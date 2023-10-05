@@ -13,12 +13,12 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import {
   adaptStandardiYhteystiedotToIncludePakotukset,
   adaptStandardiYhteystiedotToYhteystiedot,
 } from "../util/adaptStandardiYhteystiedot";
-import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
+import { findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { uuid } from "../util/uuid";
 import { parameters } from "../aws/parameters";
@@ -149,66 +149,6 @@ export class AsiakirjaAdapter {
       return julkaisu;
     }
     throw new Error("HyvaksymisPaatosVaihe puuttuu");
-  }
-
-  findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
-    if (projekti.aloitusKuulutusJulkaisut) {
-      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    }
-  }
-
-  findNahtavillaoloWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
-    if (projekti.nahtavillaoloVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    }
-  }
-
-  findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    }
-  }
-
-  findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.jatkoPaatos1VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    }
-  }
-
-  findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.jatkoPaatos2VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    }
-  }
-
-  findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
-    if (projekti.aloitusKuulutusJulkaisut) {
-      return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    }
-  }
-
-  findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    }
-  }
-
-  findHJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.jatkoPaatos1VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    }
-  }
-
-  findHJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    if (projekti.jatkoPaatos2VaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    }
-  }
-
-  findNahtavillaoloLastApproved(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
-    if (projekti.nahtavillaoloVaiheJulkaisut) {
-      return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    }
   }
 }
 

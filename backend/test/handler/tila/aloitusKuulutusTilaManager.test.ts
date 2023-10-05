@@ -11,19 +11,22 @@ import { UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
-
 import { expect } from "chai";
+import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
+  let _updateJulkaisuStub: sinon.SinonStub;
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+    _updateJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
   });
 
   beforeEach(() => {
+    new SchedulerMock();
     const projekti4 = new ProjektiFixture().dbProjekti4();
     const { oid, versio, kayttoOikeudet, euRahoitus, vahainenMenettely, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } =
       projekti4;
@@ -43,8 +46,8 @@ describe("aloitusKuulutusTilaManager", () => {
   });
 
   afterEach(() => {
-    sinon.reset();
     userFixture.logout();
+    sinon.reset();
   });
 
   after(() => {

@@ -10,6 +10,7 @@ import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
+import { findJatkoPaatos2VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -24,7 +25,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    return asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
+    return findJatkoPaatos2VaiheWaitingForApproval(projekti);
   }
 
   getUpdatedAineistotForVaihe(
@@ -121,12 +122,12 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval = findJatkoPaatos2VaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("JatkoPaatos2Vaihe on jo olemassa odottamassa hyväksyntää");
     }
 
-    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", this.getHyvaksymisPaatosVaihe(projekti));
+    await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", this.getVaihe(projekti));
 
     const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.jatkoPaatos2Vaihe);
     if (!julkaisu.ilmoituksenVastaanottajat) {
@@ -150,28 +151,28 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisu = asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
+    const julkaisu = findJatkoPaatos2VaiheWaitingForApproval(projekti);
     if (!julkaisu) {
       throw new Error("Ei jatkoPaatos2Vaihetta odottamassa hyväksyntää");
     }
+    projekti = await this.rejectJulkaisu(projekti, julkaisu, syy);
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos2Vaihe: projekti.jatkoPaatos2Vaihe });
+  }
 
-    const jatkoPaatos2Vaihe = this.getHyvaksymisPaatosVaihe(projekti);
+  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti> {
+    const jatkoPaatos2Vaihe = this.getVaihe(projekti);
     jatkoPaatos2Vaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
       throw new Error("julkaisu.hyvaksymisPaatosVaihePDFt puuttuu");
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos2Vaihe });
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.delete(projekti, julkaisu.id);
-  }
-
-  getHyvaksymisPaatosVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
-    const hyvaksymisPaatosVaihe = projekti.jatkoPaatos2Vaihe;
-    if (!hyvaksymisPaatosVaihe) {
-      throw new Error("Projektilla ei ole jatkoPaatos2Vaihetta");
-    }
-    return hyvaksymisPaatosVaihe;
+    return {
+      ...projekti,
+      jatkoPaatos2Vaihe,
+      jatkoPaatos2VaiheJulkaisut: projekti.jatkoPaatos1VaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
+    };
   }
 }
 

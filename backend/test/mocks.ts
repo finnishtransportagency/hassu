@@ -6,7 +6,7 @@ import { SchedulerMock } from "../integrationtest/api/testUtil/util";
 import { parameters } from "../src/aws/parameters";
 import MockDate from "mockdate";
 import { mockUUID } from "../integrationtest/shared/sharedMock";
-import { SyncAineistoMock } from "../integrationtest/api/testUtil/syncAineistoMock";
+import { EventSqsClientMock } from "../integrationtest/api/testUtil/eventSqsClientMock";
 
 export function mockBankHolidays(): void {
   let bankHolidaysStub: sinon.SinonStub;
@@ -72,7 +72,7 @@ export function mockParameters(): void {
 export function defaultUnitTestMocks(): void {
   mockBankHolidays();
   new SchedulerMock();
-  new SyncAineistoMock();
+  new EventSqsClientMock();
   mockParameters();
   setupMockDate();
   mockUUID();

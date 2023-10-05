@@ -17,10 +17,10 @@ import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
-import { ImportAineistoMock } from "./importAineistoMock";
+import { EventSqsClientMock } from "./eventSqsClientMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { aineistoSynchronizationSchedulerService } from "../../../src/aineisto/aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "../../../src/scheduler/projektiSchedulerService";
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 import MockDate from "mockdate";
@@ -31,11 +31,11 @@ import { expect } from "chai";
 
 export async function testAineistoProcessing(
   oid: string,
-  importAineistoMock: ImportAineistoMock,
+  eventSqsClientMock: EventSqsClientMock,
   description: string,
   userFixture: UserFixture
 ): Promise<void> {
-  await importAineistoMock.processQueue();
+  await eventSqsClientMock.processQueue();
   await takeS3Snapshot(oid, description);
   await verifyVuorovaikutusSnapshot(oid, userFixture, description + ", ja aineistot on prosessoitu");
 }
@@ -54,7 +54,7 @@ export function asetaAika(date: string | undefined | null): void {
   MockDate.set(parseDate(date).add(1, "second").toDate()); //Lisätään sekunti keskiyön jälkeen, jotta isBefore-kutsut menisivät samana päivänä läpi oikein
 }
 
-export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
+export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string, eventSqsClientMock: EventSqsClientMock): Promise<void> {
   asetaAika("2022-10-01");
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
@@ -66,7 +66,8 @@ export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Prom
     });
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
   }
-  await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
+  await projektiSchedulerService.synchronizeProjektiFiles(oid);
+  await eventSqsClientMock.processQueue();
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
@@ -361,7 +362,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
 export async function testAddSuunnitelmaluonnos(
   oid: string,
   velhoToimeksiannot: VelhoToimeksianto[],
-  importAineistoMock: ImportAineistoMock,
+  eventSqsClientMock: EventSqsClientMock,
   description: string,
   userFixture: UserFixture
 ): Promise<API.Projekti> {
@@ -373,7 +374,7 @@ export async function testAddSuunnitelmaluonnos(
 
   await testAineistoProcessing(
     oid,
-    importAineistoMock,
+    eventSqsClientMock,
     description + " Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin",
     userFixture
   );
@@ -450,7 +451,7 @@ async function saveAndVerifyAineistoSave(
   suunnitelmaluonnokset: API.AineistoInput[],
   originalVuorovaikutus: API.VuorovaikutusKierros,
   identifier: string | number | undefined,
-  importAineistoMock: ImportAineistoMock,
+  eventSqsClientMock: EventSqsClientMock,
   userFixture: UserFixture
 ): Promise<Projekti> {
   await api.tallennaProjekti({
@@ -464,7 +465,7 @@ async function saveAndVerifyAineistoSave(
       suunnitelmaluonnokset,
     },
   });
-  await importAineistoMock.processQueue();
+  await eventSqsClientMock.processQueue();
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
   return await verifyVuorovaikutusSnapshot(oid, userFixture, description);
 }
@@ -483,7 +484,7 @@ export function pickAineistotFromToimeksiannotByName(
 export async function testImportAineistot(
   oid: string,
   velhoToimeksiannot: VelhoToimeksianto[],
-  importAineistoMock: ImportAineistoMock,
+  eventSqsClientMock: EventSqsClientMock,
   description: string,
   userFixture: UserFixture
 ): Promise<Projekti> {
@@ -521,7 +522,7 @@ export async function testImportAineistot(
     suunnitelmaluonnokset,
     originalVuorovaikutus,
     description + ", initialSave",
-    importAineistoMock,
+    eventSqsClientMock,
     userFixture
   );
   esittelyaineistot.forEach((aineisto) => {
@@ -539,7 +540,7 @@ export async function testImportAineistot(
     cloneDeep(suunnitelmaluonnokset),
     originalVuorovaikutus,
     description + ", updateNimiAndJarjestys",
-    importAineistoMock,
+    eventSqsClientMock,
     userFixture
   );
 
@@ -552,7 +553,7 @@ export async function testImportAineistot(
     suunnitelmaluonnokset,
     originalVuorovaikutus,
     description + ", esittelyAineistotWithoutFirst",
-    importAineistoMock,
+    eventSqsClientMock,
     userFixture
   );
 }
@@ -634,7 +635,7 @@ export async function testPublicAccessToProjekti(
 ): Promise<unknown> {
   userFixture.logout();
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
-  publicProjekti.paivitetty = "***unit test***";
+  publicProjekti.paivitetty = "***unittest***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (publicProjekti?.nahtavillaoloVaihe) {
     publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(publicProjekti.nahtavillaoloVaihe);

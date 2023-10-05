@@ -109,7 +109,7 @@ module.exports = (phase) => {
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
-    AINEISTO_IMPORT_SQS_URL: process.env.AINEISTO_IMPORT_SQS_URL,
+    EVENT_SQS_URL: process.env.EVENT_SQS_URL,
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
     ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
 

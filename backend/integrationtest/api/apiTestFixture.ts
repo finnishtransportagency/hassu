@@ -4,6 +4,7 @@ import {
   AloitusKuulutusInput,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
+  IlmoituksenVastaanottajatInput,
   KaytettavaPalvelu,
   Kieli,
   Kielitiedot,
@@ -120,6 +121,29 @@ class ApiTestFixture {
         lahetetty: "2022-03-11T14:54",
         nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
         __typename: "ViranomaisVastaanottaja",
+      },
+    ],
+  };
+
+  ilmoituksenVastaanottajatInput: IlmoituksenVastaanottajatInput = {
+    kunnat: [
+      {
+        sahkoposti: "mikkeli@mikke.li",
+        id: mikkeli,
+      },
+      {
+        sahkoposti: "juva@ju.va",
+        id: juva,
+      },
+      {
+        sahkoposti: "savonlinna@savonlin.na",
+        id: savonlinna,
+      },
+    ],
+    viranomaiset: [
+      {
+        sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
       },
     ],
   };
@@ -254,13 +278,8 @@ class ApiTestFixture {
   });
 
   vuorovaikutusKierroksenTiedot = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => {
-    const vastaanottajat = cloneDeep(apiTestFixture.ilmoituksenVastaanottajat);
-    vastaanottajat?.kunnat?.forEach((kunta) => {
-      delete kunta.lahetetty;
-    });
-    vastaanottajat?.viranomaiset?.forEach((viranomainen) => {
-      delete viranomainen.lahetetty;
-    });
+    const vastaanottajat = cloneDeep(apiTestFixture.ilmoituksenVastaanottajatInput);
+
     return {
       vuorovaikutusNumero,
       vuorovaikutusJulkaisuPaiva: `2022-0${vuorovaikutusNumero + 1}-03`,

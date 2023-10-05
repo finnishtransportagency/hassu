@@ -14,12 +14,13 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
 import { expect } from "chai";
+import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
 
   before(async () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
@@ -61,7 +62,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     });
 
     // Aktivoi uudelleenkuulutus julkaistulle aloituskuulutukselle
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -85,14 +86,14 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     // Hyväksytään uudelleenkuulutus
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
 
     userFixture.loginAs(UserFixture.projari112);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -123,7 +124,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     emailClientStub.verifyEmailsSent();
     pdfGeneratorStub.verifyAllPDFContents();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
     await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);

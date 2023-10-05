@@ -17,7 +17,7 @@ import { TilaManager } from "./TilaManager";
 import { isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { IllegalArgumentError } from "hassu-common/error";
+import { AineistoMuokkausError, IllegalArgumentError } from "hassu-common/error";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class KuulutusTilaManager<
@@ -57,6 +57,7 @@ export abstract class KuulutusTilaManager<
       projektiEnnenTallennusta: projekti,
       tallennettavaKuulutus: uusiKuulutus,
     });
+    await this.updateProjektiSchedule(projekti.oid, uusiKuulutus.kuulutusPaiva);
   }
 
   async peruAineistoMuokkaus(projekti: DBProjekti): Promise<void> {
@@ -101,10 +102,10 @@ export abstract class KuulutusTilaManager<
 
   async validatePeruAineistoMuokkaus(kuulutus: T, viimeisinJulkaisu: Y | undefined): Promise<void> {
     if (!kuulutus.aineistoMuokkaus) {
-      throw new IllegalArgumentError("Aineistomuokkaus ei ole auki. Et voi perua sitä.");
+      throw new AineistoMuokkausError("Aineistomuokkaus ei ole auki. Et voi perua sitä.");
     }
     if (!viimeisinJulkaisu) {
-      throw new IllegalArgumentError("Aineistomuokkaus täytyy perua tietylle julkaisulle, ja julkaisua ei löytynyt");
+      throw new AineistoMuokkausError("Aineistomuokkaus täytyy perua tietylle julkaisulle, ja julkaisua ei löytynyt");
     }
     if (viimeisinJulkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
       throw new IllegalArgumentError("Aineistomuokkausta ei voi perua, jos julkaisu odottaa hyväksyntää. Hylkää julkaisu ensin.");
@@ -134,7 +135,7 @@ export abstract class KuulutusTilaManager<
     await this.saveVaihe(projekti, uusiKuulutus);
     // Jo edellistä julkaisua ei ole julkaistu vielä, perutaan julkaisu
     if (!isDateTimeInThePast(hyvaksyttyJulkaisu.kuulutusPaiva ?? undefined, "start-of-day")) {
-      this.updateJulkaisu(projekti, { ...hyvaksyttyJulkaisu, tila: KuulutusJulkaisuTila.PERUUTETTU });
+      await this.updateJulkaisu(projekti, { ...hyvaksyttyJulkaisu, tila: KuulutusJulkaisuTila.PERUUTETTU });
     }
     auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
       projektiEnnenTallennusta: projekti,
@@ -286,7 +287,7 @@ export abstract class KuulutusTilaManager<
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     const approvedJulkaisu = await this.updateJulkaisuToBeApproved(await this.reloadProjekti(projekti), hyvaksyja);
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
-    await this.synchronizeProjektiFiles(projekti.oid, approvedJulkaisu.kuulutusPaiva);
+    await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
     await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }

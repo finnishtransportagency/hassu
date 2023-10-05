@@ -1,28 +1,28 @@
-import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
+import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
 import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
-class AineistoImporterClient {
+class EventSqsClient {
   async importAineisto(oid: string) {
-    await this.sendImportAineistoEvent({ type: ImportAineistoEventType.IMPORT, oid });
+    await this.sendScheduledEvent({ type: ScheduledEventType.IMPORT, oid });
   }
 
   async synchronizeAineisto(oid: string) {
-    await this.sendImportAineistoEvent({ type: ImportAineistoEventType.SYNCHRONIZE, oid });
+    await this.sendScheduledEvent({ type: ScheduledEventType.SYNCHRONIZE, oid });
   }
 
-  async sendImportAineistoEvent(params: ImportAineistoEvent, retry?: boolean) {
+  async sendScheduledEvent(params: ScheduledEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
-      log.info("sendImportAineistoEvent", { messageParams });
+      log.info("sendScheduledEvent", { messageParams });
       const result = await getSQS().sendMessage(messageParams);
-      log.info("sendImportAineistoEvent", { result });
+      log.info("sendScheduledEvent", { result });
     }
   }
 
-  createMessageParams(params: ImportAineistoEvent, retry?: boolean) {
+  createMessageParams(params: ScheduledEvent, retry?: boolean) {
     if (retry) {
       let retriesLeft = params.retriesLeft;
       if (retriesLeft == undefined) {
@@ -38,11 +38,11 @@ class AineistoImporterClient {
     const messageParams: SendMessageRequest = {
       MessageGroupId: params.oid,
       MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
-      QueueUrl: config.aineistoImportSqsUrl,
+      QueueUrl: config.eventSqsUrl,
       DelaySeconds: retry ? 60 : undefined,
     };
     return messageParams;
   }
 }
 
-export const aineistoImporterClient = new AineistoImporterClient();
+export const eventSqsClient = new EventSqsClient();

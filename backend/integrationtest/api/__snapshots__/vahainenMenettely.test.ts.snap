@@ -176,13 +176,15 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
   ],
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 4`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 4`] = `Array []`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 5`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "mockedtime": "2024-01-01T00:00",
@@ -273,7 +275,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 5`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 6`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "mockedtime": "2024-01-01T00:00",
@@ -414,7 +416,11 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 6`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 7`] = `Array []`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 8`] = `Array []`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 9`] = `
 Object {
   "description": "lisaAineisto",
   "mockedtime": "2024-01-01T00:00",
@@ -476,7 +482,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 7`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 10`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -847,7 +853,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 8`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 11`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -989,7 +995,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 9`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 12`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
   "mockedtime": "2024-01-01T00:00",
@@ -997,23 +1003,25 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
   ],
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 10`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 13`] = `Array []`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 14`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1118,7 +1126,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 11`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 15`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1234,7 +1242,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 12`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 16`] = `
 Array [
   Object {
     "attachments": Array [
@@ -1324,7 +1332,7 @@ Muistutus 1
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 13`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
 Array [
   Object {
     "subject": "Muistutus - 00000001-473f-49e2-a1d1-51228ae6f158",
@@ -1385,7 +1393,7 @@ Muistutus 2
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 14`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1529,7 +1537,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 15`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1690,7 +1698,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 16`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -1916,7 +1924,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -2153,7 +2161,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -2308,7 +2316,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -2461,7 +2469,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -2469,33 +2477,35 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-06-01T00:00:00+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
   ],
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `Array []`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2663,7 +2673,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2779,7 +2789,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 28`] = `
 Array [
   Object {
     "attachments": Array [
@@ -2845,7 +2855,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 29`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [

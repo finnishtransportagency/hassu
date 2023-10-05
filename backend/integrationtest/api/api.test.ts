@@ -43,16 +43,22 @@ import {
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
+  testLisaaMuistutusIncrement,
+  testMuokkaaAineistojaNahtavillaolo,
   testNahtavillaolo,
+  testNahtavillaoloAineistoSendForApproval,
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
   testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymismenettelyssa,
+  testHyvaksymisPaatosAineistoSendForApproval,
   testHyvaksymisPaatosVaihe,
+  testHyvaksymisPaatosVaiheAineistoMuokkausApproval,
   testHyvaksymisPaatosVaiheApproval,
   testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa,
+  testMuokkaaAineistojaHyvaksymisPaatosVaihe,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
@@ -61,12 +67,18 @@ import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUti
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
+import {
+  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
+  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
+  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
+} from "./testUtil/cleanUpFunctions";
+import { projektiDatabase } from "../../src/database/projektiDatabase";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -97,6 +109,7 @@ describe("Api", () => {
   });
 
   it("cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
@@ -168,7 +181,7 @@ describe("Api", () => {
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
@@ -191,7 +204,7 @@ describe("Api", () => {
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     await testAineistoProcessing(
       oid,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu",
       userFixture
     );
@@ -200,7 +213,7 @@ describe("Api", () => {
 
     await testPaivitaPerustietoja(oid, 1, "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen", userFixture);
 
-    await siirraVuorovaikutusKierrosMenneisyyteen(oid);
+    await siirraVuorovaikutusKierrosMenneisyyteen(oid, eventSqsClientMock);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen vuorovaikutuskierros", userFixture);
@@ -214,7 +227,7 @@ describe("Api", () => {
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
@@ -229,7 +242,7 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
     await schedulerMock.verifyAndRunSchedule();
-    await testAineistoProcessing(oid, importAineistoMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
+    await testAineistoProcessing(oid, eventSqsClientMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
@@ -238,7 +251,7 @@ describe("Api", () => {
       testAddSuunnitelmaluonnos(
         oid,
         velhoToimeksiannot,
-        importAineistoMock,
+        eventSqsClientMock,
         "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
         userFixture
       )
@@ -258,23 +271,60 @@ describe("Api", () => {
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
 
-    asetaAika("2024-01-01");
+    asetaAika("2023-12-31"); // Päivää ennen nähtävilläolon kuulutuspäivää
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
-
-    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    await testNahtavillaoloApproval(
+      oid,
+      projektiPaallikko,
+      userFixture,
+      Status.SUUNNITTELU,
+      "NahtavillaOloJulkinenAfterApprovalButNotPublic"
+    );
+    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty.");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
-    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
+    await eventSqsClientMock.processQueue();
+    await takeS3Snapshot(oid, "Nähtävilläolo hyväksytty mutta ei vielä julki.");
     emailClientStub.verifyEmailsSent();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.siirraTila({
+      oid: projekti.oid,
+      tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+      toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS,
+    });
+    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    expect(projekti.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+    projekti = await testMuokkaaAineistojaNahtavillaolo(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
+    projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
+    let dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(2);
 
+    asetaAika("2024-01-01"); // Nähtävilläolon kuulutuspäivä koittaa
+    await schedulerMock.verifyAndRunSchedule();
+    await eventSqsClientMock.processQueue();
+    dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(1); //Hyväksymätön aineistomuokkaus on poistettu scheduloidusti kuulutuspäivän tullessa.
+    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
+    await testPublicAccessToProjekti(
+      oid,
+      Status.NAHTAVILLAOLO,
+      userFixture,
+      "NahtavillaOloJulkinenAfterApprovalAndPublic",
+      (projektiJulkinen) => {
+        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
+        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
+        return projektiJulkinen.nahtavillaoloVaihe;
+      }
+    );
+    emailClientStub.verifyEmailsSent(); //Ei pitäisi olla lähtenyt ylimääräisiä emaileja.
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     await expect(
       testUudelleenkuulutus(
         oid,
@@ -286,9 +336,9 @@ describe("Api", () => {
       )
     ).to.eventually.be.fulfilled;
 
-    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await verifyProjektiSchedule(oid, "Nähtävilläolon uudelleenkuulutus julkaistu");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
@@ -304,7 +354,7 @@ describe("Api", () => {
     asetaAika("2025-01-01");
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    let projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
     await testHyvaksymisPaatosVaihe(oid, userFixture);
@@ -315,10 +365,10 @@ describe("Api", () => {
       velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY,
-      "2025-01-01"
+      "2025-01-02" // Yksi päivä tulevaisuudessa
     );
 
-    // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä importAineistoMock.processQueue() kutsuttu)
+    // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä eventSqsClientMock.processQueue() kutsuttu)
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await expect(
       api.siirraTila({
@@ -328,16 +378,47 @@ describe("Api", () => {
       })
     ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
-    await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty");
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
+    await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
-    await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
+    await eventSqsClientMock.processQueue();
+    await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();
+
+    // Avaa aineistomuokkaus
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.siirraTila({
+      oid: projekti.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS,
+    });
+    projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    expect(projekti.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.not.be.null;
+    projekti = await testMuokkaaAineistojaHyvaksymisPaatosVaihe(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
+    projekti = await testHyvaksymisPaatosAineistoSendForApproval(oid, projektiPaallikko, userFixture);
+    // Hyväksy aineistomuokkaus
+    await testHyvaksymisPaatosVaiheAineistoMuokkausApproval(oid, userFixture, eventSqsClientMock, schedulerMock);
+    // Kuulutuspäivä koittaa
+    asetaAika("2025-01-02");
+    await eventSqsClientMock.processQueue();
+    await schedulerMock.verifyAndRunSchedule();
+    await testPublicAccessToProjekti(
+      oid,
+      Status.HYVAKSYTTY,
+      userFixture,
+      "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
+      (projektiJulkinen) =>
+        (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+          projektiJulkinen.hyvaksymisPaatosVaihe!
+        ))
+    );
+    await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
+
     // TODO: päätös kadonnut, päiväyksissä häikkää siis
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
@@ -348,7 +429,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     const oid = await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
@@ -364,7 +445,7 @@ describe("Api", () => {
     );
     await verifyProjektiSchedule(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();

@@ -21,7 +21,7 @@ import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUti
 
 describe("Nähtävilläolovaihe", () => {
   const userFixture = new UserFixture(userService);
-  const { importAineistoMock } = defaultMocks();
+  const { eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -71,7 +71,7 @@ describe("Nähtävilläolovaihe", () => {
       "Nähtävilläolovaihe saamenkielisellä kuulutuksella ja ilmoituksella",
       ProjektiPaths.PATH_NAHTAVILLAOLO
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     //
     // Hyväksyntä
@@ -88,7 +88,7 @@ describe("Nähtävilläolovaihe", () => {
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     p = await api.lataaProjekti(oid);
     expectToMatchSnapshot(
@@ -123,6 +123,6 @@ describe("Nähtävilläolovaihe", () => {
       userFixture,
       "2040-06-01"
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
   });
 });

@@ -25,6 +25,7 @@ import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emai
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
 import { isAllowedToMoveBack } from "hassu-common/util/operationValidators";
+import { findNahtavillaoloWaitingForApproval } from "../../projekti/projektiUtil";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -70,6 +71,14 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+    const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    }
+    await this.peruAineistoMuokkaus(projekti);
+  }
+
   getVaihePathname(): string {
     return ProjektiPaths.PATH_NAHTAVILLAOLO;
   }
@@ -82,7 +91,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
-    return asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
+    return findNahtavillaoloWaitingForApproval(projekti);
   }
 
   getUpdatedAineistotForVaihe(
@@ -209,7 +218,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("Nahtavillaolovaihe on jo olemassa odottamassa hyväksyntää");
     }
@@ -238,20 +247,28 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
     }
+    projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe: projekti.nahtavillaoloVaihe });
+  }
 
+  private async rejectJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu, syy: string): Promise<DBProjekti> {
     const nahtavillaoloVaihe = this.getVaihe(projekti);
     nahtavillaoloVaihe.palautusSyy = syy;
-    if (!julkaisuWaitingForApproval.nahtavillaoloPDFt) {
+    if (!julkaisu.nahtavillaoloPDFt) {
       throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
     }
-    await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.nahtavillaoloPDFt);
+    await this.deletePDFs(projekti.oid, julkaisu.nahtavillaoloPDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
-    await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisu.id);
+    return {
+      ...projekti,
+      nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
+    };
   }
 
   private async generatePDFs(

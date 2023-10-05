@@ -5,7 +5,6 @@ import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { cleanupAnyProjektiData, replaceFieldsByName } from "../api/testFixtureRecorder";
 import {
   addLogoFilesToProjekti,
@@ -22,6 +21,7 @@ import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "../api/testUtil/saameUtil";
 import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
 import { expect } from "chai";
+import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -35,7 +35,7 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub } = defaultMocks();
+  const { emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -61,7 +61,7 @@ describe("AloitusKuulutus", () => {
     await addLogoFilesToProjekti(oid);
     await takeSnapshot(oid);
 
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -69,7 +69,7 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYLKAA,
       syy: "Korjaa teksti",
@@ -78,7 +78,7 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -86,14 +86,14 @@ describe("AloitusKuulutus", () => {
     await takeSnapshot(oid);
 
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     await takeSnapshot(oid);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     emailClientStub.verifyEmailsSent();
   });
@@ -158,25 +158,25 @@ describe("AloitusKuulutus", () => {
     // Hyväksyntä
     //
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     userFixture.loginAs(UserFixture.hassuATunnus1);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisu");
 
     //
     // Uudelleenkuulutus
     //
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
@@ -184,18 +184,18 @@ describe("AloitusKuulutus", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     // Lisätään uudelleenkuulutukseen selitystekstit
     await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-23");
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     userFixture.loginAs(UserFixture.projari112);
-    await aloitusKuulutusTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisun uudelleenkuulutus");
     p = await api.lataaProjekti(oid);
     expect(p.aloitusKuulutusJulkaisu?.kuulutusPaiva).to.eq("2020-01-23");

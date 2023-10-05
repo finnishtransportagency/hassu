@@ -10,6 +10,7 @@ import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { findAloitusKuulutusWaitingForApproval } from "../projekti/projektiUtil";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -18,7 +19,7 @@ async function handleAloitusKuulutus(
   muutokset: TallennaProjektiInput
 ) {
   // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
-  const aloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+  const aloitusKuulutusJulkaisu = findAloitusKuulutusWaitingForApproval(projekti);
   if (aloitusKuulutusJulkaisu) {
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,

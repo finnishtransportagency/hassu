@@ -55,7 +55,7 @@ async function main() {
       publicBucket: hassuDatabaseStack.publicBucket,
       projektiTable: hassuDatabaseStack.projektiTable,
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
-      aineistoImportQueue: hassuBackendStack.aineistoImportQueue,
+      eventQueue: hassuBackendStack.eventQueue,
       asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
     });
     await hassuFrontendStack.process().catch((e) => {

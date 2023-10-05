@@ -20,7 +20,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
 import chai from "chai";
-import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
+import { eventSqsClient } from "../../src/scheduler/eventSqsClient";
 
 const { expect } = chai;
 
@@ -28,7 +28,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   const userFixture = new UserFixture(userService);
-  const { awsCloudfrontInvalidationStub, importAineistoMock } = defaultMocks();
+  const { awsCloudfrontInvalidationStub, eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -85,27 +85,27 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     await expectJulkinenProjektiStatus(Status.HYVAKSYTTY);
     await verifyProjektiSchedule(oid, "Ajastukset kun projekti on hyväksytty. Pitäisi olla ajastus epäaktiiviseksi menemiselle.");
 
     // Kuulutusvaihepäättyypäivä yli vuosi menneisyyteen
-    asetaAika("2027-02-01");
+    asetaAika("2027-02-02");
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
     await expectJulkinenNotFound(oid, userFixture);
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);
     // Käynnistä ajastettu aineistojen poisto, koska projekti on mennyt epäaktiiviseksi. Tässä testissä toiminnallisuus ei ole ajastuksia luonut, joten ajetaan synkronointi manuaalisesti tässä:
-    await aineistoImporterClient.importAineisto(oid);
-    await importAineistoMock.processQueue();
+    await eventSqsClient.importAineisto(oid);
+    await eventSqsClientMock.processQueue();
     await recordProjektiTestFixture(FixtureName.EPAAKTIIVINEN_1, oid);
 
     await lisaaKasittelynTilaJatkopaatos1({
       oid,
       versio: epaAktiivinenProjekti1.versio,
       kasittelynTila: {
-        ensimmainenJatkopaatos: { paatoksenPvm: "2027-02-01", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2027-02-02", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },
     });
 

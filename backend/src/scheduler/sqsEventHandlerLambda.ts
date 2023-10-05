@@ -1,18 +1,23 @@
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
-import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
+import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { aineistoSynchronizationSchedulerService } from "./aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import * as API from "hassu-common/graphql/apiModel";
-import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
+import { synchronizeFilesToPublic } from "../aineisto/synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
-import { aineistoImporterClient } from "./aineistoImporterClient";
-import { ImportContext } from "./importContext";
-import { aineistoDeleterService } from "./aineistoDeleterService";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { eventSqsClient } from "./eventSqsClient";
+import { ImportContext } from "../aineisto/importContext";
+import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
+import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
+import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManager";
+import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
+import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
+import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
+import { AineistoMuokkausError } from "hassu-common/error";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -87,22 +92,44 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", async () => {
     try {
       for (const record of event.Records) {
-        const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
-        if (aineistoEvent.scheduleName) {
-          await aineistoSynchronizationSchedulerService.deletePastSchedule(aineistoEvent.scheduleName);
+        const scheduledEvent: ScheduledEvent = JSON.parse(record.body);
+        if (scheduledEvent.scheduleName) {
+          await projektiSchedulerService.deletePastSchedule(scheduledEvent.scheduleName);
         }
-        log.info("ImportAineistoEvent", aineistoEvent);
-        const { oid } = aineistoEvent;
-
+        log.info("ScheduledEvent", scheduledEvent);
+        const { oid } = scheduledEvent;
         const projekti = await projektiDatabase.loadProjektiByOid(oid);
         if (!projekti) {
           throw new Error("Projektia " + oid + " ei löydy");
         }
 
         const ctx = await new ImportContext(projekti).init();
-
-        if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-          await handleImport(ctx);
+        try {
+          switch (scheduledEvent.type) {
+            case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
+              await nahtavillaoloTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
+              await hyvaksymisPaatosVaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
+              await jatkoPaatos1VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
+              await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case ScheduledEventType.IMPORT:
+              await handleImport(ctx);
+              break;
+            default:
+              break;
+          }
+        } catch (e) {
+          if (e instanceof AineistoMuokkausError) {
+            log.info("Scheduled event cancelled. All ok.", e.message);
+          } else {
+            throw e;
+          }
         }
 
         await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
@@ -110,12 +137,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         // Synkronoidaan tiedostot aina
         const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
+        if (projekti && scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
           // Yritä uudelleen minuutin päästä
-          await aineistoImporterClient.sendImportAineistoEvent(aineistoEvent, true);
+          await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
         }
       }
     } catch (e: unknown) {

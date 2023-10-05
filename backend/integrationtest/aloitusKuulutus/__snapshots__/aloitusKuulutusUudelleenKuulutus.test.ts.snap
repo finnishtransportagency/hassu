@@ -215,7 +215,9 @@ puh. 0293121213, markku.koi(at)koi.com
 }
 `;
 
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `Array []`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",
@@ -233,7 +235,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 8`] = `
 Object {
   "description": "publicProjekti  uudelleenkuulutuksen jälkeen",
   "mockedtime": "2020-01-01T02:00",

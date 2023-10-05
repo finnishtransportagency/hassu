@@ -301,13 +301,67 @@
       "SUOMI": "/euLogot/FI/logofi.png"
     },
     "hyvaksymisPaatosVaihe": {
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/hyvaksymispaatos/1/aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
@@ -318,12 +372,12 @@
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
       ],
-      "id": 1,
+      "id": 2,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
@@ -343,8 +397,8 @@
           }
         ]
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": {
         "yhteysHenkilot": [
           "A000112"
@@ -435,8 +489,8 @@
         "kielitiedot": {
           "ensisijainenKieli": "SUOMI"
         },
-        "kuulutusPaiva": "2025-01-01",
-        "kuulutusVaihePaattyyPaiva": "2025-02-01",
+        "kuulutusPaiva": "2025-01-02",
+        "kuulutusVaihePaattyyPaiva": "2025-02-02",
         "kuulutusYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",
@@ -460,6 +514,201 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/deleted/hyvaksymispaatos/1/lähetekirje.eml",
+          "tuotu": null
+        },
+        "muokkaaja": "A000112",
+        "tila": "PERUUTETTU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/123/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": "https://linkki-hankesivulle.fi",
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": [
+          {
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu"
+          },
+          {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi"
+          },
+          {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen"
+          }
+        ]
+      },
+      {
+        "aineistoMuokkaus": {
+          "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00"
+        },
+        "aineistoNahtavilla": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+            "jarjestys": 2,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+            "jarjestys": 3,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+            "jarjestys": 4,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+            "jarjestys": 5,
+            "kategoriaId": "osa_a",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "kategoriaId": "osa_a",
+            "nimi": "TYHJÄ.txt",
+            "tiedosto": "/hyvaksymispaatos/2/TYHJÄ.txt",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          }
+        ],
+        "asianhallintaEventId": "00000002-e436-4256-a2d2-74ab6778d07f",
+        "hallintoOikeus": "HAMEENLINNA",
+        "hyvaksyja": "A000112",
+        "hyvaksymisPaatos": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
+            "tila": "POISTETTU",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          }
+        ],
+        "hyvaksymisPaatosVaihePDFt": {
+          "SUOMI": {
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/deleted/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/deleted/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/deleted/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/deleted/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/deleted/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          }
+        },
+        "hyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+        "id": 2,
+        "ilmoituksenVastaanottajat": {
+          "kunnat": [
+            {
+              "id": 491,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "mikkeli@mikke.li"
+            },
+            {
+              "id": 178,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "juva@ju.va"
+            },
+            {
+              "id": 740,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "savonlinna@savonlin.na"
+            }
+          ],
+          "viranomaiset": [
+            {
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
+            }
+          ]
+        },
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "kuulutusPaiva": "2025-01-02",
+        "kuulutusVaihePaattyyPaiva": "2025-02-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241",
+            "A000112"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi"
+            },
+            {
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen"
+            }
+          ]
+        },
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/deleted/hyvaksymispaatos/2/lähetekirje.eml",
           "tuotu": null
         },
         "muokkaaja": "A000112",
@@ -510,7 +759,7 @@
       "ensimmainenJatkopaatos": {
         "aktiivinen": true,
         "asianumero": "jatkopaatos1_asianumero",
-        "paatoksenPvm": "2027-02-01"
+        "paatoksenPvm": "2027-02-02"
       },
       "hyvaksymispaatos": {
         "aktiivinen": true,
@@ -558,6 +807,7 @@
     },
     "lyhytOsoite": "3c1d",
     "nahtavillaoloVaihe": {
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
@@ -565,7 +815,7 @@
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -574,7 +824,7 @@
           "nimi": "aineisto3.txt",
           "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -583,7 +833,7 @@
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -592,7 +842,7 @@
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -601,7 +851,7 @@
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -610,12 +860,15 @@
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         }
       ],
+      "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
       "hankkeenKuvaus": {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
       },
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2023-12-31T00:00:01+02:00",
       "id": 2,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
@@ -630,16 +883,21 @@
         ],
         "viranomaiset": [
           {
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "2023-12-31T00:00",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }
         ]
       },
+      "kielitiedot": {
+        "ensisijainenKieli": "SUOMI"
+      },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "kuulutusYhteystiedot": {
         "yhteysHenkilot": [
+          "LX581241",
           "A000112"
         ],
         "yhteysTiedot": [
@@ -657,6 +915,11 @@
           }
         ]
       },
+      "lahetekirje": {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+        "tuotu": "2023-12-31T00:00"
+      },
       "lisaAineisto": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -664,11 +927,38 @@
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00"
         }
       ],
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "uudelleenKuulutus": null
+      "muokkaaja": "A000112",
+      "nahtavillaoloPDFt": {
+        "SUOMI": {
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloPDFPath": "/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
+        }
+      },
+      "uudelleenKuulutus": null,
+      "velho": {
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": [
+          91,
+          92
+        ],
+        "linkki": "https://linkki-hankesivulle.fi",
+        "maakunnat": [
+          1
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": [
+          "tie"
+        ]
+      }
     },
     "nahtavillaoloVaiheJulkaisut": [
       {
@@ -679,7 +969,7 @@
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -688,7 +978,7 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/1/aineisto3.txt",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -697,7 +987,7 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -706,7 +996,7 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -715,7 +1005,7 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -724,7 +1014,7 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
         "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
@@ -732,32 +1022,32 @@
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2024-01-01T00:00:01+02:00",
+        "hyvaksymisPaiva": "2023-12-31T00:00:01+02:00",
         "id": 1,
         "ilmoituksenVastaanottajat": {
           "kunnat": [
             {
               "id": 491,
-              "lahetetty": "2024-01-01T00:00",
+              "lahetetty": "2023-12-31T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "mikkeli@mikke.li"
             },
             {
               "id": 178,
-              "lahetetty": "2024-01-01T00:00",
+              "lahetetty": "2023-12-31T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "juva@ju.va"
             },
             {
               "id": 740,
-              "lahetetty": "2024-01-01T00:00",
+              "lahetetty": "2023-12-31T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "savonlinna@savonlin.na"
             }
           ],
           "viranomaiset": [
             {
-              "lahetetty": "2024-01-01T00:00",
+              "lahetetty": "2023-12-31T00:00",
               "messageId": "messageId_test",
               "nimi": "ETELA_SAVO_ELY",
               "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
@@ -801,7 +1091,7 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
@@ -856,6 +1146,7 @@
         ]
       },
       {
+        "aineistoMuokkaus": null,
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
@@ -863,7 +1154,7 @@
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -872,7 +1163,7 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -881,7 +1172,7 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -890,7 +1181,7 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -899,7 +1190,7 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -908,10 +1199,10 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
-        "asianhallintaEventId": "00000004-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -985,7 +1276,7 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
@@ -999,7 +1290,7 @@
         },
         "tila": "HYVAKSYTTY",
         "uudelleenKuulutus": {
-          "alkuperainenHyvaksymisPaiva": "2024-01-01T00:00:01+02:00",
+          "alkuperainenHyvaksymisPaiva": "2023-12-31T00:00:01+02:00",
           "selosteKuulutukselle": {
             "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ..."
           },
@@ -1033,6 +1324,14 @@
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
             "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu"
+          },
+          {
+            "etunimi": "Testi1",
+            "kunta": 536,
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -1152,6 +1451,29 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
+      "00000002-e436-4256-a2d2-74ab6778d07f": {
+        "asianhallintaEventId": "00000002-e436-4256-a2d2-74ab6778d07f",
+        "asiatunnus": "HASSU/123/2023",
+        "dokumentit": [
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"
+          }
+        ],
+        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
+        "vaylaAsianhallinta": true
+      },
       "00000003-8557-4a58-8a93-64ade8cd137b": {
         "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
         "asiatunnus": "HASSU/123/2023",
@@ -1166,8 +1488,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000004-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000004-0be9-455d-a434-0fab721acaa2",
+      "00000005-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {

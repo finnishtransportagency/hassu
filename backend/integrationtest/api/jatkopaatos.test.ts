@@ -42,7 +42,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Jatkopäätökset", () => {
   const userFixture = new UserFixture(userService);
 
-  const { importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
+  const { eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
   before(async () => {
     mockSaveProjektiToVelho();
     await deleteProjekti(oid);
@@ -73,7 +73,7 @@ describe("Jatkopäätökset", () => {
       Status.JATKOPAATOS_1,
       kuulutusPaiva
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös1 created", "jatkopaatos1");
   }
 
@@ -89,40 +89,40 @@ describe("Jatkopäätökset", () => {
       Status.JATKOPAATOS_2,
       kuulutusPaiva
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös2 created", "jatkopaatos2");
     return projekti;
   }
 
   it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
     userFixture.loginAs(UserFixture.projari112);
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
-    await addJatkopaatos1WithAineistot("2025-01-01");
+    await addJatkopaatos1WithAineistot("2025-01-02");
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
 
     // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
-    asetaAika("2026-01-01");
+    asetaAika("2026-01-02");
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
-    await addJatkopaatos2KasittelynTila("2026-01-01");
+    await addJatkopaatos2KasittelynTila("2026-01-02");
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-    await addJatkopaatos2WithAineistot("2026-01-01");
+    await addJatkopaatos2WithAineistot("2026-01-02");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0); // Jatkopäätös1:n aineistojen poisto
     await testJatkoPaatos2VaiheApproval(oid, projektiPaallikko, userFixture);
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
 
     // Move jatkopaatos at least months into the past
-    asetaAika("2027-01-01");
+    asetaAika("2027-01-02");
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 
@@ -149,7 +149,7 @@ describe("Jatkopäätökset", () => {
         },
       },
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     p = await api.lataaProjekti(oid);
     expectToMatchSnapshot(
       "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
@@ -168,7 +168,7 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos1VaiheJulkaisu",
       oid,
       userFixture,
-      importAineistoMock
+      eventSqsClientMock
     );
     await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1);
     //
@@ -184,7 +184,7 @@ describe("Jatkopäätökset", () => {
       userFixture,
       "2040-06-02"
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
       oid,
@@ -219,7 +219,7 @@ describe("Jatkopäätökset", () => {
         },
       },
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     p = await api.lataaProjekti(oid);
     expectToMatchSnapshot(
       "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
@@ -238,7 +238,7 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos2VaiheJulkaisu",
       oid,
       userFixture,
-      importAineistoMock
+      eventSqsClientMock
     );
 
     //
@@ -254,7 +254,7 @@ describe("Jatkopäätökset", () => {
       userFixture,
       "2040-06-01"
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
       oid,

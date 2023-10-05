@@ -1,6 +1,8 @@
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import {
+  Aineisto,
+  AineistoInput,
   KuulutusJulkaisuTila,
   LisaAineistoParametrit,
   NahtavillaoloVaihe,
@@ -12,7 +14,7 @@ import {
   VelhoAineisto,
   VelhoToimeksianto,
 } from "hassu-common/graphql/apiModel";
-import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
+import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
@@ -25,7 +27,10 @@ import axios from "axios";
 import assert from "assert";
 import { assertIsDefined } from "../../../src/util/assertions";
 
-import { expect } from "chai"; //
+import { expect } from "chai";
+import { removeTypeName } from "../../../src/projekti/adapter/adaptToDB";
+import { EventSqsClientMock } from "./eventSqsClientMock";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
   let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
@@ -45,8 +50,17 @@ export async function testNahtavillaolo(oid: string, projektiPaallikko: string):
   return projekti;
 }
 
-export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: ProjektiKayttaja, userFixture: UserFixture): Promise<void> {
+export async function testNahtavillaoloApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture,
+  expectedPublicStatus: Status,
+  desc: string
+): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+
+  let dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  const julkaisutLengthBeginning = dbProjekti?.nahtavillaoloVaiheJulkaisut?.length || 0;
   await api.siirraTila({
     oid,
     tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
@@ -58,21 +72,41 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO, toiminto: TilasiirtymaToiminto.HYVAKSY });
+  dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(julkaisutLengthBeginning + 1);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[julkaisutLengthBeginning].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   expectToMatchSnapshot("testNahtavillaOloAfterApproval", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
     nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
-  await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "NahtavillaOloJulkinenAfterApproval", (projektiJulkinen) => {
+  await testPublicAccessToProjekti(oid, expectedPublicStatus, userFixture, desc, (projektiJulkinen) => {
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
     return projektiJulkinen.nahtavillaoloVaihe;
   });
-  await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
-  await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
 }
 
-async function testLisaaMuistutusIncrement(
+export async function testNahtavillaoloAineistoSendForApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture
+): Promise<Projekti> {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+  });
+  const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  expectToMatchSnapshot("testNahtavillaOloAfterSendAineistoMuokkausForApproval", {
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
+    nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
+  });
+  return projekti;
+}
+
+export async function testLisaaMuistutusIncrement(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture,
@@ -112,7 +146,9 @@ export async function testImportNahtavillaoloAineistot(
   const lisaAineisto = velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
       toimeksianto.aineistot
-        .filter((aineisto) => aineisto.tiedosto.indexOf("Yksityistie_lunastukset.pdf") >= 0)
+        .filter((aineisto) => {
+          return aineisto.tiedosto.indexOf("Yksityistie_lunastukset.pdf") >= 0;
+        })
         .forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
@@ -137,6 +173,59 @@ export async function testImportNahtavillaoloAineistot(
   return p.nahtavillaoloVaihe;
 }
 
+export async function testMuokkaaAineistojaNahtavillaolo(
+  projekti: Projekti,
+  velhoToimeksiannot: VelhoToimeksianto[],
+  schedulerMock: SchedulerMock,
+  eventSqsClientMock: EventSqsClientMock
+): Promise<Projekti> {
+  const uudetAineistot = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot
+        .filter((aineisto) => {
+          return aineisto.tiedosto.indexOf("1400-73Y-6710-4_Pituusleikkaus_Y4.pdf") >= 0;
+        })
+        .forEach((aineisto) => documents.push(aineisto));
+      return documents;
+    }, [] as VelhoAineisto[])
+    .sort((a, b) => a.oid.localeCompare(b.oid));
+
+  const nykyinenAineisto: Aineisto[] = projekti.nahtavillaoloVaihe?.aineistoNahtavilla as Aineisto[];
+  const aineistoInput: AineistoInput[] = nykyinenAineisto
+    .map((aineisto) => removeTypeName(aineisto) as AineistoInput)
+    .concat(adaptAineistoToInput(uudetAineistot).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })));
+
+  await api.tallennaProjekti({
+    oid: projekti.oid,
+    versio: projekti.versio,
+    nahtavillaoloVaihe: {
+      aineistoNahtavilla: aineistoInput,
+    },
+  });
+
+  let dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus ennen scheduleria ja sqs-jononkäsittelyä", {
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
+  });
+  projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
+  const nahtavillaoloVaihe = cloneDeep(projekti.nahtavillaoloVaihe);
+  expect(nahtavillaoloVaihe?.lisaAineistoParametrit).not.to.be.undefined;
+
+  await schedulerMock.verifyAndRunSchedule();
+  await eventSqsClientMock.processQueue();
+  dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus schedulerin ja sqs-jononkäsittelyn jälkeen", {
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
+  });
+  projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
+  expectToMatchSnapshot("testNahtavillaoloAineistoMuokkausAfterImport", cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe));
+
+  assert(projekti.nahtavillaoloVaihe);
+  return projekti;
+}
+
 async function validateFileIsDownloadable(aineistoURL: string) {
   try {
     const getResponse = await axios.get(aineistoURL);
@@ -147,9 +236,16 @@ async function validateFileIsDownloadable(aineistoURL: string) {
   }
 }
 
-export async function testNahtavillaoloLisaAineisto(oid: string, lisaAineistoParametrit: LisaAineistoParametrit): Promise<void> {
+export async function testNahtavillaoloLisaAineisto(
+  oid: string,
+  lisaAineistoParametrit: LisaAineistoParametrit,
+  schedulerMock: SchedulerMock,
+  eventSqsClientMock: EventSqsClientMock
+): Promise<void> {
   expect(lisaAineistoParametrit).to.not.be.empty;
   const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
+  await schedulerMock.verifyAndRunSchedule();
+  await eventSqsClientMock.processQueue();
   assertIsDefined(lisaAineistot.aineistot, "lisaAineistot.aineistot");
   assertIsDefined(lisaAineistot.lisaAineistot, "lisaAineistot.lisaAineistot");
   expectToMatchSnapshot("lisaAineisto", {

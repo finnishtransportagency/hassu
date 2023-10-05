@@ -16,6 +16,7 @@ import {
 import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
+  testLisaaMuistutusIncrement,
   testNahtavillaolo,
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
@@ -30,7 +31,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -84,18 +85,19 @@ describe("Api", () => {
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
-
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(
       oid,
       "Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
     );
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     emailClientStub.verifyEmailsSent();
 
     await testUudelleenkuulutus(
@@ -109,7 +111,7 @@ describe("Api", () => {
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(
       oid,
       "Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"

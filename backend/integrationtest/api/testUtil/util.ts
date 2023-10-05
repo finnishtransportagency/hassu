@@ -15,14 +15,8 @@ import mocha from "mocha";
 import { NotFoundError } from "hassu-common/error";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
-import {
-  CreateScheduleCommand,
-  CreateScheduleCommandInput,
-  DeleteScheduleCommand,
-  ListSchedulesCommand,
-  SchedulerClient,
-} from "@aws-sdk/client-scheduler";
-import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { CreateScheduleCommand, CreateScheduleCommandInput, ListSchedulesCommand, SchedulerClient } from "@aws-sdk/client-scheduler";
+import { handleEvent } from "../../../src/scheduler/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
@@ -34,11 +28,10 @@ import {
   openSearchClientYllapito,
 } from "../../../src/projektiSearch/openSearchClient";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { lyhytOsoiteDatabase } from "../../../src/database/lyhytOsoiteDatabase";
 import crypto from "crypto";
-import { ImportAineistoMock } from "./importAineistoMock";
+import { EventSqsClientMock } from "./eventSqsClientMock";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
@@ -50,12 +43,14 @@ import { CloudFront } from "@aws-sdk/client-cloudfront";
 import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
 import MockDate from "mockdate";
 import orderBy from "lodash/orderBy";
-import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
+import { dateTimeToString, nyt, parseDate } from "../../../src/util/dateUtil";
 import { parameters } from "../../../src/aws/parameters";
 import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
+import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
+import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -258,6 +253,7 @@ export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
 
 export class SchedulerMock {
   private schedulerStub = mockClient(SchedulerClient);
+  private schedules: Set<CreateScheduleCommandInput> = new Set<CreateScheduleCommandInput>();
 
   constructor() {
     mocha.beforeEach(() => {
@@ -271,24 +267,27 @@ export class SchedulerMock {
   async verifyAndRunSchedule(): Promise<void> {
     const createCalls = this.schedulerStub.commandCalls(CreateScheduleCommand);
     if (createCalls.length > 0) {
-      const calls: CreateScheduleCommandInput[] = createCalls
+      createCalls
         .map((call) => {
           const input = call.args[0].input as unknown as CreateScheduleCommandInput;
           input.GroupName = "***unittest***";
           return input;
         })
-        .sort();
-      expect(calls).toMatchSnapshot();
-      await Promise.all(
-        calls.map(async (args: CreateScheduleCommandInput) => {
-          assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
-          const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
-          return handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
-        })
-      );
+        .forEach((call) => this.schedules.add(call));
     }
-
-    expectAwsCalls("deleteSchedule", this.schedulerStub.commandCalls(DeleteScheduleCommand), "GroupName");
+    expect(Array.from(this.schedules).sort()).toMatchSnapshot();
+    await Array.from(this.schedules).reduce((promiseChain, args: CreateScheduleCommandInput) => {
+      return promiseChain.then(async () => {
+        assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
+        const event: ScheduledEvent = JSON.parse(args.Target?.Input);
+        if (!event.date || (event.date && parseDate(event.date).isBefore(nyt()))) {
+          const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
+          this.schedules.delete(args);
+          await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+          return;
+        }
+      });
+    }, Promise.resolve());
     this.schedulerStub.resetHistory();
   }
 }
@@ -379,7 +378,7 @@ function setupMockDate() {
 export function defaultMocks(): {
   schedulerMock: SchedulerMock;
   emailClientStub: EmailClientStub;
-  importAineistoMock: ImportAineistoMock;
+  eventSqsClientMock: EventSqsClientMock;
   awsCloudfrontInvalidationStub: CloudFrontStub;
   pdfGeneratorStub: PDFGeneratorStub;
   parametersStub: ParametersStub;
@@ -389,7 +388,7 @@ export function defaultMocks(): {
   setupLocalDatabase();
   const schedulerMock = new SchedulerMock();
   const emailClientStub = new EmailClientStub();
-  const importAineistoMock = new ImportAineistoMock();
+  const eventSqsClientMock = new EventSqsClientMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   const parametersStub = new ParametersStub();
@@ -398,13 +397,13 @@ export function defaultMocks(): {
   setupMockDate();
   velhoCache();
   mockUUID();
-  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
+  return { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
-  expectToMatchSnapshot(description + ", schedule", orderBy(new ProjektiAineistoManager(dbProjekti).getSchedule(), "date"));
+  expectToMatchSnapshot(description + ", schedule", orderBy(new ProjektiScheduleManager(dbProjekti).getSchedule(), "date"));
 }
 
 export const PATH_EU_LOGO = __dirname + "/../../../../cypress/fixtures/eu-logo.jpg";

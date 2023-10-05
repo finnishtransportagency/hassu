@@ -30,6 +30,9 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
+    throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
   checkPriviledgesAvaaAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkPriviledgesAvaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
@@ -161,7 +164,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
 
-    await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 

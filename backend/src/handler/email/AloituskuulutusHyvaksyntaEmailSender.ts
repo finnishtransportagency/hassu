@@ -5,19 +5,19 @@ import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel"
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
-import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloituskuulutusEmailCreator } from "../../email/aloituskuulutusEmailCreator";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
+import { findAloitusKuulutusLastApproved } from "../../projekti/projektiUtil";
 
 class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti, "projekti pitää olla olemassa");
     // aloituskuulutusjulkaisu kyllä löytyy
-    const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = asiakirjaAdapter.findAloitusKuulutusLastApproved(projekti);
+    const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = findAloitusKuulutusLastApproved(projekti);
     assertIsDefined(aloituskuulutus, "Aloituskuulutuksella ei ole hyväksyttyä julkaisua");
     const emailCreator = await AloituskuulutusEmailCreator.newInstance(projekti, aloituskuulutus);
     // aloituskuulutus.muokkaaja on määritelty

@@ -1,34 +1,34 @@
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
-import { ImportAineistoEvent, ImportAineistoEventType } from "../../src/aineisto/importAineistoEvent";
+import { eventSqsClient } from "../../src/scheduler/eventSqsClient";
+import { ScheduledEvent, ScheduledEventType } from "../../src/scheduler/scheduledEvent";
 import { assertIsDefined } from "../../src/util/assertions";
 
 const chai = require("chai");
 const { expect } = chai;
 
-describe("aineistoImporterLambda", () => {
+describe("sqsEventHandlerLambda", () => {
   after(() => {
     sinon.restore();
   });
 
-  function sendEventWithRetries(event: ImportAineistoEvent) {
-    const sqsMessage: SendMessageRequest | undefined = aineistoImporterClient.createMessageParams(event, true);
+  function sendEventWithRetries(event: ScheduledEvent) {
+    const sqsMessage: SendMessageRequest | undefined = eventSqsClient.createMessageParams(event, true);
     assertIsDefined(sqsMessage);
     expect(sqsMessage.DelaySeconds).to.eq(60);
     return JSON.parse(sqsMessage.MessageBody || "{}");
   }
 
   it("should produce params for retry successfully", async () => {
-    let event: ImportAineistoEvent = { oid: "1", type: ImportAineistoEventType.SYNCHRONIZE };
+    let event: ScheduledEvent = { oid: "1", type: ScheduledEventType.SYNCHRONIZE };
     event = sendEventWithRetries(event);
     expect(event.retriesLeft).to.eq(60);
     event = sendEventWithRetries(event);
     expect(event.retriesLeft).to.eq(59);
 
     event.retriesLeft = 0;
-    const sqsMessage = aineistoImporterClient.createMessageParams(event, true);
+    const sqsMessage = eventSqsClient.createMessageParams(event, true);
     expect(sqsMessage).to.be.undefined;
   });
 });

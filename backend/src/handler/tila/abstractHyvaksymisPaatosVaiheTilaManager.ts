@@ -19,11 +19,20 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
 import { IllegalArgumentError } from "hassu-common/error";
+import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu
 > {
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+    const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    }
+    await this.peruAineistoMuokkaus(projekti);
+  }
+
   async removeRejectionReasonIfExists(
     projekti: DBProjekti,
     key: "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "hyvaksymisPaatosVaihe",
@@ -156,6 +165,8 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
       }
     }
   }
+
+  abstract rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti>;
 }
 
 async function createPDF(

@@ -2,7 +2,7 @@ import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
-import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "../../scheduler/projektiSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -60,6 +60,15 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       } else {
         await this.peruAineistoMuokkausInternal(projekti);
       }
+    } else if (toiminto == TilasiirtymaToiminto.HYLKAA_JA_PERU_AINEISTOMUOKKAUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
+        throw new Error("hylkaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        if (!syy) {
+          throw new Error("Aineitomuokkauksen hylkäämiseltä puuttuu syy!");
+        }
+        await this.rejectAndPeruAineistoMuokkausInternal(projekti, syy);
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -107,6 +116,12 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await this.reject(projekti, syy);
   }
 
+  private async rejectAndPeruAineistoMuokkausInternal(projekti: DBProjekti, syy: string) {
+    this.checkPriviledgesApproveReject(projekti);
+    auditLog.info("Hylkää aineistomuokkauksen hyväksyntä", { vaihe: this.getVaihe(projekti) });
+    await this.rejectAndPeruAineistoMuokkaus(projekti, syy);
+  }
+
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
     auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
@@ -120,13 +135,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await this.uudelleenkuuluta(projekti);
   }
 
-  async synchronizeProjektiFiles(oid: string, synchronizationDate?: string | null): Promise<void> {
+  async updateProjektiSchedule(oid: string, synchronizationDate?: string | null): Promise<void> {
     const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
     if (!date || date.isBefore(nyt())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
+      await projektiSchedulerService.synchronizeProjektiFiles(oid);
     }
-    await aineistoSynchronizationSchedulerService.updateProjektiSynchronizationSchedule(oid);
+    await projektiSchedulerService.updateProjektiSynchronizationSchedule(oid);
   }
 
   private checkPriviledgesForPalaa(): NykyinenKayttaja {
@@ -153,7 +168,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
-  abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
+  abstract reject(projekti: DBProjekti, syy: string): Promise<void>;
+
+  abstract rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
