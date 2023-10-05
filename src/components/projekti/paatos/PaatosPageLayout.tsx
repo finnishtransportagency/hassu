@@ -152,7 +152,7 @@ function PaatosPageLayoutContent({
     ];
 
     // Ei muokkaustilassa (LUKU tai MIGROITU) järjestys on käänteinen
-    return julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS ? result : result.reverse();
+    return !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos.muokkausTila === MuokkausTila.MUOKKAUS ? result : result.reverse();
   }, [paatosRoutePart, projekti, aineistoStatus, julkaisu?.tila, julkaisu?.aineistoMuokkaus, status, julkaisematonPaatos?.muokkausTila]);
 
   const value = useMemo(() => {

@@ -30,8 +30,8 @@ const vaiheSpecificRoute: Record<
 > = {
   NAHTAVILLAOLO: "nahtavillaoloVaihe",
   HYVAKSYMISPAATOSVAIHE: "hyvaksymisPaatosVaihe",
-  JATKOPAATOS_1: "jatkoPaatos2Vaihe",
-  JATKOPAATOS_2: "jatkoPaatos1Vaihe",
+  JATKOPAATOS_1: "jatkoPaatos1Vaihe",
+  JATKOPAATOS_2: "jatkoPaatos2Vaihe",
 };
 
 type FormValues = HyvaksymisPaatosVaiheAineistotFormValues & NahtavilleAsetettavatAineistotFormValues;

@@ -57,11 +57,12 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       waitForAnimations: true,
     });
 
-    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]')
       .first()
       .should("be.disabled")
       .should("be.checked")
+      .parent()
       .siblings()
       .invoke("text")
       .should("eq", "A-tunnus1 Hassu, A000112, (Alajärvi), 0291111111, mikko.haapamki@cgi.com");

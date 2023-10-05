@@ -154,48 +154,19 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
 
   cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
 
-  // TODO: Uuden yhteystiedon lisaaminen aiheuttaa talla hetkella ajonaikaisen virheen
-  // TypeError: Cannot read properties of undefined (reading 'reduce')
-
-  // cy.get("main").then((main) => {
-  //   let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]');
-  //   if (nimikentta.length === 0) {
-  //     cy.get("#append_vuorovaikuttamisen_yhteystiedot_button").click();
-  //   }
-  // });
-
-  // const yhteystietoSelectorToTextMap = new Map([
-  //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]', "Henkilöetunimi"],
-  //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sukunimi"]', "Henkilösukunimi"],
-  //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.organisaatio"]', "Henkilöorganisaatio"],
-  //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.puhelinnumero"]', "0294444444"],
-  //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sahkoposti"]', "henkilo@sahkoposti.fi"],
-  // ]);
-
-  // yhteystietoSelectorToTextMap.forEach((text, selector) => {
-  //   cy.get(selector, {
-  //     timeout: 10000,
-  //   })
-  //     .should("be.enabled")
-  //     .type(text);
-  // });
+  cy.get("body").then(($body) => {
+    const seloste = $body.find('[name="vuorovaikutusKierros.selosteVuorovaikutuskierrokselle"]');
+    if (seloste.length > 0) {
+      cy.wrap(seloste)
+        .should("be.enabled")
+        .type(CLEAR_ALL + "Seloste 123");
+    }
+  });
 
   cy.get("#save_and_publish").click();
   cy.get("#accept_and_publish_vuorovaikutus").click();
 
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-  // TODO: sivun tiedot eivat vastaa bakkarista tulevia jostain syysta
-  // mainFormSelectorToTextMap.forEach((text) => {
-  //   cy.contains(text);
-  // });
-
-  // TODO: kts yhteystieto runtime error
-  // yhteystietoSelectorToTextMap.forEach((text, selector) => {
-  //   cy.get(selector, {
-  //     timeout: 10000,
-  //   }).should("have.value", text);
-  // });
 }
 
 export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua() {
