@@ -279,7 +279,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
+  const jatkopaatos2Pvm = watch("kasittelynTila.toinenJatkopaatos.paatoksenPvm");
+  const jatkopaatos2Asiatunnus = watch("kasittelynTila.toinenJatkopaatos.asianumero");
   const jatkopaatos1lisaaDisabled = ensimmainenJatkopaatosDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus;
+  const jatkopaatos2lisaaDisabled = toinenJatkopaatosDisabled || !jatkopaatos2Pvm || !jatkopaatos2Asiatunnus;
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   return (
@@ -576,6 +579,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 />
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || ""} disabled />
+              )}
+              {!projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
+                <HassuGridItem sx={{ alignSelf: "end" }}>
+                  <Button id="lisaa_jatkopaatos2" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos2lisaaDisabled}>
+                    Lisää jatkopäätös
+                  </Button>
+                </HassuGridItem>
               )}
             </HassuGrid>
           </SectionContent>
