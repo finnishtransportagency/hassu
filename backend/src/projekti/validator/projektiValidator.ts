@@ -135,7 +135,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, projekti: Projekti, 
 
   if (isSuunnitteluSopimusAddedOrDeleted && !allowedToChangeSuunnittelusopimus) {
     throw new IllegalArgumentError(
-      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa."
     );
   }
 }
@@ -149,7 +149,7 @@ function validateEuRahoitus(dbProjekti: DBProjekti, projekti: Projekti, input: T
 
   if (isEuSopimusAddedOrDeleted && !allowedToChangeEuSopimus) {
     throw new IllegalArgumentError(
-      "EU-rahoituksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
+      "EU-rahoituksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa."
     );
   }
 }
@@ -236,7 +236,7 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, projekti: Projekti, i
   const allowedToChangeVahainenMenettely = isAllowedToChangeVahainenMenettely(projekti);
   if (isVahainenMenettelyValueChanged && !allowedToChangeVahainenMenettely) {
     throw new IllegalArgumentError(
-      "Vähäisen menettelyn olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
+      "Vähäisen menettelyn olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa."
     );
   }
 }

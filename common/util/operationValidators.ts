@@ -74,11 +74,14 @@ function isJulkaisuUserCreated(julkaisu: Julkaisu): julkaisu is NonNullable<Julk
     : !!julkaisu && julkaisu.tila !== KuulutusJulkaisuTila.MIGROITU;
 }
 
-const isVaiheMuokkaustilassa = (vaihe: Vaihe) =>
-  !vaihe ||
-  (vaihe.__typename === "VuorovaikutusKierros"
-    ? vaihe.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA
-    : vaihe.muokkausTila === MuokkausTila.MUOKKAUS);
+function isVaiheMuokkaustilassa(vaihe: Vaihe): boolean {
+  return (
+    !vaihe ||
+    (vaihe.__typename === "VuorovaikutusKierros"
+      ? vaihe.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA
+      : vaihe.muokkausTila === MuokkausTila.MUOKKAUS)
+  );
+}
 
 type AdditionalValidation = (tila: JulkaisuStatus, julkaisu: Julkaisu, vaihe: Vaihe) => boolean;
 

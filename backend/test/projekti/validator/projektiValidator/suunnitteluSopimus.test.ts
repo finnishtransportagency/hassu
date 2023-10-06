@@ -223,6 +223,69 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(allOk).to.eql(true);
   });
 
+  it("should allow suunnittelusopimus being added if aloituskuulutus is migrated even if suunnitteluvaihe exists", async () => {
+    const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    delete projekti.suunnitteluSopimus;
+    delete projekti.vuorovaikutusKierrosJulkaisut;
+    projekti.aloitusKuulutusJulkaisut = [
+      {
+        velho: { nimi: "" },
+        tila: KuulutusJulkaisuTila.MIGROITU,
+        id: 1,
+        yhteystiedot: [],
+        kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
+        kuulutusYhteystiedot: {},
+      },
+    ];
+
+    await expect(
+      validateTallennaProjekti(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        suunnitteluSopimus: {
+          kunta: 1,
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
+          yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+        },
+      })
+    ).to.eventually.be.fulfilled;
+  });
+
+  it("should not allow suunnittelusopimus being added if aloituskuulutus is migrated if vuorovaikutusKierrosJulkaisut exists", async () => {
+    const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    delete projekti.suunnitteluSopimus;
+    projekti.aloitusKuulutusJulkaisut = [
+      {
+        velho: { nimi: "" },
+        tila: KuulutusJulkaisuTila.MIGROITU,
+        id: 1,
+        yhteystiedot: [],
+        kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
+        kuulutusYhteystiedot: {},
+      },
+    ];
+
+    await expect(
+      validateTallennaProjekti(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        suunnitteluSopimus: {
+          kunta: 1,
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
+          yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+        },
+      })
+    ).to.eventually.be.rejectedWith(
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa."
+    );
+  });
+
   it("should not allow suunnittelusopimus being added if aloituskuulutus is migrated and there is vuorovaikutusKierrosJulkaisu", async () => {
     const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
     delete projekti.suunnitteluSopimus;
