@@ -15,7 +15,7 @@ import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { H3 } from "@components/Headings";
+import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 
@@ -129,19 +129,27 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
         return acc;
       }, []) || [];
 
-    return aineistotKategorioittain.map(({ kategoria, aineisto }) => ({
-      title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineisto?.length || 0})`,
-      content: (
-        <SuunnitelmaAineistoKategoriaContent
-          aineistot={aineisto}
-          kategoria={kategoria}
-          expandedState={props.expandedState}
-          julkaisuPaiva={props.julkaisuPaiva}
-          alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
-        />
-      ),
-      id: kategoria.id,
-    }));
+    return aineistotKategorioittain.map<AccordionItem>(({ kategoria, aineisto }) => {
+      const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
+      const Heading = props.paakategoria ? H4 : H5;
+      return {
+        title: (
+          <Heading variant="h5" sx={{ margin: 0 }}>
+            {titleText}
+          </Heading>
+        ),
+        content: (
+          <SuunnitelmaAineistoKategoriaContent
+            aineistot={aineisto}
+            kategoria={kategoria}
+            expandedState={props.expandedState}
+            julkaisuPaiva={props.julkaisuPaiva}
+            alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+          />
+        ),
+        id: kategoria.id,
+      };
+    });
   }, [
     props.aineistoKategoriat,
     props.aineistot,
