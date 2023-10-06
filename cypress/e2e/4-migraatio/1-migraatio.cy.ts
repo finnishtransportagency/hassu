@@ -185,9 +185,7 @@ describe("Migraatio", () => {
 
     // Täytä nähtävilläolovaihe
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
-    cy.contains(
-      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
-    );
+
     lisaaNahtavillaoloAineistot(oid);
     const selectorToTextMap = {
       '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "nahtavillaolovaiheen kuvaus Suomeksi",
@@ -246,10 +244,6 @@ describe("Migraatio", () => {
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
 
-    cy.contains(
-      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
-    );
-
     cy.contains("Kuulutus hyväksymispäätöksestä");
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, undefined, "asianumero123");
@@ -269,7 +263,7 @@ describe("Migraatio", () => {
       waitForAnimations: true,
     });
 
-    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 

@@ -64,7 +64,9 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
       },
     ];
     // LUKU-tilassa järjestys on käänteinen
-    return projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS ? tabs : tabs.reverse();
+    return !projekti.nahtavillaoloVaihe?.muokkausTila || projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS
+      ? tabs
+      : tabs.reverse();
   }, [projekti]);
 
   const value = useMemo(() => {
