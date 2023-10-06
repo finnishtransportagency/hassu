@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { Kieli, Status, TallennaProjektiInput } from "@services/api";
+import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -192,43 +192,33 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         persistentData.kielitiedot.toissijainenKieli = null;
       }
       try {
-        if (suunnittelusopimusprojekti === "true") {
-          const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
-          if (persistentData.suunnitteluSopimus?.logo?.SUOMI && logoTiedostoFi instanceof File) {
-            persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
-          } else if (persistentData.suunnitteluSopimus?.logo?.SUOMI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+        if (suunnittelusopimusprojekti === "true" && persistentData.suunnitteluSopimus?.logo) {
+          const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
+          const originalInputLogo = persistentData.suunnitteluSopimus.logo;
+          const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
+          if (originalInputLogo?.SUOMI && logoTiedostoFi instanceof File) {
+            ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
           }
-          const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
-          if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
-            persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
-          } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+          const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
+          if (originalInputLogo?.RUOTSI && logoTiedostoSv instanceof File) {
+            ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
           }
+          persistentData.suunnitteluSopimus.logo = ssLogo;
         }
 
         if (persistentData.euRahoitus) {
-          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
-            persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
-          } else if (persistentData.euRahoitusLogot?.SUOMI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.SUOMI;
+          const euLogo: LokalisoituTekstiInputEiPakollinen = {};
+          const originalInputLogo = persistentData.euRahoitusLogot;
+          const euLogoFITiedosto = originalInputLogo?.SUOMI as unknown as File | undefined | string;
+          if (originalInputLogo?.SUOMI && euLogoFITiedosto instanceof File) {
+            euLogo.SUOMI = await talletaLogo(euLogoFITiedosto);
           }
 
-          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
-            persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
-          } else if (persistentData.euRahoitusLogot?.RUOTSI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.RUOTSI;
+          const euLogoSVTiedosto = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
+          if (originalInputLogo?.RUOTSI && euLogoSVTiedosto instanceof File) {
+            euLogo.RUOTSI = await talletaLogo(euLogoSVTiedosto);
           }
+          persistentData.euRahoitusLogot = euLogo;
         }
 
         setStatusBeforeSave(projekti?.status);
