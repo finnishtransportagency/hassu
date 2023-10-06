@@ -44,7 +44,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
           <p>
             Aineistot ovat olleet nähtävillä palvelun julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
             {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan. Nähtävilleasetetut aineistot löytyvät
-            <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
+            <ExtLink style={{marginLeft: '5px'}} href={velhoURL}>Projektivelhosta</ExtLink>.
           </p>
         ) : (
           <p>
