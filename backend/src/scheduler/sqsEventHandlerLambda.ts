@@ -19,6 +19,12 @@ import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheT
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
 
+async function handleZipping(ctx: ImportContext) {
+  const manager: ProjektiAineistoManager = ctx.manager;
+  const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
+  await nahtavillaoloVaiheAineisto.createZipOfAineisto();
+}
+
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
@@ -46,6 +52,11 @@ async function handleImport(ctx: ImportContext) {
       log.info("Päivitetään vuorovaikutusKierrosJulkaisu aineistojen tuonnin jälkeen", { vuorovaikutusKierrosJulkaisu: changes });
       await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(ctx.projekti, changes);
     }
+  }
+
+  if(nahtavillaoloVaihe) {
+    return await eventSqsClient.zipAineisto(oid);
+    
   }
 }
 
@@ -120,6 +131,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
               break;
             case ScheduledEventType.IMPORT:
               await handleImport(ctx);
+              break;
+            case ScheduledEventType.ZIP:
+              await handleZipping(ctx);
               break;
             default:
               break;

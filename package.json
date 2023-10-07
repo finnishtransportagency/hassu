@@ -14,6 +14,7 @@
     "@aws-sdk/client-wafv2": "3.408.0",
     "@aws-sdk/cloudfront-signer": "3.398.0",
     "@aws-sdk/lib-dynamodb": "3.408.0",
+    "@aws-sdk/lib-storage": "^3.425.0",
     "@aws-sdk/protocol-http": "3.370.0",
     "@aws-sdk/s3-presigned-post": "3.408.0",
     "@aws-sdk/s3-request-presigner": "3.408.0",
@@ -52,6 +53,7 @@
     "apollo-link-context": "1.0.20",
     "apollo-link-error": "1.1.13",
     "apollo-link-http": "1.5.17",
+    "archiver": "^6.0.1",
     "aws-appsync-auth-link": "2.0.8",
     "axios": "0.21.4",
     "classnames": "2.3.1",
@@ -62,6 +64,7 @@
     "form-data": "4.0.0",
     "graphql": "14.7.0",
     "graphql-tag": "2.12.5",
+    "hassu-common": "./common",
     "html-react-parser": "3.0.8",
     "js-cookie": "3.0.1",
     "jsonschema": "1.4.1",
@@ -94,8 +97,7 @@
     "web-vitals": "2.1.0",
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
-    "yup": "0.32.9",
-    "hassu-common": "./common"
+    "yup": "0.32.9"
   },
   "devDependencies": {
     "@aws-amplify/api": "5.4.0",
@@ -110,6 +112,7 @@
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "13.2.1",
+    "@types/archiver": "^5.3.3",
     "@types/aws-lambda": "8.10.92",
     "@types/chai": "4.3.0",
     "@types/chai-as-promised": "7.1.4",

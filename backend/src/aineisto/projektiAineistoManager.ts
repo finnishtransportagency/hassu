@@ -28,6 +28,8 @@ import { assertIsDefined } from "../util/assertions";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDoAsync } from "../projekti/adapter/adaptToDB";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
+import { ZipSourceFile, generateAndStreamZipfileToS3 } from "./zipFiles";
+import { config } from "../config";
 
 export class ProjektiAineistoManager {
   private projekti: DBProjekti;
@@ -125,6 +127,24 @@ export abstract class VaiheAineisto<T, J> {
         return this.vaihe;
       }
     }
+  }
+
+  async createZipOfAineisto(): Promise<T | undefined> {
+    if (!this.vaihe) return;
+    const aineistotPaths = this.getAineistot(this.vaihe);
+    const filesToZip: ZipSourceFile[] = [];
+    const yllapitoPath = new ProjektiPaths(this.oid).yllapitoFullPath;
+    for (const aineistot of aineistotPaths) {
+      if (!aineistot.aineisto) return;
+      for (const aineisto of aineistot.aineisto) {
+        console.log("pushing s3key: " + yllapitoPath + aineisto.tiedosto);
+        filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto });
+      }
+    }
+    const yllapitoVaihePath = aineistotPaths[0]?.paths.yllapitoFullPath;
+    console.log("Yllapitovaihepath " + yllapitoVaihePath);
+
+    await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, yllapitoVaihePath + "/aineisto.zip");
   }
 
   isReady(): boolean {

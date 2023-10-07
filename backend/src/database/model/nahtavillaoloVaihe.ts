@@ -17,6 +17,7 @@ export type NahtavillaoloVaihe = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   lisaAineisto?: Array<Aineisto> | null;
+  aineistopaketti?: string | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;
@@ -33,6 +34,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   lisaAineisto?: Array<Aineisto> | null;
+  aineistopaketti?: string | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;

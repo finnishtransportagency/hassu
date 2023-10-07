@@ -5,6 +5,10 @@ import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
 class EventSqsClient {
+  async zipAineisto(oid: string) {
+    await this.sendScheduledEvent({ type: ScheduledEventType.ZIP, oid });
+  }
+
   async importAineisto(oid: string) {
     await this.sendScheduledEvent({ type: ScheduledEventType.IMPORT, oid });
   }
