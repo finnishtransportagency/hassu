@@ -38,7 +38,13 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("antaa muuttaa kielitietoja projektille, jolla ei ole aloituskuulutusjulkaisua", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, aloitusKuulutusJulkaisut, ...projekti } = fixture.dbProjekti2();
+    const {
+      suunnitteluSopimus: _s,
+      nahtavillaoloVaihe: _n,
+      hyvaksymisPaatosVaihe: _h,
+      aloitusKuulutusJulkaisut: _a,
+      ...projekti
+    } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -52,8 +58,14 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("antaa muuttaa kielitietoja projektille, jolla on migroitu aloituskuulutusjulkaisu", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, aloitusKuulutusJulkaisut, aloitusKuulutus, ...projekti } =
-      fixture.dbProjekti2();
+    const {
+      suunnitteluSopimus: _s,
+      nahtavillaoloVaihe: _n,
+      hyvaksymisPaatosVaihe: _h,
+      aloitusKuulutusJulkaisut: _aj,
+      aloitusKuulutus: _a,
+      ...projekti
+    } = fixture.dbProjekti2();
     const testiProjekti: DBProjekti = {
       ...projekti,
       aloitusKuulutusJulkaisut: [
@@ -80,7 +92,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("ei anna muuttaa kielitietoja projektille, jolla on julkaistu aloituskuulutus eikä muokkaustilaista uudelleenkuulutusta", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const { suunnitteluSopimus: _s, nahtavillaoloVaihe: _n, hyvaksymisPaatosVaihe: _h, ...projekti } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -94,7 +106,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("antaa muuttaa kielitietoja projektille, jos sillä on avattu aloituskuulutuksen uudelleenkuulutus", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const { suunnitteluSopimus: _s, nahtavillaoloVaihe: _n, hyvaksymisPaatosVaihe: _h, ...projekti } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -116,7 +128,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("ei anna muuttaa kielitietoja projektille, jos sillä on avattu aloituskuulutuksen uudelleenkuulutus ja se on hyväksytty", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const { suunnitteluSopimus: _s, nahtavillaoloVaihe: _n, hyvaksymisPaatosVaihe: _h, ...projekti } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -152,7 +164,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
 
   it("antaa muuttaa kielitietoja projektille, jos sillä on muokattavaksi palautettu aloituskuulutuksen uudelleenkuulutus", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const { suunnitteluSopimus: _s, nahtavillaoloVaihe: _n, hyvaksymisPaatosVaihe: _h, ...projekti } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -246,7 +258,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should allow kielitiedot being changed if aloituskuulutus and suunnitteluvihe are migrated", async () => {
+  it("should allow kielitiedot being changed if aloituskuulutus and suunnitteluvaihe are migrated", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
     delete projekti.suunnitteluSopimus;

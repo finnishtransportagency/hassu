@@ -193,7 +193,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should allow euRahoitus being added if aloituskuulutus and suunnitteluvihe are migrated", async () => {
+  it("should allow euRahoitus being added if aloituskuulutus and suunnitteluvaihe are migrated", async () => {
     const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
     delete projekti.aloitusKuulutusJulkaisut;
     delete projekti.aloitusKuulutus;
@@ -243,7 +243,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(allOk).to.eql(true);
   });
 
-  it("should allow euRahoitus being added if aloituskuulutus and suunnitteluvihe are migrated, nahtavillaolo is published but there is uudelleenkuulutus open", async () => {
+  it("should allow euRahoitus being added if aloituskuulutus and suunnitteluvaihe are migrated, nahtavillaolo is published but there is uudelleenkuulutus open", async () => {
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     projekti.aloitusKuulutus = {
       id: 1,
@@ -298,7 +298,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(allOk).to.eql(true);
   });
 
-  it("should not allow euRahoitus being added if aloituskuulutus and suunnitteluvihe are migrated, nahtavillaolo is published and there is uudelleenkuulutus waiting to be accepted", async () => {
+  it("should not allow euRahoitus being added if aloituskuulutus and suunnitteluvaihe are migrated, nahtavillaolo is published and there is uudelleenkuulutus waiting to be accepted", async () => {
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     projekti.aloitusKuulutus = {
       id: 1,

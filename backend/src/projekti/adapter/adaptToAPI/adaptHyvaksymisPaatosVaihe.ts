@@ -70,6 +70,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
   const julkaisu =
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ||
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (!julkaisu) {

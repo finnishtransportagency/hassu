@@ -1,6 +1,6 @@
 import { DBProjekti } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierrosTila } from "../graphql/apiModel";
-import { isProjektiAPIProjekti, isProjektiDBProjekti } from "./typeCheckers";
+import { KuulutusJulkaisuTila, MuokkausTila, Projekti, Status, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import { statusOrder } from "../statusOrder";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -40,141 +40,103 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   return true;
 }
 
-export function noJulkaisuOrKutsuIsInReadState({
-  aloitusKuulutusMuokkausTila,
-  vuorovaikutusKierrosTila,
-  nahtavillaoloVaiheMuokkausTila,
-  hyvaksymisVaiheMuokkausTila,
-  jatkoPaatos1VaiheMuokkausTila,
-  jatkoPaatos2VaiheMuokkausTila,
-}: {
-  aloitusKuulutusMuokkausTila: MuokkausTila | undefined | null;
-  vuorovaikutusKierrosTila: VuorovaikutusKierrosTila | undefined | null;
-  nahtavillaoloVaiheMuokkausTila: MuokkausTila | undefined | null;
-  hyvaksymisVaiheMuokkausTila: MuokkausTila | undefined | null;
-  jatkoPaatos1VaiheMuokkausTila: MuokkausTila | undefined | null;
-  jatkoPaatos2VaiheMuokkausTila: MuokkausTila | undefined | null;
-}): boolean {
-  if (!aloitusKuulutusMuokkausTila) {
-    return true;
-  }
-  if (aloitusKuulutusMuokkausTila === MuokkausTila.LUKU) {
-    return false;
-  }
-  if (aloitusKuulutusMuokkausTila === MuokkausTila.MUOKKAUS) {
-    return true;
-  }
-  // aloitusKuulutusMuokkausTila === MuokkausTila.MIGROITU
-  if (!vuorovaikutusKierrosTila) {
-    return true;
-  }
-  if (vuorovaikutusKierrosTila !== VuorovaikutusKierrosTila.MIGROITU) {
-    return false;
-  }
-  // vuorovaikutusKierrosTila === VuorovaikutusKierrosTila.MIGROITU
-  if (!nahtavillaoloVaiheMuokkausTila) {
-    return true;
-  }
-  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
-    return true;
-  }
-  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.LUKU) {
-    return false;
-  }
-  if (!hyvaksymisVaiheMuokkausTila) {
-    return true;
-  }
-  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
-    return true;
-  }
-  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.LUKU) {
-    return false;
-  }
-  // hyvaksymisVaiheMuokkausTila === MuokkausTila.MIGROITU
-  if (!jatkoPaatos1VaiheMuokkausTila) {
-    return true;
-  }
-  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
-    return true;
-  }
-  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.LUKU) {
-    return false;
-  }
-  // jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MIGROITU
-  if (!jatkoPaatos2VaiheMuokkausTila) {
-    return true;
-  }
-  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
-    return true;
-  }
-  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.LUKU) {
-    return false;
-  }
-  return false;
+type JulkaisuStatus =
+  | Status.ALOITUSKUULUTUS
+  | Status.SUUNNITTELU
+  | Status.NAHTAVILLAOLO
+  | Status.HYVAKSYTTY
+  | Status.JATKOPAATOS_1
+  | Status.JATKOPAATOS_2;
+
+type JulkaisuAvain = keyof Pick<
+  Projekti,
+  | "aloitusKuulutusJulkaisu"
+  | "vuorovaikutusKierrosJulkaisut"
+  | "nahtavillaoloVaiheJulkaisu"
+  | "hyvaksymisPaatosVaiheJulkaisu"
+  | "jatkoPaatos1VaiheJulkaisu"
+  | "jatkoPaatos2VaiheJulkaisu"
+>;
+
+type VaiheAvain = keyof Pick<
+  Projekti,
+  "aloitusKuulutus" | "vuorovaikutusKierros" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+>;
+
+type Julkaisu = Projekti[JulkaisuAvain];
+type Vaihe = Projekti[VaiheAvain];
+
+type TilakohtaisetVaiheet = Record<JulkaisuStatus, { julkaisu: Julkaisu; vaihe: Vaihe }>;
+
+function isJulkaisuUserCreated(julkaisu: Julkaisu): julkaisu is NonNullable<Julkaisu> {
+  return Array.isArray(julkaisu)
+    ? julkaisu.some((kierrosJulkaisu) => !!kierrosJulkaisu?.tila && kierrosJulkaisu.tila !== VuorovaikutusKierrosTila.MIGROITU)
+    : !!julkaisu && julkaisu.tila !== KuulutusJulkaisuTila.MIGROITU;
 }
 
-function noJulkaisuOrKutsuIsInReadStateProjekti(projekti: Projekti) {
-  return noJulkaisuOrKutsuIsInReadState({
-    aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
-    vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
-    nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,
-    hyvaksymisVaiheMuokkausTila: projekti.hyvaksymisPaatosVaihe?.muokkausTila,
-    jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
-    jatkoPaatos2VaiheMuokkausTila: projekti.jatkoPaatos2Vaihe?.muokkausTila,
-  });
-}
-
-function thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti: Projekti) {
+function isVaiheMuokkaustilassa(vaihe: Vaihe): boolean {
   return (
-    !projekti.vuorovaikutusKierrosJulkaisut ||
-    !projekti.vuorovaikutusKierrosJulkaisut.length ||
-    (projekti.vuorovaikutusKierrosJulkaisut.length === 1 &&
-      projekti.vuorovaikutusKierrosJulkaisut[0].tila === VuorovaikutusKierrosTila.MIGROITU)
+    !vaihe ||
+    (vaihe.__typename === "VuorovaikutusKierros"
+      ? vaihe.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA
+      : vaihe.muokkausTila === MuokkausTila.MUOKKAUS)
   );
+}
+
+type AdditionalValidation = (tila: JulkaisuStatus, julkaisu: Julkaisu, vaihe: Vaihe) => boolean;
+
+function noUserCreatedJulkaisuPreventingChange(projekti: Projekti, additionalVaiheChecks?: AdditionalValidation): boolean {
+  const tilakohtaisetVaiheet: TilakohtaisetVaiheet = {
+    ALOITUSKUULUTUS: { julkaisu: projekti.aloitusKuulutusJulkaisu, vaihe: projekti.aloitusKuulutus },
+    SUUNNITTELU: { julkaisu: projekti.vuorovaikutusKierrosJulkaisut, vaihe: projekti.vuorovaikutusKierros },
+    NAHTAVILLAOLO: { julkaisu: projekti.nahtavillaoloVaiheJulkaisu, vaihe: projekti.nahtavillaoloVaihe },
+    HYVAKSYTTY: { julkaisu: projekti.hyvaksymisPaatosVaiheJulkaisu, vaihe: projekti.hyvaksymisPaatosVaihe },
+    JATKOPAATOS_1: { julkaisu: projekti.jatkoPaatos1VaiheJulkaisu, vaihe: projekti.jatkoPaatos1Vaihe },
+    JATKOPAATOS_2: { julkaisu: projekti.jatkoPaatos2VaiheJulkaisu, vaihe: projekti.jatkoPaatos2Vaihe },
+  };
+
+  const noJulkaisuPreventingChange = !Object.entries(tilakohtaisetVaiheet)
+    // Jos julkaisua ei ole tai se on migratoitu, vaihe on OK
+    .filter(([_, { julkaisu }]) => isJulkaisuUserCreated(julkaisu))
+    // Tarkastetaan salliiko vaiheen ja julkaisun tiedot
+    .some(([tilaString, { julkaisu, vaihe }]) => {
+      const tila = tilaString as JulkaisuStatus;
+      const statusNro = statusOrder[tila];
+
+      // Haetaan julkaisut, jotka on järjestyksessä ennen kyseistä vaihetta
+      const aiemmatJulkaisut = Object.entries(tilakohtaisetVaiheet)
+        .filter(([t]) => statusOrder[t as JulkaisuStatus] < statusNro)
+        .map(([_, { julkaisu: j }]) => j);
+
+      const vaiheNotEditable = !isVaiheMuokkaustilassa(vaihe);
+      const hasPriorUserCreatedJulkaisu = aiemmatJulkaisut.some(isJulkaisuUserCreated);
+      const doesntPassAdditionalChecks = additionalVaiheChecks ? !additionalVaiheChecks(tila, julkaisu, vaihe) : false;
+
+      // Jos vaihe ei ole muokattavissa
+      // TAI sitä edeltävissä vaiheissa on käyttäjän luomia julkaisuja
+      // TAI se ei läpäise lisäehtoja
+      return vaiheNotEditable || hasPriorUserCreatedJulkaisu || doesntPassAdditionalChecks;
+    });
+
+  return noJulkaisuPreventingChange;
 }
 
 export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
-  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+  return noUserCreatedJulkaisuPreventingChange(projekti);
 }
 
 export function isAllowedToChangeSuunnittelusopimus(projekti: Projekti): boolean {
-  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+  return noUserCreatedJulkaisuPreventingChange(projekti);
 }
 
 export function isAllowedToChangeKielivalinta(projekti: Projekti): boolean {
-  return (
-    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) &&
-    noJulkaisuOrKutsuIsInReadStateProjekti(projekti) &&
-    thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti)
-  );
+  // Jos tila on jotain muuta kuin ALOITUSKUULUTUS, tarkistetaan, että vaiheella ei ole uudelleenkuulutusta
+  const preventNonAloituskuulutusUudelleenkuulutus: AdditionalValidation = (tila, _julkaisu, vaihe) => {
+    return tila === Status.ALOITUSKUULUTUS || (vaihe?.__typename === "VuorovaikutusKierros" ? true : !vaihe?.uudelleenKuulutus);
+  };
+  return noUserCreatedJulkaisuPreventingChange(projekti, preventNonAloituskuulutusUudelleenkuulutus);
 }
 
 export function isAllowedToChangeEuRahoitus(projekti: Projekti): boolean {
-  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
-}
-
-export function thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti: DBProjekti | Projekti): boolean {
-  if (isProjektiAPIProjekti(projekti)) {
-    return thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti);
-  } else if (isProjektiDBProjekti(projekti)) {
-    return thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(projekti);
-  } else {
-    return false;
-  }
-}
-
-function thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti: Projekti) {
-  if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
-  if (projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
-  if (projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
-  if (projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
-  return true;
-}
-
-function thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(dbProjekti: DBProjekti) {
-  if (dbProjekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
-  if (dbProjekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
-  if (dbProjekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
-  if (dbProjekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
-  return true;
+  return noUserCreatedJulkaisuPreventingChange(projekti);
 }
