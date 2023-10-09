@@ -107,14 +107,16 @@ class ProjektiAdapterJulkinen {
       dbProjekti.jatkoPaatos1VaiheJulkaisut,
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu),
-      projektiScheduleManager.getJatkoPaatos1Vaihe()
+      projektiScheduleManager.getJatkoPaatos1Vaihe(),
+      kieli
     );
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos2VaiheJulkaisut,
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu),
-      projektiScheduleManager.getJatkoPaatos2Vaihe()
+      projektiScheduleManager.getJatkoPaatos2Vaihe(),
+      kieli
     );
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",

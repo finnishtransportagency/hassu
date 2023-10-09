@@ -427,6 +427,20 @@ Object {
       "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2025-01-02",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2025 - 2.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
     "kuulutusVaihePaattyyPaiva": "2025-02-02",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
@@ -988,6 +1002,20 @@ Object {
       "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2026-01-02",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2026 - 2.2.2026</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2026 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
     "kuulutusVaihePaattyyPaiva": "2026-02-02",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
@@ -1314,6 +1342,20 @@ Object {
         "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-06-09",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
+      },
       "kuulutusVaihePaattyyPaiva": "2040-01-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -2024,6 +2066,20 @@ Object {
         "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2040-06-02",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.6.2040 - 2.7.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
+      },
       "kuulutusVaihePaattyyPaiva": "2040-07-02",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -2569,6 +2625,20 @@ Object {
         "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-06-09",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
+      },
       "kuulutusVaihePaattyyPaiva": "2040-01-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -3279,6 +3349,20 @@ Object {
         "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2040-06-01",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.6.2040 - 1.7.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
+      },
       "kuulutusVaihePaattyyPaiva": "2040-07-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {

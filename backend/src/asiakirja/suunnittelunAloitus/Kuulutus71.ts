@@ -15,6 +15,7 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private asiakirjaTyyppi: AsiakirjaTyyppi;
+  private kasittelynTila: KasittelynTila;
 
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -54,6 +55,21 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (!kasittelynTila) {
       throw new Error("kasittelynTila ei ole määritelty");
     }
+    if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
+      if (!kasittelynTila.ensimmainenJatkopaatos) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
+    } else {
+      if (!kasittelynTila.toinenJatkopaatos) {
+        throw new Error("kasittelynTila.toinenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.toinenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.toinenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
+    }
     if (!kasittelynTila.hyvaksymispaatos) {
       throw new Error("kasittelynTila.hyvaksymispaatos ei ole määritelty");
     }
@@ -64,6 +80,7 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     super(kieli, kutsuAdapter);
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
+    this.kasittelynTila = kasittelynTila;
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(asiakirjaTyyppi, this.kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
@@ -75,6 +92,14 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       return this.kutsuAdapter.linkki_jatkopaatos1;
     } else {
       return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
+  }
+
+  asianumero_traficom(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+    } else {
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
     }
   }
 

@@ -54,6 +54,16 @@ const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({
         label: t("tabi-tekstit.jatkopaatos", { nro: 1 }),
         id: "jatkopaatos1_tab",
       },
+      {
+        linkProps: {
+          href: {
+            pathname: `/suunnitelma/[oid]/jatkopaatos2`,
+            query: { oid: projekti?.oid },
+          },
+        },
+        label: t("tabi-tekstit.jatkopaatos", { nro: 2 }),
+        id: "jatkopaatos2_tab",
+      },
     ];
 
     return result;

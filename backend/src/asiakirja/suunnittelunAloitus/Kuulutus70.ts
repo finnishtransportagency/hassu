@@ -46,11 +46,20 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (!kasittelynTila) {
       throw new Error("kasittelynTila ei ole määritelty");
     }
-    if (!kasittelynTila.hyvaksymispaatos) {
-      throw new Error("kasittelynTila.hyvaksymispaatos ei ole määritelty");
-    }
-    if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
-      throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
+    if (asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      if (!kasittelynTila.ensimmainenJatkopaatos) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
+    } else {
+      if (!kasittelynTila.toinenJatkopaatos) {
+        throw new Error("kasittelynTila.toinenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.toinenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.toinenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
     }
     const kieli = props.kieli;
     const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
@@ -77,11 +86,19 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   hyvaksymis_pvm(): string {
-    return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return formatDate(this.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm);
+    } else {
+      return formatDate(this.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm);
+    }
   }
 
   asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+    } else {
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
+    }
   }
 
   kuulutuspaiva(): string {

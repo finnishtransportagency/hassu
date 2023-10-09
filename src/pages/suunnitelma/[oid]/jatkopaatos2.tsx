@@ -14,7 +14,7 @@ export default function Hyvaksymispaatos(): ReactElement {
   const { data: projekti, error } = useProjektiJulkinen();
   const kuulutus = projekti?.hyvaksymisPaatosVaihe;
   const SAAME_CONTENT_TEXTS = {
-    otsikko: "Gulahus plánema dohkkeheamis",
+    otsikko: "Gulahus dohkkehanmearrádusa joatkimis",
     kappale1:
       "Mearrádussii sáhttá ohcat váidimiin nuppástusa Lappi hálddahusrievttis 30 beaivvi siste mearrádusa diehtunoažžumis. Nuppástusohcama dárkilut rávvagat leat mearrádusa mildosis lean váidinčujuhusas.",
   };
@@ -23,7 +23,7 @@ export default function Hyvaksymispaatos(): ReactElement {
 
   useEffect(() => {
     if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
-    if (projekti && !projekti.hyvaksymisPaatosVaihe) {
+    if (projekti && !projekti.jatkoPaatos2Vaihe) {
       router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
     }
   }, [projekti, router]);
@@ -34,7 +34,7 @@ export default function Hyvaksymispaatos(): ReactElement {
 
   return (
     <PaatosPageLayout
-      pageTitle={t("ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}
+      pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}
       saameContent={
         <SaameContent
           kielitiedot={projekti.kielitiedot}
@@ -44,7 +44,7 @@ export default function Hyvaksymispaatos(): ReactElement {
         />
       }
     >
-      <HyvaksymispaatosTiedot kuulutus={projekti.hyvaksymisPaatosVaihe} paatosTyyppi={PaatosTyyppi.HYVAKSYMISPAATOS} />
+      <HyvaksymispaatosTiedot kuulutus={projekti.jatkoPaatos2Vaihe} paatosTyyppi={PaatosTyyppi.JATKOPAATOS2} />,
     </PaatosPageLayout>
   );
 }
