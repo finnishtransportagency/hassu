@@ -26,12 +26,14 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
           data={data}
         />
       </Section>
-      <Section noDivider>
-        <ButtonLink href={data?.aineistopaketti ? data.aineistopaketti : undefined}>
-          Lataa kaikki
-          <DownloadIcon className="ml-2" />
-        </ButtonLink>
-      </Section>
+      {data?.aineistopaketti && (
+        <Section noDivider>
+          <ButtonLink href={data.aineistopaketti}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+        </Section>
+      )}
     </>
   );
 }

@@ -20,9 +20,24 @@ import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheT
 import { AineistoMuokkausError } from "hassu-common/error";
 
 async function handleZipping(ctx: ImportContext) {
+  //TODO: joskus muillekin vaiheille kuin nahtavillaolo
+  if (!ctx.projekti.nahtavillaoloVaihe) return;
+  const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
   const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
-  await nahtavillaoloVaiheAineisto.createZipOfAineisto();
+  const aineistopakettiFullS3Key =
+    new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
+  log.info("luo aineistopaiketti, key: " + aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheAineisto.createZipOfAineisto(aineistopakettiFullS3Key);
+
+  const aineistopakettiRelativeS3Key =
+    new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
+  const nahtavillaoloVaihe = { ...ctx.projekti.nahtavillaoloVaihe };
+  await projektiDatabase.saveProjektiWithoutLocking({
+    oid,
+    versio: ctx.projekti.versio,
+    nahtavillaoloVaihe: { ...nahtavillaoloVaihe, aineistopaketti: aineistopakettiRelativeS3Key },
+  });
 }
 
 async function handleImport(ctx: ImportContext) {
@@ -54,9 +69,8 @@ async function handleImport(ctx: ImportContext) {
     }
   }
 
-  if(nahtavillaoloVaihe) {
+  if (nahtavillaoloVaihe) {
     return await eventSqsClient.zipAineisto(oid);
-    
   }
 }
 

@@ -5,9 +5,10 @@ import { Upload } from "@aws-sdk/lib-storage";
 import archiver from "archiver";
 import { getS3Client } from "../aws/client";
 
-function getFileName(s3Key: string, zipKey?: string) {
-  if (!zipKey) return s3Key.split("/").pop()!;
-  return zipKey;
+function getFileName(s3Key: string, zipFolder?: string) {
+  const fileName = s3Key.split("/").pop()!;
+  if (!zipFolder) return fileName;
+  return zipFolder + fileName;
 }
 
 const s3Client = getS3Client();
@@ -44,7 +45,7 @@ function getWritableStreamFromS3(bucket: string, zipFileS3Key: string) {
   return { passthrough, uploads };
 }
 
-export type ZipSourceFile = { s3Key: string; zipKey?: string };
+export type ZipSourceFile = { s3Key: string; zipFolder?: string };
 type S3DownloadStreamDetails = { stream: Readable; filename: string };
 export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFiles: ZipSourceFile[], zipFileS3Key: string) {
   const readables: S3DownloadStreamDetails[] = [];
@@ -52,7 +53,7 @@ export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFile
     for (const zipSourceFile of zipSourceFiles) {
       log.info("reading " + zipSourceFile.s3Key);
       const s3ReadableStream = await getReadableStreamFromS3(bucket, zipSourceFile.s3Key);
-      readables.push({ stream: s3ReadableStream as Readable, filename: getFileName(zipSourceFile.s3Key, zipSourceFile.zipKey) });
+      readables.push({ stream: s3ReadableStream as Readable, filename: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
     }
 
     const { passthrough, uploads } = getWritableStreamFromS3(bucket, zipFileS3Key);
