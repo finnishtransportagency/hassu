@@ -153,6 +153,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      false,
       false
     );
 

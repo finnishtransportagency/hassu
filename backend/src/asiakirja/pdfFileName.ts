@@ -86,6 +86,28 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_jatkopaatos",
     },
   },
+  JATKOPAATOSKUULUTUS2: {
+    TIE: { [ProjektiTyyppi.TIE]: "T441", [ProjektiTyyppi.YLEINEN]: "70YS" },
+    RATA: { [ProjektiTyyppi.RATA]: "70R", [ProjektiTyyppi.YLEINEN]: "70YS" },
+  },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE: {
+    TIE: { [ProjektiTyyppi.TIE]: "T441_1", [ProjektiTyyppi.YLEINEN]: "71YS" },
+    RATA: { [ProjektiTyyppi.RATA]: "71R", [ProjektiTyyppi.YLEINEN]: "71YS" },
+  },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE: {
+    TIE: { [ProjektiTyyppi.TIE]: "T441_3", [ProjektiTyyppi.YLEINEN]: "72YS" },
+    RATA: { [ProjektiTyyppi.RATA]: "72R", [ProjektiTyyppi.YLEINEN]: "72YS" },
+  },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA2: {
+    TIE: {
+      [ProjektiTyyppi.TIE]: "T441_2",
+      [ProjektiTyyppi.YLEINEN]: "12YS_jatkopaatos",
+    },
+    RATA: {
+      [ProjektiTyyppi.RATA]: "12R_jatkopaatos",
+      [ProjektiTyyppi.YLEINEN]: "12YS_jatkopaatos",
+    },
+  },
   
 };
 

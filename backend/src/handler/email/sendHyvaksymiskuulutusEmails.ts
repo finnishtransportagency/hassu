@@ -215,7 +215,7 @@ class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
   }
 
   protected getAsiakirjaTyyppi() {
-    return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE;
+    return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2_LAHETEKIRJE;
   }
 
   protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {

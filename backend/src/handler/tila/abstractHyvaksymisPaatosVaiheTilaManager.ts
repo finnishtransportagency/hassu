@@ -48,7 +48,8 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     projekti: DBProjekti,
     julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
     path: PathTuple,
-    jatkoPaatos: boolean
+    jatkoPaatos: boolean,
+    jatkoPaatos2: boolean
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
@@ -62,23 +63,34 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
 
       // Create PDFs in parallel
       const hyvaksymisKuulutusPDFPath = createPDFOfType(
-        jatkoPaatos ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS : AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
+        jatkoPaatos
+          ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
+          : jatkoPaatos2
+          ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2
+          : AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
       );
       const hyvaksymisIlmoitusLausunnonantajillePDFPath = createPDFOfType(
         jatkoPaatos
           ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+          : jatkoPaatos2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE
           : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
       );
-      const hyvaksymisIlmoitusMuistuttajillePDFPath = jatkoPaatos
-        ? undefined
-        : createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE);
+      const hyvaksymisIlmoitusMuistuttajillePDFPath =
+        jatkoPaatos || jatkoPaatos2 ? undefined : createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE);
       const ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath = createPDFOfType(
         jatkoPaatos
           ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+          : jatkoPaatos2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
           : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
       );
       const ilmoitusHyvaksymispaatoskuulutuksestaPDFPath = createPDFOfType(
-        jatkoPaatos ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
+        jatkoPaatos
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+          : jatkoPaatos2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2
+          : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
       );
       return {
         hyvaksymisKuulutusPDFPath: await hyvaksymisKuulutusPDFPath,

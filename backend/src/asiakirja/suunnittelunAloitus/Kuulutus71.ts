@@ -14,8 +14,10 @@ const baseline = -7;
 export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private asiakirjaTyyppi: AsiakirjaTyyppi;
 
   constructor(
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     props: HyvaksymisPaatosVaiheKutsuAdapterProps
@@ -61,16 +63,19 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
     super(kieli, kutsuAdapter);
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
-
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.kutsuAdapter.addTemplateResolver(this);
-    const fileName = createPDFFileName(
-      AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
-      this.kutsuAdapter.asiakirjanMuoto,
-      velho.tyyppi,
-      kieli
-    );
+    const fileName = createPDFFileName(asiakirjaTyyppi, this.kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
+  }
+
+  linkki_jatkopaatos(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
   }
 
   viimeinen_voimassaolovuosi(): string | null | undefined {

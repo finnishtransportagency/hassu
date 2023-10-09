@@ -144,6 +144,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(julkaisu),
+      false,
       true
     );
 

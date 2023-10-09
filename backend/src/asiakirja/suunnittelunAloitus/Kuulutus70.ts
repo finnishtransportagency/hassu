@@ -16,8 +16,10 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected kieli: KaannettavaKieli;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
+  private asiakirjaTyyppi: AsiakirjaTyyppi;
 
   constructor(
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     props: HyvaksymisPaatosVaiheKutsuAdapterProps
@@ -55,15 +57,23 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
     super(kieli, kutsuAdapter);
     this.kieli = props.kieli;
-
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
 
     this.kutsuAdapter.addTemplateResolver(this);
-    const fileName = createPDFFileName(AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
+    const fileName = createPDFFileName(asiakirjaTyyppi, this.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos1.otsikko");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+  }
+
+  linkki_jatkopaatos(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
   }
 
   hyvaksymis_pvm(): string {

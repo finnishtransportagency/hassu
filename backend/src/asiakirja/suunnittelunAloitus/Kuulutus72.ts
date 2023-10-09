@@ -81,6 +81,14 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
+  linkki_jatkopaatos(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
+  }
+
   viimeinen_voimassaolovuosi(): string | null | undefined {
     return this.hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi;
   }
