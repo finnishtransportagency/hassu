@@ -132,7 +132,7 @@ function modifyDateFieldsByName(obj: Record<string, unknown>, numberOfDaysToMove
       if (typeof value == "string") {
         const oldStr = obj[prop] as string;
         // Jos merkkijono alkaa numerolla jonka jälkeen on väliviiva ja numero, niin yritetään parsia päivämäärä
-        if (oldStr.search(/^\d+-\d+/) !== -1) {
+        if (oldStr.search(/^\d+-\d+/) !== -1 && dayjs(oldStr).isValid()) {
           let old = parseOptionalDate(oldStr);
           if (old) {
             old = old.subtract(numberOfDaysToMoveToPast, "day");
