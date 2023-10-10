@@ -55,7 +55,7 @@ export const AineistoMuokkausSection = styled(({ tyyppi, projekti, children, jul
   return (
     <Section {...sectionProps}>
       {kuulutusHyvaksyttyOdottaaJulkaisua && (
-        <Button type="button" onClick={open} className="lg:absolute lg:top-0 lg:right-0 ml-auto lg:ml-0">
+        <Button id="avaa_aineiston_muokkaus" type="button" onClick={open} className="lg:absolute lg:top-0 lg:right-0 ml-auto lg:ml-0">
           Muokkaa
         </Button>
       )}
@@ -66,10 +66,10 @@ export const AineistoMuokkausSection = styled(({ tyyppi, projekti, children, jul
           <p>Projektipäällikkö saa tiedon muokatuista aineistoista.</p>
         </DialogContent>
         <DialogActions>
-          <Button type="button" primary onClick={aktivoiAineistoMuokkaus}>
+          <Button id="jatka_aineiston_muokkaus" type="button" primary onClick={aktivoiAineistoMuokkaus}>
             Jatka
           </Button>
-          <Button type="button" onClick={close}>
+          <Button id="peruuta_aineiston_muokkaus" type="button" onClick={close}>
             Peruuta
           </Button>
         </DialogActions>

@@ -72,6 +72,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
       {!paatos && !isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
         <ButtonFlat
           type="button"
+          id="toggle_open_close_kategoriat"
           onClick={() => {
             if (areToimeksiannotExpanded) {
               setExpandedToimeksiannot([]);

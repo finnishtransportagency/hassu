@@ -186,8 +186,14 @@ describe("Migraatio", () => {
     // Täytä nähtävilläolovaihe
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
 
-    lisaaNahtavillaoloAineistot(oid);
+    lisaaNahtavillaoloAineistot({
+      oid,
+      aineistoNahtavilla: { toimeksianto: "Toimeksianto1" },
+      lisaAineisto: { toimeksianto: "Toimeksianto1" },
+    });
+    const today = formatDate(dayjs());
     const selectorToTextMap = {
+      '[name="nahtavillaoloVaihe.kuulutusPaiva"]': today,
       '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "nahtavillaolovaiheen kuvaus Suomeksi",
       '[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]': "test@vayla.fi",
       '[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]': "test@vayla.fi",

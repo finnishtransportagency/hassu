@@ -98,22 +98,23 @@ export default function Lukunakyma() {
           <HassuAccordion
             items={[
               {
+                id: "lisa_aineisto_accordion_lukutila",
                 title: <span>{`Lisäaineisto (${julkaisu.lisaAineisto?.length || 0})`}</span>,
                 content: (
                   <>
-                    <Stack direction="column" rowGap={2}>
-                      {julkaisu.lisaAineisto?.map((aineisto) => (
+                  <Stack direction="column" rowGap={2}>
+                    {julkaisu.lisaAineisto?.map((aineisto) => (
                         <span key={aineisto.dokumenttiOid}>
-                          <HassuAineistoNimiExtLink
-                            tiedostoPolku={aineisto.tiedosto}
-                            aineistoNimi={aineisto.nimi}
-                            aineistoTila={aineisto.tila}
-                            sx={{ mr: 3 }}
-                          />
+                        <HassuAineistoNimiExtLink
+                          tiedostoPolku={aineisto.tiedosto}
+                          aineistoNimi={aineisto.nimi}
+                          aineistoTila={aineisto.tila}
+                          sx={{ mr: 3 }}
+                        />
                           {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
                         </span>
-                      ))}
-                    </Stack>
+                    ))}
+                  </Stack>
                   </>
                 ),
               },
