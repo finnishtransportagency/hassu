@@ -3,7 +3,7 @@ import ExtLink from "@components/ExtLink";
 import HassuAccordion from "@components/HassuAccordion";
 import Section from "@components/layout/Section2";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import { Stack } from "@mui/material";
+import { experimental_sx as sx, Stack, styled } from "@mui/material";
 import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
@@ -15,6 +15,8 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
+import { UusiSpan } from "@components/projekti/UusiSpan";
+import dayjs from "dayjs";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -101,21 +103,22 @@ export default function Lukunakyma() {
                 id: "lisa_aineisto_accordion_lukutila",
                 title: <span>{`Lisäaineisto (${julkaisu.lisaAineisto?.length || 0})`}</span>,
                 content: (
-                  <>
                   <Stack direction="column" rowGap={2}>
                     {julkaisu.lisaAineisto?.map((aineisto) => (
-                        <span key={aineisto.dokumenttiOid}>
+                      <AineistoRow key={aineisto.dokumenttiOid}>
                         <HassuAineistoNimiExtLink
                           tiedostoPolku={aineisto.tiedosto}
                           aineistoNimi={aineisto.nimi}
                           aineistoTila={aineisto.tila}
                           sx={{ mr: 3 }}
                         />
-                          {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
-                        </span>
+                        {!!aineisto.tuotu && <span>({formatDateTime(aineisto.tuotu)})</span>}
+                        {!!aineisto.tuotu &&
+                          !!julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva &&
+                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva) && <UusiSpan />}
+                      </AineistoRow>
                     ))}
                   </Stack>
-                  </>
                 ),
               },
             ]}
@@ -128,3 +131,5 @@ export default function Lukunakyma() {
     </>
   );
 }
+
+const AineistoRow = styled("span")(sx({ display: "flex", gap: 3 }));
