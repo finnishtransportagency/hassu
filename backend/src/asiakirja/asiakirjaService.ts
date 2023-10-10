@@ -22,6 +22,7 @@ import { log } from "../logger";
 import { Kuulutus70 } from "./suunnittelunAloitus/Kuulutus70";
 import { Kuulutus71 } from "./suunnittelunAloitus/Kuulutus71";
 import { Kuulutus72 } from "./suunnittelunAloitus/Kuulutus72";
+import { getPaatosTyyppi } from "../projekti/adapter/projektiAdapterJulkinen";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -130,7 +131,8 @@ export class AsiakirjaService {
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
-      hyvaksymisPaatosVaihe
+      hyvaksymisPaatosVaihe,
+      getPaatosTyyppi(asiakirjaTyyppi)
     );
 
     if (

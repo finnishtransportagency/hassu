@@ -12,6 +12,7 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
+import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -153,8 +154,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu),
-      true,
-      false
+      PaatosTyyppi.JATKOPAATOS1
     );
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);

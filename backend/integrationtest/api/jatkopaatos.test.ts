@@ -71,7 +71,8 @@ describe("Jatkopäätökset", () => {
       velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid,
       Status.JATKOPAATOS_1,
-      kuulutusPaiva
+      kuulutusPaiva,
+      "2027"
     );
     await eventSqsClientMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös1 created", "jatkopaatos1");
@@ -87,7 +88,8 @@ describe("Jatkopäätökset", () => {
       velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid,
       Status.JATKOPAATOS_2,
-      kuulutusPaiva
+      kuulutusPaiva,
+      "2028"
     );
     await eventSqsClientMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös2 created", "jatkopaatos2");

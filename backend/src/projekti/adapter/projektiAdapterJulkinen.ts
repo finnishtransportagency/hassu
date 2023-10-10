@@ -64,6 +64,32 @@ import {
   ProjektiScheduleManager,
 } from "../../scheduler/projektiScheduleManager";
 
+export enum PaatosTyyppi {
+  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
+  JATKOPAATOS1 = "JATKOPAATOS1",
+  JATKOPAATOS2 = "JATKOPAATOS2",
+}
+
+export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
+  if (
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+  ) {
+    return PaatosTyyppi.JATKOPAATOS1;
+  } else if (
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2 ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2 ||
+    asiakirjaTyyppi === API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE
+  ) {
+    return PaatosTyyppi.JATKOPAATOS2;
+  } else {
+    return PaatosTyyppi.HYVAKSYMISPAATOS;
+  }
+}
+
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(
     dbProjekti: DBProjekti,
@@ -100,6 +126,7 @@ class ProjektiAdapterJulkinen {
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu),
       projektiScheduleManager.getHyvaksymisPaatosVaihe(),
+      PaatosTyyppi.HYVAKSYMISPAATOS,
       kieli
     );
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
@@ -108,6 +135,7 @@ class ProjektiAdapterJulkinen {
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu),
       projektiScheduleManager.getJatkoPaatos1Vaihe(),
+      PaatosTyyppi.JATKOPAATOS1,
       kieli
     );
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
@@ -116,6 +144,7 @@ class ProjektiAdapterJulkinen {
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu),
       projektiScheduleManager.getJatkoPaatos2Vaihe(),
+      PaatosTyyppi.JATKOPAATOS2,
       kieli
     );
     const projekti: API.ProjektiJulkinen = {
@@ -384,6 +413,7 @@ class ProjektiAdapterJulkinen {
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
     getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
     paatosVaiheAineisto: HyvaksymisPaatosVaiheScheduleManager,
+    paatosTyyppi: PaatosTyyppi,
     kieli?: KaannettavaKieli
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
@@ -456,7 +486,7 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu)
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu, paatosTyyppi)
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;

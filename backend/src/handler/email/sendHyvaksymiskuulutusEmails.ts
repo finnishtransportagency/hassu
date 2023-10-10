@@ -16,10 +16,15 @@ import {
   findHJatko2KuulutusLastApproved,
   findHyvaksymisKuulutusLastApproved,
 } from "../../projekti/projektiUtil";
+import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
     return findHyvaksymisKuulutusLastApproved(projekti);
+  }
+
+  protected getPaatosTyyppi() {
+    return PaatosTyyppi.HYVAKSYMISPAATOS;
   }
 
   public async sendEmails(oid: string): Promise<void> {
@@ -27,7 +32,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     assertIsDefined(projekti, "projekti pitää olla olemassa");
     const julkaisu = this.findLastApproved(projekti);
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
-    const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu);
+    const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu, this.getPaatosTyyppi());
 
     assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
     const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
@@ -184,6 +189,10 @@ class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
     return findHJatko1KuulutusLastApproved(projekti);
   }
 
+  protected getPaatosTyyppi() {
+    return PaatosTyyppi.JATKOPAATOS1;
+  }
+
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
     return emailCreator.createJatkopaatosHyvaksyttyViranomaisille();
   }
@@ -204,6 +213,10 @@ class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
 class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
   public findLastApproved(projekti: DBProjekti) {
     return findHJatko2KuulutusLastApproved(projekti);
+  }
+
+  protected getPaatosTyyppi() {
+    return PaatosTyyppi.JATKOPAATOS2;
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {

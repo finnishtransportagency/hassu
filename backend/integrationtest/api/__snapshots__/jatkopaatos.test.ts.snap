@@ -87,6 +87,7 @@ Object {
       },
       "muokkausTila": "MUOKKAUS",
       "uudelleenKuulutus": undefined,
+      "viimeinenVoimassaolovuosi": "2027",
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -220,6 +221,7 @@ Object {
       },
       "muokkausTila": "LUKU",
       "uudelleenKuulutus": undefined,
+      "viimeinenVoimassaolovuosi": "2027",
     },
     "jatkoPaatos1VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -357,6 +359,7 @@ Object {
           "tie",
         ],
       },
+      "viimeinenVoimassaolovuosi": "2027",
       "yhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
@@ -434,10 +437,10 @@ Object {
       ],
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
-        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Liikenne- ja viestintävirasto on 2.2.2027 päätöksellään jatkopaatos1_asianumero, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden 2027 loppuun.",
         "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2025 - 2.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
-        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/jatkopaatos1\\">https://localhost:3000/s/3c1d/jatkopaatos1</a>.",
+        "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
@@ -638,6 +641,7 @@ Object {
       },
       "muokkausTila": "MUOKKAUS",
       "uudelleenKuulutus": undefined,
+      "viimeinenVoimassaolovuosi": "2028",
     },
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
@@ -795,6 +799,7 @@ Object {
       },
       "muokkausTila": "LUKU",
       "uudelleenKuulutus": undefined,
+      "viimeinenVoimassaolovuosi": "2027",
     },
     "jatkoPaatos2VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -932,6 +937,7 @@ Object {
           "tie",
         ],
       },
+      "viimeinenVoimassaolovuosi": "2028",
       "yhteystiedot": Array [
         Object {
           "__typename": "Yhteystieto",
@@ -1009,10 +1015,10 @@ Object {
       ],
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
-        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Liikenne- ja viestintävirasto on 2.1.2026 päätöksellään jatkopaatos2_asianumero, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden 2028 loppuun.",
         "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2026 - 2.2.2026</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2026 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
-        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2026 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/jatkopaatos2\\">https://localhost:3000/s/3c1d/jatkopaatos2</a>.",
+        "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
@@ -1349,10 +1355,10 @@ Object {
         ],
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
-          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
-          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/jatkopaatos1\\">https://localhost:3000/s/0894/jatkopaatos1</a>.",
+          "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
@@ -2073,10 +2079,10 @@ Object {
         ],
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
-          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.6.2040 - 2.7.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
-          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/jatkopaatos1\\">https://localhost:3000/s/0894/jatkopaatos1</a>.",
+          "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
@@ -2632,10 +2638,10 @@ Object {
         ],
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
-          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
-          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/jatkopaatos2\\">https://localhost:3000/s/0894/jatkopaatos2</a>.",
+          "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
@@ -3356,10 +3362,10 @@ Object {
         ],
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
-          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
+          "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.6.2040 - 1.7.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
-          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.6.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/jatkopaatos2\\">https://localhost:3000/s/0894/jatkopaatos2</a>.",
+          "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },

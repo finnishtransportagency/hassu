@@ -3,6 +3,7 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   IlmoituksenVastaanottajat,
+  KasittelynTila,
   SuunnitteluSopimus,
   UudelleenKuulutus,
   Yhteystieto,
@@ -12,16 +13,46 @@ import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
+
+function getPaatoksenPvm(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyyppi): string {
+  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return kasittelynTila.hyvaksymispaatos?.paatoksenPvm as string;
+  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    return kasittelynTila.ensimmainenJatkopaatos?.paatoksenPvm as string;
+  } else {
+    return kasittelynTila.toinenJatkopaatos?.paatoksenPvm as string;
+  }
+}
+
+function getAsiaNumero(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyyppi): string {
+  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return kasittelynTila.hyvaksymispaatos?.asianumero as string;
+  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    return kasittelynTila.ensimmainenJatkopaatos?.asianumero as string;
+  } else {
+    return kasittelynTila.toinenJatkopaatos?.asianumero as string;
+  }
+}
 
 export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,
   kieli: KaannettavaKieli,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
+  paatosTyyppi: PaatosTyyppi
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
-  assertIsDefined(kasittelynTila.hyvaksymispaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
-  assertIsDefined(kasittelynTila.hyvaksymispaatos?.asianumero, "kasittelynTila.hyvaksymispaatos.asianumero puuttuu");
+  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    assertIsDefined(kasittelynTila.hyvaksymispaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
+    assertIsDefined(kasittelynTila.hyvaksymispaatos?.asianumero, "kasittelynTila.hyvaksymispaatos.asianumero puuttuu");
+  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    assertIsDefined(kasittelynTila.ensimmainenJatkopaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
+    assertIsDefined(kasittelynTila.ensimmainenJatkopaatos?.asianumero, "kasittelynTila.hyvaksymispaatos.asianumero puuttuu");
+  } else {
+    assertIsDefined(kasittelynTila.toinenJatkopaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
+    assertIsDefined(kasittelynTila.toinenJatkopaatos?.asianumero, "kasittelynTila.hyvaksymispaatos.asianumero puuttuu");
+  }
   const velho = hyvaksymisPaatosVaihe.velho;
   assertIsDefined(velho, "hyvaksymisPaatosVaihe.velho puuttuu");
   assertIsDefined(velho.tyyppi, "hyvaksymisPaatosVaihe.velho.tyyppi puuttuu");
@@ -40,13 +71,15 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     yhteystiedot: hyvaksymisPaatosVaihe.yhteystiedot,
     kayttoOikeudet,
     kieli,
-    paatoksenPvm: kasittelynTila.hyvaksymispaatos.paatoksenPvm,
-    asianumero: kasittelynTila.hyvaksymispaatos.asianumero,
+    paatoksenPvm: getPaatoksenPvm(kasittelynTila, paatosTyyppi),
+    asianumero: getAsiaNumero(kasittelynTila, paatosTyyppi),
     hallintoOikeus: hyvaksymisPaatosVaihe.hallintoOikeus,
     euRahoitusLogot,
     ilmoituksenVastaanottajat: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat,
     uudelleenKuulutus: hyvaksymisPaatosVaihe.uudelleenKuulutus || undefined,
     suunnitteluSopimus,
+    paatosTyyppi,
+    viimeinenVoimassaolovuosi: hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi,
   };
 }
 
@@ -57,6 +90,8 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
   paatoksenPvm: string;
   asianumero: string;
   hallintoOikeus: HallintoOikeus;
+  paatosTyyppi: PaatosTyyppi;
+  viimeinenVoimassaolovuosi?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
@@ -114,6 +149,21 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
+  get linkki_jatkopaatos(): string {
+    assertIsDefined(this.oid);
+    if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+      return super.linkki_jatkopaatos1;
+    } else if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+      return super.linkki_jatkopaatos2;
+    } else {
+      return "";
+    }
+  }
+
+  get viimeinen_voimassaolovuosi(): string | null | undefined {
+    return this.props.viimeinenVoimassaolovuosi;
+  }
+
   get laheteTekstiVastaanottajat(): string[] {
     const result: string[] = [];
     const kunnat = this.props.ilmoituksenVastaanottajat?.kunnat;
@@ -129,11 +179,11 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get userInterfaceFields(): KuulutusTekstit | undefined {
     let kappale1;
-
+    const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? 'hyvaksymispaatoksesta' : 'jatkopaatos1'
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      kappale1 = this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale1");
+      kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.tie_kappale1`);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      kappale1 = this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale1");
+      kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.rata_kappale1`);
     } else {
       return undefined;
     }
@@ -142,12 +192,12 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
       __typename: "KuulutusTekstit",
       leipaTekstit: [
         kappale1,
-        this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale2_ui"),
-        this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale3"),
-        this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale4"),
+        this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale2_ui`),
+        this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale3`),
+        this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale4`),
       ],
       kuvausTekstit: [],
-      infoTekstit: [this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale5")],
+      infoTekstit: [this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale5`)],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
   }

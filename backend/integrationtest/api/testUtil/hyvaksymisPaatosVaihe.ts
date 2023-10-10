@@ -3,6 +3,7 @@ import {
   Aineisto,
   AineistoInput,
   HallintoOikeus,
+  HyvaksymisPaatosVaiheInput,
   Kieli,
   KuulutusJulkaisuTila,
   Projekti,
@@ -140,7 +141,8 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
   velhoToimeksiannot: VelhoToimeksianto[],
   projektiPaallikko: string,
   expectedStatus: Status,
-  kuulutusPaiva: string
+  kuulutusPaiva: string,
+  viimeinenVoimassaolovuosi?: string
 ): Promise<Projekti> {
   const lisaAineisto = velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
@@ -154,7 +156,7 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
   if (aineistoWithSpecialChars) {
     hyvaksymisPaatos.push(aineistoWithSpecialChars);
   }
-  const vaiheContents = {
+  const vaiheContents: HyvaksymisPaatosVaiheInput = {
     hyvaksymisPaatos: adaptAineistoToInput(hyvaksymisPaatos),
     aineistoNahtavilla: adaptAineistoToInput([lisaAineisto[0]]).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
 
@@ -164,7 +166,7 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
       yhteysHenkilot: [projektiPaallikko],
     },
     hallintoOikeus: HallintoOikeus.HAMEENLINNA,
-
+    viimeinenVoimassaolovuosi,
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
   };
