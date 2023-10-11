@@ -24,7 +24,7 @@ export default function TietoaPalvelustaSivu() {
   return (
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
-        <h1>{t("paaotsikko")}</h1>
+        <h1 id="mainPageContent">{t("paaotsikko")}</h1>
         <ContentSpacer gap={4}>
           <p>{t("kappale1")}</p>
           <ExternalLinkkiLista

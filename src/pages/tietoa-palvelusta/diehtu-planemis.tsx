@@ -7,7 +7,7 @@ export default function DiehtuPlanemisSivu() {
   return (
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
-        <h1>Diehtu plánemis</h1>
+        <h1 id="mainPageContent">Diehtu plánemis</h1>
         <p className="vayla-label">
           Stáhta johtalusfávlliid plánen -bálvalusas siidu lea riikkavuložiid, čanusjoavkkuid ja virgeoapmahaččaid gaskasaš eanageainnuid ja
           ruovdemáđijaid lágas ásahuvvon plánaid vuorrováikkuhuskanála. Lágas ásahuvvon plánat leat oppalašplána, geaidnoplána ja
