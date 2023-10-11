@@ -8,7 +8,10 @@ type ProjektiStatusComparisonFunc = (
 export const isProjektiStatusGreaterOrEqualTo: ProjektiStatusComparisonFunc = (projekti, minimumStatus) =>
   !!projekti.status && statusOrder[projekti.status] >= statusOrder[minimumStatus];
 
-export const statusOrder: Record<Status, number> = {
+export const isProjektiStatusLessOrEqualTo: ProjektiStatusComparisonFunc = (projekti, maximumStatus) =>
+  !!projekti.status && statusOrder[projekti.status] <= statusOrder[maximumStatus];
+
+  export const statusOrder: Record<Status, number> = {
   EI_JULKAISTU_PROJEKTIN_HENKILOT: 0,
   EI_JULKAISTU: 1,
   ALOITUSKUULUTUS: 2,

@@ -28,7 +28,7 @@ import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo, isProjektiStatusLessOrEqualTo } from "hassu-common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";
@@ -194,7 +194,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [projekti]);
 
   const isFormDisabled = disableAdminOnlyFields && hyvaksymispaatosDisabled;
-  const ensimmainenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1);
+  const ensimmainenJatkopaatosDisabled = disableAdminOnlyFields || !(isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) && isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1));
   const toinenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2);
 
   const formOptions: UseFormProps<KasittelynTilaFormValues> = {
@@ -281,7 +281,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       withLoadingSpinner(
         (async () => {
           try {
-            data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = false;
             data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
             await onSubmit(data);
             showSuccessMessage("Jatkopäätös lisätty");
@@ -585,7 +584,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
               )}
-              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && !projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
+              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && (
                 <HassuGridItem sx={{ alignSelf: "end" }}>
                   <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos1lisaaDisabled}>
                     Lisää jatkopäätös
