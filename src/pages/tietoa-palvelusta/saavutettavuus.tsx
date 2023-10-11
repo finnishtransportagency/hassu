@@ -12,7 +12,7 @@ export default function SaavutettavuusSelosteSivu() {
   return (
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
-        <h1>{t("paaotsikko")}</h1>
+        <h1 id="mainPageContent">{t("paaotsikko")}</h1>
         <Trans
           i18nKey="tietoa-palvelusta/saavutettavuus:kappale1"
           components={{

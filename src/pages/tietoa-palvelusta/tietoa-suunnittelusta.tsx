@@ -12,7 +12,7 @@ export default function TietoaPalvelustaSivu() {
   return (
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
-        <h1>{t("paaotsikko")}</h1>
+        <h1 id="mainPageContent">{t("paaotsikko")}</h1>
         <p className="vayla-label">{t("ingressi")}</p>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("suunnittelun-vaiheet.otsikko")}</h2>

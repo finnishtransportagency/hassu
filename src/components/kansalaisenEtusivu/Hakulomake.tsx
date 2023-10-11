@@ -171,7 +171,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
       {(desktop || (!desktop && !pienennaHakuState)) && (
         <SearchSection noDivider>
-          <H2>{t("suunnitelmien-haku")}</H2>
+          <H2 id="mainPageContent">{t("suunnitelmien-haku")}</H2>
           <FormProvider {...useFormReturn}>
             <form className="mt-4">
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>

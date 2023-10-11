@@ -387,4 +387,21 @@
   button.hoverbutton {
     background-color: #0064af;
   }
+  .skip-to-main-content a {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    opacity: 0;
+    cursor: default;
+    z-index: -1;
+  }
+  .skip-to-main-content a:focus {
+    color: white;
+    opacity: 1;
+    left: calc(50% - 126px);
+    z-index: 1;
+    background-color: #0064af;
+    text-decoration: underline;
+    padding: 4px 23px 10px 23px;
+  }
 }
