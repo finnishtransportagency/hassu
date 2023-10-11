@@ -137,14 +137,10 @@ export abstract class VaiheAineisto<T, J> {
     for (const aineistot of aineistotPaths) {
       if (!aineistot.aineisto) return;
       for (const aineisto of aineistot.aineisto) {
-        console.log("pushing s3key: " + yllapitoPath + aineisto.tiedosto);
         const folder = aineisto.kategoriaId + "/";
-        console.log("with zipfolder: " + folder);
         filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
       }
     }
-    const yllapitoVaihePath = aineistotPaths[0]?.paths.yllapitoFullPath;
-    console.log("Yllapitovaihepath " + yllapitoVaihePath);
 
     await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
   }
