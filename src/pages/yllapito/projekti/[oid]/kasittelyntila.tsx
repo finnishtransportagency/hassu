@@ -128,6 +128,7 @@ function removeEmptyValues(data: KasittelynTilaFormValues): KasittelynTilaFormVa
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const router = useRouter();
   const [openTallenna, setOpenTallenna] = useState(false);
+  const [openTallenna2, setOpenTallenna2] = useState(false);
 
   const { isLoading: isFormSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
@@ -150,15 +151,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       },
     };
 
-    //TODO When the input fields are enabled, the values should be strings not null or undefined
     kasittelynTila.ensimmainenJatkopaatos = {
       paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
       asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
     };
-    //TODO When the input fields are enabled, the values should be strings not null or undefined
     kasittelynTila.toinenJatkopaatos = {
-      paatoksenPvm: null,
-      asianumero: undefined,
+      paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
+      asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
     };
     kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
     kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
@@ -276,6 +275,39 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const handleClickTallennaJaAvaa = useMemo(() => {
     return handleSubmit(avaaJatkopaatos);
   }, [avaaJatkopaatos, handleSubmit]);
+
+  const avaaJatkopaatos2 = useCallback(
+    (data: KasittelynTilaFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = false;
+            data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
+            await onSubmit(data);
+            showSuccessMessage("Jatkopäätös lisätty");
+          } catch (e) {
+            log.log("OnSubmit Error", e);
+          }
+          setOpenTallenna2(false);
+          const siirtymaTimer = setTimeout(() => {
+            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
+          }, 1500);
+          return () => clearTimeout(siirtymaTimer);
+        })()
+      ),
+    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+  );
+
+  const handleClickOpenTallenna2 = () => {
+    setOpenTallenna2(true);
+  };
+  const handleClickCloseTallenna2 = () => {
+    setOpenTallenna2(false);
+  };
+
+  const handleClickTallennaJaAvaa2 = useMemo(() => {
+    return handleSubmit(avaaJatkopaatos2);
+  }, [avaaJatkopaatos2, handleSubmit]);
 
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
@@ -553,7 +585,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
               )}
-              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && (
+              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && !projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
                 <HassuGridItem sx={{ alignSelf: "end" }}>
                   <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos1lisaaDisabled}>
                     Lisää jatkopäätös
@@ -582,11 +614,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               )}
               {!projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
                 <HassuGridItem sx={{ alignSelf: "end" }}>
-                  <Button id="lisaa_jatkopaatos2" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos2lisaaDisabled}>
+                  <Button id="lisaa_jatkopaatos2" onClick={handleSubmit(handleClickOpenTallenna2)} disabled={jatkopaatos2lisaaDisabled}>
                     Lisää jatkopäätös
                   </Button>
                 </HassuGridItem>
               )}
+              <LuoJatkopaatosDialog isOpen={openTallenna2} onClose={handleClickCloseTallenna2} tallenna={handleClickTallennaJaAvaa2} />
             </HassuGrid>
           </SectionContent>
         </Section>
