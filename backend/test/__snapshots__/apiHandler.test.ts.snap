@@ -184,7 +184,7 @@ Array [
   "Save projekti having only projektipaallikko",
   Object {
     "aloitusKuulutus": undefined,
-    "ashaIntegraatio": undefined,
+    "asianhallintaIntegraatio": undefined,
     "euRahoitus": undefined,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
@@ -269,7 +269,7 @@ Array [
   "Save projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "aloitusKuulutus": undefined,
-    "ashaIntegraatio": undefined,
+    "asianhallintaIntegraatio": undefined,
     "euRahoitus": undefined,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
@@ -427,7 +427,7 @@ Array [
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
-    "ashaIntegraatio": undefined,
+    "asianhallintaIntegraatio": undefined,
     "euRahoitus": false,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
