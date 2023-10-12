@@ -60,7 +60,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
-                      : AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
+                      : AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
                     ensisijainenKieli
                   );
                 })}
@@ -76,7 +78,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
-                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2,
                     ensisijainenKieli
                   )
                 )}
@@ -92,7 +96,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
-                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
                     ensisijainenKieli
                   )
                 )}
@@ -107,7 +113,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   onClick={handleSubmit((formData) =>
                     esikatselePdf(
                       convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                      AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+                      paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                        ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+                        : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE,
                       ensisijainenKieli
                     )
                   )}
@@ -163,7 +171,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
-                      : AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
+                      : AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
                     toissijainenKieli
                   )
                 )}
@@ -179,7 +189,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
-                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2,
                     toissijainenKieli
                   )
                 )}
@@ -195,7 +207,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
                     paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
                       ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
-                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+                      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                      ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
                     toissijainenKieli
                   )
                 )}
@@ -210,7 +224,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   onClick={handleSubmit((formData) =>
                     esikatselePdf(
                       convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                      AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+                      paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                        ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+                        : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE,
                       toissijainenKieli
                     )
                   )}

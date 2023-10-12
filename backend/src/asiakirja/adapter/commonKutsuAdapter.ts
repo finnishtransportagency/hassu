@@ -13,6 +13,7 @@ import {
   linkHyvaksymisPaatos,
   linkHyvaksymisPaatosYllapito,
   linkJatkoPaatos1,
+  linkJatkoPaatos2,
   linkNahtavillaOlo,
   linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
@@ -297,6 +298,11 @@ export class CommonKutsuAdapter {
   get linkki_jatkopaatos1(): string {
     assertIsDefined(this.oid);
     return linkJatkoPaatos1(this.linkableProjekti, this.kieli);
+  }
+
+  get linkki_jatkopaatos2(): string {
+    assertIsDefined(this.oid);
+    return linkJatkoPaatos2(this.linkableProjekti, this.kieli);
   }
 
   get tietosuojaurl(): string {

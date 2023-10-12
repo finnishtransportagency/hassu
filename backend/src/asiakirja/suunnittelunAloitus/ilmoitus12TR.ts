@@ -17,6 +17,9 @@ const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA: {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
   },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA2: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
+  },
 };
 
 export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
@@ -70,6 +73,8 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       return this.kutsuAdapter.linkki_hyvaksymispaatos;
     } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA) {
       return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2) {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
     } else {
       return "";
     }

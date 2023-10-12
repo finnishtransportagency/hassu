@@ -57,11 +57,20 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (!kasittelynTila) {
       throw new Error("kasittelynTila ei ole määritelty");
     }
-    if (!kasittelynTila.hyvaksymispaatos) {
-      throw new Error("kasittelynTila.hyvaksymispaatos ei ole määritelty");
-    }
-    if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
-      throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
+    if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      if (!kasittelynTila.ensimmainenJatkopaatos) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
+    } else {
+      if (!kasittelynTila.toinenJatkopaatos) {
+        throw new Error("kasittelynTila.toinenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.toinenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.toinenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
     }
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params);
     super(kieli, kutsuAdapter);
@@ -74,11 +83,19 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
     const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
     if (kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
+      this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     } else {
       this.header = kutsuAdapter.title;
     }
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+  }
+
+  linkki_jatkopaatos(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
   }
 
   viimeinen_voimassaolovuosi(): string | null | undefined {
@@ -86,11 +103,19 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   hyvaksymis_pvm(): string {
-    return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      return formatDate(this.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm);
+    } else {
+      return formatDate(this.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm);
+    }
   }
 
   asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+    } else {
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
+    }
   }
 
   kuulutuspaiva(): string {
@@ -115,16 +140,16 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   ilmoituksen_vastaanottajille(): string {
-    return this.kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.maakunnalle");
+    return this.kutsuAdapter.text("asiakirja.jatkopaatoksesta_ilmoittaminen.maakunnalle");
   }
 
   private paragraphs(): PDFStructureElement[] {
     return [
       this.headerElement(this.kutsuAdapter.title, false),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.lausunnonantajille_kappale1"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale2"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale3"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale4"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.lausunnonantajille_kappale1"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale2"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale3"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale4"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),

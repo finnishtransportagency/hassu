@@ -48,6 +48,21 @@ export function adaptKasittelynTilaToSave(
     projektiAdaptationResult.resetKayttooikeudetAndSynchronizeVelho();
   }
 
+  const toinenJatkopaatosMerged: Hyvaksymispaatos = mergeWith(
+    {},
+    dbKasittelynTila?.toinenJatkopaatos,
+    kasittelynTilaInput.toinenJatkopaatos,
+    preventArrayMergingCustomizer
+  );
+  // Tunnista jatkopäätöksen lisäys ja lisää event käyttöoikeuksien nollaamiseksi
+  if (
+    !dbKasittelynTila?.toinenJatkopaatos?.aktiivinen &&
+    toinenJatkopaatosMerged.aktiivinen &&
+    toinenJatkopaatosMerged.asianumero &&
+    toinenJatkopaatosMerged.paatoksenPvm
+  ) {
+    projektiAdaptationResult.resetKayttooikeudetAndSynchronizeVelho();
+  }
   const { hallintoOikeus, korkeinHallintoOikeus, ...rest } = kasittelynTilaInput;
   const adaptedKasittelynTila = {
     ...rest,

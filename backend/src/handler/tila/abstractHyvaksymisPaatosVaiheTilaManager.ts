@@ -20,6 +20,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-commo
 import { assertIsDefined } from "../../util/assertions";
 import { IllegalArgumentError } from "hassu-common/error";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
+import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
@@ -48,7 +49,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     projekti: DBProjekti,
     julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
     path: PathTuple,
-    jatkoPaatos: boolean
+    paatosTyyppi: PaatosTyyppi
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
@@ -62,23 +63,34 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
 
       // Create PDFs in parallel
       const hyvaksymisKuulutusPDFPath = createPDFOfType(
-        jatkoPaatos ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS : AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
+        paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+          ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
+          : paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
+          ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2
+          : AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
       );
       const hyvaksymisIlmoitusLausunnonantajillePDFPath = createPDFOfType(
-        jatkoPaatos
+        paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
           ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+          : paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE
           : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
       );
-      const hyvaksymisIlmoitusMuistuttajillePDFPath = jatkoPaatos
-        ? undefined
-        : createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE);
+      const hyvaksymisIlmoitusMuistuttajillePDFPath =
+      paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE) : undefined;
       const ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath = createPDFOfType(
-        jatkoPaatos
+        paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
           ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+          : paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
           : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
       );
       const ilmoitusHyvaksymispaatoskuulutuksestaPDFPath = createPDFOfType(
-        jatkoPaatos ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
+        paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+          : paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2
+          : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
       );
       return {
         hyvaksymisKuulutusPDFPath: await hyvaksymisKuulutusPDFPath,

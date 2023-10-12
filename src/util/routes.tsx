@@ -120,6 +120,30 @@ export const ENSIMMAINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
   visible: false,
 };
 
+export const TOINEN_JATKAMINEN_ROUTE: Route = {
+  title: "2. jatkaminen",
+  id: "2_jatkopaatos",
+  pathname: `/yllapito/projekti/[oid]/jatkaminen2`,
+  requiredStatus: Status.JATKOPAATOS_2_AINEISTOT,
+  visible: isJatkopaatos2Visible,
+};
+
+export const TOINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
+  title: "2. jatkaminen aineisto",
+  id: "2_jatkopaatos_aineisto",
+  pathname: `/yllapito/projekti/[oid]/jatkaminen2/aineisto`,
+  requiredStatus: Status.JATKOPAATOS_2_AINEISTOT,
+  visible: false,
+};
+
+export const TOINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
+  title: "1. jatkaminen kuulutus",
+  id: "1_jatkopaatos_kuulutus",
+  pathname: `/yllapito/projekti/[oid]/jatkaminen2/kuulutus`,
+  requiredStatus: Status.JATKOPAATOS_2,
+  visible: false,
+};
+
 const routes: Route[] = [
   PROJEKTIN_HENKILOT_ROUTE,
   PROJEKTIN_TIEDOT_ROUTE,
@@ -135,6 +159,9 @@ const routes: Route[] = [
   ENSIMMAINEN_JATKAMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_AINEISTO_ROUTE,
   ENSIMMAINEN_JATKAMINEN_KUULUTUS_ROUTE,
+  TOINEN_JATKAMINEN_ROUTE,
+  TOINEN_JATKAMINEN_AINEISTO_ROUTE,
+  TOINEN_JATKAMINEN_KUULUTUS_ROUTE,
 ];
 
 export const projektinVaiheetNavigaatiossa: Route[] = [
@@ -143,6 +170,7 @@ export const projektinVaiheetNavigaatiossa: Route[] = [
   NAHTAVILLAOLO_ROUTE,
   HYVAKSYMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_ROUTE,
+  TOINEN_JATKAMINEN_ROUTE,
 ];
 
 export default routes;
@@ -152,6 +180,13 @@ function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined
     return false;
   }
   return isProjektiStatusGreaterOrEqualTo(projekti, Status.JATKOPAATOS_1_AINEISTOT);
+}
+
+function isJatkopaatos2Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
+  if (!projekti) {
+    return false;
+  }
+  return isProjektiStatusGreaterOrEqualTo(projekti, Status.JATKOPAATOS_2_AINEISTOT);
 }
 
 export function isVisible(projekti: ProjektiLisatiedolla | null | undefined, route: Route) {

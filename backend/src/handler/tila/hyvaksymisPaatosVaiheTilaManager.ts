@@ -12,6 +12,7 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoStateError";
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
+import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -153,7 +154,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
-      false
+      PaatosTyyppi.HYVAKSYMISPAATOS
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);

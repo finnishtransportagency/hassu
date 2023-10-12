@@ -6,9 +6,13 @@ import dayjs from "dayjs";
 import HassuGrid from "@components/HassuGrid";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 type FormFields = {
   jatkoPaatos1Vaihe: {
+    viimeinenVoimassaolovuosi: string | null;
+  };
+  jatkoPaatos2Vaihe: {
     viimeinenVoimassaolovuosi: string | null;
   };
 };
@@ -24,7 +28,11 @@ function getYears(count: number) {
   return yearsArray;
 }
 
-export default function Voimassaolovuosi() {
+type Props = {
+  paatosTyyppi: PaatosTyyppi;
+};
+
+export default function Voimassaolovuosi({ paatosTyyppi }: Props) {
   const {
     formState: { errors },
     control,
@@ -45,8 +53,16 @@ export default function Voimassaolovuosi() {
             label="Päätöksen viimeinen voimassaolovuosi *"
             control={control}
             defaultValue=""
-            name="jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi"
-            error={errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi}
+            name={
+              paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                ? "jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi"
+                : "jatkoPaatos2Vaihe.viimeinenVoimassaolovuosi"
+            }
+            error={
+              paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+                ? errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi
+                : errors?.jatkoPaatos2Vaihe?.viimeinenVoimassaolovuosi
+            }
           >
             {years.map((year) => {
               return (

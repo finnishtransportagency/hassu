@@ -17,12 +17,14 @@ import { AineistoLinkkiLista } from "./AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 import EuLogo from "../common/EuLogo";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
+  paatosTyyppi: PaatosTyyppi;
 }
 
-export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElement {
+export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props): ReactElement {
   const { t, lang } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
@@ -56,7 +58,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
     },
   ];
 
-  const kuulutusTekstit = projekti.hyvaksymisPaatosVaihe?.kuulutusTekstit;
+  const kuulutusTekstit =
+    paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
+      ? projekti.hyvaksymisPaatosVaihe?.kuulutusTekstit
+      : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+      ? projekti.jatkoPaatos1Vaihe?.kuulutusTekstit
+      : projekti.jatkoPaatos2Vaihe?.kuulutusTekstit;
 
   return (
     <Section noDivider>

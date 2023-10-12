@@ -54,10 +54,21 @@ const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({
         label: t("tabi-tekstit.jatkopaatos", { nro: 1 }),
         id: "jatkopaatos1_tab",
       },
+      {
+        linkProps: {
+          href: {
+            pathname: `/suunnitelma/[oid]/jatkopaatos2`,
+            query: { oid: projekti?.oid },
+          },
+        },
+        label: t("tabi-tekstit.jatkopaatos", { nro: 2 }),
+        id: "jatkopaatos2_tab",
+        disabled: !projekti.jatkoPaatos2Vaihe,
+      },
     ];
 
     return result;
-  }, [projekti?.oid, t]);
+  }, [projekti?.oid, projekti.jatkoPaatos2Vaihe, t]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
@@ -72,7 +83,7 @@ const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({
 
   return (
     <Tabs value={value}>
-      {tabProps.map((tProps, index) => (
+      {tabProps.filter((t) => !t.disabled).map((tProps, index) => (
         <LinkTab key={index} {...tProps} />
       ))}
     </Tabs>

@@ -329,18 +329,18 @@
       "kappale5": "Päätökseen voi valittamalla hakea muutosta {{hallinto_oikeus_genetiivi}} hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
     },
-    "kuulutus_jatkopaatos1": {
+    "kuulutus_jatkopaatos": {
       "otsikko": "Kuulutus hyväksymispäätöksen voimassaoloajan pidentäminen",
       "tie_kappale1": "Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}}, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "rata_kappale1": "Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "kappale2": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä {{kuulutusNahtavillaAika}}.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
       "kappale2_ui": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-      "kappale3": "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutusPaiva}} osoitteessa {{linkki_jatkopaatos1}}.",
+      "kappale3": "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutusPaiva}} osoitteessa {{linkki_jatkopaatos}}.",
       "kappale4": "Kuulutettavasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kappale5": "Päätökseen voi valittamalla hakea muutosta {{hallinto_oikeus_genetiivi}} hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
     },
-    "jatkopaatoksesta1_ilmoittaminen": {
+    "jatkopaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksen voimassaoloajan pidentämisestä ilmoittaminen",
       "muistuttajille": "muistuttajille",
       "lausunnonantajille": "lausunnonantajille",
@@ -352,13 +352,13 @@
       "lain_rata": "ratalain",
       "lakiviite_hyvaksymispaatoksesta_ilmoittaminen_tie": "Laki liikennejärjestelmästä ja maanteistä 104 §",
       "lakiviite_hyvaksymispaatoksesta_ilmoittaminen_rata": "Ratalaki 91 §",
-      "kappale3": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_jatkopaatos1}}.",
+      "kappale3": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_jatkopaatos}}.",
       "kappale4": "Liitteenä olevasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kuulutuksesta_ilmoittaminen": "Kuulutuksesta ilmoittaminen",
       "kuulutuksesta_ilmoittaminen_kappale1": "{{viranomainenLyhyt}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} hyväksymispäätöksen voimassaoloajan pidentämistä koskevan päätöksen tiedoksiantoa ({{lakiviite_kuulutuksesta_ilmoittaminen}}). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.",
       "lakiviite_kuulutuksesta_ilmoittaminen_tie": "LjMTL 103 § ja hallintolaki 62 § a",
       "lakiviite_kuulutuksesta_ilmoittaminen_rata": "ratalaki 90 § ja hallintolaki 62 a §",
-      "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{linkki_jatkopaatos1}}.",
+      "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{linkki_jatkopaatos}}.",
       "kuulutuksesta_ilmoittaminen_kappale3": "{{viranomainenLyhyt}} pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
       "lausunnonantajille_kappale1": "{{viranomainenLyhyt}} ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "lakiviite_muistuttajille_tie": "laki liikennejärjestelmästä ja maanteistä 104 §",

@@ -22,6 +22,7 @@ import { log } from "../logger";
 import { Kuulutus70 } from "./suunnittelunAloitus/Kuulutus70";
 import { Kuulutus71 } from "./suunnittelunAloitus/Kuulutus71";
 import { Kuulutus72 } from "./suunnittelunAloitus/Kuulutus72";
+import { getPaatosTyyppi } from "../projekti/adapter/projektiAdapterJulkinen";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -130,28 +131,36 @@ export class AsiakirjaService {
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
-      hyvaksymisPaatosVaihe
+      hyvaksymisPaatosVaihe,
+      getPaatosTyyppi(asiakirjaTyyppi)
     );
 
     if (
-      asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
-      asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
     ) {
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
+    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
       return new Kuulutus60(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
+    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
       return new Kuulutus61(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (
-      asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA ||
-      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA ||
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA ||
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2
     ) {
       return new Ilmoitus12TR(asiakirjaTyyppi, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
-      return new Kuulutus70(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
-      return new Kuulutus71(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS || asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2) {
+      return new Kuulutus70(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+    } else if (
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE ||
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+    ) {
+      return new Kuulutus71(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+    } else if (
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE ||
+      asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE
+    ) {
       return new Kuulutus72(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     }
     throw new Error("Not implemented");

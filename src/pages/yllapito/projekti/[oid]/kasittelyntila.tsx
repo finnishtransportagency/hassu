@@ -28,7 +28,7 @@ import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo, isProjektiStatusLessOrEqualTo } from "hassu-common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";
@@ -128,6 +128,7 @@ function removeEmptyValues(data: KasittelynTilaFormValues): KasittelynTilaFormVa
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const router = useRouter();
   const [openTallenna, setOpenTallenna] = useState(false);
+  const [openTallenna2, setOpenTallenna2] = useState(false);
 
   const { isLoading: isFormSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
@@ -150,15 +151,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       },
     };
 
-    //TODO When the input fields are enabled, the values should be strings not null or undefined
     kasittelynTila.ensimmainenJatkopaatos = {
       paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
       asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
     };
-    //TODO When the input fields are enabled, the values should be strings not null or undefined
     kasittelynTila.toinenJatkopaatos = {
-      paatoksenPvm: null,
-      asianumero: undefined,
+      paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
+      asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
     };
     kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
     kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
@@ -195,7 +194,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [projekti]);
 
   const isFormDisabled = disableAdminOnlyFields && hyvaksymispaatosDisabled;
-  const ensimmainenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1);
+  const ensimmainenJatkopaatosDisabled = disableAdminOnlyFields || !(isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) && isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1));
   const toinenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2);
 
   const formOptions: UseFormProps<KasittelynTilaFormValues> = {
@@ -277,9 +276,44 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     return handleSubmit(avaaJatkopaatos);
   }, [avaaJatkopaatos, handleSubmit]);
 
+  const avaaJatkopaatos2 = useCallback(
+    (data: KasittelynTilaFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
+            await onSubmit(data);
+            showSuccessMessage("Jatkopäätös lisätty");
+          } catch (e) {
+            log.log("OnSubmit Error", e);
+          }
+          setOpenTallenna2(false);
+          const siirtymaTimer = setTimeout(() => {
+            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
+          }, 1500);
+          return () => clearTimeout(siirtymaTimer);
+        })()
+      ),
+    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+  );
+
+  const handleClickOpenTallenna2 = () => {
+    setOpenTallenna2(true);
+  };
+  const handleClickCloseTallenna2 = () => {
+    setOpenTallenna2(false);
+  };
+
+  const handleClickTallennaJaAvaa2 = useMemo(() => {
+    return handleSubmit(avaaJatkopaatos2);
+  }, [avaaJatkopaatos2, handleSubmit]);
+
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
+  const jatkopaatos2Pvm = watch("kasittelynTila.toinenJatkopaatos.paatoksenPvm");
+  const jatkopaatos2Asiatunnus = watch("kasittelynTila.toinenJatkopaatos.asianumero");
   const jatkopaatos1lisaaDisabled = ensimmainenJatkopaatosDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus;
+  const jatkopaatos2lisaaDisabled = toinenJatkopaatosDisabled || !jatkopaatos2Pvm || !jatkopaatos2Asiatunnus;
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   return (
@@ -577,6 +611,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || ""} disabled />
               )}
+              {!projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
+                <HassuGridItem sx={{ alignSelf: "end" }}>
+                  <Button id="lisaa_jatkopaatos2" onClick={handleSubmit(handleClickOpenTallenna2)} disabled={jatkopaatos2lisaaDisabled}>
+                    Lisää jatkopäätös
+                  </Button>
+                </HassuGridItem>
+              )}
+              <LuoJatkopaatosDialog isOpen={openTallenna2} onClose={handleClickCloseTallenna2} tallenna={handleClickTallennaJaAvaa2} />
             </HassuGrid>
           </SectionContent>
         </Section>

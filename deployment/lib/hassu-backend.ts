@@ -101,7 +101,8 @@ export class HassuBackendStack extends Stack {
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
 
-    const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
+    const vpc = await this.getVpc();
+    const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables, vpc);
     // TODO: Remove once no schedules for this queue
     const aineistoSQS = this.createAineistoImporterQueue()
     const eventSQS = this.createEventQueue();
@@ -109,7 +110,7 @@ export class HassuBackendStack extends Stack {
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
-    await this.createAsianhallintaLambda(asianhallintaSQS);
+    await this.createAsianhallintaLambda(asianhallintaSQS, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -403,8 +404,7 @@ export class HassuBackendStack extends Stack {
     return backendLambda;
   }
 
-  private async createAsianhallintaLambda(asianhallintaSQS: Queue) {
-    const vpc = await this.getVpc();
+  private async createAsianhallintaLambda(asianhallintaSQS: Queue, vpc: IVpc) {
     const asianhallintaLambda = new DockerImageFunction(this, "asianhallinta-lambda", {
       vpc,
       functionName: "hassu-asianhallinta-" + Config.env,
@@ -512,8 +512,7 @@ export class HassuBackendStack extends Stack {
     return vpc;
   }
 
-  private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
-    const vpc = await this.getVpc();
+  private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>, vpc: IVpc) {
     const personSearchLambda = new NodejsFunction(this, "PersonSearchUpdaterLambda", {
       functionName: "hassu-personsearchupdater-" + Config.env,
       runtime: lambdaRuntime,

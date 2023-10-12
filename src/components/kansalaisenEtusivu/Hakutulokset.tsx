@@ -36,6 +36,8 @@ export function getSivuTilanPerusteella(tila: Status | null | undefined) {
       return "hyvaksymispaatos";
     case Status.JATKOPAATOS_1:
       return "jatkopaatos1";
+    case Status.JATKOPAATOS_2:
+      return "jatkopaatos2";
     default:
       return "";
   }

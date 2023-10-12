@@ -13,6 +13,7 @@ export type IlmoitusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+  | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2
 >;
 
 export abstract class SuunnittelunAloitusPdf extends CommonPdf<
@@ -46,6 +47,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
         break;
       case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
       case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA:
+      case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2:
         kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params as HyvaksymisPaatosVaiheKutsuAdapterProps);
         break;
       default:

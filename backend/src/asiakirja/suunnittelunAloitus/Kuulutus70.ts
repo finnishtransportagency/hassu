@@ -16,8 +16,10 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected kieli: KaannettavaKieli;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
+  private asiakirjaTyyppi: AsiakirjaTyyppi;
 
   constructor(
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     props: HyvaksymisPaatosVaiheKutsuAdapterProps
@@ -44,34 +46,59 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (!kasittelynTila) {
       throw new Error("kasittelynTila ei ole määritelty");
     }
-    if (!kasittelynTila.hyvaksymispaatos) {
-      throw new Error("kasittelynTila.hyvaksymispaatos ei ole määritelty");
-    }
-    if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
-      throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
+    if (asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      if (!kasittelynTila.ensimmainenJatkopaatos) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
+    } else {
+      if (!kasittelynTila.toinenJatkopaatos) {
+        throw new Error("kasittelynTila.toinenJatkopaatos ei ole määritelty");
+      }
+      if (!kasittelynTila.toinenJatkopaatos.paatoksenPvm) {
+        throw new Error("kasittelynTila.toinenJatkopaatos.paatoksenPvm ei ole määritelty");
+      }
     }
     const kieli = props.kieli;
     const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
     super(kieli, kutsuAdapter);
     this.kieli = props.kieli;
-
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
 
     this.kutsuAdapter.addTemplateResolver(this);
-    const fileName = createPDFFileName(AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
-    this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos1.otsikko");
+    const fileName = createPDFFileName(asiakirjaTyyppi, this.asiakirjanMuoto, velho.tyyppi, kieli);
+    this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos.otsikko");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
+  linkki_jatkopaatos(): string {
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
+    } else {
+      return this.kutsuAdapter.linkki_jatkopaatos2;
+    }
+  }
+
   hyvaksymis_pvm(): string {
-    return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return formatDate(this.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm);
+    } else {
+      return formatDate(this.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm);
+    }
   }
 
   asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
+    if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+    } else {
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
+    }
   }
 
   kuulutuspaiva(): string {
@@ -109,19 +136,19 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     let kappale1;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.tie_kappale1");
+      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.tie_kappale1");
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.rata_kappale1");
+      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.rata_kappale1");
     } else {
       return [];
     }
     return [
       this.uudelleenKuulutusParagraph(),
       kappale1,
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale2"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale3"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale4"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale5"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale2"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale3"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale4"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale5"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),

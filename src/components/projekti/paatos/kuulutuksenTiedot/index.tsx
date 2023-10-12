@@ -155,7 +155,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 vaiheenAvain="paatos"
               />
               <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
-              {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
+              {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi paatosTyyppi={paatosTyyppi} />}
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
               <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} />
