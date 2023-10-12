@@ -27,28 +27,28 @@ const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi pr
 const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvaksymispyynto
 const aloituskuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
 const aloituskuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
 const aloituskuulutusHyvaksyttyOtsikko = "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}";
 const aloituskuulutusHyvaksyttyTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko =
   "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}";
 const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 // Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
@@ -58,7 +58,7 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Nähtävilläolovaihekuulutuksen hyväksyminen pdf projektipaallikolle
 const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty {{asiatunnus}}`;
 const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
@@ -67,7 +67,7 @@ nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-t
 
 Voit tarkastella kuulutusta osoitteessa {{nahtavillaoloYllapitoUrl}}
 
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Sait tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 
 const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}`;
 const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} hyväksymispäätöskuulutus on hyväksytty.

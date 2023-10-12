@@ -38,7 +38,7 @@ describe("EmailTemplating", () => {
         "Voit tarkastella projektia osoitteessa https://" +
         domain +
         "/yllapito/projekti/1.2.246.578.5.1.165\n" +
-        "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+        "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
     );
   });
 });

@@ -84,14 +84,15 @@ describe("emailHandler", () => {
       const emailOptions = createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
-      expect(emailOptions.text).to.eq(
-        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-          "Testiprojekti 2\n" +
-          "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
-          "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5\n" +
-          "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
-      );
-      expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
+        expect(emailOptions.text).to.eq(
+          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+            "Testiprojekti 2\n" +
+            "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5\n" +
+            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+        );
+        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
+      });
     });
 
     it("should send emails and attachments succesfully", async () => {
