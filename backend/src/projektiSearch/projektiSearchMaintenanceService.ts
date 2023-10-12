@@ -9,6 +9,8 @@ import { log } from "../logger";
 export type MaintenanceEvent = {
   action: "deleteIndex" | "index";
   startKey?: string;
+  index?: number;
+  size?: number;
 };
 
 export class ProjektiSearchMaintenanceService {

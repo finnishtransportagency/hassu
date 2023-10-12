@@ -15,6 +15,7 @@ import { parameters } from "../../src/aws/parameters";
 import { mockClient } from "aws-sdk-client-mock";
 import { SQSClient } from "@aws-sdk/client-sqs";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { MaintenanceEvent } from "../../src/projektiSearch/projektiSearchMaintenanceService";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -116,7 +117,26 @@ describe("dynamoDBStreamHandler", () => {
     expect(openSearchClientIlmoitustauluSyoteStub.putDocument.getCalls()).to.have.length(2);
     expect(openSearchClientIlmoitustauluSyoteStub.putDocument.getCalls().map((call) => call.args)).toMatchSnapshot();
 
-    expect(sqsStub.send).to.have.been.calledOnce;
+    expect(sqsStub.send).to.not.have.been.called;
+  });
+
+  it("should reindex the database successfully on maintenance event", async () => {
+    sinon.restore();
+    sinon
+      .stub(projektiDatabase, "scanProjektit")
+      .onFirstCall().resolves({ projektis: [projekti], startKey: 'startkey1' })
+      .onSecondCall().resolves({ projektis: [projekti], startKey: undefined });
+    sinon.stub(parameters, "getIndexerSQSUrl").resolves("mockedIndexerSQSUrl");
+    const sqsStub = mockClient(SQSClient);
+
+    const mEvent: MaintenanceEvent = {
+      action: "index",
+    };
+    await handleDynamoDBEvents(mEvent);
+    expect(indexProjektiStub.calledOnce).to.be.false;
+
+    expect(sqsStub.send).to.have.been.calledTwice;
     expect(sqsStub.send.args[0][0].input).toMatchSnapshot();
+    expect(sqsStub.send.args[1][0].input).toMatchSnapshot();
   });
 });

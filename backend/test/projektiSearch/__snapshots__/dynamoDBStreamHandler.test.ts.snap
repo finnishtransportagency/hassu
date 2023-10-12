@@ -264,9 +264,16 @@ Array [
 ]
 `;
 
-exports[`dynamoDBStreamHandler should reindex the database successfully 3`] = `
+exports[`dynamoDBStreamHandler should reindex the database successfully on maintenance event 1`] = `
 Object {
-  "MessageBody": "{\\"action\\":\\"index\\",\\"startKey\\":\\"startkey1\\"}",
+  "MessageBody": "{\\"action\\":\\"index\\",\\"index\\":1,\\"size\\":2}",
+  "QueueUrl": "mockedIndexerSQSUrl",
+}
+`;
+
+exports[`dynamoDBStreamHandler should reindex the database successfully on maintenance event 2`] = `
+Object {
+  "MessageBody": "{\\"action\\":\\"index\\",\\"startKey\\":\\"startkey1\\",\\"index\\":2,\\"size\\":2}",
   "QueueUrl": "mockedIndexerSQSUrl",
 }
 `;
