@@ -83,7 +83,7 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.kasittelynTila = kasittelynTila;
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(asiakirjaTyyppi, this.kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
-    this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
+    this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
   }
 
@@ -140,15 +140,15 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       this.headerElement(this.header, false),
       this.headerElement(this.kutsuAdapter.title, false),
       this.uudelleenKuulutusParagraph(),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale1"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale2"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale3"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kappale4"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kuulutuksesta_ilmoittaminen"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale1"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale2"),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta1_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale3"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale1"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale2"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale3"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale4"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kuulutuksesta_ilmoittaminen"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale1"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale2"),
+      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kuulutuksesta_ilmoittaminen_kappale3"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),

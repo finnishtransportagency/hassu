@@ -329,7 +329,7 @@
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
-    "kuulutus_jatkopaatos1": {
+    "kuulutus_jatkopaatos": {
       "otsikko": "Kungörelse förlängning av giltighetstiden för beslut om godkännande",
       "tie_kappale1": "Transport- och kommunikationsverket har {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} godkänt en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): {{suunnitelman_nimi}} med fyra år fram till utgången av år {{viimeinen_voimassaolovuosi}}.",
       "rata_kappale1": "Transport- och kommunikationsverket har {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} godkänt en {{suunnitelma}} enligt banlagen (110/2007): {{suunnitelman_nimi}} med fyra år fram till utgången av år {{viimeinen_voimassaolovuosi}}.",
@@ -340,7 +340,7 @@
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
-    "jatkopaatoksesta1_ilmoittaminen": {
+    "jatkopaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Anmälan om förlängning av giltighetstiden för beslut om godkännande",
       "muistuttajille": "till dem som lämnat in en anmärkning",
       "lausunnonantajille": "till dem som gett ett utlåtande",

@@ -179,7 +179,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get userInterfaceFields(): KuulutusTekstit | undefined {
     let kappale1;
-    const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? 'hyvaksymispaatoksesta' : 'jatkopaatos1'
+    const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? 'hyvaksymispaatoksesta' : 'jatkopaatos'
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.tie_kappale1`);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {

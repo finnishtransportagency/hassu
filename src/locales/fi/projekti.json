@@ -329,7 +329,7 @@
       "kappale5": "Päätökseen voi valittamalla hakea muutosta {{hallinto_oikeus_genetiivi}} hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
     },
-    "kuulutus_jatkopaatos1": {
+    "kuulutus_jatkopaatos": {
       "otsikko": "Kuulutus hyväksymispäätöksen voimassaoloajan pidentäminen",
       "tie_kappale1": "Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}}, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "rata_kappale1": "Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
@@ -340,7 +340,7 @@
       "kappale5": "Päätökseen voi valittamalla hakea muutosta {{hallinto_oikeus_genetiivi}} hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
     },
-    "jatkopaatoksesta1_ilmoittaminen": {
+    "jatkopaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksen voimassaoloajan pidentämisestä ilmoittaminen",
       "muistuttajille": "muistuttajille",
       "lausunnonantajille": "lausunnonantajille",

@@ -73,7 +73,7 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(asiakirjaTyyppi, this.asiakirjanMuoto, velho.tyyppi, kieli);
-    this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos1.otsikko");
+    this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos.otsikko");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
@@ -136,19 +136,19 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     let kappale1;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.tie_kappale1");
+      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.tie_kappale1");
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.rata_kappale1");
+      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.rata_kappale1");
     } else {
       return [];
     }
     return [
       this.uudelleenKuulutusParagraph(),
       kappale1,
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale2"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale3"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale4"),
-      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos1.kappale5"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale2"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale3"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale4"),
+      this.paragraphFromKey("asiakirja.kuulutus_jatkopaatos.kappale5"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
