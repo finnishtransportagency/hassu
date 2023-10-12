@@ -29,7 +29,7 @@ import path from "path";
 import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 import { EmailEventType } from "../../backend/src/email/model/emailEvent";
 import assert from "assert";
-import { Vpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
@@ -404,7 +404,9 @@ export class HassuBackendStack extends Stack {
   }
 
   private async createAsianhallintaLambda(asianhallintaSQS: Queue) {
+    const vpc = await this.getVpc();
     const asianhallintaLambda = new DockerImageFunction(this, "asianhallinta-lambda", {
+      vpc,
       functionName: "hassu-asianhallinta-" + Config.env,
       code: DockerImageCode.fromEcr(Repository.fromRepositoryName(this, "ecr-asianhallinta", "hassu-asianhallinta"), {
         tagOrDigest: ASIANHALLINTA_LAMBDA_VERSION,
@@ -487,7 +489,11 @@ export class HassuBackendStack extends Stack {
           },
         },
       },
-      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps", LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? 'info' : 'info' },
+      environment: {
+        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+        NODE_OPTIONS: "--enable-source-maps",
+        LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+      },
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
@@ -499,10 +505,15 @@ export class HassuBackendStack extends Stack {
     return pdfGeneratorLambda;
   }
 
-  private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
+  private async getVpc(): Promise<IVpc> {
     const vpcName = await this.config.getParameterNow("HassuVpcName");
     assert(vpcName, "HassuVpcName SSM-parametri pitää olla olemassa");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
+    return vpc;
+  }
+
+  private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
+    const vpc = await this.getVpc();
     const personSearchLambda = new NodejsFunction(this, "PersonSearchUpdaterLambda", {
       functionName: "hassu-personsearchupdater-" + Config.env,
       runtime: lambdaRuntime,
@@ -667,7 +678,7 @@ export class HassuBackendStack extends Stack {
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
-      LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? 'info' : 'info',
+      LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
     };
     return variables;
   }

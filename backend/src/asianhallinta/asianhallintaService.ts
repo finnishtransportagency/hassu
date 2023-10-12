@@ -11,6 +11,7 @@ class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
     if (await parameters.isAsianhallintaIntegrationEnabled()) {
       await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
+      await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId);
     }
   }
 

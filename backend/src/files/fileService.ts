@@ -333,7 +333,7 @@ export class FileService {
           while (sourceKeys.length) {
             const key = sourceKeys.pop();
             if (key) {
-              await FileService.deleteFile(sourceBucket, key);
+              await this.deleteFile(sourceBucket, key);
             }
           }
         })
@@ -343,7 +343,7 @@ export class FileService {
     } while (ContinuationToken);
   }
 
-  private static async deleteFile(sourceBucket: string, sourceKey: string) {
+  private async deleteFile(sourceBucket: string, sourceKey: string) {
     const s3 = getS3Client();
 
     await s3.send(

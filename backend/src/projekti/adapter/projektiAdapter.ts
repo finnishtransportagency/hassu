@@ -162,6 +162,7 @@ export class ProjektiAdapter {
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
+      asianhallintaIntegraatio,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(
@@ -197,6 +198,7 @@ export class ProjektiAdapter {
         liittyvatSuunnitelmat,
         salt: projekti.salt || lisaAineistoService.generateSalt(),
         kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
+        asianhallintaIntegraatio,
       }
     );
 

@@ -177,6 +177,7 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
+  asianhallintaIntegraatio: Boolean
 }
 
 type VuorovaikutusKierros {

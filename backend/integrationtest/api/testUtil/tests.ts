@@ -179,6 +179,7 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
       SUOMI: await tallennaEULogo("logofi.png"),
       RUOTSI: await tallennaEULogo("logosv.png"),
     },
+    asianhallintaIntegraatio: true,
   });
 
   // Check that the saved projekti is what it is supposed to be
