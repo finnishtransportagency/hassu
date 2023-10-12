@@ -10,7 +10,8 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
-import { SendMessageCommandInput } from "@aws-sdk/client-sqs/dist-types/commands/SendMessageCommand";
+import { projektiDatabase } from "../database/projektiDatabase";
+import { SendMessageCommandInput } from "@aws-sdk/client-sqs";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
@@ -38,18 +39,27 @@ async function handleManagementAction(event: MaintenanceEvent) {
   if (action == "deleteIndex") {
     await new ProjektiSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
-    const startKey = await new ProjektiSearchMaintenanceService().index(event);
-    if (startKey && startKey !== event.startKey) {
-      const newEvent: MaintenanceEvent = { action: "index", startKey };
+    let scanResult;
+    const events: MaintenanceEvent[] = [{ action: "index" }];
+    do {
+      scanResult = await projektiDatabase.scanProjektit(scanResult?.startKey);
+      if (scanResult.startKey) {
+        const newEvent: MaintenanceEvent = { action: "index", startKey: scanResult.startKey };
+        events.push(newEvent);
+      }
+    } while (scanResult.startKey);
+    let i = 1;
+    for (event of events) {
+      event.index = i++;
+      event.size = events.length;
       const args: SendMessageCommandInput = {
         QueueUrl: await parameters.getIndexerSQSUrl(),
-        MessageBody: JSON.stringify(newEvent),
+        MessageBody: JSON.stringify(event)
       };
       log.info("Sending SQS event", { args });
       await getSQS().sendMessage(args);
-    } else {
-      log.info("Indeksointi valmis");
     }
+    log.info("Indeksointi aloitettu");
   }
 }
 
@@ -61,8 +71,12 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
   const records = (event as SQSEvent).Records;
   if (records && records.length == 1 && records[0].body) {
     const body: MaintenanceEvent = JSON.parse(records[0].body);
-    log.info("SQS event received", { body });
-    return handleManagementAction(body);
+    log.info("SQS event " + body.index + "/" + body.size + " received", { body });
+    await new ProjektiSearchMaintenanceService().index(body);
+    if (body.index === body.size) {
+      log.info("Indeksointi valmis");
+    }
+    return;
   }
   setupLambdaMonitoring();
   if (!(event as DynamoDBStreamEvent).Records) {
