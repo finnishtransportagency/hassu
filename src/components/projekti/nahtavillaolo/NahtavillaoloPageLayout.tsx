@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Tabs } from "@mui/material";
@@ -106,6 +106,16 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
 
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("nahtavillaolokuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "false");
+  }, []);
+
   return (
     <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Kuulutus nähtäville asettamisesta" contentAsideTitle={contentAsideTitle}>
       {!migroitu ? (
@@ -161,7 +171,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                     asianhallintaan.
                   </li>
                 </OhjelistaNotification>
-                <Notification type={NotificationType.INFO} hideIcon closable>
+                <Notification type={NotificationType.INFO} hideIcon closable onClose={ohjeetOnClose} open={ohjeetOpen}>
                   <div>
                     <h3 className="vayla-small-title">Ohjeet</h3>
                     <ul className="list-disc block pl-5">

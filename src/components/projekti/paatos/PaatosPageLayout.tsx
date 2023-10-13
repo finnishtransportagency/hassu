@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState, VFC } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
@@ -22,6 +22,7 @@ import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -169,6 +170,16 @@ function PaatosPageLayoutContent({
     !nextPaatosData?.julkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("paatoskuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("paatoskuulutuksenOhjeet", "false");
+  }, []);
+
   return (
     <ProjektiPageLayout
       title={pageTitle}
@@ -195,9 +206,17 @@ function PaatosPageLayoutContent({
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-              <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]}>
-                <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-              </OhjelistaNotification>
+              <>
+                <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]}>
+                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                </OhjelistaNotification>
+                <Notification closable type={NotificationType.INFO} hideIcon open={ohjeetOpen} onClose={ohjeetOnClose}>
+                  <div>
+                    <h3 className="vayla-small-title">Ohjeet</h3>
+                    <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                  </div>
+                </Notification>
+              </>
             )}
             <Tabs value={value}>
               {tabProps.map((tProps, index) => (

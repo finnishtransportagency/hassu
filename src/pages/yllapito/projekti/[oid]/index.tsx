@@ -261,6 +261,16 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     }
   }, [projekti, router, statusBeforeSave]);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("perustietojenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("perustietojenOhjeet", "false");
+  }, []);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -287,7 +297,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
                 </li>
               </OhjelistaNotification>
-              <Notification type={NotificationType.INFO} hideIcon closable>
+              <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
                 <h4 className="vayla-small-title">Ohjeet</h4>
                 <ul className="list-disc block pl-5">
                   <li>

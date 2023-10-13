@@ -133,6 +133,16 @@ function KayttoOikeusHallintaFormElements({
     onKayttajatUpdate(kayttoOikeudet || []);
   }, [kayttoOikeudet, onKayttajatUpdate]);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("kayttoOikeusOhjeet", "false");
+  }, []);
+
   return (
     <Section gap={8}>
       {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
@@ -160,7 +170,7 @@ function KayttoOikeusHallintaFormElements({
           </li>
         )}
       </OhjelistaNotification>
-      <Notification type={NotificationType.INFO} hideIcon closable>
+      <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
         <div>
           <h4 className="vayla-small-title">Ohjeet</h4>
           <ul className="list-disc block pl-5">

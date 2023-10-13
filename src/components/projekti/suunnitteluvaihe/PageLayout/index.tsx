@@ -151,6 +151,16 @@ function SuunnitteluPageLayout({
   const migroitu = vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const edellinenVaiheMigroitu = projekti.aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("suunnitteluvaiheenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("suunnitteluvaiheenOhjeet", "false");
+  }, []);
+
   return (
     <ProjektiPageLayout
       title="Suunnittelu"
@@ -211,7 +221,7 @@ function SuunnitteluPageLayout({
                 </li>
                 <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
               </OhjelistaNotification>
-              <Notification type={NotificationType.INFO} hideIcon closable>
+              <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
                 <div>
                   <h3 className="vayla-small-title">Ohjeet</h3>
                   <ul className="list-disc block pl-5">

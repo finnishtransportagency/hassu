@@ -1,8 +1,8 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { useProjekti } from "src/hooks/useProjekti";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -255,6 +255,16 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const { handleDraftSubmit } = useHandleSubmit(useFormReturn);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("aloituskuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("aloituskuulutuksenOhjeet", "false");
+  }, []);
+
   if (!projekti || isLoadingProjekti) {
     return <></>;
   }
@@ -334,7 +344,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                     <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
                   </OhjelistaNotification>
-                  <Notification type={NotificationType.INFO} hideIcon closable>
+                  <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
                     <div>
                       <h3 className="vayla-small-title">Ohjeet</h3>
                       <ul className="list-disc block pl-5">
