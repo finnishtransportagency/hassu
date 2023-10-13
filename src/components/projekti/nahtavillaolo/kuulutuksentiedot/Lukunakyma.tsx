@@ -27,7 +27,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 

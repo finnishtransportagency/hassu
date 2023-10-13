@@ -246,7 +246,7 @@ type VuorovaikutusKierrosJulkaisu {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
   selosteVuorovaikutuskierrokselle: String
 }
 
@@ -334,7 +334,7 @@ type NahtavillaoloVaiheJulkaisu {
   hyvaksyja: String
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -358,7 +358,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -765,7 +765,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
@@ -1056,11 +1056,20 @@ type KuulutusTekstit {
   tietosuoja: String
 }
 
+enum AsianTila {
+  ASIANHALLINTA_VAARASSA_TILASSA
+  ASIAA_EI_LOYDY
+  VIRHE
+  SYNKRONOITU
+  VALMIS_VIENTIIN
+  EI_TESTATTAVISSA
+}
+
 type AsianhallinnanTila {
   """
   Jos tyhja, niin asianhallinta on oikeassa tilassa.
   Jos ASIANHALLINTA_VAARASSA_TILASSA niin asianhallinta on vaarassa tilassa.
   Jos ASIAA_EI_LOYDY, on asiatunnus projektilla vaara.
   """
-  asianTila: String
+  asianTila: AsianTila
 }

@@ -1,11 +1,11 @@
 import { AsianhallintaSynkronointi, SynkronointiTila } from "@hassu/asianhallinta";
-
-export const EI_TESTATTAVISSA = "EI_TESTATTAVISSA";
+import { AsianTila } from "hassu-common/graphql/apiModel";
+import { synkronointiTilaToAsianTilaMap } from "../../../asianhallinta/synkronointiTilaToAsianTilaMap";
 
 export const getAsianhallintaSynchronizationStatus = (
   synkronoinnit: Record<string, AsianhallintaSynkronointi> | undefined,
   asianhallintaEventId: string | null | undefined
-): SynkronointiTila | undefined | typeof EI_TESTATTAVISSA => {
+): AsianTila | undefined => {
   if (asianhallintaEventId && synkronoinnit?.[asianhallintaEventId]?.dokumentit) {
     const synkronointi = synkronoinnit[asianhallintaEventId];
     // Käy läpi synkronointi.dokumentit.synkronointiTila
@@ -19,7 +19,7 @@ export const getAsianhallintaSynchronizationStatus = (
       getTilaIfExists(tilat, "ASIAA_EI_LOYDY") ||
       getTilaIfExists(tilat, "VIRHE");
     if (virheTila) {
-      return virheTila;
+      return synkronointiTilaToAsianTilaMap[virheTila];
     }
 
     for (const dokumentti of synkronointi.dokumentit) {
@@ -28,9 +28,9 @@ export const getAsianhallintaSynchronizationStatus = (
       }
     }
 
-    return "SYNKRONOITU";
+    return AsianTila.SYNKRONOITU;
   }
-  return EI_TESTATTAVISSA;
+  return AsianTila.EI_TESTATTAVISSA;
 };
 
 function getTilaIfExists(tilat: (SynkronointiTila | undefined)[], tila: SynkronointiTila) {

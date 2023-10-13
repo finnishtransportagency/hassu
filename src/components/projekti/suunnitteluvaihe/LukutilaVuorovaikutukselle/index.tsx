@@ -15,7 +15,7 @@ import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
 
 type Props = {
   vuorovaikutusnro: number;

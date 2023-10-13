@@ -1,13 +1,13 @@
 import React, { ReactElement } from "react";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
-import { ProjektiTestCommand } from "../../../../common/testUtil.dev";
+import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import useAsianhallinnanTila from "../../../hooks/useAsianhallinnanTila";
-import { AsiakirjaTyyppi, AsianhallinnanTila } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, AsianhallinnanTila, AsianTila } from "hassu-common/graphql/apiModel";
 import { SynkronointiTila } from "@hassu/asianhallinta";
 
 type Props = {
   oid: string;
-  asianhallintaSynkronointiTila: string | null | undefined;
+  asianhallintaSynkronointiTila: AsianTila | null | undefined;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   className?: string;
 };

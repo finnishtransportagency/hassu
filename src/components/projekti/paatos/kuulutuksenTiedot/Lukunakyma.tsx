@@ -29,7 +29,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import { label } from "src/util/textUtil";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;

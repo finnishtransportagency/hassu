@@ -19,6 +19,7 @@ import { NotFoundError } from "hassu-common/error";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { AsianhallinnanTila, AsianhallinnanTilaQueryVariables, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap";
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
@@ -80,7 +81,7 @@ class AsianhallintaService {
       const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       log.info("checkAsianhallintaState", { response });
       if (response.synkronointiTila) {
-        return { __typename: "AsianhallinnanTila", asianTila: response.synkronointiTila };
+        return { __typename: "AsianhallinnanTila", asianTila: synkronointiTilaToAsianTilaMap[response.synkronointiTila] };
       } else {
         log.error("checkAsianhallintaState", { response });
       }

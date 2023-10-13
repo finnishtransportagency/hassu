@@ -22,7 +22,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutu
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -35,6 +35,7 @@ interface Props {
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
   const { lang, t } = useTranslation();
   const { data: kayttaja } = useCurrentUser();
+
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
