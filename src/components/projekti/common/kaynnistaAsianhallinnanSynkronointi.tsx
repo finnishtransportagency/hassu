@@ -3,7 +3,6 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import useAsianhallinnanTila from "../../../hooks/useAsianhallinnanTila";
 import { AsiakirjaTyyppi, AsianhallinnanTila, AsianTila } from "hassu-common/graphql/apiModel";
-import { SynkronointiTila } from "@hassu/asianhallinta";
 
 type Props = {
   oid: string;
@@ -31,7 +30,7 @@ export default function KaynnistaAsianhallinnanSynkronointiNappi({
   }
   return (
     <div className={className}>
-      {asianhallintaSynkronointiTila !== "SYNKRONOITU" && (
+      {asianhallintaSynkronointiTila !== AsianTila.SYNKRONOITU && (
         <ButtonFlatWithIcon
           icon="history"
           onClick={(e) => {
@@ -47,35 +46,35 @@ export default function KaynnistaAsianhallinnanSynkronointiNappi({
   );
 }
 
-function naytaIntegroinninTila(synkronointiTila: string | null | undefined, asianhallinnanTila: AsianhallinnanTila | undefined) {
-  let tila;
-  let asianhallinnanTilaTxt;
+function naytaIntegroinninTila(asianTila: AsianTila | null | undefined, asianhallinnanTila: AsianhallinnanTila | undefined) {
+  let tila: string | undefined;
+  let asianhallinnanTilaTxt: string | undefined;
 
-  if (synkronointiTila) {
-    switch (synkronointiTila as SynkronointiTila) {
-      case "ASIAA_EI_LOYDY":
+  if (asianTila) {
+    switch (asianTila) {
+      case AsianTila.ASIAA_EI_LOYDY:
         tila = "Asiaa ei löydy";
         break;
-      case "ASIANHALLINTA_VAARASSA_TILASSA":
+      case AsianTila.ASIANHALLINTA_VAARASSA_TILASSA:
         tila = "Asianhallinta on väärässä tilassa";
         break;
-      case "VIRHE":
+      case AsianTila.VIRHE:
         tila = "Synkronoinnissa tapahtui virhe";
         break;
-      case "SYNKRONOITU":
+      case AsianTila.VIRHE:
         tila = "Synkronoitu";
         break;
     }
   }
   if (!tila && asianhallinnanTila) {
     switch (asianhallinnanTila.asianTila) {
-      case "VALMIS_VIENTIIN":
+      case AsianTila.VALMIS_VIENTIIN:
         asianhallinnanTilaTxt = "Asianhallinta on valmis ottamaan vastaan dokumentteja tästä vaiheesta";
         break;
-      case "ASIANHALLINTA_VAARASSA_TILASSA":
+      case AsianTila.ASIANHALLINTA_VAARASSA_TILASSA:
         asianhallinnanTilaTxt = "Asianhallinta on väärässä tilassa";
         break;
-      case "ASIAA_EI_LOYDY":
+      case AsianTila.ASIAA_EI_LOYDY:
         asianhallinnanTilaTxt = "Asiaa ei löydy";
         break;
     }
