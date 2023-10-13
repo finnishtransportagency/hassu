@@ -53,7 +53,7 @@ export default function HenkilotPage(): ReactElement {
 
   return (
     <ProjektiPageLayout
-      title="Projektin Henkilöt"
+      title="Projektin henkilöt"
       contentAsideTitle={<PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
       {projekti &&

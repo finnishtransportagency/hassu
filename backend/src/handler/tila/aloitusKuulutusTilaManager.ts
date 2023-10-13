@@ -80,6 +80,9 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
+    throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+  }
   rejectAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
   }
@@ -138,7 +141,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
-    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
+    // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
     // tai nähtävilläolovaiheessa, kun kyseessä on vähäinen menettely
     const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     if (

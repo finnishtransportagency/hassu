@@ -33,7 +33,7 @@ describe("Projektin henkilot", () => {
     cy.login("A1");
     //projektipaallikko
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-    cy.contains("Projektin Henkilöt");
+    cy.contains("Projektin henkilöt");
     cy.contains(projektiNimi);
     cy.get('input[name="kayttoOikeudet.0.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamki@cgi.com");
     cy.get('input[name="kayttoOikeudet.0.yleinenYhteystieto"').should("be.disabled").should("be.checked");
