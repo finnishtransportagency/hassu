@@ -13,7 +13,7 @@ import * as dayjs from "dayjs";
 
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-  cy.contains("Projektin Henkilöt", { timeout: 30000 });
+  cy.contains("Projektin henkilöt", { timeout: 30000 });
   cy.get('input[name="kayttoOikeudet.0.puhelinnumero"]').should("be.enabled").type("0291111111");
   cy.get('input[name="kayttoOikeudet.1.puhelinnumero"]').should("be.enabled").type("0291111111");
 
