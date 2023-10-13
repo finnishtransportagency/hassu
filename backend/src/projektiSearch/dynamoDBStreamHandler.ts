@@ -40,12 +40,12 @@ async function handleManagementAction(event: MaintenanceEvent) {
     await new ProjektiSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
     let startKey: string | undefined = undefined;
-    const events: MaintenanceEvent[] = [{ action: "index" }];
+    const events: MaintenanceEvent[] = [];
     do {
-      startKey = (await projektiDatabase.scanProjektit(startKey)).startKey;
-      if (startKey) {
-        const newEvent: MaintenanceEvent = { action: "index", startKey };
-        events.push(newEvent);
+      const scanResult = await projektiDatabase.scanProjektit(startKey);
+      startKey = scanResult.startKey;
+      for (const projekti of scanResult.projektis) {
+        events.push({ action: "index", projekti })
       }
     } while (startKey);
     let i = 1;
@@ -56,7 +56,7 @@ async function handleManagementAction(event: MaintenanceEvent) {
         QueueUrl: await parameters.getIndexerSQSUrl(),
         MessageBody: JSON.stringify(event)
       };
-      log.info("Sending SQS event", { args });
+      log.info("Sending SQS event " + event.index);
       await getSQS().sendMessage(args);
     }
     log.info("Indeksointi aloitettu");
@@ -71,8 +71,14 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
   const records = (event as SQSEvent).Records;
   if (records && records.length == 1 && records[0].body) {
     const body: MaintenanceEvent = JSON.parse(records[0].body);
-    log.info("SQS event " + body.index + "/" + body.size + " received", { body });
-    await new ProjektiSearchMaintenanceService().index(body);
+    log.info("SQS event " + body.index + "/" + body.size + " received", { oid: body.projekti?.oid });
+    if (body.projekti) {
+      try {
+        await projektiSearchService.indexProjekti(body.projekti);
+      } catch (e) {
+        log.error(e);
+      }
+    }
     if (body.index === body.size) {
       log.info("Indeksointi valmis");
     }
