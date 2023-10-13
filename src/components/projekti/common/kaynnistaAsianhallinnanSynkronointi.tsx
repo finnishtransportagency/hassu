@@ -61,7 +61,7 @@ function naytaIntegroinninTila(asianTila: AsianTila | null | undefined, asianhal
       case AsianTila.VIRHE:
         tila = "Synkronoinnissa tapahtui virhe";
         break;
-      case AsianTila.VIRHE:
+      case AsianTila.SYNKRONOITU:
         tila = "Synkronoitu";
         break;
     }
