@@ -227,7 +227,7 @@ export default function AineistoSivunPainikkeet({
       <Section noDivider>
         {muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
           <Stack justifyContent={{ md: "space-between" }} direction={{ xs: "column", md: "row" }}>
-            <Button id="cancel_aineistomuokkaus" type="button" onClick={open}>
+            <Button id="poistu_aineiston_muokkaus" type="button" onClick={open}>
               Poistu muokkaustilasta
             </Button>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
@@ -252,10 +252,10 @@ export default function AineistoSivunPainikkeet({
                 </p>
               </DialogContent>
               <DialogActions>
-                <Button type="button" onClick={cancelAineistoMuokkaus} primary>
+                <Button id="accept_poistu_aineiston_muokkaus" type="button" onClick={cancelAineistoMuokkaus} primary>
                   Kyllä
                 </Button>
-                <Button type="button" onClick={close}>
+                <Button id="cancel_poistu_aineiston_muokkaus" type="button" onClick={close}>
                   Peruuta
                 </Button>
               </DialogActions>

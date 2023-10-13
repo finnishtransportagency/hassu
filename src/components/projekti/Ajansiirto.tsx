@@ -57,7 +57,12 @@ export default function Ajansiirto({ oid }: { oid: string }) {
             />
             <span style={{ marginLeft: "1em", marginRight: "1em" }}>AJANSIIRTO</span>
           </h3>
-          <TextInput type="number" label="Siirrä projektin päivämääriä x päivää menneisyyteen" {...register("days")} />
+          <TextInput
+            type="number"
+            label="Siirrä projektin päivämääriä x päivää menneisyyteen"
+            id="ajansiirto_paiva_lkm"
+            {...register("days")}
+          />
           <Button
             style={{
               borderRadius: 0,
@@ -65,6 +70,7 @@ export default function Ajansiirto({ oid }: { oid: string }) {
             }}
             disabled={!formState.isValid}
             type="button"
+            id="ajansiirto_siirra"
             onClick={handleSubmit(siirraMenneisyyteen)}
           >
             <span>Siirrä</span>

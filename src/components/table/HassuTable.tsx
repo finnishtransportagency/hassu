@@ -44,6 +44,7 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
         disabled={!row.getCanSelect()}
         indeterminate={row.getIsSomeSelected()}
         onChange={row.getToggleSelectedHandler()}
+        name={row.id ? `select_row_${row.id}` : undefined}
       />
     </Span>
   ),
@@ -52,46 +53,44 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
 
 function SelectHeader<T>(props: HeaderContext<T, unknown>) {
   return (
-    <>
-      <Span
-        sx={{
-          display: { xs: "none", md: "flex" },
-          justifyContent: "center",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          margin: "auto",
-        }}
-      >
-        <Span>Valitse</Span>
-        <Span sx={{ position: "relative" }}>
-          <Checkbox
-            disabled={!props.table.options.enableRowSelection}
-            checked={props.table.getIsAllRowsSelected()}
-            indeterminate={props.table.getIsSomeRowsSelected()}
-            onChange={props.table.getToggleAllRowsSelectedHandler()}
-            sx={{
-              "&::before": {
-                content: '"("',
-                position: "absolute",
-                top: "50%",
-                left: "5%",
-                transform: "translateY(-50%)",
-                color: "#7A7A7A",
-              },
-              "&::after": {
-                content: '")"',
-                position: "absolute",
-                top: "50%",
-                right: "5%",
-                transform: "translateY(-50%)",
-                color: "#7A7A7A",
-              },
-            }}
-          />
-        </Span>
+    <Span
+      sx={{
+        display: { xs: "none", md: "flex" },
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+        margin: "auto",
+      }}
+    >
+      <Span>Valitse</Span>
+      <Span sx={{ position: "relative" }}>
+        <Checkbox
+          disabled={!props.table.options.enableRowSelection}
+          checked={props.table.getIsAllRowsSelected()}
+          indeterminate={props.table.getIsSomeRowsSelected()}
+          onChange={props.table.getToggleAllRowsSelectedHandler()}
+          sx={{
+            "&::before": {
+              content: '"("',
+              position: "absolute",
+              top: "50%",
+              left: "5%",
+              transform: "translateY(-50%)",
+              color: "#7A7A7A",
+            },
+            "&::after": {
+              content: '")"',
+              position: "absolute",
+              top: "50%",
+              right: "5%",
+              transform: "translateY(-50%)",
+              color: "#7A7A7A",
+            },
+          }}
+        />
       </Span>
-    </>
+    </Span>
   );
 }
 

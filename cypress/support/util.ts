@@ -57,6 +57,18 @@ export function selectAllAineistotFromCategory(accordion) {
     });
 }
 
+export function selectAineistotFromCategory(accordion: string, aineistojenNimet: string[]) {
+  cy.get(accordion).click();
+  aineistojenNimet.forEach((nimi) => {
+    cy.get("#table_body_Suunnitelma-aineisto")
+      .contains(nimi)
+      .parentsUntil("div[data-index]")
+      .find('input[name*="select_row_"]')
+      .first()
+      .click();
+  });
+}
+
 export function typeIntoFields(selectorToTextMap: Record<string, string>) {
   Object.entries(selectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
@@ -67,7 +79,11 @@ export function typeIntoFields(selectorToTextMap: Record<string, string>) {
   });
 }
 
-export function verifyAllDownloadLinks(opts?) {
+type VerifyAllDownloadLinksOptions = {
+  absoluteURLs?: boolean;
+};
+
+export function verifyAllDownloadLinks(opts?: VerifyAllDownloadLinksOptions) {
   const baseUrl = Cypress.env("host");
   cy.get(".file_download").then((links) => {
     for (const link of links.get()) {

@@ -1,5 +1,4 @@
-import * as dayjs from "dayjs";
-import { formatDate, selectAllAineistotFromCategory, typeIntoFields } from "./util";
+import { selectAllAineistotFromCategory, selectAineistotFromCategory, typeIntoFields } from "./util";
 
 export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<string, string>) {
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
@@ -16,13 +15,6 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
     }
   });
 
-  const today = formatDate(dayjs());
-
-  cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
-    waitForAnimations: true,
-    force: true,
-  });
-
   cy.wait(1000);
 
   typeIntoFields(selectorToTextMap);
@@ -37,7 +29,6 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
 
   // Test saved values
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
-  cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("have.value", today);
 
   Object.entries(selectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
@@ -46,7 +37,39 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
   });
 }
 
-export function lisaaNahtavillaoloAineistot(oid) {
+export function avaaAineistonMuokkaus(oid) {
+  cy.login("A1");
+  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+  cy.get("#aineisto_tab").click({ force: true });
+  cy.get("#avaa_aineiston_muokkaus").click({ force: true });
+  cy.get("#jatka_aineiston_muokkaus").click({ force: true });
+  cy.contains("Aineistot avattu muokattavaksi").wait(2000);
+}
+
+export function suljeAineistonMuokkaus(oid) {
+  cy.login("A1");
+  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+  cy.get("#aineisto_tab").click({ force: true });
+  cy.get("#poistu_aineiston_muokkaus").click({ force: true });
+  cy.get("#accept_poistu_aineiston_muokkaus").click({ force: true });
+  cy.contains("Aineistojen muokkaustila suljettu").wait(2000);
+}
+
+type AineistoLisaysOptions = {
+  toimeksianto: string;
+  aineistojenNimet?: string[];
+};
+
+type LisaaNahtavillaoloAineistotOptions = {
+  oid: string;
+  aineistoNahtavilla: AineistoLisaysOptions;
+  lisaAineisto: AineistoLisaysOptions;
+  /**
+   * The URL to visit. Behaves the same as the `url` argument.
+   */
+};
+
+export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, lisaAineisto }: LisaaNahtavillaoloAineistotOptions) {
   // This test had to be inserted here and can not be done
   // after publishing test below
   cy.login("A1");
@@ -55,7 +78,11 @@ export function lisaaNahtavillaoloAineistot(oid) {
   cy.get("#aineisto_tab").click({ force: true });
 
   cy.get("#aineisto_nahtavilla_import_button").click();
-  selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
+  if (aineistoNahtavilla.aineistojenNimet) {
+    selectAineistotFromCategory(`#aineisto_accordion_${aineistoNahtavilla.toimeksianto}`, aineistoNahtavilla.aineistojenNimet);
+  } else {
+    selectAllAineistotFromCategory(`#aineisto_accordion_${aineistoNahtavilla.toimeksianto}`);
+  }
   cy.get("#select_valitut_aineistot_button").click();
   cy.get("#kategorisoimattomat").click();
 
@@ -70,7 +97,13 @@ export function lisaaNahtavillaoloAineistot(oid) {
   });
 
   cy.get("#open_lisaaineisto_button").click();
-  selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
+
+  if (lisaAineisto.aineistojenNimet) {
+    selectAineistotFromCategory(`#aineisto_accordion_${lisaAineisto.toimeksianto}`, lisaAineisto.aineistojenNimet);
+  } else {
+    selectAllAineistotFromCategory(`#aineisto_accordion_${lisaAineisto.toimeksianto}`);
+  }
+
   cy.get("#select_valitut_aineistot_button").click();
 
   cy.get("#kategorisoimattomat").click();
@@ -92,7 +125,13 @@ export function lisaaNahtavillaoloAineistot(oid) {
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 }
 
-export function hyvaksyNahtavillaoloKuulutus() {
+type HyvaksyNahtavillaoloKuulutusOptions = {
+  kuulutusPaivaInFuture?: boolean;
+};
+
+export function hyvaksyNahtavillaoloKuulutus(
+  { kuulutusPaivaInFuture }: HyvaksyNahtavillaoloKuulutusOptions = { kuulutusPaivaInFuture: false }
+) {
   cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click();
   cy.contains("Lähetys onnistui");
   cy.get("#button_open_acceptance_dialog")
@@ -106,5 +145,5 @@ export function hyvaksyNahtavillaoloKuulutus() {
   cy.reload();
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-  cy.contains("Kuulutus on julkaistu");
+  cy.contains(kuulutusPaivaInFuture ? "Kuulutusta ei ole vielä julkaistu." : "Kuulutus on julkaistu");
 }
