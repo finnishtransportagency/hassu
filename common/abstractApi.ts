@@ -2,7 +2,8 @@ import {
   AnnaPalautettaPalvelustaMutationVariables,
   ArkistoiProjektiMutationVariables,
   AsetaPalauteVastattuMutationVariables,
-  AsiakirjaTyyppi, AsianhallinnanTila, AsianhallinnanTilaQueryVariables,
+  AsiakirjaTyyppi,
+  AsianhallinnanTila,
   EsikatseleAsiakirjaPDFQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
@@ -55,7 +56,7 @@ import {
   VelhoHakuTulos,
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
-  VuorovaikutusPerustiedotInput
+  VuorovaikutusPerustiedotInput,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -263,7 +264,7 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.asianhallinnanTila,
     isYllapitoOperation: true,
-  }
+  },
 };
 
 export abstract class AbstractApi {
@@ -284,8 +285,8 @@ export abstract class AbstractApi {
   async lataaAsianhallinnanTila(oid: string, asiakirjaTyyppi: AsiakirjaTyyppi): Promise<AsianhallinnanTila> {
     return await this.callYllapitoAPI(apiConfig.asianhallinnanTila, {
       oid,
-      asiakirjaTyyppi
-    } as AsianhallinnanTilaQueryVariables);
+      asiakirjaTyyppi,
+    });
   }
 
   async lataaProjektiJulkinen(oid: string, kieli?: Kieli): Promise<ProjektiJulkinen> {

@@ -17,7 +17,7 @@ export default function KaynnistaAsianhallinnanSynkronointiPainike({
   className,
   asiakirjaTyyppi,
 }: Props): ReactElement {
-  const isIntegraatioAvailable = asianhallintaSynkronointiTila !== "EI_TESTATTAVISSA";
+  const isIntegraatioAvailable = asianhallintaSynkronointiTila !== AsianTila.EI_TESTATTAVISSA;
   // Kutsutaan rajapintaa vain jos integraatio on käytössä ja dokumentteja odottaa vientiä. Asettamalla oid=undefined ei apikutsua tehdä.
   const asianhallinnanTila = useAsianhallinnanTila(isIntegraatioAvailable ? oid : undefined, asiakirjaTyyppi).data;
   if (!isIntegraatioAvailable) {
