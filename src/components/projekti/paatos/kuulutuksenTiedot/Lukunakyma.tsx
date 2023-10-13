@@ -29,7 +29,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import { label } from "src/util/textUtil";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -133,7 +133,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
               {kayttaja?.features?.asianhallintaIntegraatio && julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
-                <KaynnistaAsianhallinnanSynkronointiNappi
+                <KaynnistaAsianhallinnanSynkronointiPainike
                   oid={projekti.oid}
                   asiakirjaTyyppi={esimerkkiAsiakirjaTyyppiVaiheessa}
                   asianhallintaSynkronointiTila={julkaisu.asianhallintaSynkronointiTila}

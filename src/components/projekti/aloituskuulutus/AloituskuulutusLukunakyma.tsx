@@ -22,7 +22,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutu
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -104,7 +104,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
           {kayttaja?.features?.asianhallintaIntegraatio && aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
-            <KaynnistaAsianhallinnanSynkronointiNappi
+            <KaynnistaAsianhallinnanSynkronointiPainike
               oid={projekti.oid}
               asiakirjaTyyppi={AsiakirjaTyyppi.ALOITUSKUULUTUS}
               asianhallintaSynkronointiTila={aloituskuulutusjulkaisu.asianhallintaSynkronointiTila}

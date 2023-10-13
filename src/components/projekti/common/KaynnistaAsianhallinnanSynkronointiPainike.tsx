@@ -11,7 +11,7 @@ type Props = {
   className?: string;
 };
 
-export default function KaynnistaAsianhallinnanSynkronointiNappi({
+export default function KaynnistaAsianhallinnanSynkronointiPainike({
   oid,
   asianhallintaSynkronointiTila,
   className,

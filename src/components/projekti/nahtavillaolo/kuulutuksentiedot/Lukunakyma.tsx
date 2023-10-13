@@ -27,7 +27,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -89,7 +89,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               </ButtonFlatWithIcon>
             )}
             {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <KaynnistaAsianhallinnanSynkronointiNappi
+              <KaynnistaAsianhallinnanSynkronointiPainike
                 oid={projekti.oid}
                 asiakirjaTyyppi={AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS}
                 asianhallintaSynkronointiTila={nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila}

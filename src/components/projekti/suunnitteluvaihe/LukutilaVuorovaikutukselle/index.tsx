@@ -15,7 +15,7 @@ import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -109,7 +109,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
         {kayttaja?.features?.asianhallintaIntegraatio && vuorovaikutusKierrosjulkaisu.tila == VuorovaikutusKierrosTila.JULKINEN && (
-          <KaynnistaAsianhallinnanSynkronointiNappi
+          <KaynnistaAsianhallinnanSynkronointiPainike
             oid={projekti.oid}
             asiakirjaTyyppi={AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU}
             asianhallintaSynkronointiTila={vuorovaikutusKierrosjulkaisu.asianhallintaSynkronointiTila}
