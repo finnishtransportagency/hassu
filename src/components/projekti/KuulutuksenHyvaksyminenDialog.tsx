@@ -61,7 +61,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
           <DialogContent>
             <p>
               Hyväksymällä aineiston sisällön, hyväksyt kuulutuksen aineisto päivityksen. Kuulutuspäivän jälkeen tulevat muutostarpeet
-              aineistojen sisältöihin vaativat uudelleen kuuluttamisen.
+              aineistojen sisältöihin vaativat uudelleenkuuluttamisen.
             </p>
           </DialogContent>
         ) : (

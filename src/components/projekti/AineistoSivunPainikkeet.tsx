@@ -247,8 +247,8 @@ export default function AineistoSivunPainikkeet({
             <HassuDialog title="Poistu aineistojen muokkaustilasta" maxWidth="sm" open={isOpen} onClose={close}>
               <DialogContent>
                 <p>
-                  Haluatko poistua aineistojen muokkaustilasta? Painamalla Kyllä-painiketta poistut aineistojen aineistojen muokkaustilasta.
-                  Tehtyjä muutoksia ei tallenneta.
+                  Haluatko poistua aineistojen muokkaustilasta? Painamalla Kyllä-painiketta poistut aineistojen muokkaustilasta. Tehtyjä
+                  muutoksia ei tallenneta.
                 </p>
               </DialogContent>
               <DialogActions>
