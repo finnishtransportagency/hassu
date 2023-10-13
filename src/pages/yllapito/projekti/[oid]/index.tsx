@@ -287,6 +287,24 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
                 </li>
               </OhjelistaNotification>
+              <Notification type={NotificationType.INFO} hideIcon closable>
+                <h4 className="vayla-small-title">Ohjeet</h4>
+                <ul className="list-disc block pl-5">
+                  <li>
+                    Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
+                  </li>
+                  <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                  <li>
+                    Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                    vaiheisiin.
+                  </li>
+                  <li>
+                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                    aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                    kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                  </li>
+                </ul>
+              </Notification>
             </ContentSpacer>
 
             <ProjektinPerusosio projekti={projekti} />
