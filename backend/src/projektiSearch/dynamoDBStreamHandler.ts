@@ -39,15 +39,15 @@ async function handleManagementAction(event: MaintenanceEvent) {
   if (action == "deleteIndex") {
     await new ProjektiSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
-    let scanResult;
+    let startKey: string | undefined = undefined;
     const events: MaintenanceEvent[] = [{ action: "index" }];
     do {
-      scanResult = await projektiDatabase.scanProjektit(scanResult?.startKey);
-      if (scanResult.startKey) {
-        const newEvent: MaintenanceEvent = { action: "index", startKey: scanResult.startKey };
+      startKey = (await projektiDatabase.scanProjektit(startKey)).startKey;
+      if (startKey) {
+        const newEvent: MaintenanceEvent = { action: "index", startKey };
         events.push(newEvent);
       }
-    } while (scanResult.startKey);
+    } while (startKey);
     let i = 1;
     for (event of events) {
       event.index = i++;
