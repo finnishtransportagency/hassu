@@ -5,10 +5,14 @@ import projektiSettings from "./projekti-settings.json";
 import projektiMapping from "./projekti-mapping.json";
 import projektiJulkinenMapping from "./projekti-julkinen-mapping.json";
 import { log } from "../logger";
+import { DBProjekti } from "../database/model";
 
 export type MaintenanceEvent = {
   action: "deleteIndex" | "index";
   startKey?: string;
+  index?: number;
+  size?: number;
+  projekti?: DBProjekti;
 };
 
 export class ProjektiSearchMaintenanceService {
