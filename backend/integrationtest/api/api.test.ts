@@ -289,7 +289,7 @@ describe("Api", () => {
       "NahtavillaOloJulkinenAfterApprovalButNotPublic"
     );
 
-    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo hyväksytty mutta ei vielä julki.");
