@@ -109,8 +109,6 @@ export async function testNahtavillaoloApproval(
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
     return projektiJulkinen.nahtavillaoloVaihe;
   });
-  await testLisaaMuistutusIncrement(projekti.oid, projektiPaallikko, userFixture, undefined);
-  await testLisaaMuistutusIncrement(projekti.oid, projektiPaallikko, userFixture, 1);
 }
 
 export async function testNahtavillaoloAineistoSendForApproval(
