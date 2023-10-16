@@ -1,4 +1,4 @@
-import { ValidationMode, ValidationModeState } from "@components/FormValidationModeProvider";
+import { ValidationMode, ValidationModeState } from "hassu-common/ProjektiValidationContext";
 import { Kieli, Kielitiedot } from "@services/api";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import * as Yup from "yup";

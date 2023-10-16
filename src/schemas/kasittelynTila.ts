@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KasittelynTila } from "@services/api";
 
 type Hyvaksymispaatos = keyof Pick<KasittelynTila, "hyvaksymispaatos" | "ensimmainenJatkopaatos" | "toinenJatkopaatos">;

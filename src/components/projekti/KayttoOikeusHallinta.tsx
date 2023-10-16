@@ -31,7 +31,7 @@ import useTranslation from "next-translate/useTranslation";
 import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;

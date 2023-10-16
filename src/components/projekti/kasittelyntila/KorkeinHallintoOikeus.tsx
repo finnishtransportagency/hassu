@@ -1,7 +1,7 @@
 import React from "react";
 import { ControllerFieldState, ControllerRenderProps, FormState, useController, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { HassuDatePicker } from "@components/form/HassuDatePicker";
 import Textarea from "@components/form/Textarea";
 import dayjs, { Dayjs } from "dayjs";

@@ -1,5 +1,5 @@
 import { Status } from "@services/api";
-import { ProjektiLisatiedolla } from "../hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { isProjektiStatusGreaterOrEqualTo } from "../../common/statusOrder";
 
 type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => boolean;

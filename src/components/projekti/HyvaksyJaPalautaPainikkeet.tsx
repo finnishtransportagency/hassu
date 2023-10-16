@@ -7,7 +7,7 @@ import { TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 import { isInPast } from "common/util/dateUtils";
 import React, { useCallback, useMemo, useState } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "src/schemas/paivamaaraSchema";
 import * as yup from "yup";

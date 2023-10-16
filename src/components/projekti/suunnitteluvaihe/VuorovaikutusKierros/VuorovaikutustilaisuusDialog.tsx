@@ -3,6 +3,7 @@ import { VuorovaikutusTilaisuusInput, Yhteystieto } from "@services/api";
 import { VuorovaikutusFormValues } from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
 import { useFormContext } from "react-hook-form";
 import VuorovaikutustilaisuusDialog from "../komponentit/VuorovaikutustilaisuusDialog";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
@@ -13,9 +14,10 @@ interface Props {
   windowHandler: (isOpen: boolean) => void;
   tilaisuudet: VuorovaikutusTilaisuusInput[] | null | undefined;
   projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
+  projekti: ProjektiLisatiedolla;
 }
 
-export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, projektiHenkilot }: Props): ReactElement {
+export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, projektiHenkilot, projekti }: Props): ReactElement {
   const { setValue: parentSetValue } = useFormContext<VuorovaikutusFormValues>();
 
   const onSubmit = useCallback(
@@ -35,6 +37,7 @@ export default function VuorovaikutusDialog({ open, windowHandler, tilaisuudet, 
       tilaisuudet={tilaisuudet || []}
       projektiHenkilot={projektiHenkilot}
       onSubmit={onSubmit}
+      projekti={projekti}
     />
   );
 }

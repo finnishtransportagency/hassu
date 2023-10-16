@@ -1,5 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import * as Yup from "yup";
@@ -96,7 +97,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     [projekti]
   );
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
@@ -104,7 +105,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     context: formContext,
   };
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
   const {
     handleSubmit,
     formState: { isDirty },

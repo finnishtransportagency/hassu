@@ -1,7 +1,8 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -161,7 +162,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = {
     resolver: yupResolver(aloituskuulutusSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
@@ -169,7 +170,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
   const {
     register,
     formState: { errors, isDirty },

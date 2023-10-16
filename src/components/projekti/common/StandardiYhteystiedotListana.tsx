@@ -1,7 +1,7 @@
 import { StandardiYhteystiedot, StandardiYhteystiedotInput, Projekti, Yhteystieto, YhteystietoInput } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { standardiYhteystiedotYhteystiedoiksi, yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useTranslation from "next-translate/useTranslation";
 

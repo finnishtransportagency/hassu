@@ -5,7 +5,8 @@ import Section from "@components/layout/Section";
 import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -194,10 +195,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [projekti]);
 
   const isFormDisabled = disableAdminOnlyFields && hyvaksymispaatosDisabled;
-  const ensimmainenJatkopaatosDisabled = disableAdminOnlyFields || !(isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) && isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1));
+  const ensimmainenJatkopaatosDisabled =
+    disableAdminOnlyFields ||
+    !(isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) && isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1));
   const toinenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2);
 
-  const formOptions: UseFormProps<KasittelynTilaFormValues> = {
+  const formOptions: UseFormProps<KasittelynTilaFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
@@ -208,7 +211,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const { showSuccessMessage } = useSnackbars();
 
-  const useFormReturn = useForm<KasittelynTilaFormValues>(formOptions);
+  const useFormReturn = useForm<KasittelynTilaFormValues, ProjektiValidationContext>(formOptions);
   const {
     register,
     handleSubmit,

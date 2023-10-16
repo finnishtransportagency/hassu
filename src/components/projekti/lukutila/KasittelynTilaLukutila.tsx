@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import Section from "@components/layout/Section";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useTranslation from "next-translate/useTranslation";
 import { formatDateIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";

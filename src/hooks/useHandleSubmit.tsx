@@ -1,4 +1,4 @@
-import { ValidationMode } from "@components/FormValidationModeProvider";
+import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { useMemo } from "react";
 import { FieldValues, useFormContext, UseFormHandleSubmit, UseFormReturn } from "react-hook-form";
 import useValidationMode from "./useValidationMode";

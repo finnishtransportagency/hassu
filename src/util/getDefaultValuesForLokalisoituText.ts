@@ -7,7 +7,7 @@ import {
   UudelleenkuulutusTila,
 } from "@services/api";
 import pickBy from "lodash/pickBy";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 export function getDefaultValuesForLokalisoituText(
   kielitiedot: ProjektiLisatiedolla["kielitiedot"],

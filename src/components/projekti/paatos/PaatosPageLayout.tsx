@@ -7,7 +7,8 @@ import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import { KuulutusJulkaisuTila, MuokkausTila } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import {

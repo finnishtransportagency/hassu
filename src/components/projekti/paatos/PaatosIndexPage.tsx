@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { MuokkausTila } from "@services/api";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { paatosPageLayoutData } from "src/util/getPaatosSpecificData";
 import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";

@@ -1,5 +1,5 @@
 import React, { useMemo, VoidFunctionComponent } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import PaatosPageLayout from "./PaatosPageLayout";
 import { MuokkausTila } from "@services/api";

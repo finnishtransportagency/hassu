@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import SuunnitteluPageLayoutWrapper from "@components/projekti/suunnitteluvaihe/PageLayout";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import SuunnitteluvaiheenPerustiedotLukutila from "@components/projekti/lukutila/SuunnitteluvaiheenPerustiedotLukutila";

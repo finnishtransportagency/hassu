@@ -1,7 +1,7 @@
 import { KayttajaTyyppi, ProjektiKayttaja, Yhteystieto } from "@services/api";
 import { useMemo } from "react";
 import projektiKayttajaToYhteystieto from "src/util/kayttajaTransformationUtil";
-import { ProjektiLisatiedolla } from "./useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 export default function useProjektiHenkilot(projekti: ProjektiLisatiedolla): (Yhteystieto & { kayttajatunnus: string })[] {
   return useMemo(() => {

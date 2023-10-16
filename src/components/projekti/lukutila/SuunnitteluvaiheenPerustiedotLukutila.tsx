@@ -1,7 +1,8 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { Link } from "@mui/material";

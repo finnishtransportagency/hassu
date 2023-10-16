@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import Painikkeet from "./Painikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
@@ -107,7 +107,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
+  const formOptions: UseFormProps<KuulutuksenTiedotFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -115,7 +115,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     context: { projekti, paatos: julkaisematonPaatos, validationMode },
   };
 
-  const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
+  const useFormReturn = useForm<KuulutuksenTiedotFormValues, ProjektiValidationContext>(formOptions);
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
   const {

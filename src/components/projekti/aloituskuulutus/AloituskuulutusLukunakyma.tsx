@@ -10,7 +10,7 @@ import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "hassu-common/util/dateUtils";

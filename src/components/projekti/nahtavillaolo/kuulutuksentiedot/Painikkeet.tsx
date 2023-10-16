@@ -1,7 +1,7 @@
 import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";

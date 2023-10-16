@@ -5,7 +5,7 @@ import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "@services/a
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import React, { useMemo } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
 import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";

@@ -7,7 +7,8 @@ import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback } from "react";
 import useApi from "src/hooks/useApi";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 

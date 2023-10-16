@@ -30,7 +30,8 @@ import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../../PdfPreviewForm";
 import pickBy from "lodash/pickBy";
@@ -176,7 +177,7 @@ function VuorovaikutusKierrosKutsu({
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
+  const formOptions: UseFormProps<VuorovaikutusFormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
       mode: "onChange",
@@ -334,6 +335,7 @@ function VuorovaikutusKierrosKutsu({
               }}
               tilaisuudet={vuorovaikutustilaisuudet}
               projektiHenkilot={projektiHenkilot}
+              projekti={projekti}
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />

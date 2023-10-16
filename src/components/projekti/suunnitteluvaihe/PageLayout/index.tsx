@@ -1,6 +1,7 @@
 import React, { ReactElement, useMemo, ReactNode, useState, useCallback } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { DialogActions, DialogContent, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";

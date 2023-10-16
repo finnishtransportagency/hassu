@@ -11,7 +11,7 @@ import HassuGrid from "@components/HassuGrid";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import replace from "lodash/replace";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { formatNimi } from "../../../../util/userUtil";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";

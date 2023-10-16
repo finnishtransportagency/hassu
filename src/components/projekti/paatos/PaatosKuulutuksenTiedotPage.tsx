@@ -1,6 +1,6 @@
 import React, { useMemo, VoidFunctionComponent } from "react";
 import KuulutuksenTiedot from "@components/projekti/paatos/kuulutuksenTiedot/index";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import Lukunakyma from "@components/projekti/paatos/kuulutuksenTiedot/Lukunakyma";
 import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";

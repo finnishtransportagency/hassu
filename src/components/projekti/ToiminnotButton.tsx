@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import { MenuItem, MenuList, styled, experimental_sx as sx, menuItemClasses } from "@mui/material";
 import { TilaSiirtymaInput, TilasiirtymaTyyppi } from "@services/api";
 import React, { useState, VoidFunctionComponent } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KeyedMutator } from "swr";
 import { SiirraModal } from "./SiirraButton";
 import { UudelleenkuulutaModal } from "./UudelleenkuulutaButton";

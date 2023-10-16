@@ -122,6 +122,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "AsianTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "SCALAR",
         "name": "Boolean",
         "possibleTypes": null,

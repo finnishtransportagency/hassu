@@ -2,7 +2,8 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { AsiakirjaTyyppi, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
 import React, { useCallback, useMemo, useState } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useSnackbars from "src/hooks/useSnackbars";
 import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
@@ -133,6 +134,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
           projektiHenkilot={projektiHenkilot}
           onSubmit={paivitaVuorovaikutustilaisuuksia}
           mostlyDisabled={true}
+          projekti={projekti}
         />
       </Section>
     </>

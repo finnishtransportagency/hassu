@@ -14,7 +14,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import ExtLink from "@components/ExtLink";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
 import DownloadLink from "@components/DownloadLink";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";

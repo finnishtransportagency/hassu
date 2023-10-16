@@ -1,6 +1,6 @@
 import isInteger from "lodash/isInteger";
 import { NextRouter } from "next/router";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 const isPositiveInteger = (num: number) => {
   return isInteger(num) && num > 0;

@@ -1,5 +1,5 @@
 import { Projekti, Status } from "@services/api";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 export function projektiOnEpaaktiivinen(projekti: Projekti | ProjektiLisatiedolla | null | undefined): boolean {
   if (!projekti) return true;

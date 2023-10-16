@@ -52,10 +52,21 @@ export async function applyProjektiStatus(projekti: API.Projekti): Promise<void>
   const perustiedot = new (class extends StatusHandler<API.Projekti> {
     async handle(p: API.Projekti) {
       // Initial state
-      p.tallennettu = true;
-      const testContext = {
+      const asianhallintaAktivoitavissa =
+        (await parameters.isAsianhallintaIntegrationEnabled()) &&
+        p.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+      const projekti: ProjektiLisatiedolla = {
+        ...p,
+        nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
+        asianhallinta: {
+          asianhallintaAktivoitavissa,
+          asianhallintaAktiivinen: asianhallintaAktivoitavissa && !!p.asianhallintaIntegraatio,
+        },
+        tallennettu: true,
+      };
+      const testContext: ValidateOptions<ProjektiValidationContext> = {
         context: {
-          projekti: p,
+          projekti,
           isRuotsinkielinenProjekti: {
             current: [p.kielitiedot?.ensisijainenKieli, p.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
           },

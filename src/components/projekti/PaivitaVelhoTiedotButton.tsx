@@ -1,6 +1,6 @@
 import React, { useCallback, VoidFunctionComponent } from "react";
 import Button from "@components/button/Button";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KeyedMutator } from "swr";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";

@@ -2,7 +2,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
 import Painikkeet from "./Painikkeet";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
@@ -87,7 +88,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
+  const formOptions: UseFormProps<KuulutuksenTiedotFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -95,7 +96,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
+  const useFormReturn = useForm<KuulutuksenTiedotFormValues, ProjektiValidationContext>(formOptions);
   const {
     formState: { isDirty },
   } = useFormReturn;

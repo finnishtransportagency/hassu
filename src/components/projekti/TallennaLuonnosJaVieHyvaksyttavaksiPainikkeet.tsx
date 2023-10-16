@@ -5,7 +5,8 @@ import { KuntaVastaanottajaInput, Status, TallennaProjektiInput, TilasiirtymaToi
 import React, { useCallback } from "react";
 import { FieldValues, SubmitHandler, UnpackNestedValue } from "react-hook-form";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import useSnackbars from "src/hooks/useSnackbars";
 import { projektiMeetsMinimumStatus } from "src/util/routes";

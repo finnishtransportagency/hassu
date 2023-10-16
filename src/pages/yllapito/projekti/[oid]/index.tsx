@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -139,7 +140,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const hasEuRahoitus = useRef(!!projekti.euRahoitus);
 
-  const formOptions: UseFormProps<FormValues> = useMemo(() => {
+  const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
       defaultValues,
@@ -149,7 +150,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     };
   }, [defaultValues, projekti]);
 
-  const useFormReturn = useForm<FormValues>(formOptions);
+  const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
 
   const {
     register,
