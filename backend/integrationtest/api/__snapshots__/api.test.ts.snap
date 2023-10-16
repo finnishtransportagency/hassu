@@ -11608,7 +11608,7 @@ Object {
 
 exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
-  "description": "Nähtävilläolo julkaistu, schedule",
+  "description": "Nähtävilläolojulkaisu hyväksytty, schedule",
   "mockedtime": "2023-12-31T00:00",
   "obj": Array [
     Object {
