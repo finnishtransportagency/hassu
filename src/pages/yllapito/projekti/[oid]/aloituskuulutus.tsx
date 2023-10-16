@@ -185,7 +185,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const saveAloituskuulutus = useCallback(
+  const preSubmitFunction = useCallback(
     async (formData: FormValues) => {
       const pohjoisSaameIlmoitusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME
         ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
@@ -209,10 +209,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
-      await api.tallennaProjekti(formData);
-      await reloadProjekti();
+      return formData;
     },
-    [api, reloadProjekti, talletaTiedosto]
+    [talletaTiedosto]
   );
 
   useEffect(() => {
@@ -480,8 +479,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           <FormProvider {...useFormReturn}>
             <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
               kuntavastaanottajat={kunnat}
+              preSubmitFunction={preSubmitFunction}
               projekti={projekti}
-              saveVaihe={saveAloituskuulutus}
               tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
             />
           </FormProvider>

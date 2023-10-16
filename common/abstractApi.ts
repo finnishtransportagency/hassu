@@ -45,6 +45,7 @@ import {
   SuomifiKayttaja,
   SuoritaTestiKomentoMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
+  TallennaJaSiirraTilaaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
   TestiKomentoInput,
@@ -82,6 +83,12 @@ export const apiConfig: ApiConfig = {
     name: "tallennaProjekti",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaProjekti,
+    isYllapitoOperation: true,
+  },
+  tallennaJaSiirraTilaa: {
+    name: "tallennaJaSiirraTilaa",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaJaSiirraTilaa,
     isYllapitoOperation: true,
   },
   lataaProjekti: {
@@ -280,6 +287,13 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);
+  }
+
+  async tallennaJaSiirraTilaa(projekti: TallennaProjektiInput, tilasiirtyma: TilaSiirtymaInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaJaSiirraTilaa, {
+      projekti,
+      tilasiirtyma,
+    } as TallennaJaSiirraTilaaMutationVariables);
   }
 
   async arkistoiProjekti(oid: string): Promise<Projekti> {

@@ -51,6 +51,7 @@ import {
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
+  sendHyvaksymisPaatosForApproval,
   testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymismenettelyssa,
   testHyvaksymisPaatosAineistoSendForApproval,
@@ -115,13 +116,13 @@ describe("Api", () => {
     }
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
-    const projekti = await testAloituskuulutus(oid);
+    let projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
-    await testNullifyProjektiField(projekti);
+    projekti = await testNullifyProjektiField(projekti);
 
     asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
     const projektiPaallikko = findProjektiPaallikko(projekti);
-    await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+    await testAloituskuulutusApproval(projekti, projektiPaallikko, userFixture);
 
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
@@ -185,7 +186,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    await testSuunnitteluvaiheVuorovaikutus(
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -197,7 +198,7 @@ describe("Api", () => {
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, "Ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
+    await julkaiseSuunnitteluvaihe(projekti, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
 
     await peruVerkkoVuorovaikutusTilaisuudet(oid, "Verkkotilaisuuksien perumisen jälkeen", userFixture);
     emailClientStub.verifyEmailsSent();
@@ -231,7 +232,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    await testSuunnitteluvaiheVuorovaikutus(
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -240,7 +241,7 @@ describe("Api", () => {
       userFixture
     );
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
+    await julkaiseSuunnitteluvaihe(projekti, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
     await schedulerMock.verifyAndRunSchedule();
     await testAineistoProcessing(oid, eventSqsClientMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -275,19 +276,20 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
     await testNahtavillaoloApproval(
-      oid,
+      projekti.oid,
       projektiPaallikko,
       userFixture,
       Status.SUUNNITTELU,
       "NahtavillaOloJulkinenAfterApprovalButNotPublic"
     );
-    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty.");
+
+    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo hyväksytty mutta ei vielä julki.");
@@ -359,7 +361,7 @@ describe("Api", () => {
 
     await testHyvaksymisPaatosVaihe(oid, userFixture);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    await testCreateHyvaksymisPaatosWithAineistot(
+    projekti = await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
       velhoToimeksiannot,
@@ -370,18 +372,12 @@ describe("Api", () => {
 
     // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä eventSqsClientMock.processQueue() kutsuttu)
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-    await expect(
-      api.siirraTila({
-        oid,
-        tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-        toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-      })
-    ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
+    await expect(sendHyvaksymisPaatosForApproval(projekti)).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
-
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
+    projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    await testHyvaksymisPaatosVaiheApproval(projekti, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
     await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();

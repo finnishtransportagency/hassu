@@ -22,7 +22,7 @@ import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { projektiSchedulerService } from "../../../src/scheduler/projektiSchedulerService";
 import { DBProjekti } from "../../../src/database/model";
-import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
+import { adaptStandardiYhteystiedotToSave, removeTypeName } from "../../../src/projekti/adapter/adaptToDB";
 import MockDate from "mockdate";
 import { parseDate } from "../../../src/util/dateUtil";
 import { uploadFile } from "../../util/s3Util";
@@ -219,7 +219,7 @@ export async function testAloitusKuulutusEsikatselu(projekti: Projekti): Promise
   fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
 }
 
-export async function testNullifyProjektiField(projekti: Projekti): Promise<void> {
+export async function testNullifyProjektiField(projekti: Projekti): Promise<Projekti> {
   // Test that fields can be removed as well
   const oid = projekti.oid;
   await api.tallennaProjekti({
@@ -230,20 +230,49 @@ export async function testNullifyProjektiField(projekti: Projekti): Promise<void
 
   const projekti2 = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
   expect(projekti2.muistiinpano).to.be.undefined;
+  return projekti2;
 }
 
 export async function testAloituskuulutusApproval(
-  oid: string,
+  projekti: Projekti,
   projektiPaallikko: API.ProjektiKayttaja,
   userFixture: UserFixture
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-  await api.siirraTila({
-    oid,
-    tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS,
-    toiminto: API.TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-  });
-  await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: API.TilasiirtymaToiminto.HYVAKSY });
+  await api.tallennaJaSiirraTilaa(
+    {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      aloitusKuulutus: {
+        kuulutusPaiva: projekti.aloitusKuulutus?.kuulutusPaiva,
+        siirtyySuunnitteluVaiheeseen: projekti.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen,
+        hankkeenKuvaus: {
+          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI as string,
+          RUOTSI: projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI,
+        },
+        kuulutusYhteystiedot: {
+          yhteysHenkilot: projekti.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot,
+          yhteysTiedot: projekti.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map(
+            (tieto) => removeTypeName<API.YhteystietoInput>(tieto) as API.YhteystietoInput
+          ),
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map(
+            (tieto) => removeTypeName<API.KuntaVastaanottajaInput>(tieto) as API.KuntaVastaanottajaInput
+          ),
+          viranomaiset: projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(
+            (tieto) => removeTypeName<API.ViranomaisVastaanottajaInput>(tieto) as API.ViranomaisVastaanottajaInput
+          ),
+        },
+      },
+    },
+    {
+      oid: projekti.oid,
+      tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: API.TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    }
+  );
+  await api.siirraTila({ oid: projekti.oid, tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: API.TilasiirtymaToiminto.HYVAKSY });
 }
 
 export async function testSuunnitteluvaihePerustiedot(
@@ -575,22 +604,87 @@ export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: User
   return projekti;
 }
 
-export async function julkaiseSuunnitteluvaihe(oid: string, description: string, userFixture: UserFixture): Promise<void> {
-  await api.siirraTila({
-    oid,
-    toiminto: API.TilasiirtymaToiminto.HYVAKSY,
-    tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-  });
+export async function julkaiseSuunnitteluvaihe(projekti: Projekti, description: string, userFixture: UserFixture): Promise<void> {
+  await api.tallennaJaSiirraTilaa(
+    {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero as number,
+        hankkeenKuvaus: removeTypeName(projekti.vuorovaikutusKierros?.hankkeenKuvaus),
+        arvioSeuraavanVaiheenAlkamisesta: removeTypeName(projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta),
+        suunnittelunEteneminenJaKesto: removeTypeName(projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto),
+        palautteidenVastaanottajat: projekti.vuorovaikutusKierros?.palautteidenVastaanottajat,
+        vuorovaikutusJulkaisuPaiva: projekti.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
+        kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan,
+        vuorovaikutusTilaisuudet: projekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map((tilaisuus) => ({
+          tyyppi: tilaisuus.tyyppi,
+          nimi: removeTypeName(tilaisuus.nimi),
+          paivamaara: tilaisuus.paivamaara,
+          alkamisAika: tilaisuus.alkamisAika,
+          paattymisAika: tilaisuus.paattymisAika,
+          kaytettavaPalvelu: tilaisuus.kaytettavaPalvelu,
+          linkki: tilaisuus.linkki,
+          paikka: removeTypeName(tilaisuus.paikka),
+          osoite: removeTypeName(tilaisuus.osoite),
+          postinumero: tilaisuus.postinumero,
+          postitoimipaikka: removeTypeName(tilaisuus.postitoimipaikka),
+          lisatiedot: removeTypeName(tilaisuus.lisatiedot),
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot,
+            yhteysTiedot: tilaisuus.esitettavatYhteystiedot?.yhteysTiedot?.map(
+              (tieto) => removeTypeName<API.YhteystietoInput>(tieto) as API.YhteystietoInput
+            ),
+          },
+          peruttu: tilaisuus.peruttu,
+        })),
+        esittelyaineistot: projekti.vuorovaikutusKierros?.esittelyaineistot?.map(
+          (aineisto) => removeTypeName(aineisto) as API.AineistoInput
+        ),
+        suunnitelmaluonnokset: projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(
+          (aineisto) => removeTypeName(aineisto) as API.AineistoInput
+        ),
+        videot: projekti.vuorovaikutusKierros?.videot?.map((video) => ({
+          SUOMI: removeTypeName(video.SUOMI) as API.LinkkiInput,
+          RUOTSI: removeTypeName(video.RUOTSI),
+        })),
+        suunnittelumateriaali: projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((video) => ({
+          SUOMI: removeTypeName(video.SUOMI) as API.LinkkiInput,
+          RUOTSI: removeTypeName(video.RUOTSI),
+        })),
+        esitettavatYhteystiedot: {
+          yhteysHenkilot: projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot,
+          yhteysTiedot: projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot?.map(
+            (tieto) => removeTypeName<API.YhteystietoInput>(tieto) as API.YhteystietoInput
+          ),
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: projekti.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.kunnat?.map(
+            (tieto) => removeTypeName<API.KuntaVastaanottajaInput>(tieto) as API.KuntaVastaanottajaInput
+          ),
+          viranomaiset: projekti.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.viranomaiset?.map(
+            (tieto) => removeTypeName<API.ViranomaisVastaanottajaInput>(tieto) as API.ViranomaisVastaanottajaInput
+          ),
+        },
+        selosteVuorovaikutuskierrokselle: projekti.vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle,
+      },
+    },
+    {
+      oid: projekti.oid,
+      toiminto: API.TilasiirtymaToiminto.HYVAKSY,
+      tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+    }
+  );
   userFixture.logout();
-  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
   let vuorovaikutukset = projektiJulkinen.vuorovaikutukset;
   if (vuorovaikutukset) {
     vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutukset);
   }
 
   expectToMatchSnapshot(description + ", publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
-  await verifyVuorovaikutusSnapshot(oid, userFixture, description);
-  await verifyProjektiSchedule(oid, description);
+  await verifyVuorovaikutusSnapshot(projekti.oid, userFixture, description);
+  await verifyProjektiSchedule(projekti.oid, description);
 }
 
 export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, description: string, userFixture: UserFixture): Promise<void> {

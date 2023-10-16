@@ -234,20 +234,21 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
   const projekti = await loadProjektiFromDatabase(oid, status);
   expectToMatchSnapshot("testVaiheAfterSiirraUudelleenkuulutettavaksi", luonnoksenSiivoaja(projekti));
 
-  await api.tallennaProjekti({
-    oid,
-    versio: projekti.versio,
-    [luonnosKey]: {
-      kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
-      uudelleenKuulutus: {
-        selosteKuulutukselle: { SUOMI: "Kuulutetaan uudelleen kuulutusteksti ..." },
-        selosteLahetekirjeeseen: { SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ..." },
+  await api.tallennaJaSiirraTilaa(
+    {
+      oid,
+      versio: projekti.versio,
+      [luonnosKey]: {
+        kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
+        uudelleenKuulutus: {
+          selosteKuulutukselle: { SUOMI: "Kuulutetaan uudelleen kuulutusteksti ..." },
+          selosteLahetekirjeeseen: { SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ..." },
+        },
       },
     },
-  });
-
-  await api.siirraTila({ oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, tyyppi: tilasiirtymaTyyppi });
+    { oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, tyyppi: tilasiirtymaTyyppi }
+  );
 }
 
 async function hyvaksyUudelleenkuulutus(

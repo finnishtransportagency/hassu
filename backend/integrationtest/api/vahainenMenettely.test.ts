@@ -58,11 +58,11 @@ describe("Api", () => {
     });
     projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
-    await testNullifyProjektiField(projekti);
+    projekti = await testNullifyProjektiField(projekti);
 
     asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
     let projektiPaallikko = findProjektiPaallikko(projekti);
-    await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+    await testAloituskuulutusApproval(projekti, projektiPaallikko, userFixture);
 
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen, vähäinen menttely", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
@@ -83,12 +83,19 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
-    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
+    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    await testNahtavillaoloApproval(
+      projekti.oid,
+      projektiPaallikko,
+      userFixture,
+      Status.NAHTAVILLAOLO,
+      "NahtavillaOloJulkinenAfterApproval"
+    );
+
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();

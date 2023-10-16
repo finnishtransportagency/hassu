@@ -2,7 +2,7 @@ import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuT
 import log from "loglevel";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { paatosSpecificRoutesMap, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
@@ -19,15 +19,13 @@ interface Props {
 }
 
 export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisematonPaatos }: Props) {
-  const { mutate: reloadProjekti } = useProjekti();
-
   const { watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const saveHyvaksymisPaatosVaihe = useCallback(
+  const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
       const paatosVaihe = formData[paatosVaiheAvain];
@@ -54,12 +52,9 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       } else {
         log.error("Puuttuu hyvaksymispaatosvaiheen tallennuksessa: " + paatosVaiheAvain);
       }
-      await api.tallennaProjekti(convertedFormData);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
+      return convertedFormData;
     },
-    [api, paatosTyyppi, reloadProjekti, talletaTiedosto]
+    [paatosTyyppi, talletaTiedosto]
   );
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
@@ -81,7 +76,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
-          saveVaihe={saveHyvaksymisPaatosVaihe}
+          preSubmitFunction={preSubmitFunction}
           tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
         />
       )}

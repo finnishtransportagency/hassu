@@ -1,7 +1,7 @@
 import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
@@ -13,15 +13,13 @@ interface Props {
 }
 
 export default function Painikkeet({ projekti }: Props) {
-  const { mutate: reloadProjekti } = useProjekti();
-
   const { watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const saveNahtavillaolo = useCallback(
+  const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const pohjoisSaameIlmoitusPdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
         ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
@@ -40,12 +38,9 @@ export default function Painikkeet({ projekti }: Props) {
       if (formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
         formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
-      await api.tallennaProjekti(formData);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
+      return formData;
     },
-    [api, reloadProjekti, talletaTiedosto]
+    [talletaTiedosto]
   );
 
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
@@ -69,7 +64,7 @@ export default function Painikkeet({ projekti }: Props) {
         <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
-          saveVaihe={saveNahtavillaolo}
+          preSubmitFunction={preSubmitFunction}
           tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
         />
       )}

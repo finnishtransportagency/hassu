@@ -21,6 +21,7 @@ import {
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiMutationVariables,
   SuoritaTestiKomentoMutationVariables,
+  TallennaJaSiirraTilaaMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -33,6 +34,7 @@ import {
   loadProjektiYllapito,
   projektinTila,
   synchronizeUpdatesFromVelho,
+  tallennaJaSiirraTilaa,
   updatePerustiedot,
   updateVuorovaikutus,
 } from "../projekti/projektiHandler";
@@ -67,7 +69,6 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
     case apiConfig.synkronoiProjektiMuutoksetVelhosta.name:
       return synchronizeUpdatesFromVelho((event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid);
-
     case apiConfig.nykyinenKayttaja.name:
       return getCurrentUser();
     case apiConfig.listaaKayttajat.name:
@@ -78,6 +79,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
       return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+    case apiConfig.tallennaJaSiirraTilaa.name:
+      return tallennaJaSiirraTilaa(event.arguments as TallennaJaSiirraTilaaMutationVariables);
     case apiConfig.esikatseleAsiakirjaPDF.name:
       return lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:

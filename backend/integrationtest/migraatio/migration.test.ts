@@ -88,7 +88,7 @@ describe("Migraatio", () => {
     asetaAika(p.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
     await schedulerMock.verifyAndRunSchedule();
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await julkaiseSuunnitteluvaihe(oid, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
+    await julkaiseSuunnitteluvaihe(p, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "Suunnitteluvaiheeseen migroitu julkinen projekti");
@@ -113,9 +113,15 @@ describe("Migraatio", () => {
     asetaAika(projekti.nahtavillaoloVaihe?.kuulutusPaiva);
     await schedulerMock.verifyAndRunSchedule();
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await eventSqsClientMock.processQueue();
-    await testNahtavillaoloApproval(oid, projektipaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
+    await testNahtavillaoloApproval(
+      projekti.oid,
+      projektipaallikko,
+      userFixture,
+      Status.NAHTAVILLAOLO,
+      "NahtavillaOloJulkinenAfterApproval"
+    );
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
@@ -149,7 +155,7 @@ describe("Migraatio", () => {
     asetaAika(p.hyvaksymisPaatosVaihe?.kuulutusPaiva);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYTTY);
+    await testHyvaksymisPaatosVaiheApproval(p, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYTTY);
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
     await eventSqsClientMock.processQueue();
