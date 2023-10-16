@@ -162,7 +162,7 @@ class ProjektiAdapterJulkinen {
       jatkoPaatos2Vaihe,
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
-    applyProjektiJulkinenStatus(projektiJulkinen);
+    await applyProjektiJulkinenStatus(projektiJulkinen);
     if (projektiJulkinen.status && this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {

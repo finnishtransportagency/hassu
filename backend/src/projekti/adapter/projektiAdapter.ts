@@ -130,7 +130,7 @@ export class ProjektiAdapter {
     });
 
     if (apiProjekti.tallennettu) {
-      applyProjektiStatus(apiProjekti);
+      await applyProjektiStatus(apiProjekti);
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
     }

@@ -29,9 +29,10 @@ describe("applyProjektiStatus", () => {
         velho: {
           __typename: "Velho",
         },
+        kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
     };
-    applyProjektiStatus(projekti as API.Projekti);
+    await applyProjektiStatus(projekti as API.Projekti);
     expect(projekti.status).to.eql(API.Status.SUUNNITTELU);
   });
 
@@ -60,9 +61,10 @@ describe("applyProjektiStatus", () => {
         velho: {
           __typename: "Velho",
         },
+        kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
     };
-    applyProjektiStatus(projekti as API.Projekti);
+    await applyProjektiStatus(projekti as API.Projekti);
     expect(projekti.status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
   });
 });

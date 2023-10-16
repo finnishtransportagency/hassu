@@ -1,5 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
+import {
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  Status,
+  SuunnittelustaVastaavaViranomainen,
+  VuorovaikutusKierrosTila,
+} from "hassu-common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -8,6 +15,8 @@ import { GenericApiKuulutusJulkaisu } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { ValidateOptions } from "yup/lib/types";
+import { parameters } from "../../aws/parameters";
 
 function isJulkaisuMigroituOrHyvaksyttyAndInPast<T extends GenericApiKuulutusJulkaisu>(julkaisu: T | null | undefined): boolean {
   const julkaisuMigratoitu = julkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;
@@ -39,9 +48,9 @@ function getHyvaksyttyHyvaksymisPaatosJulkaisu(julkaisu: API.HyvaksymisPaatosVai
   return julkaisu;
 }
 
-export function applyProjektiStatus(projekti: API.Projekti): void {
+export async function applyProjektiStatus(projekti: API.Projekti): Promise<void> {
   const perustiedot = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       // Initial state
       p.tallennettu = true;
       const testContext = {
@@ -81,23 +90,23 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         p.aloitusKuulutus = { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MUOKKAUS };
       }
       p.status = API.Status.ALOITUSKUULUTUS;
-      super.handle(p); // Continue evaluating next rules
+      await super.handle(p); // Continue evaluating next rules
     }
   })();
 
   const suunnittelu = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       if (p.vahainenMenettely) {
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       } else if (p.aloitusKuulutusJulkaisu) {
         p.status = API.Status.SUUNNITTELU;
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       }
     }
   })();
 
   const nahtavillaOlo = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       if (
         p.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU ||
         p.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN ||
@@ -114,13 +123,13 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         ) {
           p.status = API.Status.NAHTAVILLAOLO;
         }
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       }
     }
   })();
 
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       if (isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT;
         if (!p.hyvaksymisPaatosVaihe && !p.hyvaksymisPaatosVaiheJulkaisu) {
@@ -137,7 +146,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
             p.status = API.Status.HYVAKSYTTY;
           }
         }
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       }
     }
   })();
@@ -155,7 +164,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Ensimmäisen jatkopäätöksen päivämäärä ja asiatunnus annettu
    */
   const jatkoPaatos1 = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       const jatkoPaatos = p.kasittelynTila?.ensimmainenJatkopaatos;
       if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm && jatkoPaatos.aktiivinen) {
         p.status = API.Status.JATKOPAATOS_1_AINEISTOT;
@@ -165,7 +174,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         ) {
           p.status = API.Status.JATKOPAATOS_1;
         }
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       }
     }
   })();
@@ -183,7 +192,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
    * Ensimmäisen jatkopäätöksen päivämäärä ja asiatunnus annettu
    */
   const jatkoPaatos2 = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
+    async handle(p: API.Projekti) {
       const jatkoPaatos = p.kasittelynTila?.toinenJatkopaatos;
       if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm) {
         p.status = API.Status.JATKOPAATOS_2_AINEISTOT;
@@ -193,7 +202,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         ) {
           p.status = API.Status.JATKOPAATOS_2;
         }
-        super.handle(p); // Continue evaluating next rules
+        await super.handle(p); // Continue evaluating next rules
       }
     }
   })();
@@ -216,5 +225,5 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     .setNext(epaAktiivinen2)
     .setNext(jatkoPaatos2)
     .setNext(epaAktiivinen3);
-  perustiedot.handle(projekti);
+  await perustiedot.handle(projekti);
 }

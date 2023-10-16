@@ -25,7 +25,7 @@ describe("applyProjektiJulkinenStatus", () => {
         },
       },
     };
-    applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
+    await applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
     expect(projekti.status).to.eql(API.Status.ALOITUSKUULUTUS);
   });
 
@@ -50,7 +50,7 @@ describe("applyProjektiJulkinenStatus", () => {
         },
       },
     };
-    applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
+    await applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
     expect(projekti.status).to.eql(API.Status.ALOITUSKUULUTUS);
   });
 
@@ -84,7 +84,7 @@ describe("applyProjektiJulkinenStatus", () => {
         yhteystiedot: [],
       },
     };
-    applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
+    await applyProjektiJulkinenStatus(projekti as API.ProjektiJulkinen);
     expect(projekti.status).to.eql(API.Status.NAHTAVILLAOLO);
   });
 });
