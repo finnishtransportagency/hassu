@@ -37,7 +37,7 @@ async function handleZipping(ctx: ImportContext) {
   await projektiDatabase.saveProjektiWithoutLocking({
     oid,
     versio: ctx.projekti.versio,
-    nahtavillaoloVaihe: { ...nahtavillaoloVaihe, aineistopaketti: aineistopakettiRelativeS3Key },
+    nahtavillaoloVaihe: { ...nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key },
   });
 }
 
