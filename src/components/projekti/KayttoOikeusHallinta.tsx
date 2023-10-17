@@ -47,6 +47,8 @@ interface Props {
   suunnitteluSopimusYhteysHenkilo?: string | undefined;
   projekti: ProjektiLisatiedolla;
   includeTitle: boolean;
+  ohjeetOpen: boolean;
+  ohjeetOnClose: () => void;
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
@@ -96,6 +98,8 @@ function KayttoOikeusHallintaFormElements({
   suunnitteluSopimusYhteysHenkilo,
   projekti,
   includeTitle,
+  ohjeetOpen,
+  ohjeetOnClose,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -132,16 +136,6 @@ function KayttoOikeusHallintaFormElements({
   useEffect(() => {
     onKayttajatUpdate(kayttoOikeudet || []);
   }, [kayttoOikeudet, onKayttajatUpdate]);
-
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("kayttoOikeusOhjeet", "false");
-  }, []);
 
   return (
     <Section gap={8}>

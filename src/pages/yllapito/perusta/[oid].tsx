@@ -140,6 +140,15 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     },
     [setFormContext]
   );
+  const [kayttooikeusOhjeetOpen, kayttooikeusOhjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const kayttooikeusOhjeetOnClose = useCallback(() => {
+    kayttooikeusOhjeetSetOpen(false);
+    localStorage.setItem("kayttoOikeusOhjeet", "false");
+  }, []);
 
   return (
     <>
@@ -159,6 +168,8 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
               onKayttajatUpdate={onKayttajatUpdate}
               projekti={projekti}
               includeTitle={true}
+              ohjeetOpen={kayttooikeusOhjeetOpen}
+              ohjeetOnClose={kayttooikeusOhjeetOnClose}
             />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">

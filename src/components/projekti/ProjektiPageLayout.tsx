@@ -2,20 +2,30 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import React, { ReactElement, ReactNode } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
-import { Stack } from "@mui/material";
+import { IconButton, Stack, SvgIcon } from "@mui/material";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import AsianhallintaStatusNotification from "./AsianhallintaStatusNotification";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   children: ReactNode;
   title: string;
   vaihe?: Vaihe;
   contentAsideTitle?: ReactNode;
+  showInfo?: boolean;
+  onOpenInfo?: () => void;
 }
 
-export default function ProjektiPageLayout({ children, title, contentAsideTitle, vaihe }: Props): ReactElement {
+export default function ProjektiPageLayout({
+  children,
+  title,
+  contentAsideTitle,
+  showInfo = false,
+  onOpenInfo,
+  vaihe,
+}: Props): ReactElement {
   const { data: projekti } = useProjekti();
 
   if (!projekti) {
@@ -36,7 +46,17 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
             direction={{ xs: "column", sm: "row" }}
             rowGap={0}
           >
-            <h1>{title}</h1>
+            <h1>
+              {title}{" "}
+              {showInfo && (
+                <IconButton onClick={onOpenInfo}>
+                  <SvgIcon>
+                    <FontAwesomeIcon icon="info-circle" />
+                  </SvgIcon>
+                </IconButton>
+              )}
+            </h1>
+
             {contentAsideTitle}
           </Stack>
           <ContentSpacer gap={7}>

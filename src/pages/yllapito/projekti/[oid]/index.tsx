@@ -66,6 +66,22 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(false);
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("perustietojenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("perustietojenOhjeet", "true");
+  }, []);
+
+  // useeffectissa vasta ohjeetOpen "alustus" koska muuten ongelmia nextjs ssr takia tms, eli ReferenceError: localStorage is not defined
+  useEffect(() => {
+    const savedValue = localStorage.getItem("perustietojenOhjeet");
+    ohjeetSetOpen(savedValue ? savedValue.toLowerCase() !== "false" : true);
+  }, []);
+
   if (!projekti) {
     return <></>;
   }
@@ -74,13 +90,15 @@ export default function ProjektiSivu() {
   return (
     <ProjektiPageLayout
       title={"Projektin tiedot"}
+      showInfo={!epaaktiivinen && !ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
       contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
       {projekti &&
         (epaaktiivinen ? (
           <ProjektinTiedotLukutila projekti={projekti} />
         ) : (
-          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+          <ProjektiSivuLomake ohjeetOpen={ohjeetOpen} ohjeetOnClose={ohjeetOnClose} {...{ projekti, projektiLoadError, reloadProjekti }} />
         ))}
     </ProjektiPageLayout>
   );
@@ -90,9 +108,11 @@ interface ProjektiSivuLomakeProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  ohjeetOpen: boolean;
+  ohjeetOnClose: () => void;
 }
 
-function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
+function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjeetOpen, ohjeetOnClose }: ProjektiSivuLomakeProps) {
   const { data: nykyinenKayttaja } = useCurrentUser();
   const router = useRouter();
 
@@ -260,16 +280,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       }
     }
   }, [projekti, router, statusBeforeSave]);
-
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("perustietojenOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("perustietojenOhjeet", "false");
-  }, []);
 
   return (
     <>

@@ -264,6 +264,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     ohjeetSetOpen(false);
     localStorage.setItem("aloituskuulutuksenOhjeet", "false");
   }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("aloituskuulutuksenOhjeet", "true");
+  }, []);
 
   if (!projekti || isLoadingProjekti) {
     return <></>;
@@ -292,6 +296,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     <ProjektiPageLayout
       title="Aloituskuulutus"
       vaihe={Vaihe.ALOITUSKUULUTUS}
+      showInfo={voiMuokata && !ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
       contentAsideTitle={
         showUudelleenkuulutaButton && (
           <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />

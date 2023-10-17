@@ -160,11 +160,17 @@ function SuunnitteluPageLayout({
     ohjeetSetOpen(false);
     localStorage.setItem("suunnitteluvaiheenOhjeet", "false");
   }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("suunnitteluvaiheenOhjeet", "true");
+  }, []);
 
   return (
     <ProjektiPageLayout
       title="Suunnittelu"
       vaihe={Vaihe.SUUNNITTELU}
+      showInfo={!published && !ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
       contentAsideTitle={
         !showLuoUusiKutsuButton && (
           <Button

@@ -91,6 +91,20 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
 
   const showSiirraButton = projekti.nykyinenKayttaja.onYllapitaja && isAllowedToMoveBackToSuunnitteluvaihe(projekti);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("nahtavillaolokuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "true");
+  }, []);
+
   const contentAsideTitle = useMemo(() => {
     if (!showUudelleenkuulutaButton && !showSiirraButton) {
       return null;
@@ -106,18 +120,14 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
 
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
 
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("nahtavillaolokuulutuksenOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "false");
-  }, []);
-
   return (
-    <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Kuulutus nähtäville asettamisesta" contentAsideTitle={contentAsideTitle}>
+    <ProjektiPageLayout
+      vaihe={Vaihe.NAHTAVILLAOLO}
+      title="Kuulutus nähtäville asettamisesta"
+      contentAsideTitle={contentAsideTitle}
+      showInfo={!ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
+    >
       {!migroitu ? (
         <>
           <Section noDivider>
