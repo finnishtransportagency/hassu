@@ -3,9 +3,9 @@ import { VuorovaikutusKierrosJulkaisu, Kielitiedot } from "@services/api";
 import React, { ComponentProps, ReactElement } from "react";
 import { formatDate } from "hassu-common/util/dateUtils";
 import Section from "@components/layout/Section2";
-import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { label } from "src/util/textUtil";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
@@ -28,7 +28,11 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
       {ensisijainenKaannettavaKieli && (
         <SectionContent>
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})
+            {label({
+              label: "Tiivistetty hankkeen sisällönkuvaus",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
           </p>
           <PreWrapParagraph>{vuorovaikutus?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
         </SectionContent>
@@ -36,7 +40,11 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
       {toissijainenKaannettavaKieli && (
         <SectionContent className="content">
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
+            {label({
+              label: "Tiivistetty hankkeen sisällönkuvaus",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
           </p>
           <PreWrapParagraph>{vuorovaikutus.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
         </SectionContent>

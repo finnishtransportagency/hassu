@@ -10,7 +10,6 @@ import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
 import DownloadLink from "@components/DownloadLink";
-import lowerCase from "lodash/lowerCase";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
@@ -23,6 +22,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import { label } from "src/util/textUtil";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -60,7 +60,12 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
   let hyvaksymisPaatosVaiheHref: string | undefined;
   if (published) {
     hyvaksymisPaatosVaiheHref =
-      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "/hyvaksymispaatos" : "/jatkopaatos1");
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      "/suunnitelma/" +
+      projekti.oid +
+      (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "/hyvaksymispaatos" : "/jatkopaatos1");
   }
 
   return (
@@ -173,7 +178,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         ) : (
           <SectionContent>
             <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(julkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            <p>
+              {label({
+                label: "Kuulutus ja ilmoitus",
+                inputLanguage: Kieli.SUOMI,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 {ensisijaisetPDFt.__typename === "HyvaksymisPaatosVaihePDF" && (
@@ -213,9 +224,15 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               </div>
             )}
 
-            {julkaisu.kielitiedot?.toissijainenKieli && (
+            {toissijainenKieli && (
               <div className="content mb-4">
-                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(julkaisu.kielitiedot?.toissijainenKieli)})</p>
+                <p>
+                  {label({
+                    label: "Kuulutus ja ilmoitus",
+                    inputLanguage: toissijainenKieli,
+                    toissijainenKieli: toissijainenKieli,
+                  })}
+                </p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     {toissijaisetPDFt.__typename === "HyvaksymisPaatosVaihePDF" && (

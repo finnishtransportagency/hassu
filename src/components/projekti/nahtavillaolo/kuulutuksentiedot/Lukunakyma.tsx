@@ -1,7 +1,6 @@
 import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
-import lowerCase from "lodash/lowerCase";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
@@ -23,6 +22,7 @@ import DownloadLink from "@components/DownloadLink";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { label } from "src/util/textUtil";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -98,8 +98,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         )}
         <div>
           <p className="vayla-label">
-            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
-            {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
+            {label({
+              label: "Tiivistetty hankkeen sisällönkuvaus",
+              inputLanguage: Kieli.SUOMI,
+              toissijainenKieli: toissijainenKieli,
+            })}
           </p>
           <PreWrapParagraph>
             {nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
@@ -110,7 +113,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         {toissijainenKaannettavaKieli && (
           <div className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
+              {label({
+                label: "Tiivistetty hankkeen sisällönkuvaus",
+                inputLanguage: toissijainenKaannettavaKieli,
+                toissijainenKieli: toissijainenKieli,
+              })}
             </p>
             <PreWrapParagraph>
               {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
@@ -154,7 +161,13 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         ) : (
           <SectionContent>
             <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            <p>
+              {label({
+                label: "Kuulutus ja ilmoitus",
+                inputLanguage: Kieli.SUOMI,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 {ensisijaisetPDFt.__typename === "NahtavillaoloPDF" && (
@@ -179,9 +192,15 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               </div>
             )}
 
-            {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+            {toissijainenKaannettavaKieli && (
               <div className="content mb-4">
-                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli)})</p>
+                <p>
+                  {label({
+                    label: "Kuulutus ja ilmoitus",
+                    inputLanguage: toissijainenKaannettavaKieli,
+                    toissijainenKieli: toissijainenKieli,
+                  })}
+                </p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     {toissijaisetPDFt.__typename === "NahtavillaoloPDF" && (

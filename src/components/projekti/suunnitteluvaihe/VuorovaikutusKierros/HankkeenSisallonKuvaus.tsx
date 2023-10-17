@@ -6,9 +6,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Textarea from "@components/form/Textarea";
-import lowerCase from "lodash/lowerCase";
 import { Kieli, Kielitiedot } from "@services/api";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
+import { label } from "src/util/textUtil";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -39,7 +39,12 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
       </Notification>
       {ensisijainenKaannettavaKieli && (
         <Textarea
-          label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+          label={label({
+            label: "Tiivistetty hankeen sisällönkuvaus",
+            inputLanguage: ensisijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+            required: true,
+          })}
           {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
           error={
             (errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[
@@ -51,7 +56,12 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
       )}
       {toissijainenKaannettavaKieli && (
         <Textarea
-          label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+          label={label({
+            label: "Tiivistetty hankeen sisällönkuvaus",
+            inputLanguage: toissijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+            required: true,
+          })}
           {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
           error={(errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
           maxLength={maxHankkeenkuvausLength}

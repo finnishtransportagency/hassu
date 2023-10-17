@@ -3,9 +3,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { Kielitiedot, TallennaProjektiInput, UudelleenKuulutus, UudelleenkuulutusTila } from "@services/api";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
-import lowerCase from "lodash/lowerCase";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { label } from "src/util/textUtil";
 
 type TallennaProjektiInputAvain = keyof Pick<TallennaProjektiInput, "aloitusKuulutus" | "nahtavillaoloVaihe"> | "paatos";
 
@@ -36,7 +36,12 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
               </p>
               {ensisijainenKaannettavaKieli && (
                 <Textarea
-                  label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+                  label={label({
+                    label: `Suunnitelman uudelleenkuuluttamisen syy`,
+                    inputLanguage: ensisijainenKaannettavaKieli,
+                    toissijainenKieli: toissijainenKaannettavaKieli,
+                    required: true,
+                  })}
                   {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteKuulutukselle.${ensisijainenKaannettavaKieli}`)}
                   error={(errors[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}
                   disabled={disabled}
@@ -44,7 +49,12 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
               )}
               {toissijainenKaannettavaKieli && (
                 <Textarea
-                  label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+                  label={label({
+                    label: `Suunnitelman uudelleenkuuluttamisen syy`,
+                    inputLanguage: toissijainenKaannettavaKieli,
+                    toissijainenKieli: toissijainenKaannettavaKieli,
+                    required: true,
+                  })}
                   {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteKuulutukselle.${toissijainenKaannettavaKieli}`)}
                   error={(errors[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[toissijainenKaannettavaKieli]}
                   disabled={disabled}
@@ -60,7 +70,12 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
             </p>
             {ensisijainenKaannettavaKieli && (
               <Textarea
-                label={`Suunnitelman uudelleenkuuluttamisen syy ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+                label={label({
+                  label: `Suunnitelman uudelleenkuuluttamisen syy`,
+                  inputLanguage: ensisijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  required: true,
+                })}
                 {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteLahetekirjeeseen.${ensisijainenKaannettavaKieli}`)}
                 error={(errors[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[ensisijainenKaannettavaKieli]}
                 disabled={disabled}
@@ -68,7 +83,12 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
             )}
             {toissijainenKaannettavaKieli && (
               <Textarea
-                label={`Suunnitelman uudelleenkuuluttamisen syy toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+                label={label({
+                  label: `Suunnitelman uudelleenkuuluttamisen syy`,
+                  inputLanguage: toissijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  required: true,
+                })}
                 {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteLahetekirjeeseen.${toissijainenKaannettavaKieli}`)}
                 error={(errors[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteLahetekirjeeseen?.[toissijainenKaannettavaKieli]}
                 disabled={disabled}

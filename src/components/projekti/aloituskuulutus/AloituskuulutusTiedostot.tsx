@@ -1,9 +1,9 @@
 import DownloadLink from "@components/DownloadLink";
 import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
-import lowerCase from "lodash/lowerCase";
 import React, { ReactElement } from "react";
 import { splitFilePath } from "../../../util/fileUtil";
+import { label } from "src/util/textUtil";
 
 interface Props {
   oid: string;
@@ -46,7 +46,13 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
           <p>Kuulutukset löytyvät asianhallinnasta.</p>
         ) : (
           <div>
-            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli)})</p>
+            <p>
+              {label({
+                label: `Kuulutus ja ilmoitus`,
+                inputLanguage: Kieli.SUOMI,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 <div>
@@ -62,9 +68,15 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
               </div>
             )}
 
-            {aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli && (
+            {toissijainenKieli && (
               <div className="content mb-4">
-                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli)})</p>
+                <p>
+                  {label({
+                    label: `Kuulutus ja ilmoitus`,
+                    inputLanguage: toissijainenKieli,
+                    toissijainenKieli: toissijainenKieli,
+                  })}
+                </p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (

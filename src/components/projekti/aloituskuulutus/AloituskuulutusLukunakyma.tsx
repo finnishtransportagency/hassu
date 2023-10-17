@@ -3,7 +3,6 @@ import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
 import replace from "lodash/replace";
-import lowerCase from "lodash/lowerCase";
 import AloituskuulutusTiedostot from "./AloituskuulutusTiedostot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -25,6 +24,7 @@ import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { label } from "src/util/textUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -119,14 +119,24 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         )}
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
-            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+            <p className="vayla-label">
+              {label({
+                label: `Tiivistetty hankkeen sisällön kuvaus`,
+                inputLanguage: ensisijainenKieli,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
         )}
         {isKieliTranslatable(toissijainenKieli) && (
           <div className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli as KaannettavaKieli)})
+              {label({
+                label: `Tiivistetty hankkeen sisällön kuvaus`,
+                inputLanguage: toissijainenKieli,
+                toissijainenKieli: toissijainenKieli,
+              })}
             </p>
             <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
@@ -144,7 +154,13 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
           <SectionContent>
             <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
-            <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})</p>
+            <p>
+              {label({
+                label: `Kuulutus ja ilmoitus`,
+                inputLanguage: Kieli.SUOMI,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 {ensisijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
@@ -164,9 +180,16 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               </div>
             )}
 
-            {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
+            {toissijainenKieli && (
               <div className="content mb-4">
-                <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})</p>
+                <p>
+                  {" "}
+                  {label({
+                    label: `Kuulutus ja ilmoitus`,
+                    inputLanguage: toissijainenKieli,
+                    toissijainenKieli: toissijainenKieli,
+                  })}
+                </p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
                     {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (

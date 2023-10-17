@@ -6,9 +6,9 @@ import { useFormContext } from "react-hook-form";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "hassu-common/util/dateUtils";
 import { useProjekti } from "src/hooks/useProjekti";
-import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
+import { label } from "src/util/textUtil";
 
 export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
   const {
@@ -26,7 +26,11 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
       {!!props.peruttu && <div className="text-red">PERUTTU</div>}
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Tilaisuuden nimi ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          label={label({
+            label: "Tilaisuuden nimi",
+            inputLanguage: ensisijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+          })}
           {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
@@ -41,7 +45,11 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
       )}
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Tilaisuuden nimi toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={label({
+            label: "Tilaisuuden nimi",
+            inputLanguage: toissijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+          })}
           {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`);

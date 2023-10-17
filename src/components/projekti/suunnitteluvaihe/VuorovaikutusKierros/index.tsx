@@ -33,7 +33,6 @@ import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../../PdfPreviewForm";
-import lowerCase from "lodash/lowerCase";
 import pickBy from "lodash/pickBy";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -51,6 +50,7 @@ import SelosteVuorovaikutuskierrokselle from "@components/projekti/suunnitteluva
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
+import { label } from "src/util/textUtil";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -346,7 +346,13 @@ function VuorovaikutusKierrosKutsu({
                 <SectionContent largeGaps>
                   {isKieliTranslatable(ensisijainenKieli) && (
                     <>
-                      <p>Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+                      <p>
+                        {label({
+                          label: "Esikatsele tiedostot",
+                          inputLanguage: ensisijainenKieli,
+                          toissijainenKieli: toissijainenKieli,
+                        })}
+                      </p>
                       <HassuStack direction={["column", "column", "row"]}>
                         <Button
                           type="submit"
@@ -362,7 +368,13 @@ function VuorovaikutusKierrosKutsu({
                   )}
                   {isKieliTranslatable(toissijainenKieli) && (
                     <>
-                      <p>Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+                      <p>
+                        {label({
+                          label: "Esikatsele tiedostot",
+                          inputLanguage: toissijainenKieli,
+                          toissijainenKieli: toissijainenKieli,
+                        })}
+                      </p>
                       <HassuStack direction={["column", "column", "row"]}>
                         <Button
                           type="submit"

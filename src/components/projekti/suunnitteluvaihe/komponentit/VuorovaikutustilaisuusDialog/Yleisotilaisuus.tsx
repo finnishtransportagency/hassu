@@ -3,13 +3,12 @@ import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
-
-import lowerCase from "lodash/lowerCase";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import Lisatiedot from "./Lisatiedot";
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { label } from "src/util/textUtil";
 
 interface Props {
   index: number;
@@ -42,7 +41,11 @@ export default function YleisoTilaisuus({
       <HassuGrid cols={{ lg: 3 }}>
         {ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Paikka (esim. kunnantalo) ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+            label={label({
+              label: "Paikka (esim. kunnantalo)",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={200}
             style={{ gridColumn: "1 / span 1" }}
             {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKaannettavaKieli}`, {
@@ -59,7 +62,11 @@ export default function YleisoTilaisuus({
 
         {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Paikka (esim. kunnantalo) toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+            label={label({
+              label: "Paikka (esim. kunnantalo)",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={200}
             style={{ gridColumn: "2 / span 1" }}
             {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKaannettavaKieli}`, {
@@ -75,7 +82,12 @@ export default function YleisoTilaisuus({
       {ensisijainenKaannettavaKieli && (
         <HassuGrid cols={{ lg: 5 }}>
           <TextInput
-            label={`Osoite ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+            label={label({
+              label: "Osoite",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+              required: true,
+            })}
             maxLength={200}
             disabled={mostlyDisabled}
             style={{ gridColumn: "1 / span 2" }}
@@ -113,7 +125,12 @@ export default function YleisoTilaisuus({
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <HassuGrid cols={{ lg: 5 }}>
           <TextInput
-            label={`Osoite toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+            label={label({
+              label: "Osoite",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+              required: true,
+            })}
             maxLength={200}
             disabled={mostlyDisabled}
             style={{ gridColumn: "1 / span 2" }}
