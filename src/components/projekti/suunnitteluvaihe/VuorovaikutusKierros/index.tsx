@@ -54,6 +54,7 @@ import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import { label } from "src/util/textUtil";
 import { isAsianhallintaVaarassaTilassa } from "../../../../util/asianhallintaVaarassaTilassa";
+import { onTulevaisuudessa } from "common/util/dateUtils";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -198,6 +199,7 @@ function VuorovaikutusKierrosKutsu({
   } = useFormReturn;
 
   const vuorovaikutustilaisuudet = watch("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
+  const julkaisupaiva = watch("vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva");
 
   useLeaveConfirm(isDirty);
 
@@ -405,7 +407,7 @@ function VuorovaikutusKierrosKutsu({
               </Section>
             }
             <Section noDivider>
-              <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
+              <Stack justifyContent="flex-end" flexDirection="row" flexWrap="wrap">
                 {projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
                   <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
                     <Button
@@ -421,7 +423,7 @@ function VuorovaikutusKierrosKutsu({
                     </Button>
                   </Stack>
                 )}
-                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]} flexWrap="wrap">
+                <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
                   <Button
                     id="save_suunnitteluvaihe_vuorovaikutukset_draft"
                     style={{ whiteSpace: "nowrap" }}
@@ -436,7 +438,7 @@ function VuorovaikutusKierrosKutsu({
                     onClick={handleSubmit(handleClickOpenHyvaksy)}
                     disabled={julkaisuIsDisabled}
                   >
-                    Tallenna julkaistavaksi
+                    {onTulevaisuudessa(julkaisupaiva) ? "Ajasta julkaistavaksi" : "Julkaise"}
                   </Button>
                 </Stack>
               </Stack>

@@ -393,6 +393,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     [api, projekti, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
+  const isUusiKierros = useMemo(() => {
+    if (!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1) {
+      return true;
+    }
+    return false;
+  }, [julkinen, projekti.vuorovaikutusKierros?.vuorovaikutusNumero]);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -479,14 +486,15 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
-              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
+            <Stack justifyContent={isUusiKierros ? "space-between" : "flex-end"} flexDirection="row" flexWrap="wrap">
+              {isUusiKierros && (
                 <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
                   <Button id="poista_luonnos" style={{ whiteSpace: "nowrap" }} type="button" onClick={confirmPoista} disabled={isLoading}>
                     Poista luonnos
                   </Button>
                 </Stack>
               )}
+
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
                 {!julkinen && (
                   <Button
