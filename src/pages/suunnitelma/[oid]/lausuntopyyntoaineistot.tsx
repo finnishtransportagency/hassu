@@ -8,6 +8,8 @@ import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "hassu-common/util/dateUtils";
+import DownloadIcon from "@mui/icons-material/Download";
+import ButtonLink from "@components/button/ButtonLink";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LisaAineistot = useLisaAineisto().data;
@@ -16,13 +18,23 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
     return <></>;
   }
   return (
-    <Section>
-      <p>Huomioi, että tämä sisältö on tarkasteltavissa {formatDate(poistumisPaiva)} asti, jonka jälkeen sisältö poistuu näkyvistä.</p>
-      <AineistoNahtavillaAccordion
-        kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]}
-        data={data}
-      />
-    </Section>
+    <>
+      <Section>
+        <p>Huomioi, että tämä sisältö on tarkasteltavissa {formatDate(poistumisPaiva)} asti, jonka jälkeen sisältö poistuu näkyvistä.</p>
+        <AineistoNahtavillaAccordion
+          kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]}
+          data={data}
+        />
+      </Section>
+      {data?.aineistopaketti && (
+        <Section noDivider>
+          <ButtonLink href={data.aineistopaketti}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+        </Section>
+      )}
+    </>
   );
 }
 

@@ -19,6 +19,28 @@ import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheT
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
 
+async function handleZipping(ctx: ImportContext) {
+  //TODO: joskus muillekin vaiheille kuin nahtavillaolo
+  if (!ctx.projekti.nahtavillaoloVaihe) return;
+  const oid = ctx.oid;
+  const manager: ProjektiAineistoManager = ctx.manager;
+  const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
+  const aineistopakettiFullS3Key =
+    new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
+  log.info("luodaan aineistopaiketti, key: " + aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheAineisto.createZipOfAineisto(aineistopakettiFullS3Key);
+
+  const aineistopakettiRelativeS3Key =
+    new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
+  const nahtavillaoloVaihe = { ...ctx.projekti.nahtavillaoloVaihe };
+  log.info("paivitetaan dbprojekti aineistopaketti-tiedolla: " + aineistopakettiRelativeS3Key);
+  await projektiDatabase.saveProjektiWithoutLocking({
+    oid,
+    versio: ctx.projekti.versio,
+    nahtavillaoloVaihe: { ...nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key },
+  });
+}
+
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
@@ -46,6 +68,10 @@ async function handleImport(ctx: ImportContext) {
       log.info("Päivitetään vuorovaikutusKierrosJulkaisu aineistojen tuonnin jälkeen", { vuorovaikutusKierrosJulkaisu: changes });
       await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(ctx.projekti, changes);
     }
+  }
+
+  if (nahtavillaoloVaihe) {
+    return await eventSqsClient.zipAineisto(oid);
   }
 }
 
@@ -120,6 +146,9 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
               break;
             case ScheduledEventType.IMPORT:
               await handleImport(ctx);
+              break;
+            case ScheduledEventType.ZIP:
+              await handleZipping(ctx);
               break;
             default:
               break;

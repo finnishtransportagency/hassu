@@ -279,6 +279,7 @@ type VuorovaikutusJulkinen {
 type NahtavillaoloVaihe {
   aineistoNahtavilla: [Aineisto!]
   lisaAineisto: [Aineisto!]
+  aineistopaketti: String
   lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
@@ -314,6 +315,7 @@ type HyvaksymisPaatosVaihe {
 type NahtavillaoloVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   lisaAineisto: [Aineisto!]
+  aineistopaketti: String
   lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
@@ -982,6 +984,7 @@ type LisaAineistot {
   poistumisPaiva: String!
   aineistot: [LisaAineisto!]
   lisaAineistot: [LisaAineisto!]
+  aineistopaketti: String
 }
 
 type LisaAineisto {
