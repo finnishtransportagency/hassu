@@ -54,7 +54,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     ].includes(tyyppi);
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
-      await this.sendForApprovalInternal(projekti);
+      await this.sendForApprovalInternal(projekti, tyyppi);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
       if (!syy) {
         throw new Error("Hylkäämiseltä puuttuu syy!");
@@ -122,13 +122,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await this.lisaaUusiKierros(projekti);
   }
 
-  private async sendForApprovalInternal(projekti: DBProjekti) {
+  private async sendForApprovalInternal(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi) {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
     this.validateSendForApproval(projekti);
     this.validateKunnatHasBeenSet(projekti);
     await this.validateAsianhallintaValmiinaSiirtoon(projekti);
     auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
-    await this.sendForApproval(projekti, kayttaja);
+    await this.sendForApproval(projekti, kayttaja, tilasiirtymaTyyppi);
   }
 
   private async rejectInternal(projekti: DBProjekti, syy: string) {
@@ -201,7 +201,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja;
 
-  abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+  abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void>;
 
   abstract reject(projekti: DBProjekti, syy: string): Promise<void>;
 

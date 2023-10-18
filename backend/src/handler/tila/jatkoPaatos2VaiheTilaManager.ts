@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja, Vaihe } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -125,7 +125,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return requireAdmin();
   }
 
-  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     const julkaisuWaitingForApproval = findJatkoPaatos2VaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("JatkoPaatos2Vaihe on jo olemassa odottamassa hyväksyntää");

@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, Vaihe } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -205,7 +205,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu palaamistoimintoa!");
   }
 
-  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("Aloituskuulutus on jo olemassa odottamassa hyväksyntää");
@@ -220,7 +220,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
-    await approvalEmailSender.sendEmails(projekti);
+    await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

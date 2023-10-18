@@ -227,7 +227,7 @@ export abstract class KuulutusTilaManager<
 
   abstract checkUudelleenkuulutusPriviledges(projekti: DBProjekti): NykyinenKayttaja;
 
-  abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+  abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void>;
 
   abstract getUpdatedAineistotForVaihe(vaihe: T, uusiId: number, paths: ProjektiPaths): Partial<T>;
 

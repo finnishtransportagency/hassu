@@ -2,7 +2,7 @@
 
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
@@ -79,7 +79,7 @@ describe("nahtavillaoloTilaManager", () => {
     // Old should julkaisut has not been updated so there is one HYVAKSYTTY left
     expect(nahtavillaoloJulkaisuUpdateStub.callCount).to.eql(0);
     // Send for approval
-    await nahtavillaoloTilaManager.sendForApproval(projekti, UserFixture.hassuAdmin);
+    await nahtavillaoloTilaManager.sendForApproval(projekti, UserFixture.hassuAdmin, TilasiirtymaTyyppi.NAHTAVILLAOLO);
     // Old julkaisut should not be updated and new one should be inserted with ODOTTAA_HYVAKSYNTAA.
     // If this is true, there should be only one JULKAISTU.
     expect(nahtavillaoloJulkaisuUpdateStub.callCount).to.eql(0);

@@ -7,7 +7,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Readable } from "stream";
 import { expectAwsCalls, S3Mock } from "../aws/awsMock";
-import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
+import { createKuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
@@ -16,6 +16,7 @@ import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
+import { TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { parameters } from "../../src/aws/parameters";
 import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
 import { KayttajaTyyppi, KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
@@ -81,7 +82,7 @@ describe("emailHandler", () => {
       loadProjektiByOidStub.resolves(fixture.dbProjekti5());
     });
     it("should send email to projektipaallikko succesfully", async () => {
-      const emailOptions = createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
+      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.ALOITUSKUULUTUS);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
         expect(emailOptions.text).to.eq(

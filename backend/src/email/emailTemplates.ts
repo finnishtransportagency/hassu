@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "hassu-common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkSuunnitteluVaiheYllapito } from "hassu-common/links";
@@ -29,10 +29,10 @@ ${"velho.nimi"}
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvaksymispyynto
-const aloituskuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
-const aloituskuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+const kuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
+const kuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+on luotu ${"kuulutusTyyppi"}kuulutus, joka odottaa hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
@@ -148,11 +148,30 @@ export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   };
 }
 
-export function createAloituskuulutusHyvaksyttavanaEmail(projekti: DBProjekti): EmailOptions {
+function getKuulutusTyyppi(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
+      return "aloitus";
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      return "nähtävilläolo";
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      return "hyväksymispäätös";
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      return "jatkopäätös";
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      return "jatkopäätös";
+    default:
+      throw new Error(`TilasiirtymaTyyppi ('${tilasiirtymaTyyppi}') ei ole tuettu hyväksyttävänä emailin lähetyksessä`);
+  }
+}
+
+export function createKuulutusHyvaksyttavanaEmail(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
+  const kuulutusTyyppi = getKuulutusTyyppi(tilasiirtymaTyyppi);
+
   return {
-    subject: aloituskuulutusHyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
-    text: aloituskuulutusHyvaksyttavanaTeksti({ domain, ...projekti }),
+    subject: kuulutusHyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
+    text: kuulutusHyvaksyttavanaTeksti({ domain, kuulutusTyyppi, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
