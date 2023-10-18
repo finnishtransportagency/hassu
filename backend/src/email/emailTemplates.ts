@@ -172,11 +172,11 @@ function getKuulutusPath(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
     case TilasiirtymaTyyppi.NAHTAVILLAOLO:
       return "/nahtavillaolo/kuulutus";
     case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
-      return "/xxx";
+      return "/hyvaksymispaatos/kuulutus";
     case TilasiirtymaTyyppi.JATKOPAATOS_1:
-      return "/xxx";
+      return "/jatkaminen1/kuulutus";
     case TilasiirtymaTyyppi.JATKOPAATOS_2:
-      return "/xxx";
+      return "/jatkaminen2/kuulutus";
     default:
       throw new Error(`TilasiirtymaTyyppi ('${tilasiirtymaTyyppi}') ei ole tuettu hyväksyttävänä emailin lähetyksessä`);
   }
