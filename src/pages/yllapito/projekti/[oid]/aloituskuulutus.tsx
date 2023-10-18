@@ -10,7 +10,6 @@ import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
   IlmoitettavaViranomainen,
-  Kieli,
   Kielitiedot,
   KuulutusJulkaisuTila,
   LaskuriTyyppi,
@@ -24,7 +23,6 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import KuulutuksenYhteystiedot from "@components/projekti/aloituskuulutus/KuulutuksenYhteystiedot";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import lowerCase from "lodash/lowerCase";
 import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
@@ -52,6 +50,7 @@ import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPai
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
+import { label } from "src/util/textUtil";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -377,7 +376,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     </p>
                     {ensisijainenKaannettavaKieli && (
                       <Textarea
-                        label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+                        label={label({
+                          label: "Tiivistetty hankkeen sisällönkuvaus",
+                          inputLanguage: ensisijainenKaannettavaKieli,
+                          toissijainenKieli: toissijainenKaannettavaKieli,
+                          required: true,
+                        })}
                         {...register(`aloitusKuulutus.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
                         error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[ensisijainenKaannettavaKieli]}
                         maxLength={maxAloituskuulutusLength}
@@ -386,7 +390,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     )}
                     {toissijainenKaannettavaKieli && (
                       <Textarea
-                        label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+                        label={label({
+                          label: "Tiivistetty hankkeen sisällönkuvaus",
+                          inputLanguage: toissijainenKaannettavaKieli,
+                          toissijainenKieli: toissijainenKaannettavaKieli,
+                          required: true,
+                        })}
                         {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
                         error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
                         maxLength={maxAloituskuulutusLength}
@@ -409,7 +418,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               </Notification>
               {ensisijainenKaannettavaKieli && (
                 <>
-                  <p>Esitettävät tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli || Kieli.SUOMI)})</p>
+                  <p>
+                    {label({
+                      label: "Esitettävät tiedostot",
+                      inputLanguage: ensisijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
+                  </p>
                   <HassuStack direction={["column", "column", "row"]}>
                     <Button
                       id={"preview_kuulutus_pdf_" + ensisijainenKaannettavaKieli}
@@ -437,7 +452,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
               {toissijainenKaannettavaKieli && (
                 <>
-                  <p>Esitettävät tiedostot toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli || Kieli.RUOTSI)})</p>
+                  <p>
+                    {label({
+                      label: "Esitettävät tiedostot",
+                      inputLanguage: toissijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
+                  </p>
                   <HassuStack direction={["column", "column", "row"]}>
                     <Button
                       id={"preview_kuulutus_pdf_" + toissijainenKaannettavaKieli}

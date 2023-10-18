@@ -2,8 +2,8 @@ import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import Section from "@components/layout/Section";
 import { Kieli, UudelleenKuulutus } from "@services/api";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import lowerCase from "lodash/lowerCase";
 import React, { VoidFunctionComponent } from "react";
+import { label } from "src/util/textUtil";
 
 export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
   ensisijainenKieli: Kieli | null | undefined;
@@ -23,13 +23,25 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
         <>
           {ensisijainenKaannettavaKieli && (
             <div>
-              <p className="vayla-label">Seloste lähetekirjeeseen ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})</p>
+              <p className="vayla-label">
+                {label({
+                  label: "Seloste lähetekirjeeseen",
+                  inputLanguage: ensisijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                })}
+              </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
           {toissijainenKaannettavaKieli && (
             <div>
-              <p className="vayla-label">Seloste lähetekirjeeseen toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})</p>
+              <p className="vayla-label">
+                {label({
+                  label: "Seloste lähetekirjeeseen",
+                  inputLanguage: toissijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                })}
+              </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
@@ -39,13 +51,25 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
         <>
           {ensisijainenKaannettavaKieli && (
             <div>
-              <p className="vayla-label">Seloste kuulutukselle ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})</p>
+              <p className="vayla-label">
+                {label({
+                  label: "Seloste kuulutukselle",
+                  inputLanguage: ensisijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                })}
+              </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
           {toissijainenKaannettavaKieli && (
             <div>
-              <p className="vayla-label">Seloste kuulutukselle toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})</p>
+              <p className="vayla-label">
+                {label({
+                  label: "Seloste kuulutukselle",
+                  inputLanguage: toissijainenKaannettavaKieli,
+                  toissijainenKieli: toissijainenKaannettavaKieli,
+                })}
+              </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}

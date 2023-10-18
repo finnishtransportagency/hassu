@@ -2,7 +2,6 @@ import React from "react";
 import Section from "@components/layout/Section";
 import { Kieli, AsiakirjaTyyppi, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import lowerCase from "lodash/lowerCase";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -10,6 +9,7 @@ import { KuulutuksenTiedotFormValues } from "./index";
 import { useFormContext } from "react-hook-form";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
+import { label } from "src/util/textUtil";
 
 type Props = {
   esikatselePdf: (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -49,7 +49,13 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
       <div style={{ marginTop: "4em" }}>
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
-            <p className="mb-10">Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
+            <p className="mb-10">
+              {label({
+                label: "Esikatsele tiedostot",
+                inputLanguage: Kieli.SUOMI,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             <Box sx={{ flexDirection: "row-reverse" }}>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
@@ -160,7 +166,13 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
         )}
         {isKieliTranslatable(toissijainenKieli) && (
           <div>
-            <p className="mb-10">Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p className="mb-10">
+              {label({
+                label: "Esikatsele tiedostot",
+                inputLanguage: toissijainenKieli,
+                toissijainenKieli: toissijainenKieli,
+              })}
+            </p>
             <Box sx={{ flexDirection: "row-reverse" }}>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}

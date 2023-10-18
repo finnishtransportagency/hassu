@@ -4,10 +4,10 @@ import SectionContent from "@components/layout/SectionContent";
 import { Kielitiedot, LokalisoituTekstiInput } from "@services/api";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { label } from "src/util/textUtil";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -46,7 +46,11 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
       {ensisijainenKaannettavaKieli && (
         <SectionContent>
           <Textarea
-            label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+            label={label({
+              label: "Tiivistetty hankkeen sisällönkuvaus",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
             error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[ensisijainenKaannettavaKieli]}
             maxLength={2000}
@@ -57,7 +61,11 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
       {toissijainenKaannettavaKieli && (
         <SectionContent>
           <Textarea
-            label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+            label={label({
+              label: "Tiivistetty hankkeen sisällönkuvaus",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
             error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
             maxLength={2000}

@@ -1,6 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { ReactElement } from "react";
-import lowerCase from "lodash/lowerCase";
 import { Kielitiedot } from "@services/api";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from ".";
@@ -10,6 +9,7 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import ListWithAlternatingBGColors from "@components/ListWithAlternatingBGColors";
 import { Box } from "@mui/system";
+import { label } from "src/util/textUtil";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -57,13 +57,21 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
               {ensisijainenKaannettavaKieli && (
                 <div className="pb-4 mb-4">
                   {toissijainenKaannettavaKieli && (
-                    <h5 className="vayla-smallest-title">{`Muu esittelymateriaali ensisijaisella kielellä (${lowerCase(
-                      ensisijainenKaannettavaKieli
-                    )})`}</h5>
+                    <h5 className="vayla-smallest-title">
+                      {label({
+                        label: "Muu esittelymateriaali",
+                        inputLanguage: ensisijainenKaannettavaKieli,
+                        toissijainenKieli: toissijainenKaannettavaKieli,
+                      })}
+                    </h5>
                   )}
                   <TextInput
                     style={{ width: "100%" }}
-                    label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                    label={label({
+                      label: "Linkin kuvaus",
+                      inputLanguage: ensisijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`, {
                       onChange: () => {
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`);
@@ -76,7 +84,11 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                   />
                   <TextInput
                     style={{ width: "100%" }}
-                    label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                    label={label({
+                      label: "Linkki muihin esittelyaineistoihin",
+                      inputLanguage: ensisijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`, {
                       onChange: () => {
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`);
@@ -92,12 +104,20 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
 
               {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
                 <div className="pb-4 mb-4">
-                  <h5 className="vayla-smallest-title">{`Muu esittelymateriaali toissijaisella kielellä (${lowerCase(
-                    toissijainenKaannettavaKieli
-                  )})`}</h5>
+                  <h5 className="vayla-smallest-title">
+                    {label({
+                      label: "Muu esittelymateriaali",
+                      inputLanguage: toissijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
+                  </h5>
                   <TextInput
                     style={{ width: "100%" }}
-                    label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                    label={label({
+                      label: "Linkin kuvaus",
+                      inputLanguage: toissijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`, {
                       onChange: () => {
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`);
@@ -108,7 +128,11 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                   />
                   <TextInput
                     style={{ width: "100%" }}
-                    label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                    label={label({
+                      label: "Linkki muihin esittelyaineistoihin",
+                      inputLanguage: toissijainenKaannettavaKieli,
+                      toissijainenKieli: toissijainenKaannettavaKieli,
+                    })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`, {
                       onChange: () => {
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`);

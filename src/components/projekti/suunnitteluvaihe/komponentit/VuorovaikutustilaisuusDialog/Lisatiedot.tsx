@@ -1,13 +1,13 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
-import lowerCase from "lodash/lowerCase";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { Label } from "@components/form/FormGroup";
 import Notification, { NotificationType } from "../../../../notification/Notification";
 import InfoIcon from "@mui/icons-material/Info";
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { label } from "src/util/textUtil";
 
 interface Props {
   index: number;
@@ -120,7 +120,11 @@ export default function Lisatiedot({
       )}
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          label={label({
+            label: "Lisätiedot",
+            inputLanguage: ensisijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+          })}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
@@ -136,7 +140,11 @@ export default function Lisatiedot({
 
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Lisätiedot toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={label({
+            label: "Tiivistetty hankkeen sisällönkuvaus",
+            inputLanguage: toissijainenKaannettavaKieli,
+            toissijainenKieli: toissijainenKaannettavaKieli,
+          })}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);

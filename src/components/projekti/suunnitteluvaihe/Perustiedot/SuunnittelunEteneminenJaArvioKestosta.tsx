@@ -7,8 +7,8 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
 import { Kielitiedot } from "@services/api";
-import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
+import { label } from "src/util/textUtil";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -33,9 +33,11 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
         </p>
         {ensisijainenKaannettavaKieli && (
           <Textarea
-            label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä (${lowerCase(
-              ensisijainenKaannettavaKieli
-            )})`}
+            label={label({
+              label: "Julkisella puolella esitettävä suunnittelun etenemisen kuvaus",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKaannettavaKieli}`, {
               onChange: () => {
@@ -50,9 +52,11 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
 
         {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
           <Textarea
-            label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus toissijaisella kielellä (${lowerCase(
-              toissijainenKaannettavaKieli
-            )})`}
+            label={label({
+              label: "Julkisella puolella esitettävä suunnittelun etenemisen kuvaus",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKaannettavaKieli}`, {
               onChange: () => {
@@ -75,7 +79,11 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
         {ensisijainenKaannettavaKieli && (
           <TextInput
             className="mt-8"
-            label={`Arvio seuraavan vaiheen alkamisesta ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+            label={label({
+              label: "Arvio seuraavan vaiheen alkamisesta",
+              inputLanguage: ensisijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKaannettavaKieli}`, {
               onChange: () => {
@@ -90,7 +98,11 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
 
         {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Arvio seuraavan vaiheen alkamisesta toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+            label={label({
+              label: "Arvio seuraavan vaiheen alkamisesta",
+              inputLanguage: toissijainenKaannettavaKieli,
+              toissijainenKieli: toissijainenKaannettavaKieli,
+            })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKaannettavaKieli}`, {
               onChange: () => {

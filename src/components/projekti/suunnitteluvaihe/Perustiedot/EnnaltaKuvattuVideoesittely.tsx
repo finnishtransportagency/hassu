@@ -4,11 +4,10 @@ import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
-
-import lowerCase from "lodash/lowerCase";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import Section from "@components/layout/Section2";
+import { label } from "src/util/textUtil";
 
 export default function EnnaltaKuvattuVideoesittely() {
   const { data: projekti } = useProjekti();
@@ -46,7 +45,11 @@ export default function EnnaltaKuvattuVideoesittely() {
                   }
                 },
               })}
-              label={`Linkki videoon ensisijaisella kielellä ${lowerCase(ensisijainenKaannettavaKieli)}`}
+              label={label({
+                label: "Linkki videoon",
+                inputLanguage: ensisijainenKaannettavaKieli,
+                toissijainenKieli: toissijainenKaannettavaKieli,
+              })}
               error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKaannettavaKieli]?.url}
             />
           )}
@@ -60,7 +63,11 @@ export default function EnnaltaKuvattuVideoesittely() {
                   trigger(`vuorovaikutusKierros.videot.${index}.${ensisijainenKaannettavaKieli}.url`);
                 },
               })}
-              label={`Linkki videoon toissijaisella kielellä ${lowerCase(toissijainenKaannettavaKieli)}`}
+              label={label({
+                label: "Linkki videoon",
+                inputLanguage: toissijainenKaannettavaKieli,
+                toissijainenKieli: toissijainenKaannettavaKieli,
+              })}
               error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKaannettavaKieli]?.url}
             />
           )}
