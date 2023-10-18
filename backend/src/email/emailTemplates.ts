@@ -29,11 +29,11 @@ ${"velho.nimi"}
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvaksymispyynto
-const kuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
+const kuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: ${"kuulutusTyyppiUpperCase"}kuulutus odottaa hyväksyntää ${"asiatunnus"}`;
 const kuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
 on luotu ${"kuulutusTyyppi"}kuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
+Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}${"kuulutusPath"}
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
 const aloituskuulutusHyvaksyttyOtsikko = "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}";
@@ -165,13 +165,32 @@ function getKuulutusTyyppi(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
   }
 }
 
+function getKuulutusPath(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
+      return "/aloituskuulutus";
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      return "/nahtavillaolo/kuulutus";
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      return "/xxx";
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      return "/xxx";
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      return "/xxx";
+    default:
+      throw new Error(`TilasiirtymaTyyppi ('${tilasiirtymaTyyppi}') ei ole tuettu hyväksyttävänä emailin lähetyksessä`);
+  }
+}
+
 export function createKuulutusHyvaksyttavanaEmail(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
   const kuulutusTyyppi = getKuulutusTyyppi(tilasiirtymaTyyppi);
+  const kuulutusTyyppiUpperCase = kuulutusTyyppi.toUpperCase();
+  const kuulutusPath = getKuulutusPath(tilasiirtymaTyyppi);
 
   return {
-    subject: kuulutusHyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
-    text: kuulutusHyvaksyttavanaTeksti({ domain, kuulutusTyyppi, ...projekti }),
+    subject: kuulutusHyvaksyttavanaOtsikko({ asiatunnus, kuulutusTyyppiUpperCase, ...projekti }),
+    text: kuulutusHyvaksyttavanaTeksti({ domain, kuulutusTyyppi, kuulutusPath, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
