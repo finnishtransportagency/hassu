@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
 import { Kieli } from "../../common/graphql/apiModel";
 import { MutableRefObject } from "react";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 export const maxNoteLength = 2000;
 
@@ -87,6 +88,10 @@ export const perustiedotValidationSchema = Yup.object()
       .notRequired()
       .nullable()
       .default(null),
+    asianhallintaIntegraatio: Yup.boolean().when("$projekti", {
+      is: (projekti: ProjektiLisatiedolla) => projekti.asianhallinta.aktivoitavissa,
+      then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
+    }),
   })
   .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
     const projekti = context.options.context?.projekti;

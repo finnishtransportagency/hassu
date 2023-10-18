@@ -33,6 +33,7 @@ import { isKuulutusPublic } from "src/util/isKuulutusJulkaistu";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot/AsianhallintaIntegraatioYhteys";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -49,6 +50,7 @@ type PersitentFormValues = Pick<
   | "liittyvatSuunnitelmat"
   | "kielitiedot"
   | "vahainenMenettely"
+  | "asianhallintaIntegraatio"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -130,6 +132,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     if (projekti.euRahoitusLogot) {
       const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
       tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
+    }
+    if (projekti.asianhallinta.aktivoitavissa) {
+      tallentamisTiedot.asianhallintaIntegraatio = !!projekti.asianhallintaIntegraatio;
     }
     return tallentamisTiedot;
   }, [projekti]);
@@ -288,6 +293,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
+            {projekti.asianhallinta.aktivoitavissa && <AsianhallintaIntegraatioYhteys formDisabled={disableFormEdit} />}
             <Section gap={4}>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>

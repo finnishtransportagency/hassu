@@ -31,11 +31,18 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
     return null;
   }
   const projekti = await api.lataaProjekti(oid);
+  const asianhallintaAktivoitavissa =
+    !!kayttaja.features?.asianhallintaIntegraatio &&
+    projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
       onProjektipaallikkoTaiVarahenkilo: userIsAdmin(kayttaja) || userIsProjectManagerOrSubstitute({ kayttaja, projekti }),
       onYllapitaja: userIsAdmin(kayttaja),
+    },
+    asianhallinta: {
+      aktivoitavissa: asianhallintaAktivoitavissa,
+      aktiivinen: asianhallintaAktivoitavissa && !!projekti.asianhallintaIntegraatio,
     },
   };
   return {

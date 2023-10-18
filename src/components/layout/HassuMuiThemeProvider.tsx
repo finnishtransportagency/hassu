@@ -65,6 +65,48 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiSwitch: {
+          styleOverrides: {
+            root: {
+              width: "72px",
+              height: "42px",
+              paddingLeft: "12px",
+              paddingRight: "12px",
+              paddingTop: "9px",
+              paddingBottom: "9px",
+              "& .MuiSwitch-track": {
+                backgroundColor: "#C7C7C7",
+                opacity: 1,
+                borderRadius: 26 / 2,
+              },
+              "& .MuiSwitch-switchBase": {
+                padding: "13px",
+                "&.Mui-checked": {
+                  transform: "translateX(27px)",
+                  "& + .MuiSwitch-track": {
+                    backgroundColor: "#0064AF",
+                    opacity: 1,
+                    border: 0,
+                  },
+                },
+                "&.Mui-disabled + .MuiSwitch-track": {
+                  opacity: 1,
+                  backgroundColor: "#C7C7C7",
+                },
+                "&.Mui-disabled .MuiSwitch-thumb": {
+                  color: "#E5E5E5",
+                },
+                transform: "translateX(3px)",
+              },
+              "& .MuiSwitch-thumb": {
+                boxShadow: "none",
+                color: "#FFFFFF",
+                width: "16px",
+                height: "16px",
+              },
+            },
+          },
+        },
         MuiSelect: {
           styleOverrides: {
             icon: {
