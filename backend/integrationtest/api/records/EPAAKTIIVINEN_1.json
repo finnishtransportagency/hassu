@@ -881,7 +881,7 @@
           "tuotu": "2023-12-31T00:00:01+02:00"
         }
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
       "hankkeenKuvaus": {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
@@ -1046,7 +1046,7 @@
             "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
-        "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+        "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
         "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
@@ -1232,7 +1232,7 @@
             "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
-        "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+        "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
         "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"

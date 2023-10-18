@@ -11295,7 +11295,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -11442,7 +11442,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -12139,7 +12139,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       },
@@ -12421,7 +12421,7 @@ Object {
           "tuotu": "2023-12-31T00:00:01+02:00",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       },
@@ -12570,7 +12570,7 @@ Object {
         "tuotu": "***unittest***",
       },
     ],
-    "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+    "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       "__typename": "LokalisoituTeksti",
@@ -12738,7 +12738,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -12898,7 +12898,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -13850,7 +13850,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -14055,7 +14055,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -14303,7 +14303,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -14551,7 +14551,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

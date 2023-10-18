@@ -341,7 +341,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -454,7 +454,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -638,7 +638,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -833,7 +833,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "aineistopaketti": "nahtavillaolo/1/aineisto.zip",
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
