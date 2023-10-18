@@ -273,7 +273,7 @@ export default function AineistoSivunPainikkeet({
               id="save_and_move_to_kuulutus_page"
               onClick={handleSubmit(saveAndMoveToKuulutusPage)}
             >
-              Tallenna ja Siirry Kuulutukselle
+              Tallenna ja Siirry kuulutukselle
             </Button>
           </Stack>
         )}

@@ -4,7 +4,7 @@ import { MuokkausTila } from "@services/api";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { paatosPageLayoutData } from "src/util/getPaatosSpecificData";
-import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { getPaatosSpecificData, paatosSpecificVaihe, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import ProjektiConsumer from "../ProjektiConsumer";
 
 function PaatosIndexPageWrapper({ paatosTyyppi }: { paatosTyyppi: PaatosTyyppi }) {
@@ -26,7 +26,7 @@ function PaatosIndexPage({ paatosTyyppi, projekti }: { paatosTyyppi: PaatosTyypp
   }, [julkaisematonPaatos?.muokkausTila, paatosRoutePart, projekti, router]);
 
   return (
-    <ProjektiPageLayout title={pageTitle}>
+    <ProjektiPageLayout vaihe={paatosSpecificVaihe[paatosTyyppi]} title={pageTitle}>
       <></>
     </ProjektiPageLayout>
   );

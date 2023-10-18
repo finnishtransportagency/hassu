@@ -8,8 +8,8 @@ export interface ProjektiLisatiedot {
     onYllapitaja: boolean;
   };
   asianhallinta: {
-    asianhallintaAktivoitavissa: boolean;
-    asianhallintaAktiivinen: boolean;
+    aktivoitavissa: boolean;
+    aktiivinen: boolean;
   };
 }
 

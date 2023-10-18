@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import { KuulutusJulkaisuTila, MuokkausTila } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -17,11 +16,12 @@ import {
   paatosSpecificStatuses,
   paatosSpecificTilasiirtymaTyyppiMap,
 } from "src/util/getPaatosSpecificData";
-import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { getPaatosSpecificData, paatosSpecificVaihe, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
+import { OhjelistaNotification } from "../common/OhjelistaNotification";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -36,55 +36,55 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
 }
 
 const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({ projekti, paatosTyyppi }) => {
-  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
-    return (
-      <ul className="list-disc block pl-5">
-        <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
-        <li>
-          Huomioithan, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa. Traficom toimittaa tarvittaessa
-          hyväksymispäätöksestä kaksi versiota – aseta nähtäville versio, jossa ei ole henkilötietoja.
-        </li>
-        <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna ja siirry kuulutukselle&quot;.</li>
-        <li>
-          Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
-          liikenneväylien suunnittelu -palvelun kansalaispuolella.
-        </li>
-        <li>
-          Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
-          <Link underline="none" href={`/yllapito/projekti/${projekti?.oid}/kasittelyntila`}>
-            Käsittelyn tila
-          </Link>{" "}
-          -sivulle.
-        </li>
-        <li>Valitse hallinto-oikeus, johon valitus osoitetaan.</li>
-        <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
-        <li>
-          Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle. Hyväksyntä on hyvä tehdä noin viikko ennen
-          kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
-        </li>
-        <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
-        <li>
-          Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. Huomioithan, että järjestelmä ei lähetä
-          ilmoitusta muistutuksen jättäneille, eikä lausunnonantajille, vaan se tulee lähettää järjestelmän ulkopuolella.
-        </li>
-      </ul>
-    );
-  } else {
-    return (
-      <ul className="list-disc block pl-5">
-        <li>Aloita lisäämällä päätökset ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
-        <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla “Tallenna ja siirry kuulutukselle”.</li>
-        <li>
-          Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
-          liikenneväylien suunnittelu -palvelun kansalaispuolella.
-        </li>
-        <li>Päätöksen päivän ja asiatunnus tulee Käsittelyn tila -sivulta.</li>
-        <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea</li>
-        <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
-        <li>Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle.</li>
-      </ul>
-    );
-  }
+  return (
+    <>
+      {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? (
+        <>
+          <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
+          <li>
+            Huomioithan, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa. Traficom toimittaa tarvittaessa
+            hyväksymispäätöksestä kaksi versiota – aseta nähtäville versio, jossa ei ole henkilötietoja.
+          </li>
+          <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna ja siirry kuulutukselle&quot;.</li>
+          <li>
+            Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
+            liikenneväylien suunnittelu -palvelun kansalaispuolella.
+          </li>
+          <li>
+            Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
+            <Link underline="none" href={`/yllapito/projekti/${projekti?.oid}/kasittelyntila`}>
+              Käsittelyn tila
+            </Link>{" "}
+            -sivulle.
+          </li>
+          <li>Valitse hallinto-oikeus, johon valitus osoitetaan.</li>
+          <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
+          <li>
+            Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle. Hyväksyntä on hyvä tehdä noin viikko
+            ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+          </li>
+          <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+          <li>
+            Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. Huomioithan, että järjestelmä ei lähetä
+            ilmoitusta muistutuksen jättäneille, eikä lausunnonantajille, vaan se tulee lähettää järjestelmän ulkopuolella.
+          </li>
+        </>
+      ) : (
+        <>
+          <li>Aloita lisäämällä päätökset ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
+          <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla “Tallenna ja siirry kuulutukselle”.</li>
+          <li>
+            Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
+            liikenneväylien suunnittelu -palvelun kansalaispuolella.
+          </li>
+          <li>Päätöksen päivän ja asiatunnus tulee Käsittelyn tila -sivulta.</li>
+          <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea</li>
+          <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
+          <li>Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle.</li>
+        </>
+      )}
+    </>
+  );
 };
 
 function PaatosPageLayoutContent({
@@ -172,6 +172,7 @@ function PaatosPageLayoutContent({
   return (
     <ProjektiPageLayout
       title={pageTitle}
+      vaihe={paatosSpecificVaihe[paatosTyyppi]}
       contentAsideTitle={
         showUudelleenkuulutaButton && (
           <UudelleenkuulutaButton
@@ -194,12 +195,9 @@ function PaatosPageLayoutContent({
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-              <Notification closable type={NotificationType.INFO} hideIcon>
-                <div>
-                  <h3 className="vayla-small-title">Ohjeet</h3>
-                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-                </div>
-              </Notification>
+              <OhjelistaNotification projekti={projekti} vaihe={paatosSpecificVaihe[paatosTyyppi]}>
+                <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+              </OhjelistaNotification>
             )}
             <Tabs value={value}>
               {tabProps.map((tProps, index) => (

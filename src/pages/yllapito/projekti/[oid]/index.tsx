@@ -34,6 +34,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot/AsianhallintaIntegraatioYhteys";
+import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -267,24 +268,19 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
                 </Notification>
               )}
-              <Notification type={NotificationType.INFO} hideIcon>
-                <h4 className="vayla-small-title">Ohjeet</h4>
-                <ul className="list-disc block pl-5">
-                  <li>
-                    Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
-                  </li>
-                  <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-                  <li>
-                    Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
-                    vaiheisiin.
-                  </li>
-                  <li>
-                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                    aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
-                    kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
-                  </li>
-                </ul>
-              </Notification>
+              <OhjelistaNotification projekti={projekti}>
+                <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+                <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                <li>
+                  Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                  vaiheisiin.
+                </li>
+                <li>
+                  Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                  aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                  kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                </li>
+              </OhjelistaNotification>
             </ContentSpacer>
 
             <ProjektinPerusosio projekti={projekti} />

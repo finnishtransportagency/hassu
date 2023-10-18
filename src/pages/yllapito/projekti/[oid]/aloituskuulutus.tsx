@@ -18,6 +18,7 @@ import {
   Status,
   TallennaProjektiInput,
   TilasiirtymaTyyppi,
+  Vaihe,
 } from "@services/api";
 import log from "loglevel";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
@@ -52,6 +53,7 @@ import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 import { label } from "src/util/textUtil";
+import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -279,6 +281,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   return (
     <ProjektiPageLayout
       title="Aloituskuulutus"
+      vaihe={Vaihe.ALOITUSKUULUTUS}
       contentAsideTitle={
         showUudelleenkuulutaButton && (
           <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />
@@ -310,32 +313,27 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
-                  <Notification type={NotificationType.INFO} hideIcon>
-                    <div>
-                      <h3 className="vayla-small-title">Ohjeet</h3>
-                      <ul className="list-disc block pl-5">
-                        <li>
-                          Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan
-                          samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
-                        </li>
-                        <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
-                        <li>
-                          Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
-                          (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
-                          tasolla. Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella
-                          kielellä, eikä tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
-                          aloituskuulutukseen.
-                        </li>
-                        <li>
-                          Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
-                          julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
-                        </li>
-                        <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
-                        <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
-                        <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
-                      </ul>
-                    </div>
-                  </Notification>
+                  <OhjelistaNotification projekti={projekti} vaihe={Vaihe.ALOITUSKUULUTUS}>
+                    <li>
+                      Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan samana
+                      päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
+                    </li>
+                    <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
+                    <li>
+                      Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
+                      (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla.
+                      Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella kielellä, eikä
+                      tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
+                      aloituskuulutukseen.
+                    </li>
+                    <li>
+                      Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
+                      julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                    </li>
+                    <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+                    <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
+                    <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
+                  </OhjelistaNotification>
                   <ContentSpacer>
                     <h5 className="vayla-small-title">Kuulutus- ja julkaisupäivä</h5>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>

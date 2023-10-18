@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
 import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
 import { Stack } from "@mui/system";
-import { TilasiirtymaTyyppi } from "@services/api";
+import { AsianTila, TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 import { isInPast } from "common/util/dateUtils";
 import React, { useCallback, useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "src/schemas/paivamaaraSchema";
 import * as yup from "yup";
+import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -48,7 +49,20 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     }
   }, [julkaisu, showErrorMessage]);
 
-  const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu.kuulutusPaiva]);
+  const hyvaksyIsDisabled = useMemo(() => {
+    const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
+    const asianHallintaVaarassaTilassa =
+      projekti.asianhallinta.aktiivinen &&
+      projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe === tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi] &&
+      projekti.aktiivisenVaiheenAsianhallinnanTila?.tila !== AsianTila.VALMIS_VIENTIIN;
+    return kuulutusPaivaInPast || asianHallintaVaarassaTilassa;
+  }, [
+    julkaisu.kuulutusPaiva,
+    projekti.aktiivisenVaiheenAsianhallinnanTila?.tila,
+    projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe,
+    projekti.asianhallinta.aktiivinen,
+    tilasiirtymaTyyppi,
+  ]);
 
   return (
     <>
@@ -57,7 +71,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
           <Button type="button" id="button_reject" onClick={openPalauta}>
             Palauta
           </Button>
-          <Button type="button" id="button_open_acceptance_dialog" disabled={kuulutusPaivaIsInPast} primary onClick={openHyvaksy}>
+          <Button type="button" id="button_open_acceptance_dialog" disabled={hyvaksyIsDisabled} primary onClick={openHyvaksy}>
             {!!julkaisu.aineistoMuokkaus ? "Hyväksy" : "Hyväksy ja lähetä"}
           </Button>
         </Stack>

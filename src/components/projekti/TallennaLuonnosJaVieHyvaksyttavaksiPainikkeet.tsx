@@ -1,9 +1,9 @@
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
-import { KuntaVastaanottajaInput, Status, TallennaProjektiInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
-import React, { useCallback } from "react";
 import { FieldValues, SubmitHandler, UnpackNestedValue } from "react-hook-form";
+import { TallennaProjektiInput, AsianTila, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import React, { useCallback, useMemo } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -13,6 +13,7 @@ import { projektiMeetsMinimumStatus } from "src/util/routes";
 import log from "loglevel";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
+import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -36,8 +37,6 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   tilasiirtymaTyyppi,
 }: Props<TFieldValues>) {
   const { showSuccessMessage } = useSnackbars();
-
-  tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi];
 
   const { mutate: reloadProjekti } = useProjekti();
 
@@ -87,6 +86,17 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     [api, preSubmitFunction, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
   );
 
+  const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
+    const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
+    const lacksKunnat = !kuntavastaanottajat?.length;
+    const asianHallintaVaarassaTilassa =
+      projekti.asianhallinta.aktiivinen &&
+      projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe === tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi] &&
+      projekti.aktiivisenVaiheenAsianhallinnanTila?.tila !== AsianTila.VALMIS_VIENTIIN;
+
+    return invalidStatus || !isProjektiReadyForTilaChange || lacksKunnat || asianHallintaVaarassaTilassa;
+  }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi]);
+
   return (
     <Section noDivider>
       <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
@@ -95,11 +105,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
         </Button>
         <Button
           type="button"
-          disabled={
-            !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]) ||
-            !isProjektiReadyForTilaChange ||
-            !kuntavastaanottajat?.length
-          }
+          disabled={tallennaHyvaksyttavaksiDisabled}
           id="save_and_send_for_acceptance"
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}

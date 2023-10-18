@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { MuokkausTila } from "@services/api";
+import { MuokkausTila, Vaihe } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 
@@ -20,7 +20,7 @@ function ProjektiPage() {
   }, [projekti, router]);
 
   return (
-    <ProjektiPageLayout title="Kuulutus nähtäville asettamisesta">
+    <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Kuulutus nähtäville asettamisesta">
       <></>
     </ProjektiPageLayout>
   );

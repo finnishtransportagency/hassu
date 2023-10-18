@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
   AsiakirjaTyyppi,
+  AsianTila,
   Kieli,
   KirjaamoOsoite,
   KuulutusJulkaisuTila,
@@ -52,6 +53,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import { label } from "src/util/textUtil";
+import useAsianhallinnanTila from "src/hooks/useAsianhallinnanTila";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -99,6 +101,8 @@ function VuorovaikutusKierrosKutsu({
   kirjaamoOsoitteet,
 }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
   const api = useApi();
+
+  const { data: asianhallinnanTila } = useAsianhallinnanTila(projekti.oid, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU);
 
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
@@ -311,7 +315,12 @@ function VuorovaikutusKierrosKutsu({
   );
 
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
-  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
+
+  const julkaisuIsDisabled = useMemo(() => {
+    const kunnatPuuttuu = !kuntavastaanottajat?.length;
+    const asianHallintaVaarassaTilassa = projekti.asianhallinta.aktiivinen && asianhallinnanTila?.asianTila !== AsianTila.VALMIS_VIENTIIN;
+    return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || asianHallintaVaarassaTilassa;
+  }, [asianhallinnanTila?.asianTila, kuntavastaanottajat?.length, projekti]);
 
   return (
     <>
@@ -426,7 +435,7 @@ function VuorovaikutusKierrosKutsu({
                     primary
                     id="save_and_publish"
                     onClick={handleSubmit(handleClickOpenHyvaksy)}
-                    disabled={!canProjektiBePublished(projekti) || kunnatPuuttuu}
+                    disabled={julkaisuIsDisabled}
                   >
                     Tallenna julkaistavaksi
                   </Button>
@@ -452,10 +461,6 @@ function VuorovaikutusKierrosKutsu({
       />
     </>
   );
-}
-
-function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
-  return projektiHasPublishedAloituskuulutusJulkaisu(projekti);
 }
 
 const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>

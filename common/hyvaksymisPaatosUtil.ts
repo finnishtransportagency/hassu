@@ -6,6 +6,7 @@ import {
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   Projekti,
+  Vaihe,
 } from "./graphql/apiModel";
 
 export enum PaatosTyyppi {
@@ -63,6 +64,12 @@ export interface PaatoksenAvaimet {
   ilmoitusPaatoskuulutuksestaLausunnonantajilleAsiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi?: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
 }
+
+export const paatosSpecificVaihe: Record<PaatosTyyppi, Vaihe> = {
+  HYVAKSYMISPAATOS: Vaihe.HYVAKSYMISPAATOS,
+  JATKOPAATOS1: Vaihe.JATKOPAATOS,
+  JATKOPAATOS2: Vaihe.JATKOPAATOS2,
+};
 
 export const paatosSpecificRoutesMap: Record<PaatosTyyppi, PaatoksenAvaimet> = {
   HYVAKSYMISPAATOS: {
