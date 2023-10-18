@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
+import { ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import {
   KuulutusJulkaisuTila,
   MuokkausTila,
@@ -55,18 +55,17 @@ export async function applyProjektiStatus(projekti: API.Projekti): Promise<void>
       const asianhallintaAktivoitavissa =
         (await parameters.isAsianhallintaIntegrationEnabled()) &&
         p.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
-      const projekti: ProjektiLisatiedolla = {
-        ...p,
-        nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
-        asianhallinta: {
-          asianhallintaAktivoitavissa,
-          asianhallintaAktiivinen: asianhallintaAktivoitavissa && !!p.asianhallintaIntegraatio,
-        },
-        tallennettu: true,
-      };
       const testContext: ValidateOptions<ProjektiValidationContext> = {
         context: {
-          projekti,
+          projekti: {
+            ...p,
+            tallennettu: true,
+            nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
+            asianhallinta: {
+              aktivoitavissa: asianhallintaAktivoitavissa,
+              aktiivinen: asianhallintaAktivoitavissa && !!p.asianhallintaIntegraatio,
+            },
+          },
           isRuotsinkielinenProjekti: {
             current: [p.kielitiedot?.ensisijainenKieli, p.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
           },

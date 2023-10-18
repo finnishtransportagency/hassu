@@ -33,6 +33,7 @@ import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCustomizer";
+import { haeAktiivisenVaiheenAsianhallinanTila } from "./haeAktiivisenVaiheenAsianhallinanTila";
 
 export class ProjektiAdapter {
   public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
@@ -133,6 +134,7 @@ export class ProjektiAdapter {
       await applyProjektiStatus(apiProjekti);
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
+      apiProjekti.aktiivisenVaiheenAsianhallinnanTila = await haeAktiivisenVaiheenAsianhallinanTila(apiProjekti);
     }
 
     return apiProjekti;

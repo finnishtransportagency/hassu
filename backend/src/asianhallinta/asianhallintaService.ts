@@ -14,7 +14,7 @@ import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { uuid } from "../util/uuid";
 import { invokeLambda } from "../aws/lambda";
-import { Config } from "../../../deployment/lib/config";
+import { config } from "../config";
 import { NotFoundError } from "hassu-common/error";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
@@ -76,7 +76,7 @@ class AsianhallintaService {
       correlationId: getCorrelationId() || uuid.v4(),
     };
     log.info("checkAsianhallintaState", { body });
-    const result = await invokeLambda(Config.asianhallintaLambdaName, true, this.wrapAsFakeSQSEvent(body));
+    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body));
     if (result) {
       const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       log.info("checkAsianhallintaState", { response });

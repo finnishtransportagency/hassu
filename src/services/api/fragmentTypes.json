@@ -75,6 +75,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AktiivisenVaiheenAsianhallinanTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "AloitusKuulutus",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -811,6 +817,12 @@
       {
         "kind": "ENUM",
         "name": "UudelleenkuulutusTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "Vaihe",
         "possibleTypes": null,
         "__typename": "__Type"
       },
