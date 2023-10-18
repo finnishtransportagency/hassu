@@ -96,6 +96,24 @@ async function runTestCommand(query: ParsedUrlQuery) {
     });
   });
 
+  await executor.onJatkopaatos2Menneisyyteen(async () => {
+    await api.suoritaTestiKomento({
+      oid: executor.getOid(),
+      tyyppi: TestiKomento.AJANSIIRTO,
+      ajansiirtoPaivina: 1,
+      vaihe: TestiKomentoVaihe.JATKOPAATOS2VAIHE,
+    });
+  });
+
+  await executor.onJatkopaatos2VuosiMenneisyyteen(async () => {
+    await api.suoritaTestiKomento({
+      oid: executor.getOid(),
+      tyyppi: TestiKomento.AJANSIIRTO,
+      vaihe: TestiKomentoVaihe.JATKOPAATOS2VAIHE,
+      ajansiirtoPaivina: 366,
+    });
+  });
+
   await executor.onResetAloituskuulutus(async () => {
     await api.suoritaTestiKomento({
       oid: executor.getOid(),

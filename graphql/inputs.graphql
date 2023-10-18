@@ -404,6 +404,7 @@ enum TestiKomentoVaihe {
   NAHTAVILLAOLO
   HYVAKSYMISVAIHE
   JATKOPAATOS1VAIHE
+  JATKOPAATOS2VAIHE
 }
 
 input TestiKomentoInput {

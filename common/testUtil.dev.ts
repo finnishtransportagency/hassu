@@ -20,6 +20,8 @@ export enum TestAction {
   RESET_JATKOPAATOS1VAIHE = "reset_jatkopaatos1vaihe",
   JATKOPAATOS1_MENNEISYYTEEN = "jatkopaatos1menneisyyteen",
   JATKOPAATOS1_VUOSI_MENNEISYYTEEN = "jatkopaatos1vuosimenneisyyteen",
+  JATKOPAATOS2_MENNEISYYTEEN = "jatkopaatos2menneisyyteen",
+  JATKOPAATOS2_VUOSI_MENNEISYYTEEN = "jatkopaatos2vuosimenneisyyteen",
   KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI = "kaynnistaasianhallintasynkronointi",
 }
 
@@ -94,6 +96,14 @@ export class ProjektiTestCommand {
 
   jatkopaatos1VuosiMenneisyyteen() {
     return this.createActionUrl(TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN);
+  }
+
+  jatkopaatos2Menneisyyteen() {
+    return this.createActionUrl(TestAction.JATKOPAATOS2_MENNEISYYTEEN);
+  }
+
+  jatkopaatos2VuosiMenneisyyteen() {
+    return this.createActionUrl(TestAction.JATKOPAATOS2_VUOSI_MENNEISYYTEEN);
   }
 
   kaynnistaAsianhallintasynkronointi() {
@@ -223,6 +233,18 @@ export class ProjektiTestCommandExecutor {
 
   async onJatkopaatos1VuosiMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN) {
+      return callback(this._oid);
+    }
+  }
+
+  async onJatkopaatos2Menneisyyteen(callback: (oid: string) => Promise<void>) {
+    if (this._action === TestAction.JATKOPAATOS2_MENNEISYYTEEN) {
+      return callback(this._oid);
+    }
+  }
+
+  async onJatkopaatos2VuosiMenneisyyteen(callback: (oid: string) => Promise<void>) {
+    if (this._action === TestAction.JATKOPAATOS2_VUOSI_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }

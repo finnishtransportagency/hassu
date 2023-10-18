@@ -65,7 +65,11 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
       window.location.host +
       "/suunnitelma/" +
       projekti.oid +
-      (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "/hyvaksymispaatos" : "/jatkopaatos1");
+      (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
+        ? "/hyvaksymispaatos"
+        : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
+        ? "/jatkopaatos1"
+        : "jatkopaatos2");
   }
 
   return (
@@ -89,7 +93,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
                     window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1Menneisyyteen());
                   } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-                    // TODO Lisää JATKOPAATOS2 toiminnot
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2Menneisyyteen());
                   }
                 }}
               >

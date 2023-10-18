@@ -49,6 +49,8 @@ class DateMoverTool {
         return this.getMaxDateFromHyvaksymisPaatos(projekti);
       case TestiKomentoVaihe.JATKOPAATOS1VAIHE:
         return this.getMaxDateFromJatkopaatos1(projekti);
+      case TestiKomentoVaihe.JATKOPAATOS2VAIHE:
+        return this.getMaxDateFromJatkopaatos2(projekti);
     }
     throw new Error("Ei toteutettu");
   }
@@ -84,6 +86,15 @@ class DateMoverTool {
   getMaxDateFromJatkopaatos1(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
     for (const julkaisu of projekti?.jatkoPaatos1VaiheJulkaisut || []) {
+      maxDate.addDate(julkaisu.kuulutusPaiva);
+      maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
+    }
+    return maxDate;
+  }
+
+  getMaxDateFromJatkopaatos2(projekti: DBProjekti) {
+    const maxDate = new DateDeltaCalculator();
+    for (const julkaisu of projekti?.jatkoPaatos2VaiheJulkaisut || []) {
       maxDate.addDate(julkaisu.kuulutusPaiva);
       maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
     }
