@@ -13,6 +13,7 @@ import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoSta
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -161,6 +162,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
+    await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

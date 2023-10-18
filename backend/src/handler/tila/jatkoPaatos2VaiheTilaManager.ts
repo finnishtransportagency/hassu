@@ -12,6 +12,7 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos2VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -152,6 +153,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     );
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.insert(projekti.oid, julkaisu);
+    await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
