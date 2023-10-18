@@ -8,7 +8,6 @@ import { FormProvider, useForm, UseFormProps, UseFormReturn } from "react-hook-f
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
-import ButtonLink from "@components/button/ButtonLink";
 import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
@@ -162,9 +161,15 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
             />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">
-                <ButtonLink className="mr-auto" href="/yllapito/perusta">
+                <Button
+                  className="mr-auto"
+                  onClick={(e) => {
+                    router.back();
+                    e.preventDefault();
+                  }}
+                >
                   Takaisin
-                </ButtonLink>
+                </Button>
                 <Button
                   id="save_and_open_projekti"
                   type="button"
