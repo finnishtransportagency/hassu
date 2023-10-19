@@ -56,6 +56,23 @@ export type NahtavillaoloVaiheJulkaisu = {
   asianhallintaEventId?: string | null;
 };
 
+export type LausuntoPyynto = {
+  id: number;
+  poistumisPaiva: string;
+  lisaAineistot?: Array<Aineisto>;
+  aineistopaketti?: string;
+  muistiinpano?: string;
+  hash: string;
+};
+
+export type LausuntoPyynnonTaydennys = {
+  kunta: number;
+  poistumisPaiva: string;
+  muistutukset: Array<Aineisto>;
+  muuAineisto: Array<Aineisto>;
+  hash: string;
+};
+
 export type NahtavillaoloPDF = {
   nahtavillaoloPDFPath: string;
   nahtavillaoloIlmoitusPDFPath: string;

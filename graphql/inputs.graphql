@@ -12,6 +12,8 @@ input TallennaProjektiInput {
   kielitiedot: KielitiedotInput
   vuorovaikutusKierros: VuorovaikutusKierrosInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
+  lausuntoPyynnot: [LausuntoPyyntoInput!]
+  LausuntoPyynnonTaydennykset: [LausuntoPynnonTaydennysInput!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
@@ -216,6 +218,20 @@ input NahtavillaoloVaiheInput {
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 
+input LausuntoPyyntoInput {
+  id: Int!
+  poistumisPaiva: String!
+  lisaAineistot: [AineistoInput!]
+  muistiinpano: String
+}
+
+input LausuntoPynnonTaydennysInput {
+  kunta: Int!
+  poistumisPaiva: String!
+  muistutukset: [AineistoInput!]
+  muuAineisto: [AineistoInput!]
+}
+
 input HyvaksymisPaatosVaiheInput {
   hyvaksymisPaatos: [AineistoInput!]
   aineistoNahtavilla: [AineistoInput!]
@@ -349,6 +365,18 @@ input MuistutusInput {
 
 input ListaaLisaAineistoInput {
   nahtavillaoloVaiheId: Int!
+  poistumisPaiva: String!
+  hash: String!
+}
+
+input ListaaLausuntoPyyntoAineistotInput {
+  lausuntoPyyntoId: Int!
+  poistumisPaiva: String!
+  hash: String!
+}
+
+input ListaaLausuntoPyynnonTaydennyksenAineistotInput {
+  kunta: Int!
   poistumisPaiva: String!
   hash: String!
 }

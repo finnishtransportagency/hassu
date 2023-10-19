@@ -161,6 +161,8 @@ type Projekti implements IProjekti {
   vuorovaikutusKierrosJulkaisut: [VuorovaikutusKierrosJulkaisu!]
   nahtavillaoloVaihe: NahtavillaoloVaihe
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
+  lausuntoPyynnot: [LausuntoPyynto!]
+  lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -355,6 +357,24 @@ type NahtavillaoloVaiheJulkaisu {
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: AsianTila
+}
+
+type LausuntoPyynto {
+  id: Int!
+  poistumisPaiva: String!
+  lisaAineistot: [LisaAineisto!]
+  aineistopaketti: String
+  muistiinpano: String
+  hash: String!
+}
+
+type LausuntoPyynnonTaydennys {
+  kunta: Int!
+  poistumisPaiva: String!
+  muistutukset: [Aineisto!]
+  muuAineisto: [LisaAineisto!]
+  aineistopaketti: String
+  hash: String!
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
