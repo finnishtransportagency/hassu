@@ -247,6 +247,16 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaLisaAineisto,
   },
+  listaaLausuntoPyynnonAineistot: {
+    name: "listaaLausuntoPyynnonAineistot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaLausuntoPyynnonAineistot,
+  },
+  listaaLausuntoPyynnonTaydennyksenAineistot: {
+    name: "listaaLausuntoPyynnonTaydennyksenAineistot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaLausuntoPyynnonTaydennyksenAineistot,
+  },
   annaPalautettaPalvelusta: {
     name: "annaPalautettaPalvelusta",
     operationType: OperationType.Mutation,

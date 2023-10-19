@@ -1,4 +1,10 @@
-import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
+import {
+  DBProjekti,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import {
   adaptAineistot,
@@ -165,4 +171,37 @@ function adaptNahtavillaoloPDFPaths(
     };
   }
   return { __typename: "NahtavillaoloPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.NahtavillaoloPDF, ...result };
+}
+
+export function adaptLausuntoPyynnot(
+  _dbProjekti: DBProjekti,
+  lausuntoPyynnot?: Array<LausuntoPyynto> | null
+): Array<API.LausuntoPyynto> | undefined {
+  return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
+    const { lisaAineistot: _lisaAineistot, ...rest } = lausuntoPyynto;
+    const apiLausuntoPyynto: API.LausuntoPyynto = {
+      __typename: "LausuntoPyynto",
+      ...rest,
+      lisaAineistot: null,
+      aineistopaketti: null, //TODO
+    };
+    return apiLausuntoPyynto;
+  });
+}
+
+export function adaptLausuntoPyynnonTaydennykset(
+  _dbProjekti: DBProjekti,
+  lausuntoPyynnonTaydennykset?: Array<LausuntoPyynnonTaydennys> | null
+): Array<API.LausuntoPyynnonTaydennys> | undefined {
+  return lausuntoPyynnonTaydennykset?.map((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
+    const { muuAineisto: _muuAineisto, muistutukset: _muistutukset, ...rest } = lausuntoPyynnonTaydennys;
+    const taydennys: API.LausuntoPyynnonTaydennys = {
+      __typename: "LausuntoPyynnonTaydennys",
+      ...rest,
+      muuAineisto: null, //TODO,
+      muistutukset: null, //TODO
+      aineistopaketti: null, // TODO
+    };
+    return taydennys;
+  });
 }
