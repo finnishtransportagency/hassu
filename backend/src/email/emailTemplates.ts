@@ -3,7 +3,13 @@ import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput, TilasiirtymaTyypp
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkSuunnitteluVaiheYllapito } from "hassu-common/links";
-import { getAsiatunnus } from "../projekti/projektiUtil";
+import {
+  findHyvaksymisPaatosVaiheWaitingForApproval,
+  findJatkoPaatos1VaiheWaitingForApproval,
+  findJatkoPaatos2VaiheWaitingForApproval,
+  findNahtavillaoloWaitingForApproval,
+  getAsiatunnus,
+} from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
@@ -32,7 +38,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 const kuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: ${"kuulutusTyyppiUpperCase"}kuulutus odottaa hyväksyntää ${"asiatunnus"}`;
 const kuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
-on luotu ${"kuulutusTyyppiLowerCase"}kuulutus, joka odottaa hyväksyntääsi.
+on luotu ${"kuulutusTyyppiLowerCase"}kuulutus, ${"kuulutusKohde"} hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}${"kuulutusPath"}
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
@@ -182,16 +188,40 @@ function getKuulutusPath(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
   }
 }
 
+function getKuulutusKohde(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  const aineistotOdottavat = "jonka muokatut aineistot odottavat";
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      if (findNahtavillaoloWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      if (findHyvaksymisPaatosVaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      if (findJatkoPaatos1VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      if (findJatkoPaatos2VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+    default:
+      return "joka odottaa";
+  }
+}
+
 export function createKuulutusHyvaksyttavanaEmail(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
   const kuulutusTyyppiUpperCase = getKuulutusTyyppi(tilasiirtymaTyyppi);
   const kuulutusTyyppiLowerCase = kuulutusTyyppiUpperCase.toLowerCase();
-
+  const kuulutusKohde = getKuulutusKohde(projekti, tilasiirtymaTyyppi);
   const kuulutusPath = getKuulutusPath(tilasiirtymaTyyppi);
 
   return {
     subject: kuulutusHyvaksyttavanaOtsikko({ asiatunnus, kuulutusTyyppiUpperCase, ...projekti }),
-    text: kuulutusHyvaksyttavanaTeksti({ domain, kuulutusTyyppiLowerCase, kuulutusPath, ...projekti }),
+    text: kuulutusHyvaksyttavanaTeksti({ domain, kuulutusTyyppiLowerCase, kuulutusPath, kuulutusKohde, ...projekti }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
