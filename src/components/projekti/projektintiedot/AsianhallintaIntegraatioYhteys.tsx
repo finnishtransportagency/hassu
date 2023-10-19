@@ -18,28 +18,28 @@ export default function AsianhallintaIntegraatioYhteys({}: Props) {
       <H4>Integraatioyhteys</H4>
       <ContentSpacer>
         <p>
-          Järjestelmä mahdollistaa integraation avulla kuulutusten, ilmoitusten ja xx viemisen automaattisesti asianhallintaan.
-          Automaattinen yhteys asianhallintaan on mahdollista ottaa pois päältä. Jos integraatioyhteys on pois päältä, käyttäjän tulee itse
-          viedä tiedostot asianhallintaan.
+          Järjestelmä mahdollistaa integraation avulla kuulutusten, ilmoitusten, kutsujen ja lähetekirjeiden viemisen automaattisesti
+          asianhallintaan. Automaattinen yhteys asianhallintaan on mahdollista ottaa pois päältä. Jos integraatioyhteys on pois päältä,
+          käyttäjän tulee itse viedä tiedostot asianhallintaan.
         </p>
         <Controller
           control={control}
-          name="asianhallintaIntegraatio"
+          name="estaAsianhallintaIntegraatio"
           render={({ field, fieldState }) => (
             <FormGroup errorMessage={fieldState.error?.message}>
               <FormControlLabel
                 control={
                   <Switch
-                    checked={!!field.value}
+                    checked={!field.value}
                     onBlur={field.onBlur}
                     name={field.name}
                     ref={field.ref}
                     onChange={(_e, checked) => {
-                      field.onChange(checked);
+                      field.onChange(!checked);
                     }}
                   />
                 }
-                label={`Integraatioyhteys ${field.value ? "päällä" : "pois päältä"}`}
+                label={`Integraatioyhteys ${!field.value ? "päällä" : "pois päältä"}`}
               />
             </FormGroup>
           )}

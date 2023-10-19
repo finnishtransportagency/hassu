@@ -41,6 +41,7 @@ describe("dynamoDBStreamHandler", () => {
     removeProjektiSuomiStub = sinon.stub(openSearchClientJulkinen["SUOMI"], "deleteDocument");
     removeProjektiRuotsiStub = sinon.stub(openSearchClientJulkinen["RUOTSI"], "deleteDocument");
     openSearchClientIlmoitustauluSyoteStub = sinon.stub(openSearchClientIlmoitustauluSyote);
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {

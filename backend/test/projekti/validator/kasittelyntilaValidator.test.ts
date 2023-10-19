@@ -11,6 +11,7 @@ import { projektiAdapter } from "../../../src/projekti/adapter/projektiAdapter";
 import { Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
+import { parameters } from "../../../src/aws/parameters";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -27,6 +28,7 @@ describe("kasittelyntilaValidator", () => {
     const kayttaja2 = personSearchFixture.createKayttaja("A000111");
     const kayttaja3 = personSearchFixture.createKayttaja("A000123");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
 
     fixture = new ProjektiFixture();
   });

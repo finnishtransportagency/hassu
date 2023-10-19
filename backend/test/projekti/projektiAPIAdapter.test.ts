@@ -10,6 +10,7 @@ import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "hassu-common/grap
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
+import { parameters } from "../../src/aws/parameters";
 
 describe("projektiHandler", () => {
   let fixture: ProjektiFixture;
@@ -19,6 +20,7 @@ describe("projektiHandler", () => {
   beforeEach(() => {
     fixture = new ProjektiFixture();
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {

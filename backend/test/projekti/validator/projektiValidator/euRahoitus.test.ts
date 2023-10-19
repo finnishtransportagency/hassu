@@ -12,6 +12,7 @@ import { Kieli, KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "hassu-com
 import { UudelleenkuulutusTila } from "../../../../src/database/model";
 
 import { expect } from "chai";
+import { parameters } from "../../../../src/aws/parameters";
 
 describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
   let fixture: ProjektiFixture;
@@ -22,6 +23,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const a1User = personSearchFixture.createKayttaja("A1");
     const a2User = personSearchFixture.createKayttaja("A2");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
 
     fixture = new ProjektiFixture();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

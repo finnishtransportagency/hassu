@@ -16,7 +16,11 @@ const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
 };
 
-const ashaOhjeistusLink = <ExternalStyledLink href="/">asianhallinnan ohjeistuksesta</ExternalStyledLink>;
+const ashaOhjeistusLink = (
+  <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/9b979b70-ff67-4990-bf47-679b24e57f00/Ratasuunnitelman_%20kasittely_%20asianhallintajarjestelmassa_Hassu%20.docx?a=true">
+    asianhallinnan ohjeistuksesta
+  </ExternalStyledLink>
+);
 
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   <>
@@ -40,7 +44,7 @@ export const OhjelistaNotification: VFC<Props> = ({ children, vaihe, projekti })
               <li>
                 <strong>Tämä kohta koskee ELY-keskusta:</strong>{" "}
                 {vaihe === Vaihe.SUUNNITTELU
-                  ? "Vie lopuksi sähköpostilla saamasi kutsu USPA:an."
+                  ? "Vie lopuksi sähköpostilla saamasi kutsu ja lähetekirje USPA:an."
                   : "Vie lopuksi sähköpostilla saamasi kuulutus ja ilmoitus kuulutuksesta USPA:an."}
               </li>
             </>

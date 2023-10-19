@@ -128,6 +128,7 @@ Array [
   "Loaded projekti having both projektipaallikko and omistaja",
   Object {
     "__typename": "Projekti",
+    "aktiivisenVaiheenAsianhallinnanTila": undefined,
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
@@ -184,7 +185,7 @@ Array [
   "Save projekti having only projektipaallikko",
   Object {
     "aloitusKuulutus": undefined,
-    "asianhallintaIntegraatio": undefined,
+    "estaAsianhallintaIntegraatio": undefined,
     "euRahoitus": undefined,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
@@ -225,6 +226,7 @@ Array [
   "Loaded projekti having only projektipaallikko",
   Object {
     "__typename": "Projekti",
+    "aktiivisenVaiheenAsianhallinnanTila": undefined,
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
@@ -269,7 +271,7 @@ Array [
   "Save projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "aloitusKuulutus": undefined,
-    "asianhallintaIntegraatio": undefined,
+    "estaAsianhallintaIntegraatio": undefined,
     "euRahoitus": undefined,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
@@ -321,6 +323,7 @@ Array [
   "Loaded projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "__typename": "Projekti",
+    "aktiivisenVaiheenAsianhallinnanTila": undefined,
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
@@ -427,7 +430,7 @@ Array [
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     },
-    "asianhallintaIntegraatio": undefined,
+    "estaAsianhallintaIntegraatio": undefined,
     "euRahoitus": false,
     "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
@@ -502,6 +505,7 @@ Array [
   "Loaded projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
     "__typename": "Projekti",
+    "aktiivisenVaiheenAsianhallinnanTila": undefined,
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
       "aloituskuulutusSaamePDFt": undefined,
@@ -647,6 +651,7 @@ Array [
 exports[`apiHandler should modify permissions from a project successfully 10`] = `
 Object {
   "__typename": "Projekti",
+  "aktiivisenVaiheenAsianhallinnanTila": undefined,
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
     "aloituskuulutusSaamePDFt": undefined,

@@ -23,6 +23,7 @@ import { ProjektiDocument } from "../../src/projektiSearch/projektiSearchAdapter
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { expect } from "chai";
 import { createSandbox } from "sinon";
+import { parameters } from "../../src/aws/parameters";
 
 const sandbox = createSandbox();
 
@@ -34,6 +35,7 @@ describe("ProjektiSearchService", () => {
     openSearchClientYllapitoStub = sandbox.stub(openSearchClientYllapito, "putDocument");
     sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     openSearchClientJulkinenSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {

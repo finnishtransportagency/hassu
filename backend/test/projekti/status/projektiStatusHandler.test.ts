@@ -2,8 +2,16 @@ import { describe, it } from "mocha";
 import * as API from "hassu-common/graphql/apiModel";
 import { applyProjektiStatus } from "../../../src/projekti/status/projektiStatusHandler";
 import { expect } from "chai";
+import sinon from "sinon";
+import { parameters } from "../../../src/aws/parameters";
 
 describe("applyProjektiStatus", () => {
+  before(() => {
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+  });
+  after(() => {
+    sinon.restore();
+  });
   it("should set projekti status to SUUNNITTELU if aloituskuulutus has been published and vahainenMenettely = false", async () => {
     const projekti: Partial<API.Projekti> = {
       __typename: "Projekti",

@@ -13,6 +13,7 @@ import { Kielitiedot, Velho } from "../../../../src/database/model";
 import MockDate from "mockdate";
 
 import { expect } from "chai";
+import { parameters } from "../../../../src/aws/parameters";
 
 describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", () => {
   let fixture: ProjektiFixture;
@@ -23,6 +24,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     const a1User = personSearchFixture.createKayttaja("A1");
     const a2User = personSearchFixture.createKayttaja("A2");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
 
     fixture = new ProjektiFixture();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

@@ -3,7 +3,6 @@ import * as sinon from "sinon";
 import { KuulutusJulkaisuTila, Projekti, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
 import { addLogoFilesToProjekti, defaultMocks, mockSaveProjektiToVelho } from "../api/testUtil/util";
