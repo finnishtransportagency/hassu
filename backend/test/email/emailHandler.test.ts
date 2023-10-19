@@ -89,7 +89,39 @@ describe("emailHandler", () => {
           "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
             "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n" +
+            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+        );
+        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
+      });
+    });
+
+    describe("sendWaitingApprovalMailNahtavillaolokuulutus", () => {
+      it("should send email to projektipaallikko succesfully", async () => {
+        const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.NAHTAVILLAOLO);
+        expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää ELY/2/2022");
+
+        expect(emailOptions.text).to.eq(
+          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+            "Testiprojekti 2\n" +
+            "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n" +
+            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+        );
+        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
+      });
+    });
+
+    describe("sendWaitingApprovalMailHyvaksymispaatoskuulutus", () => {
+      it("should send email to projektipaallikko succesfully", async () => {
+        const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
+        expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
+
+        expect(emailOptions.text).to.eq(
+          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+            "Testiprojekti 2\n" +
+            "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus/hyvaksymispaatos/kuulutus\n" +
             "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
