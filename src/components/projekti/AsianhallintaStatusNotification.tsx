@@ -1,7 +1,7 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { AsianTila, Vaihe } from "@services/api";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
-import { vaiheOnMuokkausTilassa } from "common/vaiheOnMuokkaustilassa";
+import { vaiheOnMuokkausTilassa } from "common/util/haeVaiheidentiedot";
 import React from "react";
 
 type Props = { projekti: ProjektiLisatiedolla; vaihe: Vaihe };

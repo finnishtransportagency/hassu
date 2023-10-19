@@ -1,6 +1,21 @@
 import { DBProjekti } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, MuokkausTila, Projekti, Status, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import {
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  Projekti,
+  Status,
+  TilasiirtymaTyyppi,
+  Vaihe,
+  VuorovaikutusKierrosTila,
+} from "../graphql/apiModel";
 import { statusOrder } from "../statusOrder";
+import {
+  haeKaikkienVaiheidenTiedot,
+  JulkaisuData,
+  julkaisuIsVuorovaikutusKierrosLista,
+  VaiheData,
+  vaiheOnMuokkausTilassa,
+} from "./haeVaiheidentiedot";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -40,77 +55,42 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   return true;
 }
 
-type JulkaisuStatus =
-  | Status.ALOITUSKUULUTUS
-  | Status.SUUNNITTELU
-  | Status.NAHTAVILLAOLO
-  | Status.HYVAKSYTTY
-  | Status.JATKOPAATOS_1
-  | Status.JATKOPAATOS_2;
-
-type JulkaisuAvain = keyof Pick<
-  Projekti,
-  | "aloitusKuulutusJulkaisu"
-  | "vuorovaikutusKierrosJulkaisut"
-  | "nahtavillaoloVaiheJulkaisu"
-  | "hyvaksymisPaatosVaiheJulkaisu"
-  | "jatkoPaatos1VaiheJulkaisu"
-  | "jatkoPaatos2VaiheJulkaisu"
->;
-
-type VaiheAvain = keyof Pick<
-  Projekti,
-  "aloitusKuulutus" | "vuorovaikutusKierros" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
->;
-
-type Julkaisu = Projekti[JulkaisuAvain];
-type Vaihe = Projekti[VaiheAvain];
-
-type TilakohtaisetVaiheet = Record<JulkaisuStatus, { julkaisu: Julkaisu; vaihe: Vaihe }>;
-
-function isJulkaisuUserCreated(julkaisu: Julkaisu): julkaisu is NonNullable<Julkaisu> {
-  return Array.isArray(julkaisu)
+function isJulkaisuUserCreated(julkaisu: JulkaisuData): julkaisu is NonNullable<JulkaisuData> {
+  return julkaisuIsVuorovaikutusKierrosLista(julkaisu)
     ? julkaisu.some((kierrosJulkaisu) => !!kierrosJulkaisu?.tila && kierrosJulkaisu.tila !== VuorovaikutusKierrosTila.MIGROITU)
     : !!julkaisu && julkaisu.tila !== KuulutusJulkaisuTila.MIGROITU;
 }
 
-function isVaiheMuokkaustilassa(vaihe: Vaihe): boolean {
-  return (
-    !vaihe ||
-    (vaihe.__typename === "VuorovaikutusKierros"
-      ? vaihe.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA
-      : vaihe.muokkausTila === MuokkausTila.MUOKKAUS)
-  );
-}
+type AdditionalValidation = (vaiheTyyppi: Vaihe, julkaisu: JulkaisuData, vaihe: VaiheData) => boolean;
 
-type AdditionalValidation = (tila: JulkaisuStatus, julkaisu: Julkaisu, vaihe: Vaihe) => boolean;
+const vaiheToStatus: Record<Vaihe, Status> = {
+  ALOITUSKUULUTUS: Status.ALOITUSKUULUTUS,
+  SUUNNITTELU: Status.SUUNNITTELU,
+  NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
+  HYVAKSYMISPAATOS: Status.HYVAKSYTTY,
+  JATKOPAATOS: Status.JATKOPAATOS_1,
+  JATKOPAATOS2: Status.JATKOPAATOS_2,
+};
 
 function noUserCreatedJulkaisuPreventingChange(projekti: Projekti, additionalVaiheChecks?: AdditionalValidation): boolean {
-  const tilakohtaisetVaiheet: TilakohtaisetVaiheet = {
-    ALOITUSKUULUTUS: { julkaisu: projekti.aloitusKuulutusJulkaisu, vaihe: projekti.aloitusKuulutus },
-    SUUNNITTELU: { julkaisu: projekti.vuorovaikutusKierrosJulkaisut, vaihe: projekti.vuorovaikutusKierros },
-    NAHTAVILLAOLO: { julkaisu: projekti.nahtavillaoloVaiheJulkaisu, vaihe: projekti.nahtavillaoloVaihe },
-    HYVAKSYTTY: { julkaisu: projekti.hyvaksymisPaatosVaiheJulkaisu, vaihe: projekti.hyvaksymisPaatosVaihe },
-    JATKOPAATOS_1: { julkaisu: projekti.jatkoPaatos1VaiheJulkaisu, vaihe: projekti.jatkoPaatos1Vaihe },
-    JATKOPAATOS_2: { julkaisu: projekti.jatkoPaatos2VaiheJulkaisu, vaihe: projekti.jatkoPaatos2Vaihe },
-  };
+  const vaiheidenTiedot = haeKaikkienVaiheidenTiedot(projekti);
 
-  const noJulkaisuPreventingChange = !Object.entries(tilakohtaisetVaiheet)
+  const noJulkaisuPreventingChange = !Object.entries(vaiheidenTiedot)
     // Jos julkaisua ei ole tai se on migratoitu, vaihe on OK
     .filter(([_, { julkaisu }]) => isJulkaisuUserCreated(julkaisu))
     // Tarkastetaan salliiko vaiheen ja julkaisun tiedot
-    .some(([tilaString, { julkaisu, vaihe }]) => {
-      const tila = tilaString as JulkaisuStatus;
-      const statusNro = statusOrder[tila];
+    .some(([vaiheString, { julkaisu, vaihe }]) => {
+      const vaiheTyyppi = vaiheString as Vaihe;
+      const statusNro = statusOrder[vaiheToStatus[vaiheTyyppi]];
 
       // Haetaan julkaisut, jotka on järjestyksessä ennen kyseistä vaihetta
-      const aiemmatJulkaisut = Object.entries(tilakohtaisetVaiheet)
-        .filter(([t]) => statusOrder[t as JulkaisuStatus] < statusNro)
+      const aiemmatJulkaisut = Object.entries(vaiheidenTiedot)
+        .filter(([t]) => statusOrder[vaiheToStatus[t as Vaihe]] < statusNro)
         .map(([_, { julkaisu: j }]) => j);
 
-      const vaiheNotEditable = !isVaiheMuokkaustilassa(vaihe);
+      const vaiheNotEditable = !vaiheOnMuokkausTilassa(projekti, vaiheTyyppi);
       const hasPriorUserCreatedJulkaisu = aiemmatJulkaisut.some(isJulkaisuUserCreated);
-      const doesntPassAdditionalChecks = additionalVaiheChecks ? !additionalVaiheChecks(tila, julkaisu, vaihe) : false;
+      const doesntPassAdditionalChecks = additionalVaiheChecks ? !additionalVaiheChecks(vaiheTyyppi, julkaisu, vaihe) : false;
 
       // Jos vaihe ei ole muokattavissa
       // TAI sitä edeltävissä vaiheissa on käyttäjän luomia julkaisuja
@@ -131,8 +111,8 @@ export function isAllowedToChangeSuunnittelusopimus(projekti: Projekti): boolean
 
 export function isAllowedToChangeKielivalinta(projekti: Projekti): boolean {
   // Jos tila on jotain muuta kuin ALOITUSKUULUTUS, tarkistetaan, että vaiheella ei ole uudelleenkuulutusta
-  const preventNonAloituskuulutusUudelleenkuulutus: AdditionalValidation = (tila, _julkaisu, vaihe) => {
-    return tila === Status.ALOITUSKUULUTUS || (vaihe?.__typename === "VuorovaikutusKierros" ? true : !vaihe?.uudelleenKuulutus);
+  const preventNonAloituskuulutusUudelleenkuulutus: AdditionalValidation = (vaiheTyyppi, _julkaisu, vaihe) => {
+    return vaiheTyyppi === Vaihe.ALOITUSKUULUTUS || (vaihe?.__typename === "VuorovaikutusKierros" ? true : !vaihe?.uudelleenKuulutus);
   };
   return noUserCreatedJulkaisuPreventingChange(projekti, preventNonAloituskuulutusUudelleenkuulutus);
 }

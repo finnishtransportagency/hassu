@@ -1,5 +1,5 @@
 import { Vaihe, Status, Projekti, AktiivisenVaiheenAsianhallinanTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-import { vaiheOnMuokkausTilassa } from "hassu-common/vaiheOnMuokkaustilassa";
+import { haeJulkaisunTiedot, julkaisuIsVuorovaikutusKierrosLista, vaiheOnMuokkausTilassa } from "hassu-common/util/haeVaiheidentiedot";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { parameters } from "../../aws/parameters";
 
@@ -34,28 +34,9 @@ const haeStatuksenVaihe: HaeStatuksenVaiheFunc = (status) => {
   return vaihe;
 };
 
-type VaiheJulkaisukentta = keyof Pick<
-  Projekti,
-  | "aloitusKuulutusJulkaisu"
-  | "vuorovaikutusKierrosJulkaisut"
-  | "nahtavillaoloVaiheJulkaisu"
-  | "hyvaksymisPaatosVaiheJulkaisu"
-  | "jatkoPaatos1VaiheJulkaisu"
-  | "jatkoPaatos2VaiheJulkaisu"
->;
-
-const vaiheidenJulkaisukentat: Record<Vaihe, VaiheJulkaisukentta> = {
-  ALOITUSKUULUTUS: "aloitusKuulutusJulkaisu",
-  SUUNNITTELU: "vuorovaikutusKierrosJulkaisut",
-  NAHTAVILLAOLO: "nahtavillaoloVaiheJulkaisu",
-  HYVAKSYMISPAATOS: "hyvaksymisPaatosVaiheJulkaisu",
-  JATKOPAATOS: "jatkoPaatos1VaiheJulkaisu",
-  JATKOPAATOS2: "jatkoPaatos2VaiheJulkaisu",
-};
-
 function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): boolean {
-  const julkaisu = projekti[vaiheidenJulkaisukentat[vaihe]];
-  if (Array.isArray(julkaisu)) {
+  const julkaisu = haeJulkaisunTiedot(projekti, vaihe);
+  if (julkaisuIsVuorovaikutusKierrosLista(julkaisu)) {
     return false;
   } else {
     return julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
