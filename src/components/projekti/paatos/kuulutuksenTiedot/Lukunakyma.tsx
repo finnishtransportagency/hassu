@@ -1,12 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import {
-  AsiakirjaTyyppi,
-  HyvaksymisPaatosVaiheJulkaisu,
-  HyvaksymisPaatosVaihePDF,
-  Kieli,
-  KuulutusJulkaisuTila,
-  KuulutusSaamePDF,
-} from "@services/api";
+import { AsiakirjaTyyppi, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -27,9 +20,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
-import useCurrentUser from "../../../../hooks/useCurrentUser";
 import { label } from "src/util/textUtil";
-import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -39,7 +30,6 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
-  const { data: kayttaja } = useCurrentUser();
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -132,14 +122,6 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
-              {kayttaja?.features?.asianhallintaIntegraatio && julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
-                <KaynnistaAsianhallinnanSynkronointiPainike
-                  oid={projekti.oid}
-                  asiakirjaTyyppi={esimerkkiAsiakirjaTyyppiVaiheessa}
-                  asianhallintaSynkronointiTila={julkaisu.asianhallintaSynkronointiTila}
-                  className={"md:col-span-2 mb-0"}
-                />
-              )}
             </div>
           )}
         </div>

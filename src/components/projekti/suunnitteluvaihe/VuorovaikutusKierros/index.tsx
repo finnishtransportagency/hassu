@@ -53,7 +53,6 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import { label } from "src/util/textUtil";
-import useAsianhallinnanTila from "src/hooks/useAsianhallinnanTila";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 

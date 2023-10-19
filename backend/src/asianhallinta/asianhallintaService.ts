@@ -3,12 +3,12 @@ import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { log } from "../logger";
 import { getSQS } from "../aws/clients/getSQS";
 import {
-  AsiakirjaTyyppi,
   AsianhallintaEvent,
   AsianhallintaSynkronointi,
   CheckAsianhallintaStateCommand,
   CheckAsianhallintaStateResponse,
   RequestType,
+  AsiakirjaTyyppi,
 } from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -18,7 +18,7 @@ import { config } from "../config";
 import { NotFoundError } from "hassu-common/error";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
-import { AsianhallinnanTila, AsianhallinnanTilaQueryVariables, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "hassu-common/graphql/apiModel";
 import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap";
 
 class AsianhallintaService {
@@ -64,7 +64,7 @@ class AsianhallintaService {
     log.info("enqueueAsianhallintaSynchronization", { result });
   }
 
-  async checkAsianhallintaState({ oid, asiakirjaTyyppi }: AsianhallinnanTilaQueryVariables): Promise<AsianhallinnanTila | undefined> {
+  async checkAsianhallintaState(oid: string, vaihe: Vaihe): Promise<AsianTila | undefined> {
     if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
       return;
     }
@@ -79,8 +79,8 @@ class AsianhallintaService {
     const body: CheckAsianhallintaStateCommand = {
       asiatunnus,
       vaylaAsianhallinta: isVaylaAsianhallinta,
-      asiakirjaTyyppi: asiakirjaTyyppi as AsiakirjaTyyppi,
-      correlationId: getCorrelationId() || uuid.v4(),
+      asiakirjaTyyppi: vaiheSpecificAsiakirjaTyyppi[vaihe],
+      correlationId: getCorrelationId() ?? uuid.v4(),
     };
     log.info("checkAsianhallintaState", { body });
     const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body));
@@ -88,7 +88,7 @@ class AsianhallintaService {
       const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       log.info("checkAsianhallintaState", { response });
       if (response.synkronointiTila) {
-        return { __typename: "AsianhallinnanTila", asianTila: synkronointiTilaToAsianTilaMap[response.synkronointiTila] };
+        return synkronointiTilaToAsianTilaMap[response.synkronointiTila];
       } else {
         log.error("checkAsianhallintaState", { response });
       }
@@ -111,5 +111,14 @@ class AsianhallintaService {
     });
   }
 }
+
+const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
+  ALOITUSKUULUTUS: "ALOITUSKUULUTUS",
+  SUUNNITTELU: "YLEISOTILAISUUS_KUTSU",
+  NAHTAVILLAOLO: "NAHTAVILLAOLOKUULUTUS",
+  HYVAKSYMISPAATOS: "HYVAKSYMISPAATOSKUULUTUS",
+  JATKOPAATOS: "JATKOPAATOS1KUULUTUS",
+  JATKOPAATOS2: "JATKOPAATOS2KUULUTUS",
+};
 
 export const asianhallintaService = new AsianhallintaService();

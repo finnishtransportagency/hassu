@@ -1,11 +1,4 @@
-import {
-  Vaihe,
-  Status,
-  Projekti,
-  AktiivisenVaiheenAsianhallinanTila,
-  AsiakirjaTyyppi,
-  KuulutusJulkaisuTila,
-} from "hassu-common/graphql/apiModel";
+import { Vaihe, Status, Projekti, AktiivisenVaiheenAsianhallinanTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { vaiheOnMuokkausTilassa } from "hassu-common/vaiheOnMuokkaustilassa";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { parameters } from "../../aws/parameters";
@@ -41,15 +34,6 @@ const haeStatuksenVaihe: HaeStatuksenVaiheFunc = (status) => {
   return vaihe;
 };
 
-const vaiheenAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
-  ALOITUSKUULUTUS: AsiakirjaTyyppi.ALOITUSKUULUTUS,
-  SUUNNITTELU: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
-  NAHTAVILLAOLO: AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
-  HYVAKSYMISPAATOS: AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
-  JATKOPAATOS: AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
-  JATKOPAATOS2: AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
-};
-
 type VaiheJulkaisukentta = keyof Pick<
   Projekti,
   | "aloitusKuulutusJulkaisu"
@@ -81,7 +65,7 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
 export async function haeAktiivisenVaiheenAsianhallinanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinanTila | null | undefined> {
-  const integraatioInaktiivinen = projekti.estaAsianhallintaIntegraatio || !(await parameters.isAsianhallintaIntegrationEnabled());
+  const integraatioInaktiivinen = !!projekti.estaAsianhallintaIntegraatio || !(await parameters.isAsianhallintaIntegrationEnabled());
   if (integraatioInaktiivinen) {
     return undefined;
   }
@@ -89,10 +73,9 @@ export async function haeAktiivisenVaiheenAsianhallinanTila(
   if (!vaihe || (!vaiheOnMuokkausTilassa(projekti, vaihe) && !vaiheenJulkaisuOdottaaHyvaksyntaa(projekti, vaihe))) {
     return undefined;
   }
-  const asiakirjaTyyppi = vaiheenAsiakirjaTyyppi[vaihe];
   return {
     __typename: "AktiivisenVaiheenAsianhallinanTila",
     vaihe,
-    tila: (await asianhallintaService.checkAsianhallintaState({ oid: projekti.oid, asiakirjaTyyppi }))?.asianTila,
+    tila: await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe),
   };
 }

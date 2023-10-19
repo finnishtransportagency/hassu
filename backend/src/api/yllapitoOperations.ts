@@ -79,8 +79,6 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return loadProjektiYllapito((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.projektinTila.name:
       return projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
-    case apiConfig.asianhallinnanTila.name:
-      return asianhallintaService.checkAsianhallintaState(event.arguments as AsianhallinnanTilaQueryVariables);
     case apiConfig.tallennaProjekti.name:
       return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.tallennaJaSiirraTilaa.name:

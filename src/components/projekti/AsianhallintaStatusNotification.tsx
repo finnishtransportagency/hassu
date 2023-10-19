@@ -9,12 +9,9 @@ type Props = { projekti: ProjektiLisatiedolla; vaihe: Vaihe };
 const ODOTTAMATON_VIRHE_VAROITUS = "Odottamaton virhe asian tilan tarkastamisessa asianhallinnasta.";
 
 const tilakohtainenVaroitus = (asianTila: AsianTila, isAdmin: boolean, lomakeMuokattavissa: boolean): string | undefined => {
+  const additionalParagrph = lomakeMuokattavissa ? " Lue ohjeista lisää." : "";
   const vaarassaTilassaVaroitus = `Tarkasta asian tila asianhallintajärjestelmästä. Asialla on auki väärä toimenpide.${
-    isAdmin
-      ? " Asialla tulee olla oikea toimenpide auki ennen kuin kuulutuksen pystyy hyväksymään."
-      : lomakeMuokattavissa
-      ? " Lue ohjeista lisää"
-      : ""
+    isAdmin ? " Asialla tulee olla oikea toimenpide auki ennen kuin kuulutuksen pystyy hyväksymään." : additionalParagrph
   }`;
 
   const tilojenVaroitukset: Record<AsianTila, string | undefined> = {

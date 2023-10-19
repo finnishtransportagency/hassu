@@ -1,6 +1,6 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { AsiakirjaTyyppi, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
+import { VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
 import React, { useCallback, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -15,8 +15,6 @@ import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
-import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -27,7 +25,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
   const { showSuccessMessage } = useSnackbars();
-  const { data: kayttaja } = useCurrentUser();
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
@@ -109,14 +106,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <SectionContent>
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
-        {kayttaja?.features?.asianhallintaIntegraatio && vuorovaikutusKierrosjulkaisu.tila == VuorovaikutusKierrosTila.JULKINEN && (
-          <KaynnistaAsianhallinnanSynkronointiPainike
-            oid={projekti.oid}
-            asiakirjaTyyppi={AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU}
-            asianhallintaSynkronointiTila={vuorovaikutusKierrosjulkaisu.asianhallintaSynkronointiTila}
-            className={"md:col-span-2 mb-0"}
-          />
-        )}
         <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <VuorovaikutusMahdollisuudet
           showAjansiirtopainikkeet={showAjansiirtopainikkeet}

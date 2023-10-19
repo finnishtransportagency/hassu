@@ -1,11 +1,4 @@
-import {
-  AsiakirjaTyyppi,
-  Kieli,
-  KuulutusJulkaisuTila,
-  KuulutusSaamePDF,
-  NahtavillaoloPDF,
-  NahtavillaoloVaiheJulkaisu,
-} from "@services/api";
+import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -26,8 +19,6 @@ import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
-import useCurrentUser from "../../../../hooks/useCurrentUser";
-import KaynnistaAsianhallinnanSynkronointiPainike from "@components/projekti/common/KaynnistaAsianhallinnanSynkronointiPainike";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -38,7 +29,6 @@ interface Props {
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation();
-  const { data: kayttaja } = useCurrentUser();
 
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
@@ -87,14 +77,6 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               >
                 Siirrä menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
-            )}
-            {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <KaynnistaAsianhallinnanSynkronointiPainike
-                oid={projekti.oid}
-                asiakirjaTyyppi={AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS}
-                asianhallintaSynkronointiTila={nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila}
-                className={"md:col-span-2 mb-0"}
-              />
             )}
           </div>
         </div>
