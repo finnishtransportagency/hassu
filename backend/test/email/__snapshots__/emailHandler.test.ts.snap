@@ -42,7 +42,7 @@ Array [
 Testiprojekti 2
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "matti.meikalainen@vayla.fi",
   },
   Object {
@@ -63,7 +63,7 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
     ],

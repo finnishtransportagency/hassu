@@ -103,7 +103,7 @@ Array [
     "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 HASSU AUTOMAATTITESTIPROJEKTI1
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -114,8 +114,8 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -127,7 +127,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
   },
   Object {
@@ -144,7 +144,7 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -994,8 +994,8 @@ Array [
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -1007,7 +1007,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 HASSU AUTOMAATTITESTIPROJEKTI1
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
@@ -1024,7 +1024,7 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -12027,6 +12027,18 @@ Object {
 exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
 Array [
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
@@ -12040,7 +12052,7 @@ nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-t
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
 
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -13662,6 +13674,23 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 `;
 
 exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+]
+`;
+
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -13809,7 +13838,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 24`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -14016,7 +14045,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 24`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14266,7 +14295,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 25`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 26`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14516,7 +14545,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 26`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 27`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14717,7 +14746,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 27`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 28`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -14883,7 +14912,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 28`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 29`] = `
 Object {
   "description": "Nähtävilläolon uudelleenkuulutus julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -14952,7 +14981,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 29`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 30`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -15076,7 +15105,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 30`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 31`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15308,7 +15337,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 31`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 32`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15444,7 +15473,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 32`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 33`] = `
 Array [
   Object {
     "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
@@ -15473,6 +15502,18 @@ Muistutus 1
     "to": "etunimi.sukunimi@org.fi",
   },
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
@@ -15486,7 +15527,7 @@ nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-t
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
 
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -15537,7 +15578,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 33`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 34`] = `
 Array [
   Object {
     "subject": "Muistutus - 00000003-0be9-455d-a434-0fab721acaa2",
@@ -16353,12 +16394,24 @@ Object {
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
 Array [
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
   },
   Object {
@@ -20093,12 +20146,24 @@ Object {
 exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
 Array [
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
   },
   Object {
@@ -20165,12 +20230,24 @@ CGI Suomi Oy",
     ],
   },
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
+HASSU AUTOMAATTITESTIPROJEKTI1
+on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {

@@ -1230,8 +1230,8 @@ Array [
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 Testiprojekti 1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
     ],
@@ -1241,8 +1241,8 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 Testiprojekti 1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
     ],
@@ -1253,7 +1253,7 @@ Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 Testiprojekti 1
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
@@ -1274,7 +1274,7 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
     ],
