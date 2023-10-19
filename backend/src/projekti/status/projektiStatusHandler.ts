@@ -63,7 +63,7 @@ export async function applyProjektiStatus(projekti: API.Projekti): Promise<void>
             nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
             asianhallinta: {
               aktivoitavissa: asianhallintaAktivoitavissa,
-              aktiivinen: asianhallintaAktivoitavissa && !!p.asianhallintaIntegraatio,
+              aktiivinen: asianhallintaAktivoitavissa && !p.estaAsianhallintaIntegraatio,
             },
           },
           isRuotsinkielinenProjekti: {

@@ -51,7 +51,7 @@ type PersitentFormValues = Pick<
   | "liittyvatSuunnitelmat"
   | "kielitiedot"
   | "vahainenMenettely"
-  | "asianhallintaIntegraatio"
+  | "estaAsianhallintaIntegraatio"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -135,7 +135,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
     }
     if (projekti.asianhallinta.aktivoitavissa) {
-      tallentamisTiedot.asianhallintaIntegraatio = !!projekti.asianhallintaIntegraatio;
+      tallentamisTiedot.estaAsianhallintaIntegraatio = !!projekti.estaAsianhallintaIntegraatio;
     }
     return tallentamisTiedot;
   }, [projekti]);

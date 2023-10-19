@@ -23,10 +23,11 @@ import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
-    if (await parameters.isAsianhallintaIntegrationEnabled()) {
-      await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
-      await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId);
+    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+      return;
     }
+    await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
+    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId);
   }
 
   /**
@@ -34,6 +35,9 @@ class AsianhallintaService {
    * saveAndEnqueueSynchronization-metodin kautta.
    */
   async enqueueSynchronization(oid: string, asianhallintaEventId: string) {
+    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+      return;
+    }
     const sqsUrl = await parameters.getAsianhallintaSQSUrl();
     if (!sqsUrl) {
       log.warn("enqueueAsianhallintaSynchronization: sqsUrl ei löytynyt");
@@ -61,6 +65,9 @@ class AsianhallintaService {
   }
 
   async checkAsianhallintaState({ oid, asiakirjaTyyppi }: AsianhallinnanTilaQueryVariables): Promise<AsianhallinnanTila | undefined> {
+    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+      return;
+    }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (!projekti) {
       throw new NotFoundError("Projektia ei löydy");

@@ -184,7 +184,7 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   aktiivisenVaiheenAsianhallinnanTila: AktiivisenVaiheenAsianhallinanTila
-  asianhallintaIntegraatio: Boolean
+  estaAsianhallintaIntegraatio: Boolean
 }
 
 enum Vaihe {

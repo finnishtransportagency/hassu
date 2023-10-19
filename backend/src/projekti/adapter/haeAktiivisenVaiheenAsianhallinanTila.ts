@@ -81,7 +81,7 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
 export async function haeAktiivisenVaiheenAsianhallinanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinanTila | null | undefined> {
-  const integraatioInaktiivinen = !projekti.asianhallintaIntegraatio || !(await parameters.isAsianhallintaIntegrationEnabled());
+  const integraatioInaktiivinen = projekti.estaAsianhallintaIntegraatio || !(await parameters.isAsianhallintaIntegrationEnabled());
   if (integraatioInaktiivinen) {
     return undefined;
   }

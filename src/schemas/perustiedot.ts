@@ -88,7 +88,7 @@ export const perustiedotValidationSchema = Yup.object()
       .notRequired()
       .nullable()
       .default(null),
-    asianhallintaIntegraatio: Yup.boolean().when("$projekti", {
+    estaAsianhallintaIntegraatio: Yup.boolean().when("$projekti", {
       is: (projekti: ProjektiLisatiedolla) => projekti.asianhallinta.aktivoitavissa,
       then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
     }),

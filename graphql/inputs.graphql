@@ -16,7 +16,7 @@ input TallennaProjektiInput {
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
   kasittelynTila: KasittelyntilaInput
-  asianhallintaIntegraatio: Boolean
+  estaAsianhallintaIntegraatio: Boolean
 }
 
 input KielitiedotInput {

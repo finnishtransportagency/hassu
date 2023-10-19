@@ -42,7 +42,7 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
     },
     asianhallinta: {
       aktivoitavissa: asianhallintaAktivoitavissa,
-      aktiivinen: asianhallintaAktivoitavissa && !!projekti.asianhallintaIntegraatio,
+      aktiivinen: asianhallintaAktivoitavissa && !projekti.estaAsianhallintaIntegraatio,
     },
   };
   return {
