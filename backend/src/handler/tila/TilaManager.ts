@@ -1,7 +1,14 @@
 import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import {
+  AsianTila,
+  NykyinenKayttaja,
+  TilaSiirtymaInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { projektiSchedulerService } from "../../scheduler/projektiSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
@@ -11,8 +18,14 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
+import { parameters } from "../../aws/parameters";
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
+  protected vaihe: Vaihe;
+
+  constructor(vaihe: Vaihe) {
+    this.vaihe = vaihe;
+  }
 
   abstract getVaihe(projekti: DBProjekti): T;
 
@@ -105,8 +118,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   private async sendForApprovalInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
     this.validateSendForApproval(projekti);
-    auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
     this.validateKunnatHasBeenSet(projekti);
+    this.validateAsianhallintaValmiinaSiirtoon(projekti);
+    auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
     await this.sendForApproval(projekti, kayttaja);
   }
 
@@ -124,9 +138,20 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
-    auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
     this.validateKunnatHasBeenSet(projekti);
+    this.validateAsianhallintaValmiinaSiirtoon(projekti);
+    auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
     await this.approve(projekti, kayttaja);
+  }
+
+  private async validateAsianhallintaValmiinaSiirtoon(projekti: DBProjekti) {
+    if (!(await parameters.isAsianhallintaIntegrationEnabled()) || projekti.estaAsianhallintaIntegraatio) {
+      return;
+    }
+    const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, this.vaihe);
+    if (asianhallinnanTila !== AsianTila.VALMIS_VIENTIIN) {
+      throw new IllegalArgumentError(`Asianhallinnan ei ole valmis vientiin. Vaihe: ${this.vaihe}, tila: ${asianhallinnanTila}`);
+    }
   }
 
   private async uudelleenkuulutaInternal(projekti: DBProjekti) {

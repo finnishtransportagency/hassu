@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -359,4 +359,4 @@ function validateVuorovaikutusKierrosEiOleJulkaisematta(dbProjekti: DBProjekti):
   }
 }
 
-export const nahtavillaoloTilaManager = new NahtavillaoloTilaManager();
+export const nahtavillaoloTilaManager = new NahtavillaoloTilaManager(Vaihe.NAHTAVILLAOLO);

@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, Vaihe, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -380,4 +380,4 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
   }
 }
 
-export const vuorovaikutusKierrosTilaManager = new VuorovaikutusKierrosTilaManager();
+export const vuorovaikutusKierrosTilaManager = new VuorovaikutusKierrosTilaManager(Vaihe.SUUNNITTELU);

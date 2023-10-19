@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -177,4 +177,4 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 }
 
-export const jatkoPaatos2VaiheTilaManager = new JatkoPaatos2VaiheTilaManager();
+export const jatkoPaatos2VaiheTilaManager = new JatkoPaatos2VaiheTilaManager(Vaihe.JATKOPAATOS2);

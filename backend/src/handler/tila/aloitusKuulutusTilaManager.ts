@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, Vaihe } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -295,4 +295,4 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 }
 
-export const aloitusKuulutusTilaManager = new AloitusKuulutusTilaManager();
+export const aloitusKuulutusTilaManager = new AloitusKuulutusTilaManager(Vaihe.ALOITUSKUULUTUS);
