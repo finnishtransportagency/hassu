@@ -13679,7 +13679,7 @@ Array [
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+on luotu nähtävilläolokuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
@@ -20149,7 +20149,7 @@ Array [
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+on luotu hyväksymispäätöskuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
