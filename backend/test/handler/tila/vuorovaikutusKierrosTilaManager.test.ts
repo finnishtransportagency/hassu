@@ -84,6 +84,8 @@ describe("vuorovaikutusKierrosTilaManager", () => {
             linkki: "http://www.fi",
           },
         ],
+        esitettavatYhteystiedot: {},
+        yhteystiedot: [],
       },
     ];
     await expect(() => vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.throw(
@@ -134,7 +136,9 @@ describe("vuorovaikutusKierrosTilaManager", () => {
       },
     ];
     projekti.vuorovaikutusKierros = { ...projekti.vuorovaikutusKierros, vuorovaikutusNumero: 1, vuorovaikutusTilaisuudet };
-    projekti.vuorovaikutusKierrosJulkaisut = [{ ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet }];
+    projekti.vuorovaikutusKierrosJulkaisut = [
+      { ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet, yhteystiedot: [], esitettavatYhteystiedot: {} },
+    ];
     await expect(vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.equal(undefined);
   });
 
@@ -155,7 +159,9 @@ describe("vuorovaikutusKierrosTilaManager", () => {
       },
     ];
     projekti.vuorovaikutusKierros = { ...projekti.vuorovaikutusKierros, vuorovaikutusNumero: 1, vuorovaikutusTilaisuudet };
-    projekti.vuorovaikutusKierrosJulkaisut = [{ ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet }];
+    projekti.vuorovaikutusKierrosJulkaisut = [
+      { ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet, yhteystiedot: [], esitettavatYhteystiedot: {} },
+    ];
     await expect(() => vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.throw(
       "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin julkaistu vuorovaikutus ei ole vielä päättynyt, tai koska ollaan jo nähtävilläolovaiheessa"
     );

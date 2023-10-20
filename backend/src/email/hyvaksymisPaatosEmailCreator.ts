@@ -5,14 +5,14 @@ import {
   createHyvaksymispaatosHyvaksyttyLaatijalleEmail,
   createHyvaksymispaatosHyvaksyttyPaallikkolleEmail,
   createHyvaksymispaatosHyvaksyttyViranomaisilleEmail,
-  createJatkopaatosHyvaksyttyViranomaisilleEmail
+  createJatkopaatosHyvaksyttyViranomaisilleEmail,
 } from "./emailTemplates";
 import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
   HyvaksymisPaatosVaiheKutsuAdapter,
 } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { EmailOptions } from "./model/emailOptions";
-import { PaatosTyyppi } from "../projekti/adapter/projektiAdapterJulkinen";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 export class HyvaksymisPaatosEmailCreator {
   private adapter!: HyvaksymisPaatosVaiheKutsuAdapter;
@@ -21,14 +21,20 @@ export class HyvaksymisPaatosEmailCreator {
     // Ignore
   }
 
-  static async newInstance(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, paatosTyyppi: PaatosTyyppi): Promise<HyvaksymisPaatosEmailCreator> {
+  static async newInstance(
+    projekti: DBProjekti,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    paatosTyyppi: PaatosTyyppi
+  ): Promise<HyvaksymisPaatosEmailCreator> {
     return new HyvaksymisPaatosEmailCreator().asyncConstructor(projekti, julkaisu, paatosTyyppi);
   }
 
   private async asyncConstructor(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, paatosTyyppi: PaatosTyyppi) {
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     assertIsDefined(julkaisu.kuulutusPaiva);
-    this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti, Kieli.SUOMI, julkaisu, paatosTyyppi));
+    this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
+      createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti, Kieli.SUOMI, julkaisu, paatosTyyppi)
+    );
     return this;
   }
 

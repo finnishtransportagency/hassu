@@ -65,11 +65,11 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
     return vaihe;
   }
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {
-    return projekti.nahtavillaoloVaiheJulkaisut || undefined;
+    return projekti.nahtavillaoloVaiheJulkaisut ?? undefined;
   }
   async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
-    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+    if (julkaisuWaitingForApproval?.aineistoMuokkaus) {
       const nahtavillaoloVaihe = this.getVaihe(projekti);
       assertIsDefined(nahtavillaoloVaihe, "Nähtävilläolovaiheen pitäisi olla määritelty, jos julkaisukin on");
       nahtavillaoloVaihe.palautusSyy = syy;
@@ -156,11 +156,13 @@ export abstract class SimpleAbstractHyvaksymisPaatosVaiheTilaManager extends Sim
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       ]) {
-        await fileService.deleteYllapitoFileFromProjekti({
-          oid,
-          filePathInProjekti: path,
-          reason: "Hyväksymispäätösvaihe rejected",
-        });
+        if (path) {
+          await fileService.deleteYllapitoFileFromProjekti({
+            oid,
+            filePathInProjekti: path,
+            reason: "Hyväksymispäätösvaihe rejected",
+          });
+        }
       }
     }
   }

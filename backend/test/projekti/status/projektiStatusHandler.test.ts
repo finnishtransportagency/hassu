@@ -32,6 +32,7 @@ describe("applyProjektiStatus", () => {
         kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
       versio: 1,
+      asianhallinta: { __typename: "Asianhallinta", aktivoitavissa: false, inaktiivinen: true },
     };
     applyProjektiStatus(projekti);
     expect(projekti.status).to.eql(API.Status.SUUNNITTELU);
@@ -65,6 +66,7 @@ describe("applyProjektiStatus", () => {
         },
         kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
+      asianhallinta: { __typename: "Asianhallinta", aktivoitavissa: false, inaktiivinen: true },
     };
     applyProjektiStatus(projekti);
     expect(projekti.status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);

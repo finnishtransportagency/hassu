@@ -365,7 +365,7 @@ function validateMuokkaustilaAllowsInput(
 function validateEstaUSPAIntegraationEstaminen(projekti: DBProjekti, input: TallennaProjektiInput) {
   if (
     projekti.velho?.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
-    (Object.keys(input) as (keyof TallennaProjektiInput)[]).includes("estaAsianhallintaIntegraatio")
+    (Object.keys(input) as (keyof TallennaProjektiInput)[]).includes("asianhallinta")
   ) {
     throw new IllegalArgumentError(
       "Ei voi muokata salliAsianHallintaIntegraatio-tietoa, koska suunnittelusta vastaava viranomainen ei ole Väylävirasto"

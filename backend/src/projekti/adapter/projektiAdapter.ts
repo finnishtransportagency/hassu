@@ -217,6 +217,7 @@ function removeUndefinedFields(object: API.Projekti): API.Projekti {
     oid: object.oid,
     versio: object.versio,
     velho: object.velho,
+    asianhallinta: object.asianhallinta,
     ...pickBy(object, (value) => value !== undefined),
   };
 }
