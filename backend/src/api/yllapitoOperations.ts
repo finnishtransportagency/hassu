@@ -22,6 +22,7 @@ import {
   TallennaJaSiirraTilaaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiMutationVariables,
+  EsikatseleLausuntoPyynnonAineistotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -49,6 +50,7 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { AppSyncEventArguments } from "./common";
 import { testHandler } from "../testing/testHandler";
+import { lisaAineistoHandler } from "../handler/lisaAineistoHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -106,6 +108,10 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
     case apiConfig.suoritaTestiKomento.name:
       await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
       return "";
+    case apiConfig.esikatseleLausuntoPyynnonAineistot.name:
+      return await lisaAineistoHandler.esikatseleLausuntoPyynnonAineistot(
+        event.arguments as EsikatseleLausuntoPyynnonAineistotQueryVariables
+      );
     default:
       return null;
   }

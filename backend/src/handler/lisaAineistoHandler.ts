@@ -1,4 +1,8 @@
-import { LisaAineistot, ListaaLisaAineistoQueryVariables } from "hassu-common/graphql/apiModel";
+import {
+  EsikatseleLausuntoPyynnonAineistotQueryVariables,
+  LisaAineistot,
+  ListaaLisaAineistoQueryVariables,
+} from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { NotFoundError } from "hassu-common/error";
@@ -17,6 +21,22 @@ class LisaAineistoHandler {
       // @ts-ignore
       lisaAineistoService.validateHash(oid, projekti.salt, params);
       return lisaAineistoService.listaaLisaAineisto(projekti, params);
+    } else {
+      throw new NotFoundError(`Projektia ${oid} ei löydy`);
+    }
+  }
+
+  async esikatseleLausuntoPyynnonAineistot({
+    oid,
+    lausuntoPyynto,
+  }: EsikatseleLausuntoPyynnonAineistotQueryVariables): Promise<LisaAineistot> {
+    log.info("Loading projekti", { oid });
+    if (!lausuntoPyynto) {
+      throw new Error("lausuntoPyynto ei annettu (esikatseleLausuntoPyynnonAineistot)");
+    }
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (projekti) {
+      return lisaAineistoService.esikatseleLausuntoPyynnonAineistot(projekti, lausuntoPyynto);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }

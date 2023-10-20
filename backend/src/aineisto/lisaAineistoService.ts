@@ -1,6 +1,7 @@
 import {
   AineistoTila,
   KuulutusJulkaisuTila,
+  LausuntoPyyntoInput,
   LisaAineisto,
   LisaAineistoParametrit,
   LisaAineistot,
@@ -24,6 +25,8 @@ import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
 import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { adaptLausuntoPyyntoToDb } from "../projekti/adapter/adaptToDB";
+import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
@@ -53,6 +56,23 @@ class LisaAineistoService {
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+  }
+
+  async esikatseleLausuntoPyynnonAineistot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LisaAineistot> {
+    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+    const lausuntoPyynto = findLausuntoPyyntoById(projekti, lausuntoPyyntoInput.id);
+    const uusiLausuntoPyynto = adaptLausuntoPyyntoToDb(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
+    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
+      const { jarjestys, kategoriaId } = aineisto;
+      const nimi = aineisto.nimi;
+      const linkki = "(esikatselu)";
+      return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
+    }
+    const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const lisaAineistot =
+      (await Promise.all(uusiLausuntoPyynto?.lisaAineistot?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const aineistopaketti = "(esikatselu)";
+    return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyyntoInput.poistumisPaiva, aineistopaketti };
   }
 
   async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoAineistotInput): Promise<LisaAineistot> {

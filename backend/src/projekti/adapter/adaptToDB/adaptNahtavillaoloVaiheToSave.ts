@@ -1,4 +1,4 @@
-import { NahtavillaoloVaihe } from "../../../database/model";
+import { LausuntoPyynto, NahtavillaoloVaihe } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import {
@@ -78,4 +78,20 @@ export function adaptNahtavillaoloVaiheToSave(
   }
 
   return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe, preventArrayMergingCustomizer);
+}
+
+export function adaptLausuntoPyyntoToDb(
+  dbLausuntoPyynto: LausuntoPyynto | undefined | null,
+  lausuntoPyyntoInput: API.LausuntoPyyntoInput | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
+): LausuntoPyynto | undefined {
+  if (!lausuntoPyyntoInput) {
+    return undefined;
+  }
+  const { lisaAineistot, ...rest } = lausuntoPyyntoInput;
+  const lisaAineistotAdapted = lausuntoPyyntoInput
+    ? adaptAineistotToSave(dbLausuntoPyynto?.lisaAineistot, lisaAineistot, projektiAdaptationResult)
+    : undefined;
+
+  return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
