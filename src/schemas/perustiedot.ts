@@ -90,23 +90,13 @@ export const perustiedotValidationSchema = Yup.object()
       .default(null),
     asianhallinta: Yup.object()
       .shape({
-        inaktiivinen: Yup.boolean().when("$projekti", {
-          is: (projekti: ProjektiLisatiedolla) =>
-            !!projekti.asianhallinta?.aktivoitavissa &&
-            // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
-            projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-          then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
-        }),
+        inaktiivinen: Yup.boolean().required("Asianhallinta integraatiotieto on pakollinen"),
       })
       .when("$projekti", {
-        is: (projekti: ProjektiLisatiedolla) => {
-          console.log(projekti.asianhallinta);
-          return (
-            !!projekti.asianhallinta?.aktivoitavissa &&
-            // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
-            projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-          );
-        },
+        is: (projekti: ProjektiLisatiedolla) =>
+          !!projekti?.asianhallinta?.aktivoitavissa &&
+          // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
+          projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
       }),
   })

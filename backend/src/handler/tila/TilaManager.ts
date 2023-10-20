@@ -145,7 +145,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   private async validateAsianhallintaValmiinaSiirtoon(projekti: DBProjekti) {
-    if (!(await parameters.isAsianhallintaIntegrationEnabled()) || projekti.estaAsianhallintaIntegraatio) {
+    if (!(await parameters.isAsianhallintaIntegrationEnabled()) || projekti.asianhallinta?.inaktiivinen) {
       return;
     }
     const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, this.vaihe);
@@ -230,7 +230,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti);
     const synkronointi = this.getVaiheAineisto(projekti).getAsianhallintaSynkronointi(projekti, asianhallintaEventId);
-    if (synkronointi && !projekti.estaAsianhallintaIntegraatio) {
+    if (synkronointi && !projekti.asianhallinta?.inaktiivinen) {
       await asianhallintaService.saveAndEnqueueSynchronization(oid, synkronointi);
     }
   }

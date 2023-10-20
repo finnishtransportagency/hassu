@@ -10,6 +10,7 @@ import { expect } from "chai";
 import { ProjektiSearchMaintenanceService } from "../../src/projektiSearch/projektiSearchMaintenanceService";
 import { ProjektiDatabase, projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
+import { parameters } from "../../src/aws/parameters";
 
 describe("ProjektiSearchMaintenanceService", () => {
   let yllapitoStub: sinon.SinonStubbedInstance<OpenSearchClient>;
@@ -24,6 +25,7 @@ describe("ProjektiSearchMaintenanceService", () => {
     ruotsiStub = sinon.stub(openSearchClientJulkinen["RUOTSI"]);
     ilmoitustauluStub = sinon.stub(openSearchClientIlmoitustauluSyote);
     projektiDatabaseStub = sinon.stub(projektiDatabase);
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
   afterEach(() => {
     sinon.reset();

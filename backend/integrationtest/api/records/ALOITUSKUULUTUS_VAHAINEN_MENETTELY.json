@@ -155,7 +155,9 @@
         ]
       }
     ],
-    "estaAsianhallintaIntegraatio": false,
+    "asianhallinta": {
+      "inaktiivinen": false
+    },
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",
