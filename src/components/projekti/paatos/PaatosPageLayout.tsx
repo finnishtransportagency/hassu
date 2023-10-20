@@ -195,7 +195,7 @@ function PaatosPageLayoutContent({
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-              <OhjelistaNotification projekti={projekti} vaihe={paatosSpecificVaihe[paatosTyyppi]}>
+              <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]}>
                 <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
               </OhjelistaNotification>
             )}

@@ -7,6 +7,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import AsianhallintaStatusNotification from "./AsianhallintaStatusNotification";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
+import useCurrentUser from "src/hooks/useCurrentUser";
 
 interface Props {
   children: ReactNode;
@@ -17,6 +18,7 @@ interface Props {
 
 export default function ProjektiPageLayout({ children, title, contentAsideTitle, vaihe }: Props): ReactElement {
   const { data: projekti } = useProjekti();
+  const { data: nykyinenKayttaja } = useCurrentUser();
 
   if (!projekti) {
     return <></>;
@@ -56,7 +58,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
                   </Notification>
                 ) : (
                   <>
-                    {!projekti.asianhallinta?.inaktiivinen && vaihe && (
+                    {nykyinenKayttaja?.features?.asianhallintaIntegraatio && vaihe && (
                       <AsianhallintaStatusNotification projekti={projekti} vaihe={vaihe} />
                     )}
                     {!!projekti.muistutusMaara && (

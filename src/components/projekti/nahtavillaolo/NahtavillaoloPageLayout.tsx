@@ -120,7 +120,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                     vaihe={projekti.nahtavillaoloVaihe}
                   />
                 )}
-                <OhjelistaNotification projekti={projekti} vaihe={Vaihe.NAHTAVILLAOLO}>
+                <OhjelistaNotification vaihe={Vaihe.NAHTAVILLAOLO}>
                   <li>
                     Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot, esim. johtokartat, ensimmäiseltä
                     välilehdeltä.

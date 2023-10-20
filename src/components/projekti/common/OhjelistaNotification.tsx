@@ -2,10 +2,10 @@ import React, { ReactNode, VFC } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
 import { Vaihe } from "@services/api";
-import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { KatsoTarkemmatASHAOhjeetLink } from "./KatsoTarkemmatASHAOhjeetLink";
+import useCurrentUser from "src/hooks/useCurrentUser";
 
-type Props = { children: ReactNode; vaihe?: Vaihe; projekti: ProjektiLisatiedolla };
+type Props = { children: ReactNode; vaihe?: Vaihe };
 
 const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   ALOITUSKUULUTUS: "Kuuluttaminen suunnittelun ja maastotöiden aloittamisesta",
@@ -28,13 +28,14 @@ const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   </>
 );
 
-export const OhjelistaNotification: VFC<Props> = ({ children, vaihe, projekti }) => {
+export const OhjelistaNotification: VFC<Props> = ({ children, vaihe }) => {
+  const { data: nykyinenKayttaja } = useCurrentUser();
   return (
     <Notification closable type={NotificationType.INFO} hideIcon>
       <div>
         <H3 variant="h4">Ohjeet</H3>
         <ul className="list-disc block pl-5">
-          {vaihe && projekti.asianhallinta?.aktivoitavissa && (
+          {vaihe && nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
             <>
               <li>
                 <strong>Tämä kohta koskee vain Väylävirastoa:</strong> <AshaKuulutusToimenpideTeksti vaihe={vaihe} />

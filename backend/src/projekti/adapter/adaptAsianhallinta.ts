@@ -1,9 +1,12 @@
 import { DBProjekti } from "../../database/model";
-import * as API from "hassu-common/graphql/apiModel";
 import { parameters } from "../../aws/parameters";
+import { Asianhallinta, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 
-export async function adaptAsianhallinta(projekti: DBProjekti): Promise<API.Asianhallinta> {
-  const aktivoitavissa = await parameters.isAsianhallintaIntegrationEnabled();
+export async function adaptAsianhallinta(projekti: DBProjekti): Promise<Asianhallinta> {
+  const aktivoitavissa =
+    (await parameters.isAsianhallintaIntegrationEnabled()) &&
+    // TODO Poista alla oleva ehto kun USPA-integraatiototeutus on valmis
+    projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   return {
     __typename: "Asianhallinta",
     aktivoitavissa,

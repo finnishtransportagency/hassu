@@ -15,7 +15,6 @@ import {
   Projekti,
   ProjektiTyyppi,
   Status,
-  SuunnittelustaVastaavaViranomainen,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
   VuorovaikutusKierrosTila,
@@ -169,7 +168,7 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateAloituskuulutus(projekti, input.aloitusKuulutus);
   validateNahtavillaoloVaihe(projekti, apiProjekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
-  validateEstaUSPAIntegraationEstaminen(projekti, input);
+  validateAsianhallinnanAktivointikytkin(apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);
 }
 
@@ -361,12 +360,8 @@ function validateMuokkaustilaAllowsInput(
   }
 }
 
-// TODO Poistettava kun USPA-integraatiototeutus valmistuu
-function validateEstaUSPAIntegraationEstaminen(projekti: DBProjekti, input: TallennaProjektiInput) {
-  if (
-    projekti.velho?.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
-    (Object.keys(input) as (keyof TallennaProjektiInput)[]).includes("asianhallinta")
-  ) {
+function validateAsianhallinnanAktivointikytkin(projekti: Projekti, input: TallennaProjektiInput) {
+  if (!projekti.asianhallinta.aktivoitavissa && (Object.keys(input) as (keyof TallennaProjektiInput)[]).includes("asianhallinta")) {
     throw new IllegalArgumentError(
       "Ei voi muokata salliAsianHallintaIntegraatio-tietoa, koska suunnittelusta vastaava viranomainen ei ole Väylävirasto"
     );

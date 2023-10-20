@@ -187,7 +187,7 @@ function SuunnitteluPageLayout({
         )}
         {!migroitu &&
           (!tilaJulkinen ? (
-            <OhjelistaNotification projekti={projekti} vaihe={Vaihe.SUUNNITTELU}>
+            <OhjelistaNotification vaihe={Vaihe.SUUNNITTELU}>
               <li>
                 Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
                 tiedot.

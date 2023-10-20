@@ -135,7 +135,7 @@ function KayttoOikeusHallintaFormElements({
   return (
     <Section gap={8}>
       {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
-      <OhjelistaNotification projekti={projekti}>
+      <OhjelistaNotification>
         <li>
           Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
           roskakoripainikkeella.

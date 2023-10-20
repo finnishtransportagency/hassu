@@ -134,6 +134,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "AsianhallintaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "AsianTila",
         "possibleTypes": null,

@@ -586,7 +586,11 @@ Array [
     },
     "asianhallinta": Object {
       "__typename": "Asianhallinta",
-      "aktiivinenTila": undefined,
+      "aktiivinenTila": Object {
+        "__typename": "AktiivisenVaiheenAsianhallinnanTila",
+        "tila": undefined,
+        "vaihe": "ALOITUSKUULUTUS",
+      },
       "aktivoitavissa": false,
       "inaktiivinen": true,
     },
@@ -877,7 +881,11 @@ Object {
   },
   "asianhallinta": Object {
     "__typename": "Asianhallinta",
-    "aktiivinenTila": undefined,
+    "aktiivinenTila": Object {
+      "__typename": "AktiivisenVaiheenAsianhallinnanTila",
+      "tila": undefined,
+      "vaihe": "SUUNNITTELU",
+    },
     "aktivoitavissa": false,
     "inaktiivinen": true,
   },

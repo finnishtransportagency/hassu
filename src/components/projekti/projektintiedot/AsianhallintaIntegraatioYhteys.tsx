@@ -7,7 +7,6 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
-import { SuunnittelustaVastaavaViranomainen } from "@services/api";
 
 type Props = {
   formDisabled: boolean;
@@ -15,7 +14,6 @@ type Props = {
 };
 
 export default function AsianhallintaIntegraatioYhteys(props: Props) {
-  const ashaYhteys = props.projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   return (
     <Section>
       <H4>Integraatioyhteys</H4>
@@ -25,14 +23,13 @@ export default function AsianhallintaIntegraatioYhteys(props: Props) {
           asianhallintaan. Automaattinen yhteys asianhallintaan on mahdollista ottaa pois päältä. Jos integraatioyhteys on pois päältä,
           käyttäjän tulee itse viedä tiedostot asianhallintaan.
         </p>
-        {ashaYhteys ? <AshaIntegraatioYhteys {...props} /> : <UspaIntegraatioYhteys />}
+        {props.projekti.asianhallinta.aktivoitavissa ? <AshaIntegraatioYhteys {...props} /> : <DisabledIntegraatioYhteys />}
       </ContentSpacer>
     </Section>
   );
 }
 
-// TODO Voidaan poistaa kun USPA-integraatiototeutus on tehty
-function UspaIntegraatioYhteys() {
+function DisabledIntegraatioYhteys() {
   return (
     <FormGroup>
       <FormControlLabel

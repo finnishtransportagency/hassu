@@ -70,9 +70,9 @@ export class ProjektiAdapter {
       lyhytOsoite: dbProjekti.lyhytOsoite,
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
-      tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
+      tyyppi: velho?.tyyppi ?? dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutus(
-        projektiPath.aloituskuulutus(aloitusKuulutus || undefined),
+        projektiPath.aloituskuulutus(aloitusKuulutus ?? undefined),
         kayttoOikeudet,
         aloitusKuulutus,
         aloitusKuulutusJulkaisut
@@ -201,7 +201,7 @@ export class ProjektiAdapter {
       euRahoitusLogot: adaptLokalisoituTekstiEiPakollinen(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
       vahainenMenettely,
       liittyvatSuunnitelmat,
-      salt: projekti.salt || lisaAineistoService.generateSalt(),
+      salt: projekti.salt ?? lisaAineistoService.generateSalt(),
       kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       asianhallinta,
     } as DBProjekti);

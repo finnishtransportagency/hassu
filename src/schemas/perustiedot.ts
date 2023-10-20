@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
-import { Kieli, SuunnittelustaVastaavaViranomainen } from "../../common/graphql/apiModel";
+import { Kieli } from "../../common/graphql/apiModel";
 import { MutableRefObject } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
@@ -93,12 +93,10 @@ export const perustiedotValidationSchema = Yup.object()
         inaktiivinen: Yup.boolean().required("Asianhallinta integraatiotieto on pakollinen"),
       })
       .when("$projekti", {
-        is: (projekti: ProjektiLisatiedolla) =>
-          !!projekti?.asianhallinta?.aktivoitavissa &&
-          // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
-          projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        is: (projekti: ProjektiLisatiedolla) => !!projekti?.asianhallinta?.aktivoitavissa,
         then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
-      }),
+      })
+      .default(undefined),
   })
   .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
     const projekti = context.options.context?.projekti;

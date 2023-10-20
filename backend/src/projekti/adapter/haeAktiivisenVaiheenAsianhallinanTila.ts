@@ -45,16 +45,18 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
 export async function haeAktiivisenVaiheenAsianhallinanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinnanTila | null | undefined> {
-  if (projekti.asianhallinta?.inaktiivinen) {
-    return undefined;
-  }
   const vaihe = projekti.status && haeStatuksenVaihe(projekti.status);
-  if (!vaihe || (!vaiheOnMuokkausTilassa(projekti, vaihe) && !vaiheenJulkaisuOdottaaHyvaksyntaa(projekti, vaihe))) {
+  if (!vaihe) {
     return undefined;
   }
+
+  const haeAsianhallinnanTila =
+    !projekti.asianhallinta?.inaktiivinen &&
+    (vaiheOnMuokkausTilassa(projekti, vaihe) || vaiheenJulkaisuOdottaaHyvaksyntaa(projekti, vaihe));
+
   return {
     __typename: "AktiivisenVaiheenAsianhallinnanTila",
     vaihe,
-    tila: await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe),
+    tila: haeAsianhallinnanTila ? await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe) : undefined,
   };
 }

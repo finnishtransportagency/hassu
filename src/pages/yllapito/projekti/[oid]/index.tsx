@@ -4,13 +4,7 @@ import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import {
-  Kieli,
-  LokalisoituTekstiInputEiPakollinen,
-  Status,
-  SuunnittelustaVastaavaViranomainen,
-  TallennaProjektiInput,
-} from "@services/api";
+import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -41,6 +35,7 @@ import VahainenMenettelyOsio from "@components/projekti/projektintiedot/Vahainen
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot/AsianhallintaIntegraatioYhteys";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
+import useCurrentUser from "src/hooks/useCurrentUser";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -98,6 +93,7 @@ interface ProjektiSivuLomakeProps {
 }
 
 function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
+  const { data: nykyinenKayttaja } = useCurrentUser();
   const router = useRouter();
 
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
@@ -114,14 +110,14 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
-      muistiinpano: projekti.muistiinpano || "",
+      muistiinpano: projekti.muistiinpano ?? "",
       euRahoitus: !!projekti.euRahoitus,
       vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
         projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
           const { __typename, ...suunnitelmaInput } = suunnitelma;
           return suunnitelmaInput;
-        }) || [],
+        }) ?? [],
       suunnittelusopimusprojekti:
         projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
       liittyviasuunnitelmia:
@@ -140,11 +136,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
       tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
     }
-    // TODO Poista SuunnittelustaVastaavaViranomainen ehto kun USPA-integraatiototeutus valmis
-    if (
-      projekti.asianhallinta?.aktivoitavissa &&
-      projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-    ) {
+    if (projekti.asianhallinta?.aktivoitavissa) {
       tallentamisTiedot.asianhallinta = { inaktiivinen: !!projekti.asianhallinta.inaktiivinen };
     }
     return tallentamisTiedot;
@@ -175,6 +167,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     reset,
     watch,
   } = useFormReturn;
+
+  const some = watch();
+
+  console.log({ errors, some });
 
   const kielitiedot = watch("kielitiedot");
 
@@ -278,7 +274,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
                 </Notification>
               )}
-              <OhjelistaNotification projekti={projekti}>
+              <OhjelistaNotification>
                 <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
                 <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
                 <li>
@@ -299,7 +295,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
-            {projekti.asianhallinta?.aktivoitavissa && (
+            {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
               <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
             )}
             <Section gap={4}>
