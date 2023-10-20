@@ -162,7 +162,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
-    await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
+    const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    if (!updatedProjekti) {
+      throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
+    }
+    await approvalEmailSender.sendEmails(updatedProjekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
