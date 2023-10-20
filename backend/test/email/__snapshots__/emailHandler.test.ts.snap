@@ -57,13 +57,15 @@ Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi
 Testiprojekti 2
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+aloituskuulutus on hyväksytty.
 
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
 
-Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
     ],

@@ -58,22 +58,26 @@ Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen la
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 // Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
-const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi
 {{nimi}}
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+aloituskuulutus on hyväksytty.
 
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 
-Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+
 // Nähtävilläolovaihekuulutuksen hyväksyminen pdf projektipaallikolle
 const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty {{asiatunnus}}`;
-const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}}
+nähtävillaolokuulutus on hyväksytty.
 
 Voit tarkastella kuulutusta osoitteessa {{nahtavillaoloYllapitoUrl}}
 
-Sait tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 
 const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}`;
 const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} hyväksymispäätöskuulutus on hyväksytty.
