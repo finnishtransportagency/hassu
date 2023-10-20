@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { AsiakirjaTyyppi, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -67,17 +67,6 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
         ? "/jatkopaatos1"
         : "jatkopaatos2");
-  }
-
-  let esimerkkiAsiakirjaTyyppiVaiheessa;
-  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
-    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
-  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
-    // TODO: keksi parametrointi jatkopäätöksille
-    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
-  } else {
-    // TODO: keksi parametrointi jatkopäätöksille
-    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
   }
 
   return (

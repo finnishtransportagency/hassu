@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
 import { FieldValues, SubmitHandler, UnpackNestedValue } from "react-hook-form";
-import { TallennaProjektiInput, AsianTila, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { TallennaProjektiInput, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback, useMemo } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -14,6 +14,7 @@ import log from "loglevel";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
+import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -89,12 +90,13 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
     const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
     const lacksKunnat = !kuntavastaanottajat?.length;
-    const asianHallintaVaarassaTilassa =
-      projekti.asianhallinta.aktiivinen &&
-      projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe === tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi] &&
-      projekti.aktiivisenVaiheenAsianhallinnanTila?.tila !== AsianTila.VALMIS_VIENTIIN;
 
-    return invalidStatus || !isProjektiReadyForTilaChange || lacksKunnat || asianHallintaVaarassaTilassa;
+    return (
+      invalidStatus ||
+      !isProjektiReadyForTilaChange ||
+      lacksKunnat ||
+      isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
+    );
   }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi]);
 
   return (

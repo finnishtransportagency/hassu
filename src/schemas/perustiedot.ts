@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
-import { Kieli } from "../../common/graphql/apiModel";
+import { Kieli, SuunnittelustaVastaavaViranomainen } from "../../common/graphql/apiModel";
 import { MutableRefObject } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
@@ -88,10 +88,27 @@ export const perustiedotValidationSchema = Yup.object()
       .notRequired()
       .nullable()
       .default(null),
-    estaAsianhallintaIntegraatio: Yup.boolean().when("$projekti", {
-      is: (projekti: ProjektiLisatiedolla) => projekti.asianhallinta.aktivoitavissa,
-      then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
-    }),
+    asianhallinta: Yup.object()
+      .shape({
+        inaktiivinen: Yup.boolean().when("$projekti", {
+          is: (projekti: ProjektiLisatiedolla) =>
+            !!projekti.asianhallinta?.aktivoitavissa &&
+            // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
+            projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+          then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
+        }),
+      })
+      .when("$projekti", {
+        is: (projekti: ProjektiLisatiedolla) => {
+          console.log(projekti.asianhallinta);
+          return (
+            !!projekti.asianhallinta?.aktivoitavissa &&
+            // TODO Ehto poistettava kun USPA-integraatiototeutus tehty
+            projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+          );
+        },
+        then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
+      }),
   })
   .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
     const projekti = context.options.context?.projekti;

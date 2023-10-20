@@ -15,9 +15,9 @@ export abstract class StatusHandler<T> {
     return handler;
   }
 
-  public async handle(p: T): Promise<void> {
+  public handle(p: T): void {
     if (this.nextHandler) {
-      await this.nextHandler.handle(p);
+      this.nextHandler.handle(p);
     }
   }
 }
@@ -44,12 +44,12 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
 
   abstract getPaatosVaihe(p: T): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined;
 
-  async handle(p: T): Promise<void> {
+  handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);
 
     if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
       p.status = this.epaAktiivisuusStatus;
-      await super.handle(p); // Continue evaluating next rules
+      super.handle(p); // Continue evaluating next rules
       return;
     }
 
@@ -62,7 +62,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
       if (hyvaksymisPaatosKuulutusPaattyyInThePast) {
         p.status = this.epaAktiivisuusStatus;
       }
-      await super.handle(p); // Continue evaluating next rules
+      super.handle(p); // Continue evaluating next rules
     }
   }
 }

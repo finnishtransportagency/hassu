@@ -7,10 +7,6 @@ export interface ProjektiLisatiedot {
     onProjektipaallikkoTaiVarahenkilo: boolean;
     onYllapitaja: boolean;
   };
-  asianhallinta: {
-    aktivoitavissa: boolean;
-    aktiivinen: boolean;
-  };
 }
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;

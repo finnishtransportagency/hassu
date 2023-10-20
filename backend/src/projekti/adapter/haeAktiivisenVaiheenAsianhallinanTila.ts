@@ -1,7 +1,6 @@
-import { Vaihe, Status, Projekti, AktiivisenVaiheenAsianhallinanTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { Vaihe, Status, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { haeJulkaisunTiedot, julkaisuIsVuorovaikutusKierrosLista, vaiheOnMuokkausTilassa } from "hassu-common/util/haeVaiheidentiedot";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
-import { parameters } from "../../aws/parameters";
 
 type HaeStatuksenVaiheFunc = (status: Status) => Vaihe | undefined;
 
@@ -45,9 +44,8 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
 
 export async function haeAktiivisenVaiheenAsianhallinanTila(
   projekti: Projekti
-): Promise<AktiivisenVaiheenAsianhallinanTila | null | undefined> {
-  const integraatioInaktiivinen = !!projekti.estaAsianhallintaIntegraatio || !(await parameters.isAsianhallintaIntegrationEnabled());
-  if (integraatioInaktiivinen) {
+): Promise<AktiivisenVaiheenAsianhallinnanTila | null | undefined> {
+  if (projekti.asianhallinta?.inaktiivinen) {
     return undefined;
   }
   const vaihe = projekti.status && haeStatuksenVaihe(projekti.status);
@@ -55,7 +53,7 @@ export async function haeAktiivisenVaiheenAsianhallinanTila(
     return undefined;
   }
   return {
-    __typename: "AktiivisenVaiheenAsianhallinanTila",
+    __typename: "AktiivisenVaiheenAsianhallinnanTila",
     vaihe,
     tila: await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe),
   };

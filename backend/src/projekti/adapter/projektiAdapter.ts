@@ -34,6 +34,7 @@ import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCustomizer";
 import { haeAktiivisenVaiheenAsianhallinanTila } from "./haeAktiivisenVaiheenAsianhallinanTila";
+import { adaptAsianhallinta } from "./adaptAsianhallinta";
 
 export class ProjektiAdapter {
   public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
@@ -59,6 +60,7 @@ export class ProjektiAdapter {
       salt: _salt,
       kasittelynTila,
       annetutMuistutukset,
+      asianhallinta: _asianhallinta,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -127,14 +129,17 @@ export class ProjektiAdapter {
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
       muistutusMaara: annetutMuistutukset?.length,
+      asianhallinta: await adaptAsianhallinta(dbProjekti),
       ...fieldsToCopyAsIs,
     });
 
     if (apiProjekti.tallennettu) {
-      await applyProjektiStatus(apiProjekti);
+      applyProjektiStatus(apiProjekti);
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
-      apiProjekti.aktiivisenVaiheenAsianhallinnanTila = await haeAktiivisenVaiheenAsianhallinanTila(apiProjekti);
+      if (apiProjekti.asianhallinta) {
+        apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinanTila(apiProjekti);
+      }
     }
 
     return apiProjekti;
@@ -164,7 +169,7 @@ export class ProjektiAdapter {
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
-      estaAsianhallintaIntegraatio,
+      asianhallinta,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(
@@ -175,34 +180,31 @@ export class ProjektiAdapter {
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
 
-    const dbProjekti: DBProjekti = mergeWith(
-      {},
-      {
-        oid,
-        versio,
-        muistiinpano,
-        aloitusKuulutus: aloitusKuulutusToSave,
-        suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus, projektiAdaptationResult),
-        kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
-        vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
-        nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
-        hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
-          projekti.hyvaksymisPaatosVaihe,
-          hyvaksymisPaatosVaihe,
-          projektiAdaptationResult
-        ),
-        jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos1Vaihe, jatkoPaatos1Vaihe, projektiAdaptationResult),
-        jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
-        kielitiedot,
-        euRahoitus,
-        euRahoitusLogot: adaptLokalisoituTekstiEiPakollinen(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
-        vahainenMenettely,
-        liittyvatSuunnitelmat,
-        salt: projekti.salt || lisaAineistoService.generateSalt(),
-        kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
-        estaAsianhallintaIntegraatio,
-      }
-    );
+    const dbProjekti: DBProjekti = mergeWith({}, {
+      oid,
+      versio,
+      muistiinpano,
+      aloitusKuulutus: aloitusKuulutusToSave,
+      suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus, projektiAdaptationResult),
+      kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
+      vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
+        projekti.hyvaksymisPaatosVaihe,
+        hyvaksymisPaatosVaihe,
+        projektiAdaptationResult
+      ),
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos1Vaihe, jatkoPaatos1Vaihe, projektiAdaptationResult),
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
+      kielitiedot,
+      euRahoitus,
+      euRahoitusLogot: adaptLokalisoituTekstiEiPakollinen(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
+      vahainenMenettely,
+      liittyvatSuunnitelmat,
+      salt: projekti.salt || lisaAineistoService.generateSalt(),
+      kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
+      asianhallinta,
+    } as DBProjekti);
 
     projektiAdaptationResult.setProjekti(dbProjekti);
     return projektiAdaptationResult;

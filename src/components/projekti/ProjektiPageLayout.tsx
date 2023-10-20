@@ -56,7 +56,9 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
                   </Notification>
                 ) : (
                   <>
-                    {projekti.asianhallinta.aktiivinen && vaihe && <AsianhallintaStatusNotification projekti={projekti} vaihe={vaihe} />}
+                    {!projekti.asianhallinta?.inaktiivinen && vaihe && (
+                      <AsianhallintaStatusNotification projekti={projekti} vaihe={vaihe} />
+                    )}
                     {!!projekti.muistutusMaara && (
                       <Notification type={NotificationType.INFO_GRAY}>
                         Järjestelmän kautta on lähetetty {projekti.muistutusMaara} kpl muistutuksia tähän suunnitelmaan.

@@ -215,6 +215,7 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
+    asianhallinta: { inaktiivinen: false },
   };
 }
 

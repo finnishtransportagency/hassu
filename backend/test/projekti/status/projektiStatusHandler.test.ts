@@ -40,7 +40,7 @@ describe("applyProjektiStatus", () => {
         kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
     };
-    await applyProjektiStatus(projekti as API.Projekti);
+    applyProjektiStatus(projekti as API.Projekti);
     expect(projekti.status).to.eql(API.Status.SUUNNITTELU);
   });
 
@@ -72,7 +72,7 @@ describe("applyProjektiStatus", () => {
         kuulutusYhteystiedot: { __typename: "StandardiYhteystiedot" },
       },
     };
-    await applyProjektiStatus(projekti as API.Projekti);
+    applyProjektiStatus(projekti as API.Projekti);
     expect(projekti.status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
   });
 });

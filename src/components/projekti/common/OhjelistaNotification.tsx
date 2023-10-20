@@ -1,9 +1,9 @@
 import React, { ReactNode, VFC } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ExternalStyledLink } from "@components/StyledLink";
 import { H3 } from "@components/Headings";
 import { Vaihe } from "@services/api";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import { KatsoTarkemmatASHAOhjeetLink } from "./KatsoTarkemmatASHAOhjeetLink";
 
 type Props = { children: ReactNode; vaihe?: Vaihe; projekti: ProjektiLisatiedolla };
 
@@ -16,17 +16,15 @@ const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
 };
 
-const ashaOhjeistusLink = (
-  <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/9b979b70-ff67-4990-bf47-679b24e57f00/Ratasuunnitelman_%20kasittely_%20asianhallintajarjestelmassa_Hassu%20.docx?a=true">
-    asianhallinnan ohjeistuksesta
-  </ExternalStyledLink>
+const UspaInaktiivinenText: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
+  <>Vie lopuksi sähköpostilla saamasi {vaihe === Vaihe.SUUNNITTELU ? "kutsu ja lähetekirje" : "kuulutus ja ilmoitus"} USPA:an.</>
 );
 
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   <>
     Ennen {vaihe === Vaihe.SUUNNITTELU ? "kutsun" : "kuulutuksen"} täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä
     oikea toimenpide, joka on nimeltään {vaiheenVelhoToimeenpide[vaihe]}. {vaihe === Vaihe.SUUNNITTELU ? "Kutsun" : "Kuulutuksen"} julkaisu
-    ei ole mahdollista, jos asianhallintajärjestelmässä on väärä toimenpide auki. Katso tarkemmat ohjeet {ashaOhjeistusLink}.
+    ei ole mahdollista, jos asianhallintajärjestelmässä on väärä toimenpide auki. <KatsoTarkemmatASHAOhjeetLink />
   </>
 );
 
@@ -36,16 +34,13 @@ export const OhjelistaNotification: VFC<Props> = ({ children, vaihe, projekti })
       <div>
         <H3 variant="h4">Ohjeet</H3>
         <ul className="list-disc block pl-5">
-          {vaihe && projekti.asianhallinta.aktiivinen && (
+          {vaihe && projekti.asianhallinta?.aktivoitavissa && (
             <>
               <li>
                 <strong>Tämä kohta koskee vain Väylävirastoa:</strong> <AshaKuulutusToimenpideTeksti vaihe={vaihe} />
               </li>
               <li>
-                <strong>Tämä kohta koskee ELY-keskusta:</strong>{" "}
-                {vaihe === Vaihe.SUUNNITTELU
-                  ? "Vie lopuksi sähköpostilla saamasi kutsu ja lähetekirje USPA:an."
-                  : "Vie lopuksi sähköpostilla saamasi kuulutus ja ilmoitus kuulutuksesta USPA:an."}
+                <strong>Tämä kohta koskee ELY-keskusta:</strong> <UspaInaktiivinenText vaihe={vaihe} />
               </li>
             </>
           )}

@@ -1,5 +1,5 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti, SuunnittelustaVastaavaViranomainen } from "@services/api";
+import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
 import { ProjektiLisatiedolla, ProjektiLisatiedot } from "hassu-common/ProjektiValidationContext";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
@@ -31,18 +31,11 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
     return null;
   }
   const projekti = await api.lataaProjekti(oid);
-  const asianhallintaAktivoitavissa =
-    !!kayttaja.features?.asianhallintaIntegraatio &&
-    projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
       onProjektipaallikkoTaiVarahenkilo: userIsAdmin(kayttaja) || userIsProjectManagerOrSubstitute({ kayttaja, projekti }),
       onYllapitaja: userIsAdmin(kayttaja),
-    },
-    asianhallinta: {
-      aktivoitavissa: asianhallintaAktivoitavissa,
-      aktiivinen: asianhallintaAktivoitavissa && !projekti.estaAsianhallintaIntegraatio,
     },
   };
   return {

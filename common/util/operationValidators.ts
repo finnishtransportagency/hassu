@@ -1,13 +1,5 @@
 import { DBProjekti } from "../../backend/src/database/model";
-import {
-  KuulutusJulkaisuTila,
-  MuokkausTila,
-  Projekti,
-  Status,
-  TilasiirtymaTyyppi,
-  Vaihe,
-  VuorovaikutusKierrosTila,
-} from "../graphql/apiModel";
+import { KuulutusJulkaisuTila, Projekti, Status, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "../graphql/apiModel";
 import { statusOrder } from "../statusOrder";
 import {
   haeKaikkienVaiheidenTiedot,

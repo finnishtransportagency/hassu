@@ -183,8 +183,18 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
-  aktiivisenVaiheenAsianhallinnanTila: AktiivisenVaiheenAsianhallinanTila
-  estaAsianhallintaIntegraatio: Boolean
+  asianhallinta: Asianhallinta
+}
+
+type Asianhallinta {
+  aktiivinenTila: AktiivisenVaiheenAsianhallinnanTila
+  inaktiivinen: Boolean!
+  aktivoitavissa: Boolean!
+}
+
+type AktiivisenVaiheenAsianhallinnanTila {
+  vaihe: Vaihe
+  tila: AsianTila
 }
 
 enum Vaihe {
@@ -194,11 +204,6 @@ enum Vaihe {
   HYVAKSYMISPAATOS
   JATKOPAATOS
   JATKOPAATOS2
-}
-
-type AktiivisenVaiheenAsianhallinanTila {
-  vaihe: Vaihe
-  tila: AsianTila
 }
 
 type VuorovaikutusKierros {

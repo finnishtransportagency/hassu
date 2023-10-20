@@ -4,7 +4,13 @@ import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
+import {
+  Kieli,
+  LokalisoituTekstiInputEiPakollinen,
+  Status,
+  SuunnittelustaVastaavaViranomainen,
+  TallennaProjektiInput,
+} from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -51,7 +57,7 @@ type PersitentFormValues = Pick<
   | "liittyvatSuunnitelmat"
   | "kielitiedot"
   | "vahainenMenettely"
-  | "estaAsianhallintaIntegraatio"
+  | "asianhallinta"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -134,8 +140,12 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
       tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
     }
-    if (projekti.asianhallinta.aktivoitavissa) {
-      tallentamisTiedot.estaAsianhallintaIntegraatio = !!projekti.estaAsianhallintaIntegraatio;
+    // TODO Poista SuunnittelustaVastaavaViranomainen ehto kun USPA-integraatiototeutus valmis
+    if (
+      projekti.asianhallinta?.aktivoitavissa &&
+      projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+    ) {
+      tallentamisTiedot.asianhallinta = { inaktiivinen: !!projekti.asianhallinta.inaktiivinen };
     }
     return tallentamisTiedot;
   }, [projekti]);
@@ -289,7 +299,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
-            {projekti.asianhallinta.aktivoitavissa && <AsianhallintaIntegraatioYhteys formDisabled={disableFormEdit} />}
+            {projekti.asianhallinta?.aktivoitavissa && (
+              <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
+            )}
             <Section gap={4}>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>

@@ -1,8 +1,9 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { AsianTila, Vaihe } from "@services/api";
+import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "@services/api";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { vaiheOnMuokkausTilassa } from "common/util/haeVaiheidentiedot";
 import React from "react";
+import { KatsoTarkemmatASHAOhjeetLink } from "./common/KatsoTarkemmatASHAOhjeetLink";
 
 type Props = { projekti: ProjektiLisatiedolla; vaihe: Vaihe };
 
@@ -28,12 +29,26 @@ const tilakohtainenVaroitus = (asianTila: AsianTila, isAdmin: boolean, lomakeMuo
 
 export default function AsianhallintaStatusNotification({ projekti, vaihe }: Props) {
   // Näytetään varoitukset vain aktiivisen vaiheen sivuilla
-  const aktiivisenVaiheenSivu = projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe === vaihe;
+
+  const aktiivisenVaiheenSivu = projekti.asianhallinta?.aktiivinenTila?.vaihe === vaihe;
+  if (
+    aktiivisenVaiheenSivu &&
+    !projekti.asianhallinta?.inaktiivinen &&
+    //TODO Muokataan kun USPA-integraatiototeutus valmistuu
+    projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+  ) {
+    return (
+      <Notification type={NotificationType.WARN}>
+        Integraatioyhteys on pois päältä. käyttäjän tulee itse viedä tiedostot asianhallintaan. <KatsoTarkemmatASHAOhjeetLink />
+      </Notification>
+    );
+  }
   const varoitus =
     aktiivisenVaiheenSivu &&
-    projekti.aktiivisenVaiheenAsianhallinnanTila?.tila &&
+    !projekti.asianhallinta?.inaktiivinen &&
+    projekti.asianhallinta?.aktiivinenTila?.tila &&
     tilakohtainenVaroitus(
-      projekti.aktiivisenVaiheenAsianhallinnanTila?.tila,
+      projekti.asianhallinta.aktiivinenTila?.tila,
       projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo,
       vaiheOnMuokkausTilassa(projekti, vaihe)
     );

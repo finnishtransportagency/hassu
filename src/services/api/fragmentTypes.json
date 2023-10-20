@@ -75,7 +75,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AktiivisenVaiheenAsianhallinanTila",
+        "name": "AktiivisenVaiheenAsianhallinnanTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -124,6 +124,12 @@
       {
         "kind": "OBJECT",
         "name": "AsianhallinnanTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Asianhallinta",
         "possibleTypes": null,
         "__typename": "__Type"
       },

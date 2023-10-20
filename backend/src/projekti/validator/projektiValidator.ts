@@ -15,6 +15,7 @@ import {
   Projekti,
   ProjektiTyyppi,
   Status,
+  SuunnittelustaVastaavaViranomainen,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
   VuorovaikutusKierrosTila,
@@ -168,6 +169,7 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateAloituskuulutus(projekti, input.aloitusKuulutus);
   validateNahtavillaoloVaihe(projekti, apiProjekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
+  validateEstaUSPAIntegraationEstaminen(projekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);
 }
 
@@ -356,5 +358,17 @@ function validateMuokkaustilaAllowsInput(
         throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }
     });
+  }
+}
+
+// TODO Poistettava kun USPA-integraatiototeutus valmistuu
+function validateEstaUSPAIntegraationEstaminen(projekti: DBProjekti, input: TallennaProjektiInput) {
+  if (
+    projekti.velho?.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
+    (Object.keys(input) as (keyof TallennaProjektiInput)[]).includes("estaAsianhallintaIntegraatio")
+  ) {
+    throw new IllegalArgumentError(
+      "Ei voi muokata salliAsianHallintaIntegraatio-tietoa, koska suunnittelusta vastaava viranomainen ei ole Väylävirasto"
+    );
   }
 }

@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
 import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
 import { Stack } from "@mui/system";
-import { AsianTila, TilasiirtymaTyyppi } from "@services/api";
+import { TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 import { isInPast } from "common/util/dateUtils";
 import React, { useCallback, useMemo, useState } from "react";
@@ -12,6 +12,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "src/schemas/paivamaaraSchema";
 import * as yup from "yup";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
+import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -51,18 +52,8 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
 
   const hyvaksyIsDisabled = useMemo(() => {
     const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
-    const asianHallintaVaarassaTilassa =
-      projekti.asianhallinta.aktiivinen &&
-      projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe === tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi] &&
-      projekti.aktiivisenVaiheenAsianhallinnanTila?.tila !== AsianTila.VALMIS_VIENTIIN;
-    return kuulutusPaivaInPast || asianHallintaVaarassaTilassa;
-  }, [
-    julkaisu.kuulutusPaiva,
-    projekti.aktiivisenVaiheenAsianhallinnanTila?.tila,
-    projekti.aktiivisenVaiheenAsianhallinnanTila?.vaihe,
-    projekti.asianhallinta.aktiivinen,
-    tilasiirtymaTyyppi,
-  ]);
+    return kuulutusPaivaInPast || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
+  }, [julkaisu.kuulutusPaiva, projekti, tilasiirtymaTyyppi]);
 
   return (
     <>

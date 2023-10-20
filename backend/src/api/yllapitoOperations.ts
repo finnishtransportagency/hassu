@@ -2,7 +2,6 @@ import { log } from "../logger";
 import {
   ArkistoiProjektiMutationVariables,
   AsetaPalauteVastattuMutationVariables,
-  AsianhallinnanTilaQueryVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
@@ -50,7 +49,6 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { AppSyncEventArguments } from "./common";
 import { testHandler } from "../testing/testHandler";
-import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
