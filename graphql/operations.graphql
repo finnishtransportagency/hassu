@@ -25,6 +25,8 @@ type Query {
     oid: String!
     lausuntoPyynnonTaydennyksenAineistonTiedot: ListaaLausuntoPyynnonTaydennyksenAineistotInput
   ): LisaAineistot!
+  esikatseleLausuntoPyynnonAineistot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LisaAineistot!
+  esikatseleLausuntoPyynnonTaydennysAineistot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPynnonTaydennysInput): LisaAineistot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
 }
