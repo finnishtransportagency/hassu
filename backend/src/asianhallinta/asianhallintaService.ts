@@ -20,10 +20,13 @@ import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "hassu-common/graphql/apiModel";
 import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap";
+import { DBProjekti } from "../database/model";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
-    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+    const projekti = await this.haeProjekti(oid);
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
@@ -35,7 +38,8 @@ class AsianhallintaService {
    * saveAndEnqueueSynchronization-metodin kautta.
    */
   async enqueueSynchronization(oid: string, asianhallintaEventId: string) {
-    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+    const projekti = await this.haeProjekti(oid);
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
     const sqsUrl = await parameters.getAsianhallintaSQSUrl();
@@ -65,12 +69,9 @@ class AsianhallintaService {
   }
 
   async checkAsianhallintaState(oid: string, vaihe: Vaihe): Promise<AsianTila | undefined> {
-    if (!(await parameters.isAsianhallintaIntegrationEnabled())) {
+    const projekti = await this.haeProjekti(oid);
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
-    }
-    const projekti = await projektiDatabase.loadProjektiByOid(oid);
-    if (!projekti) {
-      throw new NotFoundError("Projektia ei löydy");
     }
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
@@ -93,6 +94,14 @@ class AsianhallintaService {
         log.error("checkAsianhallintaState", { response });
       }
     }
+  }
+
+  private async haeProjekti(oid: string): Promise<DBProjekti> {
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projekti) {
+      throw new NotFoundError("Projektia ei löydy");
+    }
+    return projekti;
   }
 
   private wrapAsFakeSQSEvent(body: unknown) {
