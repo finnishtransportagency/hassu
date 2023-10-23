@@ -26,6 +26,7 @@ import {
 } from "../../../integrationtest/api/testUtil/util";
 import { isDateTimeInThePast, nyt } from "../../../src/util/dateUtil";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import { parameters } from "../../../src/aws/parameters";
 
 describe("aloitusKuulutusTilaManagerApproval", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -48,6 +49,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {

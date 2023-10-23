@@ -4,7 +4,6 @@ import { DBProjekti } from "../../database/model";
 import {
   AsianTila,
   NykyinenKayttaja,
-  SuunnittelustaVastaavaViranomainen,
   TilaSiirtymaInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -19,7 +18,7 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
-import { parameters } from "../../aws/parameters";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
   protected vaihe: Vaihe;
@@ -146,12 +145,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   private async validateAsianhallintaValmiinaSiirtoon(projekti: DBProjekti) {
-    // TODO Poista suunnittelustaVastaavaViranomainen ehto kun USPA-integraatio on valmis
-    if (
-      !(await parameters.isAsianhallintaIntegrationEnabled()) ||
-      projekti.asianhallinta?.inaktiivinen ||
-      projekti.velho?.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-    ) {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
     const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, this.vaihe);
@@ -236,8 +230,11 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     // Ladataan projekti kannasta, jotta siinä on kaikki päivittyneet tiedot mukana
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti);
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+      return;
+    }
     const synkronointi = this.getVaiheAineisto(projekti).getAsianhallintaSynkronointi(projekti, asianhallintaEventId);
-    if (synkronointi && !projekti.asianhallinta?.inaktiivinen) {
+    if (synkronointi) {
       await asianhallintaService.saveAndEnqueueSynchronization(oid, synkronointi);
     }
   }

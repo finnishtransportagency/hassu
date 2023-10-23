@@ -16,6 +16,7 @@ import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
+import { parameters } from "../../src/aws/parameters";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -33,6 +34,7 @@ describe("emailHandler", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     mockSaveProjektiToVelho();
   });
 
