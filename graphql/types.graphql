@@ -361,9 +361,9 @@ type NahtavillaoloVaiheJulkaisu {
 
 type LausuntoPyynto {
   id: Int!
+  legacy: LisaAineistoParametrit
   poistumisPaiva: String!
   lisaAineistot: [Aineisto!]
-  aineistopaketti: String
   muistiinpano: String
   hash: String!
 }
@@ -373,7 +373,6 @@ type LausuntoPyynnonTaydennys {
   poistumisPaiva: String!
   muistutukset: [Aineisto!]
   muuAineisto: [Aineisto!]
-  aineistopaketti: String
   hash: String!
 }
 

@@ -179,7 +179,7 @@ export function adaptLausuntoPyynnot(
 ): Array<API.LausuntoPyynto> | undefined {
   const oid = dbProjekti.oid;
   return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
-    const { lisaAineistot, ...rest } = lausuntoPyynto;
+    const { lisaAineistot, legacy: _legacy, ...rest } = lausuntoPyynto;
     assertIsDefined(dbProjekti.salt);
     const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
     const apiLausuntoPyynto: API.LausuntoPyynto = {

@@ -58,6 +58,7 @@ export type NahtavillaoloVaiheJulkaisu = {
 
 export type LausuntoPyynto = {
   id: number;
+  legacy?: number; //nahtavillaoloVaiheId
   poistumisPaiva: string;
   lisaAineistot?: Array<Aineisto>;
   aineistopaketti?: string;
