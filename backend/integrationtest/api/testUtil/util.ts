@@ -375,9 +375,7 @@ export function mockAsianhallintaService(): void {
     checkAsianhallintaStateLambdaStub = sinon.stub(asianhallintaService, "checkAsianhallintaState");
   });
   mocha.beforeEach(() => {
-    checkAsianhallintaStateLambdaStub.callsFake(() => {
-      return { __typename: "AsianhallinnanTila", asianTila: AsianTila.VALMIS_VIENTIIN };
-    });
+    checkAsianhallintaStateLambdaStub.callsFake(() => AsianTila.VALMIS_VIENTIIN);
   });
 }
 

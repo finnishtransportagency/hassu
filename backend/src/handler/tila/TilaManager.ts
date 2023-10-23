@@ -4,6 +4,7 @@ import { DBProjekti } from "../../database/model";
 import {
   AsianTila,
   NykyinenKayttaja,
+  SuunnittelustaVastaavaViranomainen,
   TilaSiirtymaInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -119,7 +120,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
     this.validateSendForApproval(projekti);
     this.validateKunnatHasBeenSet(projekti);
-    this.validateAsianhallintaValmiinaSiirtoon(projekti);
+    await this.validateAsianhallintaValmiinaSiirtoon(projekti);
     auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
     await this.sendForApproval(projekti, kayttaja);
   }
@@ -139,18 +140,24 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
     this.validateKunnatHasBeenSet(projekti);
-    this.validateAsianhallintaValmiinaSiirtoon(projekti);
+    await this.validateAsianhallintaValmiinaSiirtoon(projekti);
     auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
     await this.approve(projekti, kayttaja);
   }
 
   private async validateAsianhallintaValmiinaSiirtoon(projekti: DBProjekti) {
-    if (!(await parameters.isAsianhallintaIntegrationEnabled()) || projekti.asianhallinta?.inaktiivinen) {
+    // TODO Poista suunnittelustaVastaavaViranomainen ehto kun USPA-integraatio on valmis
+    if (
+      !(await parameters.isAsianhallintaIntegrationEnabled()) ||
+      projekti.asianhallinta?.inaktiivinen ||
+      projekti.velho?.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+    ) {
       return;
     }
     const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, this.vaihe);
+
     if (asianhallinnanTila !== AsianTila.VALMIS_VIENTIIN) {
-      throw new IllegalArgumentError(`Asianhallinnan ei ole valmis vientiin. Vaihe: ${this.vaihe}, tila: ${asianhallinnanTila}`);
+      throw new IllegalArgumentError(`Suunnitelman asia ei ole valmis vientiin. Vaihe: ${this.vaihe}, tila: ${asianhallinnanTila}`);
     }
   }
 
