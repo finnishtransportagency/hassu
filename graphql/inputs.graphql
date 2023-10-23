@@ -13,7 +13,7 @@ input TallennaProjektiInput {
   vuorovaikutusKierros: VuorovaikutusKierrosInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   lausuntoPyynnot: [LausuntoPyyntoInput!]
-  LausuntoPyynnonTaydennykset: [LausuntoPynnonTaydennysInput!]
+  LausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
@@ -225,7 +225,7 @@ input LausuntoPyyntoInput {
   muistiinpano: String
 }
 
-input LausuntoPynnonTaydennysInput {
+input LausuntoPyynnonTaydennysInput {
   kunta: Int!
   poistumisPaiva: String!
   muistutukset: [AineistoInput!]

@@ -1024,7 +1024,9 @@ type ProjektiHakutulosDokumentti {
 type LisaAineistot {
   poistumisPaiva: String!
   aineistot: [LisaAineisto!]
+  muutAineistot: [LisaAineisto!]
   lisaAineistot: [LisaAineisto!]
+  muistutukset: [LisaAineisto!]
   aineistopaketti: String
 }
 
