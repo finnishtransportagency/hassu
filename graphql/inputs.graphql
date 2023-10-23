@@ -13,7 +13,7 @@ input TallennaProjektiInput {
   vuorovaikutusKierros: VuorovaikutusKierrosInput
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   lausuntoPyynnot: [LausuntoPyyntoInput!]
-  LausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
+  lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput

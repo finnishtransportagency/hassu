@@ -174,7 +174,7 @@ export class ProjektiAdapter {
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
       lausuntoPyynnot,
-      LausuntoPyynnonTaydennykset,
+      lausuntoPyynnonTaydennykset,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -200,9 +200,9 @@ export class ProjektiAdapter {
       vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
       nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
       lausuntoPyynnot: adaptLausuntoPyynnotToSave(projekti.lausuntoPyynnot, lausuntoPyynnot, projektiAdaptationResult),
-      LausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToSave(
+      lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToSave(
         projekti.lausuntoPyynnonTaydennykset,
-        LausuntoPyynnonTaydennykset,
+        lausuntoPyynnonTaydennykset,
         projektiAdaptationResult
       ),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
