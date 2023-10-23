@@ -73,6 +73,18 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
       }
       hyvaksyttyEmail.attachments = [nahtavillaKuulutusPDF];
 
+      const kiinteistoPdfPath = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+      if (!kiinteistoPdfPath) {
+        throw new Error(
+          `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath on määrittelemättä`
+        );
+      }
+      const nahtavillaKiinteistoPDF = await fileService.getFileAsAttachment(oid, kiinteistoPdfPath);
+      if (!nahtavillaKiinteistoPDF) {
+        throw new Error("NahtavillaKiinteistoPDF:n saaminen epäonnistui");
+      }
+      hyvaksyttyEmail.attachments.push(nahtavillaKiinteistoPDF);
+
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
         const pdfPathRuotsi = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloPDFPath;
         if (!pdfPathRuotsi) {
@@ -85,6 +97,19 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
           throw new Error("NahtavillaKuulutusPDF:n saaminen epäonnistui");
         }
         hyvaksyttyEmail.attachments.push(nahtavillaKuulutusPDFRuotsi);
+
+        const kiinteistoPdfPathRuotsi =
+          nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+        if (!kiinteistoPdfPathRuotsi) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath on määrittelemättä`
+          );
+        }
+        const nahtavillaKiinteistoPDFRuotsi = await fileService.getFileAsAttachment(oid, kiinteistoPdfPathRuotsi);
+        if (!nahtavillaKiinteistoPDFRuotsi) {
+          throw new Error("NahtavillaKiinteistoPDFRuotsi:n saaminen epäonnistui");
+        }
+        hyvaksyttyEmail.attachments.push(nahtavillaKiinteistoPDFRuotsi);
       }
 
       await emailClient.sendEmail(hyvaksyttyEmail);
