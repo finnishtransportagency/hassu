@@ -1,6 +1,7 @@
 import {
   AineistoTila,
   KuulutusJulkaisuTila,
+  LausuntoPyynnonTaydennysInput,
   LausuntoPyyntoInput,
   LisaAineisto,
   LisaAineistoParametrit,
@@ -25,7 +26,7 @@ import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
 import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
-import { adaptLausuntoPyyntoToDb } from "../projekti/adapter/adaptToDB";
+import { adaptLausuntoPyynnonTaydennysToDb, adaptLausuntoPyyntoToDb } from "../projekti/adapter/adaptToDB";
 import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
 
 class LisaAineistoService {
@@ -62,17 +63,45 @@ class LisaAineistoService {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoById(projekti, lausuntoPyyntoInput.id);
     const uusiLausuntoPyynto = adaptLausuntoPyyntoToDb(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
-    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
+    function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
       const { jarjestys, kategoriaId } = aineisto;
       const nimi = aineisto.nimi;
       const linkki = "(esikatselu)";
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
     }
-    const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const aineistot = (nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || []).sort(jarjestaAineistot) || [];
     const lisaAineistot =
       (await Promise.all(uusiLausuntoPyynto?.lisaAineistot?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
     const aineistopaketti = "(esikatselu)";
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyyntoInput.poistumisPaiva, aineistopaketti };
+  }
+
+  async esikatseleLausuntoPyynnonTaydennyksenAineistot(
+    projekti: DBProjekti,
+    lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
+  ): Promise<LisaAineistot> {
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, lausuntoPyynnonTaydennysInput.kunta);
+    const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToDb(
+      lausuntoPyynnonTaydennys,
+      lausuntoPyynnonTaydennysInput,
+      new ProjektiAdaptationResult(projekti)
+    );
+    function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
+      const { jarjestys, kategoriaId } = aineisto;
+      const nimi = aineisto.nimi;
+      const linkki = "(esikatselu)";
+      return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
+    }
+    const muutAineistot = (uusiLausuntoPyynnonTaydennys?.muuAineisto?.map(adaptLisaAineisto) || []).sort(jarjestaAineistot) || [];
+    const muistutukset = (uusiLausuntoPyynnonTaydennys?.muistutukset?.map(adaptLisaAineisto) || []).sort(jarjestaAineistot) || [];
+    const aineistopaketti = "(esikatselu)";
+    return {
+      __typename: "LisaAineistot",
+      muutAineistot,
+      muistutukset,
+      poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
+      aineistopaketti,
+    };
   }
 
   async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoAineistotInput): Promise<LisaAineistot> {
@@ -103,6 +132,40 @@ class LisaAineistoService {
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+  }
+
+  async listaaLausuntoPyynnonTaydennyksenAineisto(
+    projekti: DBProjekti,
+    params: ListaaLausuntoPyynnonTaydennyksenAineistotInput
+  ): Promise<LisaAineistot> {
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
+
+    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
+      const { jarjestys, kategoriaId } = aineisto;
+      let nimi = aineisto.nimi;
+      let linkki;
+      if (aineisto.tila == AineistoTila.VALMIS) {
+        if (!aineisto.tiedosto) {
+          const msg = `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
+          log.error(msg, { aineisto });
+          throw new Error(msg);
+        }
+        linkki = await fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
+      } else {
+        nimi = nimi + " (odottaa tuontia)";
+        linkki = "";
+      }
+      return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
+    }
+
+    const muutAineistot =
+      (await Promise.all(lausuntoPyynnonTaydennys?.muuAineisto?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const muistutukset =
+      (await Promise.all(lausuntoPyynnonTaydennys?.muistutukset?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
+      : null;
+    return { __typename: "LisaAineistot", muutAineistot, muistutukset, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {

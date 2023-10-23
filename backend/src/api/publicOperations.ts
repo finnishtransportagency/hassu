@@ -3,6 +3,8 @@ import {
   LataaProjektiJulkinenQueryVariables,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
+  ListaaLausuntoPyynnonAineistotQueryVariables,
+  ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables,
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
@@ -39,6 +41,12 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
       return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:
       return lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
+    case apiConfig.listaaLausuntoPyynnonAineistot.name:
+      return lisaAineistoHandler.listaaLausuntoPyynnonAineistot(event.arguments as ListaaLausuntoPyynnonAineistotQueryVariables);
+    case apiConfig.listaaLausuntoPyynnonTaydennyksenAineistot.name:
+      return lisaAineistoHandler.listaaLausuntoPyynnonTaydennysAineistot(
+        event.arguments as ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables
+      );
     case apiConfig.annaPalautettaPalvelusta.name:
       return palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
     case apiConfig.nykyinenSuomifiKayttaja.name:

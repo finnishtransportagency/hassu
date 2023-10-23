@@ -1,4 +1,4 @@
-import { LausuntoPyynto, NahtavillaoloVaihe } from "../../../database/model";
+import { LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaihe } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import {
@@ -94,4 +94,20 @@ export function adaptLausuntoPyyntoToDb(
     : undefined;
 
   return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted });
+}
+
+export function adaptLausuntoPyynnonTaydennysToDb(
+  dbLausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null,
+  lausuntoPyynnonTaydennysInput: API.LausuntoPyynnonTaydennysInput | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
+): LausuntoPyynnonTaydennys | undefined {
+  if (!lausuntoPyynnonTaydennysInput) {
+    return undefined;
+  }
+  const { muuAineisto, ...rest } = lausuntoPyynnonTaydennysInput;
+  const muuAineistotAdapted = lausuntoPyynnonTaydennysInput
+    ? adaptAineistotToSave(dbLausuntoPyynnonTaydennys?.muuAineisto, muuAineisto, projektiAdaptationResult)
+    : undefined;
+
+  return mergeWith({}, dbLausuntoPyynnonTaydennys, { ...rest, muuAineisto: muuAineistotAdapted });
 }

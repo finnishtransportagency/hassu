@@ -70,6 +70,7 @@ export type LausuntoPyynnonTaydennys = {
   poistumisPaiva: string;
   muistutukset: Array<Aineisto>;
   muuAineisto: Array<Aineisto>;
+  aineistopaketti?: string;
   hash: string;
 };
 
