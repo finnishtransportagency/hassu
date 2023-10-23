@@ -10,6 +10,9 @@ import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { NotFoundError } from "hassu-common/error";
 import { lisaAineistoService } from "../aineisto/lisaAineistoService";
+import dayjs from "dayjs";
+import { nyt } from "../util/dateUtil";
+import { findLausuntoPyynnonTaydennysByKunta, findLausuntoPyyntoById } from "../util/lausuntoPyyntoUtil";
 
 class LisaAineistoHandler {
   async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LisaAineistot> {
@@ -42,7 +45,15 @@ class LisaAineistoHandler {
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      lisaAineistoService.validateHash(oid, projekti.salt, params);
+      lisaAineistoService.validateLausuntoPyyntoHash(oid, projekti.salt, params);
+      const lausuntoPyynto = findLausuntoPyyntoById(projekti, params.lausuntoPyyntoId);
+      if (!lausuntoPyynto) {
+        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+      }
+      const poistumisPaivaEndOfTheDay = dayjs(lausuntoPyynto.poistumisPaiva).endOf("day");
+      if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
+        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+      }
       return lisaAineistoService.listaaLausuntoPyyntoAineisto(projekti, params);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
@@ -62,7 +73,15 @@ class LisaAineistoHandler {
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      lisaAineistoService.validateHash(oid, projekti.salt, params);
+      lisaAineistoService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params);
+      const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
+      if (!lausuntoPyynnonTaydennys) {
+        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+      }
+      const poistumisPaivaEndOfTheDay = dayjs(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
+      if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
+        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+      }
       return lisaAineistoService.listaaLausuntoPyynnonTaydennyksenAineisto(projekti, params);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);

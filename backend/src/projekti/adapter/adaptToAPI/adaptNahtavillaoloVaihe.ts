@@ -174,33 +174,39 @@ function adaptNahtavillaoloPDFPaths(
 }
 
 export function adaptLausuntoPyynnot(
-  _dbProjekti: DBProjekti,
+  dbProjekti: DBProjekti,
   lausuntoPyynnot?: Array<LausuntoPyynto> | null
 ): Array<API.LausuntoPyynto> | undefined {
+  const oid = dbProjekti.oid;
   return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
-    const { lisaAineistot: _lisaAineistot, ...rest } = lausuntoPyynto;
+    const { lisaAineistot, ...rest } = lausuntoPyynto;
+    assertIsDefined(dbProjekti.salt);
+    const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
     const apiLausuntoPyynto: API.LausuntoPyynto = {
       __typename: "LausuntoPyynto",
       ...rest,
-      lisaAineistot: null,
-      aineistopaketti: null, //TODO
+      lisaAineistot: adaptAineistot(lisaAineistot, paths),
+      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.id, dbProjekti.salt),
     };
     return apiLausuntoPyynto;
   });
 }
 
 export function adaptLausuntoPyynnonTaydennykset(
-  _dbProjekti: DBProjekti,
+  dbProjekti: DBProjekti,
   lausuntoPyynnonTaydennykset?: Array<LausuntoPyynnonTaydennys> | null
 ): Array<API.LausuntoPyynnonTaydennys> | undefined {
+  const oid = dbProjekti.oid;
   return lausuntoPyynnonTaydennykset?.map((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
-    const { muuAineisto: _muuAineisto, muistutukset: _muistutukset, ...rest } = lausuntoPyynnonTaydennys;
+    const { muuAineisto, muistutukset, ...rest } = lausuntoPyynnonTaydennys;
+    assertIsDefined(dbProjekti.salt);
+    const paths = new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys);
     const taydennys: API.LausuntoPyynnonTaydennys = {
       __typename: "LausuntoPyynnonTaydennys",
       ...rest,
-      muuAineisto: null, //TODO,
-      muistutukset: null, //TODO
-      aineistopaketti: null, // TODO
+      muuAineisto: adaptAineistot(muuAineisto, paths),
+      muistutukset: adaptAineistot(muistutukset, paths),
+      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynnonTaydennys.kunta, dbProjekti.salt),
     };
     return taydennys;
   });

@@ -1,6 +1,5 @@
 import {
   AineistoTila,
-  KuulutusJulkaisuTila,
   LausuntoPyynnonTaydennysInput,
   LausuntoPyyntoInput,
   LisaAineisto,
@@ -14,20 +13,18 @@ import {
 import crypto from "crypto";
 import dayjs from "dayjs";
 import { IllegalAccessError, NotFoundError } from "hassu-common/error";
-import {
-  Aineisto,
-  DBProjekti,
-  LausuntoPyynnonTaydennys,
-  LausuntoPyynto,
-  NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
-} from "../database/model";
+import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
 import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
-import { adaptLausuntoPyynnonTaydennysToDb, adaptLausuntoPyyntoToDb } from "../projekti/adapter/adaptToDB";
+import { adaptLausuntoPyynnonTaydennysToSave, adaptLausuntoPyyntoToSave } from "../projekti/adapter/adaptToDB";
 import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
+import {
+  findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+  findLausuntoPyynnonTaydennysByKunta,
+  findLausuntoPyyntoById,
+} from "../util/lausuntoPyyntoUtil";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
@@ -62,7 +59,7 @@ class LisaAineistoService {
   async esikatseleLausuntoPyynnonAineistot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LisaAineistot> {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoById(projekti, lausuntoPyyntoInput.id);
-    const uusiLausuntoPyynto = adaptLausuntoPyyntoToDb(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
+    const uusiLausuntoPyynto = adaptLausuntoPyyntoToSave(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
     function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
       const { jarjestys, kategoriaId } = aineisto;
       const nimi = aineisto.nimi;
@@ -81,7 +78,7 @@ class LisaAineistoService {
     lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
   ): Promise<LisaAineistot> {
     const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, lausuntoPyynnonTaydennysInput.kunta);
-    const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToDb(
+    const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToSave(
       lausuntoPyynnonTaydennys,
       lausuntoPyynnonTaydennysInput,
       new ProjektiAdaptationResult(projekti)
@@ -107,6 +104,9 @@ class LisaAineistoService {
   async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoAineistotInput): Promise<LisaAineistot> {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoById(projekti, params.lausuntoPyyntoId);
+    if (!lausuntoPyynto) {
+      throw new Error("Lausuntopyyntöä ei löytynyt");
+    }
 
     async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
       const { jarjestys, kategoriaId } = aineisto;
@@ -131,7 +131,7 @@ class LisaAineistoService {
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
-    return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+    return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyynto.poistumisPaiva, aineistopaketti };
   }
 
   async listaaLausuntoPyynnonTaydennyksenAineisto(
@@ -139,7 +139,9 @@ class LisaAineistoService {
     params: ListaaLausuntoPyynnonTaydennyksenAineistotInput
   ): Promise<LisaAineistot> {
     const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
-
+    if (!lausuntoPyynnonTaydennys) {
+      throw new Error("LausuntoPyynnonTaydennystä ei löytynyt");
+    }
     async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
       const { jarjestys, kategoriaId } = aineisto;
       let nimi = aineisto.nimi;
@@ -165,7 +167,13 @@ class LisaAineistoService {
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
-    return { __typename: "LisaAineistot", muutAineistot, muistutukset, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+    return {
+      __typename: "LisaAineistot",
+      muutAineistot,
+      muistutukset,
+      poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
+      aineistopaketti,
+    };
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {
@@ -183,6 +191,26 @@ class LisaAineistoService {
       poistumisPaiva: expires,
       hash,
     };
+  }
+
+  generateHashForLausuntoPyynto(oid: string, lausuntoPyyntoId: number, salt: string): string {
+    if (!salt) {
+      // Should not happen after going to production because salt is generated in the first save to DB
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return;
+    }
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyyntoId, salt);
+  }
+
+  generateHashForLausuntoPyynnonTaydennys(oid: string, kuntaId: number, salt: string): string {
+    if (!salt) {
+      // Should not happen after going to production because salt is generated in the first save to DB
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return;
+    }
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, kuntaId, salt);
   }
 
   generateSalt() {
@@ -203,28 +231,18 @@ class LisaAineistoService {
   }
 
   validateLausuntoPyyntoHash(oid: string, salt: string, params: ListaaLausuntoPyyntoAineistotInput) {
-    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, params, salt);
+    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, params.lausuntoPyyntoId, salt);
     if (hash != params.hash) {
       log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, params, salt, hash });
       throw new IllegalAccessError("Lausuntopyynnon aineiston tarkistussumma ei täsmää");
     }
-
-    const poistumisPaivaEndOfTheDay = dayjs(params.poistumisPaiva).endOf("day");
-    if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-      throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
-    }
   }
 
   validateLausuntoPyynnonTaydennysHash(oid: string, salt: string, params: ListaaLausuntoPyynnonTaydennyksenAineistotInput) {
-    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(oid, params, salt);
+    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(oid, params.kunta, salt);
     if (hash != params.hash) {
       log.error("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää", { oid, params, salt, hash });
       throw new IllegalAccessError("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää");
-    }
-
-    const poistumisPaivaEndOfTheDay = dayjs(params.poistumisPaiva).endOf("day");
-    if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-      throw new NotFoundError("Lausuntopyynnon täydennyksen aineiston linkki on vanhentunut");
     }
   }
 
@@ -238,31 +256,23 @@ class LisaAineistoService {
       .digest("hex");
   }
 
-  private static createLausuntoPyyntoHash(
-    oid: string,
-    params: Omit<ListaaLausuntoPyyntoAineistotInput, "hash">,
-    salt: string | undefined
-  ): string {
+  private static createLausuntoPyyntoHash(oid: string, lausuntoPyyntoId: number, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
     return crypto
       .createHash("sha512")
-      .update([oid, String(params.lausuntoPyyntoId), params.poistumisPaiva, salt].join())
+      .update([oid, "lausuntopyynto", String(lausuntoPyyntoId), salt].join())
       .digest("hex");
   }
 
-  private static createLausuntoPyynnonTaydennysHash(
-    oid: string,
-    params: Omit<ListaaLausuntoPyynnonTaydennyksenAineistotInput, "hash">,
-    salt: string | undefined
-  ): string {
+  private static createLausuntoPyynnonTaydennysHash(oid: string, kuntaId: number, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
     return crypto
       .createHash("sha512")
-      .update([oid, String(params.kunta), params.poistumisPaiva, salt].join())
+      .update([oid, "lausuntopyynnon taydennys", String(kuntaId), salt].join())
       .digest("hex");
   }
 }
@@ -281,30 +291,6 @@ function findNahtavillaoloVaiheById(
   lista = lista.filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId);
 
   return lista.pop();
-}
-
-function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
-  if (projekti.nahtavillaoloVaiheJulkaisut) {
-    projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
-  } else {
-    return undefined;
-  }
-}
-
-function findLausuntoPyyntoById(projekti: DBProjekti, lausuntoPyyntoId: number): LausuntoPyynto | undefined {
-  if (projekti.lausuntoPyynnot) {
-    return projekti.lausuntoPyynnot.filter((pyynto) => pyynto.id === lausuntoPyyntoId).pop();
-  } else {
-    return undefined;
-  }
-}
-
-function findLausuntoPyynnonTaydennysByKunta(projekti: DBProjekti, kunta: number): LausuntoPyynnonTaydennys | undefined {
-  if (projekti.lausuntoPyynnonTaydennykset) {
-    return projekti.lausuntoPyynnonTaydennykset.filter((pyynto) => pyynto.kunta === kunta).pop();
-  } else {
-    return undefined;
-  }
 }
 
 export const lisaAineistoService = new LisaAineistoService();

@@ -24,6 +24,8 @@ import {
 import {
   adaptAloitusKuulutusToSave,
   adaptHyvaksymisPaatosVaiheToSave,
+  adaptLausuntoPyynnonTaydennyksetToSave,
+  adaptLausuntoPyynnotToSave,
   adaptLokalisoituTekstiEiPakollinen,
   adaptNahtavillaoloVaiheToSave,
   adaptSuunnitteluSopimusToSave,
@@ -171,6 +173,8 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat,
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
+      lausuntoPyynnot,
+      LausuntoPyynnonTaydennykset,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -195,6 +199,12 @@ export class ProjektiAdapter {
       kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
       vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
       nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
+      lausuntoPyynnot: adaptLausuntoPyynnotToSave(projekti.lausuntoPyynnot, lausuntoPyynnot, projektiAdaptationResult),
+      LausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToSave(
+        projekti.lausuntoPyynnonTaydennykset,
+        LausuntoPyynnonTaydennykset,
+        projektiAdaptationResult
+      ),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
         projekti.hyvaksymisPaatosVaihe,
         hyvaksymisPaatosVaihe,
