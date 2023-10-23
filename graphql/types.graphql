@@ -300,9 +300,6 @@ type VuorovaikutusJulkinen {
 
 type NahtavillaoloVaihe {
   aineistoNahtavilla: [Aineisto!]
-  lisaAineisto: [Aineisto!]
-  aineistopaketti: String
-  lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
@@ -336,9 +333,6 @@ type HyvaksymisPaatosVaihe {
 
 type NahtavillaoloVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
-  lisaAineisto: [Aineisto!]
-  aineistopaketti: String
-  lisaAineistoParametrit: LisaAineistoParametrit
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String

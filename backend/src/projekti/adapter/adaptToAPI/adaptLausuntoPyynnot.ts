@@ -6,6 +6,7 @@ import { adaptAineistot } from "../common";
 import { tiedostoDownloadLinkService } from "../../../tiedostot/tiedostoDownloadLinkService";
 import { adaptLadattuTiedostoToAPI } from ".";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
+import { lisaAineistoService } from "../../../tiedostot/lisaAineistoService";
 
 export function adaptLausuntoPyynnot(
   dbProjekti: DBProjekti,
@@ -13,12 +14,17 @@ export function adaptLausuntoPyynnot(
 ): Array<API.LausuntoPyynto> | undefined {
   const oid = dbProjekti.oid;
   return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
-    const { lisaAineistot, legacy: _legacy, ...rest } = lausuntoPyynto;
+    assertIsDefined(dbProjekti.salt);
+    const { lisaAineistot, legacy: legacyNahtavillaoloId, ...rest } = lausuntoPyynto;
+    const legacy: API.LisaAineistoParametrit | undefined = legacyNahtavillaoloId
+      ? lisaAineistoService.generateListingParams(oid, legacyNahtavillaoloId, dbProjekti.salt)
+      : undefined;
     assertIsDefined(dbProjekti.salt);
     const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
     const apiLausuntoPyynto: API.LausuntoPyynto = {
       __typename: "LausuntoPyynto",
       ...rest,
+      legacy,
       lisaAineistot: adaptAineistot(lisaAineistot, paths),
       hash: tiedostoDownloadLinkService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.uuid, dbProjekti.salt),
     };

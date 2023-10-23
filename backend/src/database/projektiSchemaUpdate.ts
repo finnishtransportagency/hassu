@@ -3,6 +3,7 @@ import {
   DBVaylaUser,
   IlmoituksenVastaanottajat,
   KuntaVastaanottaja,
+  LausuntoPyynto,
   Linkki,
   LocalizedMap,
   VuorovaikutusTilaisuus,
@@ -12,17 +13,40 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
 import { Kieli } from "hassu-common/graphql/apiModel";
+import { nyt } from "../util/dateUtil";
+import { uuid } from "../util/uuid";
 
 function isValueArrayOfStrings(value: unknown) {
   return isArray(value) && value.length > 0 && typeof value[0] == "string";
 }
 
 /**
- * Konvertoi merkkijonomuotoiset kunnat ja maakunnat numeroiksi
+ * Konvertoi vanhanmuotoisen projektidatan uudenmuotoiseksi
  * @param projekti
  */
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
-  const p: DBProjekti = cloneDeepWith(projekti, (value, key) => {
+  const projektiAsAny: any = projekti as any;
+  const lausuntoPyynnot = projekti.lausuntoPyynnot || [];
+  projektiAsAny["nahtavillaoloVaiheJulkaisut"]?.map((julkaisu: any) => {
+    const lisaAineistot = julkaisu["lisaAineistot"];
+    if (lisaAineistot && !lausuntoPyynnot?.some((pyynto) => pyynto.legacy === julkaisu.id)) {
+      const legacyLausuntoPyynto: LausuntoPyynto = {
+        uuid: uuid.v4(),
+        poistumisPaiva: nyt().add(180, "day").format("YYYY-MM-DD"),
+        lisaAineistot,
+        legacy: julkaisu.id,
+        aineistopaketti: julkaisu.aineistopaketti,
+      };
+      lausuntoPyynnot.push(legacyLausuntoPyynto);
+    }
+    delete julkaisu["lisaAineistot"];
+    delete julkaisu["lisaAineistoParamterit"];
+    delete julkaisu["aineistopaketti"];
+  });
+  if (lausuntoPyynnot.length) {
+    projektiAsAny.lausuntoPyynnot = lausuntoPyynnot;
+  }
+  const p: DBProjekti = cloneDeepWith(projektiAsAny, (value, key) => {
     if (value === "SAAME") {
       return "POHJOISSAAME";
     }
@@ -251,6 +275,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       julkaisu.yhteystiedot = [];
     }
   });
+
   p.nahtavillaoloVaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -286,6 +311,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       };
     }
   });
-
+  if (p.lausuntoPyynnot && !p.lausuntoPyynnot.length) {
+    delete p.lausuntoPyynnot;
+  }
   return p;
 }
