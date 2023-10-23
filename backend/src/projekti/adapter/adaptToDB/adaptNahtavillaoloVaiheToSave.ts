@@ -22,7 +22,6 @@ export function adaptNahtavillaoloVaiheToSave(
   }
   const {
     aineistoNahtavilla: aineistoNahtavillaInput,
-    lisaAineisto: lisaAineistoInput,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     hankkeenKuvaus,
@@ -39,9 +38,6 @@ export function adaptNahtavillaoloVaiheToSave(
     projektiAdaptationResult
   );
 
-  const lisaAineisto = lisaAineistoInput
-    ? adaptAineistotToSave(dbNahtavillaoloVaihe?.lisaAineisto, lisaAineistoInput, projektiAdaptationResult)
-    : undefined;
   const id = getId(dbNahtavillaoloVaihe);
 
   const uusiNahtavillaolovaihe: NahtavillaoloVaihe = {
@@ -60,10 +56,6 @@ export function adaptNahtavillaoloVaiheToSave(
   }
   if (hankkeenKuvaus) {
     uusiNahtavillaolovaihe.hankkeenKuvaus = adaptHankkeenKuvausToSave(hankkeenKuvaus);
-  }
-
-  if (lisaAineisto) {
-    uusiNahtavillaolovaihe.lisaAineisto = lisaAineisto;
   }
 
   if (nahtavillaoloSaamePDFt) {
