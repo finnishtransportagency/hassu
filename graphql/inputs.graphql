@@ -371,13 +371,11 @@ input ListaaLisaAineistoInput {
 
 input ListaaLausuntoPyyntoAineistotInput {
   lausuntoPyyntoId: Int!
-  poistumisPaiva: String!
   hash: String!
 }
 
 input ListaaLausuntoPyynnonTaydennyksenAineistotInput {
   kunta: Int!
-  poistumisPaiva: String!
   hash: String!
 }
 

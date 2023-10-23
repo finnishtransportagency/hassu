@@ -80,7 +80,43 @@ export function adaptNahtavillaoloVaiheToSave(
   return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe, preventArrayMergingCustomizer);
 }
 
-export function adaptLausuntoPyyntoToDb(
+export function adaptLausuntoPyynnotToSave(
+  dbLausuntoPyynnot: LausuntoPyynto[] | undefined | null,
+  lausuntoPyyntoInput: API.LausuntoPyyntoInput[] | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
+): LausuntoPyynto[] | undefined {
+  if (!lausuntoPyyntoInput) {
+    return undefined;
+  }
+  return lausuntoPyyntoInput.map(
+    (lausuntoPyynto) =>
+      adaptLausuntoPyyntoToSave(
+        dbLausuntoPyynnot?.find((pyynto) => pyynto.id === lausuntoPyynto.id),
+        lausuntoPyynto,
+        projektiAdaptationResult
+      ) as LausuntoPyynto
+  );
+}
+
+export function adaptLausuntoPyynnonTaydennyksetToSave(
+  dbLausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] | undefined | null,
+  lausuntoPyynnonTaydennysInput: API.LausuntoPyynnonTaydennysInput[] | undefined | null,
+  projektiAdaptationResult: ProjektiAdaptationResult
+): LausuntoPyynnonTaydennys[] | undefined {
+  if (!lausuntoPyynnonTaydennysInput) {
+    return undefined;
+  }
+  return lausuntoPyynnonTaydennysInput.map(
+    (lausuntoPyynto) =>
+      adaptLausuntoPyynnonTaydennysToSave(
+        dbLausuntoPyynnonTaydennykset?.find((pyynto) => pyynto.kunta === lausuntoPyynto.kunta),
+        lausuntoPyynto,
+        projektiAdaptationResult
+      ) as LausuntoPyynnonTaydennys
+  );
+}
+
+export function adaptLausuntoPyyntoToSave(
   dbLausuntoPyynto: LausuntoPyynto | undefined | null,
   lausuntoPyyntoInput: API.LausuntoPyyntoInput | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
@@ -96,7 +132,7 @@ export function adaptLausuntoPyyntoToDb(
   return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
 
-export function adaptLausuntoPyynnonTaydennysToDb(
+export function adaptLausuntoPyynnonTaydennysToSave(
   dbLausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null,
   lausuntoPyynnonTaydennysInput: API.LausuntoPyynnonTaydennysInput | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult

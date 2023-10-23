@@ -62,7 +62,6 @@ export type LausuntoPyynto = {
   lisaAineistot?: Array<Aineisto>;
   aineistopaketti?: string;
   muistiinpano?: string;
-  hash: string;
 };
 
 export type LausuntoPyynnonTaydennys = {
@@ -71,7 +70,6 @@ export type LausuntoPyynnonTaydennys = {
   muistutukset: Array<Aineisto>;
   muuAineisto: Array<Aineisto>;
   aineistopaketti?: string;
-  hash: string;
 };
 
 export type NahtavillaoloPDF = {
