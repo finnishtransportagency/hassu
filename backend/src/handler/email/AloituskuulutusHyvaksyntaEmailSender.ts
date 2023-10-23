@@ -70,6 +70,20 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusRuotsiPDF);
       }
 
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+        const pdfSaamePath = aloituskuulutus.aloituskuulutusSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+        if (!pdfSaamePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const aloituskuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+        if (!aloituskuulutusSaamePDF) {
+          throw new Error("AloituskuulutusSaamePDF:n saaminen epäonnistui");
+        }
+        aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusSaamePDF);
+      }
+
       await emailClient.sendEmail(aloituskuulutusHyvaksyttyEmail);
     } else {
       log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
