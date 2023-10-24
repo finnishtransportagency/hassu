@@ -71,6 +71,10 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  constructor() {
+    super(Vaihe.NAHTAVILLAOLO);
+  }
+
   async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
@@ -359,4 +363,4 @@ function validateVuorovaikutusKierrosEiOleJulkaisematta(dbProjekti: DBProjekti):
   }
 }
 
-export const nahtavillaoloTilaManager = new NahtavillaoloTilaManager(Vaihe.NAHTAVILLAOLO);
+export const nahtavillaoloTilaManager = new NahtavillaoloTilaManager();

@@ -80,6 +80,10 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  constructor() {
+    super(Vaihe.ALOITUSKUULUTUS);
+  }
+
   rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
   }
@@ -295,4 +299,4 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 }
 
-export const aloitusKuulutusTilaManager = new AloitusKuulutusTilaManager(Vaihe.ALOITUSKUULUTUS);
+export const aloitusKuulutusTilaManager = new AloitusKuulutusTilaManager();

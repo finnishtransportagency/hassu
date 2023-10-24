@@ -30,6 +30,9 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  constructor() {
+    super(Vaihe.SUUNNITTELU);
+  }
   rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
@@ -380,4 +383,4 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
   }
 }
 
-export const vuorovaikutusKierrosTilaManager = new VuorovaikutusKierrosTilaManager(Vaihe.SUUNNITTELU);
+export const vuorovaikutusKierrosTilaManager = new VuorovaikutusKierrosTilaManager();

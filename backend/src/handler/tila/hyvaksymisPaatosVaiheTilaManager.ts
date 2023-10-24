@@ -15,6 +15,9 @@ import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/proj
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  constructor() {
+    super(Vaihe.HYVAKSYMISPAATOS);
+  }
   getVaihePathname(): string {
     return ProjektiPaths.PATH_HYVAKSYMISPAATOS;
   }
@@ -190,4 +193,4 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 }
 
-export const hyvaksymisPaatosVaiheTilaManager = new HyvaksymisPaatosVaiheTilaManager(Vaihe.HYVAKSYMISPAATOS);
+export const hyvaksymisPaatosVaiheTilaManager = new HyvaksymisPaatosVaiheTilaManager();

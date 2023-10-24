@@ -14,6 +14,9 @@ import { findJatkoPaatos2VaiheWaitingForApproval } from "../../projekti/projekti
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  constructor() {
+    super(Vaihe.JATKOPAATOS2);
+  }
   getVaihePathname(): string {
     return ProjektiPaths.PATH_JATKOPAATOS2;
   }
@@ -177,4 +180,4 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 }
 
-export const jatkoPaatos2VaiheTilaManager = new JatkoPaatos2VaiheTilaManager(Vaihe.JATKOPAATOS2);
+export const jatkoPaatos2VaiheTilaManager = new JatkoPaatos2VaiheTilaManager();
