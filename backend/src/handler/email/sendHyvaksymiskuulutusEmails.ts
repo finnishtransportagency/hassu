@@ -228,7 +228,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
-    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmail();
+    const emailToProjektiPaallikko = emailCreator.createJatkopaatosHyvaksyttyEmail();
     if (emailToProjektiPaallikko.to) {
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))

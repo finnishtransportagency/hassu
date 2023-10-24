@@ -70,3 +70,7 @@ export function linkHyvaksymismenettelyssaYllapito(oid: string): string {
 export function linkHyvaksymisPaatosYllapito(oid: string): string {
   return linkSuunnitelmaYllapito(oid) + "/hyvaksymispaatos";
 }
+
+export function linkJatkoPaatos1Yllapito(oid: string): string {
+  return linkSuunnitelmaYllapito(oid) + "/jatkaminen1";
+}

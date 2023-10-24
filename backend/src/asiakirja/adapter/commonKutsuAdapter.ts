@@ -13,6 +13,7 @@ import {
   linkHyvaksymisPaatos,
   linkHyvaksymisPaatosYllapito,
   linkJatkoPaatos1,
+  linkJatkoPaatos1Yllapito,
   linkJatkoPaatos2,
   linkNahtavillaOlo,
   linkNahtavillaOloYllapito,
@@ -288,6 +289,11 @@ export class CommonKutsuAdapter {
   get hyvaksymispaatosYllapitoUrl(): string {
     assertIsDefined(this.oid);
     return linkHyvaksymisPaatosYllapito(this.oid);
+  }
+
+  get jatkopaatos1YllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    return linkJatkoPaatos1Yllapito(this.oid);
   }
 
   get linkki_hyvaksymispaatos(): string {

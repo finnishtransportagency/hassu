@@ -55,6 +55,7 @@ const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suu
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 // Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
@@ -83,6 +84,14 @@ const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien s
 const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} hyväksymispäätöskuulutus on hyväksytty.
 
 Voit tarkastella projektia osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const jatkopaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}`;
+const jatkopaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} jatkopäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa {{jatkopaatos1YllapitoUrl}}
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
@@ -263,6 +272,15 @@ export function createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter: Hyvak
   return {
     subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleOtsikko),
     text: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleTeksti),
+    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createjatkopaatosHyvaksyttyPaallikkolleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  return {
+    subject: adapter.substituteText(jatkopaatosHyvaksyttyPaallikolleOtsikko),
+    text: adapter.substituteText(jatkopaatosHyvaksyttyPaallikolleTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
