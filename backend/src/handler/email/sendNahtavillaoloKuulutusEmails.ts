@@ -112,6 +112,20 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
         hyvaksyttyEmail.attachments.push(nahtavillaKiinteistoPDFRuotsi);
       }
 
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+        const pdfSaamePath = nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+        if (!pdfSaamePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const nahtavillaKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+        if (!nahtavillaKuulutusSaamePDF) {
+          throw new Error("NahtavillaKuulutusSaamePDF:n saaminen epäonnistui");
+        }
+        hyvaksyttyEmail.attachments.push(nahtavillaKuulutusSaamePDF);
+      }
+
       await emailClient.sendEmail(hyvaksyttyEmail);
     } else {
       log.error("NahtavillaKuulutusPDF PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
