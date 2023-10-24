@@ -42,6 +42,7 @@ process.env.AWS_SDK_LOAD_CONFIG = "true";
 
 process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN = "";
 process.env.FRONTEND_DOMAIN_NAME = "localhost:3000";
+process.env.FRONTEND_API_DOMAIN_NAME = "localhost:3000";
 process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 
 process.env.FRONTEND_PUBLIC_KEY_ID = "test_public_key_id";
