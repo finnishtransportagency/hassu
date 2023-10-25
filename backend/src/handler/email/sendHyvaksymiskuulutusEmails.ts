@@ -105,7 +105,35 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
         if (!ilmoitusKunnallePdf) {
           throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKunnallePdf:ää ei löytynyt kielellä '${kieli}'`);
         }
+
         (await lahetettavatPDFt).push(ilmoitusKuulutusPdf, ilmoitusKunnallePdf);
+
+        if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+          const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+          if (!pdfSaamePath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+            );
+          }
+          const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+          if (!hyvaksyttyKuulutusSaamePDF) {
+            throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
+          }
+
+          const pdfIlmoitusSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto;
+          if (!pdfIlmoitusSaamePath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto on määrittelemättä`
+            );
+          }
+          const hyvaksyttyKuulutusIlmoitusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfIlmoitusSaamePath);
+          if (!hyvaksyttyKuulutusIlmoitusSaamePDF) {
+            throw new Error("HyvaksyttyKuulutusIlmoitusSaamePDF:n saaminen epäonnistui");
+          }
+
+          (await lahetettavatPDFt).push(hyvaksyttyKuulutusSaamePDF, hyvaksyttyKuulutusIlmoitusSaamePDF);
+        }
+
         return lahetettavatPDFt;
       }, Promise.resolve([]));
     const paatosTiedostot =
