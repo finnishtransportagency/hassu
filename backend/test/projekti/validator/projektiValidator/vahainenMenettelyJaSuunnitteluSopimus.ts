@@ -44,12 +44,12 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
       { kayttajatunnus: user.uid as string, email: "", etunimi: "", sukunimi: "", organisaatio: "" },
     ];
 
-    const input = {
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       suunnitteluSopimus: {
         kunta: 1,
-        logo: "123.jpg",
+        logo: { SUOMI: "123.png", RUOTSI: "123.png" },
         yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
       },
     };
@@ -58,7 +58,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
 
   it("ei anna asettaa vähäiseen menettelyyn suunnittelusopimuksellista projektia", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { aloitusKuulutus, ...projekti } = fixture.dbProjekti1(); // Tällä on suunnittelusopimus
+    const { aloitusKuulutus: _a, ...projekti } = fixture.dbProjekti1(); // Tällä on suunnittelusopimus
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -69,7 +69,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
 
   it("ei anna asettaa vähäiseen menettelyyn projektia jonka asettaa myös suunnittelusopimukselliseksi", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { aloitusKuulutus, suunnitteluSopimus, ...projekti } = fixture.dbProjekti1();
+    const { aloitusKuulutus: _a, suunnitteluSopimus: _ss, ...projekti } = fixture.dbProjekti1();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -77,7 +77,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
       suunnitteluSopimus: {
         yhteysHenkilo: "plop",
         kunta: 1,
-        logo: "jotain.png",
+        logo: { SUOMI: "jotain.png", RUOTSI: "jotain.png" },
       },
     };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
@@ -85,7 +85,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
 
   it("ei anna asettaa suunnittelusopimusta projektille, jossa sovelletaan vähäistä menettelyä", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { aloitusKuulutus, suunnitteluSopimus, ...projekti } = fixture.dbProjekti1();
+    const { aloitusKuulutus: _a, suunnitteluSopimus: _ss, ...projekti } = fixture.dbProjekti1();
     projekti.vahainenMenettely = true;
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -93,7 +93,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
       suunnitteluSopimus: {
         yhteysHenkilo: "plop",
         kunta: 1,
-        logo: "jotain.png",
+        logo: { SUOMI: "jotain.png", RUOTSI: "jotain.png" },
       },
     };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);

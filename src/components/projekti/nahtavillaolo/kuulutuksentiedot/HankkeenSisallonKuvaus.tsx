@@ -6,8 +6,8 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { label } from "src/util/textUtil";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;

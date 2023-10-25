@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";

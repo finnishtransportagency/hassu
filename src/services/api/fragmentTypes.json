@@ -75,6 +75,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AktiivisenVaiheenAsianhallinnanTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "AloitusKuulutus",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -112,6 +118,30 @@
       {
         "kind": "ENUM",
         "name": "AsiakirjaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AsianhallinnanTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Asianhallinta",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AsianhallintaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "AsianTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -799,6 +829,12 @@
       {
         "kind": "ENUM",
         "name": "UudelleenkuulutusTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "Vaihe",
         "possibleTypes": null,
         "__typename": "__Type"
       },

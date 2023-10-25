@@ -10,7 +10,7 @@ import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "hassu-common/util/dateUtils";
@@ -20,9 +20,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
-import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -34,7 +32,7 @@ interface Props {
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
   const { lang, t } = useTranslation();
-  const { data: kayttaja } = useCurrentUser();
+
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
@@ -102,13 +100,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
-          {kayttaja?.features?.asianhallintaIntegraatio &&
-            aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
-            kaynnistaAsianhallinnanSynkronointiNappi({
-              oid: projekti.oid,
-              asianhallintaSynkronointiTila: aloituskuulutusjulkaisu.asianhallintaSynkronointiTila,
-              className: "md:col-span-2 mb-0",
-            })}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila

@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -12,9 +12,12 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
-import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  constructor() {
+    super(Vaihe.JATKOPAATOS);
+  }
   getVaihePathname(): string {
     return ProjektiPaths.PATH_JATKOPAATOS1;
   }

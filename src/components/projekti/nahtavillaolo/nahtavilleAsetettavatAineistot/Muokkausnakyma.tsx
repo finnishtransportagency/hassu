@@ -2,7 +2,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AineistoInput, TallennaProjektiInput, TilasiirtymaTyyppi } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
@@ -58,7 +59,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues> = {
+  const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -66,7 +67,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
+  const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues, ProjektiValidationContext>(formOptions);
   const {
     formState: { isDirty },
     reset,

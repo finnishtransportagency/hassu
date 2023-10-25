@@ -1,4 +1,4 @@
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { HyvaksymisPaatosVaihe, KuulutusJulkaisuTila, MuokkausTila, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import { EdellinenVaiheMigroituNotification } from "./EdellinenVaiheMigroituNotification";

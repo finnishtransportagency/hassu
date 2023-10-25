@@ -6,7 +6,7 @@ import { TallennaProjektiInput } from "@services/api";
 import { isAllowedToChangeVahainenMenettely } from "hassu-common/util/operationValidators";
 import React, { Fragment } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 type Props = { formDisabled?: boolean; projekti: ProjektiLisatiedolla };
 

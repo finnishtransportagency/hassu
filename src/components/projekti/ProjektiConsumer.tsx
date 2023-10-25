@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
-import { ProjektiLisatiedolla, useProjekti, useProjektiOptions } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
+import { useProjekti, useProjektiOptions } from "src/hooks/useProjekti";
 
 interface ProjektiConsumerProps {
   children?: (p: ProjektiLisatiedolla) => ReactElement | null;

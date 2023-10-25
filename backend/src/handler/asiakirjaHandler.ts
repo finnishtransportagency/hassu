@@ -8,9 +8,10 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
-import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
+import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { findAloitusKuulutusWaitingForApproval } from "../projekti/projektiUtil";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -169,12 +170,10 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
         case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS:
-        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE:
         case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2:
-        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2_LAHETEKIRJE:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
         case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE:

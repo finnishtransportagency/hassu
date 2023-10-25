@@ -3,7 +3,7 @@ import { Kieli } from "@services/api";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 interface Props {
   projekti: ProjektiLisatiedolla | null;

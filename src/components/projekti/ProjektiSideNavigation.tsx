@@ -2,7 +2,8 @@ import React, { FunctionComponent, ReactElement, useCallback, useEffect, useStat
 import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { NextRouter, useRouter } from "next/router";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import {
   isVisible,
   KASITTELYN_TILA_ROUTE,

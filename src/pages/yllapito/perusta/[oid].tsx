@@ -1,5 +1,6 @@
 import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { useRouter } from "next/router";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
@@ -86,7 +87,7 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
 
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
-  const formOptions: UseFormProps<FormValues> = {
+  const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",

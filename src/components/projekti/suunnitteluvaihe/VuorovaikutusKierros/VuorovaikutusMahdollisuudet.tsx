@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 import { VuorovaikutusTilaisuusInput } from "@services/api";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import CommonVuorovaikutusMahdollisuudet from "../komponentit/VuorovaikutusMahdollisuudet";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 interface Props {
   setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;

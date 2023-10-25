@@ -2,9 +2,10 @@ import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuT
 import log from "loglevel";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KuulutuksenTiedotFormValues } from "./index";
-import { paatosSpecificRoutesMap, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
+import { paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";

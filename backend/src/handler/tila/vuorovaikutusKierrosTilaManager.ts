@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, Vaihe, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -30,6 +30,9 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  constructor() {
+    super(Vaihe.SUUNNITTELU);
+  }
   rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }

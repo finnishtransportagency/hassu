@@ -20,7 +20,7 @@ import {
 import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } from "src/schemas/vuorovaikutus";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -138,6 +138,7 @@ interface Props {
   projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
   onSubmit: (formData: VuorovaikutustilaisuusFormValues) => void;
   mostlyDisabled?: boolean;
+  projekti: ProjektiLisatiedolla;
 }
 
 export default function VuorovaikutusDialog({
@@ -147,14 +148,13 @@ export default function VuorovaikutusDialog({
   projektiHenkilot,
   onSubmit,
   mostlyDisabled,
+  projekti,
 }: Props): ReactElement {
-  const { data: projekti } = useProjekti();
-
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
+  const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
       abortEarly: false,
       recursive: true,
@@ -167,7 +167,7 @@ export default function VuorovaikutusDialog({
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
+  const useFormReturn = useForm<VuorovaikutustilaisuusFormValues, ProjektiValidationContext>(formOptions);
   const {
     control,
     reset,

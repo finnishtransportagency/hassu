@@ -1,6 +1,6 @@
 import React from "react";
 import ProjektiPerustiedot from "./ProjektiPerustiedot";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiKuntatiedot from "./ProjektiKuntatiedot";
 import ProjektinLinkit from "./ProjektinLinkit";
 import Section from "@components/layout/Section2";

@@ -104,13 +104,13 @@ export class HassuBackendStack extends Stack {
     const vpc = await this.getVpc();
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables, vpc);
     // TODO: Remove once no schedules for this queue
-    const aineistoSQS = this.createAineistoImporterQueue()
+    const aineistoSQS = this.createAineistoImporterQueue();
     const eventSQS = this.createEventQueue();
     this.eventQueue = eventSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
-    await this.createAsianhallintaLambda(asianhallintaSQS, vpc);
+    const asianhallintaLambda = await this.createAsianhallintaLambda(asianhallintaSQS, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -118,6 +118,9 @@ export class HassuBackendStack extends Stack {
       asianhallintaSQS,
       pdfGeneratorLambda,
       true
+    );
+    yllapitoBackendLambda.addToRolePolicy(
+      new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
     );
     this.attachDatabaseToLambda(yllapitoBackendLambda, true);
     HassuBackendStack.mapApiResolversToLambda(api, yllapitoBackendLambda, true);
@@ -407,7 +410,7 @@ export class HassuBackendStack extends Stack {
   private async createAsianhallintaLambda(asianhallintaSQS: Queue, vpc: IVpc) {
     const asianhallintaLambda = new DockerImageFunction(this, "asianhallinta-lambda", {
       vpc,
-      functionName: "hassu-asianhallinta-" + Config.env,
+      functionName: Config.asianhallintaLambdaName,
       code: DockerImageCode.fromEcr(Repository.fromRepositoryName(this, "ecr-asianhallinta", "hassu-asianhallinta"), {
         tagOrDigest: ASIANHALLINTA_LAMBDA_VERSION,
       }),
@@ -417,7 +420,6 @@ export class HassuBackendStack extends Stack {
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       },
       memorySize: 1792,
-      reservedConcurrentExecutions: 1,
       timeout: Duration.minutes(3),
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -431,7 +433,7 @@ export class HassuBackendStack extends Stack {
       })
     );
     asianhallintaSQS.grantConsumeMessages(asianhallintaLambda);
-    asianhallintaLambda.addEventSource(new SqsEventSource(asianhallintaSQS));
+    asianhallintaLambda.addEventSource(new SqsEventSource(asianhallintaSQS, { maxConcurrency: 2 }));
     this.props.yllapitoBucket.grantRead(asianhallintaLambda);
 
     // Asianhallintalambdalle lupa päivittää projektille synkronoinnin tiloja
@@ -442,7 +444,6 @@ export class HassuBackendStack extends Stack {
     });
     updateSynkronointiPolicy.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "synkronoinnit"] });
     asianhallintaLambda.addToRolePolicy(updateSynkronointiPolicy);
-
     return asianhallintaLambda;
   }
 
@@ -752,7 +753,7 @@ export class HassuBackendStack extends Stack {
     return queue;
   }
 
-  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, aineistoSQS: Queue,  ...backendLambdas: NodejsFunction[]) {
+  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, aineistoSQS: Queue, ...backendLambdas: NodejsFunction[]) {
     const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,

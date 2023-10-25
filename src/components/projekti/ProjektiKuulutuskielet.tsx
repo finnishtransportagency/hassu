@@ -6,7 +6,7 @@ import lowerCase from "lodash/lowerCase";
 import HassuGrid from "@components/HassuGrid";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { isAllowedToChangeKielivalinta } from "hassu-common/util/operationValidators";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";

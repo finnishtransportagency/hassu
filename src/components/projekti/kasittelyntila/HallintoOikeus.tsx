@@ -8,7 +8,7 @@ import { ControllerFieldState, ControllerRenderProps, FormState, useController, 
 import FormGroup from "@components/form/FormGroup";
 import styled from "@emotion/styled";
 import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasittelyntila";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 
 type HallintoOikeusProps = { disabled: boolean; projekti: ProjektiLisatiedolla; includeInForm: boolean };
 

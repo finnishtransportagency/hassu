@@ -678,7 +678,6 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
-      "asianhallintaEventId": "00000001-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -889,7 +888,6 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
-      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -1052,7 +1050,6 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
-      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",

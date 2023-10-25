@@ -7,7 +7,7 @@ import { HassuDatePicker } from "@components/form/HassuDatePicker";
 import { isValidDate } from "hassu-common/util/dateUtils";
 import dayjs, { Dayjs } from "dayjs";
 import { Hyvaksymispaatos } from "@services/api";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import StyledLink from "@components/StyledLink";
 
 type Props = {

@@ -5,7 +5,7 @@ import StyledLink from "@components/StyledLink";
 import { DialogActions, DialogContent } from "@mui/material";
 import { Kielitiedot, VuorovaikutusKierrosJulkaisu, VuorovaikutusKierrosTila } from "@services/api";
 import React, { useCallback, useMemo, useState, VFC } from "react";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import IlmoituksenVastaanottajatLukutila from "../../komponentit/IlmoituksenVastaanottajatLukutila";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import LukutilaLinkkiJaKutsut from "../../LukutilaVuorovaikutukselle/LukutilaLinkkiJaKutsut";

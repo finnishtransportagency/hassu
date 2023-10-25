@@ -1,6 +1,8 @@
 {
   "projekti": {
-    "asianhallintaIntegraatio": true,
+    "asianhallinta": {
+      "inaktiivinen": false
+    },
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",

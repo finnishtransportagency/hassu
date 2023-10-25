@@ -9,6 +9,7 @@ import {
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  Vaihe,
   VuorovaikutusKierros,
   VuorovaikutusKierrosInput,
   VuorovaikutusTilaisuus,
@@ -30,7 +31,8 @@ import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "../../PdfPreviewForm";
 import pickBy from "lodash/pickBy";
@@ -51,6 +53,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
 import { label } from "src/util/textUtil";
+import { isAsianhallintaVaarassaTilassa } from "../../../../util/asianhallintaVaarassaTilassa";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -176,7 +179,7 @@ function VuorovaikutusKierrosKutsu({
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
+  const formOptions: UseFormProps<VuorovaikutusFormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
       mode: "onChange",
@@ -310,7 +313,13 @@ function VuorovaikutusKierrosKutsu({
   );
 
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
-  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
+
+  const julkaisuIsDisabled = useMemo(() => {
+    const kunnatPuuttuu = !kuntavastaanottajat?.length;
+    return (
+      !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, Vaihe.SUUNNITTELU)
+    );
+  }, [kuntavastaanottajat?.length, projekti]);
 
   return (
     <>
@@ -334,6 +343,7 @@ function VuorovaikutusKierrosKutsu({
               }}
               tilaisuudet={vuorovaikutustilaisuudet}
               projektiHenkilot={projektiHenkilot}
+              projekti={projekti}
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
@@ -424,7 +434,7 @@ function VuorovaikutusKierrosKutsu({
                     primary
                     id="save_and_publish"
                     onClick={handleSubmit(handleClickOpenHyvaksy)}
-                    disabled={!canProjektiBePublished(projekti) || kunnatPuuttuu}
+                    disabled={julkaisuIsDisabled}
                   >
                     Tallenna julkaistavaksi
                   </Button>
@@ -450,10 +460,6 @@ function VuorovaikutusKierrosKutsu({
       />
     </>
   );
-}
-
-function canProjektiBePublished(projekti: ProjektiLisatiedolla): boolean {
-  return projektiHasPublishedAloituskuulutusJulkaisu(projekti);
 }
 
 const projektiHasPublishedAloituskuulutusJulkaisu: (projekti: ProjektiLisatiedolla) => boolean = (projekti) =>

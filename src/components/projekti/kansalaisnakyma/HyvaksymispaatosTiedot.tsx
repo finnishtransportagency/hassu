@@ -17,7 +17,7 @@ import { AineistoLinkkiLista } from "./AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 import EuLogo from "../common/EuLogo";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;

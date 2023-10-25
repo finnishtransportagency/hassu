@@ -6,7 +6,7 @@ import log from "loglevel";
 import React, { useCallback, useState, VoidFunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
 

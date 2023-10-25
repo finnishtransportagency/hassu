@@ -193,6 +193,7 @@ export class ProjektiFixture {
         tyyppi: ProjektiTyyppi.TIE,
         maakunnat: [kuntametadata.idForMaakuntaName("Uusimaa"), kuntametadata.idForMaakuntaName("Pirkanmaa")],
       },
+      asianhallinta: { __typename: "Asianhallinta", aktivoitavissa: true, inaktiivinen: true },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       status: Status.EI_JULKAISTU,
       tallennettu: false,

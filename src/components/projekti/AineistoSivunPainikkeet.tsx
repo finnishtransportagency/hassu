@@ -8,7 +8,8 @@ import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./paatos/aineistot/Muokkausnakyma";
@@ -272,7 +273,7 @@ export default function AineistoSivunPainikkeet({
               id="save_and_move_to_kuulutus_page"
               onClick={handleSubmit(saveAndMoveToKuulutusPage)}
             >
-              Tallenna ja Siirry Kuulutukselle
+              Tallenna ja Siirry kuulutukselle
             </Button>
           </Stack>
         )}

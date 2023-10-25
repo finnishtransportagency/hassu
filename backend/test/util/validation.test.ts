@@ -116,6 +116,7 @@ describe("the validation function named", () => {
           tila: VuorovaikutusKierrosTila.JULKINEN,
           suunnittelumateriaali: [{ SUOMI: { nimi: "", url: "" } }],
           arvioSeuraavanVaiheenAlkamisesta: null,
+          esitettavatYhteystiedot: {},
         },
         {
           vuorovaikutusSaamePDFt: {},
@@ -168,6 +169,7 @@ describe("the validation function named", () => {
           tila: VuorovaikutusKierrosTila.JULKINEN,
           suunnittelumateriaali: [{ SUOMI: { nimi: "", url: "" } }],
           arvioSeuraavanVaiheenAlkamisesta: null,
+          esitettavatYhteystiedot: {},
         },
       ],
       paivitetty: "2023-05-05T13:10:18+03:00",

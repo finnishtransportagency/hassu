@@ -1,5 +1,6 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
 import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
+import { ProjektiLisatiedolla, ProjektiLisatiedot } from "hassu-common/ProjektiValidationContext";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
@@ -21,12 +22,6 @@ export function useProjekti(config: useProjektiOptions = {}) {
   const { data: kayttaja } = useCurrentUser();
   return useSWR([apiConfig.lataaProjekti.graphql, oid, kayttaja], projektiLoader, config);
 }
-
-interface ProjektiLisatiedot {
-  nykyinenKayttaja: { omaaMuokkausOikeuden: boolean; onProjektipaallikkoTaiVarahenkilo: boolean; onYllapitaja: boolean };
-}
-
-export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;
 
 const getProjektiLoader = (api: API) => async (_query: string, oid: string | undefined, kayttaja: NykyinenKayttaja | undefined) => {
   if (!oid) {

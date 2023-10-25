@@ -92,11 +92,12 @@ enum AsiakirjaTyyppi {
   ILMOITUS_KUULUTUKSESTA
   YLEISOTILAISUUS_KUTSU
   YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
-  HYVAKSYMISPAATOSKUULUTUS
   NAHTAVILLAOLOKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
+
+  HYVAKSYMISPAATOSKUULUTUS
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
@@ -182,7 +183,27 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
-  asianhallintaIntegraatio: Boolean
+  asianhallinta: Asianhallinta!
+}
+
+type Asianhallinta {
+  aktiivinenTila: AktiivisenVaiheenAsianhallinnanTila
+  inaktiivinen: Boolean!
+  aktivoitavissa: Boolean!
+}
+
+type AktiivisenVaiheenAsianhallinnanTila {
+  vaihe: Vaihe
+  tila: AsianTila
+}
+
+enum Vaihe {
+  ALOITUSKUULUTUS
+  SUUNNITTELU
+  NAHTAVILLAOLO
+  HYVAKSYMISPAATOS
+  JATKOPAATOS
+  JATKOPAATOS2
 }
 
 type VuorovaikutusKierros {
@@ -245,7 +266,7 @@ type VuorovaikutusKierrosJulkaisu {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
   selosteVuorovaikutuskierrokselle: String
 }
 
@@ -333,7 +354,7 @@ type NahtavillaoloVaiheJulkaisu {
   hyvaksyja: String
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -357,7 +378,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -764,7 +785,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
-  asianhallintaSynkronointiTila: String
+  asianhallintaSynkronointiTila: AsianTila
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
@@ -1053,4 +1074,22 @@ type KuulutusTekstit {
   kuvausTekstit: [String!]
   infoTekstit: [String!]
   tietosuoja: String
+}
+
+enum AsianTila {
+  ASIANHALLINTA_VAARASSA_TILASSA
+  ASIAA_EI_LOYDY
+  VIRHE
+  SYNKRONOITU
+  VALMIS_VIENTIIN
+  EI_TESTATTAVISSA
+}
+
+type AsianhallinnanTila {
+  """
+  Jos tyhja, niin asianhallinta on oikeassa tilassa.
+  Jos ASIANHALLINTA_VAARASSA_TILASSA niin asianhallinta on vaarassa tilassa.
+  Jos ASIAA_EI_LOYDY, on asiatunnus projektilla vaara.
+  """
+  asianTila: AsianTila
 }

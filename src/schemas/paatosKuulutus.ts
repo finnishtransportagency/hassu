@@ -1,8 +1,8 @@
 import { paatosKuulutusSchema } from "./paatosKuulutusYhteiset";
-import { PaatosTyyppi } from "../util/getPaatosSpecificData";
 import { hyvaksymispaatosKuulutusSaamePDFtSchema } from "./hyvaksymispaatosKuulutusSaamePDFt";
 import { jatkopaatos1KuulutusSaamePDFtSchema } from "./jatkopaatos1KuulutusSaamePDFt";
 import { jatkopaatos2KuulutusSaamePDFtSchema } from "./jatkopaatos2KuulutusSaamePDFt";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 function paatosSaamePDFSchema(paatosTyyppi: PaatosTyyppi) {
   switch (paatosTyyppi) {

@@ -31,16 +31,13 @@ describe("nahtavillaoloTilaManager", () => {
   beforeEach(() => {
     projekti = new ProjektiFixture().nahtavillaoloVaihe();
     userFixture.loginAs(UserFixture.hassuAdmin);
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {
     sinon.reset();
     sinon.restore();
     userFixture.logout();
-  });
-
-  after(() => {
-    sinon.restore();
   });
 
   it("should set old julkaisu tila to PERUUTETTU when making uudelleenkuuluta, if old julkaisu's kuulutusPaiva has not passed", async function () {
@@ -66,7 +63,6 @@ describe("nahtavillaoloTilaManager", () => {
     const originalKuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
     projekti = { ...projekti, nahtavillaoloVaihe: { ...(projekti.nahtavillaoloVaihe as NahtavillaoloVaihe), aineistoNahtavilla: [] } };
     MockDate.set("2023-01-01");
-    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon
       .stub(pdfGeneratorClient, "createNahtavillaoloKuulutusPdf")
       .returns(Promise.resolve({ __typename: "PDF", nimi: "", sisalto: "", textContent: "" }));

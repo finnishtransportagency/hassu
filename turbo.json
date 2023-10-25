@@ -64,7 +64,8 @@
     "test:backend": {
       "inputs": [
         "backend/**/*.ts",
-        "common/**/*"
+        "common/**/*",
+        "package.json"
       ],
       "outputs": [
         "./.report/unit/test-results.xml"
@@ -73,7 +74,8 @@
     "test:integration": {
       "inputs": [
         "backend/**/*.ts",
-        "common/**/*"
+        "common/**/*",
+        "package.json"
       ],
       "outputs": [
         "./.report/unit/integration-test-results.xml"

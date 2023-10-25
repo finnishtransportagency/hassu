@@ -1,6 +1,7 @@
 import { log } from "../logger";
 import {
   ArkistoiProjektiMutationVariables,
+  AsetaPalauteVastattuMutationVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
@@ -13,15 +14,14 @@ import {
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
-  AsetaPalauteVastattuMutationVariables,
   PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
-  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
-  TallennaProjektiMutationVariables,
   SuoritaTestiKomentoMutationVariables,
   TallennaJaSiirraTilaaMutationVariables,
+  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
+  TallennaProjektiMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";

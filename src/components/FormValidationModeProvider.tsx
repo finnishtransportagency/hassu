@@ -1,11 +1,5 @@
-import React, { createContext, MutableRefObject, ReactNode, useRef } from "react";
-
-export enum ValidationMode {
-  DRAFT = "DRAFT",
-  PUBLISH = "PUBLISH",
-}
-
-export type ValidationModeState = MutableRefObject<ValidationMode> | undefined;
+import { ValidationMode, ValidationModeState } from "hassu-common/ProjektiValidationContext";
+import React, { createContext, ReactNode, useRef } from "react";
 
 export const ValidationModeContext = createContext<ValidationModeState>(undefined);
 

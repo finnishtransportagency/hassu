@@ -1,6 +1,6 @@
 import React from "react";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { PaatoksenKuulutuksenTiedotPage } from "@components/projekti/paatos/PaatosKuulutuksenTiedotPage";
 
 export default function Jatkaminen1Wrapper() {

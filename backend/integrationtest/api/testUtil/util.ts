@@ -1,6 +1,14 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, Status, VelhoAineisto } from "hassu-common/graphql/apiModel";
+import {
+  AineistoInput,
+  AsianTila,
+  IlmoitettavaViranomainen,
+  Kieli,
+  KirjaamoOsoite,
+  Status,
+  VelhoAineisto,
+} from "hassu-common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -51,6 +59,7 @@ import { EmailOptions } from "../../../src/email/model/emailOptions";
 import { expect } from "chai";
 import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
 import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
+import { asianhallintaService } from "../../../src/asianhallinta/asianhallintaService";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -99,12 +108,6 @@ export async function expectStatusEiJulkaistu(oid: string, userFixture: UserFixt
   expect(value.status).to.eql(Status.EI_JULKAISTU);
   expect(value.oid).to.eql(oid);
   expect(Object.keys(value.velho || {}).length).to.eql(1);
-  // ({
-  //   __typename: "ProjektiJulkinen",
-  //   oid,
-  //   velho: { __typename: "VelhoJulkinen" },
-  //   status: Status.EI_JULKAISTU,
-  // });
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 
@@ -221,7 +224,7 @@ export class ParametersStub {
       this.stub = sinon.stub(parameters, "getParameter");
     });
     mocha.beforeEach(() => {
-      this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(async () => String(this.asianhallintaEnabled));
+      this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(() => String(this.asianhallintaEnabled));
     });
   }
 }
@@ -365,6 +368,17 @@ export function mockPersonSearchUpdaterClient(): void {
   });
 }
 
+let checkAsianhallintaStateLambdaStub: sinon.SinonStub;
+
+export function mockAsianhallintaService(): void {
+  mocha.before(() => {
+    checkAsianhallintaStateLambdaStub = sinon.stub(asianhallintaService, "checkAsianhallintaState");
+  });
+  mocha.beforeEach(() => {
+    checkAsianhallintaStateLambdaStub.callsFake(() => AsianTila.VALMIS_VIENTIIN);
+  });
+}
+
 function setupMockDate() {
   mocha.beforeEach(() => {
     MockDate.set("2020-01-01");
@@ -394,6 +408,7 @@ export function defaultMocks(): {
   const parametersStub = new ParametersStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
+  mockAsianhallintaService();
   setupMockDate();
   velhoCache();
   mockUUID();

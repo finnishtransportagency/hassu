@@ -23,7 +23,8 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "../SaapuneetKysymyksetJaPalautteet";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
+import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
@@ -207,7 +208,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<SuunnittelunPerustiedotFormValues> = {
+  const formOptions: UseFormProps<SuunnittelunPerustiedotFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -215,7 +216,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);
+  const useFormReturn = useForm<SuunnittelunPerustiedotFormValues, ProjektiValidationContext>(formOptions);
   const {
     reset,
     handleSubmit,

@@ -6,9 +6,10 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import AineistoSivunPainikkeet from "../../AineistoSivunPainikkeet";
 import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { PaatosSpecificData, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
+import { PaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
@@ -111,7 +112,7 @@ function MuokkausnakymaForm({
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
+  const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -119,7 +120,7 @@ function MuokkausnakymaForm({
     context: { projekti, validationMode },
   };
 
-  const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);
+  const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues, ProjektiValidationContext>(formOptions);
   const {
     formState: { isDirty },
   } = useFormReturn;

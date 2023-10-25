@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -7,7 +7,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import ExtLink from "@components/ExtLink";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
 import DownloadLink from "@components/DownloadLink";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
@@ -15,13 +15,11 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
-import useCurrentUser from "../../../../hooks/useCurrentUser";
-import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { label } from "src/util/textUtil";
 
 interface Props {
@@ -32,7 +30,6 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
-  const { data: kayttaja } = useCurrentUser();
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -114,12 +111,6 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
-              {kayttaja?.features?.asianhallintaIntegraatio &&
-                julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
-                kaynnistaAsianhallinnanSynkronointiNappi({
-                  oid: projekti.oid,
-                  asianhallintaSynkronointiTila: julkaisu.asianhallintaSynkronointiTila,
-                })}
             </div>
           )}
         </div>

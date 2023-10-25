@@ -13,6 +13,7 @@ import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { expect } from "chai";
 import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
+import { parameters } from "../../../src/aws/parameters";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
@@ -23,6 +24,7 @@ describe("aloitusKuulutusTilaManager", () => {
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     _updateJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {

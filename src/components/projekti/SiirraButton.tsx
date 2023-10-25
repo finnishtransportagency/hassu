@@ -5,7 +5,7 @@ import { TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@se
 import log from "loglevel";
 import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
 import router from "next/router";

@@ -190,6 +190,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
 
     const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
     const oldVuorovaikutuskierrosJulkaisu = vuorovaikutusKierrosJulkaisut?.pop();
+    vuorovaikutusKierrosJulkaisu.asianhallintaEventId = oldVuorovaikutuskierrosJulkaisu?.asianhallintaEventId;
     vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
 
     await projektiDatabase.saveProjekti({

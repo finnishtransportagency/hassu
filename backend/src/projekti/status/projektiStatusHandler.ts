@@ -1,4 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { KuulutusJulkaisuTila, MuokkausTila, Status, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
@@ -8,6 +9,8 @@ import { GenericApiKuulutusJulkaisu } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { ValidateOptions } from "yup/lib/types";
+import { cloneDeep } from "lodash";
 
 function isJulkaisuMigroituOrHyvaksyttyAndInPast<T extends GenericApiKuulutusJulkaisu>(julkaisu: T | null | undefined): boolean {
   const julkaisuMigratoitu = julkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;
@@ -43,10 +46,16 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const perustiedot = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       // Initial state
-      p.tallennettu = true;
-      const testContext = {
+
+      const projektiLisatiedolla: ProjektiLisatiedolla = {
+        ...cloneDeep(p),
+        tallennettu: true,
+        nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
+      };
+
+      const testContext: ValidateOptions<ProjektiValidationContext> = {
         context: {
-          projekti: p,
+          projekti: projektiLisatiedolla,
           isRuotsinkielinenProjekti: {
             current: [p.kielitiedot?.ensisijainenKieli, p.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
           },

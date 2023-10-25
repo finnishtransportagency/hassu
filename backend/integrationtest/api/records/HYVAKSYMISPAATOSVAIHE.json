@@ -302,7 +302,9 @@
       "2023-12-31T22:00:01.000Z",
       "2023-12-31T22:00:01.000Z"
     ],
-    "asianhallintaIntegraatio": true,
+    "asianhallinta": {
+      "inaktiivinen": false
+    },
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",
@@ -1223,7 +1225,7 @@
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1"
         },
-        "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
+        "asianhallintaEventId": "00000001-8557-4a58-8a93-64ade8cd137b",
         "esitettavatYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",
@@ -1469,7 +1471,7 @@
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "huomenna"
         },
-        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
+        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
         "esitettavatYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",

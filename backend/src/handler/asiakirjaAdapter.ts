@@ -21,7 +21,7 @@ import {
 import { findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { uuid } from "../util/uuid";
-import { parameters } from "../aws/parameters";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -46,7 +46,7 @@ export class AsiakirjaAdapter {
         ),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
-      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
       }
       return julkaisu;
@@ -88,7 +88,7 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
       };
-      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
       }
       return julkaisu;
@@ -121,7 +121,7 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
-      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
       }
       return julkaisu;
@@ -143,7 +143,7 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
-      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
       }
       return julkaisu;
