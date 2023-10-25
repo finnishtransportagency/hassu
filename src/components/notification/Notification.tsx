@@ -119,6 +119,8 @@ const Notification = styled(
     borderWidth: "1px",
     backgroundColor: "#F8F8F8",
     padding: 5,
+    fontSize: "1rem",
+    lineHeight: 1.5,
     "& .notification-icon": {
       marginRight: 5,
       marginTop: 0.5,
