@@ -7,7 +7,7 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoStateError";
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";

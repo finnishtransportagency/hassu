@@ -15,7 +15,7 @@ import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";
 import { GenericVaihe } from "../../projekti/projektiUtil";
 import { nyt, parseDate } from "../../util/dateUtil";
-import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";

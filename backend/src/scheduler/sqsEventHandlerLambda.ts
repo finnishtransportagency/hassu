@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../aineisto/importContext";
 import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
-import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager } from "../aineisto/ProjektiAineistoManager";
 import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";

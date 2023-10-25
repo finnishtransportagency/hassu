@@ -18,7 +18,7 @@ import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/er
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager } from "../../aineisto/ProjektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { assertIsDefined } from "../../util/assertions";

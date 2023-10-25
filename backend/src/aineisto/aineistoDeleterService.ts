@@ -1,6 +1,6 @@
 import { ImportContext } from "./importContext";
 import { Status } from "hassu-common/graphql/apiModel";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { ProjektiAineistoManager } from "./ProjektiAineistoManager";
 import { projektiDatabase } from "../database/projektiDatabase";
 
 class AineistoDeleterService {
