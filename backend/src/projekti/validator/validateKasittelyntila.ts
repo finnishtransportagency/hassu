@@ -16,7 +16,18 @@ export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projek
     const inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc = (key) =>
       has(input.kasittelynTila, key) && !isEqual(input.kasittelynTila?.[key], projekti.kasittelynTila?.[key]);
 
-    validateKasittelyntilaHyvaksymispaatos(apiProjekti, inputChangesKasittelynTilaField);
+    const inputChangesHyvaksymispaatosField: InputChangesKasittelynTilaFieldFunc = (key) => {
+      if (
+        (!projekti.kasittelynTila?.hyvaksymispaatos || isEqual(projekti.kasittelynTila.hyvaksymispaatos, {})) &&
+        input.kasittelynTila?.hyvaksymispaatos?.asianumero === "" &&
+        input.kasittelynTila.hyvaksymispaatos.paatoksenPvm === null
+      ) {
+        return false;
+      }
+      return inputChangesKasittelynTilaField(key);
+    };
+
+    validateKasittelyntilaHyvaksymispaatos(apiProjekti, inputChangesHyvaksymispaatosField);
     validateKasittelyntilaEnsimmainenJatkopaatos(apiProjekti, projekti, inputChangesKasittelynTilaField);
     validateKasittelyntilaToinenJatkopaatos(apiProjekti, projekti, inputChangesKasittelynTilaField);
   }
