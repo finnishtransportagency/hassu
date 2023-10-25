@@ -1,7 +1,6 @@
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { AineistoPathsPair, NahtavillaoloVaiheAineisto, S3Paths, VaiheAineisto } from ".";
 import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { parseOptionalDate } from "../../util/dateUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
@@ -60,7 +59,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
           result &&
           synchronizeFilesToPublic(
             this.oid,
-            new ProjektiPaths(this.oid).vuorovaikutus(julkaisu),
+            this.projektiPaths.vuorovaikutus(julkaisu),
             kuulutusPaiva,
             kuulutusPaattyyPaiva?.startOf("day")
           )
@@ -119,7 +118,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
     }
     const asiatunnus = getAsiatunnus(projekti.velho);
     assertIsDefined(asiatunnus);
-    const vuorovaikutusPaths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
+    const vuorovaikutusPaths = this.projektiPaths.vuorovaikutus(julkaisu);
     const s3Paths = new S3Paths(vuorovaikutusPaths);
     forSuomiRuotsiDo((kieli) => s3Paths.pushYllapitoFilesIfDefined(julkaisu.vuorovaikutusPDFt?.[kieli]?.kutsuPDFPath));
     forEverySaameDo((kieli) => s3Paths.pushYllapitoFilesIfDefined(julkaisu.vuorovaikutusSaamePDFt?.[kieli]?.tiedosto));

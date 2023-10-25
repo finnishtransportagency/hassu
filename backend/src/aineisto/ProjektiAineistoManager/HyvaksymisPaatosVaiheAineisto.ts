@@ -8,7 +8,6 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 
 export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -88,7 +87,7 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     }
     const asiatunnus = getAsiatunnus(projekti.velho);
     assertIsDefined(asiatunnus);
-    const paths = new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu);
+    const paths = this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu);
     const s3Paths = new S3Paths(paths);
     forSuomiRuotsiDo((kieli) => {
       const pdf = julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli];

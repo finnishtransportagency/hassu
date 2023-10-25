@@ -48,7 +48,7 @@ export abstract class VaiheAineisto<T, J> {
     if (!this.vaihe) return;
     const aineistotPaths = this.getAineistot(this.vaihe);
     const filesToZip: ZipSourceFile[] = [];
-    const yllapitoPath = new ProjektiPaths(this.oid).yllapitoFullPath;
+    const yllapitoPath = this.projektiPaths.yllapitoFullPath;
     for (const aineistot of aineistotPaths) {
       if (!aineistot.aineisto) return;
       for (const aineisto of aineistot.aineisto) {

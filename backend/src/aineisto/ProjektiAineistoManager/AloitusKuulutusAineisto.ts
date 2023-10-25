@@ -3,7 +3,6 @@ import { AineistoPathsPair, S3Paths, VaiheAineisto, getKuulutusSaamePDFt } from 
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, LadattuTiedosto } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 import { parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
@@ -22,11 +21,7 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return synchronizeFilesToPublic(
-        this.oid,
-        new ProjektiPaths(this.oid).aloituskuulutus(julkaisu),
-        parseOptionalDate(julkaisu.kuulutusPaiva)
-      );
+      return synchronizeFilesToPublic(this.oid, this.projektiPaths.aloituskuulutus(julkaisu), parseOptionalDate(julkaisu.kuulutusPaiva));
     }
     return true;
   }
@@ -42,7 +37,7 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
     }
     const asiatunnus = getAsiatunnus(julkaisu.velho);
     assertIsDefined(asiatunnus);
-    const aloituskuulutusPaths = new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisu);
+    const aloituskuulutusPaths = this.projektiPaths.aloituskuulutus(julkaisu);
     const s3Paths = new S3Paths(aloituskuulutusPaths);
     forSuomiRuotsiDo((kieli) => {
       const aloituskuulutusPDF = julkaisu.aloituskuulutusPDFt?.[kieli];

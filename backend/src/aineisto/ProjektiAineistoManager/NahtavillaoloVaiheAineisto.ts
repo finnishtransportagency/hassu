@@ -9,7 +9,6 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 
 export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getAineistot(vaihe: NahtavillaoloVaihe): AineistoPathsPair[] {
@@ -93,7 +92,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
     }
     const asiatunnus = getAsiatunnus(projekti.velho);
     assertIsDefined(asiatunnus);
-    const paths = new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu);
+    const paths = this.projektiPaths.nahtavillaoloVaihe(julkaisu);
     const s3Paths = new S3Paths(paths);
     forSuomiRuotsiDo((kieli) => {
       const pdf = julkaisu.nahtavillaoloPDFt?.[kieli];
