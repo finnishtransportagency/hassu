@@ -26,7 +26,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-commo
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {

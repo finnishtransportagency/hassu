@@ -8,7 +8,7 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";

@@ -19,7 +19,7 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";

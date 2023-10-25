@@ -2,7 +2,7 @@ import { DBProjekti } from "../database/model";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { Status } from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { ProjektiAineistoManager } from "./ProjektiAineistoManager";
 
 export class ImportContext {
   private readonly dbProjekti: DBProjekti;

@@ -7,7 +7,7 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import assert from "assert";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos2VaiheWaitingForApproval } from "../../projekti/projektiUtil";
