@@ -13,6 +13,7 @@ import VuorovaikutusMahdollisuudet from "../../LukutilaVuorovaikutukselle/Vuorov
 import { AineistotSection } from "./AineistotSection";
 import { VuorovaikuttamisenYhteysHenkilot } from "../../LukutilaVuorovaikutukselle/VuorovaikuttamisenYhteysHenkilot";
 import { examineJulkaisuPaiva } from "hassu-common/util/dateUtils";
+import { Tagi } from "@components/Tagi";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -80,8 +81,8 @@ const AiempiJulkaisuLinkki: VFC<{
         <StyledLink as="button" sx={{ fontWeight: 400 }} onClick={openDialog}>
           {`${julkaisu.id}. kutsu vuorovaikutukseen`}
         </StyledLink>
-        {onViimeisinJulkinenJulkaisu && <span className="ml-2 text-red">{`<- Kansalaiselle näkyvät tiedot`}</span>}
-        {!published && <span className="ml-2 text-red">{`<- Julkaistaan kansalaiselle ${julkaisuPaiva}`}</span>}
+        {onViimeisinJulkinenJulkaisu && <Tagi className="ml-4">Esillä julkisella puolella</Tagi>}
+        {!published && <Tagi className="ml-4">{`Esillä julkisella puolella ${julkaisuPaiva} lähtien`}</Tagi>}
       </div>
       {isDialogOpen && (
         <HassuDialog title={`${julkaisu.id}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
