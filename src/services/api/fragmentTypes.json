@@ -404,6 +404,30 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "LausuntoPyynnonTaydennys",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LausuntoPyynnonTaydennysInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LausuntoPyynto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LausuntoPyyntoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "LiitteenSkannausTulos",
         "possibleTypes": null,
@@ -442,6 +466,18 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ListaaKayttajatInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ListaaLausuntoPyynnonTaydennyksenAineistotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ListaaLausuntoPyyntoAineistotInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
