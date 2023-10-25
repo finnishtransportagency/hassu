@@ -74,3 +74,7 @@ export function linkHyvaksymisPaatosYllapito(oid: string): string {
 export function linkJatkoPaatos1Yllapito(oid: string): string {
   return linkSuunnitelmaYllapito(oid) + "/jatkaminen1";
 }
+
+export function linkJatkoPaatos2Yllapito(oid: string): string {
+  return linkSuunnitelmaYllapito(oid) + "/jatkaminen2";
+}

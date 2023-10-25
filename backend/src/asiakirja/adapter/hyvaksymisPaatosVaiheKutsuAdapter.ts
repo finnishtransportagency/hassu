@@ -205,4 +205,15 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
   get uudelleenKuulutusSeloste(): string | undefined {
     return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
+
+  get jatkopaatosYllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+      return super.jatkopaatos1YllapitoUrl;
+    } else if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+      return super.jatkopaatos2YllapitoUrl;
+    } else {
+      return "";
+    }
+  }
 }

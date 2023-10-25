@@ -91,7 +91,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 const jatkopaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}`;
 const jatkopaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} jatkopäätöskuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa {{jatkopaatos1YllapitoUrl}}
+Voit tarkastella projektia osoitteessa {{jatkopaatosYllapitoUrl}}
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 

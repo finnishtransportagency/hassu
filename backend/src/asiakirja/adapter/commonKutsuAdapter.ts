@@ -15,6 +15,7 @@ import {
   linkJatkoPaatos1,
   linkJatkoPaatos1Yllapito,
   linkJatkoPaatos2,
+  linkJatkoPaatos2Yllapito,
   linkNahtavillaOlo,
   linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
@@ -294,6 +295,11 @@ export class CommonKutsuAdapter {
   get jatkopaatos1YllapitoUrl(): string {
     assertIsDefined(this.oid);
     return linkJatkoPaatos1Yllapito(this.oid);
+  }
+
+  get jatkopaatos2YllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    return linkJatkoPaatos2Yllapito(this.oid);
   }
 
   get linkki_hyvaksymispaatos(): string {
