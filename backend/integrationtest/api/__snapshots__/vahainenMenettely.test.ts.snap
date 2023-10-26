@@ -1271,6 +1271,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
         "contentType": "application/pdf",
         "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+      },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1
@@ -2842,6 +2846,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
       Object {
         "contentType": "application/pdf",
         "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",

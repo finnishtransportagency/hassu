@@ -12048,6 +12048,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
         "contentType": "application/pdf",
         "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+      },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1
@@ -15524,6 +15528,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
         "contentType": "application/pdf",
         "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+      },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1
@@ -16429,6 +16437,14 @@ Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen la
       Object {
         "contentType": "application/pdf",
         "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -20182,6 +20198,14 @@ Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen la
         "contentType": "application/pdf",
         "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+      },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
@@ -20265,6 +20289,14 @@ Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen la
       Object {
         "contentType": "application/pdf",
         "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
