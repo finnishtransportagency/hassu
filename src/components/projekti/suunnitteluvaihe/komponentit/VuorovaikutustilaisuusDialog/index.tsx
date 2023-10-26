@@ -384,7 +384,7 @@ const HassuBadge = styled(Badge)(() => ({
       color: "rgb(0, 100, 175)",
     },
   },
-}));
+  }));
 
 const HassuChip = styled(Chip)(() => ({
   paddingRight: 4,
@@ -414,6 +414,18 @@ const HassuChip = styled(Chip)(() => ({
     "&:hover": {
       background: "rgb(0, 70, 145)",
       boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+    },
+  },
+  [`&.Mui-disabled`]: {
+    opacity: 100,
+    background: "#999999",
+    color: "#f8f8f8",
+    [`> .${svgIconClasses.root}`]: {
+      color: "#f8f8f8",
+    },
+    [`* > .MuiBadge-badge`]: {
+      background: "#f8f8f8",
+      color: "#999999",
     },
   },
 }));
