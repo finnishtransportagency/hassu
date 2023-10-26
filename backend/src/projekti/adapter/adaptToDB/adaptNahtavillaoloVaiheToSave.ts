@@ -113,6 +113,8 @@ export function adaptLausuntoPyynnotToSave(
         return poistettava;
       }) || [];
 
+  if (poistettavat.length) projektiAdaptationResult.aineistoChanged();
+
   return pysyvat.concat(poistettavat);
 }
 
@@ -155,6 +157,8 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
         };
         return poistettava;
       }) || [];
+
+  if (poistettavat.length) projektiAdaptationResult.aineistoChanged();
 
   return pysyvat.concat(poistettavat);
 }
