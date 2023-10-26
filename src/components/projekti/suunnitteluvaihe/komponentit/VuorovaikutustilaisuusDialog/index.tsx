@@ -372,8 +372,8 @@ export default function VuorovaikutusDialog({
 
 const HassuBadge = styled(Badge)(() => ({
   [`&.${chipClasses.deleteIcon}`]: {
-    marginLeft: "0.5rem",
-    marginRight: "1rem",
+    marginLeft: "0.5rem !important",
+    marginRight: "1rem !important",
   },
   [`&.${chipClasses.label}`]: {
     paddingRight: "0px",
