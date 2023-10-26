@@ -40,7 +40,7 @@ export class ProjektiAineistoManager {
   }
 
   getLausuntoPyynnot(): LausuntoPyyntoAineisto {
-    return new LausuntoPyyntoAineisto(this.projekti.oid, this.projekti.lausuntoPyynnot);
+    return new LausuntoPyyntoAineisto(this.projekti.oid, this.projekti.lausuntoPyynnot, this.projekti.nahtavillaoloVaihe);
   }
 
   getLausuntoPyynnonTaydennykset(): LausuntoPyynnonTaydennyksetAineisto {
