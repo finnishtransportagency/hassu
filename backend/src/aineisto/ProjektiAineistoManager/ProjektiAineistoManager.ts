@@ -3,6 +3,8 @@ import {
   HyvaksymisPaatosVaiheAineisto,
   JatkoPaatos1VaiheAineisto,
   JatkoPaatos2VaiheAineisto,
+  LausuntoPyynnonTaydennyksetAineisto,
+  LausuntoPyyntoAineisto,
   NahtavillaoloVaiheAineisto,
   VuorovaikutusKierrosAineisto,
   VuorovaikutusKierrosJulkaisuAineisto,
@@ -21,6 +23,8 @@ export class ProjektiAineistoManager {
       this.getAloitusKuulutusVaihe().isReady() &&
       this.getVuorovaikutusKierros().isReady() &&
       this.getNahtavillaoloVaihe().isReady() &&
+      this.getLausuntoPyynnot().isReady() &&
+      this.getLausuntoPyynnot().isReady() &&
       this.getHyvaksymisPaatosVaihe().isReady() &&
       this.getJatkoPaatos1Vaihe().isReady() &&
       this.getJatkoPaatos2Vaihe().isReady()
@@ -33,6 +37,14 @@ export class ProjektiAineistoManager {
 
   getNahtavillaoloVaihe(): NahtavillaoloVaiheAineisto {
     return new NahtavillaoloVaiheAineisto(this.projekti.oid, this.projekti.nahtavillaoloVaihe, this.projekti.nahtavillaoloVaiheJulkaisut);
+  }
+
+  getLausuntoPyynnot(): LausuntoPyyntoAineisto {
+    return new LausuntoPyyntoAineisto(this.projekti.oid, this.projekti.lausuntoPyynnot);
+  }
+
+  getLausuntoPyynnonTaydennykset(): LausuntoPyynnonTaydennyksetAineisto {
+    return new LausuntoPyynnonTaydennyksetAineisto(this.projekti.oid, this.projekti.lausuntoPyynnonTaydennykset);
   }
 
   getVuorovaikutusKierros(): VuorovaikutusKierrosAineisto {

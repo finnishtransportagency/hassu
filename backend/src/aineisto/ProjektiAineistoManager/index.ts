@@ -1,5 +1,6 @@
 export * from "./ProjektiAineistoManager";
 export * from "./util";
+export * from "./AineistoManager";
 export * from "./VaiheAineisto";
 export * from "./AbstractHyvaksymisPaatosVaiheAineisto";
 export * from "./S3Paths";
@@ -9,5 +10,7 @@ export * from "./HyvaksymisPaatosVaiheAineisto";
 export * from "./JatkoPaatos1VaiheAineisto";
 export * from "./JatkoPaatos2VaiheAineisto";
 export * from "./NahtavillaoloVaiheAineisto";
+export * from "./LausuntoPyyntoAineisto";
+export * from "./LausuntoPyynnonTaydennyksetAineisto";
 export * from "./VuorovaikutusKierrosAineisto";
 export * from "./VuorovaikutusKierrosJulkaisuAineisto";
