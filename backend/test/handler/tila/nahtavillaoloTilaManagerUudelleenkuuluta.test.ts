@@ -70,6 +70,8 @@ describe("nahtavillaoloTilaManager", () => {
       .stub(pdfGeneratorClient, "createNahtavillaoloKuulutusPdf")
       .returns(Promise.resolve({ __typename: "PDF", nimi: "", sisalto: "", textContent: "" }));
     sinon.stub(fileService, "createFileToProjekti");
+    const loadProjektiStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+    loadProjektiStub.resolves(projekti);
     const nahtavillaoloJulkaisuUpdateStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
     const nahtavillaoloJulkaisuInsertStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "insert");
     const saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
