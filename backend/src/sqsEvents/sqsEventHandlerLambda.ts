@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../aineisto/importContext";
 import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
-import { ProjektiAineistoManager } from "../aineisto/ProjektiAineistoManager";
+import { LausuntoPyynnonTaydennyksetAineisto, LausuntoPyyntoAineisto, ProjektiAineistoManager } from "../aineisto/ProjektiAineistoManager";
 import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
@@ -26,62 +26,28 @@ async function handleZipping(ctx: ImportContext) {
     return;
   const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
-  const aineistoPakettiRelativeS3Keyt: string[] = [];
+  const aineistoPakettiRelativeS3Keys: string[] = [];
   let nahtavillaoloVaihe: NahtavillaoloVaihe | undefined;
   let lausuntoPyynnot: LausuntoPyynto[] | undefined;
   let lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] | undefined;
 
   if (ctx.projekti.nahtavillaoloVaihe) {
-    const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
-    const aineistopakettiFullS3Key =
-      new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
-    log.info("luodaan nähtävilläolon aineistopaiketti, key: " + aineistopakettiFullS3Key);
-    await nahtavillaoloVaiheAineisto.createZipOfAineisto(aineistopakettiFullS3Key);
-
-    const aineistopakettiRelativeS3Key =
-      new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
-    aineistoPakettiRelativeS3Keyt.push(aineistopakettiRelativeS3Key);
-    nahtavillaoloVaihe = { ...ctx.projekti.nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
+    nahtavillaoloVaihe = await handleNahtavillaoloZipping(oid, manager, ctx.projekti.nahtavillaoloVaihe, aineistoPakettiRelativeS3Keys);
   }
 
   if (ctx.projekti.lausuntoPyynnot?.length) {
-    const lausuntoPyyntoAineisto = manager.getLausuntoPyynnot();
-    lausuntoPyynnot = await Promise.all(
-      ctx.projekti.lausuntoPyynnot.map(async (lausuntoPyynto) => {
-        // Ei luoda turhaan aineistopakettia poistoa odottaville lausuntopyynnöille, mutta
-        // pidetään ne mukana, koska niiden poistaminen käsitellään erikseen.
-        if (lausuntoPyynto.poistetaan) return lausuntoPyynto;
-        const aineistopakettiFullS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoFullPath + "/aineisto.zip";
-
-        log.info("luodaan lausuntopyynnön aineistopaketti, key: " + aineistopakettiFullS3Key);
-        await lausuntoPyyntoAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.id);
-        const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoPath + "/aineisto.zip";
-        aineistoPakettiRelativeS3Keyt.push(aineistopakettiRelativeS3Key);
-        return { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
-      })
-    );
+    lausuntoPyynnot = await handleLausuntuPyynnotZipping(oid, manager, ctx.projekti.lausuntoPyynnot, aineistoPakettiRelativeS3Keys);
   }
 
   if (ctx.projekti.lausuntoPyynnonTaydennykset?.length) {
-    const lausuntoPyynnonTaydennyksetAineisto = manager.getLausuntoPyynnonTaydennykset();
-    lausuntoPyynnonTaydennykset = await Promise.all(
-      ctx.projekti.lausuntoPyynnonTaydennykset.map(async (lausuntoPyynnonTaydennys) => {
-        // Ei luoda turhaan aineistopakettia poistoa odottaville lausuntopyynnöille, mutta
-        // pidetään ne mukana, koska niiden poistaminen käsitellään erikseen.
-        if (lausuntoPyynnonTaydennys.poistetaan) return lausuntoPyynnonTaydennys;
-        const aineistopakettiFullS3Key =
-          new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys).yllapitoFullPath + "/aineisto.zip";
-
-        log.info("luodaan lausuntopyynnön täydennyksen aineistopaketti, key: " + aineistopakettiFullS3Key);
-        await lausuntoPyynnonTaydennyksetAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynnonTaydennys.kunta);
-        const aineistopakettiRelativeS3Key =
-          new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys).yllapitoPath + "/aineisto.zip";
-        aineistoPakettiRelativeS3Keyt.push(aineistopakettiRelativeS3Key);
-        return { ...lausuntoPyynnonTaydennys, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
-      })
+    lausuntoPyynnonTaydennykset = await handleLausuntoPyynnonTaydennyksetZipping(
+      oid,
+      manager,
+      ctx.projekti.lausuntoPyynnonTaydennykset,
+      aineistoPakettiRelativeS3Keys
     );
   }
-  log.info("paivitetaan dbprojekti aineistopaketti-tiedoilla: " + aineistoPakettiRelativeS3Keyt.toString());
+  log.info("paivitetaan dbprojekti aineistopaketti-tiedoilla: " + aineistoPakettiRelativeS3Keys.toString());
   await projektiDatabase.saveProjektiWithoutLocking({
     oid,
     versio: ctx.projekti.versio,
@@ -89,6 +55,93 @@ async function handleZipping(ctx: ImportContext) {
     lausuntoPyynnot,
     lausuntoPyynnonTaydennykset,
   });
+}
+
+async function handleNahtavillaoloZipping(
+  oid: string,
+  manager: ProjektiAineistoManager,
+  nahtavillaoloVaihe: NahtavillaoloVaihe,
+  aineistoPakettiRelativeS3Keys: string[]
+): Promise<NahtavillaoloVaihe> {
+  const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
+  const aineistopakettiFullS3Key = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
+  log.info("luodaan nähtävilläolon aineistopaiketti, key: " + aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheAineisto.createZipOfAineisto(aineistopakettiFullS3Key);
+
+  const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
+  aineistoPakettiRelativeS3Keys.push(aineistopakettiRelativeS3Key);
+  return { ...nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
+}
+
+async function handleLausuntuPyynnotZipping(
+  oid: string,
+  manager: ProjektiAineistoManager,
+  lausuntoPyynnot: LausuntoPyynto[],
+  aineistoPakettiRelativeS3Keys: string[]
+) {
+  const lausuntoPyyntoAineisto = manager.getLausuntoPyynnot();
+  return await Promise.all(
+    lausuntoPyynnot.map((lausuntoPyynto) =>
+      handleLausuntuPyyntoZipping(oid, lausuntoPyyntoAineisto, lausuntoPyynto, aineistoPakettiRelativeS3Keys)
+    )
+  );
+}
+
+async function handleLausuntuPyyntoZipping(
+  oid: string,
+  lausuntoPyyntoAineisto: LausuntoPyyntoAineisto,
+  lausuntoPyynto: LausuntoPyynto,
+  aineistoPakettiRelativeS3Keys: string[]
+) {
+  // Ei luoda turhaan aineistopakettia poistoa odottaville lausuntopyynnöille, mutta
+  // pidetään ne mukana, koska niiden poistaminen käsitellään erikseen.
+  if (lausuntoPyynto.poistetaan) return lausuntoPyynto;
+  const aineistopakettiFullS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoFullPath + "/aineisto.zip";
+
+  log.info("luodaan lausuntopyynnön aineistopaketti, key: " + aineistopakettiFullS3Key);
+  await lausuntoPyyntoAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.id);
+  const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoPath + "/aineisto.zip";
+  aineistoPakettiRelativeS3Keys.push(aineistopakettiRelativeS3Key);
+  return { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
+}
+
+async function handleLausuntoPyynnonTaydennyksetZipping(
+  oid: string,
+  manager: ProjektiAineistoManager,
+  lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[],
+  aineistoPakettiRelativeS3Keys: string[]
+): Promise<LausuntoPyynnonTaydennys[]> {
+  const lausuntoPyynnonTaydennyksetAineisto = manager.getLausuntoPyynnonTaydennykset();
+  return await Promise.all(
+    lausuntoPyynnonTaydennykset.map(async (lausuntoPyynnonTaydennys) =>
+      handleLausuntoPyynnonTaydennysZipping(
+        oid,
+        lausuntoPyynnonTaydennyksetAineisto,
+        lausuntoPyynnonTaydennys,
+        aineistoPakettiRelativeS3Keys
+      )
+    )
+  );
+}
+
+async function handleLausuntoPyynnonTaydennysZipping(
+  oid: string,
+  lausuntoPyynnonTaydennyksetAineisto: LausuntoPyynnonTaydennyksetAineisto,
+  lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys,
+  aineistoPakettiRelativeS3Keys: string[]
+): Promise<LausuntoPyynnonTaydennys> {
+  // Ei luoda turhaan aineistopakettia poistoa odottaville lausuntopyynnöille, mutta
+  // pidetään ne mukana, koska niiden poistaminen käsitellään erikseen.
+  if (lausuntoPyynnonTaydennys.poistetaan) return lausuntoPyynnonTaydennys;
+  const aineistopakettiFullS3Key =
+    new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys).yllapitoFullPath + "/aineisto.zip";
+
+  log.info("luodaan lausuntopyynnön täydennyksen aineistopaketti, key: " + aineistopakettiFullS3Key);
+  await lausuntoPyynnonTaydennyksetAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynnonTaydennys.kunta);
+  const aineistopakettiRelativeS3Key =
+    new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys).yllapitoPath + "/aineisto.zip";
+  aineistoPakettiRelativeS3Keys.push(aineistopakettiRelativeS3Key);
+  return { ...lausuntoPyynnonTaydennys, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
 }
 
 async function handleChangedAineisto(ctx: ImportContext) {
