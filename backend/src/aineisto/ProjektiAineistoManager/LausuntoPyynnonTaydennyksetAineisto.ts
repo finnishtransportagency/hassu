@@ -18,4 +18,9 @@ export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<Lausunt
   getLadatutTiedostot(_vaihe: LausuntoPyynnonTaydennys[]): LadattuTiedosto[] {
     return []; //Lausuntopyynnön täydennyksiin ei liity muista tiedostoja kuin muut aineistot
   }
+
+  async handleChanges(): Promise<LausuntoPyynnonTaydennys[] | undefined> {
+    const vaihe = await super.handleChanges();
+    return vaihe?.filter((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennys.poistetaan);
+  }
 }
