@@ -10,7 +10,10 @@ RUN npm install -f -g @aws-amplify/cli@10.7.3 && amplify
 
 RUN amazon-linux-extras install docker -y
 
-RUN yum update -y && yum install -y tar gzip python3 curl git unzip && pip3 install docker-compose && pip3 install --upgrade urllib3==1.26.15
+RUN yum update -y
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+RUN yum install -y tar gzip python3 curl git unzip jq && pip3 install docker-compose && pip3 install --upgrade urllib3==1.26.15
 
 RUN if [ "$(uname -m)" == "x86_64" ]; then curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; else curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"; fi && \
     unzip awscliv2.zip && \
