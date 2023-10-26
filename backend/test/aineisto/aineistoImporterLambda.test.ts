@@ -2,9 +2,8 @@ import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
-import { SqsEventType } from "../../src/sqsEvents/sqsEvent";
+import { SqsEvent, SqsEventType } from "../../src/sqsEvents/sqsEvent";
 import { assertIsDefined } from "../../src/util/assertions";
-import { ScheduledEvent } from "../../src/sqsEvents/scheduledEvent";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -14,7 +13,7 @@ describe("sqsEventHandlerLambda", () => {
     sinon.restore();
   });
 
-  function sendEventWithRetries(event: ScheduledEvent) {
+  function sendEventWithRetries(event: SqsEvent) {
     const sqsMessage: SendMessageRequest | undefined = eventSqsClient.createMessageParams(event, true);
     assertIsDefined(sqsMessage);
     expect(sqsMessage.DelaySeconds).to.eq(60);
@@ -22,7 +21,7 @@ describe("sqsEventHandlerLambda", () => {
   }
 
   it("should produce params for retry successfully", async () => {
-    let event: ScheduledEvent = { oid: "1", type: SqsEventType.SYNCHRONIZE };
+    let event: SqsEvent = { oid: "1", type: SqsEventType.SYNCHRONIZE };
     event = sendEventWithRetries(event);
     expect(event.retriesLeft).to.eq(60);
     event = sendEventWithRetries(event);

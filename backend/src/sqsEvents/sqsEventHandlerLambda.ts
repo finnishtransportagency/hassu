@@ -1,7 +1,7 @@
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
-import { SqsEventType } from "./sqsEvent";
+import { SqsEvent, SqsEventType } from "./sqsEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
@@ -18,7 +18,6 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
-import { ScheduledEvent } from "./scheduledEvent";
 
 async function handleZipping(ctx: ImportContext) {
   //TODO: joskus muillekin vaiheille kuin nahtavillaolo
@@ -119,12 +118,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", async () => {
     try {
       for (const record of event.Records) {
-        const scheduledEvent: ScheduledEvent = JSON.parse(record.body);
-        if (scheduledEvent.scheduleName) {
-          await projektiSchedulerService.deletePastSchedule(scheduledEvent.scheduleName);
+        const sqsEvent: SqsEvent = JSON.parse(record.body);
+        if (sqsEvent.scheduleName) {
+          await projektiSchedulerService.deletePastSchedule(sqsEvent.scheduleName);
         }
-        log.info("ScheduledEvent", scheduledEvent);
-        const { oid } = scheduledEvent;
+        log.info("sqsEvent", sqsEvent);
+        const { oid } = sqsEvent;
         const projekti = await projektiDatabase.loadProjektiByOid(oid);
         if (!projekti) {
           throw new Error("Projektia " + oid + " ei löydy");
@@ -132,7 +131,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
         const ctx = await new ImportContext(projekti).init();
         try {
-          switch (scheduledEvent.type) {
+          switch (sqsEvent.type) {
             case SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
               await nahtavillaoloTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
@@ -172,12 +171,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         // Synkronoidaan tiedostot aina
         const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (projekti && scheduledEvent.type == SqsEventType.SYNCHRONIZE) {
+        if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
           // Yritä uudelleen minuutin päästä
-          await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
+          await eventSqsClient.addEventToSqsQueue(sqsEvent, true);
         }
       }
     } catch (e: unknown) {
