@@ -63,14 +63,16 @@ export type LausuntoPyynto = {
   lisaAineistot?: Array<Aineisto>;
   aineistopaketti?: string;
   muistiinpano?: string;
+  poistetaan?: boolean;
 };
 
 export type LausuntoPyynnonTaydennys = {
   kunta: number;
   poistumisPaiva: string;
-  muistutukset: Array<Aineisto>;
-  muuAineisto: Array<Aineisto>;
+  muistutukset?: Array<Aineisto>;
+  muuAineisto?: Array<Aineisto>;
   aineistopaketti?: string;
+  poistetaan?: boolean;
 };
 
 export type NahtavillaoloPDF = {
