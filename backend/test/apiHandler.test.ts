@@ -26,7 +26,7 @@ import { emailClient } from "../src/email/email";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { projektiSchedulerService } from "../src/scheduler/projektiSchedulerService";
+import { projektiSchedulerService } from "../src/sqsEvents/projektiSchedulerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";

@@ -1,18 +1,10 @@
-export enum ScheduledEventType {
-  IMPORT = "IMPORT",
+export enum SqsEventType {
+  IMPORT = "IMPORT", // deprecated, kept until next production deployment
   SYNCHRONIZE = "SYNCHRONIZE",
   END_NAHTAVILLAOLO_AINEISTOMUOKKAUS = "END_NAHTAVILLAOLO_AINEISTOMUOKKAUS",
   END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS = "END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS",
   END_JATKOPAATOS1_AINEISTOMUOKKAUS = "END_JATKOPAATOS1_AINEISTOMUOKKAUS",
   END_JATKOPAATOS2_AINEISTOMUOKKAUS = "END_JATKOPAATOS2_AINEISTOMUOKKAUS",
   ZIP = "ZIP",
+  AINEISTO_CHANGED = "AINEISTO_CHANGED",
 }
-
-export type ScheduledEvent = {
-  type: ScheduledEventType;
-  oid: string;
-  scheduleName?: string;
-  retriesLeft?: number;
-  reason?: string;
-  date?: string;
-};

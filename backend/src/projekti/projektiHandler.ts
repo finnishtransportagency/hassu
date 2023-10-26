@@ -42,9 +42,8 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { eventSqsClient } from "../scheduler/eventSqsClient";
+import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
-import { tallennaJaSiirraTilaa } from "hassu-common/graphql/mutations";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 
@@ -199,7 +198,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
       vuorovaikutusKierros,
       vuorovaikutusKierrosJulkaisut,
     });
-    await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
+    await handleEvents(projektiAdaptationResult); // Täältä voi tulla AINEISTO_CHANGED-eventtejä, jos aineistot muuttuivat.
 
     if (oldVuorovaikutuskierrosJulkaisu?.lahetekirje) {
       await fileService.deleteYllapitoFileFromProjekti({
@@ -620,7 +619,7 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return await eventSqsClient.importAineisto(oid);
+    return await eventSqsClient.handleChangedAineisto(oid);
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {

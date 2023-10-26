@@ -1,7 +1,7 @@
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
-import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
+import { SqsEventType } from "./sqsEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
@@ -18,6 +18,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
+import { ScheduledEvent } from "./scheduledEvent";
 
 async function handleZipping(ctx: ImportContext) {
   //TODO: joskus muillekin vaiheille kuin nahtavillaolo
@@ -41,7 +42,7 @@ async function handleZipping(ctx: ImportContext) {
   });
 }
 
-async function handleImport(ctx: ImportContext) {
+async function handleChangedAineisto(ctx: ImportContext) {
   const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
@@ -132,22 +133,27 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         const ctx = await new ImportContext(projekti).init();
         try {
           switch (scheduledEvent.type) {
-            case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
+            case SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
               await nahtavillaoloTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
-            case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
+            case SqsEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
               await hyvaksymisPaatosVaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
-            case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
+            case SqsEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
               await jatkoPaatos1VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
-            case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
+            case SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
               await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
-            case ScheduledEventType.IMPORT:
-              await handleImport(ctx);
+            // deprecated, kept until next production deployment
+            // Tämä on täällä vielä siltä varalta, että tuotantoon viemisen hetkellä sqs-jonossa on IMPORT-eventtejä
+            case SqsEventType.IMPORT:
+              await handleChangedAineisto(ctx);
               break;
-            case ScheduledEventType.ZIP:
+            case SqsEventType.AINEISTO_CHANGED:
+              await handleChangedAineisto(ctx);
+              break;
+            case SqsEventType.ZIP:
               await handleZipping(ctx);
               break;
             default:
@@ -166,7 +172,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         // Synkronoidaan tiedostot aina
         const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (projekti && scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
+        if (projekti && scheduledEvent.type == SqsEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {

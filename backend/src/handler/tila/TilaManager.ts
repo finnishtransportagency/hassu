@@ -9,7 +9,7 @@ import {
   TilasiirtymaTyyppi,
   Vaihe,
 } from "hassu-common/graphql/apiModel";
-import { projektiSchedulerService } from "../../scheduler/projektiSchedulerService";
+import { projektiSchedulerService } from "../../sqsEvents/projektiSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";

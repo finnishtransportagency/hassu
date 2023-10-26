@@ -19,7 +19,7 @@ import { AineistoTila, Kieli, KuulutusJulkaisuTila } from "hassu-common/graphql/
 import { IllegalArgumentError } from "hassu-common/error";
 
 import { expect } from "chai";
-import { projektiSchedulerService } from "../../../src/scheduler/projektiSchedulerService";
+import { projektiSchedulerService } from "../../../src/sqsEvents/projektiSchedulerService";
 
 describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
   let projekti: DBProjekti;
