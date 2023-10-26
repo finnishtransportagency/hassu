@@ -79,26 +79,30 @@ export default function Verkkotilaisuus({
       />
       {mostlyDisabled ? (
         !peruttu && (
+          <div className="mt-8">
+            <Button
+              className="btn-remove-red"
+              onClick={(event) => {
+                event.preventDefault();
+                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              }}
+            >
+              Peru tilaisuus
+            </Button>
+          </div>
+        )
+      ) : (
+        <div className="mt-8">
           <Button
             className="btn-remove-red"
             onClick={(event) => {
               event.preventDefault();
-              setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              remove(index);
             }}
           >
-            Peru tilaisuus
+            Poista
           </Button>
-        )
-      ) : (
-        <Button
-          className="btn-remove-red"
-          onClick={(event) => {
-            event.preventDefault();
-            remove(index);
-          }}
-        >
-          Poista
-        </Button>
+        </div>
       )}
     </VuorovaikutusSectionContent>
   );
