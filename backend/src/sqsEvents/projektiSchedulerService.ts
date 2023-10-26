@@ -1,5 +1,5 @@
 import { eventSqsClient } from "./eventSqsClient";
-import { SqsEventType } from "./sqsEvent";
+import { SqsEvent, SqsEventType } from "./sqsEvent";
 import { dateTimeToString, nyt } from "../util/dateUtil";
 import dayjs, { Dayjs } from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
@@ -17,7 +17,6 @@ import {
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType } from "./projektiScheduleManager";
-import { ScheduledEvent } from "./scheduledEvent";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -101,7 +100,7 @@ class ProjektiSchedulerService {
 
   async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, type: SqsEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ScheduledEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date) };
+    const event: SqsEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date) };
     const params: CreateScheduleCommandInput = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,

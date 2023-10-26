@@ -58,8 +58,8 @@ import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
 import { ProjektiScheduleManager } from "../../../src/sqsEvents/projektiScheduleManager";
-import { ScheduledEvent } from "../../../src/sqsEvents/scheduledEvent";
 import { asianhallintaService } from "../../../src/asianhallinta/asianhallintaService";
+import { SqsEvent } from "../../../src/sqsEvents/sqsEvent";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -282,7 +282,7 @@ export class SchedulerMock {
     await Array.from(this.schedules).reduce((promiseChain, args: CreateScheduleCommandInput) => {
       return promiseChain.then(async () => {
         assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
-        const event: ScheduledEvent = JSON.parse(args.Target?.Input);
+        const event: SqsEvent = JSON.parse(args.Target?.Input);
         if (!event.date || (event.date && parseDate(event.date).isBefore(nyt()))) {
           const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
           this.schedules.delete(args);

@@ -8,3 +8,12 @@ export enum SqsEventType {
   ZIP = "ZIP",
   AINEISTO_CHANGED = "AINEISTO_CHANGED",
 }
+
+export type SqsEvent = {
+  type: SqsEventType;
+  oid: string;
+  scheduleName?: string;
+  retriesLeft?: number;
+  reason?: string;
+  date?: string;
+};
