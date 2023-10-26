@@ -44,7 +44,6 @@ import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
 import { eventSqsClient } from "../scheduler/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
-import { tallennaJaSiirraTilaa } from "hassu-common/graphql/mutations";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 
