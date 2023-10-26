@@ -18,7 +18,9 @@ export abstract class AineistoManager<T> {
     if (this.vaihe) {
       let changes = false;
       for (const element of this.getAineistot(this.vaihe)) {
+        // Aineistot, joita saadaan ulos this.getAineistot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
         changes = (await handleAineistot(this.oid, element.aineisto, element.paths)) || changes;
+        // Tämä taikafunktio handlaa aineistot siten, että this.vaihe:een sisältö muuttuu sellaiseksi, jossa aineistot on merkitty käsitellyksi.
       }
       if (changes) {
         return this.vaihe;
@@ -26,6 +28,11 @@ export abstract class AineistoManager<T> {
     }
   }
 
+  // On äärimmäisen tärkeää handleChanges()-funktion toiminnan kannnalta,
+  // että tämän getAineistot-funktion jokainen implementaatio palauttaa aineistot vaiheesta kopioimatta niitä,
+  // eli että tämän palauttamat aineistot ovat samat, kuin joihin parametrina annettu vaihe viittaa.
+  // Myöhemmin nimittäin kyseisiin aineistoihin tehdään muutoksia ja halutaan, että kyseiset muutokset ovat
+  // nähtävillä, kun tarkastellaan tuota parametrina annettuna vaihetta kutsumalla this.vaihe.
   abstract getAineistot(vaihe: T): AineistoPathsPair[];
 
   abstract getLadatutTiedostot(vaihe: T): LadattuTiedosto[];
