@@ -178,18 +178,20 @@ export function adaptLausuntoPyynnot(
   lausuntoPyynnot?: Array<LausuntoPyynto> | null
 ): Array<API.LausuntoPyynto> | undefined {
   const oid = dbProjekti.oid;
-  return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
-    const { lisaAineistot, legacy: _legacy, ...rest } = lausuntoPyynto;
-    assertIsDefined(dbProjekti.salt);
-    const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
-    const apiLausuntoPyynto: API.LausuntoPyynto = {
-      __typename: "LausuntoPyynto",
-      ...rest,
-      lisaAineistot: adaptAineistot(lisaAineistot, paths),
-      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.id, dbProjekti.salt),
-    };
-    return apiLausuntoPyynto;
-  });
+  return lausuntoPyynnot
+    ?.filter((lausuntoPyynto) => !lausuntoPyynto.poistetaan)
+    .map((lausuntoPyynto: LausuntoPyynto) => {
+      const { lisaAineistot, legacy: _legacy, ...rest } = lausuntoPyynto;
+      assertIsDefined(dbProjekti.salt);
+      const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
+      const apiLausuntoPyynto: API.LausuntoPyynto = {
+        __typename: "LausuntoPyynto",
+        ...rest,
+        lisaAineistot: adaptAineistot(lisaAineistot, paths),
+        hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.id, dbProjekti.salt),
+      };
+      return apiLausuntoPyynto;
+    });
 }
 
 export function adaptLausuntoPyynnonTaydennykset(
@@ -197,17 +199,19 @@ export function adaptLausuntoPyynnonTaydennykset(
   lausuntoPyynnonTaydennykset?: Array<LausuntoPyynnonTaydennys> | null
 ): Array<API.LausuntoPyynnonTaydennys> | undefined {
   const oid = dbProjekti.oid;
-  return lausuntoPyynnonTaydennykset?.map((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
-    const { muuAineisto, muistutukset, ...rest } = lausuntoPyynnonTaydennys;
-    assertIsDefined(dbProjekti.salt);
-    const paths = new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys);
-    const taydennys: API.LausuntoPyynnonTaydennys = {
-      __typename: "LausuntoPyynnonTaydennys",
-      ...rest,
-      muuAineisto: adaptAineistot(muuAineisto, paths),
-      muistutukset: adaptAineistot(muistutukset, paths),
-      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynnonTaydennys.kunta, dbProjekti.salt),
-    };
-    return taydennys;
-  });
+  return lausuntoPyynnonTaydennykset
+    ?.filter((lausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennys.poistetaan)
+    .map((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
+      const { muuAineisto, muistutukset, ...rest } = lausuntoPyynnonTaydennys;
+      assertIsDefined(dbProjekti.salt);
+      const paths = new ProjektiPaths(oid).lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys);
+      const taydennys: API.LausuntoPyynnonTaydennys = {
+        __typename: "LausuntoPyynnonTaydennys",
+        ...rest,
+        muuAineisto: adaptAineistot(muuAineisto, paths),
+        muistutukset: adaptAineistot(muistutukset, paths),
+        hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynnonTaydennys.kunta, dbProjekti.salt),
+      };
+      return taydennys;
+    });
 }

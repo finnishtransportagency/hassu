@@ -88,7 +88,7 @@ export function adaptLausuntoPyynnotToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
-  return lausuntoPyyntoInput.map(
+  const pysyvat = lausuntoPyyntoInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyyntoToSave(
         dbLausuntoPyynnot?.find((pyynto) => pyynto.id === lausuntoPyynto.id),
@@ -96,6 +96,24 @@ export function adaptLausuntoPyynnotToSave(
         projektiAdaptationResult
       ) as LausuntoPyynto
   );
+
+  const poistettavat: LausuntoPyynto[] =
+    dbLausuntoPyynnot
+      ?.filter((lausuntoPyynnonTaydennys) => !lausuntoPyyntoInput.find((taydennys) => taydennys.id === lausuntoPyynnonTaydennys.id))
+      ?.map((lausuntoPyynto) => {
+        const poistettava: LausuntoPyynto = {
+          ...lausuntoPyynto,
+          poistetaan: true,
+          lisaAineistot:
+            lausuntoPyynto.lisaAineistot?.map((aineisto) => ({
+              ...aineisto,
+              tila: API.AineistoTila.ODOTTAA_POISTOA,
+            })) || undefined,
+        };
+        return poistettava;
+      }) || [];
+
+  return pysyvat.concat(poistettavat);
 }
 
 export function adaptLausuntoPyynnonTaydennyksetToSave(
@@ -106,7 +124,7 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
   if (!lausuntoPyynnonTaydennysInput) {
     return undefined;
   }
-  return lausuntoPyynnonTaydennysInput.map(
+  const pysyvat = lausuntoPyynnonTaydennysInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyynnonTaydennysToSave(
         dbLausuntoPyynnonTaydennykset?.find((pyynto) => pyynto.kunta === lausuntoPyynto.kunta),
@@ -114,6 +132,31 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
         projektiAdaptationResult
       ) as LausuntoPyynnonTaydennys
   );
+  // Oletettavasti kunnat pysyvät samana prosessin ajan, mutta siltä varalta, että eivät pysy, tehdään tällainen mekanismi
+  const poistettavat: LausuntoPyynnonTaydennys[] =
+    dbLausuntoPyynnonTaydennykset
+      ?.filter(
+        (lausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennysInput.find((taydennys) => taydennys.kunta === lausuntoPyynnonTaydennys.kunta)
+      )
+      ?.map((lausuntoPyynnonTaydennys) => {
+        const poistettava: LausuntoPyynnonTaydennys = {
+          ...lausuntoPyynnonTaydennys,
+          poistetaan: true,
+          muuAineisto:
+            lausuntoPyynnonTaydennys.muuAineisto?.map((aineisto) => ({
+              ...aineisto,
+              tila: API.AineistoTila.ODOTTAA_POISTOA,
+            })) || undefined,
+          muistutukset:
+            lausuntoPyynnonTaydennys.muistutukset?.map((aineisto) => ({
+              ...aineisto,
+              tila: API.AineistoTila.ODOTTAA_POISTOA,
+            })) || undefined,
+        };
+        return poistettava;
+      }) || [];
+
+  return pysyvat.concat(poistettavat);
 }
 
 export function adaptLausuntoPyyntoToSave(
