@@ -255,7 +255,7 @@ function VuorovaikutusKierrosKutsu({
               tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
             });
             await reloadProjekti();
-            showSuccessMessage(`Tallennus ja hyväksyminen onnistui`);
+            showSuccessMessage(`Lähetys onnistui`);
           } catch (error) {
             log.error("Virhe hyväksyntään lähetyksessä", error);
           }
