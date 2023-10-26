@@ -20,7 +20,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
 import chai from "chai";
-import { eventSqsClient } from "../../src/scheduler/eventSqsClient";
+import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 
 const { expect } = chai;
 

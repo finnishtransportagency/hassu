@@ -24,7 +24,7 @@ import { NotFoundError } from "hassu-common/error";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
 import { CreateScheduleCommand, CreateScheduleCommandInput, ListSchedulesCommand, SchedulerClient } from "@aws-sdk/client-scheduler";
-import { handleEvent } from "../../../src/scheduler/sqsEventHandlerLambda";
+import { handleEvent } from "../../../src/sqsEvents/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
@@ -57,8 +57,8 @@ import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
-import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
-import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
+import { ProjektiScheduleManager } from "../../../src/sqsEvents/projektiScheduleManager";
+import { ScheduledEvent } from "../../../src/sqsEvents/scheduledEvent";
 import { asianhallintaService } from "../../../src/asianhallinta/asianhallintaService";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {

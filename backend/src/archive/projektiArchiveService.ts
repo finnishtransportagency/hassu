@@ -1,6 +1,6 @@
 import { fileService } from "../files/fileService";
 import { testProjektiDatabase } from "../database/testProjektiDatabase";
-import { projektiSchedulerService } from "../scheduler/projektiSchedulerService";
+import { projektiSchedulerService } from "../sqsEvents/projektiSchedulerService";
 
 class ProjektiArchiveService {
   async archiveProjekti(oid: string): Promise<string> {

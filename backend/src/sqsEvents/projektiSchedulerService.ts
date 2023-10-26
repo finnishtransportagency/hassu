@@ -1,5 +1,5 @@
 import { eventSqsClient } from "./eventSqsClient";
-import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
+import { SqsEventType } from "./sqsEvent";
 import { dateTimeToString, nyt } from "../util/dateUtil";
 import dayjs, { Dayjs } from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
@@ -17,6 +17,7 @@ import {
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType } from "./projektiScheduleManager";
+import { ScheduledEvent } from "./scheduledEvent";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -37,42 +38,27 @@ class ProjektiSchedulerService {
       if (!publishOrExpireEvent.date.isBefore(now)) {
         switch (publishOrExpireEvent.type) {
           case PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO:
-            await this.addScheduleOrDeleteFromList(
-              oid,
-              schedules,
-              publishOrExpireEvent,
-              ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS
-            );
+            await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS);
             break;
           case PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE:
             await this.addScheduleOrDeleteFromList(
               oid,
               schedules,
               publishOrExpireEvent,
-              ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS
+              SqsEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS
             );
             break;
           case PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE:
-            await this.addScheduleOrDeleteFromList(
-              oid,
-              schedules,
-              publishOrExpireEvent,
-              ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS
-            );
+            await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS);
             break;
           case PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE:
-            await this.addScheduleOrDeleteFromList(
-              oid,
-              schedules,
-              publishOrExpireEvent,
-              ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS
-            );
+            await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS);
             break;
           default:
             break;
         }
         // always create schedule for SYNCHRONIZE event
-        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, ScheduledEventType.SYNCHRONIZE);
+        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.SYNCHRONIZE);
       }
     }
 
@@ -91,7 +77,7 @@ class ProjektiSchedulerService {
     oid: string,
     schedules: Record<string, ScheduleSummary>,
     event: PublishOrExpireEvent,
-    eventType: ScheduledEventType
+    eventType: SqsEventType
   ) {
     const scheduleParams = createScheduleParams(oid, event.date, eventType, event.type);
     if (!schedules[scheduleParams.scheduleName]) {
@@ -113,7 +99,7 @@ class ProjektiSchedulerService {
     );
   }
 
-  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, type: ScheduledEventType): Promise<void> {
+  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, type: SqsEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
     const event: ScheduledEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date) };
     const params: CreateScheduleCommandInput = {
@@ -178,15 +164,15 @@ function formatScheduleDate(date: dayjs.Dayjs): string {
   return date.format("YYYY-MM-DDTHH:mm:ss");
 }
 
-function typeSuffix(type: ScheduledEventType, publishOrExpire: PublishOrExpireEventType): string {
+function typeSuffix(type: SqsEventType, publishOrExpire: PublishOrExpireEventType): string {
   log.info("eventType: " + type + ", publishOrExpire: " + publishOrExpire);
-  if (type == ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS) {
+  if (type == SqsEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS) {
     return "EHY";
-  } else if (type == ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS) {
+  } else if (type == SqsEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS) {
     return "EJ1";
-  } else if (type == ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS) {
+  } else if (type == SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS) {
     return "EJ2";
-  } else if (type == ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS) {
+  } else if (type == SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS) {
     return "ENA";
   } else {
     // SYNCHRONIZE
@@ -215,7 +201,7 @@ function typeSuffix(type: ScheduledEventType, publishOrExpire: PublishOrExpireEv
 function createScheduleParams(
   oid: string,
   date: dayjs.Dayjs,
-  eventType: ScheduledEventType,
+  eventType: SqsEventType,
   publishOrExpire: PublishOrExpireEventType
 ): ScheduleParams {
   const dateString = formatScheduleDate(date);

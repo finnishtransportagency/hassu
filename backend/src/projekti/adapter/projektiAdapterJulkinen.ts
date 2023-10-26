@@ -62,7 +62,7 @@ import {
   HyvaksymisPaatosVaiheScheduleManager,
   isVerkkotilaisuusLinkkiVisible,
   ProjektiScheduleManager,
-} from "../../scheduler/projektiScheduleManager";
+} from "../../sqsEvents/projektiScheduleManager";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {

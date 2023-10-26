@@ -1,20 +1,21 @@
-import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
+import { SqsEventType } from "./sqsEvent";
 import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
 import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
+import { ScheduledEvent } from "./scheduledEvent";
 
 class EventSqsClient {
   async zipAineisto(oid: string) {
-    await this.sendScheduledEvent({ type: ScheduledEventType.ZIP, oid });
+    await this.sendScheduledEvent({ type: SqsEventType.ZIP, oid });
   }
 
   async handleChangedAineisto(oid: string) {
-    await this.sendScheduledEvent({ type: ScheduledEventType.AINEISTO_CHANGED, oid });
+    await this.sendScheduledEvent({ type: SqsEventType.AINEISTO_CHANGED, oid });
   }
 
   async synchronizeAineisto(oid: string) {
-    await this.sendScheduledEvent({ type: ScheduledEventType.SYNCHRONIZE, oid });
+    await this.sendScheduledEvent({ type: SqsEventType.SYNCHRONIZE, oid });
   }
 
   async sendScheduledEvent(params: ScheduledEvent, retry?: boolean) {

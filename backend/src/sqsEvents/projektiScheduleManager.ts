@@ -11,7 +11,7 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import { ProjektiPaths } from "../files/ProjektiPath";
-import { KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
 import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
