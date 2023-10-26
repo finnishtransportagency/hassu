@@ -97,7 +97,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);
     // Käynnistä ajastettu aineistojen poisto, koska projekti on mennyt epäaktiiviseksi. Tässä testissä toiminnallisuus ei ole ajastuksia luonut, joten ajetaan synkronointi manuaalisesti tässä:
-    await eventSqsClient.importAineisto(oid);
+    await eventSqsClient.handleChangedAineisto(oid);
     await eventSqsClientMock.processQueue();
     await recordProjektiTestFixture(FixtureName.EPAAKTIIVINEN_1, oid);
 

@@ -41,7 +41,7 @@ async function handleZipping(ctx: ImportContext) {
   });
 }
 
-async function handleImport(ctx: ImportContext) {
+async function handleChangedAineisto(ctx: ImportContext) {
   const oid = ctx.oid;
   const manager: ProjektiAineistoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
@@ -144,8 +144,13 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
             case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
               await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
               break;
+            // deprecated, kept until next production deployment
+            // Tämä on täällä vielä siltä varalta, että tuotantoon viemisen hetkellä sqs-jonossa on IMPORT-eventtejä
             case ScheduledEventType.IMPORT:
-              await handleImport(ctx);
+              await handleChangedAineisto(ctx);
+              break;
+            case ScheduledEventType.AINEISTO_CHANGED:
+              await handleChangedAineisto(ctx);
               break;
             case ScheduledEventType.ZIP:
               await handleZipping(ctx);

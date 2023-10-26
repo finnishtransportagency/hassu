@@ -9,8 +9,8 @@ class EventSqsClient {
     await this.sendScheduledEvent({ type: ScheduledEventType.ZIP, oid });
   }
 
-  async importAineisto(oid: string) {
-    await this.sendScheduledEvent({ type: ScheduledEventType.IMPORT, oid });
+  async handleChangedAineisto(oid: string) {
+    await this.sendScheduledEvent({ type: ScheduledEventType.AINEISTO_CHANGED, oid });
   }
 
   async synchronizeAineisto(oid: string) {

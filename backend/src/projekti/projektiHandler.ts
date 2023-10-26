@@ -198,7 +198,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
       vuorovaikutusKierros,
       vuorovaikutusKierrosJulkaisut,
     });
-    await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
+    await handleEvents(projektiAdaptationResult); // Täältä voi tulla AINEISTO_CHANGED-eventtejä, jos aineistot muuttuivat.
 
     if (oldVuorovaikutuskierrosJulkaisu?.lahetekirje) {
       await fileService.deleteYllapitoFileFromProjekti({
@@ -619,7 +619,7 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return await eventSqsClient.importAineisto(oid);
+    return await eventSqsClient.handleChangedAineisto(oid);
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {
