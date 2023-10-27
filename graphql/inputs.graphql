@@ -223,6 +223,7 @@ input LausuntoPyyntoInput {
   poistumisPaiva: String!
   lisaAineistot: [AineistoInput!]
   muistiinpano: String
+  poistetaan: Boolean
 }
 
 input LausuntoPyynnonTaydennysInput {
@@ -230,6 +231,7 @@ input LausuntoPyynnonTaydennysInput {
   poistumisPaiva: String!
   muistutukset: [AineistoInput!]
   muuAineisto: [AineistoInput!]
+  poistetaan: Boolean
 }
 
 input HyvaksymisPaatosVaiheInput {

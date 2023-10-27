@@ -42,14 +42,15 @@ class LisaAineistoHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      // projekti.salt on määritelty
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      lisaAineistoService.validateLausuntoPyyntoHash(oid, projekti.salt, params);
       const lausuntoPyynto = findLausuntoPyyntoById(projekti, params.lausuntoPyyntoId);
       if (!lausuntoPyynto) {
         throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
       }
+      // projekti.salt on määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      lisaAineistoService.validateLausuntoPyyntoHash(oid, projekti.salt, params.hash, lausuntoPyynto);
+
       const poistumisPaivaEndOfTheDay = dayjs(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
@@ -70,14 +71,14 @@ class LisaAineistoHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      // projekti.salt on määritelty
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      lisaAineistoService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params);
       const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
       if (!lausuntoPyynnonTaydennys) {
         throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
       }
+      // projekti.salt on määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      lisaAineistoService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
       const poistumisPaivaEndOfTheDay = dayjs(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");

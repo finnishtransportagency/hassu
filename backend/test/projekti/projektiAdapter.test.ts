@@ -5,7 +5,7 @@ import * as sinon from "sinon";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-
+import MockDate from "mockdate";
 import { expect } from "chai";
 import { AineistoTila, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
@@ -60,6 +60,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should be able to create one lausuntoPyynto for project", async () => {
+    MockDate.set("2022-05-07T18:01");
     const dbProjekti = new ProjektiFixture().nahtavillaoloVaihe();
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     const input: TallennaProjektiInput = {
@@ -95,6 +96,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07T18:01",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -102,6 +104,7 @@ describe("projektiAdapter", () => {
       .forEach((key) => {
         expect(result.projekti[key]).to.eql(undefined);
       });
+    MockDate.reset();
   });
 
   it("should be able to add more lisaAineistot to a specific lausuntoPyynto", async () => {
@@ -121,6 +124,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -169,6 +173,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -179,6 +184,7 @@ describe("projektiAdapter", () => {
   });
 
   it("should be able to add a second lausuntoPyynto", async () => {
+    MockDate.set("2022-05-08T18:01");
     const dbProjekti = new ProjektiFixture().nahtavillaoloVaihe();
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     dbProjekti.lausuntoPyynnot = [
@@ -195,6 +201,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -243,6 +250,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
       {
         id: 2,
@@ -257,6 +265,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
+        luontiPaiva: "2022-05-08T18:01",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -264,6 +273,7 @@ describe("projektiAdapter", () => {
       .forEach((key) => {
         expect(result.projekti[key]).to.eql(undefined);
       });
+    MockDate.reset();
   });
 
   it("should be able to remove lisaAineisto from lausuntoPyynto", async () => {
@@ -283,6 +293,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -319,6 +330,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -345,6 +357,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
       },
       {
         id: 2,
@@ -359,6 +372,7 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
+        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -378,6 +392,21 @@ describe("projektiAdapter", () => {
           ],
           muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
         },
+        {
+          id: 2,
+          poistumisPaiva: "2022-06-07",
+          lisaAineistot: [
+            {
+              dokumenttiOid: "B1",
+              nimi: "Example B1",
+              tila: AineistoTila.VALMIS,
+              kategoriaId: undefined,
+              jarjestys: 1,
+            },
+          ],
+          muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
+          poistetaan: true,
+        },
       ],
     };
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
@@ -395,6 +424,23 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
+        luontiPaiva: "2022-05-07",
+      },
+      {
+        id: 2,
+        poistumisPaiva: "2022-06-07",
+        lisaAineistot: [
+          {
+            dokumenttiOid: "B1",
+            nimi: "Example B1",
+            tila: AineistoTila.VALMIS,
+            kategoriaId: undefined,
+            jarjestys: 1,
+          },
+        ],
+        muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
+        luontiPaiva: "2022-05-07",
+        poistetaan: true,
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -402,7 +448,5 @@ describe("projektiAdapter", () => {
       .forEach((key) => {
         expect(result.projekti[key]).to.eql(undefined);
       });
-
-    //TODO: testaa että poistetun lausuntopyynnön aineistot oikeasti poistetaan jollain mekanismilla
   });
 });
