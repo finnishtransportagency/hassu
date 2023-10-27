@@ -1,5 +1,5 @@
 import { DBProjekti } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, Projekti, Status, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import { KuulutusJulkaisuTila, Projekti, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "../graphql/apiModel";
 import { statusOrder } from "../statusOrder";
 import {
   haeKaikkienVaiheidenTiedot,
@@ -7,6 +7,7 @@ import {
   julkaisuIsVuorovaikutusKierrosLista,
   VaiheData,
   vaiheOnMuokkausTilassa,
+  vaiheToStatus,
 } from "./haeVaiheidentiedot";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
@@ -54,15 +55,6 @@ function isJulkaisuUserCreated(julkaisu: JulkaisuData): julkaisu is NonNullable<
 }
 
 type AdditionalValidation = (vaiheTyyppi: Vaihe, julkaisu: JulkaisuData, vaihe: VaiheData) => boolean;
-
-const vaiheToStatus: Record<Vaihe, Status> = {
-  ALOITUSKUULUTUS: Status.ALOITUSKUULUTUS,
-  SUUNNITTELU: Status.SUUNNITTELU,
-  NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
-  HYVAKSYMISPAATOS: Status.HYVAKSYTTY,
-  JATKOPAATOS: Status.JATKOPAATOS_1,
-  JATKOPAATOS2: Status.JATKOPAATOS_2,
-};
 
 function noUserCreatedJulkaisuPreventingChange(projekti: Projekti, additionalVaiheChecks?: AdditionalValidation): boolean {
   const vaiheidenTiedot = haeKaikkienVaiheidenTiedot(projekti);
