@@ -154,7 +154,9 @@ async function handleChangedAineisto(ctx: ImportContext) {
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChanges();
   const jatkoPaatos1Vaihe = await manager.getJatkoPaatos1Vaihe().handleChanges();
   const jatkoPaatos2Vaihe = await manager.getJatkoPaatos2Vaihe().handleChanges();
-  // Päivitä vain jos on muuttuneita tietoja
+  // Päivitä vain jos on muuttuneita tietoja.
+  // Huom! lausuntoPyynnot tai lausuntoPyynnonTaydennykset saattaa olla tyhjä array,
+  // missä tapauksessa tahdotaan tehdä talennus.
   if (
     vuorovaikutusKierros ||
     nahtavillaoloVaihe ||
@@ -164,6 +166,8 @@ async function handleChangedAineisto(ctx: ImportContext) {
     jatkoPaatos1Vaihe ||
     jatkoPaatos2Vaihe
   ) {
+    // Tässä tallennetaan tieto siitä, että aineistot on tuotu, ja poistettavaksi merkityt
+    // aineistot, lausuntopyynnöt ja lausuntopyynnön täydennykset poistetaan oikeasti.
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       versio: ctx.projekti.versio,

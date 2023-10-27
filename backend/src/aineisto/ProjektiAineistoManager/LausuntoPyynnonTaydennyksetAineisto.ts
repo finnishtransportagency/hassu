@@ -30,6 +30,10 @@ export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<Lausunt
 
   async handleChanges(): Promise<LausuntoPyynnonTaydennys[] | undefined> {
     const vaihe = await super.handleChanges();
+    // Aineistot on poistettu nyt kaikista eri lausuntopyyntöjen täydennyuksistä, joten poistettavaksi merkityt lausuntopyytöjen täydennykset
+    // voi oikeasti poistaa.
+    // Tässä funktiossa palautettu lausuntopyyntöjen täydennykset -array tallennetaan kutsuvassa funktiossa projektin lausuntopyyntöjen täydennyksiksi,
+    // eli poistetuksi merkityt lausuntopyyntöjen täydennykset tulevat poistetuksi.
     return vaihe?.filter((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennys.poistetaan);
   }
 
