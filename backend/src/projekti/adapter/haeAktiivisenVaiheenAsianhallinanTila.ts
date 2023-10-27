@@ -7,6 +7,7 @@ import {
   vaiheToStatus,
 } from "hassu-common/util/haeVaiheidentiedot";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): boolean {
   const julkaisu = haeJulkaisunTiedot(projekti, vaihe);
@@ -25,10 +26,12 @@ export async function haeAktiivisenVaiheenAsianhallinanTila(
     return undefined;
   }
 
+  const asianhallintaEnabled = await isProjektiAsianhallintaIntegrationEnabled(projekti);
+
   return {
     __typename: "AktiivisenVaiheenAsianhallinnanTila",
     vaihe,
-    tila: !projekti.asianhallinta?.inaktiivinen ? await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe) : undefined,
+    tila: asianhallintaEnabled ? await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe) : undefined,
   };
 }
 
