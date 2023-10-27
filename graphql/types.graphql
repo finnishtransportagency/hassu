@@ -366,6 +366,7 @@ type LausuntoPyynto {
   lisaAineistot: [Aineisto!]
   muistiinpano: String
   hash: String!
+  poistetaan: Boolean
 }
 
 type LausuntoPyynnonTaydennys {
@@ -374,6 +375,7 @@ type LausuntoPyynnonTaydennys {
   muistutukset: [Aineisto!]
   muuAineisto: [Aineisto!]
   hash: String!
+  poistetaan: Boolean
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

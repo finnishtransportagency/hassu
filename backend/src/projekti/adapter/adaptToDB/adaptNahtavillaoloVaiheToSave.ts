@@ -11,6 +11,7 @@ import {
 import mergeWith from "lodash/mergeWith";
 import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
+import { dateTimeToString, nyt } from "../../../util/dateUtil";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -88,7 +89,7 @@ export function adaptLausuntoPyynnotToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
-  const pysyvat = lausuntoPyyntoInput.map(
+  return lausuntoPyyntoInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyyntoToSave(
         dbLausuntoPyynnot?.find((pyynto) => pyynto.id === lausuntoPyynto.id),
@@ -96,21 +97,6 @@ export function adaptLausuntoPyynnotToSave(
         projektiAdaptationResult
       ) as LausuntoPyynto
   );
-
-  const poistettavat: LausuntoPyynto[] =
-    dbLausuntoPyynnot
-      ?.filter((lausuntoPyynnonTaydennys) => !lausuntoPyyntoInput.find((taydennys) => taydennys.id === lausuntoPyynnonTaydennys.id))
-      ?.map((lausuntoPyynto) => {
-        const poistettava: LausuntoPyynto = {
-          ...lausuntoPyynto,
-          poistetaan: true,
-        };
-        return poistettava;
-      }) || [];
-
-  if (poistettavat.length) projektiAdaptationResult.aineistoChanged();
-
-  return pysyvat.concat(poistettavat);
 }
 
 export function adaptLausuntoPyynnonTaydennyksetToSave(
@@ -121,7 +107,7 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
   if (!lausuntoPyynnonTaydennysInput) {
     return undefined;
   }
-  const pysyvat = lausuntoPyynnonTaydennysInput.map(
+  return lausuntoPyynnonTaydennysInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyynnonTaydennysToSave(
         dbLausuntoPyynnonTaydennykset?.find((pyynto) => pyynto.kunta === lausuntoPyynto.kunta),
@@ -129,23 +115,6 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
         projektiAdaptationResult
       ) as LausuntoPyynnonTaydennys
   );
-  // Oletettavasti kunnat pysyvät samana prosessin ajan, mutta siltä varalta, että eivät pysy, tehdään tällainen mekanismi
-  const poistettavat: LausuntoPyynnonTaydennys[] =
-    dbLausuntoPyynnonTaydennykset
-      ?.filter(
-        (lausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennysInput.find((taydennys) => taydennys.kunta === lausuntoPyynnonTaydennys.kunta)
-      )
-      ?.map((lausuntoPyynnonTaydennys) => {
-        const poistettava: LausuntoPyynnonTaydennys = {
-          ...lausuntoPyynnonTaydennys,
-          poistetaan: true,
-        };
-        return poistettava;
-      }) || [];
-
-  if (poistettavat.length) projektiAdaptationResult.aineistoChanged();
-
-  return pysyvat.concat(poistettavat);
 }
 
 export function adaptLausuntoPyyntoToSave(
@@ -161,7 +130,9 @@ export function adaptLausuntoPyyntoToSave(
     ? adaptAineistotToSave(dbLausuntoPyynto?.lisaAineistot, lisaAineistot, projektiAdaptationResult)
     : undefined;
 
-  return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted });
+  const luontiPaiva = dbLausuntoPyynto?.luontiPaiva ? dbLausuntoPyynto.luontiPaiva : dateTimeToString(nyt());
+  // TODO hoita poistetaan aineistoChanged
+  return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted, luontiPaiva });
 }
 
 export function adaptLausuntoPyynnonTaydennysToSave(
@@ -176,6 +147,7 @@ export function adaptLausuntoPyynnonTaydennysToSave(
   const muuAineistotAdapted = lausuntoPyynnonTaydennysInput
     ? adaptAineistotToSave(dbLausuntoPyynnonTaydennys?.muuAineisto, muuAineisto, projektiAdaptationResult)
     : undefined;
-
-  return mergeWith({}, dbLausuntoPyynnonTaydennys, { ...rest, muuAineisto: muuAineistotAdapted });
+  const luontiPaiva = dbLausuntoPyynnonTaydennys?.luontiPaiva ? dbLausuntoPyynnonTaydennys.luontiPaiva : dateTimeToString(nyt());
+  // TODO hoita poistetaan aineistoChanged
+  return mergeWith({}, dbLausuntoPyynnonTaydennys, { ...rest, muuAineisto: muuAineistotAdapted, luontiPaiva });
 }

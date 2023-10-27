@@ -13,7 +13,14 @@ import {
 import crypto from "crypto";
 import dayjs from "dayjs";
 import { IllegalAccessError, NotFoundError } from "hassu-common/error";
-import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import {
+  Aineisto,
+  DBProjekti,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
@@ -193,24 +200,24 @@ class LisaAineistoService {
     };
   }
 
-  generateHashForLausuntoPyynto(oid: string, lausuntoPyyntoId: number, salt: string): string {
+  generateHashForLausuntoPyynto(oid: string, lausuntoPyyntoId: number, luontiPaiva: string, salt: string): string {
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return;
     }
-    return LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyyntoId, salt);
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyyntoId, luontiPaiva, salt);
   }
 
-  generateHashForLausuntoPyynnonTaydennys(oid: string, kuntaId: number, salt: string): string {
+  generateHashForLausuntoPyynnonTaydennys(oid: string, kuntaId: number, luontiPaiva: string, salt: string): string {
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return;
     }
-    return LisaAineistoService.createLausuntoPyyntoHash(oid, kuntaId, salt);
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, kuntaId, luontiPaiva, salt);
   }
 
   generateSalt() {
@@ -230,18 +237,23 @@ class LisaAineistoService {
     }
   }
 
-  validateLausuntoPyyntoHash(oid: string, salt: string, params: ListaaLausuntoPyyntoAineistotInput) {
-    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, params.lausuntoPyyntoId, salt);
-    if (hash != params.hash) {
-      log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, params, salt, hash });
+  validateLausuntoPyyntoHash(oid: string, salt: string, givenHash: string, lausuntoPyynto: LausuntoPyynto) {
+    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyynto.id, lausuntoPyynto.luontiPaiva, salt);
+    if (hash != givenHash) {
+      log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
       throw new IllegalAccessError("Lausuntopyynnon aineiston tarkistussumma ei täsmää");
     }
   }
 
-  validateLausuntoPyynnonTaydennysHash(oid: string, salt: string, params: ListaaLausuntoPyynnonTaydennyksenAineistotInput) {
-    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(oid, params.kunta, salt);
-    if (hash != params.hash) {
-      log.error("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää", { oid, params, salt, hash });
+  validateLausuntoPyynnonTaydennysHash(oid: string, salt: string, givenHash: string, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) {
+    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(
+      oid,
+      lausuntoPyynnonTaydennys.kunta,
+      lausuntoPyynnonTaydennys.luontiPaiva,
+      salt
+    );
+    if (hash != givenHash) {
+      log.error("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
       throw new IllegalAccessError("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää");
     }
   }
@@ -256,23 +268,23 @@ class LisaAineistoService {
       .digest("hex");
   }
 
-  private static createLausuntoPyyntoHash(oid: string, lausuntoPyyntoId: number, salt: string | undefined): string {
+  private static createLausuntoPyyntoHash(oid: string, lausuntoPyyntoId: number, luontiPaiva: string, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
     return crypto
       .createHash("sha512")
-      .update([oid, "lausuntopyynto", String(lausuntoPyyntoId), salt].join())
+      .update([oid, "lausuntopyynto", String(lausuntoPyyntoId), luontiPaiva, salt].join())
       .digest("hex");
   }
 
-  private static createLausuntoPyynnonTaydennysHash(oid: string, kuntaId: number, salt: string | undefined): string {
+  private static createLausuntoPyynnonTaydennysHash(oid: string, kuntaId: number, luontiPaiva: string, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
     return crypto
       .createHash("sha512")
-      .update([oid, "lausuntopyynnon taydennys", String(kuntaId), salt].join())
+      .update([oid, "lausuntopyynnon taydennys", String(kuntaId), luontiPaiva, salt].join())
       .digest("hex");
   }
 }
