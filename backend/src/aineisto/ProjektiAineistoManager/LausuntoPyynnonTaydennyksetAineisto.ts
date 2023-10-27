@@ -1,6 +1,8 @@
 import { AineistoManager, AineistoPathsPair } from ".";
 import { config } from "../../config";
 import { LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../database/model";
+import { ProjektiPaths } from "../../files/ProjektiPath";
+import { fileService } from "../../files/fileService";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 
 export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<LausuntoPyynnonTaydennys[]> {
@@ -30,13 +32,17 @@ export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<Lausunt
 
   async handleChanges(): Promise<LausuntoPyynnonTaydennys[] | undefined> {
     const vaihe = await super.handleChanges();
-    // Aineistot on poistettu nyt kaikista eri lausuntopyyntöjen täydennyuksistä, joten poistettavaksi merkityt lausuntopyytöjen täydennykset
-    // voi oikeasti poistaa.
+    // Hoidetaan poistettavaksi merkittyjen lausuntopyyntöjen täydennysten aineistojen ja aineistopaketin poistaminen.
+    // Sen jälkeen filtteröidään ne pois paluuarvosta.
     // Tässä funktiossa palautettu lausuntopyyntöjen täydennykset -array tallennetaan kutsuvassa funktiossa projektin lausuntopyyntöjen täydennyksiksi,
     // eli poistetuksi merkityt lausuntopyyntöjen täydennykset tulevat poistetuksi.
     return vaihe?.filter((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
       if (lausuntoPyynnonTaydennys.poistetaan) {
-        //TODO: poista aineistopaketti
+        // Poista kaikki aineistot ja aineistopaketti kansiosta
+        fileService.deleteProjektiFilesRecursively(
+          this.projektiPaths,
+          ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS + "/" + lausuntoPyynnonTaydennys.kunta
+        );
         return false;
       } else {
         return true;

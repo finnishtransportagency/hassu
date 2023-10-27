@@ -104,11 +104,6 @@ export function adaptLausuntoPyynnotToSave(
         const poistettava: LausuntoPyynto = {
           ...lausuntoPyynto,
           poistetaan: true,
-          lisaAineistot:
-            lausuntoPyynto.lisaAineistot?.map((aineisto) => ({
-              ...aineisto,
-              tila: API.AineistoTila.ODOTTAA_POISTOA,
-            })) || undefined,
         };
         return poistettava;
       }) || [];
@@ -144,16 +139,6 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
         const poistettava: LausuntoPyynnonTaydennys = {
           ...lausuntoPyynnonTaydennys,
           poistetaan: true,
-          muuAineisto:
-            lausuntoPyynnonTaydennys.muuAineisto?.map((aineisto) => ({
-              ...aineisto,
-              tila: API.AineistoTila.ODOTTAA_POISTOA,
-            })) || undefined,
-          muistutukset:
-            lausuntoPyynnonTaydennys.muistutukset?.map((aineisto) => ({
-              ...aineisto,
-              tila: API.AineistoTila.ODOTTAA_POISTOA,
-            })) || undefined,
         };
         return poistettava;
       }) || [];

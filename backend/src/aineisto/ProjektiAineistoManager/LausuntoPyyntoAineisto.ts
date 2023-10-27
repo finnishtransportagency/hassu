@@ -1,6 +1,8 @@
 import { AineistoManager, AineistoPathsPair, NahtavillaoloVaiheAineisto } from ".";
 import { config } from "../../config";
 import { LadattuTiedosto, LausuntoPyynto, NahtavillaoloVaihe } from "../../database/model";
+import { ProjektiPaths } from "../../files/ProjektiPath";
+import { fileService } from "../../files/fileService";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 
 export class LausuntoPyyntoAineisto extends AineistoManager<LausuntoPyynto[]> {
@@ -17,12 +19,14 @@ export class LausuntoPyyntoAineisto extends AineistoManager<LausuntoPyynto[]> {
 
   async handleChanges(): Promise<LausuntoPyynto[] | undefined> {
     const vaihe = await super.handleChanges();
-    // Aineistot on poistettu nyt kaikista eri lausuntopyynnöistä, joten poistettavaksi merkityt lausuntopyynnöt voi oikeasti poistaa.
+    // Hoidetaan poistettavaksi merkittyjen lausuntopyyntöjen aineistojen ja aineistopaketin poistaminen.
+    // Sen jälkeen filtteröidään ne pois paluuarvosta.
     // Tässä funktiossa palautettu lausuntopyynnöt-array tallennetaan kutsuvassa funktiossa projektin lausuntopyynnöiksi, eli
     // poistetuksi merkityt lausuntopyynnöt tulevat poistetuksi.
     return vaihe?.filter((lausuntoPyynto: LausuntoPyynto) => {
       if (lausuntoPyynto.poistetaan) {
-        //TODO poista aineistopaketti
+        // Poista kaikki aineistot ja aineistopaketti kansiosta
+        fileService.deleteProjektiFilesRecursively(this.projektiPaths, ProjektiPaths.PATH_LAUSUNTOPYYNTO + "/" + lausuntoPyynto.id);
         return false;
       } else {
         return true;
