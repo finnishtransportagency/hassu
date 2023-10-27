@@ -34,7 +34,14 @@ export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<Lausunt
     // voi oikeasti poistaa.
     // Tässä funktiossa palautettu lausuntopyyntöjen täydennykset -array tallennetaan kutsuvassa funktiossa projektin lausuntopyyntöjen täydennyksiksi,
     // eli poistetuksi merkityt lausuntopyyntöjen täydennykset tulevat poistetuksi.
-    return vaihe?.filter((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => !lausuntoPyynnonTaydennys.poistetaan);
+    return vaihe?.filter((lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) => {
+      if (lausuntoPyynnonTaydennys.poistetaan) {
+        //TODO: poista aineistopaketti
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 
   async createZipOfAineisto(zipFileS3Key: string, kuntaId: number): Promise<LausuntoPyynnonTaydennys | undefined> {
