@@ -31,6 +31,8 @@ const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
   "nahtavillaoloVaiheJulkaisut",
   "hyvaksymisPaatosVaiheJulkaisut",
+  "jatkoPaatos1VaiheJulkaisut",
+  "jatkoPaatos2VaiheJulkaisut",
   "synkronoinnit",
 ] as (keyof DBProjekti)[] as string[];
 
