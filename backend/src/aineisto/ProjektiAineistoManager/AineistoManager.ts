@@ -17,10 +17,10 @@ export abstract class AineistoManager<T> {
   async handleChanges(): Promise<T | undefined> {
     if (this.vaihe) {
       let changes = false;
+      // Aineistot, joita saadaan ulos this.getAineistot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
       for (const element of this.getAineistot(this.vaihe)) {
-        // Aineistot, joita saadaan ulos this.getAineistot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
-        changes = (await handleAineistot(this.oid, element.aineisto, element.paths)) || changes;
         // Tämä taikafunktio handlaa aineistot siten, että this.vaihe:een sisältö muuttuu sellaiseksi, jossa aineistot on merkitty käsitellyksi.
+        changes = (await handleAineistot(this.oid, element.aineisto, element.paths)) || changes;
       }
       if (changes) {
         return this.vaihe;

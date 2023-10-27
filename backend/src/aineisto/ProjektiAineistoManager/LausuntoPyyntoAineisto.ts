@@ -20,7 +20,14 @@ export class LausuntoPyyntoAineisto extends AineistoManager<LausuntoPyynto[]> {
     // Aineistot on poistettu nyt kaikista eri lausuntopyynnöistä, joten poistettavaksi merkityt lausuntopyynnöt voi oikeasti poistaa.
     // Tässä funktiossa palautettu lausuntopyynnöt-array tallennetaan kutsuvassa funktiossa projektin lausuntopyynnöiksi, eli
     // poistetuksi merkityt lausuntopyynnöt tulevat poistetuksi.
-    return vaihe?.filter((lausuntoPyynto: LausuntoPyynto) => !lausuntoPyynto.poistetaan);
+    return vaihe?.filter((lausuntoPyynto: LausuntoPyynto) => {
+      if (lausuntoPyynto.poistetaan) {
+        //TODO poista aineistopaketti
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 
   getAineistot(vaihe: LausuntoPyynto[]): AineistoPathsPair[] {
