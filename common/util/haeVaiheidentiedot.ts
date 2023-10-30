@@ -1,4 +1,12 @@
-import { MuokkausTila, Projekti, Vaihe, VuorovaikutusKierrosJulkaisu, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import {
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  Projekti,
+  Status,
+  Vaihe,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusKierrosTila,
+} from "../graphql/apiModel";
 
 export type JulkaisuAvain = keyof Pick<
   Projekti,
@@ -55,12 +63,29 @@ const getInitialVaiheidenDatat = (): VaiheidenDatat => ({
   SUUNNITTELU: { julkaisu: undefined, vaihe: undefined },
 });
 
+export function isVaiheMigroitu(projekti: Projekti, vaihe: Vaihe): boolean {
+  const vaiheenJulkaisu = haeJulkaisunTiedot(projekti, vaihe);
+  const vaiheenData = haeVaiheenTiedot(projekti, vaihe);
+
+  if (julkaisuIsVuorovaikutusKierrosLista(vaiheenJulkaisu)) {
+    // Should always be true
+    if (vaiheenData?.__typename === "VuorovaikutusKierros") {
+      return vaiheenData.tila === VuorovaikutusKierrosTila.MIGROITU;
+    }
+  } else {
+    return vaiheenJulkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;
+  }
+  return false;
+}
+
 export function vaiheOnMuokkausTilassa(projekti: Projekti, vaihe: Vaihe): boolean {
-  const vaiheenData = projekti[vaiheidenKentat[vaihe]];
+  const vaiheenData = haeVaiheenTiedot(projekti, vaihe);
+  const vaiheIsMigroitu = isVaiheMigroitu(projekti, vaihe);
+
   if (vaiheenData?.__typename === "VuorovaikutusKierros") {
     return !vaiheenData?.tila || vaiheenData.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA;
   } else {
-    return !vaiheenData?.muokkausTila || vaiheenData.muokkausTila === MuokkausTila.MUOKKAUS;
+    return vaiheenData?.muokkausTila === MuokkausTila.MUOKKAUS || (!vaiheIsMigroitu && !vaiheenData?.muokkausTila);
   }
 }
 
@@ -71,4 +96,13 @@ export const haeKaikkienVaiheidenTiedot = (projekti: Projekti): VaiheidenDatat =
   }, getInitialVaiheidenDatat());
 
   return vaiheidenDatat;
+};
+
+export const vaiheToStatus: Record<Vaihe, Status> = {
+  ALOITUSKUULUTUS: Status.ALOITUSKUULUTUS,
+  SUUNNITTELU: Status.SUUNNITTELU,
+  NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
+  HYVAKSYMISPAATOS: Status.HYVAKSYTTY,
+  JATKOPAATOS: Status.JATKOPAATOS_1,
+  JATKOPAATOS2: Status.JATKOPAATOS_2,
 };
