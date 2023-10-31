@@ -219,7 +219,7 @@ input NahtavillaoloVaiheInput {
 }
 
 input LausuntoPyyntoInput {
-  id: Int!
+  uuid: String!
   poistumisPaiva: String!
   lisaAineistot: [AineistoInput!]
   muistiinpano: String
@@ -228,6 +228,7 @@ input LausuntoPyyntoInput {
 
 input LausuntoPyynnonTaydennysInput {
   kunta: Int!
+  uuid: String!
   poistumisPaiva: String!
   muistutukset: [AineistoInput!]
   muuAineisto: [AineistoInput!]
@@ -372,12 +373,12 @@ input ListaaLisaAineistoInput {
 }
 
 input ListaaLausuntoPyyntoAineistotInput {
-  lausuntoPyyntoId: Int!
+  lausuntoPyyntoUuid: String!
   hash: String!
 }
 
 input ListaaLausuntoPyynnonTaydennyksenAineistotInput {
-  kunta: Int!
+  lausuntoPyynnonTaydennysUuid: String!
   hash: String!
 }
 

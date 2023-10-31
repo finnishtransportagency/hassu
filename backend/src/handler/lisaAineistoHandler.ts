@@ -12,7 +12,7 @@ import { NotFoundError } from "hassu-common/error";
 import { lisaAineistoService } from "../aineisto/lisaAineistoService";
 import dayjs from "dayjs";
 import { nyt } from "../util/dateUtil";
-import { findLausuntoPyynnonTaydennysByKunta, findLausuntoPyyntoById } from "../util/lausuntoPyyntoUtil";
+import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "../util/lausuntoPyyntoUtil";
 
 class LisaAineistoHandler {
   async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LisaAineistot> {
@@ -42,7 +42,7 @@ class LisaAineistoHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      const lausuntoPyynto = findLausuntoPyyntoById(projekti, params.lausuntoPyyntoId);
+      const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
       if (!lausuntoPyynto) {
         throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
       }
@@ -71,7 +71,7 @@ class LisaAineistoHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
+      const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
       if (!lausuntoPyynnonTaydennys) {
         throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
       }

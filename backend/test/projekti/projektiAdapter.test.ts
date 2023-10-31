@@ -5,7 +5,6 @@ import * as sinon from "sinon";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import MockDate from "mockdate";
 import { expect } from "chai";
 import { AineistoTila, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
@@ -60,7 +59,6 @@ describe("projektiAdapter", () => {
   });
 
   it("should be able to create one lausuntoPyynto for project", async () => {
-    MockDate.set("2022-05-07T18:01");
     const dbProjekti = new ProjektiFixture().nahtavillaoloVaihe();
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     const input: TallennaProjektiInput = {
@@ -68,7 +66,7 @@ describe("projektiAdapter", () => {
       versio: dbProjekti.versio,
       lausuntoPyynnot: [
         {
-          id: 1,
+          uuid: "1",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -84,7 +82,7 @@ describe("projektiAdapter", () => {
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
     expect(result.projekti.lausuntoPyynnot).to.eql([
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -96,7 +94,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07T18:01",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -104,7 +101,6 @@ describe("projektiAdapter", () => {
       .forEach((key) => {
         expect(result.projekti[key]).to.eql(undefined);
       });
-    MockDate.reset();
   });
 
   it("should be able to add more lisaAineistot to a specific lausuntoPyynto", async () => {
@@ -112,7 +108,7 @@ describe("projektiAdapter", () => {
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     dbProjekti.lausuntoPyynnot = [
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -124,7 +120,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -132,7 +127,7 @@ describe("projektiAdapter", () => {
       versio: dbProjekti.versio,
       lausuntoPyynnot: [
         {
-          id: 1,
+          uuid: "1",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -154,7 +149,7 @@ describe("projektiAdapter", () => {
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
     expect(result.projekti.lausuntoPyynnot).to.eql([
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -173,7 +168,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -184,12 +178,11 @@ describe("projektiAdapter", () => {
   });
 
   it("should be able to add a second lausuntoPyynto", async () => {
-    MockDate.set("2022-05-08T18:01");
     const dbProjekti = new ProjektiFixture().nahtavillaoloVaihe();
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     dbProjekti.lausuntoPyynnot = [
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -201,7 +194,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -209,7 +201,7 @@ describe("projektiAdapter", () => {
       versio: dbProjekti.versio,
       lausuntoPyynnot: [
         {
-          id: 1,
+          uuid: "1",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -222,7 +214,7 @@ describe("projektiAdapter", () => {
           muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
         },
         {
-          id: 2,
+          uuid: "2",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -238,7 +230,7 @@ describe("projektiAdapter", () => {
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
     expect(result.projekti.lausuntoPyynnot).to.eql([
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -250,10 +242,9 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
       {
-        id: 2,
+        uuid: "2",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -265,7 +256,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
-        luontiPaiva: "2022-05-08T18:01",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -273,7 +263,6 @@ describe("projektiAdapter", () => {
       .forEach((key) => {
         expect(result.projekti[key]).to.eql(undefined);
       });
-    MockDate.reset();
   });
 
   it("should be able to remove lisaAineisto from lausuntoPyynto", async () => {
@@ -281,7 +270,7 @@ describe("projektiAdapter", () => {
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     dbProjekti.lausuntoPyynnot = [
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -293,7 +282,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -301,7 +289,7 @@ describe("projektiAdapter", () => {
       versio: dbProjekti.versio,
       lausuntoPyynnot: [
         {
-          id: 1,
+          uuid: "1",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -318,7 +306,7 @@ describe("projektiAdapter", () => {
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
     expect(result.projekti.lausuntoPyynnot).to.eql([
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -330,7 +318,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
     ]);
     (Object.keys(result.projekti) as (keyof typeof result.projekti)[])
@@ -345,7 +332,7 @@ describe("projektiAdapter", () => {
     delete dbProjekti.nahtavillaoloVaiheJulkaisut;
     dbProjekti.lausuntoPyynnot = [
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -357,10 +344,9 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
       {
-        id: 2,
+        uuid: "2",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -372,7 +358,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
-        luontiPaiva: "2022-05-07",
       },
     ];
     const input: TallennaProjektiInput = {
@@ -380,7 +365,7 @@ describe("projektiAdapter", () => {
       versio: dbProjekti.versio,
       lausuntoPyynnot: [
         {
-          id: 1,
+          uuid: "1",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -393,7 +378,7 @@ describe("projektiAdapter", () => {
           muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
         },
         {
-          id: 2,
+          uuid: "2",
           poistumisPaiva: "2022-06-07",
           lisaAineistot: [
             {
@@ -412,7 +397,7 @@ describe("projektiAdapter", () => {
     const result = await projektiAdapter.adaptProjektiToSave(dbProjekti, input);
     expect(result.projekti.lausuntoPyynnot).to.eql([
       {
-        id: 1,
+        uuid: "1",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -424,10 +409,9 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle X.",
-        luontiPaiva: "2022-05-07",
       },
       {
-        id: 2,
+        uuid: "2",
         poistumisPaiva: "2022-06-07",
         lisaAineistot: [
           {
@@ -439,7 +423,6 @@ describe("projektiAdapter", () => {
           },
         ],
         muistiinpano: "Tämä lausuntopyyntö on tarkoitus lähettää vastaanottajalle Y.",
-        luontiPaiva: "2022-05-07",
         poistetaan: true,
       },
     ]);

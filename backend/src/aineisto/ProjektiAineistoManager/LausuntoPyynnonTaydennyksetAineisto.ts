@@ -50,8 +50,10 @@ export class LausuntoPyynnonTaydennyksetAineisto extends AineistoManager<Lausunt
     });
   }
 
-  async createZipOfAineisto(zipFileS3Key: string, kuntaId: number): Promise<LausuntoPyynnonTaydennys | undefined> {
-    const lausuntoPyynnonTaydennys = this.vaihe?.find((lausuntoPyynnonTaydennys) => lausuntoPyynnonTaydennys.kunta === kuntaId);
+  async createZipOfAineisto(zipFileS3Key: string, lausuntoPyynnonTaydennysUuid: string): Promise<LausuntoPyynnonTaydennys | undefined> {
+    const lausuntoPyynnonTaydennys = this.vaihe?.find(
+      (lausuntoPyynnonTaydennys) => lausuntoPyynnonTaydennys.uuid === lausuntoPyynnonTaydennysUuid
+    );
     if (!lausuntoPyynnonTaydennys) return;
 
     const aineistotPaths = this.getAineisto(lausuntoPyynnonTaydennys);

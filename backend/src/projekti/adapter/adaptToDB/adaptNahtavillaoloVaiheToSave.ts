@@ -11,7 +11,6 @@ import {
 import mergeWith from "lodash/mergeWith";
 import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
-import { dateTimeToString, nyt } from "../../../util/dateUtil";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -92,7 +91,7 @@ export function adaptLausuntoPyynnotToSave(
   return lausuntoPyyntoInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyyntoToSave(
-        dbLausuntoPyynnot?.find((pyynto) => pyynto.id === lausuntoPyynto.id),
+        dbLausuntoPyynnot?.find((pyynto) => pyynto.uuid === lausuntoPyynto.uuid),
         lausuntoPyynto,
         projektiAdaptationResult
       ) as LausuntoPyynto
@@ -110,7 +109,7 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
   return lausuntoPyynnonTaydennysInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyynnonTaydennysToSave(
-        dbLausuntoPyynnonTaydennykset?.find((pyynto) => pyynto.kunta === lausuntoPyynto.kunta),
+        dbLausuntoPyynnonTaydennykset?.find((pyynto) => pyynto.uuid === lausuntoPyynto.uuid),
         lausuntoPyynto,
         projektiAdaptationResult
       ) as LausuntoPyynnonTaydennys
@@ -129,10 +128,8 @@ export function adaptLausuntoPyyntoToSave(
   const lisaAineistotAdapted = lausuntoPyyntoInput
     ? adaptAineistotToSave(dbLausuntoPyynto?.lisaAineistot, lisaAineistot, projektiAdaptationResult)
     : undefined;
-
-  const luontiPaiva = dbLausuntoPyynto?.luontiPaiva ? dbLausuntoPyynto.luontiPaiva : dateTimeToString(nyt());
   // TODO hoita poistetaan aineistoChanged
-  return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted, luontiPaiva });
+  return mergeWith({}, dbLausuntoPyynto, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
 
 export function adaptLausuntoPyynnonTaydennysToSave(
@@ -147,7 +144,6 @@ export function adaptLausuntoPyynnonTaydennysToSave(
   const muuAineistotAdapted = lausuntoPyynnonTaydennysInput
     ? adaptAineistotToSave(dbLausuntoPyynnonTaydennys?.muuAineisto, muuAineisto, projektiAdaptationResult)
     : undefined;
-  const luontiPaiva = dbLausuntoPyynnonTaydennys?.luontiPaiva ? dbLausuntoPyynnonTaydennys.luontiPaiva : dateTimeToString(nyt());
   // TODO hoita poistetaan aineistoChanged
-  return mergeWith({}, dbLausuntoPyynnonTaydennys, { ...rest, muuAineisto: muuAineistotAdapted, luontiPaiva });
+  return mergeWith({}, dbLausuntoPyynnonTaydennys, { ...rest, muuAineisto: muuAineistotAdapted });
 }

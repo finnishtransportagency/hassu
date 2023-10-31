@@ -50,8 +50,8 @@ export class LausuntoPyyntoAineisto extends AineistoManager<LausuntoPyynto[]> {
     ];
   }
 
-  async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoId: number): Promise<LausuntoPyynto | undefined> {
-    const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.id === lausuntoPyyntoId);
+  async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoUuid: string): Promise<LausuntoPyynto | undefined> {
+    const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
     if (!lausuntoPyynto) return;
     const lausuntoPyyntoAineistotPaths = this.getAineisto(lausuntoPyynto);
     //Meitä kiinnostaa vain nähtävilläolovaiheen aineistot, joten voimme antaa nähtävilläoovaihejulkaisuksi undefined.

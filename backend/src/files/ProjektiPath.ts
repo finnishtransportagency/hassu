@@ -289,16 +289,16 @@ class NahtavillaoloVaihePaths extends PathTuple {
 }
 
 class LausuntoPyyntoPaths extends PathTuple {
-  private readonly lausuntoPyyntoId?: number;
+  private readonly lausuntoPyyntoUuid?: string;
 
   constructor(parent: PathTuple, lausuntoPyynto: LausuntoPyynto | undefined | null) {
     super(parent);
-    this.lausuntoPyyntoId = lausuntoPyynto?.id;
+    this.lausuntoPyyntoUuid = lausuntoPyynto?.uuid;
   }
 
   get yllapitoPath(): string {
-    assertIsDefined(this.lausuntoPyyntoId, "lausuntoPyyntoId pitää olla annettu");
-    return ProjektiPaths.PATH_LAUSUNTOPYYNTO + "/" + this.lausuntoPyyntoId;
+    assertIsDefined(this.lausuntoPyyntoUuid, "lausuntoPyyntoUuid pitää olla annettu");
+    return ProjektiPaths.PATH_LAUSUNTOPYYNTO + "/" + this.lausuntoPyyntoUuid;
   }
 
   get publicPath(): string {
@@ -307,16 +307,16 @@ class LausuntoPyyntoPaths extends PathTuple {
 }
 
 class LausuntoPyynnonTaydennysPaths extends PathTuple {
-  private readonly lausuntoPyynnonTaydennysKuntaId?: number;
+  private readonly lausuntoPyynnonTaydennysUuid?: string;
 
   constructor(parent: PathTuple, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null) {
     super(parent);
-    this.lausuntoPyynnonTaydennysKuntaId = lausuntoPyynnonTaydennys?.kunta;
+    this.lausuntoPyynnonTaydennysUuid = lausuntoPyynnonTaydennys?.uuid;
   }
 
   get yllapitoPath(): string {
-    assertIsDefined(this.lausuntoPyynnonTaydennysKuntaId, "lausuntoPyynnonTaydennys pitää olla annettu");
-    return ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS + "/" + this.lausuntoPyynnonTaydennysKuntaId;
+    assertIsDefined(this.lausuntoPyynnonTaydennysUuid, "lausuntoPyynnonTaydennysUuid pitää olla annettu");
+    return ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS + "/" + this.lausuntoPyynnonTaydennysUuid;
   }
 
   get publicPath(): string {

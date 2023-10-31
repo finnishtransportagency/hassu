@@ -29,8 +29,8 @@ import { adaptLausuntoPyynnonTaydennysToSave, adaptLausuntoPyyntoToSave } from "
 import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
 import {
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
-  findLausuntoPyynnonTaydennysByKunta,
-  findLausuntoPyyntoById,
+  findLausuntoPyynnonTaydennysByUuid,
+  findLausuntoPyyntoByUuid,
 } from "../util/lausuntoPyyntoUtil";
 
 class LisaAineistoService {
@@ -65,7 +65,7 @@ class LisaAineistoService {
 
   async esikatseleLausuntoPyynnonAineistot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LisaAineistot> {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
-    const lausuntoPyynto = findLausuntoPyyntoById(projekti, lausuntoPyyntoInput.id);
+    const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, lausuntoPyyntoInput.uuid);
     const uusiLausuntoPyynto = adaptLausuntoPyyntoToSave(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
     function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
       const { jarjestys, kategoriaId } = aineisto;
@@ -84,7 +84,7 @@ class LisaAineistoService {
     projekti: DBProjekti,
     lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
   ): Promise<LisaAineistot> {
-    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, lausuntoPyynnonTaydennysInput.kunta);
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, lausuntoPyynnonTaydennysInput.uuid);
     const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToSave(
       lausuntoPyynnonTaydennys,
       lausuntoPyynnonTaydennysInput,
@@ -110,7 +110,7 @@ class LisaAineistoService {
 
   async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoAineistotInput): Promise<LisaAineistot> {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
-    const lausuntoPyynto = findLausuntoPyyntoById(projekti, params.lausuntoPyyntoId);
+    const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
     if (!lausuntoPyynto) {
       throw new Error("Lausuntopyyntöä ei löytynyt");
     }
@@ -145,7 +145,7 @@ class LisaAineistoService {
     projekti: DBProjekti,
     params: ListaaLausuntoPyynnonTaydennyksenAineistotInput
   ): Promise<LisaAineistot> {
-    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByKunta(projekti, params.kunta);
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
     if (!lausuntoPyynnonTaydennys) {
       throw new Error("LausuntoPyynnonTaydennystä ei löytynyt");
     }
@@ -200,24 +200,24 @@ class LisaAineistoService {
     };
   }
 
-  generateHashForLausuntoPyynto(oid: string, lausuntoPyyntoId: number, luontiPaiva: string, salt: string): string {
+  generateHashForLausuntoPyynto(oid: string, uuid: string, salt: string): string {
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return;
     }
-    return LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyyntoId, luontiPaiva, salt);
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, uuid, salt);
   }
 
-  generateHashForLausuntoPyynnonTaydennys(oid: string, kuntaId: number, luontiPaiva: string, salt: string): string {
+  generateHashForLausuntoPyynnonTaydennys(oid: string, uuid: string, salt: string): string {
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return;
     }
-    return LisaAineistoService.createLausuntoPyyntoHash(oid, kuntaId, luontiPaiva, salt);
+    return LisaAineistoService.createLausuntoPyyntoHash(oid, uuid, salt);
   }
 
   generateSalt() {
@@ -238,7 +238,7 @@ class LisaAineistoService {
   }
 
   validateLausuntoPyyntoHash(oid: string, salt: string, givenHash: string, lausuntoPyynto: LausuntoPyynto) {
-    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyynto.id, lausuntoPyynto.luontiPaiva, salt);
+    const hash = LisaAineistoService.createLausuntoPyyntoHash(oid, lausuntoPyynto.uuid, salt);
     if (hash != givenHash) {
       log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
       throw new IllegalAccessError("Lausuntopyynnon aineiston tarkistussumma ei täsmää");
@@ -246,12 +246,7 @@ class LisaAineistoService {
   }
 
   validateLausuntoPyynnonTaydennysHash(oid: string, salt: string, givenHash: string, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) {
-    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(
-      oid,
-      lausuntoPyynnonTaydennys.kunta,
-      lausuntoPyynnonTaydennys.luontiPaiva,
-      salt
-    );
+    const hash = LisaAineistoService.createLausuntoPyynnonTaydennysHash(oid, lausuntoPyynnonTaydennys.uuid, salt);
     if (hash != givenHash) {
       log.error("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
       throw new IllegalAccessError("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää");
@@ -268,24 +263,18 @@ class LisaAineistoService {
       .digest("hex");
   }
 
-  private static createLausuntoPyyntoHash(oid: string, lausuntoPyyntoId: number, luontiPaiva: string, salt: string | undefined): string {
+  private static createLausuntoPyyntoHash(oid: string, uuid: string, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
-    return crypto
-      .createHash("sha512")
-      .update([oid, "lausuntopyynto", String(lausuntoPyyntoId), luontiPaiva, salt].join())
-      .digest("hex");
+    return crypto.createHash("sha512").update([oid, "lausuntopyynto", uuid, salt].join()).digest("hex");
   }
 
-  private static createLausuntoPyynnonTaydennysHash(oid: string, kuntaId: number, luontiPaiva: string, salt: string | undefined): string {
+  private static createLausuntoPyynnonTaydennysHash(oid: string, uuid: string, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
-    return crypto
-      .createHash("sha512")
-      .update([oid, "lausuntopyynnon taydennys", String(kuntaId), luontiPaiva, salt].join())
-      .digest("hex");
+    return crypto.createHash("sha512").update([oid, "lausuntopyynnon taydennys", uuid, salt].join()).digest("hex");
   }
 }
 

@@ -186,7 +186,7 @@ export function adaptLausuntoPyynnot(
       __typename: "LausuntoPyynto",
       ...rest,
       lisaAineistot: adaptAineistot(lisaAineistot, paths),
-      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.id, lausuntoPyynto.luontiPaiva, dbProjekti.salt),
+      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.uuid, dbProjekti.salt),
     };
     return apiLausuntoPyynto;
   });
@@ -206,12 +206,7 @@ export function adaptLausuntoPyynnonTaydennykset(
       ...rest,
       muuAineisto: adaptAineistot(muuAineisto, paths),
       muistutukset: adaptAineistot(muistutukset, paths),
-      hash: lisaAineistoService.generateHashForLausuntoPyynto(
-        oid,
-        lausuntoPyynnonTaydennys.kunta,
-        lausuntoPyynnonTaydennys.luontiPaiva,
-        dbProjekti.salt
-      ),
+      hash: lisaAineistoService.generateHashForLausuntoPyynto(oid, lausuntoPyynnonTaydennys.uuid, dbProjekti.salt),
     };
     return taydennys;
   });

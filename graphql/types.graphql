@@ -360,7 +360,7 @@ type NahtavillaoloVaiheJulkaisu {
 }
 
 type LausuntoPyynto {
-  id: Int!
+  uuid: String!
   legacy: LisaAineistoParametrit
   poistumisPaiva: String!
   lisaAineistot: [Aineisto!]
@@ -371,6 +371,7 @@ type LausuntoPyynto {
 
 type LausuntoPyynnonTaydennys {
   kunta: Int!
+  uuid: String!
   poistumisPaiva: String!
   muistutukset: [Aineisto!]
   muuAineisto: [Aineisto!]

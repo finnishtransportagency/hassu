@@ -9,9 +9,17 @@ export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: DBProje
   }
 }
 
-export function findLausuntoPyyntoById(projekti: DBProjekti, lausuntoPyyntoId: number): LausuntoPyynto | undefined {
+export function findLausuntoPyyntoByUuid(projekti: DBProjekti, uuid: string): LausuntoPyynto | undefined {
   if (projekti.lausuntoPyynnot) {
-    return projekti.lausuntoPyynnot.filter((pyynto) => pyynto.id === lausuntoPyyntoId).pop();
+    return projekti.lausuntoPyynnot.filter((pyynto) => pyynto.uuid === uuid).pop();
+  } else {
+    return undefined;
+  }
+}
+
+export function findLausuntoPyynnonTaydennysByUuid(projekti: DBProjekti, uuid: string): LausuntoPyynnonTaydennys | undefined {
+  if (projekti.lausuntoPyynnonTaydennykset) {
+    return projekti.lausuntoPyynnonTaydennykset.filter((pyynto) => pyynto.uuid === uuid).pop();
   } else {
     return undefined;
   }

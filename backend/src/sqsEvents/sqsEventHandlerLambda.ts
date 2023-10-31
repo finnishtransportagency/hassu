@@ -21,7 +21,6 @@ import { AineistoMuokkausError } from "hassu-common/error";
 import { LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaihe } from "../database/model";
 
 async function handleZipping(ctx: ImportContext) {
-  //TODO: joskus muillekin vaiheille kuin nahtavillaolo
   if (!(ctx.projekti.nahtavillaoloVaihe || ctx.projekti.lausuntoPyynnot?.length || ctx.projekti.lausuntoPyynnonTaydennykset?.length))
     return;
   const oid = ctx.oid;
@@ -36,7 +35,7 @@ async function handleZipping(ctx: ImportContext) {
   }
 
   if (ctx.projekti.lausuntoPyynnot?.length) {
-    lausuntoPyynnot = await handleLausuntuPyynnotZipping(oid, manager, ctx.projekti.lausuntoPyynnot, aineistoPakettiRelativeS3Keys);
+    lausuntoPyynnot = await handleLausuntoPyynnotZipping(oid, manager, ctx.projekti.lausuntoPyynnot, aineistoPakettiRelativeS3Keys);
   }
 
   if (ctx.projekti.lausuntoPyynnonTaydennykset?.length) {
@@ -73,7 +72,7 @@ async function handleNahtavillaoloZipping(
   return { ...nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
 }
 
-async function handleLausuntuPyynnotZipping(
+async function handleLausuntoPyynnotZipping(
   oid: string,
   manager: ProjektiAineistoManager,
   lausuntoPyynnot: LausuntoPyynto[],
@@ -82,12 +81,12 @@ async function handleLausuntuPyynnotZipping(
   const lausuntoPyyntoAineisto = manager.getLausuntoPyynnot();
   return await Promise.all(
     lausuntoPyynnot.map((lausuntoPyynto) =>
-      handleLausuntuPyyntoZipping(oid, lausuntoPyyntoAineisto, lausuntoPyynto, aineistoPakettiRelativeS3Keys)
+      handleLausuntoPyyntoZipping(oid, lausuntoPyyntoAineisto, lausuntoPyynto, aineistoPakettiRelativeS3Keys)
     )
   );
 }
 
-async function handleLausuntuPyyntoZipping(
+async function handleLausuntoPyyntoZipping(
   oid: string,
   lausuntoPyyntoAineisto: LausuntoPyyntoAineisto,
   lausuntoPyynto: LausuntoPyynto,
@@ -99,7 +98,7 @@ async function handleLausuntuPyyntoZipping(
   const aineistopakettiFullS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoFullPath + "/aineisto.zip";
 
   log.info("luodaan lausuntopyynnön aineistopaketti, key: " + aineistopakettiFullS3Key);
-  await lausuntoPyyntoAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.id);
+  await lausuntoPyyntoAineisto.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.uuid);
   const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoPath + "/aineisto.zip";
   aineistoPakettiRelativeS3Keys.push(aineistopakettiRelativeS3Key);
   return { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
