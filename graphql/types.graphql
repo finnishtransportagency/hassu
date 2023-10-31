@@ -504,6 +504,16 @@ enum AineistoTila {
   POISTETTU
 }
 
+enum LadattuTiedostoTila {
+  ODOTTAA_PERSISTOINTIA
+  VALMIS
+  ODOTTAA_POISTOA
+  """
+  Tiedosto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot tiedostoista silti sailytetaan
+  """
+  POISTETTU
+}
+
 type Palaute {
   id: ID!
   vastaanotettu: String
@@ -726,6 +736,11 @@ type LadattuTiedosto {
   """
   nimi: String!
   tuotu: String
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+  tila: LadattuTiedostoTila
 }
 
 type AloitusKuulutusPDF {

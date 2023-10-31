@@ -256,6 +256,22 @@ input AineistoInput {
   tila: AineistoTila
 }
 
+input LadattuTiedostoInput {
+  """
+  Polku, jonka api.valmisteleTiedostonLataus palauttaa
+  """
+  tiedosto: String!
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+  tila: LadattuTiedostoTila
+}
+
 input ProjektiKayttajaInput {
   tyyppi: KayttajaTyyppi
   kayttajatunnus: String!
