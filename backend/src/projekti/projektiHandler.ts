@@ -35,7 +35,7 @@ import {
 } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
-import { ProjektiAineistoManager } from "../aineisto/ProjektiAineistoManager";
+import { ProjektiTiedostoManager } from "../aineisto/ProjektiTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
@@ -50,7 +50,7 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
-    const aineistoManager = new ProjektiAineistoManager(projektiFromDB);
+    const aineistoManager = new ProjektiTiedostoManager(projektiFromDB);
     return { __typename: "ProjektinTila", aineistotValmiit: aineistoManager.isReady() };
   } else {
     throw new NotFoundError("Projektia ei löydy: " + oid);

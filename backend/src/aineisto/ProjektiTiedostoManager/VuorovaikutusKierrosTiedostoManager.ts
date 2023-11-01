@@ -1,5 +1,5 @@
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
-import { AineistoPathsPair, NahtavillaoloVaiheAineisto, S3Paths, VaiheAineisto } from ".";
+import { AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, S3Paths, VaiheTiedostoManager } from ".";
 import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { parseOptionalDate } from "../../util/dateUtil";
@@ -10,17 +10,17 @@ import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { findJulkaisuWithAsianhallintaEventId, getAsiatunnus } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 
-export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
-  private nahtavillaoloVaiheAineisto: NahtavillaoloVaiheAineisto;
+export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  private nahtavillaoloVaiheTiedostoManager: NahtavillaoloVaiheTiedostoManager;
 
   constructor(
     oid: string,
     vaihe: VuorovaikutusKierros | undefined | null,
     julkaisut: VuorovaikutusKierrosJulkaisu[] | undefined | null,
-    nahtavillaoloVaiheAineisto: NahtavillaoloVaiheAineisto
+    nahtavillaoloVaiheTiedostoManager: NahtavillaoloVaiheTiedostoManager
   ) {
     super(oid, vaihe, julkaisut);
-    this.nahtavillaoloVaiheAineisto = nahtavillaoloVaiheAineisto;
+    this.nahtavillaoloVaiheTiedostoManager = nahtavillaoloVaiheTiedostoManager;
   }
 
   getAineistot(vaihe: VuorovaikutusKierros): AineistoPathsPair[] {
@@ -54,7 +54,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
         const result = await promiseResult;
         const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
         // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
-        const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
+        const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheTiedostoManager.getKuulutusPaiva();
         return (
           result &&
           synchronizeFilesToPublic(

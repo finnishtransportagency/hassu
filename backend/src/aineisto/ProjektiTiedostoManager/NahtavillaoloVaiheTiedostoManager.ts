@@ -1,25 +1,26 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { AbstractHyvaksymisPaatosVaiheAineisto, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, LadattuTiedosto } from "../../database/model";
+import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
+import { DBProjekti, LadattuTiedosto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { parseOptionalDate } from "../../util/dateUtil";
+import { Dayjs } from "dayjs";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 
-export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
-  getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
-    const paths = this.projektiPaths.hyvaksymisPaatosVaihe(this.vaihe);
+export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  getAineistot(vaihe: NahtavillaoloVaihe): AineistoPathsPair[] {
+    const paths = this.projektiPaths.nahtavillaoloVaihe(this.vaihe);
     return [
       { aineisto: vaihe.aineistoNahtavilla, paths },
-      { aineisto: vaihe.hyvaksymisPaatos, paths: paths.paatos },
+      { aineisto: vaihe.lisaAineisto, paths },
     ];
   }
 
-  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedosto[] {
-    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
+  getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt);
   }
 
   async synchronize(): Promise<boolean> {
@@ -27,7 +28,7 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     if (julkaisu) {
       return synchronizeFilesToPublic(
         this.oid,
-        this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu),
+        this.projektiPaths.nahtavillaoloVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
@@ -35,24 +36,28 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     return true;
   }
 
-  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
+  getKuulutusPaiva(): Dayjs | undefined {
+    const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    if (julkaisu) {
+      return parseOptionalDate(julkaisu.kuulutusPaiva);
+    }
+  }
+
+  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<NahtavillaoloVaiheJulkaisu[]> {
     if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
       return [];
     }
     const julkaisutSet = await this.julkaisut.reduce(
-      async (modifiedJulkaisutPromise: Promise<Set<HyvaksymisPaatosVaiheJulkaisu>>, julkaisu) => {
+      async (modifiedJulkaisutPromise: Promise<Set<NahtavillaoloVaiheJulkaisu>>, julkaisu: NahtavillaoloVaiheJulkaisu) => {
         const modifiedJulkaisut = await modifiedJulkaisutPromise;
         await forSuomiRuotsiDoAsync(async (kieli) => {
-          if (
-            await this.deleteFilesWhenEpaaktiivinen(
-              julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli],
-              "hyvaksymisKuulutusPDFPath",
-              "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
-              "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
-              "hyvaksymisIlmoitusLausunnonantajillePDFPath",
-              "hyvaksymisIlmoitusMuistuttajillePDFPath"
-            )
-          ) {
+          const modified = await this.deleteFilesWhenEpaaktiivinen(
+            julkaisu.nahtavillaoloPDFt?.[kieli],
+            "nahtavillaoloPDFPath",
+            "nahtavillaoloIlmoitusPDFPath",
+            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"
+          );
+          if (modified) {
             modifiedJulkaisut.add(julkaisu);
           }
         });
@@ -61,17 +66,17 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
           modifiedJulkaisut.add(julkaisu);
         }
 
-        if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.hyvaksymisPaatosVaiheSaamePDFt)) {
+        if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.nahtavillaoloSaamePDFt)) {
           modifiedJulkaisut.add(julkaisu);
         }
 
-        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
+        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.lisaAineisto)) {
           modifiedJulkaisut.add(julkaisu);
         }
 
         return modifiedJulkaisut;
       },
-      Promise.resolve(new Set<HyvaksymisPaatosVaiheJulkaisu>())
+      Promise.resolve(new Set<NahtavillaoloVaiheJulkaisu>())
     );
     return Array.from(julkaisutSet.values());
   }
@@ -87,20 +92,19 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     }
     const asiatunnus = getAsiatunnus(projekti.velho);
     assertIsDefined(asiatunnus);
-    const paths = this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu);
+    const paths = this.projektiPaths.nahtavillaoloVaihe(julkaisu);
     const s3Paths = new S3Paths(paths);
     forSuomiRuotsiDo((kieli) => {
-      const pdf = julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli];
+      const pdf = julkaisu.nahtavillaoloPDFt?.[kieli];
       s3Paths.pushYllapitoFilesIfDefined(
-        pdf?.hyvaksymisKuulutusPDFPath,
-        pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
-        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
-        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
+        pdf?.nahtavillaoloPDFPath,
+        pdf?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+        pdf?.nahtavillaoloIlmoitusPDFPath
       );
     });
 
     forEverySaameDo((kieli) => {
-      const pdf = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+      const pdf = julkaisu.nahtavillaoloSaamePDFt?.[kieli];
       s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
     });
 

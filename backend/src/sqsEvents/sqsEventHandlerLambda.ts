@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../aineisto/importContext";
 import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
-import { ProjektiAineistoManager } from "../aineisto/ProjektiAineistoManager";
+import { ProjektiTiedostoManager } from "../aineisto/ProjektiTiedostoManager";
 import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
@@ -23,12 +23,12 @@ async function handleZipping(ctx: ImportContext) {
   //TODO: joskus muillekin vaiheille kuin nahtavillaolo
   if (!ctx.projekti.nahtavillaoloVaihe) return;
   const oid = ctx.oid;
-  const manager: ProjektiAineistoManager = ctx.manager;
-  const nahtavillaoloVaiheAineisto = manager.getNahtavillaoloVaihe();
+  const manager: ProjektiTiedostoManager = ctx.manager;
+  const nahtavillaoloVaiheTiedostoManager = manager.getNahtavillaoloVaihe();
   const aineistopakettiFullS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
   log.info("luodaan aineistopaiketti, key: " + aineistopakettiFullS3Key);
-  await nahtavillaoloVaiheAineisto.createZipOfAineisto(aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key);
 
   const aineistopakettiRelativeS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
@@ -43,7 +43,7 @@ async function handleZipping(ctx: ImportContext) {
 
 async function handleChangedAineisto(ctx: ImportContext) {
   const oid = ctx.oid;
-  const manager: ProjektiAineistoManager = ctx.manager;
+  const manager: ProjektiTiedostoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
   const nahtavillaoloVaihe = await manager.getNahtavillaoloVaihe().handleChanges();
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChanges();
@@ -102,7 +102,7 @@ async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
   await synchronizeEULogot(ctx);
   await synchronizeKuntaLogo(ctx);
 
-  const manager: ProjektiAineistoManager = ctx.manager;
+  const manager: ProjektiTiedostoManager = ctx.manager;
   return (
     (await manager.getAloitusKuulutusVaihe().synchronize()) &&
     (await manager.getVuorovaikutusKierros().synchronize()) &&

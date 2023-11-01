@@ -19,7 +19,7 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
+import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../aineisto/ProjektiTiedostoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -143,8 +143,8 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return vaihe;
   }
 
-  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
-    return new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe();
+  getVaiheAineisto(projekti: DBProjekti): VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+    return new ProjektiTiedostoManager(projekti).getNahtavillaoloVaihe();
   }
 
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {

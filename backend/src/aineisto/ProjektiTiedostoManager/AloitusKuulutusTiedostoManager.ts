@@ -1,5 +1,5 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { AineistoPathsPair, S3Paths, VaiheAineisto, getKuulutusSaamePDFt } from ".";
+import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, LadattuTiedosto } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
@@ -9,7 +9,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 
-export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getAineistot(): AineistoPathsPair[] {
     return [];
   }

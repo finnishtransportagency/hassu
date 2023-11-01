@@ -2,17 +2,17 @@ import { DBProjekti } from "../database/model";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { Status } from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
-import { ProjektiAineistoManager } from "./ProjektiAineistoManager";
+import { ProjektiTiedostoManager } from "./ProjektiTiedostoManager";
 
 export class ImportContext {
   private readonly dbProjekti: DBProjekti;
   private _julkinenStatus?: Status;
   private _projektiStatus!: Status;
-  private readonly _manager: ProjektiAineistoManager;
+  private readonly _manager: ProjektiTiedostoManager;
 
   constructor(dbProjekti: DBProjekti) {
     this.dbProjekti = dbProjekti;
-    this._manager = new ProjektiAineistoManager(dbProjekti);
+    this._manager = new ProjektiTiedostoManager(dbProjekti);
   }
 
   async init(): Promise<this> {
@@ -41,7 +41,7 @@ export class ImportContext {
     return this._projektiStatus;
   }
 
-  get manager(): ProjektiAineistoManager {
+  get manager(): ProjektiTiedostoManager {
     return this._manager;
   }
 }

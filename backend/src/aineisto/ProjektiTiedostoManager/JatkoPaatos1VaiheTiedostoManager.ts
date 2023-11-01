@@ -1,11 +1,11 @@
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-import { AbstractHyvaksymisPaatosVaiheAineisto, AineistoPathsPair, getKuulutusSaamePDFt } from ".";
+import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, getKuulutusSaamePDFt } from ".";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, LadattuTiedosto } from "../../database/model";
 import { findJulkaisuWithTila } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { parseOptionalDate } from "../../util/dateUtil";
 
-export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
+export class JatkoPaatos1VaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
     const paths = this.projektiPaths.jatkoPaatos1Vaihe(this.vaihe);
     return [

@@ -8,7 +8,7 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
-import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
+import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../aineisto/ProjektiTiedostoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
@@ -78,8 +78,8 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return vaihe;
   }
 
-  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
-    return new ProjektiAineistoManager(projekti).getJatkoPaatos1Vaihe();
+  getVaiheAineisto(projekti: DBProjekti): VaiheTiedostoManager<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
+    return new ProjektiTiedostoManager(projekti).getJatkoPaatos1Vaihe();
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {

@@ -8,17 +8,17 @@ import { AineistoTila, Status } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 
-export abstract class VaiheAineisto<T, J> {
+export abstract class VaiheTiedostoManager<T, J> {
   public readonly oid: string;
   public readonly vaihe: T | undefined;
   public readonly julkaisut: J[] | undefined;
   public readonly projektiPaths: ProjektiPaths;
 
   constructor(oid: string, vaihe: T | undefined | null, julkaisut: J[] | undefined | null) {
-    this.oid = oid;
     this.projektiPaths = new ProjektiPaths(oid);
+    this.oid = oid;
     this.vaihe = vaihe || undefined;
-    this.julkaisut = julkaisut || undefined;
+    this.julkaisut = julkaisut ?? undefined;
   }
 
   abstract getAineistot(vaihe: T): AineistoPathsPair[];
@@ -92,7 +92,7 @@ export abstract class VaiheAineisto<T, J> {
   ): Promise<boolean> {
     let modified = false;
     for (const field of fields) {
-      if (obj && obj[field]) {
+      if (obj?.[field]) {
         const filepath = obj[field] as unknown as string;
         await fileService.deleteYllapitoFileFromProjekti({
           filePathInProjekti: filepath,
