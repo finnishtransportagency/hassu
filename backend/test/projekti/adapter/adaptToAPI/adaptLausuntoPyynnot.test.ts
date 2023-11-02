@@ -1,5 +1,5 @@
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../../src/database/model";
-import { adaptLausuntoPyynnot } from "../../../../src/projekti/adapter/adaptToAPI";
+import { Aineisto, DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../../src/database/model";
+import { adaptLausuntoPyynnonTaydennykset, adaptLausuntoPyynnot } from "../../../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 
@@ -79,5 +79,32 @@ describe("adaptLausuntoPyynnot:", () => {
         jarjestys: 2,
       },
     ]);
+  });
+
+  it("adaptLausuntoPyynnonTaydennys returns same hash for same lausuntoPyynnonTaydennys even if poistumisPaiva changes", () => {
+    const dbProjekti: DBProjekti = {
+      oid: "123",
+      salt: "salt",
+    } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
+    const lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys = {
+      uuid: "joku-uuid",
+      poistumisPaiva: "2022-01-01",
+      muuAineisto: [],
+      muistutukset: [],
+      aineistopaketti: "osoite/aineistopakettiin",
+      poistetaan: false,
+      kunta: 1,
+    };
+    const adaptedLausuntoPyynto: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennykset(dbProjekti, [
+      lausuntoPyynnonTaydennys,
+    ])?.pop() as API.LausuntoPyynnonTaydennys;
+    const firstHash = adaptedLausuntoPyynto.hash;
+    lausuntoPyynnonTaydennys.poistumisPaiva = "2022-02-02";
+    const adaptedLausuntoPyynnonTaydennysAfterPoistumisPaivaUpdate: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennykset(
+      dbProjekti,
+      [lausuntoPyynnonTaydennys]
+    )?.pop() as API.LausuntoPyynnonTaydennys;
+    const secondHash = adaptedLausuntoPyynnonTaydennysAfterPoistumisPaivaUpdate.hash;
+    expect(firstHash).to.eql(secondHash);
   });
 });
