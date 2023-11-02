@@ -35,7 +35,7 @@ import {
 } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
-import { ProjektiTiedostoManager } from "../aineisto/ProjektiTiedostoManager";
+import { ProjektiTiedostoManager } from "../tiedostot/ProjektiTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";

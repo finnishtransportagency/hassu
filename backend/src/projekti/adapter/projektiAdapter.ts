@@ -4,7 +4,7 @@ import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
-import { lisaAineistoService } from "../../aineisto/lisaAineistoService";
+import { lisaAineistoService } from "../../tiedostot/lisaAineistoService";
 import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename, adaptVelho } from "./common";
 import {
   adaptAloitusKuulutus,

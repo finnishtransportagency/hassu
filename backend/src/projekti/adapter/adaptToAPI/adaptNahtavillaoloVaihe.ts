@@ -11,7 +11,7 @@ import {
   adaptVelho,
 } from "../common";
 import { fileService } from "../../../files/fileService";
-import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
+import { lisaAineistoService } from "../../../tiedostot/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";

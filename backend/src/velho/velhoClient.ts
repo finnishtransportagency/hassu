@@ -20,7 +20,7 @@ import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
-import { PartiallyMandatory } from "../aineisto/PartiallyMandatory";
+import { PartiallyMandatory } from "../tiedostot/PartiallyMandatory";
 import { VelhoUnavailableError } from "hassu-common/error/velhoUnavailableError";
 
 import NodeCache from "node-cache";
