@@ -1,10 +1,10 @@
-import { DBProjekti, LausuntoPyynto } from "../../../../src/database/model";
+import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../../src/database/model";
 import { adaptLausuntoPyynnot } from "../../../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 
-describe("adaptLausuntoPyynnot", () => {
-  it("returns same hash for same lausuntoPyynto even if poistumisPaiva changes", () => {
+describe("adaptLausuntoPyynnot:", () => {
+  it("adaptLausuntoPyynnot returns same hash for same lausuntoPyynto even if poistumisPaiva changes", () => {
     const dbProjekti: DBProjekti = {
       oid: "123",
       salt: "salt",
@@ -25,5 +25,59 @@ describe("adaptLausuntoPyynnot", () => {
     ])?.pop() as API.LausuntoPyynto;
     const secondHash = adaptedLausuntoPyyntoAfterPoistumisPaivaUpdate.hash;
     expect(firstHash).to.eql(secondHash);
+  });
+
+  it("adaptLausuntoPyynnot adapts lisaAineistot by converting the relative tiedosto path in db to the long one including Projekti oid, and ordering Aineisto array by 'jarjetys' field", () => {
+    const dbProjekti: DBProjekti = {
+      oid: "123",
+      salt: "salt",
+    } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
+    const lisaAineistot: Aineisto[] = [
+      {
+        dokumenttiOid: "foo",
+        tiedosto: "/lausuntopyynto/joku-uuid/Aineisto%201.txt",
+        nimi: "Aineisto 1",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2021-12-01T01:01",
+        jarjestys: 2,
+      },
+      {
+        dokumenttiOid: "bar",
+        tiedosto: "/lausuntopyynto/joku-uuid/Aineisto%202.txt",
+        nimi: "Aineisto 2",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2021-12-01T01:02",
+        jarjestys: 1,
+      },
+    ];
+    const lausuntoPyynto: LausuntoPyynto = {
+      uuid: "joku-uuid",
+      poistumisPaiva: "2022-01-01",
+      lisaAineistot,
+      aineistopaketti: "osoite/aineistopakettiin",
+      muistiinpano: "Ei vielä lähetetty kellekään",
+      poistetaan: false,
+    };
+    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
+    expect(adaptedLausuntoPyynto.lisaAineistot).to.eql([
+      {
+        __typename: "Aineisto",
+        dokumenttiOid: "bar",
+        tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynto/joku-uuid/Aineisto%202.txt",
+        nimi: "Aineisto 2",
+        tila: "VALMIS",
+        tuotu: "2021-12-01T01:02",
+        jarjestys: 1,
+      },
+      {
+        __typename: "Aineisto",
+        dokumenttiOid: "foo",
+        tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynto/joku-uuid/Aineisto%201.txt",
+        nimi: "Aineisto 1",
+        tila: "VALMIS",
+        tuotu: "2021-12-01T01:01",
+        jarjestys: 2,
+      },
+    ]);
   });
 });
