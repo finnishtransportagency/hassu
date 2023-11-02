@@ -57,7 +57,7 @@ import {
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestysFunktiot";
 import {
   HyvaksymisPaatosVaiheScheduleManager,
   isVerkkotilaisuusLinkkiVisible,

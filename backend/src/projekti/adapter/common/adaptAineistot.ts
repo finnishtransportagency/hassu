@@ -4,7 +4,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { nyt } from "../../../util/dateUtil";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestysFunktiot";
 
 export function adaptAineistot(
   aineistot: Aineisto[] | undefined | null,

@@ -13,7 +13,7 @@ import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } 
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestysFunktiot";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
