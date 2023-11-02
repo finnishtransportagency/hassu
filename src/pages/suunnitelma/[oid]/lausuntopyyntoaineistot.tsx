@@ -4,7 +4,7 @@ import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
+import { Aineisto, LadattavaTiedosto, LadattavatTiedostot } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "hassu-common/util/dateUtils";
@@ -12,7 +12,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
-  const data: null | undefined | LisaAineistot = useLisaAineisto().data;
+  const data: null | undefined | LadattavatTiedostot = useLisaAineisto().data;
   let poistumisPaiva = data?.poistumisPaiva;
   if (!poistumisPaiva) {
     return <></>;
@@ -40,16 +40,16 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
 
 interface AineistoNahtavillaAccordionProps {
   kategoriat: AineistoKategoria[];
-  data?: null | LisaAineistot;
+  data?: null | LadattavatTiedostot;
 }
 
 const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = (props) => {
   const { t } = useTranslation("aineisto");
   const data = props.data;
-  const aineistot: LisaAineisto[] = useMemo(
+  const aineistot: LadattavaTiedosto[] = useMemo(
     () => [
       ...(data?.aineistot || []),
-      ...(data?.lisaAineistot?.map<LisaAineisto>((aineisto) => ({ ...aineisto, kategoriaId: "lisaAineisto" })) || []),
+      ...(data?.lisaAineistot?.map<LadattavaTiedosto>((aineisto) => ({ ...aineisto, kategoriaId: "lisaAineisto" })) || []),
     ],
     [data]
   );

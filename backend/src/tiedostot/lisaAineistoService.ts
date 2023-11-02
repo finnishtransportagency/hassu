@@ -1,4 +1,10 @@
-import { AineistoTila, LisaAineisto, LisaAineistoParametrit, LisaAineistot, ListaaLisaAineistoInput } from "hassu-common/graphql/apiModel";
+import {
+  AineistoTila,
+  LadattavaTiedosto,
+  LadattavatTiedostot,
+  LisaAineistoParametrit,
+  ListaaLisaAineistoInput,
+} from "hassu-common/graphql/apiModel";
 
 import crypto from "crypto";
 import dayjs from "dayjs";
@@ -10,10 +16,10 @@ import { nyt } from "../util/dateUtil";
 import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
 
 class LisaAineistoService {
-  async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
+  async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
     const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
 
-    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
+    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LadattavaTiedosto> {
       const { jarjestys, kategoriaId } = aineisto;
       let nimi = aineisto.nimi;
       let linkki;
@@ -28,7 +34,7 @@ class LisaAineistoService {
         nimi = nimi + " (odottaa tuontia)";
         linkki = "";
       }
-      return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
+      return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
     }
 
     const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
@@ -36,7 +42,7 @@ class LisaAineistoService {
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;
-    return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {

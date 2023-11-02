@@ -9,13 +9,13 @@ import {
   Kayttaja,
   Kieli,
   KirjaamoOsoite,
+  LadattavatTiedostot,
   LaskePaattymisPaivaQueryVariables,
   LaskuriTyyppi,
   LataaPalautteetPDFQueryVariables,
   LataaProjektiJulkinenQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
-  LisaAineistot,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
@@ -453,7 +453,7 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.listKirjaamoOsoitteet);
   }
 
-  async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LisaAineistot> {
+  async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
     return await this.callAPI(apiConfig.listaaLisaAineisto, {
       oid,
       lisaAineistoTiedot,
