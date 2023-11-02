@@ -1,29 +1,20 @@
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
-import { AineistoPathsPair, handleAineistot, makeFilePathDeleted } from ".";
+import { makeFilePathDeleted } from ".";
 import { Aineisto, DBProjekti, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
-import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 import { config } from "../../config";
 import { AineistoTila, Status } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
+import { TiedostoManager } from "./TiedostoManager";
 
-export abstract class VaiheAineisto<T, J> {
-  public readonly oid: string;
-  public readonly vaihe: T | undefined;
+export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   public readonly julkaisut: J[] | undefined;
-  public readonly projektiPaths: ProjektiPaths;
 
   constructor(oid: string, vaihe: T | undefined | null, julkaisut: J[] | undefined | null) {
-    this.oid = oid;
-    this.projektiPaths = new ProjektiPaths(oid);
-    this.vaihe = vaihe || undefined;
-    this.julkaisut = julkaisut || undefined;
+    super(oid, vaihe);
+    this.julkaisut = julkaisut ?? undefined;
   }
-
-  abstract getAineistot(vaihe: T): AineistoPathsPair[];
-
-  abstract getLadatutTiedostot(vaihe: T): LadattuTiedosto[];
 
   abstract synchronize(): Promise<boolean>;
 
@@ -31,18 +22,6 @@ export abstract class VaiheAineisto<T, J> {
     projekti: DBProjekti,
     asianhallintaEventId: string | null | undefined
   ): AsianhallintaSynkronointi | undefined;
-
-  async handleChanges(): Promise<T | undefined> {
-    if (this.vaihe) {
-      let changes = false;
-      for (const element of this.getAineistot(this.vaihe)) {
-        changes = (await handleAineistot(this.oid, element.aineisto, element.paths)) || changes;
-      }
-      if (changes) {
-        return this.vaihe;
-      }
-    }
-  }
 
   async createZipOfAineisto(zipFileS3Key: string): Promise<T | undefined> {
     if (!this.vaihe) return;
@@ -60,30 +39,6 @@ export abstract class VaiheAineisto<T, J> {
     await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
   }
 
-  isReady(): boolean {
-    function hasAllAineistoValmis(element: AineistoPathsPair): boolean {
-      if (!element.aineisto) {
-        return true;
-      }
-      return element.aineisto?.every((a) => a.tila == AineistoTila.VALMIS);
-    }
-
-    let ready = true;
-    if (this.vaihe) {
-      const aineistot = this.getAineistot(this.vaihe);
-      for (const element of aineistot) {
-        const tmp = hasAllAineistoValmis(element);
-        ready = ready && tmp;
-      }
-
-      const ladatutTiedostot = this.getLadatutTiedostot(this.vaihe);
-      for (const ladattuTiedosto of ladatutTiedostot) {
-        ready = ready && !!ladattuTiedosto.tuotu;
-      }
-    }
-    return ready;
-  }
-
   abstract deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<J[]>;
 
   protected async deleteFilesWhenEpaaktiivinen<T extends Record<string, unknown>, K extends keyof T>(
@@ -92,7 +47,7 @@ export abstract class VaiheAineisto<T, J> {
   ): Promise<boolean> {
     let modified = false;
     for (const field of fields) {
-      if (obj && obj[field]) {
+      if (obj?.[field]) {
         const filepath = obj[field] as unknown as string;
         await fileService.deleteYllapitoFileFromProjekti({
           filePathInProjekti: filepath,

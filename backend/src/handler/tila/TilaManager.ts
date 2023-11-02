@@ -15,7 +15,7 @@ import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";
 import { GenericVaihe } from "../../projekti/projektiUtil";
 import { nyt, parseDate } from "../../util/dateUtil";
-import { VaiheAineisto } from "../../aineisto/ProjektiAineistoManager";
+import { VaiheTiedostoManager } from "../../aineisto/ProjektiTiedostoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
@@ -29,7 +29,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract getVaihe(projekti: DBProjekti): T;
 
-  abstract getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<T, Y>;
+  abstract getVaiheAineisto(projekti: DBProjekti): VaiheTiedostoManager<T, Y>;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();

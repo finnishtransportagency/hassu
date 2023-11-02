@@ -18,7 +18,7 @@ import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/er
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { ProjektiAineistoManager } from "../../aineisto/ProjektiAineistoManager";
+import { ProjektiTiedostoManager } from "../../aineisto/ProjektiTiedostoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { assertIsDefined } from "../../util/assertions";
@@ -125,7 +125,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   getVaiheAineisto(projekti: DBProjekti) {
-    return new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe();
+    return new ProjektiTiedostoManager(projekti).getAloitusKuulutusVaihe();
   }
 
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {

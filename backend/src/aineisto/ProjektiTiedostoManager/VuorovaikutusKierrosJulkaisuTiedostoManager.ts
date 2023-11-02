@@ -1,7 +1,7 @@
-import { AineistoPathsPair, VaiheAineisto } from ".";
+import { AineistoPathsPair, VaiheTiedostoManager } from ".";
 import { LadattuTiedosto, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 
-export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<VuorovaikutusKierrosJulkaisu, unknown> {
+export class VuorovaikutusKierrosJulkaisuTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierrosJulkaisu, unknown> {
   constructor(oid: string, julkaisu: VuorovaikutusKierrosJulkaisu | undefined | null) {
     super(oid, julkaisu, undefined);
   }
@@ -19,17 +19,17 @@ export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<Vuorovai
   }
 
   async synchronize(): Promise<boolean> {
-    // VuorovaikutusKierrosAineisto vastuussa tästä
+    // VuorovaikutusKierrosTiedostoManager vastuussa tästä
     throw new Error("Not implemented");
   }
 
   async deleteAineistotIfEpaaktiivinen(): Promise<VuorovaikutusKierrosJulkaisu[]> {
-    // VuorovaikutusKierrosAineisto vastuussa tästä
+    // VuorovaikutusKierrosTiedostoManager vastuussa tästä
     return [];
   }
 
   getAsianhallintaSynkronointi(): undefined {
-    // VuorovaikutusKierrosAineisto vastuussa tästä
+    // VuorovaikutusKierrosTiedostoManager vastuussa tästä
     throw new Error("Not implemented");
   }
 }

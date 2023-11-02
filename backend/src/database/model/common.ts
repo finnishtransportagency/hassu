@@ -5,6 +5,7 @@ import {
   Kieli,
   ProjektiTyyppi,
   SuunnittelustaVastaavaViranomainen,
+  LadattuTiedostoTila,
 } from "hassu-common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
@@ -122,4 +123,7 @@ export type LadattuTiedosto = {
   // Kayttajalle esitettava tiedostonimi
   nimi?: string | null;
   tuotu?: string | null;
+  //Numero jarjestamista varten
+  jarjestys?: number;
+  tila?: LadattuTiedostoTila;
 };

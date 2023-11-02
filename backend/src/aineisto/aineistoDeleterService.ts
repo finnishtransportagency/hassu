@@ -1,6 +1,6 @@
 import { ImportContext } from "./importContext";
 import { Status } from "hassu-common/graphql/apiModel";
-import { ProjektiAineistoManager } from "./ProjektiAineistoManager";
+import { ProjektiTiedostoManager } from "./ProjektiTiedostoManager";
 import { projektiDatabase } from "../database/projektiDatabase";
 
 class AineistoDeleterService {
@@ -8,7 +8,7 @@ class AineistoDeleterService {
     if (ctx.projektiStatus == Status.EPAAKTIIVINEN_1) {
       // Poista aineisto epäaktiivinent1 edeltävistä tiloista
 
-      const manager: ProjektiAineistoManager = ctx.manager;
+      const manager: ProjektiTiedostoManager = ctx.manager;
 
       await Promise.all(
         (
