@@ -21,6 +21,8 @@ import {
   NahtavillaoloVaiheJulkaisu,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
+  LausuntoPyynto,
+  LausuntoPyynnonTaydennys,
 } from ".";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
@@ -165,6 +167,8 @@ export type DBProjekti = {
   vuorovaikutusKierrosJulkaisut?: VuorovaikutusKierrosJulkaisu[] | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
+  lausuntoPyynnot?: LausuntoPyynto[] | null;
+  lausuntoPyynnonTaydennykset?: LausuntoPyynnonTaydennys[] | null;
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
   hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   jatkoPaatos1Vaihe?: HyvaksymisPaatosVaihe | null;
