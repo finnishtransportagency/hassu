@@ -2,7 +2,7 @@ import { LisaAineistot, ListaaLisaAineistoQueryVariables } from "hassu-common/gr
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { NotFoundError } from "hassu-common/error";
-import { lisaAineistoService } from "../aineisto/lisaAineistoService";
+import { lisaAineistoService } from "../tiedostot/lisaAineistoService";
 
 class LisaAineistoHandler {
   async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LisaAineistot> {
