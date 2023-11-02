@@ -1,37 +1,179 @@
 import {
+  AineistoTila,
   LausuntoPyynnonTaydennysInput,
   LausuntoPyyntoInput,
+  LadattavaTiedosto,
   LadattavatTiedostot,
   ListaaLausuntoPyynnonTaydennyksenTiedostotInput,
   ListaaLausuntoPyyntoTiedostotInput,
 } from "hassu-common/graphql/apiModel";
-
+import { aineistoEiOdotaPoistoaTaiPoistettu, ladattuTiedostoEiOdotaPoistoaTaiPoistettu } from "hassu-common/util/tiedostoTilaUtil";
 import crypto from "crypto";
 import { IllegalAccessError } from "hassu-common/error";
-import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../database/model";
+import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../database/model";
 import { log } from "../logger";
+import {
+  findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+  findLausuntoPyynnonTaydennysByUuid,
+  findLausuntoPyyntoByUuid,
+} from "../util/lausuntoPyyntoUtil";
+import { adaptLausuntoPyynnonTaydennysToSave, adaptLausuntoPyyntoToSave } from "../projekti/adapter/adaptToDB/adaptLausuntoPyynnotToSave";
+import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
+import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { fileService } from "../files/fileService";
 
 class TiedostoDownloadLinkService {
-  async esikatseleLausuntoPyynnonAineistot(_projekti: DBProjekti, _lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
-    throw new Error("Not implemented yet");
+  private async adaptAineistoToLadattavaTiedosto(oid: string, aineisto: Aineisto): Promise<LadattavaTiedosto> {
+    const { jarjestys, kategoriaId } = aineisto;
+    let nimi = aineisto.nimi;
+    let linkki;
+    if (aineisto.tila == AineistoTila.VALMIS) {
+      if (!aineisto.tiedosto) {
+        const msg = `Virhe tiedostojen listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
+        log.error(msg, { aineisto });
+        throw new Error(msg);
+      }
+      linkki = await fileService.createYllapitoSignedDownloadLink(oid, aineisto.tiedosto);
+    } else {
+      nimi = nimi + " (odottaa tuontia)";
+      linkki = "";
+    }
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
+  }
+
+  private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
+    const { jarjestys } = tiedosto;
+    let nimi: string = tiedosto.nimi || "";
+    let linkki;
+    if (tiedosto.tuotu) {
+      linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
+    } else {
+      nimi = nimi + " (odottaa tuontia)";
+      linkki = "";
+    }
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki };
+  }
+
+  async esikatseleLausuntoPyynnonTiedostot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
+    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+    const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, lausuntoPyyntoInput.uuid);
+    const uusiLausuntoPyynto = adaptLausuntoPyyntoToSave(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
+    const aineistot =
+      (
+        await Promise.all(
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const lisaAineistot =
+      (
+        await Promise.all(
+          uusiLausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const aineistopaketti = "(esikatselu)";
+    return {
+      __typename: "LadattavatTiedostot",
+      aineistot,
+      lisaAineistot,
+      poistumisPaiva: lausuntoPyyntoInput.poistumisPaiva,
+      aineistopaketti,
+    };
   }
 
   async esikatseleLausuntoPyynnonTaydennyksenAineistot(
-    _projekti: DBProjekti,
-    _lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
+    projekti: DBProjekti,
+    lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
   ): Promise<LadattavatTiedostot> {
-    throw new Error("Not implemented yet");
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, lausuntoPyynnonTaydennysInput.uuid);
+    const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToSave(
+      lausuntoPyynnonTaydennys,
+      lausuntoPyynnonTaydennysInput,
+      new ProjektiAdaptationResult(projekti)
+    );
+    const muutAineistot =
+      (
+        await Promise.all(
+          uusiLausuntoPyynnonTaydennys?.muuAineisto?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const muistutukset =
+      (
+        await Promise.all(
+          uusiLausuntoPyynnonTaydennys?.muistutukset?.map((aineisto) =>
+            this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)
+          ) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const aineistopaketti = "(esikatselu)";
+    return {
+      __typename: "LadattavatTiedostot",
+      muutAineistot,
+      muistutukset,
+      poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
+      aineistopaketti,
+    };
   }
 
-  async listaaLausuntoPyyntoAineisto(_projekti: DBProjekti, _params: ListaaLausuntoPyyntoTiedostotInput): Promise<LadattavatTiedostot> {
-    throw new Error("Not implemented yet");
+  async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoTiedostotInput): Promise<LadattavatTiedostot> {
+    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+    const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
+    if (!lausuntoPyynto) {
+      throw new Error("Lausuntopyyntöä ei löytynyt");
+    }
+
+    const aineistot =
+      (
+        await Promise.all(
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const lisaAineistot =
+      (
+        await Promise.all(
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const aineistopaketti = lausuntoPyynto?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
+      : null;
+    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyynto.poistumisPaiva, aineistopaketti };
   }
 
   async listaaLausuntoPyynnonTaydennyksenAineisto(
-    _projekti: DBProjekti,
-    _params: ListaaLausuntoPyynnonTaydennyksenTiedostotInput
+    projekti: DBProjekti,
+    params: ListaaLausuntoPyynnonTaydennyksenTiedostotInput
   ): Promise<LadattavatTiedostot> {
-    throw new Error("Not implemented yet");
+    const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
+    if (!lausuntoPyynnonTaydennys) {
+      throw new Error("LausuntoPyynnonTaydennystä ei löytynyt");
+    }
+
+    const muutAineistot =
+      (
+        await Promise.all(
+          lausuntoPyynnonTaydennys?.muuAineisto
+            ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const muistutukset =
+      (
+        await Promise.all(
+          lausuntoPyynnonTaydennys?.muistutukset
+            ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
+            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) || []
+        )
+      ).sort(jarjestaAineistot) || [];
+    const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
+      : null;
+    return {
+      __typename: "LadattavatTiedostot",
+      muutAineistot,
+      muistutukset,
+      poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
+      aineistopaketti,
+    };
   }
 
   generateHashForLausuntoPyynto(oid: string, uuid: string, salt: string): string {
