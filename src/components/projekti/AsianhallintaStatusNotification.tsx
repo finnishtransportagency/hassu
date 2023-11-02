@@ -42,8 +42,7 @@ const tilakohtainenVaroitus = (
 export default function AsianhallintaStatusNotification({ projekti, vaihe }: Props) {
   // Näytetään varoitukset vain aktiivisen vaiheen sivuilla
   const aktiivisenVaiheenSivu = projekti.asianhallinta?.aktiivinenTila?.vaihe === vaihe;
-
-  if (aktiivisenVaiheenSivu && projekti.asianhallinta?.inaktiivinen && projekti.asianhallinta.aktivoitavissa) {
+  if (aktiivisenVaiheenSivu && projekti.asianhallinta?.inaktiivinen) {
     return (
       <Notification type={NotificationType.WARN}>
         Integraatioyhteys on pois päältä. Käyttäjän tulee itse viedä tiedostot asianhallintaan.
