@@ -39,7 +39,7 @@ const validateJwtToken = async (token: string | undefined, dataToken: string, is
   const publicKeys = await getPublicKeys(tokenPayload.iss);
   const publicKey = publicKeys[tokenHeader.kid];
   if (!publicKey) {
-    log.log("Public key not found");
+    log.error("Public key not found");
     return;
   }
 
