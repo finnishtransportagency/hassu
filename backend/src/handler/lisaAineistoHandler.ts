@@ -1,11 +1,11 @@
-import { LisaAineistot, ListaaLisaAineistoQueryVariables } from "hassu-common/graphql/apiModel";
+import { LadattavatTiedostot, ListaaLisaAineistoQueryVariables } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { NotFoundError } from "hassu-common/error";
 import { lisaAineistoService } from "../tiedostot/lisaAineistoService";
 
 class LisaAineistoHandler {
-  async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LisaAineistot> {
+  async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LadattavatTiedostot> {
     log.info("Loading projekti", { oid });
     if (!params) {
       throw new Error("params ei annettu (listaaLisaAineisto)");

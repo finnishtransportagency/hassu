@@ -1016,14 +1016,14 @@ type ProjektiHakutulosDokumentti {
   oikeusMuokata: Boolean
 }
 
-type LisaAineistot {
+type LadattavatTiedostot {
   poistumisPaiva: String!
-  aineistot: [LisaAineisto!]
-  lisaAineistot: [LisaAineisto!]
+  aineistot: [LadattavaTiedosto!]
+  lisaAineistot: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 
-type LisaAineisto {
+type LadattavaTiedosto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
   """

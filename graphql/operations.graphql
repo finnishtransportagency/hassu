@@ -19,7 +19,7 @@ type Query {
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
   listKirjaamoOsoitteet: [KirjaamoOsoite!]
 
-  listaaLisaAineisto(oid: String!, lisaAineistoTiedot: ListaaLisaAineistoInput): LisaAineistot!
+  listaaLisaAineisto(oid: String!, lisaAineistoTiedot: ListaaLisaAineistoInput): LadattavatTiedostot!
 
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF

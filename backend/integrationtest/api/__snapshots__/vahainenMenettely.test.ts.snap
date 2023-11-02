@@ -427,42 +427,42 @@ Object {
   "obj": Object {
     "aineistot": Array [
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
         "nimi": "aineisto3.txt",
       },
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 2,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
         "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
       },
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 3,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
         "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
       },
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 4,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
         "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
       },
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 5,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
         "nimi": "Yksityistie_lunastukset.pdf",
       },
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
@@ -471,7 +471,7 @@ Object {
     ],
     "lisaAineistot": Array [
       Object {
-        "__typename": "LisaAineisto",
+        "__typename": "LadattavaTiedosto",
         "jarjestys": 1,
         "kategoriaId": undefined,
         "linkki": "***unittest***",
