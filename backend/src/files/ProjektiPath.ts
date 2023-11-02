@@ -3,6 +3,8 @@ import {
   AloitusKuulutusJulkaisu,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
@@ -43,6 +45,8 @@ export abstract class PathTuple {
 export class ProjektiPaths extends PathTuple {
   static PATH_ALOITUSKUULUTUS = "aloituskuulutus";
   static PATH_NAHTAVILLAOLO = "nahtavillaolo";
+  static PATH_LAUSUNTOPYYNTO = "lausuntopyynto";
+  static PATH_LAUSUNTOPYYNNON_TAYDENNYS = "lausuntopyynnon_taydennys";
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   static PATH_JATKOPAATOS1 = "jatkopaatos1";
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
@@ -81,6 +85,14 @@ export class ProjektiPaths extends PathTuple {
 
   nahtavillaoloVaihe(nahtavillaoloVaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | undefined | null): PathTuple {
     return new NahtavillaoloVaihePaths(this, nahtavillaoloVaihe);
+  }
+
+  lausuntoPyynto(lausuntoPyynto: LausuntoPyynto | undefined | null): PathTuple {
+    return new LausuntoPyyntoPaths(this, lausuntoPyynto);
+  }
+
+  lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null): PathTuple {
+    return new LausuntoPyynnonTaydennysPaths(this, lausuntoPyynnonTaydennys);
   }
 
   euLogot(): PathTuple {
@@ -273,6 +285,42 @@ class NahtavillaoloVaihePaths extends PathTuple {
 
   get publicPath(): string {
     return ProjektiPaths.PATH_NAHTAVILLAOLO;
+  }
+}
+
+class LausuntoPyyntoPaths extends PathTuple {
+  private readonly lausuntoPyyntoUuid?: string;
+
+  constructor(parent: PathTuple, lausuntoPyynto: LausuntoPyynto | undefined | null) {
+    super(parent);
+    this.lausuntoPyyntoUuid = lausuntoPyynto?.uuid;
+  }
+
+  get yllapitoPath(): string {
+    assertIsDefined(this.lausuntoPyyntoUuid, "lausuntoPyyntoUuid pitää olla annettu");
+    return ProjektiPaths.PATH_LAUSUNTOPYYNTO + "/" + this.lausuntoPyyntoUuid;
+  }
+
+  get publicPath(): string {
+    return ProjektiPaths.PATH_LAUSUNTOPYYNTO;
+  }
+}
+
+class LausuntoPyynnonTaydennysPaths extends PathTuple {
+  private readonly lausuntoPyynnonTaydennysUuid?: string;
+
+  constructor(parent: PathTuple, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null) {
+    super(parent);
+    this.lausuntoPyynnonTaydennysUuid = lausuntoPyynnonTaydennys?.uuid;
+  }
+
+  get yllapitoPath(): string {
+    assertIsDefined(this.lausuntoPyynnonTaydennysUuid, "lausuntoPyynnonTaydennysUuid pitää olla annettu");
+    return ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS + "/" + this.lausuntoPyynnonTaydennysUuid;
+  }
+
+  get publicPath(): string {
+    return ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS;
   }
 }
 
