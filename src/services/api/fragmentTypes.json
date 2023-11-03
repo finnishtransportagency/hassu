@@ -387,6 +387,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "LadattavaTiedosto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LadattavatTiedostot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "LadattuTiedosto",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -435,19 +447,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "LisaAineisto",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "LisaAineistoParametrit",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LisaAineistot",
         "possibleTypes": null,
         "__typename": "__Type"
       },
