@@ -204,7 +204,7 @@ function SuunnitteluPageLayout({
         {!migroitu &&
           (!tilaJulkinen ? (
             <>
-              <OhjelistaNotification vaihe={Vaihe.SUUNNITTELU}>
+              <OhjelistaNotification vaihe={Vaihe.SUUNNITTELU} open={ohjeetOpen} onClose={ohjeetOnClose}>
                 <li>
                   Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
                   tiedot.
@@ -227,34 +227,6 @@ function SuunnitteluPageLayout({
                 </li>
                 <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
               </OhjelistaNotification>
-              <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
-                <div>
-                  <h3 className="vayla-small-title">Ohjeet</h3>
-                  <ul className="list-disc block pl-5">
-                    <li>
-                      Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä
-                      vuorovaikutustilaisuuksien tiedot.
-                    </li>
-                    <li>
-                      Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-                      suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
-                      julkaisun jälkeen.
-                    </li>
-                    <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
-                    <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
-                    <li>
-                      Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
-                      kutsusta ajoissa.
-                    </li>
-                    <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
-                    <li>
-                      Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
-                      julkaisuun asti.
-                    </li>
-                    <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
-                  </ul>
-                </div>
-              </Notification>
             </>
           ) : (
             <>

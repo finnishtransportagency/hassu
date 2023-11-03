@@ -32,7 +32,6 @@ import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
-import Notification, { NotificationType } from "@components/notification/Notification";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -140,7 +139,7 @@ function KayttoOikeusHallintaFormElements({
   return (
     <Section gap={8}>
       {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
-      <OhjelistaNotification>
+      <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
         <li>
           Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
           roskakoripainikkeella.
@@ -164,35 +163,7 @@ function KayttoOikeusHallintaFormElements({
           </li>
         )}
       </OhjelistaNotification>
-      <Notification type={NotificationType.INFO} hideIcon closable open={ohjeetOpen} onClose={ohjeetOnClose}>
-        <div>
-          <h4 className="vayla-small-title">Ohjeet</h4>
-          <ul className="list-disc block pl-5">
-            <li>
-              Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
-              roskakoripainikkeella.
-            </li>
-            <li>
-              Valitse ‘Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa’, jos haluat henkilön yhteystiedot
-              julkaistavan. Kuulutuksissa esitettävät yhteystiedot valitaan erikseen kuulutuksien yhteydessä. Projektipäällikön yhteystiedot
-              näytetään aina.
-            </li>
-            {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
-              <li>
-                Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva
-                (tunnus muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja
-                muokkausoikeudet. Jos et saa asetettua haluamaasi henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
-              </li>
-            ) : (
-              <li>
-                Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet.
-                Projektipäälliköllä ja varahenkilöllä on oikeus käsitellä varahenkilöoikeuksia. Ota tarvittaessa yhteys projektipäällikköön
-                tai varahenkilöön.
-              </li>
-            )}
-          </ul>
-        </div>
-      </Notification>
+
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>
           <ContentSpacer>

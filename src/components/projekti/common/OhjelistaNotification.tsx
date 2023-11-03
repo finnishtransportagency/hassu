@@ -5,7 +5,7 @@ import { Vaihe } from "@services/api";
 import { KatsoTarkemmatASHAOhjeetLink } from "./KatsoTarkemmatASHAOhjeetLink";
 import useCurrentUser from "src/hooks/useCurrentUser";
 
-type Props = { children: ReactNode; vaihe?: Vaihe };
+type Props = { children: ReactNode; vaihe?: Vaihe; open?: boolean; onClose?: () => void };
 
 const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   ALOITUSKUULUTUS: "Kuuluttaminen suunnittelun ja maastotöiden aloittamisesta",
@@ -28,10 +28,10 @@ const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   </>
 );
 
-export const OhjelistaNotification: VFC<Props> = ({ children, vaihe }) => {
+export const OhjelistaNotification: VFC<Props> = ({ children, vaihe, open, onClose }) => {
   const { data: nykyinenKayttaja } = useCurrentUser();
   return (
-    <Notification closable type={NotificationType.INFO} hideIcon>
+    <Notification closable type={NotificationType.INFO} hideIcon open={open} onClose={onClose}>
       <div>
         <H3 variant="h4">Ohjeet</H3>
         <ul className="list-disc block pl-5">

@@ -22,7 +22,6 @@ import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
-import Notification, { NotificationType } from "@components/notification/Notification";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -179,6 +178,10 @@ function PaatosPageLayoutContent({
     ohjeetSetOpen(false);
     localStorage.setItem("paatoskuulutuksenOhjeet", "false");
   }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("paatoskuulutuksenOhjeet", "true");
+  }, []);
 
   return (
     <ProjektiPageLayout
@@ -193,6 +196,8 @@ function PaatosPageLayoutContent({
           />
         )
       }
+      showInfo={!ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
     >
       {!migroitu ? (
         <>
@@ -207,15 +212,9 @@ function PaatosPageLayoutContent({
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
               <>
-                <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]}>
+                <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]} open={ohjeetOpen} onClose={ohjeetOnClose}>
                   <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
                 </OhjelistaNotification>
-                <Notification closable type={NotificationType.INFO} hideIcon open={ohjeetOpen} onClose={ohjeetOnClose}>
-                  <div>
-                    <h3 className="vayla-small-title">Ohjeet</h3>
-                    <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-                  </div>
-                </Notification>
               </>
             )}
             <Tabs value={value}>
