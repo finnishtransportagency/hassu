@@ -4,6 +4,8 @@ import {
   AsetaPalauteVastattuMutationVariables,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
+  EsikatseleLausuntoPyynnonTiedostotQueryVariables,
+  EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   Kayttaja,
@@ -16,10 +18,16 @@ import {
   LataaProjektiJulkinenQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
+  LausuntoPyynnonTaydennysInput,
+  LausuntoPyyntoInput,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
   ListaaKayttajatQueryVariables,
+  ListaaLausuntoPyynnonTiedostotQueryVariables,
+  ListaaLausuntoPyynnonTaydennyksenTiedostotInput,
+  ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
+  ListaaLausuntoPyyntoTiedostotInput,
   ListaaLisaAineistoInput,
   ListaaLisaAineistoQueryVariables,
   ListaaPalautteetQueryVariables,
@@ -247,6 +255,28 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaLisaAineisto,
   },
+  listaaLausuntoPyynnonTiedostot: {
+    name: "listaaLausuntoPyynnonTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaLausuntoPyynnonTiedostot,
+  },
+  listaaLausuntoPyynnonTaydennyksenTiedostot: {
+    name: "listaaLausuntoPyynnonTaydennyksenTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaLausuntoPyynnonTaydennyksenTiedostot,
+  },
+  esikatseleLausuntoPyynnonTiedostot: {
+    name: "esikatseleLausuntoPyynnonTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.esikatseleLausuntoPyynnonTiedostot,
+    isYllapitoOperation: true,
+  },
+  esikatseleLausuntoPyynnonTaydennysTiedostot: {
+    name: "esikatseleLausuntoPyynnonTaydennysTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.esikatseleLausuntoPyynnonTaydennysTiedostot,
+    isYllapitoOperation: true,
+  },
   annaPalautettaPalvelusta: {
     name: "annaPalautettaPalvelusta",
     operationType: OperationType.Mutation,
@@ -458,6 +488,43 @@ export abstract class AbstractApi {
       oid,
       lisaAineistoTiedot,
     } as ListaaLisaAineistoQueryVariables);
+  }
+
+  async listaaLausuntoPyynnonTiedostot(
+    oid: string,
+    listaaLausuntoPyyntoTiedostotInput: ListaaLausuntoPyyntoTiedostotInput
+  ): Promise<LadattavatTiedostot> {
+    return await this.callAPI(apiConfig.listaaLausuntoPyynnonTiedostot, {
+      oid,
+      listaaLausuntoPyyntoTiedostotInput,
+    } as ListaaLausuntoPyynnonTiedostotQueryVariables);
+  }
+
+  async listaaLausuntoPyynnonTaydennyksenTiedostot(
+    oid: string,
+    listaaLausuntoPyynnonTaydennyksenTiedostotInput: ListaaLausuntoPyynnonTaydennyksenTiedostotInput
+  ): Promise<LadattavatTiedostot> {
+    return await this.callAPI(apiConfig.listaaLausuntoPyynnonTaydennyksenTiedostot, {
+      oid,
+      listaaLausuntoPyynnonTaydennyksenTiedostotInput,
+    } as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables);
+  }
+
+  async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
+    return await this.callAPI(apiConfig.esikatseleLausuntoPyynnonTiedostot, {
+      oid,
+      lausuntoPyyntoInput,
+    } as EsikatseleLausuntoPyynnonTiedostotQueryVariables);
+  }
+
+  async esikatseleLausuntoPyynnonTaydennysTiedostot(
+    oid: string,
+    lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
+  ): Promise<LadattavatTiedostot> {
+    return await this.callAPI(apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot, {
+      oid,
+      lausuntoPyynnonTaydennysInput,
+    } as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables);
   }
 
   async suoritaTestiKomento(testiKomento: TestiKomentoInput): Promise<string> {

@@ -3,6 +3,8 @@ import {
   LataaProjektiJulkinenQueryVariables,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
+  ListaaLausuntoPyynnonAineistotQueryVariables,
+  ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables,
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
@@ -19,6 +21,7 @@ import { log } from "../logger";
 import { palauteHandlerJulkinen } from "../palaute/palauteHandlerJulkinen";
 import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJulkinenHandler";
 import { getSuomiFiKayttaja } from "../user/userService";
+import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 
 export async function executePublicOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -43,6 +46,12 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
       return palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
     case apiConfig.nykyinenSuomifiKayttaja.name:
       return getSuomiFiKayttaja();
+    case apiConfig.listaaLausuntoPyynnonAineistot.name:
+      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonAineistot(event.arguments as ListaaLausuntoPyynnonAineistotQueryVariables);
+    case apiConfig.listaaLausuntoPyynnonTaydennyksenAineistot.name:
+      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysAineistot(
+        event.arguments as ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables
+      );
     default:
       return null;
   }

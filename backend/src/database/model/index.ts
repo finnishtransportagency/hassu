@@ -4,3 +4,4 @@ export * from "./suunnitteluVaihe";
 export * from "./nahtavillaoloVaihe";
 export * from "./hyvaksymisPaatosVaihe";
 export * from "./palaute";
+export * from "./lausuntoPyynnot";
