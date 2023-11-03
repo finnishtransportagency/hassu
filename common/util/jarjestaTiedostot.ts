@@ -1,9 +1,9 @@
 import { Aineisto } from "../../backend/src/database/model";
 
-type GenericAineisto = Pick<Aineisto, "jarjestys" | "nimi">;
-type AineistoSortFunction = (a: GenericAineisto, b: GenericAineisto) => number;
+type GenericTiedosto = Pick<Aineisto, "jarjestys" | "nimi">;
+type TiedostoSortFunction = (a: GenericTiedosto, b: GenericTiedosto) => number;
 
-export const jarjestaAineistot: AineistoSortFunction = (a, b) => {
+export const jarjestaTiedostot: TiedostoSortFunction = (a, b) => {
   if (typeof a.jarjestys !== "number" && typeof b.jarjestys !== "number") {
     return a.nimi.localeCompare(b.nimi);
   } else if (typeof a.jarjestys !== "number") {

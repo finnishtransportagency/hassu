@@ -57,7 +57,7 @@ import {
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import {
   HyvaksymisPaatosVaiheScheduleManager,
   isVerkkotilaisuusLinkkiVisible,
@@ -519,7 +519,7 @@ function adaptAineistotJulkinen(
   if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
-      .sort(jarjestaAineistot)
+      .sort(jarjestaTiedostot)
       .map((aineisto) => {
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
