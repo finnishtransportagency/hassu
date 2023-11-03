@@ -19,7 +19,7 @@ import {
 } from "../util/lausuntoPyyntoUtil";
 import { adaptLausuntoPyynnonTaydennysToSave, adaptLausuntoPyyntoToSave } from "../projekti/adapter/adaptToDB/adaptLausuntoPyynnotToSave";
 import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../files/fileService";
 
 class TiedostoDownloadLinkService {
@@ -63,13 +63,13 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const lisaAineistot =
       (
         await Promise.all(
           uusiLausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -95,7 +95,7 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muuAineisto?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const muistutukset =
       (
         await Promise.all(
@@ -103,7 +103,7 @@ class TiedostoDownloadLinkService {
             this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)
           ) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -126,13 +126,13 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const lisaAineistot =
       (
         await Promise.all(
           lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
@@ -155,7 +155,7 @@ class TiedostoDownloadLinkService {
             ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
             .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const muistutukset =
       (
         await Promise.all(
@@ -163,7 +163,7 @@ class TiedostoDownloadLinkService {
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
             .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) || []
         )
-      ).sort(jarjestaAineistot) || [];
+      ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
