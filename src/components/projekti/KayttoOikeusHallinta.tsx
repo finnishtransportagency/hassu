@@ -46,6 +46,8 @@ interface Props {
   suunnitteluSopimusYhteysHenkilo?: string | undefined;
   projekti: ProjektiLisatiedolla;
   includeTitle: boolean;
+  ohjeetOpen: boolean;
+  ohjeetOnClose: () => void;
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
@@ -95,6 +97,8 @@ function KayttoOikeusHallintaFormElements({
   suunnitteluSopimusYhteysHenkilo,
   projekti,
   includeTitle,
+  ohjeetOpen,
+  ohjeetOnClose,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -135,7 +139,7 @@ function KayttoOikeusHallintaFormElements({
   return (
     <Section gap={8}>
       {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
-      <OhjelistaNotification>
+      <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
         <li>
           Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
           roskakoripainikkeella.
@@ -159,6 +163,7 @@ function KayttoOikeusHallintaFormElements({
           </li>
         )}
       </OhjelistaNotification>
+
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>
           <ContentSpacer>

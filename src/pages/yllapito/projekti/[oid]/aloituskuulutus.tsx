@@ -1,8 +1,8 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
-import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { useProjekti } from "src/hooks/useProjekti";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
@@ -255,6 +255,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const { handleDraftSubmit } = useHandleSubmit(useFormReturn);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("aloituskuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("aloituskuulutuksenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("aloituskuulutuksenOhjeet", "true");
+  }, []);
+
   if (!projekti || isLoadingProjekti) {
     return <></>;
   }
@@ -282,6 +296,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     <ProjektiPageLayout
       title="Aloituskuulutus"
       vaihe={Vaihe.ALOITUSKUULUTUS}
+      showInfo={voiMuokata && !ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
       contentAsideTitle={
         showUudelleenkuulutaButton && (
           <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />
@@ -313,7 +329,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
-                  <OhjelistaNotification vaihe={Vaihe.ALOITUSKUULUTUS}>
+                  <OhjelistaNotification vaihe={Vaihe.ALOITUSKUULUTUS} open={ohjeetOpen} onClose={ohjeetOnClose}>
                     <li>
                       Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan samana
                       päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
@@ -334,6 +350,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                     <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
                   </OhjelistaNotification>
+
                   <ContentSpacer>
                     <h5 className="vayla-small-title">Kuulutus- ja julkaisupäivä</h5>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>

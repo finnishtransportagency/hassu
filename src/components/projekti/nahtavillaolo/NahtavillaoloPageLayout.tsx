@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Tabs } from "@mui/material";
@@ -90,6 +90,20 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
 
   const showSiirraButton = projekti.nykyinenKayttaja.onYllapitaja && isAllowedToMoveBackToSuunnitteluvaihe(projekti);
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("nahtavillaolokuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("nahtavillaolokuulutuksenOhjeet", "true");
+  }, []);
+
   const contentAsideTitle = useMemo(() => {
     if (!showUudelleenkuulutaButton && !showSiirraButton) {
       return null;
@@ -106,7 +120,13 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
 
   return (
-    <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Kuulutus nähtäville asettamisesta" contentAsideTitle={contentAsideTitle}>
+    <ProjektiPageLayout
+      vaihe={Vaihe.NAHTAVILLAOLO}
+      title="Kuulutus nähtäville asettamisesta"
+      contentAsideTitle={contentAsideTitle}
+      showInfo={!ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
+    >
       {!migroitu ? (
         <>
           <Section noDivider>
@@ -120,7 +140,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                     vaihe={projekti.nahtavillaoloVaihe}
                   />
                 )}
-                <OhjelistaNotification vaihe={Vaihe.NAHTAVILLAOLO}>
+                <OhjelistaNotification vaihe={Vaihe.NAHTAVILLAOLO} onClose={ohjeetOnClose} open={ohjeetOpen}>
                   <li>
                     Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot, esim. johtokartat, ensimmäiseltä
                     välilehdeltä.

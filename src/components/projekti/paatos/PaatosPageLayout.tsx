@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState, VFC } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
@@ -169,6 +169,20 @@ function PaatosPageLayoutContent({
     !nextPaatosData?.julkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("paatoskuulutuksenOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("paatoskuulutuksenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("paatoskuulutuksenOhjeet", "true");
+  }, []);
+
   return (
     <ProjektiPageLayout
       title={pageTitle}
@@ -182,6 +196,8 @@ function PaatosPageLayoutContent({
           />
         )
       }
+      showInfo={!ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
     >
       {!migroitu ? (
         <>
@@ -195,9 +211,11 @@ function PaatosPageLayoutContent({
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-              <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]}>
-                <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-              </OhjelistaNotification>
+              <>
+                <OhjelistaNotification vaihe={paatosSpecificVaihe[paatosTyyppi]} open={ohjeetOpen} onClose={ohjeetOnClose}>
+                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                </OhjelistaNotification>
+              </>
             )}
             <Tabs value={value}>
               {tabProps.map((tProps, index) => (
