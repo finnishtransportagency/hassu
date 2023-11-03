@@ -39,13 +39,13 @@ import { ProjektiTiedostoManager } from "../tiedostot/ProjektiTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
-import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
 import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
+import { persistLadattuTiedosto } from "../files/persistFiles";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -425,31 +425,6 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
   }
 }
 
-async function persistLadattuTiedosto(oid: string, ladattuTiedosto: LadattuTiedosto, targetFilePathInProjekti: string) {
-  if (ladattuTiedosto) {
-    if (!ladattuTiedosto.tuotu) {
-      const uploadedFile: string = await fileService.persistFileToProjekti({
-        uploadedFileSource: ladattuTiedosto.tiedosto,
-        oid,
-        targetFilePathInProjekti,
-      });
-
-      const fileName = uploadedFile.split("/").pop();
-      assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
-      ladattuTiedosto.tiedosto = uploadedFile;
-      ladattuTiedosto.nimi = fileName;
-      ladattuTiedosto.tuotu = localDateTimeString();
-    } else if (ladattuTiedosto.nimi == null) {
-      // Deletoi tiedosto
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: ladattuTiedosto.tiedosto,
-        reason: "Käyttäjä poisti tiedoston",
-      });
-    }
-  }
-}
-
 async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K extends keyof T>(
   oid: string,
   container: T | undefined | null,
@@ -462,7 +437,12 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   for (const key of keys) {
     const ladattuTiedosto = container[key];
     if (ladattuTiedosto) {
-      await persistLadattuTiedosto(oid, ladattuTiedosto, path.yllapitoPath);
+      await persistLadattuTiedosto({
+        oid,
+        ladattuTiedosto,
+        targetFilePathInProjekti: path.yllapitoPath,
+        poistetaan: !ladattuTiedosto.nimi,
+      });
     }
   }
 }
@@ -488,11 +468,12 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
     const vuorovaikutusKierros = dbProjekti.vuorovaikutusKierros;
     const kutsuPDFLadattuTiedosto = vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
     if (kutsuPDFLadattuTiedosto) {
-      await persistLadattuTiedosto(
-        dbProjekti.oid,
-        kutsuPDFLadattuTiedosto,
-        new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath
-      );
+      await persistLadattuTiedosto({
+        oid: dbProjekti.oid,
+        ladattuTiedosto: kutsuPDFLadattuTiedosto,
+        targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
+        poistetaan: !kutsuPDFLadattuTiedosto.nimi,
+      });
     }
   });
 }
