@@ -13,7 +13,7 @@ import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } 
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
@@ -37,8 +37,8 @@ class LisaAineistoService {
       return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
     }
 
-    const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
-    const lisaAineistot = (await Promise.all(nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaTiedostot) || [];
+    const lisaAineistot = (await Promise.all(nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [])).sort(jarjestaTiedostot) || [];
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;

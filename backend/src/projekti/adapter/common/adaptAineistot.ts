@@ -4,7 +4,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { nyt } from "../../../util/dateUtil";
-import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 
 export function adaptAineistot(
   aineistot: Aineisto[] | undefined | null,
@@ -17,7 +17,7 @@ export function adaptAineistot(
   if (aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
-      .sort(jarjestaAineistot)
+      .sort(jarjestaTiedostot)
       .map((aineisto) => {
         const apiAineisto: API.Aineisto = {
           __typename: "Aineisto",
