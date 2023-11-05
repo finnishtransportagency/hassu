@@ -68,12 +68,13 @@ export default function Soittoaika({
                 errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
               >
                 {projektiHenkilot?.map((hlo) => {
-                  const tunnuslista = value || [];
+                  const { kayttajatunnus, ...yhteystietoIlmanKayttajatunnusta } = hlo;
+                  const tunnuslista = value ?? [];
                   return (
                     <Fragment key={hlo.kayttajatunnus}>
                       <FormControlLabel
                         sx={{ marginLeft: "0px" }}
-                        label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
+                        label={yhteystietoVirkamiehelleTekstiksi(yhteystietoIlmanKayttajatunnusta, t)}
                         control={
                           <Checkbox
                             disabled={!!peruttu}

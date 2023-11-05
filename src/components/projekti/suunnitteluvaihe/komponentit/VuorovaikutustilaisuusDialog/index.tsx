@@ -354,7 +354,7 @@ export default function VuorovaikutusDialog({
 
       <DialogActions>
         <Button primary onClick={handleSubmit(saveTilaisuudet)} id="save_vuorovaikutus_tilaisuudet">
-          {mostlyDisabled ? "Päivitä" : "Tallenna"}
+          {mostlyDisabled ? "Päivitä" : "OK"}
         </Button>
         <Button
           onClick={(e) => {
