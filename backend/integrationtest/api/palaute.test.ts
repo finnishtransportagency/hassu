@@ -6,7 +6,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { api } from "./apiClient";
 import { defaultMocks, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
-import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
+import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "../../commonTestUtil/cleanUpFunctions";
 import * as sinon from "sinon";
 import fs from "fs";
 import { virusScanService } from "../../src/files/virusScanService";

@@ -24,7 +24,7 @@ import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 import { mockBankHolidays, mockParameters } from "../mocks";
 import * as sinon from "sinon";
-import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
+import { cleanupUrlsInPDF } from "../../commonTestUtil/cleanUpFunctions";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
@@ -158,7 +158,7 @@ describe("asiakirjaService", () => {
       luonnos: true,
       asiakirjaTyyppi,
     });
-    pdf.textContent = cleanupNahtavillaUrlsInPDF(pdf.textContent);
+    pdf.textContent = cleanupUrlsInPDF(pdf.textContent);
     expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
   }
 

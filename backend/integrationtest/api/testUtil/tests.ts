@@ -5,10 +5,10 @@ import { apiTestFixture } from "../apiTestFixture";
 import fs from "fs";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
-  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
-  cleanupUudelleenKuulutusTimestamps,
+  cleanupNahtavillaoloTimestamps,
+  cleanupVaiheTimestamps,
   cleanupVuorovaikutusKierrosTimestamps,
-} from "./cleanUpFunctions";
+} from "../../../commonTestUtil/cleanUpFunctions";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
@@ -733,7 +733,7 @@ export async function testPublicAccessToProjekti(
   publicProjekti.paivitetty = "***unittest***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (publicProjekti?.nahtavillaoloVaihe) {
-    publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(publicProjekti.nahtavillaoloVaihe);
+    publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloTimestamps(publicProjekti.nahtavillaoloVaihe);
   }
 
   [
@@ -743,7 +743,7 @@ export async function testPublicAccessToProjekti(
     publicProjekti.jatkoPaatos1Vaihe,
     publicProjekti.jatkoPaatos2Vaihe,
   ].forEach((vaihe) => {
-    cleanupUudelleenKuulutusTimestamps(vaihe);
+    cleanupVaiheTimestamps(vaihe);
   });
   if (publicProjekti.vuorovaikutukset) {
     publicProjekti.vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(publicProjekti.vuorovaikutukset);

@@ -24,11 +24,7 @@ import { expect } from "chai";
 import { api } from "../apiClient";
 import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot, takeYllapitoS3Snapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
-import {
-  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps,
-  cleanupNahtavillaoloTimestamps,
-} from "./cleanUpFunctions";
+import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../../commonTestUtil/cleanUpFunctions";
 import capitalize from "lodash/capitalize";
 import { EventSqsClientMock } from "./eventSqsClientMock";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
@@ -221,9 +217,7 @@ export async function testHyvaksymisPaatosVaiheAineistoMuokkausApproval(
     userFixture,
     "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
     (projektiJulkinen) =>
-      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-        projektiJulkinen.hyvaksymisPaatosVaihe!
-      ))
+      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheTimestamps(projektiJulkinen.hyvaksymisPaatosVaihe!))
   );
 
   await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
@@ -298,9 +292,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
     userFixture,
     "HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
     (projektiJulkinen) =>
-      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-        projektiJulkinen.hyvaksymisPaatosVaihe!
-      ))
+      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheTimestamps(projektiJulkinen.hyvaksymisPaatosVaihe!))
   );
 
   await takePublicS3Snapshot(projekti.oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
@@ -322,9 +314,7 @@ export async function testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisy
     "HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
     (projektiJulkinen) => {
       assertIsDefined(projektiJulkinen.hyvaksymisPaatosVaihe);
-      projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-        projektiJulkinen.hyvaksymisPaatosVaihe
-      );
+      projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheTimestamps(projektiJulkinen.hyvaksymisPaatosVaihe);
       return projektiJulkinen.hyvaksymisPaatosVaihe;
     }
   );

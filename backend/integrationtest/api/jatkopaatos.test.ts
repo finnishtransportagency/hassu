@@ -28,10 +28,7 @@ import {
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
 import { expect } from "chai";
-import {
-  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps,
-} from "./testUtil/cleanUpFunctions";
+import { cleanupHyvaksymisPaatosVaiheTimestamps } from "../../commonTestUtil/cleanUpFunctions";
 import { assertIsDefined } from "../../src/util/assertions";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
@@ -304,8 +301,7 @@ export async function testJatkoPaatos1VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos1VaiheJulkinenAfterApproval",
-    (projektiJulkinen) =>
-      (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos1Vaihe))
+    (projektiJulkinen) => (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheTimestamps(projektiJulkinen.jatkoPaatos1Vaihe))
   );
 }
 
@@ -344,8 +340,7 @@ export async function testJatkoPaatos2VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos2VaiheJulkinenAfterApproval",
-    (projektiJulkinen) =>
-      (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos2Vaihe))
+    (projektiJulkinen) => (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheTimestamps(projektiJulkinen.jatkoPaatos2Vaihe))
   );
 }
 

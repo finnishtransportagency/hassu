@@ -1,5 +1,12 @@
 import { describe, it } from "mocha";
-import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import {
+  HyvaksymisPaatosVaiheJulkaisuJulkinen,
+  Kieli,
+  NahtavillaoloVaiheJulkaisuJulkinen,
+  Status,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "hassu-common/graphql/apiModel";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -68,11 +75,7 @@ import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUti
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
-import {
-  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
-  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
-} from "./testUtil/cleanUpFunctions";
+import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../commonTestUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
@@ -319,8 +322,9 @@ describe("Api", () => {
       userFixture,
       "NahtavillaOloJulkinenAfterApprovalAndPublic",
       (projektiJulkinen) => {
-        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
-        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
+        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloTimestamps<NahtavillaoloVaiheJulkaisuJulkinen>(
+          projektiJulkinen.nahtavillaoloVaihe
+        );
         return projektiJulkinen.nahtavillaoloVaihe;
       }
     );
@@ -409,7 +413,7 @@ describe("Api", () => {
       userFixture,
       "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
       (projektiJulkinen) =>
-        (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+        (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheTimestamps<HyvaksymisPaatosVaiheJulkaisuJulkinen>(
           projektiJulkinen.hyvaksymisPaatosVaihe!
         ))
     );
