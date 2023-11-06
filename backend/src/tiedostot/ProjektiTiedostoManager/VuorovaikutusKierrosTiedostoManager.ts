@@ -9,6 +9,7 @@ import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { findJulkaisuWithAsianhallintaEventId, getAsiatunnus } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   private nahtavillaoloVaiheTiedostoManager: NahtavillaoloVaiheTiedostoManager;
@@ -34,7 +35,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
     ];
   }
 
-  getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedosto[] {
+  getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedostoPathsPair[] {
     const tiedostot: LadattuTiedosto[] = [];
     const saamePDFt = vaihe.vuorovaikutusSaamePDFt;
     if (saamePDFt) {
@@ -45,7 +46,8 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
         }
       });
     }
-    return tiedostot;
+    const paths = this.projektiPaths.vuorovaikutus(vaihe);
+    return [{ tiedostot, paths }];
   }
 
   async synchronize(): Promise<boolean> {

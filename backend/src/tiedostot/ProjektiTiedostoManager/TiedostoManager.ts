@@ -1,7 +1,7 @@
-import { AineistoPathsPair, handleAineistot } from ".";
-import { LadattuTiedosto } from "../../database/model";
+import { AineistoPathsPair, handleAineistot, handleTiedostot } from ".";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { AineistoTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export abstract class TiedostoManager<T> {
   public readonly oid: string;
@@ -29,8 +29,18 @@ export abstract class TiedostoManager<T> {
   }
 
   async handleChangedTiedostot(): Promise<T | undefined> {
-    // TODO when relevant
-    throw new Error("not yet implemented");
+    if (this.vaihe) {
+      let changes = false;
+      // Tiedostot, joita saadaan ulos this.getLadatutTiedostot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
+      for (const element of this.getLadatutTiedostot(this.vaihe)) {
+        // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
+        // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
+        changes = await handleTiedostot(this.oid, element.tiedostot, element.paths);
+      }
+      if (changes) {
+        return this.vaihe;
+      }
+    }
   }
 
   // On äärimmäisen tärkeää handleChanges()-funktion toiminnan kannnalta,
@@ -40,7 +50,7 @@ export abstract class TiedostoManager<T> {
   // nähtävillä, kun tarkastellaan tuota parametrina annettuna vaihetta kutsumalla this.vaihe.
   abstract getAineistot(vaihe: T): AineistoPathsPair[];
 
-  abstract getLadatutTiedostot(vaihe: T): LadattuTiedosto[];
+  abstract getLadatutTiedostot(vaihe: T): LadattuTiedostoPathsPair[];
 
   isReady(): boolean {
     function hasAllAineistoValmis(element: AineistoPathsPair): boolean {
@@ -48,6 +58,13 @@ export abstract class TiedostoManager<T> {
         return true;
       }
       return element.aineisto?.every((a) => a.tila == AineistoTila.VALMIS);
+    }
+
+    function hasAllLadattuTiedostoValmis(element: LadattuTiedostoPathsPair): boolean {
+      if (!element.tiedostot) {
+        return true;
+      }
+      return element.tiedostot?.every((a) => a.tila == LadattuTiedostoTila.VALMIS || a.tiedosto);
     }
 
     let ready = true;
@@ -59,8 +76,9 @@ export abstract class TiedostoManager<T> {
       }
 
       const ladatutTiedostot = this.getLadatutTiedostot(this.vaihe);
-      for (const ladattuTiedosto of ladatutTiedostot) {
-        ready = ready && !!ladattuTiedosto.tuotu;
+      for (const element of ladatutTiedostot) {
+        const tmp = hasAllLadattuTiedostoValmis(element);
+        ready = ready && tmp;
       }
     }
     return ready;

@@ -4,6 +4,8 @@ import {
   JatkoPaatos1VaiheTiedostoManager,
   JatkoPaatos2VaiheTiedostoManager,
   NahtavillaoloVaiheTiedostoManager,
+  LausuntoPyyntoTiedostoManager,
+  LausuntoPyynnonTaydennyksetTiedostoManager,
   VuorovaikutusKierrosTiedostoManager,
   VuorovaikutusKierrosJulkaisuTiedostoManager,
 } from ".";
@@ -37,6 +39,14 @@ export class ProjektiTiedostoManager {
       this.projekti.nahtavillaoloVaihe,
       this.projekti.nahtavillaoloVaiheJulkaisut
     );
+  }
+
+  getLausuntoPyynnot(): LausuntoPyyntoTiedostoManager {
+    return new LausuntoPyyntoTiedostoManager(this.projekti.oid, this.projekti.lausuntoPyynnot, this.projekti.nahtavillaoloVaiheJulkaisut);
+  }
+
+  getLausuntoPyynnonTaydennykset(): LausuntoPyynnonTaydennyksetTiedostoManager {
+    return new LausuntoPyynnonTaydennyksetTiedostoManager(this.projekti.oid, this.projekti.lausuntoPyynnonTaydennykset);
   }
 
   getVuorovaikutusKierros(): VuorovaikutusKierrosTiedostoManager {

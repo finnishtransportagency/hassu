@@ -10,5 +10,7 @@ export * from "./HyvaksymisPaatosVaiheTiedostoManager";
 export * from "./JatkoPaatos1VaiheTiedostoManager";
 export * from "./JatkoPaatos2VaiheTiedostoManager";
 export * from "./NahtavillaoloVaiheTiedostoManager";
+export * from "./LausuntoPyyntoTiedostoManager";
+export * from "./LausuntoPyynnonTaydennysTiedostoManager";
 export * from "./VuorovaikutusKierrosTiedostoManager";
 export * from "./VuorovaikutusKierrosJulkaisuTiedostoManager";

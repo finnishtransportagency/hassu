@@ -1,12 +1,13 @@
 import { KuulutusJulkaisuTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, LadattuTiedosto } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo } from "../../projekti/adapter/common";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -17,8 +18,9 @@ export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
     ];
   }
 
-  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedosto[] {
-    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
+  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedostoPathsPair[] {
+    const paths = this.projektiPaths.jatkoPaatos2Vaihe(vaihe);
+    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt), paths }];
   }
 
   async synchronize(): Promise<boolean> {
@@ -38,8 +40,10 @@ export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
     return [];
   }
 
-  getAsianhallintaSynkronointi(projekti: DBProjekti,
-    asianhallintaEventId: string | null | undefined): AsianhallintaSynkronointi | undefined {
+  getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined {
     const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
     if (!julkaisu || !julkaisu.asianhallintaEventId) {
       // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
@@ -55,7 +59,7 @@ export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
         pdf?.hyvaksymisKuulutusPDFPath,
         pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
-        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
       );
     });
 

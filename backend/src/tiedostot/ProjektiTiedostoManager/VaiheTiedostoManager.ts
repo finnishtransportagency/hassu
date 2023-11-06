@@ -30,13 +30,15 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
     const filesToZip: ZipSourceFile[] = [];
     const yllapitoPath = this.projektiPaths.yllapitoFullPath;
     for (const aineistot of aineistotPaths) {
-      if (!aineistot.aineisto) return;
-      for (const aineisto of aineistot.aineisto) {
-        const folder = translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/";
-        filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
+      if (aineistot.aineisto) {
+        for (const aineisto of aineistot.aineisto) {
+          if (aineisto.tila === AineistoTila.VALMIS) {
+            const folder = translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/";
+            filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
+          }
+        }
       }
     }
-
     await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
   }
 

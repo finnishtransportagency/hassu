@@ -1,6 +1,6 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, LadattuTiedosto } from "../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { parseOptionalDate } from "../../util/dateUtil";
@@ -8,14 +8,16 @@ import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getAineistot(): AineistoPathsPair[] {
     return [];
   }
 
-  getLadatutTiedostot(vaihe: AloitusKuulutus): LadattuTiedosto[] {
-    return getKuulutusSaamePDFt(vaihe.aloituskuulutusSaamePDFt);
+  getLadatutTiedostot(vaihe: AloitusKuulutus): LadattuTiedostoPathsPair[] {
+    const paths = this.projektiPaths.aloituskuulutus(vaihe);
+    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.aloituskuulutusSaamePDFt), paths }];
   }
 
   async synchronize(): Promise<boolean> {
