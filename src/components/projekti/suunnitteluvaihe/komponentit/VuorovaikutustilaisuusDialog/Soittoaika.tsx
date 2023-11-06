@@ -45,6 +45,12 @@ export default function Soittoaika({
   return (
     <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+      <Lisatiedot
+        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.SOITTOAIKA}
+        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
+        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+        index={index}
+      />
       <SectionContent>
         <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
         <p>
@@ -62,12 +68,13 @@ export default function Soittoaika({
                 errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
               >
                 {projektiHenkilot?.map((hlo) => {
-                  const tunnuslista = value || [];
+                  const { kayttajatunnus, ...yhteystietoIlmanKayttajatunnusta } = hlo;
+                  const tunnuslista = value ?? [];
                   return (
                     <Fragment key={hlo.kayttajatunnus}>
                       <FormControlLabel
                         sx={{ marginLeft: "0px" }}
-                        label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
+                        label={yhteystietoVirkamiehelleTekstiksi(yhteystietoIlmanKayttajatunnusta, t)}
                         control={
                           <Checkbox
                             disabled={!!peruttu}
@@ -94,34 +101,33 @@ export default function Soittoaika({
         )}
       </SectionContent>
       <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
-      <Lisatiedot
-        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.SOITTOAIKA}
-        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
-        index={index}
-      />
+
       {mostlyDisabled ? (
         !peruttu && (
+          <div className="mt-8">
+            <Button
+              className="btn-remove-red"
+              onClick={(event) => {
+                event.preventDefault();
+                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              }}
+            >
+              Peru tilaisuus
+            </Button>
+          </div>
+        )
+      ) : (
+        <div className="mt-8">
           <Button
             className="btn-remove-red"
             onClick={(event) => {
               event.preventDefault();
-              setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              remove(index);
             }}
           >
-            Peru tilaisuus
+            Poista
           </Button>
-        )
-      ) : (
-        <Button
-          className="btn-remove-red"
-          onClick={(event) => {
-            event.preventDefault();
-            remove(index);
-          }}
-        >
-          Poista
-        </Button>
+        </div>
       )}
     </VuorovaikutusSectionContent>
   );

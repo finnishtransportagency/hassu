@@ -131,7 +131,7 @@ export default function VuorovaikutusMahdollisuudet({
                               {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                             </span>
                           </p>
-                          <div className="pl-2">
+                          <div>
                             <span>
                               {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
                                 <p className="mb-0" key={index}>
@@ -154,7 +154,7 @@ export default function VuorovaikutusMahdollisuudet({
                             {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                             {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                           </p>
-                          <div className="pl-2">
+                          <div>
                             {tilaisuus.esitettavatYhteystiedot && (
                               <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
                             )}

@@ -7,7 +7,7 @@ const DownloadLink = (
   { href, children, className, ...props }: LinkProps & Omit<React.ComponentProps<typeof Link>, "ref">,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => {
-  const isDeleted = !!href && (href as string).startsWith(FILE_PATH_DELETED_PREFIX);
+  const isDeleted = !!href && href.startsWith(FILE_PATH_DELETED_PREFIX);
   const actualHref = isDeleted ? undefined : href;
   const classes = ["file_download"];
   if (className) {

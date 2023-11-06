@@ -404,4 +404,8 @@
     text-decoration: underline;
     padding: 4px 23px 10px 23px;
   }
+
+  .file_download {
+    font-size: 1rem;
+  }
 }

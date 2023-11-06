@@ -53,7 +53,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
         )}
         {ensisijainenKaannettavaKieli && (
           <>
-            <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
+            <p className="vayla-label mb-5">Ladattavat kutsut</p>
             <div>Kutsu pääkielellä ({lowerCase(ensisijainenKaannettavaKieli)})</div>
             <div>
               <DownloadLink href={ensisijainenKutsuPDFPath}>{splitFilePath(ensisijainenKutsuPDFPath).fileName}</DownloadLink>

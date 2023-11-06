@@ -43,7 +43,7 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
         </div>
         <div>
           <p>
-            Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun palvelun
+            Klikkaamalla Vahvista lähetys -painiketta vahvistat kutsun vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun palvelun
             julkiselle puolelle asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen
             klikkaamisen jälkeen.
           </p>
@@ -51,7 +51,7 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
       </DialogContent>
       <DialogActions>
         <Button primary type="button" id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
-          Tallenna ja lähetä
+          Vahvista lähetys
         </Button>
         <Button type="button" onClick={onClose}>
           Peruuta

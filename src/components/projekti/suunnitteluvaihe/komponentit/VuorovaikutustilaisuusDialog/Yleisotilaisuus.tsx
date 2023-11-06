@@ -169,26 +169,30 @@ export default function YleisoTilaisuus({
       />
       {mostlyDisabled ? (
         !peruttu && (
+          <div className="mt-8">
+            <Button
+              className="btn-remove-red"
+              type="button"
+              onClick={() => {
+                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              }}
+            >
+              Peru tilaisuus
+            </Button>
+          </div>
+        )
+      ) : (
+        <div className="mt-8">
           <Button
             className="btn-remove-red"
             type="button"
             onClick={() => {
-              setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
+              remove(index);
             }}
           >
-            Peru tilaisuus
+            Poista
           </Button>
-        )
-      ) : (
-        <Button
-          className="btn-remove-red"
-          type="button"
-          onClick={() => {
-            remove(index);
-          }}
-        >
-          Poista
-        </Button>
+        </div>
       )}
     </VuorovaikutusSectionContent>
   );
