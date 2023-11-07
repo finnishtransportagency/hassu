@@ -1,4 +1,4 @@
-import { Projekti, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { Projekti } from "hassu-common/graphql/apiModel";
 import { parameters } from "../aws/parameters";
 import { DBProjekti } from "../database/model";
 
@@ -7,9 +7,5 @@ export async function isProjektiAsianhallintaIntegrationEnabled(projekti: DBProj
 }
 
 export async function canProjektiAsianhallintaIntegrationBeEnabled(projekti: DBProjekti | Projekti): Promise<boolean> {
-  return (
-    (await parameters.isAsianhallintaIntegrationEnabled()) &&
-    // TODO Poista alla oleva ehto kun USPA-integraatiototeutus on valmis
-    projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-  );
+  return await parameters.isAsianhallintaIntegrationEnabled();
 }
