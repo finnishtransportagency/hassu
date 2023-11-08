@@ -10,12 +10,12 @@
     "test": "npm run setup && cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
+    "@types/node": "^16.18.60",
+    "aws-xray-sdk-core": "^3.5.3",
+    "cross-env": "^7.0.3",
     "hassu": "file:..",
-    "read-excel-file": "5.5.3",
-    "yargs": "17.6.2",
-    "cross-env": "7.0.3",
-    "aws-xray-sdk-core": "3.5.3",
-    "@types/node": "16.11.7"
+    "read-excel-file": "^5.7.1",
+    "yargs": "^17.7.2"
   },
   "overrides": {
     "@aws-sdk/types": "3.433.0",
