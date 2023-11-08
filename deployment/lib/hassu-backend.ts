@@ -419,6 +419,7 @@ export class HassuBackendStack extends Stack {
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "none",
         YLLAPITO_TABLE_NAME: this.props.projektiTable.tableName,
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+        ENVIRONMENT: Config.env,
       },
       memorySize: 1792,
       timeout: Duration.minutes(3),
