@@ -83,7 +83,7 @@ Object {
         },
         "__typename": "KuulutusSaamePDFt",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
         "__typename": "LokalisoituTeksti",
@@ -336,7 +336,7 @@ Object {
         },
         "__typename": "KuulutusSaamePDFt",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
         "__typename": "LokalisoituTeksti",
@@ -698,6 +698,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000001-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -908,6 +909,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -1070,6 +1072,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",

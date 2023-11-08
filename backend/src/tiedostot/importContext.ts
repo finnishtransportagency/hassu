@@ -16,7 +16,7 @@ export class ImportContext {
   }
 
   async init(): Promise<this> {
-    const projektiStatus = (await projektiAdapter.adaptProjekti(this.projekti)).status;
+    const projektiStatus = (await projektiAdapter.adaptProjekti(this.projekti, undefined, false)).status;
     if (!projektiStatus) {
       throw new Error("Projektin statusta ei voitu määrittää: " + this.oid);
     }

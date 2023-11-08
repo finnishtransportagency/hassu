@@ -8,7 +8,7 @@ import {
 export async function adaptAsianhallinta(projekti: DBProjekti): Promise<Asianhallinta> {
   return {
     __typename: "Asianhallinta",
-    aktivoitavissa: await canProjektiAsianhallintaIntegrationBeEnabled(projekti),
+    aktivoitavissa: await canProjektiAsianhallintaIntegrationBeEnabled(),
     inaktiivinen: !(await isProjektiAsianhallintaIntegrationEnabled(projekti)),
   };
 }

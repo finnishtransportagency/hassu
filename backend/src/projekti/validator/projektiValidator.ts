@@ -156,7 +156,7 @@ function validateEuRahoitus(dbProjekti: DBProjekti, projekti: Projekti, input: T
 
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
-  const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+  const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
   validateKielivalinta(projekti, apiProjekti, input);
   validateEuRahoitus(projekti, apiProjekti, input);
   validateKasittelynTila(projekti, apiProjekti, input);

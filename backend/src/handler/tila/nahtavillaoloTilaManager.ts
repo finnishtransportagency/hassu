@@ -161,7 +161,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusjulkaisua ei ole
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
     const isHyvaksymisPaatosPresent = !!apiProjekti.hyvaksymisPaatosVaiheJulkaisu;
     if (isHyvaksymisPaatosPresent) {
       throw new IllegalArgumentError(

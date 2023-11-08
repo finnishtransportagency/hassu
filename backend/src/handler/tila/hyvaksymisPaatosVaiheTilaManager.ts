@@ -96,7 +96,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Hyväksymisvaiheen uudelleenkuuluttaminen on mahdollista vain jos jatkopäätös1kuulutusjulkaisua ei ole
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
     const isJatkoPaatosPresent = !!apiProjekti.jatkoPaatos1VaiheJulkaisu;
     if (isJatkoPaatosPresent) {
       throw new IllegalArgumentError(

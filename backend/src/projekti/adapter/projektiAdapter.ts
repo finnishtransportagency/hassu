@@ -39,7 +39,7 @@ import { haeAktiivisenVaiheenAsianhallinanTila } from "./haeAktiivisenVaiheenAsi
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 
 export class ProjektiAdapter {
-  public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
+  public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe, checkAsianhallintaState = true): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
       aloitusKuulutus,
@@ -143,7 +143,7 @@ export class ProjektiAdapter {
       applyProjektiStatus(apiProjekti);
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
-      if (apiProjekti.asianhallinta) {
+      if (apiProjekti.asianhallinta && checkAsianhallintaState) {
         apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinanTila(apiProjekti);
       }
     }

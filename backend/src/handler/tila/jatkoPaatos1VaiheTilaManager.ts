@@ -96,7 +96,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Jatkopäätös1Vaiheen uudelleenkuuluttaminen on mahdollista vain jos JatkoPaatos2VaiheJulkaisua ei ole
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
     const isJatkoPaatos2Present = !!apiProjekti.jatkoPaatos2VaiheJulkaisu;
     if (isJatkoPaatos2Present) {
       throw new IllegalArgumentError(
