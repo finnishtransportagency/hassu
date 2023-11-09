@@ -5,7 +5,7 @@ export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut">
 ): NahtavillaoloVaiheJulkaisu | undefined {
   if (projekti.nahtavillaoloVaiheJulkaisut) {
-    projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
+    return projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
   } else {
     return undefined;
   }
