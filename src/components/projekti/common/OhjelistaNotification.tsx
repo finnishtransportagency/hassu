@@ -16,9 +16,15 @@ const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
 };
 
-const UspaInaktiivinenText: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
-  <>Vie lopuksi sähköpostilla saamasi {vaihe === Vaihe.SUUNNITTELU ? "kutsu ja lähetekirje" : "kuulutus ja ilmoitus"} USPA:an.</>
-);
+const UspaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return <>Kuulutus, ilmoitus kuulutuksesta ja lähetekirje siirtyvät automaattisesti USPA:an.</>
+  } else if (vaihe === Vaihe.SUUNNITTELU) {
+    return <>Kutsu ja lähetekirje kutsusta siirtyy automaattisesti USPA:an.</>
+  } else {
+    return <>Kuulutus ja ilmoitus kuulutuksesta siirtyy automaattisesti USPA:an.</>
+  }
+};
 
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   <>
@@ -41,7 +47,7 @@ export const OhjelistaNotification: VFC<Props> = ({ children, vaihe, open, onClo
                 <strong>Tämä kohta koskee vain Väylävirastoa:</strong> <AshaKuulutusToimenpideTeksti vaihe={vaihe} />
               </li>
               <li>
-                <strong>Tämä kohta koskee ELY-keskusta:</strong> <UspaInaktiivinenText vaihe={vaihe} />
+                <strong>Tämä kohta koskee ELY-keskusta:</strong> <UspaKuulutusToimenpideTeksti vaihe={vaihe} />
               </li>
             </>
           )}
