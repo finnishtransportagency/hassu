@@ -369,6 +369,7 @@ async function createVuorovaikutusKierrosPDF(
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.vuorovaikutusJulkaisuPaiva),
     asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+    kieli,
   });
   return { ...pdf, fullFilePathInProjekti };
 }

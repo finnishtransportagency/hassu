@@ -57,6 +57,7 @@ async function createAloituskuulutusPDF(
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
     asiakirjaTyyppi,
+    kieli,
   });
 }
 

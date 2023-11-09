@@ -32,6 +32,7 @@ import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { Aineisto } from "../database/model";
 import Mail from "nodemailer/lib/mailer";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -51,6 +52,7 @@ export type CreateFileProperties = {
   bucketName?: string;
   fileType?: FileType;
   asiakirjaTyyppi?: AsiakirjaTyyppi;
+  kieli?: KaannettavaKieli;
 };
 
 // Simple types to hold file information for syncronization purposes
@@ -93,6 +95,7 @@ const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 const S3_METADATA_FILE_TYPE = "filetype";
 const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
+const S3_METADATA_KIELI = "kieli";
 
 export class FileService {
   /**
@@ -187,6 +190,9 @@ export class FileService {
       }
       if (param.asiakirjaTyyppi) {
         metadata[S3_METADATA_ASIAKIRJATYYPPI] = param.asiakirjaTyyppi;
+      }
+      if (param.kieli) {
+        metadata[S3_METADATA_KIELI] = param.kieli;
       }
       await this.putFile(param.bucketName || config.yllapitoBucketName, param, filePath, metadata);
 
