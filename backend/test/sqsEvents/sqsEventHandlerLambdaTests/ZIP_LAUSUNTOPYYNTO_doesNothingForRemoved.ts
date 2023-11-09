@@ -1,0 +1,64 @@
+import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
+import { fakeEventInSqsQueue, stubBasics } from "./util/util";
+import {
+  hyvaksymatonNahtavillaoloJulkaisuAineistoB,
+  hyvaksyttyNahtavillaoloJulkaisuAineistoA,
+  nahtavillaoloVaiheAineistoC,
+} from "./util/nahtavillaoloTestData";
+import * as API from "hassu-common/graphql/apiModel";
+import { expect } from "chai";
+
+// eventSqsHandlerLambda reacts to event ZIP_LAUSUNTOPYYNTO by doing nothing if lausuntoPyynto is marked to be removed
+export const zipLausuntoPyyntoDoesNothingForRemoved = async () => {
+  const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ZIP_LAUSUNTOPYYNTO, projektiOid: "1", uuid: "joku-uuid" });
+  const lisaAineistot1: Aineisto[] = [
+    {
+      tiedosto: "/lausuntopyynto/joku-uuid/Tiedosto%201.txt",
+      dokumenttiOid: "foo",
+      nimi: "Tiedosto%201.txt",
+      tila: API.AineistoTila.VALMIS,
+      jarjestys: 2,
+    },
+  ];
+  const lisaAineistot2: Aineisto[] = [
+    {
+      tiedosto: "/lausuntopyynto/joku-toinen-uuid/Tiedosto%202.txt",
+      dokumenttiOid: "bar",
+      nimi: "Tiedosto%202.txt",
+      tila: API.AineistoTila.VALMIS,
+      jarjestys: 2,
+    },
+  ];
+  const lausuntoPyynnot: LausuntoPyynto[] = [
+    {
+      uuid: "joku-uuid",
+      poistumisPaiva: "2022-01-01",
+      lisaAineistot: lisaAineistot1,
+      poistetaan: true,
+    },
+    {
+      uuid: "joku-toinen-uuid",
+      poistumisPaiva: "2022-01-02",
+      lisaAineistot: lisaAineistot2,
+    },
+  ];
+  const projekti: DBProjekti = {
+    oid: "1",
+    versio: 1,
+    kayttoOikeudet: [],
+    salt: "salt",
+    nahtavillaoloVaihe: nahtavillaoloVaiheAineistoC,
+    nahtavillaoloVaiheJulkaisut: [hyvaksyttyNahtavillaoloJulkaisuAineistoA, hyvaksymatonNahtavillaoloJulkaisuAineistoB],
+    lausuntoPyynnot,
+    tallennettu: true,
+    velho: { nimi: "Projekti 1" },
+  };
+  const { saveProjektiInternalStub, zipFilesStub } = stubBasics({
+    loadProjektiByOidReturnValue: projekti,
+    applyProjektiStatusSetStatus: API.Status.NAHTAVILLAOLO,
+  });
+  await handler();
+  expect(saveProjektiInternalStub.callCount).to.eql(0);
+  expect(zipFilesStub.callCount).to.eql(0);
+};
