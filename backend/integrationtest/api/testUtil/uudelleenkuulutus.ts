@@ -15,11 +15,9 @@ import { asetaAika, loadProjektiFromDatabase, testPublicAccessToProjekti } from 
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
   cleanupAloituskuulutusTimestamps,
-  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
   cleanupHyvaksymisPaatosVaiheTimestamps,
-  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
   cleanupNahtavillaoloTimestamps,
-} from "./cleanUpFunctions";
+} from "../../../commonTestUtil/cleanUpFunctions";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
 
 import { expect } from "chai"; //
@@ -92,7 +90,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(nahtavillaoloVaiheJulkaisu) as Projekti["nahtavillaoloVaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ nahtavillaoloVaihe }) => ({
-      nahtavillaoloVaihe: cleanupNahtavillaoloJulkaisuJulkinenTimestamps(nahtavillaoloVaihe),
+      nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
     }),
   },
   [UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE]: {
@@ -111,7 +109,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       ) as Projekti["hyvaksymisPaatosVaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ hyvaksymisPaatosVaihe }) => ({
-      hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(hyvaksymisPaatosVaihe),
+      hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(hyvaksymisPaatosVaihe),
     }),
   },
   [UudelleelleenkuulutettavaVaihe.JATKOPAATOS_1]: {
@@ -128,7 +126,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       jatkoPaatos1VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos1VaiheJulkaisu) as Projekti["jatkoPaatos1VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos1Vaihe }) => ({
-      jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(jatkoPaatos1Vaihe),
+      jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos1Vaihe),
     }),
   },
   [UudelleelleenkuulutettavaVaihe.JATKOPAATOS_2]: {
@@ -145,7 +143,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       jatkoPaatos2VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos2VaiheJulkaisu) as Projekti["jatkoPaatos2VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos2Vaihe }) => ({
-      jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(jatkoPaatos2Vaihe),
+      jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos2Vaihe),
     }),
   },
 };

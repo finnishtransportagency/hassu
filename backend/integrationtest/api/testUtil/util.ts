@@ -1,4 +1,4 @@
-import { cleanupGeneratedIds } from "./cleanUpFunctions";
+import { cleanupGeneratedIds } from "../../../commonTestUtil/cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
 import {
   AineistoInput,

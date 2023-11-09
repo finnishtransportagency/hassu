@@ -750,7 +750,7 @@ Object {
         },
         "__typename": "KuulutusSaamePDFt",
       },
-      "hyvaksymisPaiva": "**unittest**",
+      "hyvaksymisPaiva": "***unittest***",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",

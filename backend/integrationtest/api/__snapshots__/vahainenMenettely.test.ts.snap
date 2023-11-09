@@ -211,26 +211,26 @@ Object {
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 491,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "***unittest***",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 178,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "***unittest***",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 740,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "***unittest***",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "***unittest***",
           "nimi": "ETELA_SAVO_ELY",
           "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
@@ -343,26 +343,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -563,26 +563,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -705,7 +705,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "**unittest**",
+      "hyvaksymisPaiva": "***unittest***",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -946,6 +946,7 @@ Object {
     },
     "kuulutusVaihePaattyyPaiva": "2024-01-30",
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
+    "nahtavillaoloSaamePDFt": undefined,
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -1487,6 +1488,7 @@ Object {
       },
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
+      "nahtavillaoloSaamePDFt": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -1620,26 +1622,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -1783,26 +1785,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -2004,7 +2006,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "**unittest**",
+      "hyvaksymisPaiva": "***unittest***",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -2247,26 +2249,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -2414,6 +2416,7 @@ Object {
       },
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
+      "nahtavillaoloSaamePDFt": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
