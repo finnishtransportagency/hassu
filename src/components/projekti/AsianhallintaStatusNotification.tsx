@@ -25,8 +25,8 @@ const tilakohtainenVaroitus = (
     }`;
   } else {
     vaarassaTilassaVaroitus = isAdmin
-    ? "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt, joten sitä ei pysty hyväksymään. Ota yhteyttä kirjaamoon."
-    : "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt. Ota yhteyttä kirjaamoon.";
+      ? "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt, joten sitä ei pysty hyväksymään. Ota yhteyttä kirjaamoon."
+      : "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt. Ota yhteyttä kirjaamoon.";
   }
 
   const tilojenVaroitukset: Record<AsianTila, JSX.Element | string | undefined> = {
@@ -67,7 +67,7 @@ export default function AsianhallintaStatusNotification({ projekti, vaihe }: Pro
       projekti.asianhallinta.aktiivinenTila?.tila,
       projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo,
       vaiheOnMuokkausTilassa(projekti, vaihe),
-      projekti.suunnittelustaVastaavaViranomainen
+      projekti.velho.suunnittelustaVastaavaViranomainen
     );
   return <>{varoitus && <Notification type={NotificationType.WARN}>{varoitus}</Notification>}</>;
 }

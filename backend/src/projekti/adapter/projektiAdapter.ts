@@ -39,7 +39,11 @@ import { haeAktiivisenVaiheenAsianhallinanTila } from "./haeAktiivisenVaiheenAsi
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 
 export class ProjektiAdapter {
-  public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe, checkAsianhallintaState = true): Promise<API.Projekti> {
+  public async adaptProjekti(
+    dbProjekti: DBProjekti,
+    virhetiedot?: API.ProjektiVirhe,
+    checkAsianhallintaState = true
+  ): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
       aloitusKuulutus,
