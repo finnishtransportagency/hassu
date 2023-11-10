@@ -32,6 +32,7 @@ describe("nahtavillaoloTilaManager", () => {
     projekti = new ProjektiFixture().nahtavillaoloVaihe();
     userFixture.loginAs(UserFixture.hassuAdmin);
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {

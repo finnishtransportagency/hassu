@@ -26,6 +26,7 @@ describe("ProjektiSearchMaintenanceService", () => {
     ilmoitustauluStub = sinon.stub(openSearchClientIlmoitustauluSyote);
     projektiDatabaseStub = sinon.stub(projektiDatabase);
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
   afterEach(() => {
     sinon.reset();

@@ -24,6 +24,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const a2User = personSearchFixture.createKayttaja("A2");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
 
     fixture = new ProjektiFixture();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

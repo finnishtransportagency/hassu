@@ -958,6 +958,7 @@ type SuomifiKayttaja {
 
 type Features {
   asianhallintaIntegraatio: Boolean!
+  uspaIntegraatio: Boolean!
 }
 
 type Kayttaja {
