@@ -153,7 +153,6 @@ type Projekti implements IProjekti {
   vaihe: String
   tyyppi: ProjektiTyyppi
   status: Status
-  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   aloitusKuulutus: AloitusKuulutus
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
   suunnitteluSopimus: SuunnitteluSopimus

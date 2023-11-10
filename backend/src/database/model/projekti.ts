@@ -1,10 +1,4 @@
-import {
-  ELY,
-  KayttajaTyyppi,
-  KuulutusJulkaisuTila,
-  ProjektiTyyppi,
-  SuunnittelustaVastaavaViranomainen,
-} from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -150,10 +144,6 @@ export type DBProjekti = {
    * @deprecated velho.tyyppi is the correct one
    */
   tyyppi?: ProjektiTyyppi | null;
-  /**
-   * @deprecated velho.suunnittelustaVastaavaViranomainen is the correct one
-   */
-  suunnittelustaVastaavaViranomainen?: SuunnittelustaVastaavaViranomainen | null;
   kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;
   euRahoitusLogot?: LocalizedMap<string> | null;
