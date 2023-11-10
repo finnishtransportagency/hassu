@@ -25,6 +25,7 @@ describe("aloitusKuulutusTilaManager", () => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     _updateJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {

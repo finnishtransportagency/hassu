@@ -1,6 +1,6 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { StyledLink } from "@components/StyledLink";
-import { AsianTila, Vaihe } from "@services/api";
+import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "@services/api";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { vaiheOnMuokkausTilassa } from "common/util/haeVaiheidentiedot";
 import React from "react";
@@ -14,12 +14,20 @@ const KIRJAAMO_OSOITE_VAYLA = "kirjaamo@vayla.fi";
 const tilakohtainenVaroitus = (
   asianTila: AsianTila | null | undefined,
   isAdmin: boolean,
-  lomakeMuokattavissa: boolean
+  lomakeMuokattavissa: boolean,
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen | undefined | null
 ): JSX.Element | string | undefined => {
   const additionalParagrph = lomakeMuokattavissa ? " Lue ohjeista lisää." : "";
-  const vaarassaTilassaVaroitus = `Tarkasta asian tila asianhallintajärjestelmästä. Asialla on auki väärä toimenpide.${
-    isAdmin ? " Asialla tulee olla oikea toimenpide auki ennen kuin kuulutuksen pystyy hyväksymään." : additionalParagrph
-  }`;
+  let vaarassaTilassaVaroitus = undefined;
+  if (suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+    vaarassaTilassaVaroitus = `Tarkasta asian tila asianhallintajärjestelmästä. Asialla on auki väärä toimenpide.${
+      isAdmin ? " Asialla tulee olla oikea toimenpide auki ennen kuin kuulutuksen pystyy hyväksymään." : additionalParagrph
+    }`;
+  } else {
+    vaarassaTilassaVaroitus = isAdmin
+    ? "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt, joten sitä ei pysty hyväksymään. Ota yhteyttä kirjaamoon."
+    : "Tarkasta asian tila asianhallintajärjestelmästä. Asiaa ei ole olemassa tai se on päättynyt. Ota yhteyttä kirjaamoon.";
+  }
 
   const tilojenVaroitukset: Record<AsianTila, JSX.Element | string | undefined> = {
     ASIAA_EI_LOYDY: "Suunnitelmaa ei löydy asianhallintajärjestelmästä. Varmista, että Projektivelhoon on asetettu oikea asiatunnus.",
@@ -35,6 +43,8 @@ const tilakohtainenVaroitus = (
         <StyledLink href={`mailto:kirjaamo@vayla.fi`}>{KIRJAAMO_OSOITE_VAYLA}</StyledLink>
       </>
     ),
+    VAARA_TOS_LUOKKA:
+      "Tarkasta asian tila asianhallintajärjestelmästä. Ota yhteyttä kirjaamoon. Ilmoita kirjaamolle, että suunnitelmalla on väärä TOS-luokka. Tarvittaessa on avattava uusi asiatunnus tien hallinnollisen käsittelyn tehtävälle 06.01.01.",
   };
   return asianTila ? tilojenVaroitukset[asianTila] : ODOTTAMATON_VIRHE_VAROITUS;
 };
@@ -56,7 +66,8 @@ export default function AsianhallintaStatusNotification({ projekti, vaihe }: Pro
     tilakohtainenVaroitus(
       projekti.asianhallinta.aktiivinenTila?.tila,
       projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo,
-      vaiheOnMuokkausTilassa(projekti, vaihe)
+      vaiheOnMuokkausTilassa(projekti, vaihe),
+      projekti.suunnittelustaVastaavaViranomainen
     );
   return <>{varoitus && <Notification type={NotificationType.WARN}>{varoitus}</Notification>}</>;
 }

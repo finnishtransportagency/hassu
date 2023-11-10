@@ -50,6 +50,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {

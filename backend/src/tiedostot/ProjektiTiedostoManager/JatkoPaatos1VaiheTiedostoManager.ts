@@ -1,9 +1,12 @@
-import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, getKuulutusSaamePDFt } from ".";
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, LadattuTiedosto } from "../../database/model";
-import { findJulkaisuWithTila } from "../../projekti/projektiUtil";
+import { KuulutusJulkaisuTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, LadattuTiedosto } from "../../database/model";
+import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { parseOptionalDate } from "../../util/dateUtil";
+import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { assertIsDefined } from "../../util/assertions";
+import { forEverySaameDo, forSuomiRuotsiDo } from "../../projekti/adapter/common";
 
 export class JatkoPaatos1VaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -35,8 +38,41 @@ export class JatkoPaatos1VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
     return [];
   }
 
-  getAsianhallintaSynkronointi(): undefined {
-    // Ei määritelty
-    return undefined;
+  getAsianhallintaSynkronointi(projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined): AsianhallintaSynkronointi | undefined {
+    const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
+    if (!julkaisu || !julkaisu.asianhallintaEventId) {
+      // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
+      return;
+    }
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus);
+    const paths = this.projektiPaths.jatkoPaatos1Vaihe(julkaisu);
+    const s3Paths = new S3Paths(paths);
+    forSuomiRuotsiDo((kieli) => {
+      const pdf = julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(
+        pdf?.hyvaksymisKuulutusPDFPath,
+        pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
+      );
+    });
+
+    forEverySaameDo((kieli) => {
+      const pdf = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
+    });
+
+    s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
+
+    assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
+    return {
+      toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
+      asianhallintaEventId: julkaisu.asianhallintaEventId,
+      asiatunnus,
+      dokumentit: s3Paths.getDokumentit(),
+      vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    };
   }
 }

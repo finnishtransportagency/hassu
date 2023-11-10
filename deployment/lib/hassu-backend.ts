@@ -232,7 +232,6 @@ export class HassuBackendStack extends Stack {
   private createProjektiSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
     const resourcePrefix = "arn:aws:lambda:eu-west-1:" + this.account + ":function:";
     const functionName = "hassu-dynamodb-stream-handler-" + Config.env;
-    const asianhallintaFunctionName = "hassu-asianhallinta-" + Config.env;
     const streamHandler = new NodejsFunction(this, "DynamoDBStreamHandler", {
       functionName,
       runtime: lambdaRuntime,
@@ -258,7 +257,7 @@ export class HassuBackendStack extends Stack {
       new PolicyStatement({
         effect: Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
-        resources: [resourcePrefix + functionName, resourcePrefix + asianhallintaFunctionName],
+        resources: [resourcePrefix + functionName],
       })
     );
 
@@ -420,6 +419,7 @@ export class HassuBackendStack extends Stack {
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "none",
         YLLAPITO_TABLE_NAME: this.props.projektiTable.tableName,
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+        ENVIRONMENT: Config.env,
       },
       memorySize: 1792,
       timeout: Duration.minutes(3),

@@ -7,9 +7,9 @@ export async function isProjektiAsianhallintaIntegrationEnabled(projekti: DBProj
 }
 
 export async function canProjektiAsianhallintaIntegrationBeEnabled(projekti: DBProjekti | Projekti): Promise<boolean> {
-  return (
-    (await parameters.isAsianhallintaIntegrationEnabled()) &&
-    // TODO Poista alla oleva ehto kun USPA-integraatiototeutus on valmis
-    projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-  );
+  if (projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+    return await parameters.isAsianhallintaIntegrationEnabled();
+  } else {
+    return await parameters.isUspaIntegrationEnabled();
+  }
 }

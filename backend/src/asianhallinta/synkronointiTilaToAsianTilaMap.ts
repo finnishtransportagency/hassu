@@ -8,4 +8,5 @@ export const synkronointiTilaToAsianTilaMap: Record<SynkronointiTila, AsianTila>
   VALMIS_VIENTIIN: AsianTila.VALMIS_VIENTIIN,
   VIRHE: AsianTila.VIRHE,
   VAARA_MENETTELYTAPA: AsianTila.VAARA_MENETTELYTAPA,
+  VAARA_TOS_LUOKKA: AsianTila.VAARA_TOS_LUOKKA,
 };

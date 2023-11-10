@@ -1434,6 +1434,9 @@
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
           },
           {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf"
+          },
+          {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/lähetekirje.eml"
           }
         ],
@@ -1472,6 +1475,9 @@
           },
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf"
           },
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"

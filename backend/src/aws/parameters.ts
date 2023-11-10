@@ -56,7 +56,12 @@ class Parameters {
         const data = (await response.json()) as ParameterStoreResponse;
         return data.Parameter.Value;
       } else {
-        log.error("getParameter(" + name + ") failed", { response });
+        if (!envName) {
+          log.error("getParameter(" + name + ") failed", { response });
+        } else {
+          // ei lokiteta virhettä kun ympäristökohtaista parametria ei välttämättä löydy
+          log.info("getParameter(" + name + ") failed", { response });
+        }
       }
     }
     return undefined;
@@ -94,6 +99,10 @@ class Parameters {
 
   async isAsianhallintaIntegrationEnabled(): Promise<boolean> {
     return (await this.getParameter("AsianhallintaIntegrationEnabled")) === "true";
+  }
+
+  async isUspaIntegrationEnabled(): Promise<boolean> {
+    return (await this.getParameter("UspaIntegrationEnabled")) === "true";
   }
 
   async getAsianhallintaSQSUrl() {

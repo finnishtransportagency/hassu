@@ -21,6 +21,7 @@ describe("projektiHandler", () => {
     fixture = new ProjektiFixture();
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {

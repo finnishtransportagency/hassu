@@ -22,6 +22,7 @@ import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "hassu-comm
 import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap";
 import { DBProjekti } from "../database/model";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { getVaylaUser } from "../user";
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
@@ -51,6 +52,7 @@ class AsianhallintaService {
       oid,
       asianhallintaEventId,
       correlationId: getCorrelationId() || uuid.v4(),
+      hyvaksyja: getVaylaUser()?.uid ?? undefined
     };
     const messageParams: SendMessageRequest = {
       MessageGroupId: oid,
@@ -126,8 +128,8 @@ const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
   SUUNNITTELU: "YLEISOTILAISUUS_KUTSU",
   NAHTAVILLAOLO: "NAHTAVILLAOLOKUULUTUS",
   HYVAKSYMISPAATOS: "HYVAKSYMISPAATOSKUULUTUS",
-  JATKOPAATOS: "JATKOPAATOS1KUULUTUS",
-  JATKOPAATOS2: "JATKOPAATOS2KUULUTUS",
+  JATKOPAATOS: "JATKOPAATOSKUULUTUS",
+  JATKOPAATOS2: "JATKOPAATOSKUULUTUS2",
 };
 
 export const asianhallintaService = new AsianhallintaService();

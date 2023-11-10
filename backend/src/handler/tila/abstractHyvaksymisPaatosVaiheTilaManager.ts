@@ -190,5 +190,6 @@ async function createPDF(
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
     asiakirjaTyyppi,
+    kieli,
   });
 }

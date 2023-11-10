@@ -95,7 +95,8 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
         pdf?.hyvaksymisKuulutusPDFPath,
         pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
-        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
+        pdf?.hyvaksymisIlmoitusMuistuttajillePDFPath
       );
     });
 

@@ -36,6 +36,7 @@ describe("ProjektiSearchService", () => {
     sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     openSearchClientJulkinenSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {

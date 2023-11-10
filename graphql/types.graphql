@@ -958,6 +958,7 @@ type SuomifiKayttaja {
 
 type Features {
   asianhallintaIntegraatio: Boolean!
+  uspaIntegraatio: Boolean!
 }
 
 type Kayttaja {
@@ -1123,6 +1124,7 @@ enum AsianTila {
   VALMIS_VIENTIIN
   VAARA_MENETTELYTAPA
   EI_TESTATTAVISSA
+  VAARA_TOS_LUOKKA
 }
 
 type AsianhallinnanTila {

@@ -57,6 +57,7 @@ async function createAloituskuulutusPDF(
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
     asiakirjaTyyppi,
+    kieli,
   });
 }
 
@@ -147,7 +148,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
     // tai nähtävilläolovaiheessa, kun kyseessä on vähäinen menettely
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
     if (
       !(
         (apiProjekti.status === Status.SUUNNITTELU && !apiProjekti.vahainenMenettely) ||
