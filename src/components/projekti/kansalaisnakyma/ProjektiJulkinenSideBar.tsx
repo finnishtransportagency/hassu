@@ -10,6 +10,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
+import { Kartta } from "../common/Kartta";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -85,6 +86,7 @@ const ProjektiSideNavigation = styled((props) => {
               </div>
             </HassuStack>
           )}
+          <Kartta />
         </SectionContent>
       </div>
     </Section>

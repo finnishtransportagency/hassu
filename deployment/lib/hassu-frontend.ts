@@ -137,11 +137,16 @@ export class HassuFrontendStack extends Stack {
     const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, frontendRequestFunction);
 
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const mmlApiKey = await config.getParameterNow("MmlApiKey");
+    const apiEndpoint = await config.getParameterNow("ApiEndpoint");
+    const apiBehavior = HassuFrontendStack.createApiBehavior(apiEndpoint, mmlApiKey);
+    
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,
       dmzProxyBehaviorWithLambda,
       dmzProxyBehavior,
+      apiBehavior,
       edgeFunctionRole,
       frontendRequestFunction
     );
@@ -375,6 +380,7 @@ export class HassuFrontendStack extends Stack {
     config: Config,
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
+    apiBehavior: BehaviorOptions,
     edgeFunctionRole: Role,
     frontendRequestFunction?: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
@@ -400,6 +406,7 @@ export class HassuFrontendStack extends Stack {
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
       "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
       "/keycloak/*": dmzProxyBehavior,
+      "/hassu/karttakuva/*": apiBehavior,
     };
     if (Config.env == "dev") {
       props["/report/*"] = await this.createPrivateBucketBehavior(
@@ -429,6 +436,21 @@ export class HassuFrontendStack extends Stack {
     };
 
     return dmzBehavior;
+  }
+
+  private static createApiBehavior(apiEndpoint: string, apiKey: string) {
+    const apiBehavior: BehaviorOptions = {
+      compress: true,
+      origin: new HttpOrigin(apiEndpoint, {
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { 'x-api-key': apiKey }
+      }),
+      cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+      originRequestPolicy: OriginRequestPolicy.CORS_CUSTOM_ORIGIN,
+      allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    };
+    return apiBehavior;
   }
 
   private async createPublicBucketBehavior(

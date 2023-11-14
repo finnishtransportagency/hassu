@@ -65,6 +65,10 @@ function setupLocalDevelopmentMode(config, env) {
           source: "/yllapito/graphql",
           destination: "/api/graphql?yllapito=true",
         },
+        {
+          source: "/hassu/karttakuva/:path*",
+          destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/hassu/karttakuva/:path*",
+        },
       ];
     },
     redirects: () => {
