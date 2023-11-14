@@ -771,68 +771,68 @@
     "nahtavillaolo/1400-72J-6709-1_Johtokartta_1.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
       "ContentType": "application/pdf",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/1400-72L-6708_Yleiskartta_kmv209-216.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72L-6708_Yleiskartta_kmv209-216.pdf",
       "ContentType": "application/pdf",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
       "ContentType": "application/pdf",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/TYHJÄ.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/Yksityistie_lunastukset.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
       "ContentType": "application/pdf",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-01-30T21:59:59.000Z",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/lähetekirje.eml": {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
-      "publishDate": "2023-12-31T22:00:00.000Z"
+      "publishDate": "2024-05-31T21:00:00.000Z"
     }
   },
   "yllapitoFiles": {
