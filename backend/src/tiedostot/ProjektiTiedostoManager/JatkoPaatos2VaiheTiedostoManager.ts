@@ -3,11 +3,12 @@ import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Path
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo } from "../../projekti/adapter/common";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
+import { Dayjs } from "dayjs";
 
 export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -25,11 +26,12 @@ export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
 
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (julkaisu) {
+    const kuulutusPaiva: Dayjs | undefined = parseOptionalDate(julkaisu?.kuulutusPaiva);
+    if (julkaisu && kuulutusPaiva?.isBefore(nyt())) {
       return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.jatkoPaatos2Vaihe(julkaisu),
-        parseOptionalDate(julkaisu.kuulutusPaiva),
+        kuulutusPaiva,
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }

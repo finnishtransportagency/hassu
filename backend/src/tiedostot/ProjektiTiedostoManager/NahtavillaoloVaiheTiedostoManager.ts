@@ -3,7 +3,7 @@ import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt 
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
@@ -27,11 +27,12 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
 
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (julkaisu) {
+    const kuulutusPaiva: Dayjs | undefined = parseOptionalDate(julkaisu?.kuulutusPaiva);
+    if (julkaisu && kuulutusPaiva?.isBefore(nyt())) {
       return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.nahtavillaoloVaihe(julkaisu),
-        parseOptionalDate(julkaisu.kuulutusPaiva),
+        kuulutusPaiva,
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }

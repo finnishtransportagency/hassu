@@ -3,12 +3,13 @@ import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt 
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
+import { Dayjs } from "dayjs";
 
 export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getAineistot(): AineistoPathsPair[] {
@@ -22,8 +23,9 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
 
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (julkaisu) {
-      return synchronizeFilesToPublic(this.oid, this.projektiPaths.aloituskuulutus(julkaisu), parseOptionalDate(julkaisu.kuulutusPaiva));
+    const kuulutusPaiva: Dayjs | undefined = parseOptionalDate(julkaisu?.kuulutusPaiva);
+    if (julkaisu && kuulutusPaiva?.isBefore(nyt())) {
+      return synchronizeFilesToPublic(this.oid, this.projektiPaths.aloituskuulutus(julkaisu), kuulutusPaiva);
     }
     return true;
   }

@@ -2,7 +2,7 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, S3Paths, VaiheTiedostoManager } from ".";
 import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
@@ -57,15 +57,19 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
         const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
         // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
         const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheTiedostoManager.getKuulutusPaiva();
-        return (
-          result &&
-          synchronizeFilesToPublic(
-            this.oid,
-            this.projektiPaths.vuorovaikutus(julkaisu),
-            kuulutusPaiva,
-            kuulutusPaattyyPaiva?.startOf("day")
-          )
-        );
+        if (kuulutusPaiva?.isBefore(nyt())) {
+          return (
+            result &&
+            synchronizeFilesToPublic(
+              this.oid,
+              this.projektiPaths.vuorovaikutus(julkaisu),
+              kuulutusPaiva,
+              kuulutusPaattyyPaiva?.startOf("day")
+            )
+          );
+        } else {
+          return Promise.resolve(true);
+        }
       }, Promise.resolve(true))) || true
     );
   }
