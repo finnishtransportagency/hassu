@@ -14,6 +14,7 @@ import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorCl
 import { fileService } from "../../../src/files/fileService";
 
 import { expect } from "chai";
+import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -61,6 +62,7 @@ describe("nahtavillaoloTilaManager", () => {
   });
 
   it("should leave one published kuulutus when making uudelleenkuulutus", async function () {
+    const addZipEventStub = sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
     const originalKuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
     projekti = { ...projekti, nahtavillaoloVaihe: { ...(projekti.nahtavillaoloVaihe as NahtavillaoloVaihe), aineistoNahtavilla: [] } };
     MockDate.set("2023-01-01");
@@ -105,5 +107,6 @@ describe("nahtavillaoloTilaManager", () => {
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].id).to.eql(2); //The second julkaisu should have id 2
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].kuulutusPaiva).to.eql(originalKuulutusPaiva);
+    expect(addZipEventStub.callCount).to.eql(1);
   });
 });

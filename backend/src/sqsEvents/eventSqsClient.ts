@@ -5,12 +5,32 @@ import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
 class EventSqsClient {
-  async zipAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.ZIP, oid });
+  async zipNahtavillaoloAineisto(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_NAHTAVILLAOLO, oid });
+  }
+
+  async zipLausuntoPyyntoAineisto(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNOT, oid });
+  }
+
+  async zipSingleLausuntoPyynto(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNTO, oid, uuid });
+  }
+
+  async zipLausuntoPyynnonTaydennysAineisto(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET, oid });
   }
 
   async handleChangedAineisto(oid: string) {
     await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_CHANGED, oid });
+  }
+
+  async handleChangedTiedostot(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.FILES_CHANGED, oid });
+  }
+
+  async handleChangedAineistotAndTiedostot(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_AND_FILES_CHANGED, oid });
   }
 
   async synchronizeAineisto(oid: string) {

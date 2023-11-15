@@ -1,9 +1,11 @@
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../database/model";
 
-export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
+export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
+  projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut">
+): NahtavillaoloVaiheJulkaisu | undefined {
   if (projekti.nahtavillaoloVaiheJulkaisut) {
-    projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
+    return projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
   } else {
     return undefined;
   }

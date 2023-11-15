@@ -19,11 +19,11 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks<P extends APIorDBPal
   }
 }
 
-type APIorDBAineisto = Pick<API.Aineisto, "tuotu">;
+type APIorDBAineistoOrLadattuTiedosto = Pick<API.Aineisto, "tuotu">;
 type APIorDBIlmoituksenVastaanottaja = Pick<API.KuntaVastaanottaja | API.ViranomaisVastaanottaja, "lahetetty">;
 type APIorDBVuorovaikutusKierros = {
-  esittelyaineistot?: APIorDBAineisto[] | null;
-  suunnitelmaluonnokset?: APIorDBAineisto[] | null;
+  esittelyaineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  suunnitelmaluonnokset?: APIorDBAineistoOrLadattuTiedosto[] | null;
   ilmoituksenVastaanottajat?: {
     kunnat?: APIorDBIlmoituksenVastaanottaja[] | null;
     viranomaiset?: APIorDBIlmoituksenVastaanottaja[] | null;
@@ -53,8 +53,10 @@ function cleanupIlmoituksenVastaanottaja<V extends APIorDBIlmoituksenVastaanotta
  */
 export function cleanupVuorovaikutusKierrosTimestamps<A extends APIorDBVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
   const cleanVuorovaikutusKierros = { ...vuorovaikutusKierros };
-  cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoCleanupFunc);
-  cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(aineistoCleanupFunc);
+  cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
+  cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(
+    aineistoOrLadattuTiedostoCleanupFunc
+  );
   if (vuorovaikutusKierros.ilmoituksenVastaanottajat) {
     const cleanIlmoituksenVastaanottajat = {
       ...vuorovaikutusKierros.ilmoituksenVastaanottajat,
@@ -76,7 +78,7 @@ export function cleanupVuorovaikutusKierrosTimestamps<A extends APIorDBVuorovaik
  * @param aineisto
  * @returns aineisto, mutta tuotu-aikaleimat on korvattu ***unittest***:lla. Parametria ei muokata.
  */
-function aineistoCleanupFunc<A extends APIorDBAineisto>(aineisto: A): A {
+function aineistoOrLadattuTiedostoCleanupFunc<A extends APIorDBAineistoOrLadattuTiedosto>(aineisto: A): A {
   if (aineisto.tuotu) {
     return {
       ...aineisto,
@@ -170,14 +172,12 @@ export function cleanupVaiheTimestamps(vaihe: APIorDBVaihe | null | undefined): 
 
 type APIorDBKuulutusSaamePDFt = {
   POHJOISSAAME?: {
-    kuulutusIlmoitusPDF?: {
-      tuotu?: string | null;
-    } | null;
-    kuulutusPDF?: {
-      tuotu?: string | null;
-    } | null;
+    kuulutusIlmoitusPDF?: APIorDBLadattuTiedosto | null;
+    kuulutusPDF?: APIorDBLadattuTiedosto | null;
   } | null;
 };
+
+type APIorDBLadattuTiedosto = Pick<API.LadattuTiedosto, "tuotu">;
 
 interface APIorDBNahtavillaolo extends APIorDBVaihe {
   aineistoMuokkaus?: {
@@ -188,8 +188,8 @@ interface APIorDBNahtavillaolo extends APIorDBVaihe {
     poistumisPaiva?: string | null;
   } | null;
   nahtavillaoloSaamePDFt?: APIorDBKuulutusSaamePDFt | null;
-  aineistoNahtavilla?: APIorDBAineisto[] | null;
-  lisaAineisto?: APIorDBAineisto[] | null;
+  aineistoNahtavilla?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  lisaAineisto?: APIorDBAineistoOrLadattuTiedosto[] | null;
 }
 
 /**
@@ -209,10 +209,10 @@ export function cleanupNahtavillaoloTimestamps<N extends APIorDBNahtavillaolo>(
   };
 
   if (cleanNahtavillaolo.aineistoNahtavilla) {
-    cleanNahtavillaolo.aineistoNahtavilla = cleanNahtavillaolo.aineistoNahtavilla.map(aineistoCleanupFunc);
+    cleanNahtavillaolo.aineistoNahtavilla = cleanNahtavillaolo.aineistoNahtavilla.map(aineistoOrLadattuTiedostoCleanupFunc);
   }
   if (cleanNahtavillaolo.lisaAineisto) {
-    cleanNahtavillaolo.lisaAineisto = cleanNahtavillaolo.lisaAineisto.map(aineistoCleanupFunc);
+    cleanNahtavillaolo.lisaAineisto = cleanNahtavillaolo.lisaAineisto.map(aineistoOrLadattuTiedostoCleanupFunc);
   }
 
   if (cleanNahtavillaolo.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
@@ -234,6 +234,58 @@ export function cleanupNahtavillaoloTimestamps<N extends APIorDBNahtavillaolo>(
   cleanNahtavillaolo.nahtavillaoloSaamePDFt = cleanupSaamePDFt(nahtavillaoloVaihe.nahtavillaoloSaamePDFt);
 
   return cleanNahtavillaolo;
+}
+
+type APIorDBLausuntoPyynto = {
+  lisaAineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
+};
+
+type APIorDBLausuntoPyynnonTaydennys = {
+  muuAineisto?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  muistutukset?: APIorDBLadattuTiedosto[] | null;
+};
+
+/**
+ *
+ * @param lausuntoPyynto API.LausuntoPyynto tai LausuntoPyynto
+ * @returns lausuntoPyynto, mutta lisaAineistoista on korvattu tuotu-aikaleimat ***unittest***:lla. Parametria ei muokata.
+ */
+export function cleanupLausuntoPyyntoTimestamps<L extends APIorDBLausuntoPyynto>(
+  lausuntoPyynto: L | null | undefined
+): L | null | undefined {
+  if (!lausuntoPyynto) {
+    return lausuntoPyynto;
+  }
+  const cleanLausuntoPyynto = {
+    ...lausuntoPyynto,
+  };
+  if (cleanLausuntoPyynto.lisaAineistot) {
+    cleanLausuntoPyynto.lisaAineistot = cleanLausuntoPyynto.lisaAineistot.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
+  return cleanLausuntoPyynto;
+}
+
+/**
+ *
+ * @param lausuntoPyynnonTaydennys API.LausuntoPyynnonTaydennys tai LausuntoPyynnonTaydennys
+ * @returns lausuntoPyynnonTaydennys, mutta muuAineistoista ja muistutuksista on korvattu tuotu-aikaleimat ***unittest***:lla. Parametria ei muokata.
+ */
+export function cleanupLausuntoPyynnonTaydennysTimestamps<L extends APIorDBLausuntoPyynnonTaydennys>(
+  lausuntoPyynnonTaydennys: L | null | undefined
+): L | null | undefined {
+  if (!lausuntoPyynnonTaydennys) {
+    return lausuntoPyynnonTaydennys;
+  }
+  const cleanLausuntoPyynnonTaydennys = {
+    ...lausuntoPyynnonTaydennys,
+  };
+  if (cleanLausuntoPyynnonTaydennys.muuAineisto) {
+    cleanLausuntoPyynnonTaydennys.muuAineisto = cleanLausuntoPyynnonTaydennys.muuAineisto.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
+  if (cleanLausuntoPyynnonTaydennys.muistutukset) {
+    cleanLausuntoPyynnonTaydennys.muistutukset = cleanLausuntoPyynnonTaydennys.muistutukset.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
+  return cleanLausuntoPyynnonTaydennys;
 }
 
 /**
@@ -271,8 +323,8 @@ function cleanupSaamePDFt<S extends APIorDBKuulutusSaamePDFt>(saamePDFt: S | nul
 
 interface APIorDBHyvaksymisPaatosVaihe extends APIorDBVaihe {
   hyvaksymisPaatosVaiheSaamePDFt?: APIorDBKuulutusSaamePDFt | null;
-  aineistoNahtavilla?: APIorDBAineisto[] | null;
-  hyvaksymisPaatos?: APIorDBAineisto[] | null;
+  aineistoNahtavilla?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  hyvaksymisPaatos?: APIorDBAineistoOrLadattuTiedosto[] | null;
 }
 
 /**
@@ -292,10 +344,10 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps<H extends APIorDBHyvaksym
   };
 
   if (cleanHyvaksymisPaatosVaihe.aineistoNahtavilla) {
-    cleanHyvaksymisPaatosVaihe.aineistoNahtavilla = cleanHyvaksymisPaatosVaihe.aineistoNahtavilla.map(aineistoCleanupFunc);
+    cleanHyvaksymisPaatosVaihe.aineistoNahtavilla = cleanHyvaksymisPaatosVaihe.aineistoNahtavilla.map(aineistoOrLadattuTiedostoCleanupFunc);
   }
   if (cleanHyvaksymisPaatosVaihe.hyvaksymisPaatos) {
-    cleanHyvaksymisPaatosVaihe.hyvaksymisPaatos = cleanHyvaksymisPaatosVaihe.hyvaksymisPaatos.map(aineistoCleanupFunc);
+    cleanHyvaksymisPaatosVaihe.hyvaksymisPaatos = cleanHyvaksymisPaatosVaihe.hyvaksymisPaatos.map(aineistoOrLadattuTiedostoCleanupFunc);
   }
 
   cleanHyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = cleanupSaamePDFt(cleanHyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt);

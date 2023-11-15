@@ -2,6 +2,7 @@ import { fileService } from "./fileService";
 import { assertIsDefined } from "../util/assertions";
 import { localDateTimeString } from "../util/dateUtil";
 import { LadattuTiedosto } from "../database/model";
+import { LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 
 export async function persistLadattuTiedosto({
   oid,
@@ -17,7 +18,7 @@ export async function persistLadattuTiedosto({
   let fileWasRemoved = false;
   let fileWasPersisted = false;
   if (ladattuTiedosto) {
-    if (!ladattuTiedosto.tuotu) {
+    if (!ladattuTiedosto.tuotu || ladattuTiedosto.tila === LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA) {
       const uploadedFile: string = await fileService.persistFileToProjekti({
         uploadedFileSource: ladattuTiedosto.tiedosto,
         oid,
@@ -29,6 +30,7 @@ export async function persistLadattuTiedosto({
       ladattuTiedosto.tiedosto = uploadedFile;
       ladattuTiedosto.nimi = fileName;
       ladattuTiedosto.tuotu = localDateTimeString();
+      ladattuTiedosto.tila = LadattuTiedostoTila.VALMIS;
       fileWasPersisted = true;
     } else if (poistetaan) {
       // Deletoi tiedosto

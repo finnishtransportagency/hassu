@@ -46,10 +46,10 @@ export function adaptLadattuTiedostoToAPI(
 ): API.LadattuTiedosto | undefined {
   if (ladattuTiedosto && ladattuTiedosto.nimi) {
     const { tiedosto, nimi, tuotu, tila, jarjestys } = ladattuTiedosto;
-    let fullPath: string;
+    let fullPath: string = tiedosto;
     if (julkinen) {
       fullPath = fileService.getPublicPathForProjektiFile(projektiPath, tiedosto);
-    } else {
+    } else if (ladattuTiedosto.tila !== API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA) {
       fullPath = fileService.getYllapitoPathForProjektiFile(projektiPath, tiedosto);
     }
     if (!fullPath.startsWith("/")) {

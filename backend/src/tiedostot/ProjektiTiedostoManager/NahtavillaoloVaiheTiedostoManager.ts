@@ -1,35 +1,38 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, LadattuTiedosto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
-  getAineistot(vaihe: NahtavillaoloVaihe): AineistoPathsPair[] {
-    const paths = this.projektiPaths.nahtavillaoloVaihe(this.vaihe);
+  getAineistot(vaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): AineistoPathsPair[] {
+    const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
     return [
       { aineisto: vaihe.aineistoNahtavilla, paths },
       { aineisto: vaihe.lisaAineisto, paths },
     ];
   }
 
-  getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedosto[] {
-    return getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt);
+  getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedostoPathsPair[] {
+    const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
+    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt), paths }];
   }
 
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (julkaisu) {
+    const kuulutusPaiva: Dayjs | undefined = parseOptionalDate(julkaisu?.kuulutusPaiva);
+    if (julkaisu && kuulutusPaiva?.isBefore(nyt())) {
       return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.nahtavillaoloVaihe(julkaisu),
-        parseOptionalDate(julkaisu.kuulutusPaiva),
+        kuulutusPaiva,
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }

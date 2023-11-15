@@ -2,13 +2,14 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, S3Paths, VaiheTiedostoManager } from ".";
 import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
-import { parseOptionalDate } from "../../util/dateUtil";
+import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { findJulkaisuWithAsianhallintaEventId, getAsiatunnus } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   private nahtavillaoloVaiheTiedostoManager: NahtavillaoloVaiheTiedostoManager;
@@ -34,7 +35,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
     ];
   }
 
-  getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedosto[] {
+  getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedostoPathsPair[] {
     const tiedostot: LadattuTiedosto[] = [];
     const saamePDFt = vaihe.vuorovaikutusSaamePDFt;
     if (saamePDFt) {
@@ -45,7 +46,8 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
         }
       });
     }
-    return tiedostot;
+    const paths = this.projektiPaths.vuorovaikutus(vaihe);
+    return [{ tiedostot, paths }];
   }
 
   async synchronize(): Promise<boolean> {
@@ -55,15 +57,19 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
         const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
         // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
         const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheTiedostoManager.getKuulutusPaiva();
-        return (
-          result &&
-          synchronizeFilesToPublic(
-            this.oid,
-            this.projektiPaths.vuorovaikutus(julkaisu),
-            kuulutusPaiva,
-            kuulutusPaattyyPaiva?.startOf("day")
-          )
-        );
+        if (kuulutusPaiva?.isBefore(nyt())) {
+          return (
+            result &&
+            synchronizeFilesToPublic(
+              this.oid,
+              this.projektiPaths.vuorovaikutus(julkaisu),
+              kuulutusPaiva,
+              kuulutusPaattyyPaiva?.startOf("day")
+            )
+          );
+        } else {
+          return Promise.resolve(true);
+        }
       }, Promise.resolve(true))) || true
     );
   }

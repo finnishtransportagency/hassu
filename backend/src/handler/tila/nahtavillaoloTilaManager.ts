@@ -26,6 +26,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-commo
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
 import { isAllowedToMoveBack } from "hassu-common/util/operationValidators";
 import { findNahtavillaoloWaitingForApproval } from "../../projekti/projektiUtil";
+import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -136,6 +137,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
+  }
+
+  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    await super.approve(projekti, hyvaksyja);
+    //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
+    await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
   }
 
   getVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
