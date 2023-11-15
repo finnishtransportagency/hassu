@@ -107,14 +107,12 @@ function adaptTiedostotToSave(
         )
     )
     .map((dbTiedosto) => ({ ...dbTiedosto, tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA }));
-  const unohdetut =
-    [] ||
-    vanhatEiPoistamistaOdottavat
-      ?.filter((tiedosto) => !tiedostotInput?.find((inputTiedosto) => tiedosto.tiedosto === inputTiedosto.tiedosto))
-      .map((tiedosto) => ({
-        ...tiedosto,
-        tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
-      }));
+  const unohdetut = vanhatEiPoistamistaOdottavat
+    ?.filter((tiedosto) => !tiedostotInput?.find((inputTiedosto) => tiedosto.tiedosto === inputTiedosto.tiedosto))
+    .map((tiedosto) => ({
+      ...tiedosto,
+      tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+    }));
   if (unohdetut?.length) {
     log.warn("TiedostotInputista puuttui tiedostoja");
     projektiAdaptationResult.filesChanged();
