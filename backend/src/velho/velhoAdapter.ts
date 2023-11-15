@@ -1,5 +1,5 @@
 import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, KasittelynTila, Velho } from "../database/model";
+import { DBProjekti, KasittelynTila, LinkitettyVelhoProjekti, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
@@ -191,11 +191,27 @@ function getMaakunnat(data: ProjektiProjekti) {
   return data.ominaisuudet["muu-maakunta"]?.split(",").map(kuntametadata.idForMaakuntaName).sort();
 }
 
-export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
+function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjekti[] {
+  console.log("*** GETTING LINKITETYT PROJEKTIT ****");
+  const linkitetytProjektit: LinkitettyVelhoProjekti[] = [];
+  data.forEach((projekti) =>
+    linkitetytProjektit.push({
+      nimi: projekti.ominaisuudet.nimi,
+      oid: projekti.oid,
+      tyyppi: getProjektiTyyppi(projekti.ominaisuudet.vaihe as any),
+    })
+  );
+  console.log("*** RETURNING LINKITETYT PROJEKTIT ****");
+  console.log(JSON.stringify(linkitetytProjektit));
+  return linkitetytProjektit;
+}
+
+export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: ProjektiProjekti[]): DBProjekti {
   const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
   const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
   const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
+  console.log("*** HAS LINKITETYT PROJEKTIT **** " + linkitetytProjektit ? true : false);
   return {
     oid: "" + data.oid,
     versio: 1,
@@ -212,6 +228,7 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
       varahenkilonEmail,
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
+      linkitetytProjektit: linkitetytProjektit ? getLinkitetytProjektit(linkitetytProjektit) : null,
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],

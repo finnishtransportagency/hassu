@@ -99,6 +99,12 @@ export enum UudelleenkuulutusTila {
   JULKAISTU_PERUUTETTU = "JULKAISTU_PERUUTETTU",
 }
 
+export type LinkitettyVelhoProjekti = {
+  oid: string;
+  nimi: string;
+  tyyppi?: ProjektiTyyppi | null;
+};
+
 export type Velho = {
   nimi: string;
   tyyppi?: ProjektiTyyppi | null;
@@ -115,6 +121,7 @@ export type Velho = {
   maakunnat?: number[] | null;
   kunnat?: number[] | null;
   linkki?: string | null;
+  linkitetytProjektit?: LinkitettyVelhoProjekti[] | null;
 };
 
 export type LadattuTiedosto = {
