@@ -243,7 +243,7 @@ export function findUpdatedFields(oldVelho: Velho, newVelho: Velho): Velho {
   return pickBy(modifiedFields, identity) as Velho;
 }
 
-function setIfDefined<T>(value: T | undefined, setValue: (value: T) => void) {
+function setIfDefined<T>(value: T | undefined | null, setValue: (value: T) => void) {
   if (value) {
     setValue(value);
   }

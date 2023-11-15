@@ -130,7 +130,7 @@ export type Paatos = {
 };
 
 export type Hyvaksymispaatos = {
-  paatoksenPvm?: string;
+  paatoksenPvm?: string | null;
   asianumero?: string;
   aktiivinen?: boolean;
 };
