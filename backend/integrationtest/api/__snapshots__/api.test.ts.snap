@@ -11962,6 +11962,7 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6708-2_Suunnitelmakartta_1.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
+      "expirationDate": "2024-01-01T00:00:00+02:00",
       "fileType": "AINEISTO",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
@@ -11969,6 +11970,7 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
+      "expirationDate": "2024-01-01T00:00:00+02:00",
       "fileType": "AINEISTO",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
@@ -11983,6 +11985,7 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6708-2_Suunnitelmakartta_1.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
+      "expirationDate": "2024-01-01T00:00:00+02:00",
       "fileType": "AINEISTO",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -11990,6 +11993,7 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
+      "expirationDate": "2024-01-01T00:00:00+02:00",
       "fileType": "AINEISTO",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -11997,6 +12001,7 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''Radan%20ristea%CC%88ma%CC%88rekisteriote_1203.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
+      "expirationDate": "2024-01-01T00:00:00+02:00",
       "fileType": "AINEISTO",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -16263,64 +16268,6 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
-    "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2025-02-02T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-    "hyvaksymispaatos/paatos/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2025-02-02T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
@@ -18059,16 +18006,7 @@ Object {
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 20`] = `
 Object {
-  "public S3 files Hyvaksymispaatos": Object {
-    "/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2025-02-02T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2025-01-02T00:00:00+02:00",
-    },
-  },
+  "public S3 files Hyvaksymispaatos": Object {},
 }
 `;
 

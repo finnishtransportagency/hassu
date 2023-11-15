@@ -1,4 +1,4 @@
-import { AineistoTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { Aineisto, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { PathTuple } from "../../files/ProjektiPath";
 import { forEverySaameDo } from "../../projekti/adapter/common";
@@ -8,6 +8,7 @@ import * as mime from "mime-types";
 import contentDisposition from "content-disposition";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { nyt } from "../../util/dateUtil";
+import { persistLadattuTiedosto } from "../../files/persistFiles";
 
 export function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
   const tiedostot: LadattuTiedosto[] = [];
@@ -41,6 +42,30 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
       hasChanges = true;
     } else {
       aineistot.push(aineisto);
+    }
+  }
+
+  return hasChanges;
+}
+
+export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] | null | undefined, paths: PathTuple): Promise<boolean> {
+  if (!tiedostot) {
+    return false;
+  }
+  let hasChanges = false;
+  const originalTiedostot = tiedostot.splice(0, tiedostot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  for (const tiedosto of originalTiedostot) {
+    const { fileWasRemoved, fileWasPersisted } = await persistLadattuTiedosto({
+      oid,
+      ladattuTiedosto: tiedosto,
+      targetFilePathInProjekti: paths.yllapitoPath,
+      poistetaan: tiedosto.tila === LadattuTiedostoTila.ODOTTAA_POISTOA,
+    });
+    if (!fileWasRemoved) {
+      tiedostot.push(tiedosto);
+    }
+    if (fileWasRemoved || fileWasPersisted) {
+      hasChanges = true;
     }
   }
 

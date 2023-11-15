@@ -1,5 +1,6 @@
 import { AineistoPathsPair, VaiheTiedostoManager } from ".";
-import { LadattuTiedosto, VuorovaikutusKierrosJulkaisu } from "../../database/model";
+import { VuorovaikutusKierrosJulkaisu } from "../../database/model";
+import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class VuorovaikutusKierrosJulkaisuTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierrosJulkaisu, unknown> {
   constructor(oid: string, julkaisu: VuorovaikutusKierrosJulkaisu | undefined | null) {
@@ -14,7 +15,7 @@ export class VuorovaikutusKierrosJulkaisuTiedostoManager extends VaiheTiedostoMa
     ];
   }
 
-  getLadatutTiedostot(): LadattuTiedosto[] {
+  getLadatutTiedostot(): LadattuTiedostoPathsPair[] {
     return [];
   }
 
