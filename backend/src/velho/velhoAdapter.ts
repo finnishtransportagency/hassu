@@ -389,12 +389,10 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
   setIfDefined(params.valitustenMaara, (value) => (ominaisuudet["valitukset"] = value));
 
   if (params.liikenteeseenluovutusOsittain || params.liikenteeseenluovutusKokonaan) {
-    if (!ominaisuudet.liikenteeseenluovutus) {
-      ominaisuudet.liikenteeseenluovutus = {
-        osittain: params.liikenteeseenluovutusOsittain ? toLocalDate(params.liikenteeseenluovutusOsittain) : null,
-        kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
-      };
-    }
+    ominaisuudet.liikenteeseenluovutus = {
+      osittain: params.liikenteeseenluovutusOsittain ? toLocalDate(params.liikenteeseenluovutusOsittain) : null,
+      kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
+    };
   }
   setIfDefined(params.lisatieto, (value) => (ominaisuudet.lisatiedot = value));
   return projekti;
