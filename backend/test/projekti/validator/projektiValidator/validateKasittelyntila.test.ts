@@ -78,8 +78,7 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila", async () => {
-    userFixture.loginAsAdmin();
-    const input: TallennaProjektiInput = {
+   const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
       kasittelynTila: {
@@ -92,7 +91,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila hyväksymispäätös", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -106,7 +104,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa db attribuutit tyhjiä", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -120,7 +117,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input attribuutit tyhjiä", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -134,7 +130,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input attribuutit tyhjiä2", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -148,7 +143,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input attribuutit tyhjiä3", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -162,7 +156,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input attribuutit tyhjiä aktiivinen tila mukana true", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -176,7 +169,6 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input attribuutit tyhjiä aktiivinen tila mukana false", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -189,8 +181,20 @@ describe("validateKasittelyntila", () => {
     validateKasittelynTila(dbProjekti, projekti, input);
   });
 
+  it("Testaa hyväksymispäätös kasittelynTila samoilla db ja input arvoilla", async () => {
+    const input: TallennaProjektiInput = {
+      oid: "1",
+      versio: 1,
+      kasittelynTila: {
+        hyvaksymispaatos: { asianumero: "test123", paatoksenPvm: "2023-11-15" },
+      },
+    };
+    const dbProjekti = createDBProjekti("test123", "2023-11-15", false);
+    const projekti = createProjekti(Status.ALOITUSKUULUTUS);
+    validateKasittelynTila(dbProjekti, projekti, input);
+  });
+
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input asianumero annettu", async () => {
-    userFixture.loginAsAdmin();
     const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
@@ -219,5 +223,19 @@ describe("validateKasittelyntila", () => {
     expect(() => validateKasittelynTila(dbProjekti, projekti, input)).to.throw(
       "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin. Projektin status nyt:ALOITUSKUULUTUS"
     );
+  });
+
+  it("Testaa hyväksymispäätös tyhjällä db kasittelynTila jossa input paatoksenPvm annettu nähtävilläolossa", async () => {
+    userFixture.loginAsAdmin();
+    const input: TallennaProjektiInput = {
+      oid: "1",
+      versio: 1,
+      kasittelynTila: {
+        hyvaksymispaatos: { asianumero: "test123", paatoksenPvm: "2023-11-11" },
+      },
+    };
+    const dbProjekti = createDBProjekti("", null, true);
+    const projekti = createProjekti(Status.NAHTAVILLAOLO);
+    validateKasittelynTila(dbProjekti, projekti, input);
   });
 });
