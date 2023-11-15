@@ -6,6 +6,7 @@ export enum ProjektiEventType {
   LOGO_FILES_CHANGED = "LOGO_FILES_CHANGED",
   RESET_KAYTTOOIKEUDET = "RESET_KAYTTOOIKEUDET",
   SAVE_PROJEKTI_TO_VELHO = "SAVE_PROJEKTI_TO_VELHO",
+  FILES_CHANGED = "FILES_CHANGED",
 }
 
 export type VuorovaikutusPublishedEvent = {
@@ -17,13 +18,15 @@ export type AineistoChangedEvent = { eventType: ProjektiEventType.AINEISTO_CHANG
 export type logoFilesChangedEvent = { eventType: ProjektiEventType.LOGO_FILES_CHANGED };
 export type ResetKayttooikeudetEvent = { eventType: ProjektiEventType.RESET_KAYTTOOIKEUDET };
 export type SaveProjektiToVelhoEvent = { eventType: ProjektiEventType.SAVE_PROJEKTI_TO_VELHO };
+export type FilesChangedEvent = { eventType: ProjektiEventType.FILES_CHANGED };
 
 export type ProjektiEvent =
   | VuorovaikutusPublishedEvent
   | AineistoChangedEvent
   | ResetKayttooikeudetEvent
   | SaveProjektiToVelhoEvent
-  | logoFilesChangedEvent;
+  | logoFilesChangedEvent
+  | FilesChangedEvent;
 
 export class ProjektiAdaptationResult {
   private dbProjekti: DBProjekti;
@@ -47,11 +50,9 @@ export class ProjektiAdaptationResult {
     return this.dbProjekti;
   }
 
-  async onEvent(eventType: ProjektiEventType, eventHandler: (event: ProjektiEvent, oid: string) => Promise<void>): Promise<void> {
-    for (const event of this.events) {
-      if (event.eventType == eventType) {
-        await eventHandler(event, this.projekti.oid);
-      }
+  async onEvents(thisHasHappened: (events: ProjektiEvent[]) => boolean, eventHandler: (oid: string) => Promise<void>): Promise<void> {
+    if (thisHasHappened(this.events)) {
+      await eventHandler(this.projekti.oid);
     }
   }
 
@@ -73,6 +74,13 @@ export class ProjektiAdaptationResult {
   logoFilesChanged(): void {
     const newEvent: logoFilesChangedEvent = {
       eventType: ProjektiEventType.LOGO_FILES_CHANGED,
+    };
+    this.pushEvent(newEvent);
+  }
+
+  filesChanged(): void {
+    const newEvent: FilesChangedEvent = {
+      eventType: ProjektiEventType.FILES_CHANGED,
     };
     this.pushEvent(newEvent);
   }
