@@ -11713,6 +11713,23 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-01-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
@@ -12259,6 +12276,23 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-01-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
@@ -12311,6 +12345,23 @@ Array [
     "Target": Object {
       "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-ENA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-01-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13098,6 +13149,23 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-01-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
@@ -13150,6 +13218,23 @@ Array [
     "Target": Object {
       "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-ENA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-01-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14988,6 +15073,23 @@ Array [
     "Target": Object {
       "Arn": "",
       "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-ENA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-PNA",
+    "ScheduleExpression": "at(2024-06-01T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"ZIP_LAUSUNTOPYYNNOT\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-PNA\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
