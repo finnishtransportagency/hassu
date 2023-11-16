@@ -14,6 +14,10 @@ import { assertIsDefined } from "../../../src/util/assertions";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
+import MockDate from "mockdate";
+import { projektiSchedulerService } from "../../../src/sqsEvents/projektiSchedulerService";
+import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
+import { formatDate } from "hassu-common/util/dateUtils";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -27,6 +31,7 @@ describe("nahtavillaoloTilaManager", () => {
 
   afterEach(() => {
     sinon.reset();
+    sinon.restore();
     userFixture.logout();
   });
 
@@ -65,5 +70,41 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
     await nahtavillaoloTilaManager.approve(projekti1, { __typename: "NykyinenKayttaja", etunimi: "", sukunimi: "" });
     expect(zipLausuntoPyyntoAineistoStub.callCount).to.eql(1);
+  });
+
+  it(", on nahtavillaolo approve, should add new schedule for ZIP_LAUSUNTOPYYNNOT, with a firing time for nahtavillaolo publish date", async function () {
+    assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
+    const projekti1: DBProjekti = {
+      ...projekti,
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          ...projekti.nahtavillaoloVaiheJulkaisut[0],
+          tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          kuulutusPaiva: "2022-06-20T11:54",
+        },
+      ],
+    };
+    MockDate.set("2022-05-20"); // Before kuulutusPaiva
+    sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti1);
+    sinon.stub(projektiDatabase, "updateJulkaisuToList");
+    sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
+    sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
+    new SchedulerMock();
+    const triggerEventAtSpecificTimeStub = sinon.stub(projektiSchedulerService, "triggerEventAtSpecificTime");
+    await nahtavillaoloTilaManager.approve(projekti1, { __typename: "NykyinenKayttaja", etunimi: "", sukunimi: "" });
+    // Etsi kaikista triggerEventAtSpecificTimeStub:n kutsuista se, jossa argumenttina annetaan ZIP_LAUSUNTOPYYNNOT
+    const callForZipLausuntoPyynnotArgs = Array.from(Array(triggerEventAtSpecificTimeStub.callCount))
+      .map((_number: number, index: number) => triggerEventAtSpecificTimeStub.getCall(index).args)
+      .find((callArgs) => callArgs[3] === "ZIP_LAUSUNTOPYYNNOT");
+    expect(callForZipLausuntoPyynnotArgs).to.exist;
+    expect(callForZipLausuntoPyynnotArgs?.[0]).to.eql({
+      oid: "3",
+      scheduleName: "P3-2022-06-20T00-00-00-PNA",
+      dateString: "2022-06-20T00:00:00",
+    });
+    expect(formatDate(callForZipLausuntoPyynnotArgs?.[1])).to.eql("20.06.2022");
+    MockDate.reset();
   });
 });
