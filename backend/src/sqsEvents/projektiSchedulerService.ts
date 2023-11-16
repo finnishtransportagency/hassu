@@ -38,6 +38,9 @@ class ProjektiSchedulerService {
         switch (publishOrExpireEvent.type) {
           case PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO:
             await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS);
+            // LausuntoPyyntojen aineistopaketissa kuuluu olla viimeisimmän julkisen nähtävilläolon aineisto mukana.
+            // Siispä aina nähtävilläolon julkaisun hetkellä laitetaan sqs-jonoon käsky zipata lausuntopyyntöjen aineistpaketti uudestaan.
+            await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.ZIP_LAUSUNTOPYYNNOT);
             break;
           case PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE:
             await this.addScheduleOrDeleteFromList(

@@ -1,11 +1,21 @@
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import { nyt, parseDate } from "./dateUtil";
 
-export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
+/**
+ *
+ * @param projekti
+ * @returns latest public nahtavillaoloVaiheJulkaisu, or latest HYVAKSYTTY nahtavillaoloVaiheJulkaisu, if none are public
+ */
+export function findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu(
   projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut">
 ): NahtavillaoloVaiheJulkaisu | undefined {
   if (projekti.nahtavillaoloVaiheJulkaisut) {
-    return projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
+    const hyvaksytyt = projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY);
+    const viimeisinJulkinen = hyvaksytyt
+      .filter((julkaisu) => julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(nyt()))
+      .pop();
+    return viimeisinJulkinen || hyvaksytyt.pop();
   } else {
     return undefined;
   }

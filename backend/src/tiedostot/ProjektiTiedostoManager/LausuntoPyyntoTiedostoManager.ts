@@ -4,7 +4,7 @@ import { config } from "../../config";
 import { LadattuTiedosto, LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
-import { findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu } from "../../util/lausuntoPyyntoUtil";
+import { findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu } from "../../util/lausuntoPyyntoUtil";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 import { translate } from "../../util/localization";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
@@ -72,7 +72,7 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
     if (!lausuntoPyynto) return;
     const lausuntoPyyntoAineistotPaths = this.getAineisto(lausuntoPyynto);
-    const latestHyvaksyttyNahtavillaoloVaiheJulkaisu = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu({
+    const latestHyvaksyttyNahtavillaoloVaiheJulkaisu = findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu({
       nahtavillaoloVaiheJulkaisut: this.nahtavillaoloVaiheJulkaisut,
     });
     // Meitä kiinnostaa vain nähtävilläolovaihejulkaisujen aineistot, joten voimme antaa nähtävilläoovaiheeksi undefined.

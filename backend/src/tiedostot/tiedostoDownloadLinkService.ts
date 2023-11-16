@@ -13,7 +13,7 @@ import { IllegalAccessError } from "hassu-common/error";
 import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../database/model";
 import { log } from "../logger";
 import {
-  findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+  findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu,
   findLausuntoPyynnonTaydennysByUuid,
   findLausuntoPyyntoByUuid,
 } from "../util/lausuntoPyyntoUtil";
@@ -55,7 +55,7 @@ class TiedostoDownloadLinkService {
   }
 
   async esikatseleLausuntoPyynnonTiedostot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
-    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+    const nahtavillaolo = findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, lausuntoPyyntoInput.uuid);
     const uusiLausuntoPyynto = adaptLausuntoPyyntoToSave(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
     const aineistot =
@@ -115,7 +115,7 @@ class TiedostoDownloadLinkService {
   }
 
   async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoTiedostotInput): Promise<LadattavatTiedostot> {
-    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+    const nahtavillaolo = findLatestHyvaksyttyJulkinenNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
     if (!lausuntoPyynto) {
       throw new Error("Lausuntopyyntöä ei löytynyt");
