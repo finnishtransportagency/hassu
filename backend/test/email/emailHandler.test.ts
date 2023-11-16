@@ -19,7 +19,7 @@ import { expect } from "chai";
 import { parameters } from "../../src/aws/parameters";
 import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
 import { KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
-import { DBProjekti2Fixture, VaiheenTila } from "../fixture/dbProjekti2Fixture";
+import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 
@@ -113,7 +113,7 @@ describe("emailHandler", () => {
     describe("sendNahtavillaoloMails", () => {
       let projekti: DBProjekti;
       beforeEach(() => {
-        projekti = new DBProjekti2Fixture().dbProjekti2(Vaihe.NAHTAVILLAOLO, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
+        projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
         loadProjektiByOidStub.resolves(projekti);
       });
 
@@ -133,7 +133,7 @@ describe("emailHandler", () => {
 
       describe("sendNahtavillaoloMails", () => {
         beforeEach(() => {
-          projekti = new DBProjekti2Fixture().dbProjekti2(Vaihe.NAHTAVILLAOLO, VaiheenTila.HYVAKSYTTY);
+          projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.HYVAKSYTTY);
           assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut?.[0]?.hyvaksymisPaiva);
 
           const julkaisu1 = projekti.nahtavillaoloVaiheJulkaisut[0];

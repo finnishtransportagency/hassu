@@ -47,9 +47,9 @@ export enum VaiheenTila {
   HYVAKSYTTY = "HYVAKSYTTY",
 }
 
-export class DBProjekti2Fixture {
-  public PROJEKTI2_NIMI = "Testiprojekti 2";
-  public PROJEKTI2_OID = "2";
+export class DBProjektiForSpecificVaiheFixture {
+  public PROJEKTI_NIMI = "Testiprojekti 2";
+  public PROJEKTI_OID = "2";
 
   private static pekkaProjariProjektiKayttaja: ProjektiKayttaja = {
     __typename: "ProjektiKayttaja",
@@ -74,21 +74,21 @@ export class DBProjekti2Fixture {
     puhelinnumero: "123456789",
   };
 
-  mattiMeikalainenDBVaylaUser(): DBVaylaUser {
-    return projektiKayttajaAsDBVaylaUser(DBProjekti2Fixture.mattiMeikalainenProjektiKayttaja);
+  private mattiMeikalainenDBVaylaUser(): DBVaylaUser {
+    return this.projektiKayttajaAsDBVaylaUser(DBProjektiForSpecificVaiheFixture.mattiMeikalainenProjektiKayttaja);
   }
 
-  dbProjekti2Velho(): Velho {
+  private velho(): Velho {
     return {
-      nimi: this.PROJEKTI2_NIMI,
+      nimi: this.PROJEKTI_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
       kunnat: mikkeliJuvaSavonlinna,
       vaylamuoto: ["tie"],
-      vastuuhenkilonEmail: DBProjekti2Fixture.pekkaProjariProjektiKayttaja.email,
+      vastuuhenkilonEmail: DBProjektiForSpecificVaiheFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: uusimaaPirkanmaa,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
-      asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
-      asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
+      asiatunnusVayla: "VAYLA/" + this.PROJEKTI_OID + "/2022",
+      asiatunnusELY: "ELY/" + this.PROJEKTI_OID + "/2022",
     };
   }
 
@@ -119,9 +119,9 @@ export class DBProjekti2Fixture {
     ],
   };
 
-  dbProjekti2Base(): DBProjekti {
+  private projektiBase(): DBProjekti {
     return {
-      oid: this.PROJEKTI2_OID,
+      oid: this.PROJEKTI_OID,
       versio: 1,
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
@@ -138,11 +138,11 @@ export class DBProjekti2Fixture {
       kasittelynTila: {
         hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
       },
-      velho: this.dbProjekti2Velho(),
+      velho: this.velho(),
       kayttoOikeudet: [
         {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          ...projektiKayttajaAsDBVaylaUser(DBProjekti2Fixture.pekkaProjariProjektiKayttaja),
+          ...this.projektiKayttajaAsDBVaylaUser(DBProjektiForSpecificVaiheFixture.pekkaProjariProjektiKayttaja),
         },
         this.mattiMeikalainenDBVaylaUser(),
       ],
@@ -150,8 +150,8 @@ export class DBProjekti2Fixture {
   }
 
   /* eslint-disable no-fallthrough */
-  public dbProjekti2(currentVaihe: Vaihe, vaiheenTila: VaiheenTila): DBProjekti {
-    const projekti = this.dbProjekti2Base();
+  public getProjektiForVaihe(currentVaihe: Vaihe, vaiheenTila: VaiheenTila): DBProjekti {
+    const projekti = this.projektiBase();
 
     const haeVaiheenTila = (currentVaihe: Vaihe, vaihe: Vaihe) => {
       const vaiheIsBeforeCurrentVaihe = statusOrder[vaiheToStatus[vaihe]] < statusOrder[vaiheToStatus[currentVaihe]];
@@ -191,7 +191,7 @@ export class DBProjekti2Fixture {
     return projekti;
   }
 
-  haeAloituskuulutusJulkaisu(vaiheenTila: VaiheenTila): AloitusKuulutusJulkaisu[] | undefined {
+  private haeAloituskuulutusJulkaisu(vaiheenTila: VaiheenTila): AloitusKuulutusJulkaisu[] | undefined {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
@@ -221,7 +221,7 @@ export class DBProjekti2Fixture {
         },
         yhteystiedot: this.yhteystiedot(),
         kuulutusYhteystiedot: this.kuulutusYhteystiedot(),
-        velho: this.dbProjekti2Velho(),
+        velho: this.velho(),
         id: 1,
         tila: this.julkaisunTila(vaiheenTila),
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
@@ -231,7 +231,7 @@ export class DBProjekti2Fixture {
   }
 
   private muokkaaja(): string | null | undefined {
-    return DBProjekti2Fixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus;
+    return DBProjektiForSpecificVaiheFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus;
   }
 
   private hyvaksymisPaiva(vaiheenTila: VaiheenTila): string | null | undefined {
@@ -243,7 +243,9 @@ export class DBProjekti2Fixture {
   }
 
   private hyvaksyja(vaiheenTila: VaiheenTila): string | null | undefined {
-    return vaiheenTila === VaiheenTila.HYVAKSYTTY ? DBProjekti2Fixture.pekkaProjariProjektiKayttaja.kayttajatunnus : undefined;
+    return vaiheenTila === VaiheenTila.HYVAKSYTTY
+      ? DBProjektiForSpecificVaiheFixture.pekkaProjariProjektiKayttaja.kayttajatunnus
+      : undefined;
   }
 
   private haeKielitiedot(): Kielitiedot {
@@ -254,7 +256,7 @@ export class DBProjekti2Fixture {
     };
   }
 
-  haeAloituskuulutus(): AloitusKuulutus {
+  private haeAloituskuulutus(): AloitusKuulutus {
     return {
       id: 1,
       hankkeenKuvaus: {
@@ -295,8 +297,8 @@ export class DBProjekti2Fixture {
     return {
       yhteysTiedot: this.yhteystiedot(),
       yhteysHenkilot: [
-        DBProjekti2Fixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
-        DBProjekti2Fixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        DBProjektiForSpecificVaiheFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        DBProjektiForSpecificVaiheFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
       ],
     };
   }
@@ -313,7 +315,7 @@ export class DBProjekti2Fixture {
     ];
   }
 
-  haeVuorovaikutus(): VuorovaikutusKierros {
+  private haeVuorovaikutus(): VuorovaikutusKierros {
     return {
       vuorovaikutusNumero: 1,
       vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
@@ -352,14 +354,14 @@ export class DBProjekti2Fixture {
     };
   }
 
-  esitettavatYhteystiedot(): StandardiYhteystiedot {
+  private esitettavatYhteystiedot(): StandardiYhteystiedot {
     return {
       yhteysTiedot: [],
       yhteysHenkilot: ["A000112"],
     };
   }
 
-  haeVuorovaikutusJulkaisut(vaiheenTila: VaiheenTila): VuorovaikutusKierrosJulkaisu[] | undefined {
+  private haeVuorovaikutusJulkaisut(vaiheenTila: VaiheenTila): VuorovaikutusKierrosJulkaisu[] | undefined {
     if (vaiheenTila !== VaiheenTila.HYVAKSYTTY) {
       return undefined;
     }
@@ -412,7 +414,7 @@ export class DBProjekti2Fixture {
     ];
   }
 
-  haeNahtavillaoloJulkaisut(vaiheenTila: VaiheenTila): NahtavillaoloVaiheJulkaisu[] | undefined {
+  private haeNahtavillaoloJulkaisut(vaiheenTila: VaiheenTila): NahtavillaoloVaiheJulkaisu[] | undefined {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
@@ -437,7 +439,7 @@ export class DBProjekti2Fixture {
         muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
         muokkaaja: this.muokkaaja(),
         tila: vaiheenTila === VaiheenTila.HYVAKSYTTY ? KuulutusJulkaisuTila.HYVAKSYTTY : KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-        velho: this.dbProjekti2Velho(),
+        velho: this.velho(),
         nahtavillaoloPDFt: {
           SUOMI: {
             nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/1.pdf",
@@ -454,7 +456,7 @@ export class DBProjekti2Fixture {
     ];
   }
 
-  haeNahtavillaolo(): NahtavillaoloVaihe {
+  private haeNahtavillaolo(): NahtavillaoloVaihe {
     return {
       id: 1,
       hankkeenKuvaus: {
@@ -468,7 +470,7 @@ export class DBProjekti2Fixture {
     };
   }
 
-  hyvaksymisPaatosVaiheJulkaisut(vaiheenTila: VaiheenTila, polku: string): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  private hyvaksymisPaatosVaiheJulkaisut(vaiheenTila: VaiheenTila, polku: string): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
@@ -517,14 +519,14 @@ export class DBProjekti2Fixture {
         kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
         muokkaaja: this.muokkaaja(),
         tila: KuulutusJulkaisuTila.HYVAKSYTTY,
-        velho: this.dbProjekti2Velho(),
+        velho: this.velho(),
         yhteystiedot: this.yhteystiedot(),
         kuulutusYhteystiedot: this.kuulutusYhteystiedot(),
       },
     ];
   }
 
-  hyvaksymisPaatosVaihe(polku: string): HyvaksymisPaatosVaihe {
+  private hyvaksymisPaatosVaihe(polku: string): HyvaksymisPaatosVaihe {
     return {
       aineistoNahtavilla: [
         {
@@ -589,17 +591,16 @@ export class DBProjekti2Fixture {
       },
     };
   }
-}
-
-function projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser {
-  return {
-    email: kayttaja.email,
-    kayttajatunnus: kayttaja.kayttajatunnus,
-    etunimi: kayttaja.etunimi,
-    sukunimi: kayttaja.sukunimi,
-    puhelinnumero: kayttaja.puhelinnumero ?? "",
-    organisaatio: kayttaja.organisaatio ?? "",
-    elyOrganisaatio: kayttaja.elyOrganisaatio ?? undefined,
-    muokattavissa: kayttaja.muokattavissa ?? undefined,
-  };
+  private projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser {
+    return {
+      email: kayttaja.email,
+      kayttajatunnus: kayttaja.kayttajatunnus,
+      etunimi: kayttaja.etunimi,
+      sukunimi: kayttaja.sukunimi,
+      puhelinnumero: kayttaja.puhelinnumero ?? "",
+      organisaatio: kayttaja.organisaatio ?? "",
+      elyOrganisaatio: kayttaja.elyOrganisaatio ?? undefined,
+      muokattavissa: kayttaja.muokattavissa ?? undefined,
+    };
+  }
 }
