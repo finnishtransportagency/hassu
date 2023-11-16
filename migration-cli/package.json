@@ -7,6 +7,7 @@
     "setup": "cross-env ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
     "migration:dev": "cross-env-shell AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true AWS_PROFILE=hassudev npm run setup:dev && ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
     "migration:prod": "cross-env-shell AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true AWS_PROFILE=hassuprod npm run setup:prod && ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
+    "migration:local": "cross-env-shell AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true AWS_PROFILE=hassudev ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
     "test": "npm run setup && cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {

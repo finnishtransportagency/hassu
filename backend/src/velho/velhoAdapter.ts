@@ -281,6 +281,8 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
     (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
   );
 
+  setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
+
   // Palauta tyhjälle lopputulokselle undefined
   if (isEqual(pickBy(kasittelynTila, identity), {})) {
     return undefined;
@@ -394,6 +396,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
       };
     }
   }
+  setIfDefined(params.lisatieto, (value) => (ominaisuudet.lisatiedot = value));
   return projekti;
 }
 

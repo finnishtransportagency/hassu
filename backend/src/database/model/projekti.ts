@@ -115,6 +115,7 @@ export type KasittelynTila = {
   liikenteeseenluovutusKokonaan?: string;
   hallintoOikeus?: OikeudenPaatos;
   korkeinHallintoOikeus?: OikeudenPaatos;
+  lisatieto?: string;
 };
 
 export type OikeudenPaatos = {
