@@ -17,11 +17,17 @@ import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
 import { parameters } from "../../src/aws/parameters";
+import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
+import { KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
+import { DBProjekti2Fixture, VaiheenTila } from "../fixture/dbProjekti2Fixture";
+import { DBProjekti } from "../../src/database/model";
+import { assertIsDefined } from "../../src/util/assertions";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let updateNahtavillaoloKuulutusJulkaisuStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   mockBankHolidays();
@@ -32,6 +38,7 @@ describe("emailHandler", () => {
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    updateNahtavillaoloKuulutusJulkaisuStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
@@ -62,16 +69,18 @@ describe("emailHandler", () => {
           personSearchFixture.manuMuokkaaja,
         ])
       );
-      loadProjektiByOidStub.resolves(fixture.dbProjekti5());
       s3Mock.mockGetObject({
         Body: Readable.from(""),
         ContentType: "application/pdf",
       } as GetObjectCommandOutput);
     });
 
-    describe("sendWaitingApprovalMail", () => {
+    describe("sendAloituskuulutusMails", () => {
+      beforeEach(() => {
+        loadProjektiByOidStub.resolves(fixture.dbProjekti5());
+      });
       it("should send email to projektipaallikko succesfully", async () => {
-        const emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
+        const emailOptions = createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
         expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
         expect(emailOptions.text).to.eq(
@@ -83,9 +92,7 @@ describe("emailHandler", () => {
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
       });
-    });
 
-    describe("sendApprovalMailsAndAttachments", () => {
       it("should send emails and attachments succesfully", async () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
@@ -100,6 +107,60 @@ describe("emailHandler", () => {
         await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
         emailClientStub.verifyEmailsSent();
+      });
+    });
+
+    describe("sendNahtavillaoloMails", () => {
+      let projekti: DBProjekti;
+      beforeEach(() => {
+        projekti = new DBProjekti2Fixture().dbProjekti2(Vaihe.NAHTAVILLAOLO, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
+        loadProjektiByOidStub.resolves(projekti);
+      });
+
+      it("should send emails and attachments succesfully", async () => {
+        publishProjektiFileStub.resolves();
+        synchronizeProjektiFilesStub.resolves();
+        updateNahtavillaoloKuulutusJulkaisuStub.resolves();
+        s3Mock.s3Mock.on(GetObjectCommand).resolves({
+          Body: Readable.from(""),
+          ContentType: "application/pdf",
+        } as GetObjectCommandOutput);
+
+        await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
+        expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+        emailClientStub.verifyEmailsSent();
+      });
+
+      describe("sendNahtavillaoloMails", () => {
+        beforeEach(() => {
+          projekti = new DBProjekti2Fixture().dbProjekti2(Vaihe.NAHTAVILLAOLO, VaiheenTila.HYVAKSYTTY);
+          assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut?.[0]?.hyvaksymisPaiva);
+
+          const julkaisu1 = projekti.nahtavillaoloVaiheJulkaisut[0];
+          projekti.nahtavillaoloVaiheJulkaisut = [
+            julkaisu1,
+            {
+              ...julkaisu1,
+              aineistoMuokkaus: { alkuperainenHyvaksymisPaiva: julkaisu1.hyvaksymisPaiva! },
+              tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+            },
+          ];
+
+          loadProjektiByOidStub.resolves(projekti);
+        });
+
+        it("dontSendIlmoitusMailsForAineistoMuokkaus", async () => {
+          publishProjektiFileStub.resolves();
+          synchronizeProjektiFilesStub.resolves();
+          updateNahtavillaoloKuulutusJulkaisuStub.resolves();
+          s3Mock.s3Mock.on(GetObjectCommand).resolves({
+            Body: Readable.from(""),
+            ContentType: "application/pdf",
+          } as GetObjectCommandOutput);
+          await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+          expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+          emailClientStub.verifyEmailsSent();
+        });
       });
     });
   });
