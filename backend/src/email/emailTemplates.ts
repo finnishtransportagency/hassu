@@ -276,7 +276,7 @@ export function createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter: Hyvak
   };
 }
 
-export function createjatkopaatosHyvaksyttyPaallikkolleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+export function createJatkopaatosHyvaksyttyPaallikkolleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(jatkopaatosHyvaksyttyPaallikolleOtsikko),
