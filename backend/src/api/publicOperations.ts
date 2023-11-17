@@ -47,9 +47,9 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
     case apiConfig.nykyinenSuomifiKayttaja.name:
       return getSuomiFiKayttaja();
     case apiConfig.listaaLausuntoPyynnonTiedostot.name:
-      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonAineistot(event.arguments as ListaaLausuntoPyynnonTiedostotQueryVariables);
+      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot(event.arguments as ListaaLausuntoPyynnonTiedostotQueryVariables);
     case apiConfig.listaaLausuntoPyynnonTaydennyksenTiedostot.name:
-      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysAineistot(
+      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot(
         event.arguments as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables
       );
     default:
