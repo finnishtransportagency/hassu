@@ -24,7 +24,12 @@ export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projek
       ) {
         return false;
       }
-      return inputChangesKasittelynTilaField(key);
+      // ignore aktiivinen
+      return (
+        has(input.kasittelynTila, key) &&
+        (!isEqual(input.kasittelynTila?.hyvaksymispaatos?.asianumero, projekti.kasittelynTila?.hyvaksymispaatos?.asianumero) ||
+          !isEqual(input.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm, projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm))
+      );
     };
 
     validateKasittelyntilaHyvaksymispaatos(apiProjekti, inputChangesHyvaksymispaatosField);
