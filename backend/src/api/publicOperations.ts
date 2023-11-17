@@ -3,8 +3,8 @@ import {
   LataaProjektiJulkinenQueryVariables,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
-  ListaaLausuntoPyynnonAineistotQueryVariables,
-  ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables,
+  ListaaLausuntoPyynnonTiedostotQueryVariables,
+  ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
@@ -46,11 +46,11 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
       return palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
     case apiConfig.nykyinenSuomifiKayttaja.name:
       return getSuomiFiKayttaja();
-    case apiConfig.listaaLausuntoPyynnonAineistot.name:
-      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonAineistot(event.arguments as ListaaLausuntoPyynnonAineistotQueryVariables);
-    case apiConfig.listaaLausuntoPyynnonTaydennyksenAineistot.name:
+    case apiConfig.listaaLausuntoPyynnonTiedostot.name:
+      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonAineistot(event.arguments as ListaaLausuntoPyynnonTiedostotQueryVariables);
+    case apiConfig.listaaLausuntoPyynnonTaydennyksenTiedostot.name:
       return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysAineistot(
-        event.arguments as ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables
+        event.arguments as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables
       );
     default:
       return null;
