@@ -88,7 +88,9 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
         <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
       </ContentSpacer>
       <ContentSpacer>
-        <H3 variant="h4">{t("projekti:ui-otsikot.paatos")}</H3>
+        <H3 variant="h4">
+          {t(paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "projekti:ui-otsikot.paatos" : "projekti:ui-otsikot.paatosJaJatkopaatos")}
+        </H3>
         {kuulutus?.hyvaksymisPaatos?.length && kuulutus?.kuulutusPaiva && (
           <AineistoLinkkiLista aineistot={kuulutus?.hyvaksymisPaatos} julkaisupaiva={kuulutus?.kuulutusPaiva} />
         )}
