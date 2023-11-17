@@ -22,8 +22,8 @@ import {
   TallennaJaSiirraTilaaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiMutationVariables,
-  EsikatseleLausuntoPyynnonAineistotQueryVariables,
-  EsikatseleLausuntoPyynnonTaydennysAineistotQueryVariables,
+  EsikatseleLausuntoPyynnonTiedostotQueryVariables,
+  EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -109,13 +109,13 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
     case apiConfig.suoritaTestiKomento.name:
       await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
       return "";
-    case apiConfig.esikatseleLausuntoPyynnonAineistot.name:
+    case apiConfig.esikatseleLausuntoPyynnonTiedostot.name:
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonAineistot(
-        event.arguments as EsikatseleLausuntoPyynnonAineistotQueryVariables
+        event.arguments as EsikatseleLausuntoPyynnonTiedostotQueryVariables
       );
-    case apiConfig.esikatseleLausuntoPyynnonTaydennysAineistot.name:
+    case apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot.name:
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysAineistot(
-        event.arguments as EsikatseleLausuntoPyynnonTaydennysAineistotQueryVariables
+        event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
     default:
       return null;
