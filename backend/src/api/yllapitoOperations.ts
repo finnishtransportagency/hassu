@@ -110,11 +110,11 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
       return "";
     case apiConfig.esikatseleLausuntoPyynnonTiedostot.name:
-      return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonAineistot(
+      return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTiedostotQueryVariables
       );
     case apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot.name:
-      return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysAineistot(
+      return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
     default:
