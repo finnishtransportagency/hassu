@@ -53,9 +53,14 @@ const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko =
 const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const jatkopaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}";
+const jatkopaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+{{nimi}}
+jatkopäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 // Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
@@ -282,6 +287,14 @@ export function createJatkopaatosHyvaksyttyPaallikkolleEmail(adapter: Hyvaksymis
     subject: adapter.substituteText(jatkopaatosHyvaksyttyPaallikolleOtsikko),
     text: adapter.substituteText(jatkopaatosHyvaksyttyPaallikolleTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createJatkopaatosHyvaksyttyLaatijalleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter, muokkaaja: Kayttaja): EmailOptions {
+  return {
+    subject: adapter.substituteText(jatkopaatosHyvaksyttyLaatijalleOtsikko),
+    text: adapter.substituteText(jatkopaatosHyvaksyttyLaatijalleTeksti),
+    to: muokkaaja.email || undefined,
   };
 }
 

@@ -34,6 +34,17 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu, this.getPaatosTyyppi());
 
+    await this.sendEmailToMuokkaaja(julkaisu, emailCreator);
+
+    const projektinKielet = [julkaisu.kielitiedot?.ensisijainenKieli, julkaisu.kielitiedot?.toissijainenKieli].filter(
+      (kieli): kieli is Kieli => !!kieli
+    );
+
+    await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
+    await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
+  }
+
+  protected async sendEmailToMuokkaaja(julkaisu: HyvaksymisPaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
     assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
     const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
@@ -43,13 +54,6 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     } else {
       log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
     }
-
-    const projektinKielet = [julkaisu.kielitiedot?.ensisijainenKieli, julkaisu.kielitiedot?.toissijainenKieli].filter(
-      (kieli): kieli is Kieli => !!kieli
-    );
-
-    await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
-    await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
@@ -316,6 +320,18 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
       await emailClient.sendEmail(emailToProjektiPaallikko);
     } else {
       log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
+    }
+  }
+
+  protected async sendEmailToMuokkaaja(julkaisu: HyvaksymisPaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
+    assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
+    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
+    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
+    const jatkopaatosHyvaksyttyEmailMuokkajalle = emailCreator.createJatkopaatosHyvaksyttyEmailMuokkaajalle(muokkaaja);
+    if (jatkopaatosHyvaksyttyEmailMuokkajalle.to) {
+      await emailClient.sendEmail(jatkopaatosHyvaksyttyEmailMuokkajalle);
+    } else {
+      log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
     }
   }
 }
