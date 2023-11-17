@@ -1,37 +1,37 @@
 import {
-  EsikatseleLausuntoPyynnonAineistotQueryVariables,
-  EsikatseleLausuntoPyynnonTaydennysAineistotQueryVariables,
-  LisaAineistot,
-  ListaaLausuntoPyynnonAineistotQueryVariables,
-  ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables,
+  EsikatseleLausuntoPyynnonTiedostotQueryVariables,
+  EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
+  LadattavatTiedostot,
+  ListaaLausuntoPyynnonTiedostotQueryVariables,
+  ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonAineistot({
     oid,
-    lausuntoPyyntoAineistonTiedot: params,
-  }: ListaaLausuntoPyynnonAineistotQueryVariables): Promise<LisaAineistot> {
+    listaaLausuntoPyyntoTiedostotInput: params,
+  }: ListaaLausuntoPyynnonTiedostotQueryVariables): Promise<LadattavatTiedostot> {
     throw new Error("Not implemented yet");
   }
 
   async listaaLausuntoPyynnonTaydennysAineistot({
     oid,
-    lausuntoPyynnonTaydennyksenAineistonTiedot: params,
-  }: ListaaLausuntoPyynnonTaydennyksenAineistotQueryVariables): Promise<LisaAineistot> {
+    listaaLausuntoPyynnonTaydennyksenTiedostotInput: params,
+  }: ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables): Promise<LadattavatTiedostot> {
     throw new Error("Not implemented yet");
   }
 
   async esikatseleLausuntoPyynnonAineistot({
     oid,
     lausuntoPyynto,
-  }: EsikatseleLausuntoPyynnonAineistotQueryVariables): Promise<LisaAineistot> {
+  }: EsikatseleLausuntoPyynnonTiedostotQueryVariables): Promise<LadattavatTiedostot> {
     throw new Error("Not implemented yet");
   }
 
   async esikatseleLausuntoPyynnonTaydennysAineistot({
     oid,
     lausuntoPyynnonTaydennys,
-  }: EsikatseleLausuntoPyynnonTaydennysAineistotQueryVariables): Promise<LisaAineistot> {
+  }: EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables): Promise<LadattavatTiedostot> {
     throw new Error("Not implemented yet");
   }
 }
