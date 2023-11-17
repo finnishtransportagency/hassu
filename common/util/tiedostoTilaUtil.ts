@@ -14,3 +14,8 @@ export function ladattuTiedostoEiOdotaPoistoaTaiPoistettu(tiedosto: LadattuTiedo
   }
   return ![API.LadattuTiedostoTila.ODOTTAA_POISTOA, API.LadattuTiedostoTila.POISTETTU].includes(tiedosto.tila);
 }
+
+export function ladattuTiedostoTilaEiPoistettu(tila: API.LadattuTiedostoTila | undefined | null): boolean {
+  if (!tila) return false;
+  return [API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA, API.LadattuTiedostoTila.VALMIS].includes(tila);
+}
