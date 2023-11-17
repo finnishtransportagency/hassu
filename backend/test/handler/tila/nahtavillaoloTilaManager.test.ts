@@ -3,24 +3,22 @@
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { DBProjekti } from "../../../src/database/model";
-//import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
-
+import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
+import { assertIsDefined } from "../../../src/util/assertions";
+import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { parameters } from "../../../src/aws/parameters";
 
 describe("nahtavillaoloTilaManager", () => {
-  //let saveProjektiStub: sinon.SinonStub;
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
-
-  before(() => {
-    //saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-  });
 
   beforeEach(() => {
     projekti = new ProjektiFixture().nahtavillaoloVaihe();
@@ -45,5 +43,27 @@ describe("nahtavillaoloTilaManager", () => {
     await expect(() => nahtavillaoloTilaManager.validateSendForApproval(projekti)).to.throw(
       "Toiminto ei ole sallittu, koska vuorovaikutuskierros on vielä julkaisematta."
     );
+  });
+
+  it("should create ZIP_LAUSUNTOPYYNNOT event on nahtavillaolo approve", async function () {
+    assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
+    const projekti1: DBProjekti = {
+      ...projekti,
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          ...projekti.nahtavillaoloVaiheJulkaisut[0],
+          tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        },
+      ],
+    };
+    const zipLausuntoPyyntoAineistoStub = sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti1);
+    sinon.stub(projektiDatabase, "updateJulkaisuToList");
+    sinon.stub(nahtavillaoloTilaManager, "updateProjektiSchedule");
+    sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
+    sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
+    await nahtavillaoloTilaManager.approve(projekti1, { __typename: "NykyinenKayttaja", etunimi: "", sukunimi: "" });
+    expect(zipLausuntoPyyntoAineistoStub.callCount).to.eql(1);
   });
 });

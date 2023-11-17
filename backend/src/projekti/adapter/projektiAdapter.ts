@@ -37,6 +37,7 @@ import { ProjektiPaths } from "../../files/ProjektiPath";
 import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCustomizer";
 import { haeAktiivisenVaiheenAsianhallinanTila } from "./haeAktiivisenVaiheenAsianhallinanTila";
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
+import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -175,6 +176,8 @@ export class ProjektiAdapter {
       liittyvatSuunnitelmat,
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
+      lausuntoPyynnot,
+      lausuntoPyynnonTaydennykset,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -199,6 +202,12 @@ export class ProjektiAdapter {
       kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
       vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
       nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
+      lausuntoPyynnot: adaptLausuntoPyynnotToSave(projekti.lausuntoPyynnot, lausuntoPyynnot, projektiAdaptationResult),
+      lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToSave(
+        projekti.lausuntoPyynnonTaydennykset,
+        lausuntoPyynnonTaydennykset,
+        projektiAdaptationResult
+      ),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
         projekti.hyvaksymisPaatosVaihe,
         hyvaksymisPaatosVaihe,

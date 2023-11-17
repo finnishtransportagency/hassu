@@ -25,7 +25,7 @@ import {
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
-import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
+import { ProjektiAdaptationResult, ProjektiEvent, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import {
@@ -590,22 +590,54 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
   }
 }
 
-async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
-  await projektiAdaptationResult.onEvent(ProjektiEventType.SAVE_PROJEKTI_TO_VELHO, async () => {
-    await saveProjektiToVelho(projektiAdaptationResult.projekti);
-  });
+export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.SAVE_PROJEKTI_TO_VELHO),
+    async () => {
+      await saveProjektiToVelho(projektiAdaptationResult.projekti);
+    }
+  );
 
-  await projektiAdaptationResult.onEvent(ProjektiEventType.RESET_KAYTTOOIKEUDET, async (_event, oid) => {
-    await synchronizeUpdatesFromVelho(oid, true);
-  });
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.RESET_KAYTTOOIKEUDET),
+    async (oid) => {
+      await synchronizeUpdatesFromVelho(oid, true);
+    }
+  );
 
-  await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return await eventSqsClient.handleChangedAineisto(oid);
-  });
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) =>
+      events.some((event) => event.eventType === ProjektiEventType.FILES_CHANGED) &&
+      events.some((event) => event.eventType === ProjektiEventType.AINEISTO_CHANGED),
+    async (oid) => {
+      return await eventSqsClient.handleChangedAineistotAndTiedostot(oid);
+    }
+  );
 
-  await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {
-    return await eventSqsClient.synchronizeAineisto(oid);
-  });
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) =>
+      events.some((event) => event.eventType === ProjektiEventType.AINEISTO_CHANGED) &&
+      !events.some((event) => event.eventType === ProjektiEventType.FILES_CHANGED),
+    async (oid) => {
+      return await eventSqsClient.handleChangedAineisto(oid);
+    }
+  );
+
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) =>
+      events.some((event) => event.eventType === ProjektiEventType.FILES_CHANGED) &&
+      !events.some((event) => event.eventType === ProjektiEventType.AINEISTO_CHANGED),
+    async (oid) => {
+      return await eventSqsClient.handleChangedTiedostot(oid);
+    }
+  );
+
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.LOGO_FILES_CHANGED),
+    async (oid) => {
+      return await eventSqsClient.synchronizeAineisto(oid);
+    }
+  );
 }
 
 async function handleLyhytOsoite(dbProjektiToSave: DBProjekti, projektiInDB: DBProjekti) {
