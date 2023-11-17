@@ -100,6 +100,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       kasittelynTila: {
+        ... projekti.kasittelynTila,
         hyvaksymispaatos: {
           asianumero: hyvaksymispaatosAsianumero,
           paatoksenPvm: dayjs(hyvaksymispaatosPaivamaara).format("YYYY-MM-DD"),
