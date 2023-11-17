@@ -62,7 +62,6 @@ export async function testNahtavillaoloApproval(
       versio: dbProjekti.versio,
       nahtavillaoloVaihe: {
         aineistoNahtavilla: dbProjekti.nahtavillaoloVaihe?.aineistoNahtavilla,
-        lisaAineisto: dbProjekti.nahtavillaoloVaihe?.lisaAineisto,
         kuulutusPaiva: dbProjekti.nahtavillaoloVaihe?.kuulutusPaiva,
         kuulutusVaihePaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
@@ -160,29 +159,16 @@ export async function testImportNahtavillaoloAineistot(projekti: Projekti, velho
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  const lisaAineisto = velhoToimeksiannot
-    .reduce((documents, toimeksianto) => {
-      toimeksianto.aineistot
-        .filter((aineisto) => {
-          return aineisto.tiedosto.indexOf("Yksityistie_lunastukset.pdf") >= 0;
-        })
-        .forEach((aineisto) => documents.push(aineisto));
-      return documents;
-    }, [] as VelhoAineisto[])
-    .sort((a, b) => a.oid.localeCompare(b.oid));
-
   await api.tallennaProjekti({
     oid,
     versio,
     nahtavillaoloVaihe: {
       aineistoNahtavilla: adaptAineistoToInput(osaB).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
-      lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
   });
 
   const p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   const nahtavillaoloVaihe = cloneDeep(p.nahtavillaoloVaihe);
-  expect(nahtavillaoloVaihe?.lisaAineistoParametrit).not.to.be.undefined;
   expectToMatchSnapshot("testImportNahtavillaoloAineistot", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
   });
@@ -226,9 +212,6 @@ export async function testMuokkaaAineistojaNahtavillaolo(
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
   });
   projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
-  const nahtavillaoloVaihe = cloneDeep(projekti.nahtavillaoloVaihe);
-  expect(nahtavillaoloVaihe?.lisaAineistoParametrit).not.to.be.undefined;
-
   await schedulerMock.verifyAndRunSchedule();
   await eventSqsClientMock.processQueue();
   dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
@@ -251,34 +234,4 @@ async function validateFileIsDownloadable(aineistoURL: string) {
     console.log(e);
     expect.fail("Could not download lisäaineisto from url:" + aineistoURL);
   }
-}
-
-export async function testNahtavillaoloLisaAineisto(
-  oid: string,
-  lisaAineistoParametrit: LisaAineistoParametrit,
-  schedulerMock: SchedulerMock,
-  eventSqsClientMock: EventSqsClientMock
-): Promise<void> {
-  expect(lisaAineistoParametrit).to.not.be.empty;
-  const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
-  await schedulerMock.verifyAndRunSchedule();
-  await eventSqsClientMock.processQueue();
-  assertIsDefined(lisaAineistot.aineistot, "lisaAineistot.aineistot");
-  assertIsDefined(lisaAineistot.lisaAineistot, "lisaAineistot.lisaAineistot");
-  expectToMatchSnapshot("lisaAineisto", {
-    aineistot: lisaAineistot.aineistot.map((aineisto) => {
-      const a = cloneDeep(aineisto);
-      a.linkki = "***unittest***";
-      return a;
-    }),
-    lisaAineistot: lisaAineistot.lisaAineistot.map((aineisto) => {
-      const a = cloneDeep(aineisto);
-      a.linkki = "***unittest***";
-      return a;
-    }),
-  });
-  assertIsDefined(lisaAineistot.aineistot[0].linkki, "lisaAineistot.aineistot[0].linkki");
-  assertIsDefined(lisaAineistot.lisaAineistot[0].linkki, "lisaAineistot.lisaAineistot[0].linkki");
-  await validateFileIsDownloadable(lisaAineistot.aineistot[0].linkki);
-  await validateFileIsDownloadable(lisaAineistot.lisaAineistot[0].linkki);
 }
