@@ -924,16 +924,6 @@
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2023-12-31T00:00"
       },
-      "lisaAineisto": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
-        }
-      ],
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": {
@@ -1021,7 +1011,6 @@
             "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
-        "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
         "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
@@ -1089,16 +1078,6 @@
           "tiedosto": "/deleted/nahtavillaolo/1/lähetekirje.eml",
           "tuotu": null
         },
-        "lisaAineisto": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-            "jarjestys": 1,
-            "nimi": "Yksityistie_lunastukset.pdf",
-            "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-            "tila": "POISTETTU",
-            "tuotu": "2023-12-31T00:00:01+02:00"
-          }
-        ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000112",
         "nahtavillaoloPDFt": {
@@ -1207,7 +1186,6 @@
             "tuotu": "2023-12-31T00:00:01+02:00"
           }
         ],
-        "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
         "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
@@ -1275,16 +1253,6 @@
           "tiedosto": "/deleted/nahtavillaolo/2/lähetekirje.eml",
           "tuotu": null
         },
-        "lisaAineisto": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-            "jarjestys": 1,
-            "nimi": "Yksityistie_lunastukset.pdf",
-            "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-            "tila": "POISTETTU",
-            "tuotu": "2023-12-31T00:00:01+02:00"
-          }
-        ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
         "nahtavillaoloPDFt": {
