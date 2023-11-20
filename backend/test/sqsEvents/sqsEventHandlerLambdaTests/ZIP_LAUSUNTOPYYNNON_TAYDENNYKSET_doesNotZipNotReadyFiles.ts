@@ -83,7 +83,7 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
     [
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/muu_aineisto_valmis.txt",
-        zipFolder: "muu_aineisto/",
+        zipFolder: "Muu aineisto/",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/tiedosto_valmis.txt",
