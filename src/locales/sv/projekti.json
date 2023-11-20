@@ -84,6 +84,7 @@
     "oid": "Oid",
     "oikopolut": "Snabbvägar",
     "paatos": "Beslut",
+    "paatosJaJatkopaatos": "Beslut och beslut om fortsättning",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
       "asianosaisen_oikeudet": "Partens rättigheter",
