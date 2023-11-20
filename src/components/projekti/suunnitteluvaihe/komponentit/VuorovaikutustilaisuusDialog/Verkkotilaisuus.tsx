@@ -2,10 +2,9 @@ import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
-import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { KaytettavaPalvelu, Kielitiedot, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
-import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusSectionContent } from ".";
 import Lisatiedot from "./Lisatiedot";
@@ -18,20 +17,13 @@ export type VuorovaikutustilaisuusFormValues = {
 
 interface Props {
   index: number;
-  ensisijainenKaannettavaKieli: KaannettavaKieli | null;
-  toissijainenKaannettavaKieli: KaannettavaKieli | null;
+  kielitiedot: Kielitiedot;
   setValue: UseFormSetValue<VuorovaikutustilaisuusFormValues>;
   remove: UseFieldArrayRemove;
   mostlyDisabled: boolean | undefined;
 }
 
-export default function Verkkotilaisuus({
-  index,
-  ensisijainenKaannettavaKieli,
-  toissijainenKaannettavaKieli,
-  remove,
-  mostlyDisabled,
-}: Props): ReactElement {
+export default function Verkkotilaisuus({ index, kielitiedot, remove, mostlyDisabled }: Props): ReactElement {
   const {
     register,
     formState: { errors },
@@ -71,12 +63,7 @@ export default function Verkkotilaisuus({
         disabled={!!peruttu}
       ></TextInput>
       <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
-      <Lisatiedot
-        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.VERKOSSA}
-        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
-        index={index}
-      />
+      <Lisatiedot tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.VERKOSSA} kielitiedot={kielitiedot} index={index} />
       {mostlyDisabled ? (
         !peruttu && (
           <div className="mt-8">

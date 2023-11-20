@@ -1,18 +1,17 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
-import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { Label } from "@components/form/FormGroup";
 import Notification, { NotificationType } from "../../../../notification/Notification";
 import InfoIcon from "@mui/icons-material/Info";
-import { Kieli, Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { label } from "src/util/textUtil";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 interface Props {
   index: number;
-  ensisijainenKaannettavaKieli: KaannettavaKieli | null;
-  toissijainenKaannettavaKieli: KaannettavaKieli | null;
+  kielitiedot: Kielitiedot;
   tilaisuustyyppi: VuorovaikutusTilaisuusTyyppi;
 }
 
@@ -87,12 +86,7 @@ function Infobox({
     </Notification>
   );
 }
-export default function Lisatiedot({
-  index,
-  ensisijainenKaannettavaKieli,
-  toissijainenKaannettavaKieli,
-  tilaisuustyyppi,
-}: Props): ReactElement {
+export default function Lisatiedot({ index, kielitiedot, tilaisuustyyppi }: Props): ReactElement {
   const {
     register,
     formState: { errors },
@@ -103,11 +97,7 @@ export default function Lisatiedot({
   const [openNotification, setOpenNotification] = useState(true);
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
-  const kielitiedot: Kielitiedot = {
-    __typename: "Kielitiedot",
-    ensisijainenKieli: ensisijainenKaannettavaKieli || Kieli.SUOMI,
-    toissijainenKieli: toissijainenKaannettavaKieli,
-  };
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <div>

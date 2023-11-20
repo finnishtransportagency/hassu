@@ -3,28 +3,21 @@ import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
-import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import Lisatiedot from "./Lisatiedot";
-import { Kieli, Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { label } from "src/util/textUtil";
 
 interface Props {
   index: number;
-  ensisijainenKaannettavaKieli: KaannettavaKieli | null;
-  toissijainenKaannettavaKieli: KaannettavaKieli | null;
+  kielitiedot: Kielitiedot;
   setValue: UseFormSetValue<VuorovaikutustilaisuusFormValues>;
   remove: UseFieldArrayRemove;
   mostlyDisabled: boolean | undefined;
 }
-export default function YleisoTilaisuus({
-  index,
-  ensisijainenKaannettavaKieli,
-  toissijainenKaannettavaKieli,
-  remove,
-  mostlyDisabled,
-}: Props): ReactElement {
+export default function YleisoTilaisuus({ index, kielitiedot, remove, mostlyDisabled }: Props): ReactElement {
   const {
     register,
     formState: { errors },
@@ -34,11 +27,7 @@ export default function YleisoTilaisuus({
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
-  const kielitiedot: Kielitiedot = {
-    __typename: "Kielitiedot",
-    ensisijainenKieli: ensisijainenKaannettavaKieli || Kieli.SUOMI,
-    toissijainenKieli: toissijainenKaannettavaKieli,
-  };
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <VuorovaikutusSectionContent style={{ position: "relative" }}>
@@ -166,12 +155,7 @@ export default function YleisoTilaisuus({
         </HassuGrid>
       )}
 
-      <Lisatiedot
-        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.PAIKALLA}
-        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
-        index={index}
-      />
+      <Lisatiedot tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.PAIKALLA} kielitiedot={kielitiedot} index={index} />
       {mostlyDisabled ? (
         !peruttu && (
           <div className="mt-8">
