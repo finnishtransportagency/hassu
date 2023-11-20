@@ -153,7 +153,6 @@ export type DBProjekti = {
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;
-  liittyvatSuunnitelmat?: Suunnitelma[] | null;
   vuorovaikutusKierros?: VuorovaikutusKierros | null;
   vuorovaikutusKierrosJulkaisut?: VuorovaikutusKierrosJulkaisu[] | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;

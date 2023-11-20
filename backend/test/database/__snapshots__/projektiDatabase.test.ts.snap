@@ -8,7 +8,6 @@ Object {
     "#euRahoitus": "euRahoitus",
     "#kayttoOikeudet": "kayttoOikeudet",
     "#kielitiedot": "kielitiedot",
-    "#liittyvatSuunnitelmat": "liittyvatSuunnitelmat",
     "#muistiinpano": "muistiinpano",
     "#paivitetty": "paivitetty",
     "#suunnitteluSopimus": "suunnitteluSopimus",
@@ -105,12 +104,6 @@ Object {
       "projektinNimiVieraskielella": "Namnet på svenska",
       "toissijainenKieli": "RUOTSI",
     },
-    ":liittyvatSuunnitelmat": Array [
-      Object {
-        "asiatunnus": "atunnus123",
-        "nimi": "Littyva suunnitelma 1 nimi",
-      },
-    ],
     ":muistiinpano": "Testiprojekti 1:n muistiinpano",
     ":paivitetty": "2022-03-15T14:29:48.845Z",
     ":suunnitteluSopimus": Object {
@@ -147,7 +140,7 @@ Object {
     "oid": "1",
   },
   "TableName": "Projekti-localstack",
-  "UpdateExpression": "SET #versio = :versio , #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #vahainenMenettely = :vahainenMenettely , #liittyvatSuunnitelmat = :liittyvatSuunnitelmat , #paivitetty = :paivitetty ",
+  "UpdateExpression": "SET #versio = :versio , #kayttoOikeudet = :kayttoOikeudet , #velho = :velho , #muistiinpano = :muistiinpano , #suunnitteluSopimus = :suunnitteluSopimus , #aloitusKuulutus = :aloitusKuulutus , #kielitiedot = :kielitiedot , #euRahoitus = :euRahoitus , #vahainenMenettely = :vahainenMenettely , #paivitetty = :paivitetty ",
 }
 `;
 

@@ -4,27 +4,12 @@ import {
   LinkitettyVelhoProjekti,
   Linkki,
   StandardiYhteystiedot,
-  Suunnitelma,
   Velho,
   Yhteystieto,
 } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { kuntametadata } from "hassu-common/kuntametadata";
-
-export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
-  if (suunnitelmat) {
-    const liittyvatSuunnitelmat = suunnitelmat.map((suunnitelma) => {
-      const s: API.Suunnitelma = {
-        __typename: "Suunnitelma",
-        ...suunnitelma,
-      };
-      return s;
-    });
-    return liittyvatSuunnitelmat as API.Suunnitelma[];
-  }
-  return suunnitelmat as undefined | null;
-}
 
 export function adaptKielitiedotByAddingTypename(
   kielitiedot: Kielitiedot | null | undefined,

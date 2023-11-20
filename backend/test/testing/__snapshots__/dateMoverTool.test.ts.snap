@@ -796,12 +796,6 @@ Object {
     "projektinNimiVieraskielella": "Projektinimi saameksi",
     "toissijainenKieli": "POHJOISSAAME",
   },
-  "liittyvatSuunnitelmat": Array [
-    Object {
-      "asiatunnus": "atunnus123",
-      "nimi": "Littyva suunnitelma 1 nimi",
-    },
-  ],
   "nahtavillaoloVaihe": Object {
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

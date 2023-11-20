@@ -5,7 +5,7 @@ import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
 import { lisaAineistoService } from "../../tiedostot/lisaAineistoService";
-import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTypename, adaptVelho } from "./common";
+import { adaptKielitiedotByAddingTypename, adaptVelho } from "./common";
 import {
   adaptAloitusKuulutus,
   adaptAloitusKuulutusJulkaisu,
@@ -50,7 +50,6 @@ export class ProjektiAdapter {
       aloitusKuulutus,
       suunnitteluSopimus,
       euRahoitusLogot,
-      liittyvatSuunnitelmat,
       aloitusKuulutusJulkaisut,
       velho,
       kielitiedot,
@@ -89,7 +88,6 @@ export class ProjektiAdapter {
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       euRahoitusLogot: adaptLogot(dbProjekti.oid, euRahoitusLogot),
-      liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       vuorovaikutusKierros: adaptVuorovaikutusKierros(kayttoOikeudet, dbProjekti.oid, vuorovaikutusKierros, vuorovaikutusKierrosJulkaisut),
@@ -173,7 +171,6 @@ export class ProjektiAdapter {
       euRahoitus,
       euRahoitusLogot,
       vahainenMenettely,
-      liittyvatSuunnitelmat,
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
       lausuntoPyynnot,
@@ -219,7 +216,6 @@ export class ProjektiAdapter {
       euRahoitus,
       euRahoitusLogot: adaptLokalisoituTekstiEiPakollinen(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
       vahainenMenettely,
-      liittyvatSuunnitelmat,
       salt: projekti.salt ?? lisaAineistoService.generateSalt(),
       kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       asianhallinta,

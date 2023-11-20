@@ -37,13 +37,7 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
           </div>
         )}
       </Section>
-      <Section>
-        <p className="vayla-label">Projektiin linkittyvät suunnitelmat</p>
-        {projekti.liittyvatSuunnitelmat?.map((suunnitelma) => (
-          <p key={suunnitelma.asiatunnus}>{suunnitelma.asiatunnus}</p>
-        ))}
-        {(!projekti.liittyvatSuunnitelmat || projekti.liittyvatSuunnitelmat.length === 0) && <p>-</p>}
-      </Section>
+      <Section></Section> {/*TODO: Velhon linkitetyt projektit lukutilassa */}
       <Section>
         <SectionContent>
           <p className="vayla-label">Suunnittelusopimus</p>

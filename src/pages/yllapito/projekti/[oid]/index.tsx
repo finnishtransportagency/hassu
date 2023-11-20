@@ -9,12 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
-import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
 import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
@@ -40,7 +38,6 @@ import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
-  liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
@@ -50,7 +47,6 @@ type PersitentFormValues = Pick<
   | "euRahoitus"
   | "euRahoitusLogot"
   | "suunnitteluSopimus"
-  | "liittyvatSuunnitelmat"
   | "kielitiedot"
   | "vahainenMenettely"
   | "asianhallinta"
@@ -134,15 +130,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
       muistiinpano: projekti.muistiinpano ?? "",
       euRahoitus: !!projekti.euRahoitus,
       vahainenMenettely: !!projekti.vahainenMenettely,
-      liittyvatSuunnitelmat:
-        projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
-          const { __typename, ...suunnitelmaInput } = suunnitelma;
-          return suunnitelmaInput;
-        }) ?? [],
       suunnittelusopimusprojekti:
         projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
-      liittyviasuunnitelmia:
-        projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.liittyvatSuunnitelmat?.length ? "true" : "false",
     };
     if (projekti.kielitiedot) {
       const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
@@ -216,8 +205,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
     (data: FormValues) =>
       withLoadingSpinner(
         (async () => {
-          const { liittyviasuunnitelmia, suunnittelusopimusprojekti, ...persistentData } = data;
-          deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
+          const { suunnittelusopimusprojekti, ...persistentData } = data;
           const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
           if (persistentData.kielitiedot && !kieli2) {
             persistentData.kielitiedot.toissijainenKieli = null;
