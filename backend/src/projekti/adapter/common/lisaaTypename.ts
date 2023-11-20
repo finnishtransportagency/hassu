@@ -1,4 +1,13 @@
-import { DBVaylaUser, Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
+import {
+  DBVaylaUser,
+  Kielitiedot,
+  LinkitettyVelhoProjekti,
+  Linkki,
+  StandardiYhteystiedot,
+  Suunnitelma,
+  Velho,
+  Yhteystieto,
+} from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -54,10 +63,23 @@ export function adaptLinkkiListByAddingTypename(links: Array<Linkki> | null | un
   return links as undefined;
 }
 
+export function adaptLinkitetytProjektitByAddingTypename(
+  projektit: Array<LinkitettyVelhoProjekti> | null | undefined
+): API.LinkitettyVelhoProjekti[] | undefined {
+  if (projektit) {
+    return projektit.map((projekti) => ({
+      ...projekti,
+      __typename: "LinkitettyVelhoProjekti",
+    }));
+  }
+  return projektit as undefined;
+}
+
 export function adaptVelho(velho: Velho | null | undefined): API.Velho {
   return {
     __typename: "Velho",
     ...velho,
+    linkitetytProjektit: adaptLinkitetytProjektitByAddingTypename(velho?.linkitetytProjektit),
     kunnat: velho?.kunnat?.map(kuntametadata.idForKuntaName),
     maakunnat: velho?.maakunnat?.map(kuntametadata.idForMaakuntaName),
   };
