@@ -32,34 +32,44 @@ const domain = config.frontendDomainName || "vayliensuunnittelu.fi";
 const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ${"asiatunnus"}`;
 const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
+
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvaksymispyynto
 const kuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: ${"kuulutusTyyppiUpperCase"}kuulutus odottaa hyväksyntää ${"asiatunnus"}`;
 const kuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 ${"velho.nimi"}
 on luotu ${"kuulutusTyyppiLowerCase"}kuulutus, ${"kuulutusKohde"} hyväksyntääsi.
+
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}${"kuulutusPath"}
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
 const aloituskuulutusHyvaksyttyOtsikko = "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}";
 const aloituskuulutusHyvaksyttyTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty.
+
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
+
 Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko =
   "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}";
 const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 hyväksymispäätöskuulutus on hyväksytty.
+
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const jatkopaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}";
 const jatkopaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 jatkopäätöskuulutus on hyväksytty.
+
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 // Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
@@ -68,7 +78,7 @@ const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu
 {{nimi}}
 aloituskuulutus on hyväksytty.
 
-Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
+Voit tarkastella projektia osoitteessa {{aloituskuulutusYllapitoUrl}}
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
@@ -79,7 +89,7 @@ const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien
 const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}}
 nähtävillaolokuulutus on hyväksytty.
 
-Voit tarkastella kuulutusta osoitteessa {{nahtavillaoloYllapitoUrl}}
+Voit tarkastella projektia osoitteessa {{nahtavillaoloYllapitoUrl}}
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
