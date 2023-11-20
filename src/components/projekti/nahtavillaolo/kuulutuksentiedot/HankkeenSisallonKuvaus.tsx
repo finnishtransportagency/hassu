@@ -26,6 +26,10 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
     formState: { errors },
   } = useFormContext<FormFields>();
 
+  if (!kielitiedot) {
+    return <></>;
+  }
+
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
@@ -49,7 +53,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
             label={label({
               label: "Tiivistetty hankkeen sisällönkuvaus",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
             error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[ensisijainenKaannettavaKieli]}
@@ -64,7 +68,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
             label={label({
               label: "Tiivistetty hankkeen sisällönkuvaus",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
             error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}

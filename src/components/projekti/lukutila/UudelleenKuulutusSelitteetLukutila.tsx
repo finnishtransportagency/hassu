@@ -1,15 +1,15 @@
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import Section from "@components/layout/Section";
-import { Kieli, UudelleenKuulutus } from "@services/api";
+import { Kielitiedot, UudelleenKuulutus } from "@services/api";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import React, { VoidFunctionComponent } from "react";
 import { label } from "src/util/textUtil";
 
 export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
-  ensisijainenKieli: Kieli | null | undefined;
-  toissijainenKieli: Kieli | null | undefined;
+  kielitiedot: Kielitiedot;
   uudelleenKuulutus: UudelleenKuulutus;
-}> = ({ uudelleenKuulutus, ensisijainenKieli, toissijainenKieli }) => {
+}> = ({ uudelleenKuulutus, kielitiedot }) => {
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot;
   const ensisijainenKaannettavaKieli: KaannettavaKieli | null = isKieliTranslatable(ensisijainenKieli)
     ? (ensisijainenKieli as KaannettavaKieli)
     : null;
@@ -27,7 +27,7 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
                 {label({
                   label: "Seloste lähetekirjeeseen",
                   inputLanguage: ensisijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                 })}
               </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
@@ -39,7 +39,7 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
                 {label({
                   label: "Seloste lähetekirjeeseen",
                   inputLanguage: toissijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                 })}
               </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
@@ -55,7 +55,7 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
                 {label({
                   label: "Seloste kuulutukselle",
                   inputLanguage: ensisijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                 })}
               </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
@@ -67,7 +67,7 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
                 {label({
                   label: "Seloste kuulutukselle",
                   inputLanguage: toissijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                 })}
               </p>
               <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>

@@ -42,12 +42,12 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
   };
 
   const { kasittelyntilaData } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
-
-  if (!julkaisu || !projekti) {
+  const kielitiedot = julkaisu?.kielitiedot;
+  if (!julkaisu || !projekti || !kielitiedot) {
     return <></>;
   }
 
-  const { ensisijainenKieli, toissijainenKieli } = julkaisu.kielitiedot || {};
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot;
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
 
@@ -123,11 +123,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           <p className="md:col-span-3 mb-0">{kasittelyntilaData?.asianumero}</p>
         </div>
         {julkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSelitteetLukutila
-            uudelleenKuulutus={julkaisu.uudelleenKuulutus}
-            ensisijainenKieli={ensisijainenKieli}
-            toissijainenKieli={toissijainenKieli}
-          />
+          <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={julkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
       </Section>
@@ -177,7 +173,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               {label({
                 label: "Kuulutus ja ilmoitus",
                 inputLanguage: Kieli.SUOMI,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             {ensisijaisetPDFt && (
@@ -225,7 +221,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   {label({
                     label: "Kuulutus ja ilmoitus",
                     inputLanguage: toissijainenKieli,
-                    toissijainenKieli: toissijainenKieli,
+                    kielitiedot,
                   })}
                 </p>
                 {toissijaisetPDFt && (

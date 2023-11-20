@@ -29,8 +29,9 @@ interface Props {
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation();
+  const kielitiedot = nahtavillaoloVaiheJulkaisu?.kielitiedot;
 
-  if (!nahtavillaoloVaiheJulkaisu || !projekti) {
+  if (!nahtavillaoloVaiheJulkaisu || !projekti || !kielitiedot) {
     return <></>;
   }
 
@@ -49,10 +50,9 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
     }
     return undefined;
   }
+  const { toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
-  const { toissijainenKaannettavaKieli } = getKaannettavatKielet(nahtavillaoloVaiheJulkaisu.kielitiedot);
-
-  const { ensisijainenKieli, toissijainenKieli } = nahtavillaoloVaiheJulkaisu.kielitiedot || {};
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
@@ -81,18 +81,14 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSelitteetLukutila
-            uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus}
-            ensisijainenKieli={ensisijainenKieli}
-            toissijainenKieli={toissijainenKieli}
-          />
+          <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
         <div>
           <p className="vayla-label">
             {label({
               label: "Tiivistetty hankkeen sisällönkuvaus",
               inputLanguage: Kieli.SUOMI,
-              toissijainenKieli: toissijainenKieli,
+              kielitiedot,
             })}
           </p>
           <PreWrapParagraph>
@@ -107,7 +103,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               {label({
                 label: "Tiivistetty hankkeen sisällönkuvaus",
                 inputLanguage: toissijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             <PreWrapParagraph>
@@ -156,7 +152,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               {label({
                 label: "Kuulutus ja ilmoitus",
                 inputLanguage: Kieli.SUOMI,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             {ensisijaisetPDFt && (
@@ -189,7 +185,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                   {label({
                     label: "Kuulutus ja ilmoitus",
                     inputLanguage: toissijainenKaannettavaKieli,
-                    toissijainenKieli: toissijainenKieli,
+                    kielitiedot,
                   })}
                 </p>
                 {toissijaisetPDFt && (

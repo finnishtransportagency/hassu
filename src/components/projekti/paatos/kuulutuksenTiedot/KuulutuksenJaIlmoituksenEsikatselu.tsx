@@ -35,12 +35,13 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
 
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
-  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli;
-  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
-
-  if (!projekti) {
+  const kielitiedot = projekti?.kielitiedot;
+  if (!projekti || !kielitiedot) {
     return null;
   }
+
+  const ensisijainenKieli = kielitiedot.ensisijainenKieli;
+  const toissijainenKieli = kielitiedot.toissijainenKieli;
 
   const {
     paatosAsiakirjaTyyppi,
@@ -61,7 +62,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
               {label({
                 label: "Esikatsele tiedostot",
                 inputLanguage: Kieli.SUOMI,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             <Box sx={{ flexDirection: "row-reverse" }}>
@@ -148,7 +149,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
               {label({
                 label: "Esikatsele tiedostot",
                 inputLanguage: toissijainenKieli,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             <Box sx={{ flexDirection: "row-reverse" }}>

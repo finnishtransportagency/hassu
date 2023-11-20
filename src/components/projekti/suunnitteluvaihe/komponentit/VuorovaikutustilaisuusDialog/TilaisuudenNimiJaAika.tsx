@@ -18,8 +18,9 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
 
   const { data: projekti } = useProjekti();
-
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
+  const kielitiedot = projekti?.kielitiedot;
+  if (!kielitiedot) return <></>;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <>
@@ -29,7 +30,7 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
           label={label({
             label: "Tilaisuuden nimi",
             inputLanguage: ensisijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
           })}
           {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
@@ -48,7 +49,7 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
           label={label({
             label: "Tilaisuuden nimi",
             inputLanguage: toissijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
           })}
           {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`, {
             onChange: () => {

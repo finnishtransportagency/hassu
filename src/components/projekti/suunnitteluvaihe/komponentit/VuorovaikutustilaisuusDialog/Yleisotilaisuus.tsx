@@ -7,7 +7,7 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import Lisatiedot from "./Lisatiedot";
-import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { Kieli, Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { label } from "src/util/textUtil";
 
 interface Props {
@@ -34,6 +34,11 @@ export default function YleisoTilaisuus({
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
+  const kielitiedot: Kielitiedot = {
+    __typename: "Kielitiedot",
+    ensisijainenKieli: ensisijainenKaannettavaKieli || Kieli.SUOMI,
+    toissijainenKieli: toissijainenKaannettavaKieli,
+  };
 
   return (
     <VuorovaikutusSectionContent style={{ position: "relative" }}>
@@ -44,7 +49,7 @@ export default function YleisoTilaisuus({
             label={label({
               label: "Paikka (esim. kunnantalo)",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={200}
             style={{ gridColumn: "1 / span 1" }}
@@ -65,7 +70,7 @@ export default function YleisoTilaisuus({
             label={label({
               label: "Paikka (esim. kunnantalo)",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={200}
             style={{ gridColumn: "2 / span 1" }}
@@ -85,7 +90,7 @@ export default function YleisoTilaisuus({
             label={label({
               label: "Osoite",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
               required: true,
             })}
             maxLength={200}
@@ -128,7 +133,7 @@ export default function YleisoTilaisuus({
             label={label({
               label: "Osoite",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
               required: true,
             })}
             maxLength={200}

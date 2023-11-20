@@ -6,7 +6,7 @@ import { VuorovaikutustilaisuusFormValues } from ".";
 import { Label } from "@components/form/FormGroup";
 import Notification, { NotificationType } from "../../../../notification/Notification";
 import InfoIcon from "@mui/icons-material/Info";
-import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
+import { Kieli, Kielitiedot, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import { label } from "src/util/textUtil";
 
 interface Props {
@@ -103,6 +103,11 @@ export default function Lisatiedot({
   const [openNotification, setOpenNotification] = useState(true);
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
+  const kielitiedot: Kielitiedot = {
+    __typename: "Kielitiedot",
+    ensisijainenKieli: ensisijainenKaannettavaKieli || Kieli.SUOMI,
+    toissijainenKieli: toissijainenKaannettavaKieli,
+  };
 
   return (
     <div>
@@ -123,7 +128,7 @@ export default function Lisatiedot({
           label={label({
             label: "Lisätiedot",
             inputLanguage: ensisijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
           })}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
@@ -143,7 +148,7 @@ export default function Lisatiedot({
           label={label({
             label: "Tiivistetty hankkeen sisällönkuvaus",
             inputLanguage: toissijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
           })}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
