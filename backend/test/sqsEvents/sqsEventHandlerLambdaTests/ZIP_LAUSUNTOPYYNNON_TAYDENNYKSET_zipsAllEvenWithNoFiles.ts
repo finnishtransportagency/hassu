@@ -79,7 +79,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsAllLPTevenWithNoFiles = async () 
     [
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%201.txt",
-        zipFolder: "muu_aineisto/",
+        zipFolder: "Muu aineisto/",
       },
     ],
     "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/aineisto.zip",

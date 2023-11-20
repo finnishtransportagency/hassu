@@ -1,13 +1,12 @@
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
-import { makeFilePathDeleted } from ".";
+import { getZipFolder, makeFilePathDeleted } from ".";
 import { Aineisto, DBProjekti, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 import { config } from "../../config";
-import { AineistoTila, Kieli, Status } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Status } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { TiedostoManager } from "./TiedostoManager";
-import { translate } from "../../util/localization";
 
 export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   public readonly julkaisut: J[] | undefined;
@@ -33,7 +32,7 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
       if (aineistot.aineisto) {
         for (const aineisto of aineistot.aineisto) {
           if (aineisto.tila === AineistoTila.VALMIS) {
-            const folder = translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/";
+            const folder = getZipFolder(aineisto.kategoriaId);
             filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
           }
         }

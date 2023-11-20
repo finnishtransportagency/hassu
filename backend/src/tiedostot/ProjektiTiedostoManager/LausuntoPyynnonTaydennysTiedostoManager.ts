@@ -1,11 +1,10 @@
-import { AineistoTila, Kieli, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
-import { TiedostoManager, AineistoPathsPair } from ".";
+import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { TiedostoManager, AineistoPathsPair, getZipFolder } from ".";
 import { config } from "../../config";
 import { LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../database/model";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
-import { translate } from "../../util/localization";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<LausuntoPyynnonTaydennys[]> {
@@ -76,8 +75,8 @@ export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<
       if (aineistot.aineisto) {
         for (const aineisto of aineistot.aineisto) {
           if (aineisto.tila === AineistoTila.VALMIS) {
-            const category = aineisto.kategoriaId ? translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/" : "";
-            const folder = "muu_aineisto/" + category;
+            const categoryFolder = getZipFolder(aineisto.kategoriaId);
+            const folder = "Muu aineisto/" + (categoryFolder || "");
             filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: folder });
           }
         }

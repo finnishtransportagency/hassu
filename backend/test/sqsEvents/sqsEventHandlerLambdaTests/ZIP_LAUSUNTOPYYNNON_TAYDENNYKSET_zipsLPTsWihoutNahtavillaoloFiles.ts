@@ -83,7 +83,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles = a
     [
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Aineisto%20123.txt",
-        zipFolder: "muu_aineisto/",
+        zipFolder: "Muu aineisto/",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%201.txt",

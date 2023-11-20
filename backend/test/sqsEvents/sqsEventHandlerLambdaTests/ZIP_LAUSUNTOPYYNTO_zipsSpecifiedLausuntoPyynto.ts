@@ -94,7 +94,7 @@ export const zipLausuntoPyyntoZipsSpecifiedLausuntoPyynto = async () => {
       },
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynto/joku-toinen-uuid/Tiedosto%202.txt",
-        zipFolder: "lisa-aineistot/",
+        zipFolder: "Lisäaineistot/",
       },
     ],
     "yllapito/tiedostot/projekti/1/lausuntopyynto/joku-toinen-uuid/aineisto.zip",

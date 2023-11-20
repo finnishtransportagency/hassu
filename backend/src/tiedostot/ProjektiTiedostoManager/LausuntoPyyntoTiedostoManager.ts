@@ -1,12 +1,11 @@
-import { AineistoTila, Kieli } from "hassu-common/graphql/apiModel";
-import { TiedostoManager, AineistoPathsPair, NahtavillaoloVaiheTiedostoManager } from ".";
+import { AineistoTila } from "hassu-common/graphql/apiModel";
+import { TiedostoManager, AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, getZipFolder } from ".";
 import { config } from "../../config";
-import { LadattuTiedosto, LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
 import { findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu } from "../../util/lausuntoPyyntoUtil";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
-import { translate } from "../../util/localization";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynto[]> {
@@ -88,7 +87,7 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
       if (aineistot.aineisto) {
         for (const aineisto of aineistot.aineisto) {
           if (aineisto.tila === AineistoTila.VALMIS) {
-            const folder = translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/";
+            const folder = getZipFolder(aineisto.kategoriaId);
             filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
           }
         }
@@ -98,8 +97,8 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
       if (aineistot.aineisto) {
         for (const aineisto of aineistot.aineisto) {
           if (aineisto.tila === AineistoTila.VALMIS) {
-            const category = aineisto.kategoriaId ? translate("aineisto-kategoria-nimi." + aineisto.kategoriaId, Kieli.SUOMI) + "/" : "";
-            const folder = "lisa-aineistot/" + category;
+            const categoryFolder = getZipFolder(aineisto.kategoriaId);
+            const folder = "Lisäaineistot/" + (categoryFolder || "");
             filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: folder });
           }
         }
