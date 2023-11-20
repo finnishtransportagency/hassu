@@ -1230,7 +1230,9 @@ Array [
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 Testiprojekti 1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
@@ -1241,7 +1243,9 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
 Testiprojekti 1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+
 Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "pekka.projari@vayla.fi",
@@ -1252,7 +1256,9 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 Testiprojekti 1
 aloituskuulutus on hyväksytty.
+
 Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
 Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
@@ -1272,7 +1278,7 @@ Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
 Testiprojekti 1
 aloituskuulutus on hyväksytty.
 
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 

@@ -88,8 +88,8 @@ describe("emailHandler", () => {
         expect(emailOptions.text).to.eq(
           "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
-            "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n" +
+            "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n\n" +
             "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
@@ -104,8 +104,8 @@ describe("emailHandler", () => {
         expect(emailOptions.text).to.eq(
           "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
-            "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n" +
+            "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n\n" +
             "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
@@ -120,8 +120,8 @@ describe("emailHandler", () => {
         expect(emailOptions.text).to.eq(
           "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
-            "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/hyvaksymispaatos/kuulutus\n" +
+            "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/hyvaksymispaatos/kuulutus\n\n" +
             "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
