@@ -41,6 +41,7 @@ Object {
     "kunnat": Array [
       12,
     ],
+    "linkitetytProjektit": undefined,
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -183,6 +184,7 @@ Array [
       "kunnat": Array [
         12,
       ],
+      "linkitetytProjektit": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -280,6 +282,7 @@ Array [
       "kunnat": Array [
         12,
       ],
+      "linkitetytProjektit": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -401,6 +404,7 @@ Array [
       "kunnat": Array [
         12,
       ],
+      "linkitetytProjektit": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -684,6 +688,7 @@ Array [
       "kunnat": Array [
         12,
       ],
+      "linkitetytProjektit": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -869,6 +874,7 @@ Object {
       "kunnat": Array [
         12,
       ],
+      "linkitetytProjektit": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -979,6 +985,7 @@ Object {
     "kunnat": Array [
       12,
     ],
+    "linkitetytProjektit": undefined,
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
