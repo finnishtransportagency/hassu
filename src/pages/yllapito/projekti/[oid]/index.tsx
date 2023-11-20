@@ -36,6 +36,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot/AsianhallintaIntegraatioYhteys";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import useCurrentUser from "src/hooks/useCurrentUser";
+import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -308,7 +309,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
             <ProjektinPerusosio projekti={projekti} />
             <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiKuulutuskielet projekti={projekti} />
-            <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
+            <LinkitetytProjektit projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
             {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
