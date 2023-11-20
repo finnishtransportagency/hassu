@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`emailHandler sendEmailsByToiminto sendAloituskuulutusMails should send emails and attachments succesfully 1`] = `
+exports[`emailHandler aloituskuulutus approval should send emails and attachments succesfully 1`] = `
 Object {
   "args": Array [
     Object {
@@ -34,7 +34,7 @@ Object {
 }
 `;
 
-exports[`emailHandler sendEmailsByToiminto sendAloituskuulutusMails should send emails and attachments succesfully 2`] = `
+exports[`emailHandler aloituskuulutus approval should send emails and attachments succesfully 2`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
@@ -128,7 +128,7 @@ Väylävirasto, Marika Ojanen, puh. 0299878787, marika.ojanen@vayla.fi",
 ]
 `;
 
-exports[`emailHandler sendEmailsByToiminto sendNahtavillaoloMails sendNahtavillaoloMails dontSendIlmoitusMailsForAineistoMuokkaus 1`] = `
+exports[`emailHandler nähtävilläolo aineistomuokkaus approval wont send ilmoitus mails for aineistoMuokkaus 1`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-yllapito",
@@ -138,31 +138,7 @@ Object {
 }
 `;
 
-exports[`emailHandler sendEmailsByToiminto sendNahtavillaoloMails sendNahtavillaoloMails dontSendIlmoitusMailsForAineistoMuokkaus 2`] = `
-Array [
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "2.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty ELY/2/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-Testiprojekti 2
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/2/nahtavillaolo
-
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "pekka.projari@vayla.fi",
-    ],
-  },
-]
-`;
-
-exports[`emailHandler sendEmailsByToiminto sendNahtavillaoloMails should send emails and attachments succesfully 1`] = `
+exports[`emailHandler nähtävilläolo approval should send emails and attachments succesfully 1`] = `
 Object {
   "args": Array [
     Object {
@@ -190,83 +166,4 @@ Object {
   ],
   "stub": "s3Mock",
 }
-`;
-
-exports[`emailHandler sendEmailsByToiminto sendNahtavillaoloMails should send emails and attachments succesfully 2`] = `
-Array [
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "2.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty ELY/2/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-Testiprojekti 2
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/2/nahtavillaolo
-
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "pekka.projari@vayla.fi",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "1.pdf",
-      },
-      Object {
-        "contentType": "application/pdf",
-        "filename": "1 sv.pdf",
-      },
-    ],
-    "cc": Array [
-      "pekka.projari@vayla.fi",
-    ],
-    "subject": "Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta",
-    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
-
-Testiprojekti 2
-
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-
-Kuulutus julkaistaan 20.6.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
-
-Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.
-
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-Lisätietoja antaa 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
-
-Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.
-
-Marikas testprojekt
-
-NTM-centralen i Nyland meddelar om publiceringen av en kungörelse som gäller framläggandet av den vägplan som nämns i rubriken. NTM-centralen i Nyland delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
-
-Kungörelsen publiceras 20.6.2022 på adressen https://localhost:3000/sv/suunnitelma/2/nahtavillaolo.
-
-Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. 
-
-Syftet med fasen är att på ett naturligt sätt koppla nuvarande och framtida markanvändning till Tavastehusvägen, att ta hänsyn till områdets bullerskydd, att förbättra flödet och säkerheten för passagerare och kollektivtrafik samt att göra gång- och cykelförbindelserna smidiga. och säker. Att förbättra flödet av tung trafik och förutsägbarheten i restid är också ett av målen.
-
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
-
-Mer information om planen 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
-    ],
-  },
-]
 `;

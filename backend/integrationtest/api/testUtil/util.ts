@@ -140,8 +140,8 @@ export class PDFGeneratorStub {
 }
 
 export class EmailClientStub {
-  private sendEmailStub!: sinon.SinonStub;
-  private sendTurvapostiEmailStub!: sinon.SinonStub;
+  public sendEmailStub!: sinon.SinonStub;
+  public sendTurvapostiEmailStub!: sinon.SinonStub;
 
   constructor() {
     mocha.before(() => {
