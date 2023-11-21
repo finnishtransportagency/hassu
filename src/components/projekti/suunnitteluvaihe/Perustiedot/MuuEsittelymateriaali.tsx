@@ -16,8 +16,6 @@ type Props = {
 };
 
 export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElement {
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
-
   const {
     register,
     formState: { errors },
@@ -33,6 +31,9 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
     control,
     name: "vuorovaikutusKierros.suunnittelumateriaali",
   });
+
+  if (!kielitiedot) return <></>;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section>
@@ -61,7 +62,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                       {label({
                         label: "Muu esittelymateriaali",
                         inputLanguage: ensisijainenKaannettavaKieli,
-                        toissijainenKieli: toissijainenKaannettavaKieli,
+                        kielitiedot,
                       })}
                     </h5>
                   )}
@@ -70,7 +71,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                     label={label({
                       label: "Linkin kuvaus",
                       inputLanguage: ensisijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`, {
                       onChange: () => {
@@ -87,7 +88,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                     label={label({
                       label: "Linkki muihin esittelyaineistoihin",
                       inputLanguage: ensisijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`, {
                       onChange: () => {
@@ -108,7 +109,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                     {label({
                       label: "Muu esittelymateriaali",
                       inputLanguage: toissijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                   </h5>
                   <TextInput
@@ -116,7 +117,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                     label={label({
                       label: "Linkin kuvaus",
                       inputLanguage: toissijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`, {
                       onChange: () => {
@@ -131,7 +132,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                     label={label({
                       label: "Linkki muihin esittelyaineistoihin",
                       inputLanguage: toissijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                     {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`, {
                       onChange: () => {

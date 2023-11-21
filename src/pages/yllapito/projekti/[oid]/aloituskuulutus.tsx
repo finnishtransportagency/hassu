@@ -395,7 +395,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                         label={label({
                           label: "Tiivistetty hankkeen sisällönkuvaus",
                           inputLanguage: ensisijainenKaannettavaKieli,
-                          toissijainenKieli: toissijainenKaannettavaKieli,
+                          kielitiedot,
                           required: true,
                         })}
                         {...register(`aloitusKuulutus.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
@@ -409,7 +409,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                         label={label({
                           label: "Tiivistetty hankkeen sisällönkuvaus",
                           inputLanguage: toissijainenKaannettavaKieli,
-                          toissijainenKieli: toissijainenKaannettavaKieli,
+                          kielitiedot,
                           required: true,
                         })}
                         {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
@@ -438,7 +438,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     {label({
                       label: "Esitettävät tiedostot",
                       inputLanguage: ensisijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                   </p>
                   <HassuStack direction={["column", "column", "row"]}>
@@ -472,7 +472,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     {label({
                       label: "Esitettävät tiedostot",
                       inputLanguage: toissijainenKaannettavaKieli,
-                      toissijainenKieli: toissijainenKaannettavaKieli,
+                      kielitiedot,
                     })}
                   </p>
                   <HassuStack direction={["column", "column", "row"]}>

@@ -5,18 +5,16 @@ import { Controller, UseFieldArrayRemove, useFormContext, UseFormSetValue } from
 import FormGroup from "@components/form/FormGroup";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
-import { VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
+import { Kielitiedot, VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Lisatiedot from "./Lisatiedot";
 import { Checkbox, FormControlLabel } from "@mui/material";
 
 interface Props {
   index: number;
-  ensisijainenKaannettavaKieli: KaannettavaKieli | null;
-  toissijainenKaannettavaKieli: KaannettavaKieli | null;
+  kielitiedot: Kielitiedot;
   setValue: UseFormSetValue<VuorovaikutustilaisuusFormValues>;
   remove: UseFieldArrayRemove;
   mostlyDisabled: boolean | undefined;
@@ -25,14 +23,7 @@ interface Props {
   })[];
 }
 
-export default function Soittoaika({
-  index,
-  ensisijainenKaannettavaKieli,
-  toissijainenKaannettavaKieli,
-  remove,
-  mostlyDisabled,
-  projektiHenkilot,
-}: Props): ReactElement {
+export default function Soittoaika({ index, kielitiedot, remove, mostlyDisabled, projektiHenkilot }: Props): ReactElement {
   const {
     formState: { errors },
     setValue,
@@ -45,12 +36,7 @@ export default function Soittoaika({
   return (
     <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
-      <Lisatiedot
-        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.SOITTOAIKA}
-        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
-        index={index}
-      />
+      <Lisatiedot tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.SOITTOAIKA} kielitiedot={kielitiedot} index={index} />
       <SectionContent>
         <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
         <p>

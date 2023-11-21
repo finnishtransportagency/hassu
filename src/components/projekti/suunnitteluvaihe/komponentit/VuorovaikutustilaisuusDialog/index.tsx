@@ -150,8 +150,6 @@ export default function VuorovaikutusDialog({
   mostlyDisabled,
   projekti,
 }: Props): ReactElement {
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
-
   const validationMode = useValidationMode();
 
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues, ProjektiValidationContext> = {
@@ -227,6 +225,10 @@ export default function VuorovaikutusDialog({
   const isYleisotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
+  const kielitiedot = projekti?.kielitiedot;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+  if (!kielitiedot) return <></>;
+
   return (
     <HassuDialog scroll="body" open={open} title="Vuorovaikutustilaisuuden lisääminen" onClose={onClose} maxWidth={"lg"}>
       <DialogContent>
@@ -294,8 +296,7 @@ export default function VuorovaikutusDialog({
                       <Verkkotilaisuus
                         key={index}
                         index={index}
-                        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-                        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+                        kielitiedot={kielitiedot}
                         setValue={setValue}
                         remove={remove}
                         mostlyDisabled={mostlyDisabled}
@@ -315,8 +316,7 @@ export default function VuorovaikutusDialog({
                       <YleisoTilaisuus
                         key={index}
                         index={index}
-                        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-                        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+                        kielitiedot={kielitiedot}
                         setValue={setValue}
                         remove={remove}
                         mostlyDisabled={mostlyDisabled}
@@ -336,8 +336,7 @@ export default function VuorovaikutusDialog({
                       <Soittoaika
                         key={index}
                         index={index}
-                        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
-                        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+                        kielitiedot={kielitiedot}
                         setValue={setValue}
                         remove={remove}
                         mostlyDisabled={mostlyDisabled}
@@ -384,7 +383,7 @@ const HassuBadge = styled(Badge)(() => ({
       color: "rgb(0, 100, 175)",
     },
   },
-  }));
+}));
 
 const HassuChip = styled(Chip)(() => ({
   paddingRight: 4,

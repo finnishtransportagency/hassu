@@ -20,7 +20,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
     formState: { errors },
     trigger,
   } = useFormContext<SuunnittelunPerustiedotFormValues>();
-
+  if (!kielitiedot) return <></>;
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
@@ -36,7 +36,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             label={label({
               label: "Julkisella puolella esitettävä suunnittelun etenemisen kuvaus",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKaannettavaKieli}`, {
@@ -55,7 +55,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             label={label({
               label: "Julkisella puolella esitettävä suunnittelun etenemisen kuvaus",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKaannettavaKieli}`, {
@@ -82,7 +82,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             label={label({
               label: "Arvio seuraavan vaiheen alkamisesta",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKaannettavaKieli}`, {
@@ -101,7 +101,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             label={label({
               label: "Arvio seuraavan vaiheen alkamisesta",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
             maxLength={maxHankkeenkuvausLength}
             {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKaannettavaKieli}`, {

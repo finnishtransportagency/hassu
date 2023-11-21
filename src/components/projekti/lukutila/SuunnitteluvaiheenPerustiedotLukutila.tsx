@@ -19,6 +19,9 @@ type Props = {
 
 function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactElement {
   const kielitiedot = projekti.kielitiedot;
+  if (!kielitiedot) {
+    return <></>;
+  }
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
@@ -33,7 +36,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Tiivistetty hankkeen sisällön kuvaus`,
                 inputLanguage: ensisijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>
@@ -46,7 +49,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Tiivistetty hankkeen sisällön kuvaus`,
                 inputLanguage: toissijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>
@@ -61,7 +64,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Julkisella puolella esitettävä suunnittelun etenemisen kuvaus`,
                 inputLanguage: ensisijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>
@@ -76,7 +79,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Julkisella puolella esitettävä suunnittelun etenemisen kuvaus`,
                 inputLanguage: toissijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>
@@ -93,7 +96,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Arvio seuraavan vaiheen alkamisesta`,
                 inputLanguage: ensisijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>
@@ -106,7 +109,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               {label({
                 label: `Arvio seuraavan vaiheen alkamisesta`,
                 inputLanguage: toissijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
                 required: true,
               })}
             </p>

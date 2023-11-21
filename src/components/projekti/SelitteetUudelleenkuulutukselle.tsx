@@ -21,6 +21,9 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
     register,
     formState: { errors },
   } = useFormContext();
+  if (!kielitiedot) {
+    return null;
+  }
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot) || {};
   return (
     <>
@@ -39,7 +42,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
                   label={label({
                     label: `Suunnitelman uudelleenkuuluttamisen syy`,
                     inputLanguage: ensisijainenKaannettavaKieli,
-                    toissijainenKieli: toissijainenKaannettavaKieli,
+                    kielitiedot,
                     required: true,
                   })}
                   {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteKuulutukselle.${ensisijainenKaannettavaKieli}`)}
@@ -52,7 +55,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
                   label={label({
                     label: `Suunnitelman uudelleenkuuluttamisen syy`,
                     inputLanguage: toissijainenKaannettavaKieli,
-                    toissijainenKieli: toissijainenKaannettavaKieli,
+                    kielitiedot,
                     required: true,
                   })}
                   {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteKuulutukselle.${toissijainenKaannettavaKieli}`)}
@@ -73,7 +76,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
                 label={label({
                   label: `Suunnitelman uudelleenkuuluttamisen syy`,
                   inputLanguage: ensisijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                   required: true,
                 })}
                 {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteLahetekirjeeseen.${ensisijainenKaannettavaKieli}`)}
@@ -86,7 +89,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
                 label={label({
                   label: `Suunnitelman uudelleenkuuluttamisen syy`,
                   inputLanguage: toissijainenKaannettavaKieli,
-                  toissijainenKieli: toissijainenKaannettavaKieli,
+                  kielitiedot,
                   required: true,
                 })}
                 {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteLahetekirjeeseen.${toissijainenKaannettavaKieli}`)}
