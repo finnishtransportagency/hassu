@@ -223,21 +223,25 @@ function getKuulutusKohde(projekti: DBProjekti, tilasiirtymaTyyppi: Tilasiirtyma
       if (findNahtavillaoloWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
+      return "joka odottaa";
       break;
     case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
       if (findHyvaksymisPaatosVaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
+      return "joka odottaa";
       break;
     case TilasiirtymaTyyppi.JATKOPAATOS_1:
       if (findJatkoPaatos1VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
+      return "joka odottaa";
       break;
     case TilasiirtymaTyyppi.JATKOPAATOS_2:
       if (findJatkoPaatos2VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
+      return "joka odottaa";
       break;
     default:
       return "joka odottaa";
