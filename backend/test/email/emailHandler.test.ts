@@ -94,6 +94,22 @@ describe("emailHandler", () => {
       );
       expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
+
+    it("should send emails and attachments succesfully", async () => {
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      updateAloitusKuulutusJulkaisuStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
+
+      const projekti = fixture.dbProjekti5();
+
+      await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+      emailClientStub.verifyEmailsSent();
+    });
   });
 
   describe("sendWaitingApprovalMailNahtavillaolokuulutus", () => {
@@ -113,6 +129,9 @@ describe("emailHandler", () => {
   });
 
   describe("sendWaitingApprovalMailHyvaksymispaatoskuulutus", () => {
+    beforeEach(() => {
+      loadProjektiByOidStub.resolves(fixture.dbProjekti5());
+    });
     it("should send email to projektipaallikko succesfully", async () => {
       const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
@@ -125,22 +144,6 @@ describe("emailHandler", () => {
           "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
       );
       expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
-    });
-
-    it("should send emails and attachments succesfully", async () => {
-      publishProjektiFileStub.resolves();
-      synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
-
-      const projekti = fixture.dbProjekti5();
-
-      await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
-      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
-      emailClientStub.verifyEmailsSent();
     });
   });
 
