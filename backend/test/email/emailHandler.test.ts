@@ -126,22 +126,22 @@ describe("emailHandler", () => {
       );
       expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
-  });
 
-  it("should send emails and attachments succesfully", async () => {
-    publishProjektiFileStub.resolves();
-    synchronizeProjektiFilesStub.resolves();
-    updateAloitusKuulutusJulkaisuStub.resolves();
-    s3Mock.s3Mock.on(GetObjectCommand).resolves({
-      Body: Readable.from(""),
-      ContentType: "application/pdf",
-    } as GetObjectCommandOutput);
+    it("should send emails and attachments succesfully", async () => {
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      updateAloitusKuulutusJulkaisuStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
 
-    const projekti = fixture.dbProjekti5();
+      const projekti = fixture.dbProjekti5();
 
-    await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
-    expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
-    emailClientStub.verifyEmailsSent();
+      await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+      emailClientStub.verifyEmailsSent();
+    });
   });
 
   describe("nähtävilläolo", () => {
