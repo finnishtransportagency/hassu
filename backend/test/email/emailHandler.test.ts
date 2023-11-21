@@ -23,6 +23,7 @@ import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBPro
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 import { EmailOptions } from "../../src/email/model/emailOptions";
+import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -112,6 +113,9 @@ describe("emailHandler", () => {
 
   describe("nähtävilläolo", () => {
     let projekti: DBProjekti;
+    before(() => {
+      sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    });
     beforeEach(() => {
       projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
       loadProjektiByOidStub.resolves(projekti);
