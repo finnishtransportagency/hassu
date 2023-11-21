@@ -29,23 +29,26 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
 
     // TODO: tarkista miksi muokkaajaa ei käytetä mihinkään tässä
+    // TODO: Lisää kustomoitu aineistomuokkaus viesti?
     await this.sendEmailToProjektipaallikko(emailCreator, nahtavillakuulutus, oid);
 
-    const lahetekirje = await emailCreator.createLahetekirjeWithAttachments();
-    const sentMessageInfo = await emailClient.sendEmail(lahetekirje);
+    if (!nahtavillakuulutus.aineistoMuokkaus) {
+      const lahetekirje = await emailCreator.createLahetekirjeWithAttachments();
+      const sentMessageInfo = await emailClient.sendEmail(lahetekirje);
 
-    const aikaleima = localDateTimeString();
-    nahtavillakuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
-    nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-    );
+      const aikaleima = localDateTimeString();
+      nahtavillakuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
+      nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+        examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+      );
 
-    nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
-      projekti.oid,
-      new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
-      lahetekirje,
-      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
-    );
+      nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
+        projekti.oid,
+        new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
+        lahetekirje,
+        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
+      );
+    }
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, nahtavillakuulutus);
   }

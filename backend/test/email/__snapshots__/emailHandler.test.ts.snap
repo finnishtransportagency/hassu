@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`emailHandler sendEmailsByToiminto sendApprovalMailsAndAttachments should send emails and attachments succesfully 1`] = `
+exports[`emailHandler aloituskuulutus approval should send emails and attachments succesfully 1`] = `
 Object {
   "args": Array [
     Object {
@@ -34,7 +34,7 @@ Object {
 }
 `;
 
-exports[`emailHandler sendEmailsByToiminto sendApprovalMailsAndAttachments should send emails and attachments succesfully 2`] = `
+exports[`emailHandler aloituskuulutus approval should send emails and attachments succesfully 2`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
@@ -126,4 +126,44 @@ Väylävirasto, Marika Ojanen, puh. 0299878787, marika.ojanen@vayla.fi",
     ],
   },
 ]
+`;
+
+exports[`emailHandler nähtävilläolo aineistomuokkaus approval wont send ilmoitus mails for aineistoMuokkaus 1`] = `
+Object {
+  "args": Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "Key": "yllapito/tiedostot/projekti/2/nahtavillaolo/1/2.pdf",
+  },
+  "stub": "s3Mock",
+}
+`;
+
+exports[`emailHandler nähtävilläolo approval should send emails and attachments succesfully 1`] = `
+Object {
+  "args": Array [
+    Object {
+      "Body": "***unittest***",
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "Key": "yllapito/tiedostot/projekti/2/nahtavillaolo/1/lähetekirje.eml",
+      "Metadata": Object {
+        "asiakirjatyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/nahtavillaolo/1/1 sv.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/nahtavillaolo/1/1.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/nahtavillaolo/1/2.pdf",
+    },
+  ],
+  "stub": "s3Mock",
+}
 `;
