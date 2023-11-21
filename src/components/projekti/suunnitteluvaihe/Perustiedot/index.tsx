@@ -186,7 +186,15 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               "\n\n" +
               "Luonnosten esittelyn jälkeen saadut palautteet ja kysymykset käydään läpi ja suunnitelma viimeistellään. " +
               "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus.",
-            RUOTSI: "",
+            RUOTSI:
+              "Planeringsskedet är rätt tidpunkt att sätta sig in i och påverka planlösningarna och föra fram information " +
+              "om lokala förhållanden som eventuellt påverkar färdigställandet av planen. " +
+              "I interaktionen under planeringen presenteras planutkast och planlösningar. " +
+              "Det är möjligt att ge respons på planutkasten och ställa frågor. " +
+              "\n\n" +
+              "Respons och frågor som kommit in efter presentationen av utkasten gås igenom och planen färdigställs. " +
+              "Därefter läggs den färdiga planen fram till påseende, " +
+              "och sakägarna har möjlighet att lämna in en officiell anmärkning om planen.",
           }
         ),
         esittelyaineistot,
