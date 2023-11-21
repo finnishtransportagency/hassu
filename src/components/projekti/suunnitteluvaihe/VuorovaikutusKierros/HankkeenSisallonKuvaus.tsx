@@ -15,12 +15,13 @@ type Props = {
 };
 
 export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactElement {
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
-
   const {
     register,
     formState: { errors },
   } = useFormContext<VuorovaikutusFormValues>();
+
+  if (!kielitiedot) return <></>;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section>
@@ -42,7 +43,7 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
           label={label({
             label: "Tiivistetty hankeen sisällönkuvaus",
             inputLanguage: ensisijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
             required: true,
           })}
           {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
@@ -59,7 +60,7 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
           label={label({
             label: "Tiivistetty hankeen sisällönkuvaus",
             inputLanguage: toissijainenKaannettavaKieli,
-            toissijainenKieli: toissijainenKaannettavaKieli,
+            kielitiedot,
             required: true,
           })}
           {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}

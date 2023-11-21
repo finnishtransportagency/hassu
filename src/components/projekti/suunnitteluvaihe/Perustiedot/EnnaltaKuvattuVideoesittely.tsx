@@ -23,7 +23,9 @@ export default function EnnaltaKuvattuVideoesittely() {
     name: "vuorovaikutusKierros.videot",
   });
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
+  const kielitiedot = projekti?.kielitiedot;
+  if (!kielitiedot) return <></>;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section noDivider>
@@ -48,7 +50,7 @@ export default function EnnaltaKuvattuVideoesittely() {
               label={label({
                 label: "Linkki videoon",
                 inputLanguage: ensisijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
               })}
               error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKaannettavaKieli]?.url}
             />
@@ -66,7 +68,7 @@ export default function EnnaltaKuvattuVideoesittely() {
               label={label({
                 label: "Linkki videoon",
                 inputLanguage: toissijainenKaannettavaKieli,
-                toissijainenKieli: toissijainenKaannettavaKieli,
+                kielitiedot,
               })}
               error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKaannettavaKieli]?.url}
             />

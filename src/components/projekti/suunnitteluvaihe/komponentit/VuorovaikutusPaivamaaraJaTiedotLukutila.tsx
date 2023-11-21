@@ -17,6 +17,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
   kielitiedot,
   ...sectionProps
 }: Props & ComponentProps<typeof Section>): ReactElement {
+  if (!kielitiedot) return <></>;
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
@@ -31,7 +32,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
             {label({
               label: "Tiivistetty hankkeen sisällönkuvaus",
               inputLanguage: ensisijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
           </p>
           <PreWrapParagraph>{vuorovaikutus?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
@@ -43,7 +44,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
             {label({
               label: "Tiivistetty hankkeen sisällönkuvaus",
               inputLanguage: toissijainenKaannettavaKieli,
-              toissijainenKieli: toissijainenKaannettavaKieli,
+              kielitiedot,
             })}
           </p>
           <PreWrapParagraph>{vuorovaikutus.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>

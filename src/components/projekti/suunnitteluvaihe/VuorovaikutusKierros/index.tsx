@@ -283,8 +283,6 @@ function VuorovaikutusKierrosKutsu({
 
   const ilmoituksenVastaanottajat = getValues("vuorovaikutusKierros.ilmoituksenVastaanottajat");
 
-  const ensisijainenKieli = projekti.kielitiedot?.ensisijainenKieli;
-  const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
@@ -322,6 +320,12 @@ function VuorovaikutusKierrosKutsu({
       !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, Vaihe.SUUNNITTELU)
     );
   }, [kuntavastaanottajat?.length, projekti]);
+
+  const kielitiedot = projekti.kielitiedot;
+  if (!kielitiedot) return <></>;
+
+  const ensisijainenKieli = kielitiedot.ensisijainenKieli;
+  const toissijainenKieli = kielitiedot.toissijainenKieli;
 
   return (
     <>
@@ -362,7 +366,7 @@ function VuorovaikutusKierrosKutsu({
                         {label({
                           label: "Esikatsele tiedostot",
                           inputLanguage: ensisijainenKieli,
-                          toissijainenKieli: toissijainenKieli,
+                          kielitiedot,
                         })}
                       </p>
                       <HassuStack direction={["column", "column", "row"]}>
@@ -384,7 +388,7 @@ function VuorovaikutusKierrosKutsu({
                         {label({
                           label: "Esikatsele tiedostot",
                           inputLanguage: toissijainenKieli,
-                          toissijainenKieli: toissijainenKieli,
+                          kielitiedot,
                         })}
                       </p>
                       <HassuStack direction={["column", "column", "row"]}>

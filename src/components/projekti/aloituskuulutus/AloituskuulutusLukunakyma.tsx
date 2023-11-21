@@ -32,8 +32,8 @@ interface Props {
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
   const { lang, t } = useTranslation();
-
-  if (!aloituskuulutusjulkaisu || !projekti) {
+  const kielitiedot = aloituskuulutusjulkaisu?.kielitiedot;
+  if (!aloituskuulutusjulkaisu || !projekti || !kielitiedot) {
     return <></>;
   }
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
@@ -43,7 +43,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     aloitusKuulutusHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/aloituskuulutus";
   }
 
-  const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot;
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
@@ -102,11 +102,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           </p>
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSelitteetLukutila
-            uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus}
-            ensisijainenKieli={ensisijainenKieli}
-            toissijainenKieli={toissijainenKieli}
-          />
+          <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
@@ -114,7 +110,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               {label({
                 label: `Tiivistetty hankkeen sisällön kuvaus`,
                 inputLanguage: ensisijainenKieli,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
@@ -126,7 +122,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               {label({
                 label: `Tiivistetty hankkeen sisällön kuvaus`,
                 inputLanguage: toissijainenKieli,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
@@ -149,7 +145,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               {label({
                 label: `Kuulutus ja ilmoitus`,
                 inputLanguage: Kieli.SUOMI,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             {ensisijaisetPDFt && (
@@ -178,7 +174,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                   {label({
                     label: `Kuulutus ja ilmoitus`,
                     inputLanguage: toissijainenKieli,
-                    toissijainenKieli: toissijainenKieli,
+                    kielitiedot,
                   })}
                 </p>
                 {toissijaisetPDFt && (

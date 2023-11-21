@@ -12,11 +12,12 @@ interface Props {
 }
 
 export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid, epaaktiivinen }: Props): ReactElement {
-  if (!oid || !aloituskuulutusjulkaisu) {
+  const kielitiedot = aloituskuulutusjulkaisu?.kielitiedot;
+  if (!oid || !aloituskuulutusjulkaisu || !kielitiedot) {
     return <></>;
   }
 
-  const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
+  const { ensisijainenKieli, toissijainenKieli } = kielitiedot;
 
   const getEnsisijaisetPdft = (kieli: Kieli | undefined | null): AloitusKuulutusPDF | null | undefined => {
     if (isKieliTranslatable(kieli) && aloituskuulutusjulkaisu && aloituskuulutusjulkaisu.aloituskuulutusPDFt) {
@@ -50,7 +51,7 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
               {label({
                 label: `Kuulutus ja ilmoitus`,
                 inputLanguage: Kieli.SUOMI,
-                toissijainenKieli: toissijainenKieli,
+                kielitiedot,
               })}
             </p>
             {ensisijaisetPDFt && (
@@ -74,7 +75,7 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                   {label({
                     label: `Kuulutus ja ilmoitus`,
                     inputLanguage: toissijainenKieli,
-                    toissijainenKieli: toissijainenKieli,
+                    kielitiedot,
                   })}
                 </p>
                 {toissijaisetPDFt && (
