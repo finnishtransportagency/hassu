@@ -85,64 +85,63 @@ describe("emailHandler", () => {
       const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.ALOITUSKUULUTUS);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
-        expect(emailOptions.text).to.eq(
-          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-            "Testiprojekti 2\n" +
-            "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n\n" +
-            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
-        );
-        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
-      });
+      expect(emailOptions.text).to.eq(
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+          "Testiprojekti 2\n" +
+          "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+          "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n\n" +
+          "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+      );
+      expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
+  });
 
-    describe("sendWaitingApprovalMailNahtavillaolokuulutus", () => {
-      it("should send email to projektipaallikko succesfully", async () => {
-        const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.NAHTAVILLAOLO);
-        expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää ELY/2/2022");
+  describe("sendWaitingApprovalMailNahtavillaolokuulutus", () => {
+    it("should send email to projektipaallikko succesfully", async () => {
+      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.NAHTAVILLAOLO);
+      expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää ELY/2/2022");
 
-        expect(emailOptions.text).to.eq(
-          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-            "Testiprojekti 2\n" +
-            "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n\n" +
-            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
-        );
-        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
-      });
+      expect(emailOptions.text).to.eq(
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+          "Testiprojekti 2\n" +
+          "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n\n" +
+          "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n\n" +
+          "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+      );
+      expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
+  });
 
-    describe("sendWaitingApprovalMailHyvaksymispaatoskuulutus", () => {
-      it("should send email to projektipaallikko succesfully", async () => {
-        const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
-        expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
+  describe("sendWaitingApprovalMailHyvaksymispaatoskuulutus", () => {
+    it("should send email to projektipaallikko succesfully", async () => {
+      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
+      expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
 
-        expect(emailOptions.text).to.eq(
-          "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-            "Testiprojekti 2\n" +
-            "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/hyvaksymispaatos/kuulutus\n\n" +
-            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
-        );
-        expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
-      });
+      expect(emailOptions.text).to.eq(
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
+          "Testiprojekti 2\n" +
+          "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+          "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/hyvaksymispaatos/kuulutus\n\n" +
+          "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+      );
+      expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
+  });
 
-    it("should send emails and attachments succesfully", async () => {
-      publishProjektiFileStub.resolves();
-      synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+  it("should send emails and attachments succesfully", async () => {
+    publishProjektiFileStub.resolves();
+    synchronizeProjektiFilesStub.resolves();
+    updateAloitusKuulutusJulkaisuStub.resolves();
+    s3Mock.s3Mock.on(GetObjectCommand).resolves({
+      Body: Readable.from(""),
+      ContentType: "application/pdf",
+    } as GetObjectCommandOutput);
 
-      const projekti = fixture.dbProjekti5();
+    const projekti = fixture.dbProjekti5();
 
-      await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
-      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
-      emailClientStub.verifyEmailsSent();
-    });
+    await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+    expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+    emailClientStub.verifyEmailsSent();
   });
 
   describe("nähtävilläolo", () => {
