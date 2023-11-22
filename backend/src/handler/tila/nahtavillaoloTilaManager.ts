@@ -221,9 +221,11 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async palaa(projekti: DBProjekti): Promise<void> {
+    assertIsDefined(projekti.vuorovaikutusKierros);
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       nahtavillaoloVaihe: null,
+      vuorovaikutusKierros: { ...projekti.vuorovaikutusKierros, palattuNahtavillaolosta: true },
     });
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.deleteAll(projekti);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);

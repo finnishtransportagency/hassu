@@ -119,6 +119,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       vuorovaikutusKierros: {
+        palattuNahtavillaolosta: projekti.vuorovaikutusKierros?.palattuNahtavillaolosta,
         vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero ?? 0) + 1,
         tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
       },
@@ -189,6 +190,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       oid,
       vuorovaikutusKierros: {
         ...rest,
+        palattuNahtavillaolosta: vuorovaikutus?.palattuNahtavillaolosta,
         esitettavatYhteystiedot: yhteystiedotBackToStandardiYhteystiedot(projekti, yhteystiedot),
         vuorovaikutusNumero: id,
         tila: VuorovaikutusKierrosTila.JULKINEN,
