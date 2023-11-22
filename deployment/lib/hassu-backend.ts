@@ -624,9 +624,6 @@ export class HassuBackendStack extends Stack {
   }
 
   private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction, isYllapitoBackend: boolean) {
-    if (process.env.TWEAK_REMOVE_APPSYNC_RESOLVERS === "true") {
-      return;
-    }
     const datasourceName = "lambdaDatasource" + (isYllapitoBackend ? "Yllapito" : "Julkinen");
     const lambdaDataSource = api.addLambdaDataSource(datasourceName, backendFn, { name: datasourceName });
 
