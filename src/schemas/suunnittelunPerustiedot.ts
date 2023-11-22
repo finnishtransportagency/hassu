@@ -3,14 +3,7 @@ import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
-
-const getAineistoSchema = () =>
-  Yup.object().shape({
-    dokumenttiOid: Yup.string().required(),
-    nimi: Yup.string().required(),
-    jarjestys: Yup.number().integer().notRequired(),
-  });
-const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
+import { getAineistotSchema } from "./common";
 
 const maxLenght = 2000;
 
