@@ -1,7 +1,7 @@
 import { Palaute } from "../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import { uuid } from "../util/uuid";
 import { localDateTimeString } from "../util/dateUtil";
+import { uuid } from "hassu-common/util/uuid";
 
 export function adaptPalauteInput(oid: string, palaute: API.PalauteInput): Palaute {
   const aikaleima = localDateTimeString();
