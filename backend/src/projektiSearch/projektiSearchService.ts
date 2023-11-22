@@ -305,7 +305,7 @@ class ProjektiSearchService {
         bool: {
           must: words.map((word) => ({
             prefix: {
-              nimi: word.trim(),
+              nimi: this.keepAlphanumeric(word),
             },
           })),
         },
@@ -376,6 +376,10 @@ class ProjektiSearchService {
       sort.push({ "nimi.keyword": { order: "asc" } });
     }
     return sort;
+  }
+
+  private static keepAlphanumeric(input: string): string {
+    return input.replace(/[^a-zA-Z0-9åäöÅÄÖ]/g, "").toLocaleLowerCase();
   }
 }
 
