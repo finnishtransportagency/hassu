@@ -218,33 +218,34 @@ function getKuulutusPath(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
 
 function getKuulutusKohde(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
   const aineistotOdottavat = "jonka muokatut aineistot odottavat";
+  const jokaOdottaa = "joka odottaa";
   switch (tilasiirtymaTyyppi) {
     case TilasiirtymaTyyppi.NAHTAVILLAOLO:
       if (findNahtavillaoloWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
-      return "joka odottaa";
+      return jokaOdottaa;
       break;
     case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
       if (findHyvaksymisPaatosVaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
-      return "joka odottaa";
+      return jokaOdottaa;
       break;
     case TilasiirtymaTyyppi.JATKOPAATOS_1:
       if (findJatkoPaatos1VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
-      return "joka odottaa";
+      return jokaOdottaa;
       break;
     case TilasiirtymaTyyppi.JATKOPAATOS_2:
       if (findJatkoPaatos2VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
         return aineistotOdottavat;
       }
-      return "joka odottaa";
+      return jokaOdottaa;
       break;
     default:
-      return "joka odottaa";
+      return jokaOdottaa;
   }
 }
 
