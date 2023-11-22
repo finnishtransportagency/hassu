@@ -3,7 +3,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import PaatosPageLayout from "./PaatosPageLayout";
 import { MuokkausTila } from "@services/api";
-import Muokkausnakyma from "./aineistot/Muokkausnakyma";
+import Muokkausnakyma from "./aineistot/MuokkausNakyma";
 import Lukunakyma from "./aineistot/Lukunakyma";
 import { getPaatosSpecificData } from "common/hyvaksymisPaatosUtil";
 

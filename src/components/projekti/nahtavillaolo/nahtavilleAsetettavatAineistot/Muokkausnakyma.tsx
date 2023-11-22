@@ -6,7 +6,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
-import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
+import SuunnitelmatJaAineistot from "./NahtavillaolonAineistoLomake";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
@@ -82,14 +82,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   return (
     <FormProvider {...useFormReturn}>
       <form>
-        <SuunnitelmatJaAineistot
-          dialogInfoText="Valitse tiedostot,
-          jotka haluat tuoda nähtäville."
-          sectionTitle="Nähtäville asetettava aineisto"
-          sectionInfoText="Nähtäville asetettava aineisto sekä lausuntopyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto siirtyy automaation avulla alakategorioihin ja käyttäjän on mahdollista järjestellä aineistoja, siirtää aineistoja alakategoriasta toiseen tai poistaa tuotuja aineistoja.
-          Nähtäville asetettu aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä."
-          vaihe={projekti.nahtavillaoloVaihe}
-        />
+        <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} />
         <LausuntopyyntoonLiitettavaLisaaineisto />
         <AineistoSivunPainikkeet
           siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
