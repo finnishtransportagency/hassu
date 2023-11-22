@@ -20,8 +20,8 @@ import {
 } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
-import { uuid } from "../util/uuid";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { uuid } from "hassu-common/util/uuid";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {

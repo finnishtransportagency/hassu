@@ -12,7 +12,7 @@ import {
 } from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { uuid } from "../util/uuid";
+import { uuid } from "hassu-common/util/uuid";
 import { invokeLambda } from "../aws/lambda";
 import { config } from "../config";
 import { NotFoundError } from "hassu-common/error";
