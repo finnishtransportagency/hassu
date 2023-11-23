@@ -31,8 +31,9 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
-    super(Vaihe.SUUNNITTELU);
+    super(Vaihe.SUUNNITTELU, Vaihe.NAHTAVILLAOLO);
   }
+
   rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
@@ -42,6 +43,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   checkPriviledgesPeruAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkPriviledgesPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  isVaiheeseenPalattu(projekti: DBProjekti): boolean {
+    return !!projekti.vuorovaikutusKierros?.palattuNahtavillaolosta;
   }
 
   validateAvaaAineistoMuokkaus(
