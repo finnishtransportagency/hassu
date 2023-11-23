@@ -2,9 +2,7 @@ import { Vaihe, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuT
 import { statusOrder } from "hassu-common/statusOrder";
 import {
   haeJulkaisunTiedot,
-  haeVaiheenTiedot,
   julkaisuIsVuorovaikutusKierrosLista,
-  vaiheenDataIsVuorovaikutusKierros,
   vaiheOnMuokkausTilassa,
   vaiheToStatus,
 } from "hassu-common/util/haeVaiheidentiedot";
