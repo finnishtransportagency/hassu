@@ -135,11 +135,7 @@ Array [
     "__typename": "Projekti",
     "asianhallinta": Object {
       "__typename": "Asianhallinta",
-      "aktiivinenTila": Object {
-        "__typename": "AktiivisenVaiheenAsianhallinnanTila",
-        "tila": undefined,
-        "vaihe": "ALOITUSKUULUTUS",
-      },
+      "aktiivinenTila": undefined,
       "aktivoitavissa": false,
       "inaktiivinen": true,
     },
@@ -244,11 +240,7 @@ Array [
     "__typename": "Projekti",
     "asianhallinta": Object {
       "__typename": "Asianhallinta",
-      "aktiivinenTila": Object {
-        "__typename": "AktiivisenVaiheenAsianhallinnanTila",
-        "tila": undefined,
-        "vaihe": "ALOITUSKUULUTUS",
-      },
+      "aktiivinenTila": undefined,
       "aktivoitavissa": false,
       "inaktiivinen": true,
     },
@@ -352,11 +344,7 @@ Array [
     "__typename": "Projekti",
     "asianhallinta": Object {
       "__typename": "Asianhallinta",
-      "aktiivinenTila": Object {
-        "__typename": "AktiivisenVaiheenAsianhallinnanTila",
-        "tila": undefined,
-        "vaihe": "ALOITUSKUULUTUS",
-      },
+      "aktiivinenTila": undefined,
       "aktivoitavissa": false,
       "inaktiivinen": true,
     },
@@ -604,11 +592,7 @@ Array [
     },
     "asianhallinta": Object {
       "__typename": "Asianhallinta",
-      "aktiivinenTila": Object {
-        "__typename": "AktiivisenVaiheenAsianhallinnanTila",
-        "tila": undefined,
-        "vaihe": "ALOITUSKUULUTUS",
-      },
+      "aktiivinenTila": undefined,
       "aktivoitavissa": false,
       "inaktiivinen": true,
     },
@@ -899,11 +883,7 @@ Object {
   },
   "asianhallinta": Object {
     "__typename": "Asianhallinta",
-    "aktiivinenTila": Object {
-      "__typename": "AktiivisenVaiheenAsianhallinnanTila",
-      "tila": undefined,
-      "vaihe": "SUUNNITTELU",
-    },
+    "aktiivinenTila": undefined,
     "aktivoitavissa": false,
     "inaktiivinen": true,
   },
