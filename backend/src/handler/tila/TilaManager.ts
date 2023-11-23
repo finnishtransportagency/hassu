@@ -23,9 +23,16 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
   protected vaihe: Vaihe;
 
-  constructor(vaihe: Vaihe) {
+  // Käytetään asianhallinnantilan validoinnissa
+  // Oletuksena palattuVaihe on sama kuin vaihe
+  protected palattuVaihe: Vaihe;
+
+  constructor(vaihe: Vaihe, palattuVaihe = vaihe) {
     this.vaihe = vaihe;
+    this.palattuVaihe = palattuVaihe;
   }
+
+  abstract isVaiheeseenPalattu(projekti: DBProjekti): boolean;
 
   abstract getVaihe(projekti: DBProjekti): T;
 
@@ -148,7 +155,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
-    const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, this.vaihe);
+    const vaihe = this.isVaiheeseenPalattu(projekti) ? this.palattuVaihe : this.vaihe;
+
+    const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe);
 
     if (asianhallinnanTila !== AsianTila.VALMIS_VIENTIIN) {
       throw new IllegalArgumentError(`Suunnitelman asia ei ole valmis vientiin. Vaihe: ${this.vaihe}, tila: ${asianhallinnanTila}`);

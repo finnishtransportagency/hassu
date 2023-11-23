@@ -238,6 +238,7 @@ type VuorovaikutusKierros {
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
   isOkToMakeNewVuorovaikutusKierros: Boolean
   selosteVuorovaikutuskierrokselle: String
+  palattuNahtavillaolosta: Boolean
 }
 
 type VuorovaikutusKierrosJulkaisu {

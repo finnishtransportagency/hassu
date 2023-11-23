@@ -34,6 +34,11 @@ export abstract class KuulutusTilaManager<
 
   abstract getUpdatedVaiheTiedotForPeruAineistoMuokkaus(kuulutus: Y): T;
 
+  // Toistaiseksi yhteenkään kuulutukseen ei voi palata
+  isVaiheeseenPalattu(_projekti: DBProjekti): boolean {
+    return false;
+  }
+
   async avaaAineistoMuokkaus(projekti: DBProjekti): Promise<void> {
     const kuulutusLuonnos = this.getVaihe(projekti);
     const julkaisut = this.getJulkaisut(projekti);

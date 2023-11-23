@@ -316,9 +316,8 @@ function VuorovaikutusKierrosKutsu({
 
   const julkaisuIsDisabled = useMemo(() => {
     const kunnatPuuttuu = !kuntavastaanottajat?.length;
-    return (
-      !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, Vaihe.SUUNNITTELU)
-    );
+    const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
+    return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, vaihe);
   }, [kuntavastaanottajat?.length, projekti]);
 
   const kielitiedot = projekti.kielitiedot;

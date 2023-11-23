@@ -133,7 +133,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
 
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
-      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      toimenpideTyyppi: projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? "PALATTU" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
       dokumentit: s3Paths.getDokumentit(),
