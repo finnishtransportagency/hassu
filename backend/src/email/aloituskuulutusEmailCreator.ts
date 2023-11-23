@@ -12,7 +12,7 @@ export class AloituskuulutusEmailCreator {
   private adapter!: AloituskuulutusKutsuAdapter;
 
   private constructor() {
-    // Ignore
+    // IgnoreXXX
   }
 
   static async newInstance(projekti: DBProjekti, aloituskuulutus: AloitusKuulutusJulkaisu): Promise<AloituskuulutusEmailCreator> {
