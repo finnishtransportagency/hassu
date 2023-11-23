@@ -192,7 +192,6 @@ function getMaakunnat(data: ProjektiProjekti) {
 }
 
 function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjekti[] {
-  console.log("*** GETTING LINKITETYT PROJEKTIT ****");
   const linkitetytProjektit: LinkitettyVelhoProjekti[] = [];
   data.forEach((projekti) =>
     linkitetytProjektit.push({
@@ -201,8 +200,6 @@ function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjek
       tyyppi: getProjektiTyyppi(projekti.ominaisuudet.vaihe as any),
     })
   );
-  console.log("*** RETURNING LINKITETYT PROJEKTIT ****");
-  console.log(JSON.stringify(linkitetytProjektit));
   return linkitetytProjektit;
 }
 
@@ -211,7 +208,6 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
   const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
   const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
-  console.log("*** HAS LINKITETYT PROJEKTIT **** " + linkitetytProjektit ? true : false);
   return {
     oid: "" + data.oid,
     versio: 1,

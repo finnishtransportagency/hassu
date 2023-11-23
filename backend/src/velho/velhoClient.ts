@@ -122,19 +122,13 @@ export class VelhoClient {
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      console.log(JSON.stringify(response.data));
 
       let linkitResponse;
-      console.log("**** CHECK IF PROJEKTILINKIT EXISTS ****");
       if (!isEmpty(response.data.projektilinkit)) {
-        console.log("**** IT DOES ******");
         linkitResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitGet(oid);
-        console.log("*** DATA ***");
-        console.log(JSON.stringify(linkitResponse.data));
       }
 
       const result = adaptProjekti(response.data, linkitResponse?.data as unknown as ProjektiRekisteri.ProjektiProjekti[]);
-      console.log(JSON.stringify(result));
       return result;
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
