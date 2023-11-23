@@ -5,8 +5,8 @@ if [ -z "${ENVIRONMENT}" ]; then
     exit 1
 fi
 
-if [ "${ENVIRONMENT}" == "dev" ] || [ "${ENVIRONMENT}" == "test" ] || [ "${ENVIRONMENT}" == "prod" ]; then
-    echo "ENVIRONMENT should not be 'dev', 'test' or 'prod'."
+if [ "${ENVIRONMENT}" == "dev" ] || [ "${ENVIRONMENT}" == "test" ] || [ "${ENVIRONMENT}" == "training" ] || [ "${ENVIRONMENT}" == "prod" ]; then
+    echo "ENVIRONMENT should not be 'dev', 'test', 'training' or 'prod'."
     exit 1
 fi
 

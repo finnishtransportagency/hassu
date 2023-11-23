@@ -5,6 +5,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import lowerCase from "lodash/lowerCase";
 import ProjektinPerusosio from "../perusosio/Perusosio";
+import LinkitetytProjektit from "../LinkitetytProjektit";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -37,7 +38,7 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
           </div>
         )}
       </Section>
-      <Section></Section> {/*TODO: Velhon linkitetyt projektit lukutilassa */}
+      <LinkitetytProjektit projekti={projekti}></LinkitetytProjektit>
       <Section>
         <SectionContent>
           <p className="vayla-label">Suunnittelusopimus</p>
