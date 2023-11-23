@@ -15,10 +15,12 @@ import { fileService } from "../../../src/files/fileService";
 
 import { expect } from "chai";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
+import { EmailClientStub } from "../../../integrationtest/api/testUtil/util";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
+  new EmailClientStub();
 
   afterEach(() => {
     userFixture.logout();
