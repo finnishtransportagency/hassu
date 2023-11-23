@@ -179,7 +179,6 @@ type Projekti implements IProjekti {
   euRahoitusLogot: LokalisoituTeksti
   muistutusMaara: Int
   vahainenMenettely: Boolean
-  liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
   paivitetty: String
   virhetiedot: ProjektiVirhe
@@ -663,6 +662,7 @@ type Velho {
   maakunnat: [Int!]
   kunnat: [Int!]
   linkki: String
+  linkitetytProjektit: [LinkitettyVelhoProjekti!]
 }
 
 type VelhoJulkinen {
@@ -677,6 +677,12 @@ type VelhoJulkinen {
   maakunnat: [Int!]
   kunnat: [Int!]
   linkki: String
+}
+
+type LinkitettyVelhoProjekti {
+  oid: String!
+  nimi: String!
+  tyyppi: ProjektiTyyppi
 }
 
 type ProjektiJulkinen implements IProjekti {

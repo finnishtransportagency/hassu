@@ -79,7 +79,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   muistiinpano: "",
   vaihe: undefined,
   tyyppi: ProjektiTyyppi.TIE,
-  suunnittelustaVastaavaViranomainen: undefined,
   aloitusKuulutus: {
     id: 1,
     kuulutusPaiva: "2022-10-10",
@@ -397,7 +396,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   tallennettu: true,
   euRahoitus: false,
   vahainenMenettely: false,
-  liittyvatSuunnitelmat: [],
   kielitiedot: {
     ensisijainenKieli: Kieli.SUOMI,
     toissijainenKieli: undefined,

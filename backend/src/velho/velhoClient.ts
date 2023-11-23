@@ -24,6 +24,7 @@ import { PartiallyMandatory } from "../tiedostot/PartiallyMandatory";
 import { VelhoUnavailableError } from "hassu-common/error/velhoUnavailableError";
 
 import NodeCache from "node-cache";
+import { isEmpty } from "lodash";
 
 const accessTokenCache = new NodeCache({
   stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
@@ -121,7 +122,14 @@ export class VelhoClient {
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      return adaptProjekti(response.data);
+
+      let linkitResponse;
+      if (!isEmpty(response.data.projektilinkit)) {
+        linkitResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitGet(oid);
+      }
+
+      const result = adaptProjekti(response.data, linkitResponse?.data as unknown as ProjektiRekisteri.ProjektiProjekti[]);
+      return result;
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }

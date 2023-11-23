@@ -346,6 +346,7 @@ Object {
           91,
           92,
         ],
+        "linkitetytProjektit": null,
         "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
@@ -924,6 +925,7 @@ Object {
           91,
           92,
         ],
+        "linkitetytProjektit": null,
         "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
@@ -1696,6 +1698,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,
@@ -1891,6 +1894,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,
@@ -3023,6 +3027,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,
@@ -3218,6 +3223,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,

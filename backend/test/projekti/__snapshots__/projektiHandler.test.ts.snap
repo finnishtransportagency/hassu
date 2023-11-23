@@ -4,6 +4,7 @@ exports[`projektiHandler should detect Velho changes successfully 1`] = `
 Object {
   "__typename": "Velho",
   "kunnat": undefined,
+  "linkitetytProjektit": undefined,
   "maakunnat": undefined,
   "nimi": "Uusi nimi",
   "varahenkilonEmail": "a2@vayla.fi",

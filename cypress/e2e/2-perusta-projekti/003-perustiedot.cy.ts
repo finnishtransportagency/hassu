@@ -17,23 +17,6 @@ describe("Projektin perustiedot", () => {
     selectFromDropdown("#kielitiedot\\.toissijainenKieli", "ruotsi");
     cy.get('input[name="kielitiedot.projektinNimiVieraskielella"]').type(CLEAR_ALL + projektiNimi + " ruotsiksi");
 
-    cy.get('input[name="liittyviasuunnitelmia"][value="true"]').check();
-
-    cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="linked_plan_trash_button"]').get();
-      for (const htmlElement of htmlElements) {
-        htmlElement.click();
-      }
-    });
-
-    cy.get("#linked_plands_new_row").click();
-    cy.get('input[name="liittyvatSuunnitelmat.0.asiatunnus"]').type(CLEAR_ALL + "abc-123");
-    cy.get('input[name="liittyvatSuunnitelmat.0.nimi"]').type(CLEAR_ALL + "Ensimmäisen nimi");
-
-    cy.get("#linked_plands_new_row").click();
-    cy.get('input[name="liittyvatSuunnitelmat.1.asiatunnus"]').type(CLEAR_ALL + "abc-456");
-    cy.get('input[name="liittyvatSuunnitelmat.1.nimi"]').type(CLEAR_ALL + "Toisen nimi");
-
     cy.get('input[name="suunnittelusopimusprojekti"][value="true"]').check();
     cy.get("#suunnittelusopimus_kunta").select("Alajärvi");
     cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);

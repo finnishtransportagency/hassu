@@ -206,13 +206,6 @@ export class ProjektiFixture {
       },
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          __typename: "Suunnitelma",
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
     };
   }
 
@@ -318,12 +311,6 @@ export class ProjektiFixture {
       },
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       paivitetty: "2022-03-15T13:00:00.000Z",
     };
   }
@@ -494,12 +481,6 @@ export class ProjektiFixture {
       },
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       kasittelynTila: {
         hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
       },
@@ -789,12 +770,6 @@ export class ProjektiFixture {
       },
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,
@@ -973,12 +948,6 @@ export class ProjektiFixture {
     },
     euRahoitus: false,
     vahainenMenettely: false,
-    liittyvatSuunnitelmat: [
-      {
-        asiatunnus: "atunnus123",
-        nimi: "Littyva suunnitelma 1 nimi",
-      },
-    ],
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
     tallennettu: true,
@@ -1335,12 +1304,6 @@ export class ProjektiFixture {
     },
     euRahoitus: false,
     vahainenMenettely: false,
-    liittyvatSuunnitelmat: [
-      {
-        asiatunnus: "atunnus123",
-        nimi: "Littyva suunnitelma 1 nimi",
-      },
-    ],
     salt: "foo",
     paivitetty: "2022-03-15T14:30:00.000Z",
     tallennettu: true,
@@ -1702,12 +1665,6 @@ export class ProjektiFixture {
       },
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,
@@ -2230,12 +2187,6 @@ export class ProjektiFixture {
       kielitiedot: kielitiedotPohjoissaame,
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,

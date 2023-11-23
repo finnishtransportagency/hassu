@@ -459,6 +459,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "LinkitettyVelhoProjekti",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Linkki",
         "possibleTypes": null,
         "__typename": "__Type"

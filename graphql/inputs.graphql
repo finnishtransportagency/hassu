@@ -5,7 +5,6 @@ input TallennaProjektiInput {
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTekstiInputEiPakollinen
   vahainenMenettely: Boolean
-  liittyvatSuunnitelmat: [SuunnitelmaInput]
   aloitusKuulutus: AloitusKuulutusInput
   suunnitteluSopimus: SuunnitteluSopimusInput
   kayttoOikeudet: [ProjektiKayttajaInput!]

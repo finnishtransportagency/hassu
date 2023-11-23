@@ -5,6 +5,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import lowerCase from "lodash/lowerCase";
 import ProjektinPerusosio from "../perusosio/Perusosio";
+import LinkitetytProjektit from "../LinkitetytProjektit";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -37,13 +38,7 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
           </div>
         )}
       </Section>
-      <Section>
-        <p className="vayla-label">Projektiin linkittyvät suunnitelmat</p>
-        {projekti.liittyvatSuunnitelmat?.map((suunnitelma) => (
-          <p key={suunnitelma.asiatunnus}>{suunnitelma.asiatunnus}</p>
-        ))}
-        {(!projekti.liittyvatSuunnitelmat || projekti.liittyvatSuunnitelmat.length === 0) && <p>-</p>}
-      </Section>
+      <LinkitetytProjektit projekti={projekti}></LinkitetytProjektit>
       <Section>
         <SectionContent>
           <p className="vayla-label">Suunnittelusopimus</p>
