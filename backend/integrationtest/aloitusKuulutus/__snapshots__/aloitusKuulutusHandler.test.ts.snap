@@ -160,6 +160,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,
@@ -427,6 +428,7 @@ Object {
           178,
           740,
         ],
+        "linkitetytProjektit": undefined,
         "maakunnat": Array [
           1,
           6,

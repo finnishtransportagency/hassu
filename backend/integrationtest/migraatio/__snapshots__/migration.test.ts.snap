@@ -370,6 +370,7 @@ Object {
           91,
           92,
         ],
+        "linkitetytProjektit": undefined,
         "linkki": null,
         "maakunnat": Array [
           1,
@@ -1400,6 +1401,7 @@ Object {
           91,
           92,
         ],
+        "linkitetytProjektit": undefined,
         "linkki": null,
         "maakunnat": Array [
           1,
