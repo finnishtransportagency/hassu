@@ -24,7 +24,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected vaihe: Vaihe;
 
   // Käytetään asianhallinnantilan validoinnissa
-  // Oletuksena palattuVaihe on sama kuin
+  // Oletuksena palattuVaihe on sama kuin vaihe
   protected palattuVaihe: Vaihe;
 
   constructor(vaihe: Vaihe, palattuVaihe = vaihe) {
