@@ -20,7 +20,6 @@ import { EmailClientStub } from "../../../integrationtest/api/testUtil/util";
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
-  new EmailClientStub();
 
   afterEach(() => {
     userFixture.logout();
@@ -102,6 +101,7 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
     sinon.stub(nahtavillaoloTilaManager, "handleAsianhallintaSynkronointi" as any);
     sinon.stub(nahtavillaoloTilaManager, "reloadProjekti").returns(Promise.resolve(projekti));
+    new EmailClientStub();
     await nahtavillaoloTilaManager.approve(projekti, UserFixture.hassuAdmin);
     // The new julkaisu should have the same date as the original (we did not change it),
     // so it is published right away.
