@@ -31,8 +31,9 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
-    super(Vaihe.SUUNNITTELU);
+    super(Vaihe.SUUNNITTELU, Vaihe.NAHTAVILLAOLO);
   }
+
   rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
     throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
@@ -42,6 +43,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   checkPriviledgesPeruAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkPriviledgesPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  isVaiheeseenPalattu(projekti: DBProjekti): boolean {
+    return !!projekti.vuorovaikutusKierros?.palattuNahtavillaolosta;
   }
 
   validateAvaaAineistoMuokkaus(
@@ -119,6 +124,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       vuorovaikutusKierros: {
+        palattuNahtavillaolosta: projekti.vuorovaikutusKierros?.palattuNahtavillaolosta,
         vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero ?? 0) + 1,
         tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
       },
@@ -189,6 +195,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       oid,
       vuorovaikutusKierros: {
         ...rest,
+        palattuNahtavillaolosta: vuorovaikutus?.palattuNahtavillaolosta,
         esitettavatYhteystiedot: yhteystiedotBackToStandardiYhteystiedot(projekti, yhteystiedot),
         vuorovaikutusNumero: id,
         tila: VuorovaikutusKierrosTila.JULKINEN,

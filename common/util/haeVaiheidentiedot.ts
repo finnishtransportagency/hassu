@@ -4,6 +4,7 @@ import {
   Projekti,
   Status,
   Vaihe,
+  VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusKierrosTila,
 } from "../graphql/apiModel";
@@ -47,6 +48,10 @@ const vaiheidenKentat: Record<Vaihe, VaiheAvain> = {
 export const haeVaiheenTiedot = (projekti: Projekti, vaihe: Vaihe): VaiheData => projekti[vaiheidenKentat[vaihe]];
 
 export const haeJulkaisunTiedot = (projekti: Projekti, vaihe: Vaihe): JulkaisuData => projekti[vaiheidenJulkaisukentat[vaihe]];
+
+export function vaiheenDataIsVuorovaikutusKierros(vaiheenData: VaiheData | null | undefined): vaiheenData is VuorovaikutusKierros {
+  return vaiheenData?.__typename === "VuorovaikutusKierros";
+}
 
 export function julkaisuIsVuorovaikutusKierrosLista(julkaisu: JulkaisuData | null | undefined): julkaisu is VuorovaikutusKierrosJulkaisu[] {
   return Array.isArray(julkaisu);

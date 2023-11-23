@@ -188,10 +188,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
     watch,
   } = useFormReturn;
 
-  const some = watch();
-
-  console.log({ errors, some });
-
   const kielitiedot = watch("kielitiedot");
 
   useEffect(() => {

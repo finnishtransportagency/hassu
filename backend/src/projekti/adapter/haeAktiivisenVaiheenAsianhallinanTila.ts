@@ -2,7 +2,9 @@ import { Vaihe, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuT
 import { statusOrder } from "hassu-common/statusOrder";
 import {
   haeJulkaisunTiedot,
+  haeVaiheenTiedot,
   julkaisuIsVuorovaikutusKierrosLista,
+  vaiheenDataIsVuorovaikutusKierros,
   vaiheOnMuokkausTilassa,
   vaiheToStatus,
 } from "hassu-common/util/haeVaiheidentiedot";
@@ -21,9 +23,13 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
 export async function haeAktiivisenVaiheenAsianhallinanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinnanTila | null | undefined> {
-  const vaihe = haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti);
+  let vaihe = haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti);
   if (!vaihe) {
     return undefined;
+  }
+
+  if (vaiheOnSuunnitteluJaPalattuNahtavillaolosta(projekti, vaihe)) {
+    vaihe = Vaihe.NAHTAVILLAOLO;
   }
 
   const asianhallintaEnabled = await isProjektiAsianhallintaIntegrationEnabled(projekti);
@@ -33,6 +39,16 @@ export async function haeAktiivisenVaiheenAsianhallinanTila(
     vaihe,
     tila: asianhallintaEnabled ? await asianhallintaService.checkAsianhallintaState(projekti.oid, vaihe) : undefined,
   };
+}
+
+function vaiheOnSuunnitteluJaPalattuNahtavillaolosta(projekti: Projekti, vaihe: Vaihe) {
+  if (vaihe === Vaihe.SUUNNITTELU) {
+    const vaiheenTiedot = haeVaiheenTiedot(projekti, vaihe);
+    if (vaiheenDataIsVuorovaikutusKierros(vaiheenTiedot) && vaiheenTiedot.palattuNahtavillaolosta) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti: Projekti) {

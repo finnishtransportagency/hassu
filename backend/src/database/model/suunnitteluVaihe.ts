@@ -31,6 +31,7 @@ export type VuorovaikutusKierros = {
   suunnitelmaluonnokset?: Aineisto[] | null;
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
   selosteVuorovaikutuskierrokselle?: string | null;
+  palattuNahtavillaolosta?: boolean;
 };
 
 export type VuorovaikutusKierrosJulkaisu = {
