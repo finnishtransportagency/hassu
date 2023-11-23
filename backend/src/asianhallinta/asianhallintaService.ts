@@ -52,7 +52,9 @@ class AsianhallintaService {
       oid,
       asianhallintaEventId,
       correlationId: getCorrelationId() || uuid.v4(),
-      hyvaksyja: getVaylaUser()?.uid ?? undefined
+      hyvaksyja: getVaylaUser()?.uid ?? undefined,
+      hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.etunimi} ${getVaylaUser()?.sukunimi}` : undefined,
+      asianNimi: projekti.velho?.nimi
     };
     const messageParams: SendMessageRequest = {
       MessageGroupId: oid,
