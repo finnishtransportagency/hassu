@@ -80,7 +80,7 @@ class TiedostoDownloadLinkService {
     };
   }
 
-  async esikatseleLausuntoPyynnonTaydennyksenAineistot(
+  async esikatseleLausuntoPyynnonTaydennyksenTiedostot(
     projekti: DBProjekti,
     lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
   ): Promise<LadattavatTiedostot> {
@@ -114,7 +114,7 @@ class TiedostoDownloadLinkService {
     };
   }
 
-  async listaaLausuntoPyyntoAineisto(projekti: DBProjekti, params: ListaaLausuntoPyyntoTiedostotInput): Promise<LadattavatTiedostot> {
+  async listaaLausuntoPyyntoTiedostot(projekti: DBProjekti, params: ListaaLausuntoPyyntoTiedostotInput): Promise<LadattavatTiedostot> {
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
     if (!lausuntoPyynto) {
@@ -139,7 +139,7 @@ class TiedostoDownloadLinkService {
     return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyynto.poistumisPaiva, aineistopaketti };
   }
 
-  async listaaLausuntoPyynnonTaydennyksenAineisto(
+  async listaaLausuntoPyynnonTaydennyksenTiedostot(
     projekti: DBProjekti,
     params: ListaaLausuntoPyynnonTaydennyksenTiedostotInput
   ): Promise<LadattavatTiedostot> {
@@ -193,7 +193,7 @@ class TiedostoDownloadLinkService {
       // @ts-ignore
       return;
     }
-    return TiedostoDownloadLinkService.createLausuntoPyyntoHash(oid, uuid, salt);
+    return TiedostoDownloadLinkService.createLausuntoPyynnonTaydennysHash(oid, uuid, salt);
   }
 
   generateSalt() {
@@ -227,7 +227,8 @@ class TiedostoDownloadLinkService {
     if (!salt) {
       throw new Error("Salt missing");
     }
-    return crypto.createHash("sha512").update([oid, "lausuntopyynnon taydennys", uuid, salt].join()).digest("hex");
+    const hash = crypto.createHash("sha512").update([oid, "lausuntopyynnon taydennys", uuid, salt].join()).digest("hex");
+    return hash;
   }
 }
 
