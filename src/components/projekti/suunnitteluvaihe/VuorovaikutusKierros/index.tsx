@@ -372,7 +372,7 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${ensisijainenKieli}`}
-                          onClick={handleSubmit((formData) =>
+                          onClick={handleDraftSubmit((formData) =>
                             esikatselePdf?.(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
                           )}
                         >
@@ -394,7 +394,7 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${toissijainenKieli}`}
-                          onClick={handleSubmit((formData) =>
+                          onClick={handleDraftSubmit((formData) =>
                             esikatselePdf?.(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
                           )}
                         >
