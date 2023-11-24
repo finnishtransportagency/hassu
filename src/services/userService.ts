@@ -17,6 +17,14 @@ export function storeKansalaisUserAuthentication(hash: string) {
   }
 }
 
+function getSuomiFiUri() {
+  if (process.env.NODE_ENV === 'development') {
+    return "http://localhost:3000/";
+  } else {
+    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+  }
+}
+
 export function getSuomiFiAuthenticationURL(): string | undefined {
   const domain = process.env.SUOMI_FI_COGNITO_DOMAIN;
   const clientId = process.env.SUOMI_FI_USERPOOL_CLIENT_ID;
@@ -24,7 +32,7 @@ export function getSuomiFiAuthenticationURL(): string | undefined {
     const url = new URL(domain);
     url.pathname = "/oauth2/authorize";
     url.searchParams.set("identity_provider", "Suomi.fi");
-    url.searchParams.set("redirect_uri", "https://" + process.env.FRONTEND_DOMAIN_NAME + "/");
+    url.searchParams.set("redirect_uri", getSuomiFiUri());
     url.searchParams.set("response_type", "TOKEN");
     url.searchParams.set("client_id", clientId);
     url.searchParams.set("scope", "email openid");
@@ -38,7 +46,8 @@ export function getSuomiFiLogoutURL(): string | undefined {
   if (domain && clientId) {
     const url = new URL(domain);
     url.pathname = "/logout";
-    url.searchParams.set("logout_uri", "https://" + process.env.FRONTEND_DOMAIN_NAME + "/");
+    url.searchParams.set("logout_uri", getSuomiFiUri());
+    url.searchParams.set("redirect_uri", getSuomiFiUri());
     url.searchParams.set("client_id", clientId);
     return url.toString();
   }
