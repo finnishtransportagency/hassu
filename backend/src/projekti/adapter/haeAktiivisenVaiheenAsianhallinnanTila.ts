@@ -18,7 +18,7 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
   }
 }
 
-export async function haeAktiivisenVaiheenAsianhallinanTila(
+export async function haeAktiivisenVaiheenAsianhallinnanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinnanTila | null | undefined> {
   const vaihe = haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti);
@@ -44,7 +44,6 @@ function haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti:
 
 function suodataSuunnitteluvaiheJosPalattuNahtavillaolostaTaiVahainenMenettely(
   projekti: Projekti
-): (value: Vaihe, index: number, array: Vaihe[]) => unknown {
-  return (vaihe) =>
-    vaihe === Vaihe.SUUNNITTELU && (!!projekti.vuorovaikutusKierros?.palattuNahtavillaolosta || !!projekti.vahainenMenettely);
+): (value: Vaihe, index: number, array: Vaihe[]) => boolean {
+  return (vaihe) => vaihe !== Vaihe.SUUNNITTELU || !(projekti.vuorovaikutusKierros?.palattuNahtavillaolosta || projekti.vahainenMenettely);
 }
