@@ -12,12 +12,12 @@ export const handleAineistoArrayForDefaultValues = (
   return (
     aineistot
       ?.map(mapAineistoToInput)
-      .reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetut(addDefaultJarjestys), initialSplittedAineistoInput) ||
+      .reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetutAineistoInput(addDefaultJarjestys), initialSplittedAineistoInput) ||
     initialSplittedAineistoInput
   );
 };
 
-export const reduceToLisatytJaPoistetut =
+const reduceToLisatytJaPoistetutAineistoInput =
   (addDefaultJarjestys: boolean) =>
   (
     acc: { poistettu: AineistoInput[]; lisatty: AineistoInput[] },
