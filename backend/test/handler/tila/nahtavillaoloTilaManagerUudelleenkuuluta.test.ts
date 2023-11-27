@@ -15,7 +15,7 @@ import { fileService } from "../../../src/files/fileService";
 
 import { expect } from "chai";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
-import { EmailClientStub } from "../../../integrationtest/api/testUtil/util";
+import { emailClient } from "../../../src/email/email";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -71,6 +71,7 @@ describe("nahtavillaoloTilaManager", () => {
       .stub(pdfGeneratorClient, "createNahtavillaoloKuulutusPdf")
       .returns(Promise.resolve({ __typename: "PDF", nimi: "", sisalto: "", textContent: "" }));
     sinon.stub(fileService, "createFileToProjekti");
+    sinon.stub(emailClient, "sendEmail");
     const loadProjektiStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     loadProjektiStub.resolves(projekti);
     const nahtavillaoloJulkaisuUpdateStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
@@ -101,7 +102,6 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
     sinon.stub(nahtavillaoloTilaManager, "handleAsianhallintaSynkronointi" as any);
     sinon.stub(nahtavillaoloTilaManager, "reloadProjekti").returns(Promise.resolve(projekti));
-    new EmailClientStub();
     await nahtavillaoloTilaManager.approve(projekti, UserFixture.hassuAdmin);
     // The new julkaisu should have the same date as the original (we did not change it),
     // so it is published right away.
