@@ -11,6 +11,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 
 type Props = {
   open: boolean;
@@ -18,9 +19,17 @@ type Props = {
   projekti: ProjektiLisatiedolla;
   tilasiirtymaTyyppi: TilasiirtymaTyyppi;
   isAineistoMuokkaus: boolean;
+  julkaisu: GenericApiKuulutusJulkaisu;
 };
 
-export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi, isAineistoMuokkaus }: Props) {
+export default function KuulutuksenHyvaksyminenDialog({
+  open,
+  onClose,
+  projekti,
+  tilasiirtymaTyyppi,
+  isAineistoMuokkaus,
+  julkaisu,
+}: Props) {
   const { t, lang } = useTranslation("commonFI");
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
@@ -74,7 +83,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
             <div>
               <p>Viranomaiset</p>
               <ul className="vayla-dialog-list">
-                {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                {julkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
                   <li key={viranomainen.nimi}>
                     {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                   </li>
@@ -82,7 +91,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
               </ul>
               <p>Kunnat</p>
               <ul className="vayla-dialog-list">
-                {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                {julkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
                   <li key={kunta.id}>
                     {kuntametadata.nameForKuntaId(kunta.id, lang)}, {kunta.sahkoposti}
                   </li>
@@ -90,12 +99,11 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
               </ul>
             </div>
             <p>
-              Jos kuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee kuulutus uudelleenkuuluttaa. Uudelleenkuulutuksissa ole
-              yhteydessä järjestelmän pääkäyttäjään.
-            </p>
-            <p>
               Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä sekä
-              ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
+              ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.{" "}
+              {projekti.asianhallinta.inaktiivinen
+                ? "Huomaathan viedä asianhallintaan tarvittavat tiedostot itse."
+                : "Järjestelmä vie tarvittavat asiakirjat automaattisesti asianhallintaan."}
             </p>
           </DialogContent>
         )}
