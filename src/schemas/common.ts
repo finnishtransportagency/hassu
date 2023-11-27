@@ -11,6 +11,15 @@ const getAineistoSchema = () =>
   });
 export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
+const getLadattuTiedostoSchema = () =>
+  Yup.object().shape({
+    tiedosto: Yup.string().required(),
+    nimi: Yup.string().required(),
+    jarjestys: Yup.number().integer().notRequired(),
+    tila: Yup.string().required(),
+  });
+export const getLadatutTiedostotSchema = () => Yup.array().of(getLadattuTiedostoSchema()).nullable();
+
 export const ilmoituksenVastaanottajat = () =>
   Yup.object()
     .shape({
