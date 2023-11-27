@@ -1,3 +1,3 @@
-export * from "./addedAineisto";
-export * from "./removedAineisto";
+export * from "./addedLisaAineisto";
+export * from "./removedLisaAineisto";
 export * from "./noChanges";

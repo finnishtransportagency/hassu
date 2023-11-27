@@ -1,30 +1,20 @@
 import { expect } from "chai";
 import { stubBasics, testDbProjekti } from "../util";
 import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAdapter";
-import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
+import { DBProjekti, LausuntoPyynto } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-
-export const addedTiedostoAgainBeforePersisting = async () => {
+export const addedLisaAineisto = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
-  const oldLPTs = [
+  const oldLPs = [
     {
       uuid: "jotain",
-      kunta: 1,
       poistumisPaiva: "2022-01-01",
-      muistutukset: [
+      lisaAineistot: [
         {
-          tiedosto: "upload/23435345.txt",
-          nimi: "tiedosto2.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
-        },
-      ],
-      muuAineisto: [
-        {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -32,62 +22,53 @@ export const addedTiedostoAgainBeforePersisting = async () => {
   ];
   const projektiInDB: DBProjekti = {
     ...testDbProjekti,
-    lausuntoPyynnonTaydennykset: oldLPTs,
+    lausuntoPyynnot: oldLPs,
   };
   const input: API.TallennaProjektiInput = {
     oid: projektiInDB.oid,
     versio: projektiInDB.versio,
-    lausuntoPyynnonTaydennykset: [
+    lausuntoPyynnot: [
       {
         uuid: "jotain",
-        kunta: 1,
         poistumisPaiva: "2022-01-01",
-        muistutukset: [
+        lisaAineistot: [
           {
-            tiedosto: "upload/23435345.txt",
-            nimi: "tiedosto2.txt",
-            tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
-          },
-        ],
-        muuAineisto: [
-          {
-            dokumenttiOid: "foo",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
-            tila: API.AineistoTila.VALMIS,
+            tila: API.LadattuTiedostoTila.VALMIS,
+          },
+          {
+            tiedosto: "uploads/235235235.txt",
+            nimi: "aineisto2.txt",
+            tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           },
         ],
       },
     ],
   };
   const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
-  const expectedLausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [
+  const expectedLausuntoPyynnot: LausuntoPyynto[] = [
     {
       uuid: "jotain",
-      kunta: 1,
       poistumisPaiva: "2022-01-01",
-      muistutukset: [
+      lisaAineistot: [
         {
-          tiedosto: "upload/23435345.txt",
-          nimi: "tiedosto2.txt",
+          tiedosto: "uploads/235235235.txt",
+          nimi: "aineisto2.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
-      ],
-      muuAineisto: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
-          jarjestys: undefined,
-          kategoriaId: undefined,
         },
       ],
     },
   ];
-  expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
+  expect(projektiAdaptationResult.projekti.lausuntoPyynnot).to.eql(expectedLausuntoPyynnot);
   await handleEvents(projektiAdaptationResult);
   expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(1); // We'd like the event to fire again, in case there was an error earlier
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

@@ -1,7 +1,7 @@
 import sinon from "sinon";
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynto } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
-import { fakeEventInSqsQueue, getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa, stubBasics } from "./util/util";
+import { fakeEventInSqsQueue, getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa, stubBasics } from "./util/util";
 import {
   hyvaksymatonNahtavillaoloJulkaisuAineistoB,
   hyvaksyttyNahtavillaoloJulkaisuAineistoA,
@@ -12,19 +12,17 @@ import { fileService } from "../../../src/files/fileService";
 import { expect } from "chai";
 import { cleanupLausuntoPyyntoTimestamps } from "../../../commonTestUtil/cleanUpFunctions";
 
-// eventSqsHandlerLambda handles event AINEISTO_CHANGED by removing lausuntoPyynto that is marked to be removed and handling changed aineistos
-export const aineistoChangedRemovesLausuntoPyyntoAndHandlesChanges = async () => {
-  const handler = fakeEventInSqsQueue({ eventType: SqsEventType.AINEISTO_CHANGED, projektiOid: "1" });
-  const lisaAineistot: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
-    "lisa",
-    "lausuntopyynto/joku-uuid",
-    "kategoriaId"
-  );
-  const lisaAineistot2: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
-    "lisa",
-    "lausuntopyynto/joku-toinen-uuid",
-    "kategoriaId"
-  );
+// eventSqsHandlerLambda handles event AINEISTO_AND_FILES_CHANGED by removing lausuntoPyynto that is marked to be removed and handling changed aineistos
+export const aineistoAndFilesChangedRemovesLausuntoPyyntoAndHandlesChanges = async () => {
+  const handler = fakeEventInSqsQueue({ eventType: SqsEventType.AINEISTO_AND_FILES_CHANGED, projektiOid: "1" });
+  const lisaAineistot: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "lisa",
+    lausuntoPyyntoUuid: "joku-uuid",
+  });
+  const lisaAineistot2: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "lisa",
+    lausuntoPyyntoUuid: "joku-toinen-uuid",
+  });
 
   const lausuntoPyynnot: LausuntoPyynto[] = [
     {
@@ -77,21 +75,17 @@ export const aineistoChangedRemovesLausuntoPyyntoAndHandlesChanges = async () =>
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_aineisto_valmis.txt",
-          dokumenttiOid: "lisa2",
-          nimi: "lisa_aineisto_valmis.txt",
-          tila: "VALMIS",
           jarjestys: 2,
+          nimi: "lisa_tiedosto_odottaa_persistointia.txt",
+          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_tiedosto_odottaa_persistointia.txt",
+          tila: "VALMIS",
           tuotu: "***unittest***",
-          kategoriaId: "kategoriaId",
         },
         {
-          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_aineisto_odottaa_tuontia.txt",
-          dokumenttiOid: "/lausuntopyynto/joku-toinen-uuid/lisa_aineisto_odottaa_tuontia.txt",
-          nimi: "lisa_aineisto_odottaa_tuontia.txt",
-          tila: "VALMIS",
           jarjestys: 1,
-          kategoriaId: "kategoriaId",
+          nimi: "lisa_tiedosto_valmis.txt",
+          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_tiedosto_valmis.txt",
+          tila: "VALMIS",
           tuotu: "***unittest***",
         },
       ],
@@ -100,8 +94,8 @@ export const aineistoChangedRemovesLausuntoPyyntoAndHandlesChanges = async () =>
   expect(saveProjektiFirstArgs.lausuntoPyynnot?.map(cleanupLausuntoPyyntoTimestamps)).to.eql(expectedLausuntoPyynnot);
   expect(zipFilesStub.callCount).to.eql(0);
   expect(deleteFileStub.callCount).to.eql(1); // Nähtävilläolojulkaisulla ei oikeasti pitäisi olla tuomista tai poitamista odottavia aineistoja
-  expect(createAineistoToProjektiStub.callCount).to.eql(1); // Nähtävilläolojulkaisulla ei oikeasti pitäisi olla tuomista tai poitamista odottavia aineistoja
-  expect(persistFileStub?.callCount).to.eql(0);
+  expect(createAineistoToProjektiStub.callCount).to.eql(0);
+  expect(persistFileStub?.callCount).to.eql(1);
   expect(addEventZipLausuntoPyyntoAineistoStub.callCount).to.eql(1);
   expect(addEventZipLausuntoPyynnonTaydennysAineistoStub.callCount).to.eql(0);
   expect(deleteProjektiFilesRecursivelyStub.callCount).to.eql(1);

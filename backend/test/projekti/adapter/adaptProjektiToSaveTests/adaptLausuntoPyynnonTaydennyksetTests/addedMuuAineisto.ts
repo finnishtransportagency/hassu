@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const removedAineistoRemovedTiedosto = async () => {
+export const addedMuuAineisto = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPTs = [
     {
@@ -21,10 +21,9 @@ export const removedAineistoRemovedTiedosto = async () => {
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -46,14 +45,19 @@ export const removedAineistoRemovedTiedosto = async () => {
           {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
             nimi: "tiedosto.txt",
-            tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            tila: API.LadattuTiedostoTila.VALMIS,
           },
         ],
         muuAineisto: [
           {
-            dokumenttiOid: "foo",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
-            tila: API.AineistoTila.ODOTTAA_POISTOA,
+            tila: API.LadattuTiedostoTila.VALMIS,
+          },
+          {
+            tiedosto: "jokupolku/2352352352345.txt",
+            nimi: "aineisto2.txt",
+            tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           },
         ],
       },
@@ -69,16 +73,20 @@ export const removedAineistoRemovedTiedosto = async () => {
         {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
           nimi: "tiedosto.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
+          tiedosto: "jokupolku/2352352352345.txt",
+          nimi: "aineisto2.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+        },
+        {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.ODOTTAA_POISTOA,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -86,7 +94,7 @@ export const removedAineistoRemovedTiedosto = async () => {
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(1);
+  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(0);
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

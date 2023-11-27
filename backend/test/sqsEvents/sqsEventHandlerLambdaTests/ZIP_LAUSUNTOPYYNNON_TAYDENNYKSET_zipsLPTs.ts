@@ -65,7 +65,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTs = async () => {
     [
       {
         s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/tiedosto_odottaa_persistointia.txt",
-        zipFolder: "muistutukset/",
+        zipFolder: "Muistutukset/",
       },
     ],
     "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/aineisto.zip",

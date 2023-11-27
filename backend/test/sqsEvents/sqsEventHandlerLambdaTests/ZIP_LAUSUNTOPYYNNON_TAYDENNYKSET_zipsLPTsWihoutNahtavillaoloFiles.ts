@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import { fakeEventInSqsQueue, stubBasics } from "./util/util";
 import {
@@ -20,12 +20,11 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles = a
       jarjestys: 2,
     },
   ];
-  const muuAineisto: Aineisto[] = [
+  const muuAineisto: LadattuTiedosto[] = [
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Aineisto%20123.txt",
-      dokumenttiOid: "kissa",
       nimi: "Aineisto%20123.txt",
-      tila: API.AineistoTila.VALMIS,
+      tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
     },
   ];
@@ -82,12 +81,12 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles = a
     "hassu-localstack-yllapito",
     [
       {
-        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Aineisto%20123.txt",
-        zipFolder: "Muu aineisto/",
+        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%201.txt",
+        zipFolder: "Muistutukset/",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%201.txt",
-        zipFolder: "muistutukset/",
+        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/Aineisto%20123.txt",
+        zipFolder: "Muu aineisto/",
       },
     ],
     "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/aineisto.zip",

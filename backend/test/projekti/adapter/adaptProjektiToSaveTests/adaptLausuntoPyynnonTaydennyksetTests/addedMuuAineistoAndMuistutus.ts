@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const addedAineistoAddedTiedosto = async () => {
+export const addedMuuAineistoAndMuistutus = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const projektiInDB: DBProjekti = testDbProjekti;
   const input: API.TallennaProjektiInput = {
@@ -18,15 +18,15 @@ export const addedAineistoAddedTiedosto = async () => {
         muistutukset: [
           {
             tiedosto: "uploads/345345235.txt",
-            nimi: "odottaa_persistointia.txt",
+            nimi: "odottaa_persistointia_muistutus.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           },
         ],
         muuAineisto: [
           {
-            dokumenttiOid: "foo",
-            nimi: "odottaa_importointia.txt",
-            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            tiedosto: "uploads/345345234.txt",
+            nimi: "odottaa_persistointia_muu_aineisto.txt",
+            tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           },
         ],
       },
@@ -40,17 +40,15 @@ export const addedAineistoAddedTiedosto = async () => {
       poistumisPaiva: "2022-01-01",
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
-          nimi: "odottaa_importointia.txt",
-          kategoriaId: undefined,
-          jarjestys: undefined,
-          tila: API.AineistoTila.ODOTTAA_TUONTIA,
+          tiedosto: "uploads/345345234.txt",
+          nimi: "odottaa_persistointia_muu_aineisto.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
       ],
       muistutukset: [
         {
           tiedosto: "uploads/345345235.txt",
-          nimi: "odottaa_persistointia.txt",
+          nimi: "odottaa_persistointia_muistutus.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
       ],
@@ -58,7 +56,7 @@ export const addedAineistoAddedTiedosto = async () => {
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(1);
+  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(0);
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

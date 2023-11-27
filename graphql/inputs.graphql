@@ -220,7 +220,7 @@ input NahtavillaoloVaiheInput {
 input LausuntoPyyntoInput {
   uuid: String!
   poistumisPaiva: String!
-  lisaAineistot: [AineistoInput!]
+  lisaAineistot: [LadattuTiedostoInput!]
   muistiinpano: String
   poistetaan: Boolean
 }
@@ -230,7 +230,7 @@ input LausuntoPyynnonTaydennysInput {
   uuid: String!
   poistumisPaiva: String!
   muistutukset: [LadattuTiedostoInput!]
-  muuAineisto: [AineistoInput!]
+  muuAineisto: [LadattuTiedostoInput!]
   poistetaan: Boolean
 }
 

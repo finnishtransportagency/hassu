@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynto } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const addedAineisto = async () => {
+export const removedLisaAineisto = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPs = [
     {
@@ -12,10 +12,9 @@ export const addedAineisto = async () => {
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -34,14 +33,9 @@ export const addedAineisto = async () => {
         poistumisPaiva: "2022-01-01",
         lisaAineistot: [
           {
-            dokumenttiOid: "foo",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
-            tila: API.AineistoTila.VALMIS,
-          },
-          {
-            dokumenttiOid: "bar",
-            nimi: "aineisto2.txt",
-            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           },
         ],
       },
@@ -54,20 +48,10 @@ export const addedAineisto = async () => {
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           tuotu: "2021-01-01T01:01",
-          jarjestys: undefined,
-          kategoriaId: undefined,
-        },
-        {
-          dokumenttiOid: "bar",
-          nimi: "aineisto2.txt",
-          tila: API.AineistoTila.ODOTTAA_TUONTIA,
-          jarjestys: undefined,
-          kategoriaId: undefined,
         },
       ],
     },
@@ -75,6 +59,6 @@ export const addedAineisto = async () => {
   expect(projektiAdaptationResult.projekti.lausuntoPyynnot).to.eql(expectedLausuntoPyynnot);
   await handleEvents(projektiAdaptationResult);
   expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
-  expect(handleChangedAineistoStub.callCount).to.eql(1);
-  expect(handleChangedTiedostotStub.callCount).to.eql(0);
+  expect(handleChangedAineistoStub.callCount).to.eql(0);
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

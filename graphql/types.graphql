@@ -362,7 +362,7 @@ type LausuntoPyynto {
   uuid: String!
   legacy: LisaAineistoParametrit
   poistumisPaiva: String!
-  lisaAineistot: [Aineisto!]
+  lisaAineistot: [LadattuTiedosto!]
   muistiinpano: String
   hash: String!
   poistetaan: Boolean
@@ -373,7 +373,7 @@ type LausuntoPyynnonTaydennys {
   uuid: String!
   poistumisPaiva: String!
   muistutukset: [LadattuTiedosto!]
-  muuAineisto: [Aineisto!]
+  muuAineisto: [LadattuTiedosto!]
   hash: String!
   poistetaan: Boolean
 }

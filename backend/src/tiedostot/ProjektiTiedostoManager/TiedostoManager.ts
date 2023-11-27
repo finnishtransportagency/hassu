@@ -35,7 +35,8 @@ export abstract class TiedostoManager<T> {
       for (const element of this.getLadatutTiedostot(this.vaihe)) {
         // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
         // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
-        changes = await handleTiedostot(this.oid, element.tiedostot, element.paths);
+        const changesInThisElement = await handleTiedostot(this.oid, element.tiedostot, element.paths);
+        changes = changes || changesInThisElement;
       }
       if (changes) {
         return this.vaihe;

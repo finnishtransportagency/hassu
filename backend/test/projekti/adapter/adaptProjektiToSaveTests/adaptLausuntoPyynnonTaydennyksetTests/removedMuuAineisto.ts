@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const addedAineistoRemovedTiedosto = async () => {
+export const removedMuuAineisto = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPTs = [
     {
@@ -19,7 +19,14 @@ export const addedAineistoRemovedTiedosto = async () => {
           tuotu: "2021-01-01T01:01",
         },
       ],
-      muuAineisto: [],
+      muuAineisto: [
+        {
+          tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
+          nimi: "aineisto.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
+          tuotu: "2021-01-01T01:01",
+        },
+      ],
     },
   ];
   const projektiInDB: DBProjekti = {
@@ -38,14 +45,14 @@ export const addedAineistoRemovedTiedosto = async () => {
           {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
             nimi: "tiedosto.txt",
-            tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            tila: API.LadattuTiedostoTila.VALMIS,
           },
         ],
         muuAineisto: [
           {
-            dokumenttiOid: "foo",
-            nimi: "odottaa_importointia.txt",
-            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
+            nimi: "aineisto.txt",
+            tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           },
         ],
       },
@@ -61,24 +68,23 @@ export const addedAineistoRemovedTiedosto = async () => {
         {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
           nimi: "tiedosto.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
-          nimi: "odottaa_importointia.txt",
-          tila: API.AineistoTila.ODOTTAA_TUONTIA,
-          jarjestys: undefined,
-          kategoriaId: undefined,
+          tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
+          nimi: "aineisto.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+          tuotu: "2021-01-01T01:01",
         },
       ],
     },
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(1);
+  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(0);
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

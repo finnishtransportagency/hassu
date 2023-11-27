@@ -1,4 +1,4 @@
-import { AineistoTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { TiedostoManager, AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, getZipFolder } from ".";
 import { config } from "../../config";
 import { LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../../database/model";
@@ -20,11 +20,17 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut || undefined;
   }
 
-  getLadatutTiedostot(_vaihe: LausuntoPyynto[]): LadattuTiedostoPathsPair[] {
-    return []; //Lausuntopyyntöihin ei liity muita tiedostoja kuin lisäaineistot
+  getLadatutTiedostot(vaihe: LausuntoPyynto[]): LadattuTiedostoPathsPair[] {
+    return (
+      vaihe.reduce((tiedostot, lausuntoPyynto) => {
+        const paths = this.projektiPaths.lausuntoPyynto(lausuntoPyynto);
+        tiedostot.push({ tiedostot: lausuntoPyynto.lisaAineistot, paths, category: "Lisäaineistot", uuid: lausuntoPyynto.uuid });
+        return tiedostot;
+      }, [] as LadattuTiedostoPathsPair[]) || []
+    );
   }
 
-  async handleChanges(): Promise<LausuntoPyynto[] | undefined> {
+  async handleChangedTiedostot(): Promise<LausuntoPyynto[] | undefined> {
     // Hoidetaan poistettavaksi merkittyjen lausuntopyyntöjen aineistojen ja aineistopaketin poistaminen.
     // Sen jälkeen filtteröidään ne pois paluuarvosta.
     // Tässä funktiossa palautettu lausuntopyyntöjen-array tallennetaan kutsuvassa funktiossa projektin lausuntopyynnöiksi,
@@ -47,30 +53,17 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
         }
       });
     }, Promise.resolve());
-    const otherChanges = super.handleChanges();
+    const otherChanges = await super.handleChangedTiedostot();
     return somethingRemoved ? this.vaihe : otherChanges;
   }
 
-  getAineistot(vaihe: LausuntoPyynto[]): AineistoPathsPair[] {
-    return vaihe.reduce((aineistoPathPairs, lausuntoPyynto) => {
-      aineistoPathPairs = aineistoPathPairs.concat(this.getAineisto(lausuntoPyynto));
-      return aineistoPathPairs;
-    }, [] as AineistoPathsPair[]);
-  }
-
-  private getAineisto(lausuntoPyynto: LausuntoPyynto): AineistoPathsPair[] {
-    return [
-      {
-        paths: this.projektiPaths.lausuntoPyynto(lausuntoPyynto),
-        aineisto: lausuntoPyynto.lisaAineistot,
-      },
-    ];
+  getAineistot(): AineistoPathsPair[] {
+    return [];
   }
 
   async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoUuid: string): Promise<LausuntoPyynto | undefined> {
     const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
     if (!lausuntoPyynto) return;
-    const lausuntoPyyntoAineistotPaths = this.getAineisto(lausuntoPyynto);
     const latestHyvaksyttyNahtavillaoloVaiheJulkaisu = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu({
       nahtavillaoloVaiheJulkaisut: this.nahtavillaoloVaiheJulkaisut,
     });
@@ -93,13 +86,15 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
         }
       }
     }
-    for (const aineistot of lausuntoPyyntoAineistotPaths) {
-      if (aineistot.aineisto) {
-        for (const aineisto of aineistot.aineisto) {
-          if (aineisto.tila === AineistoTila.VALMIS) {
-            const categoryFolder = getZipFolder(aineisto.kategoriaId);
-            const folder = "Lisäaineistot/" + (categoryFolder || "");
-            filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: folder });
+    const ladattuTiedostoPathsPairs = this.getLadatutTiedostot([lausuntoPyynto]).filter(
+      (pathsPair) => pathsPair.uuid === lausuntoPyynto.uuid
+    );
+    for (const tiedostotArray of ladattuTiedostoPathsPairs) {
+      if (tiedostotArray.tiedostot && tiedostotArray.paths) {
+        for (const tiedosto of tiedostotArray.tiedostot) {
+          if (tiedosto.tila === LadattuTiedostoTila.VALMIS) {
+            const zipFolder = tiedostotArray.category ? tiedostotArray.category + "/" : undefined;
+            filesToZip.push({ s3Key: this.projektiPaths.yllapitoFullPath + tiedosto.tiedosto, zipFolder });
           }
         }
       }

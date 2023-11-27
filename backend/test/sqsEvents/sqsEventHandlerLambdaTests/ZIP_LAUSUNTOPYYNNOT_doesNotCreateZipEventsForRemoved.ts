@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynto } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import { fakeEventInSqsQueue, stubBasics } from "./util/util";
 import {
@@ -14,21 +14,19 @@ import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 // eventSqsHandlerLambda react to event ZIP_LAUSUNTOPYYNNOT by adding ZIP_LAUSUNTOPYYNTO events, but not for lausuntoPyynto that are marked to be removed
 export const zipLausuntoPyynnotDoesNotCreateZipEventsForRemovedLP = async () => {
   const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ZIP_LAUSUNTOPYYNNOT, projektiOid: "1" });
-  const lisaAineistot1: Aineisto[] = [
+  const lisaAineistot1: LadattuTiedosto[] = [
     {
       tiedosto: "/lausuntopyynto/joku-uuid/Tiedosto%201.txt",
-      dokumenttiOid: "foo",
       nimi: "Tiedosto%201.txt",
-      tila: API.AineistoTila.VALMIS,
+      tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
     },
   ];
-  const lisaAineistot2: Aineisto[] = [
+  const lisaAineistot2: LadattuTiedosto[] = [
     {
       tiedosto: "/lausuntopyynto/joku-toinen-uuid/Tiedosto%202.txt",
-      dokumenttiOid: "bar",
       nimi: "Tiedosto%202.txt",
-      tila: API.AineistoTila.VALMIS,
+      tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
     },
   ];

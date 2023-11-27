@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, LausuntoPyynnonTaydennys } from "../../../src/database/model";
+import { LadattuTiedosto, DBProjekti, LausuntoPyynnonTaydennys } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import { fakeEventInSqsQueue, stubBasics } from "./util/util";
 import * as API from "hassu-common/graphql/apiModel";
@@ -7,12 +7,11 @@ import { expect } from "chai";
 // eventSqsHandlerLambda reacts to event ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET by zipping lausuntoPyynnonTaydennys files of all lausuntoPyynnonTaydennys, even when some have no files
 export const zipLausuntoPyynnonTaydennyksetZipsAllLPTevenWithNoFiles = async () => {
   const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET, projektiOid: "1" });
-  const muuAineisto: Aineisto[] = [
+  const muuAineisto: LadattuTiedosto[] = [
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%201.txt",
-      dokumenttiOid: "foo",
       nimi: "Tiedosto%201.txt",
-      tila: API.AineistoTila.VALMIS,
+      tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
     },
   ];

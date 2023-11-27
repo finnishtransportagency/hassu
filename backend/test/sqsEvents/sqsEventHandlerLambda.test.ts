@@ -1,8 +1,8 @@
 import sinon from "sinon";
 import {
   filesChangedPersistsAndDeletesLausuntoPyynnonTaydennysFiles,
-  aineistoChangedRemovesLausuntoPyynnonTaydennysFiles,
-  aineistoChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChanges,
+  filesChangedRemovesLausuntoPyynnonTaydennysFiles,
+  filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChanges,
   zipLausuntoPyynnonTaydennyksetZipsLPTs,
   zipLausuntoPyyntoZipsLausuntoPyyntoFiles,
   zipLausuntoPyyntoZipsSpecifiedLausuntoPyynto,
@@ -10,8 +10,8 @@ import {
   zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles,
   zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles,
   zipLausuntoPyyntoDoesNotZipNotReadyFiles,
-  aineistoChangedRemovesLausuntoPyynto,
-  aineistoChangedRemovesLausuntoPyyntoAndHandlesChanges,
+  filesChangedRemovesLausuntoPyynto,
+  aineistoAndFilesChangedRemovesLausuntoPyyntoAndHandlesChanges,
   zipNahtavillaoloZipsReadyNahtavillaoloFiles,
   zipLausuntoPyynnonTaydennyksetZipsAllLPTevenWithNoFiles,
   zipLausuntoPyynnotDoesNotCreateZipEventsForRemovedLP,
@@ -33,23 +33,13 @@ describe("sqsEventHandlerLambda handles event", () => {
     filesChangedPersistsAndDeletesLausuntoPyynnonTaydennysFiles
   );
 
-  // AINEISTO_CHANGED tests
+  it("FILES_CHANGED by removing lausuntoPyynnonTaydennys that are marked to be removed", filesChangedRemovesLausuntoPyynnonTaydennysFiles);
+
+  it("FILES_CHANGED by removing lausuntoPyynto that is marked to be removed", filesChangedRemovesLausuntoPyynto);
 
   it(
-    "AINEISTO_CHANGED by removing lausuntoPyynnonTaydennys that are marked to be removed",
-    aineistoChangedRemovesLausuntoPyynnonTaydennysFiles
-  );
-
-  it(
-    "AINEISTO_CHANGED by removing lausuntoPyynnonTaydennys that are marked to be removed and handling changed aineisto for others",
-    aineistoChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChanges
-  );
-
-  it("AINEISTO_CHANGED by removing lausuntoPyynto that is marked to be removed", aineistoChangedRemovesLausuntoPyynto);
-
-  it(
-    "AINEISTO_CHANGED by removing lausuntoPyynto that is marked to be removed and handling changed aineistos",
-    aineistoChangedRemovesLausuntoPyyntoAndHandlesChanges
+    "FILES_CHANGED by removing lausuntoPyynnonTaydennys that are marked to be removed and handling changed aineisto for others",
+    filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChanges
   );
 
   // ZIP_LAUSUNTOPYYNTO tests
@@ -103,6 +93,11 @@ describe("sqsEventHandlerLambda handles event", () => {
   );
 
   // AINEISTO_AND_FILES_CHANGED tests
+
+  it(
+    "AINEISTO_AND_FILES_CHANGED by removing lausuntoPyynto that is marked to be removed and handling changed files",
+    aineistoAndFilesChangedRemovesLausuntoPyyntoAndHandlesChanges
+  );
 
   it(
     "AINEISTO_AND_FILES_CHANGED by handling vuorovaikutusKierrosJulkaisu aineistos",

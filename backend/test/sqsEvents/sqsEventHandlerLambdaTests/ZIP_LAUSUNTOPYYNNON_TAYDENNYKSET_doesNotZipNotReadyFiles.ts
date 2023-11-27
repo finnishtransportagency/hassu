@@ -1,6 +1,6 @@
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
-import { fakeEventInSqsQueue, getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa, stubBasics } from "./util/util";
+import { fakeEventInSqsQueue, getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa, stubBasics } from "./util/util";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 
@@ -30,7 +30,10 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
       tuotu: "2021-06-01T01:02",
     },
   ];
-  const muuAineisto: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa("muu", "lausuntopyynnon_taydennys/joku-uuid");
+  const muuAineisto: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "muu",
+    lausuntoPyynnonTaydennysUuid: "joku-uuid",
+  });
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [
     {
       uuid: "joku-uuid",
@@ -82,12 +85,12 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
     "hassu-localstack-yllapito",
     [
       {
-        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/muu_aineisto_valmis.txt",
-        zipFolder: "Muu aineisto/",
+        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/tiedosto_valmis.txt",
+        zipFolder: "Muistutukset/",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/tiedosto_valmis.txt",
-        zipFolder: "muistutukset/",
+        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/muu_tiedosto_valmis.txt",
+        zipFolder: "Muu aineisto/",
       },
     ],
     "yllapito/tiedostot/projekti/1/lausuntopyynnon_taydennys/joku-uuid/aineisto.zip",

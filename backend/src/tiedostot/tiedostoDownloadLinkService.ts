@@ -61,13 +61,17 @@ class TiedostoDownloadLinkService {
     const aineistot =
       (
         await Promise.all(
-          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          nahtavillaolo?.aineistoNahtavilla
+            ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const lisaAineistot =
       (
         await Promise.all(
-          uusiLausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          uusiLausuntoPyynto?.lisaAineistot
+            ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = "(esikatselu)";
@@ -93,15 +97,17 @@ class TiedostoDownloadLinkService {
     const muutAineistot =
       (
         await Promise.all(
-          uusiLausuntoPyynnonTaydennys?.muuAineisto?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          uusiLausuntoPyynnonTaydennys?.muuAineisto
+            ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const muistutukset =
       (
         await Promise.all(
-          uusiLausuntoPyynnonTaydennys?.muistutukset?.map((aineisto) =>
-            this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)
-          ) || []
+          uusiLausuntoPyynnonTaydennys?.muistutukset
+            ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = "(esikatselu)";
@@ -130,7 +136,7 @@ class TiedostoDownloadLinkService {
     const lisaAineistot =
       (
         await Promise.all(
-          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
@@ -152,8 +158,8 @@ class TiedostoDownloadLinkService {
       (
         await Promise.all(
           lausuntoPyynnonTaydennys?.muuAineisto
-            ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
         )
       ).sort(jarjestaTiedostot) || [];
     const muistutukset =

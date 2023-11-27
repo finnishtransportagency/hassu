@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const removedAineistoRemovedTiedostoButBothNotYetValmis = async () => {
+export const addedMuuAineistoRemovedMuistutus = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPTs = [
     {
@@ -13,18 +13,13 @@ export const removedAineistoRemovedTiedostoButBothNotYetValmis = async () => {
       poistumisPaiva: "2022-01-01",
       muistutukset: [
         {
-          tiedosto: "uploads/345345235.txt",
-          nimi: "odottaa_persistointia.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
+          nimi: "tiedosto.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
+          tuotu: "2021-01-01T01:01",
         },
       ],
-      muuAineisto: [
-        {
-          dokumenttiOid: "foo",
-          nimi: "odottaa_importointia.txt",
-          tila: API.AineistoTila.ODOTTAA_TUONTIA,
-        },
-      ],
+      muuAineisto: [],
     },
   ];
   const projektiInDB: DBProjekti = {
@@ -41,16 +36,16 @@ export const removedAineistoRemovedTiedostoButBothNotYetValmis = async () => {
         poistumisPaiva: "2022-01-01",
         muistutukset: [
           {
-            tiedosto: "uploads/345345235.txt",
-            nimi: "odottaa_persistointia.txt",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
+            nimi: "tiedosto.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           },
         ],
         muuAineisto: [
           {
-            dokumenttiOid: "foo",
-            nimi: "odottaa_importointia.txt",
-            tila: API.AineistoTila.ODOTTAA_POISTOA,
+            tiedosto: "jokupolku/234235345.txt",
+            nimi: "odottaa_persistointia.txt",
+            tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           },
         ],
       },
@@ -64,23 +59,24 @@ export const removedAineistoRemovedTiedostoButBothNotYetValmis = async () => {
       poistumisPaiva: "2022-01-01",
       muistutukset: [
         {
-          tiedosto: "uploads/345345235.txt",
-          nimi: "odottaa_persistointia.txt",
+          tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
+          nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+          tuotu: "2021-01-01T01:01",
         },
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
-          nimi: "odottaa_importointia.txt",
-          tila: API.AineistoTila.ODOTTAA_POISTOA,
+          tiedosto: "jokupolku/234235345.txt",
+          nimi: "odottaa_persistointia.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
       ],
     },
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(1);
+  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(0);
+  expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

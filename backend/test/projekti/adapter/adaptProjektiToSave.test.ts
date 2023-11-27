@@ -1,46 +1,45 @@
 import sinon from "sinon";
 import {
-  addedAineistoAddedTiedosto,
-  removedAineistoRemovedTiedosto,
-  removedAineistoAddedTiedosto,
-  addedAineistoRemovedTiedosto,
-  removedAineistoRemovedTiedostoButBothNotYetValmis,
-  addedAineisto,
-  addedTiedosto,
-  removedAineisto,
+  addedMuuAineistoAndMuistutus,
+  removedMuuAineistoRemovedMuistutus,
+  removedMuuAineistoAddedMuistutus,
+  addedMuuAineistoRemovedMuistutus,
+  removedMuuAineistoRemovedMuistutusButBothNotYetValmis,
+  addedMuuAineisto,
+  addedMuistutus,
+  removedMuuAineisto,
   noChanges,
-  addedTiedostoAgainBeforePersisting,
+  addedMuistutusAgainBeforePersisting,
 } from "./adaptProjektiToSaveTests/adaptLausuntoPyynnonTaydennyksetTests";
-import {
-  addedAineisto as addedAineistoLP,
-  removedAineisto as removedAineistoLP,
-  noChanges as noChangesLP,
-} from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
+import { addedLisaAineisto, removedLisaAineisto, noChanges as noChangesLP } from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
 
 describe("adaptProjektiToSave produces correct events and adapted projekti when saving changes to lausuntoPyynnonTaydennykset", () => {
   afterEach(() => {
     sinon.reset();
     sinon.restore();
   });
-  it("when adding aineisto and adding tiedosto", addedAineistoAddedTiedosto);
+  it("when adding muuAineisto and muistutus", addedMuuAineistoAndMuistutus);
 
-  it("when removing aineisto and removing tiedosto", removedAineistoRemovedTiedosto);
+  it("when removing muuAineisto and removing muistutus", removedMuuAineistoRemovedMuistutus);
 
-  it("when removing aineisto and adding tiedosto", removedAineistoAddedTiedosto);
+  it("when removing muuAineisto and adding muistutus", removedMuuAineistoAddedMuistutus);
 
-  it("when adding tiedosto and removing aineisto", addedAineistoRemovedTiedosto);
+  it("when adding muuAineisto and removing muistutus", addedMuuAineistoRemovedMuistutus);
 
-  it("when removing aineisto and removing tiedosto that are not imported/persisted yet", removedAineistoRemovedTiedostoButBothNotYetValmis);
+  it(
+    "when removing muuAineisto and removing muistutus that are not imported/persisted yet",
+    removedMuuAineistoRemovedMuistutusButBothNotYetValmis
+  );
 
-  it("when adding aineisto", addedAineisto);
+  it("when adding muuAineisto", addedMuuAineisto);
 
-  it("when adding tiedosto", addedTiedosto);
+  it("when adding muistutus", addedMuistutus);
 
-  it("when removing aineisto", removedAineisto);
+  it("when removing muuAineisto", removedMuuAineisto);
 
-  it("when making no changes to aineisto or tiedosto", noChanges);
+  it("when making no changes to muuAineisto or muistutukset", noChanges);
 
-  it("when adding the same tiedosto again, before it has been persisted", addedTiedostoAgainBeforePersisting);
+  it("when adding the same muistutus again, before it has been persisted", addedMuistutusAgainBeforePersisting);
 });
 
 describe("adaptProjektiToSave produces correct events and adapterd projekti when saving changes to lausuntoPyynnot", () => {
@@ -48,9 +47,9 @@ describe("adaptProjektiToSave produces correct events and adapterd projekti when
     sinon.reset();
     sinon.restore();
   });
-  it("when adding aineisto", addedAineistoLP);
+  it("when adding lisaAineisto", addedLisaAineisto);
 
-  it("when removing aineisto", removedAineistoLP);
+  it("when removing aineisto", removedLisaAineisto);
 
-  it("when making no changes to aineisto", noChangesLP);
+  it("when making no changes to lisaAineisto", noChangesLP);
 });
