@@ -16,9 +16,10 @@ import { uuid } from "../util/uuid";
 import { invokeLambda } from "../aws/lambda";
 import { config } from "../config";
 import { NotFoundError } from "hassu-common/error";
+import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
-import { AsianTila, SuunnittelustaVastaavaViranomainen, Vaihe } from "hassu-common/graphql/apiModel";
+import { AsianTila, Vaihe } from "hassu-common/graphql/apiModel";
 import { synkronointiTilaToAsianTilaMap } from "./synkronointiTilaToAsianTilaMap";
 import { DBProjekti } from "../database/model";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
@@ -54,7 +55,7 @@ class AsianhallintaService {
       correlationId: getCorrelationId() || uuid.v4(),
       hyvaksyja: getVaylaUser()?.uid ?? undefined,
       hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.etunimi} ${getVaylaUser()?.sukunimi}` : undefined,
-      asianNimi: projekti.velho?.nimi
+      asianNimi: projekti.velho?.nimi,
     };
     const messageParams: SendMessageRequest = {
       MessageGroupId: oid,
@@ -80,10 +81,9 @@ class AsianhallintaService {
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
     assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
-    const isVaylaAsianhallinta = projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
     const body: CheckAsianhallintaStateCommand = {
       asiatunnus,
-      vaylaAsianhallinta: isVaylaAsianhallinta,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
       asiakirjaTyyppi: vaiheSpecificAsiakirjaTyyppi[vaihe],
       correlationId: getCorrelationId() ?? uuid.v4(),
     };

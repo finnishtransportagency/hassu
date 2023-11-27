@@ -329,7 +329,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
-                  <OhjelistaNotification vaihe={Vaihe.ALOITUSKUULUTUS} open={ohjeetOpen} onClose={ohjeetOnClose}>
+                  <OhjelistaNotification
+                    asianhallintaTiedot={{ vaihe: Vaihe.ALOITUSKUULUTUS, projekti }}
+                    open={ohjeetOpen}
+                    onClose={ohjeetOnClose}
+                  >
                     <li>
                       Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan samana
                       päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
