@@ -2,9 +2,7 @@ import { Vaihe, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuT
 import { statusOrder } from "hassu-common/statusOrder";
 import {
   haeJulkaisunTiedot,
-  haeVaiheenTiedot,
   julkaisuIsVuorovaikutusKierrosLista,
-  vaiheenDataIsVuorovaikutusKierros,
   vaiheOnMuokkausTilassa,
   vaiheToStatus,
 } from "hassu-common/util/haeVaiheidentiedot";
@@ -20,16 +18,12 @@ function vaiheenJulkaisuOdottaaHyvaksyntaa(projekti: Projekti, vaihe: Vaihe): bo
   }
 }
 
-export async function haeAktiivisenVaiheenAsianhallinanTila(
+export async function haeAktiivisenVaiheenAsianhallinnanTila(
   projekti: Projekti
 ): Promise<AktiivisenVaiheenAsianhallinnanTila | null | undefined> {
-  let vaihe = haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti);
+  const vaihe = haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti);
   if (!vaihe) {
     return undefined;
-  }
-
-  if (vaiheOnSuunnitteluJaPalattuNahtavillaolosta(projekti, vaihe)) {
-    vaihe = Vaihe.NAHTAVILLAOLO;
   }
 
   const asianhallintaEnabled = await isProjektiAsianhallintaIntegrationEnabled(projekti);
@@ -41,18 +35,15 @@ export async function haeAktiivisenVaiheenAsianhallinanTila(
   };
 }
 
-function vaiheOnSuunnitteluJaPalattuNahtavillaolosta(projekti: Projekti, vaihe: Vaihe) {
-  if (vaihe === Vaihe.SUUNNITTELU) {
-    const vaiheenTiedot = haeVaiheenTiedot(projekti, vaihe);
-    if (vaiheenDataIsVuorovaikutusKierros(vaiheenTiedot) && vaiheenTiedot.palattuNahtavillaolosta) {
-      return true;
-    }
-  }
-  return false;
-}
-
 function haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti: Projekti) {
   return Object.values(Vaihe)
+    .filter(suodataSuunnitteluvaiheJosPalattuNahtavillaolostaTaiVahainenMenettely(projekti))
     .sort((vaiheA, vaiheB) => statusOrder[vaiheToStatus[vaiheA]] - statusOrder[vaiheToStatus[vaiheB]])
     .find((vaihe) => vaiheOnMuokkausTilassa(projekti, vaihe) || vaiheenJulkaisuOdottaaHyvaksyntaa(projekti, vaihe));
+}
+
+function suodataSuunnitteluvaiheJosPalattuNahtavillaolostaTaiVahainenMenettely(
+  projekti: Projekti
+): (value: Vaihe, index: number, array: Vaihe[]) => boolean {
+  return (vaihe) => vaihe !== Vaihe.SUUNNITTELU || !(projekti.vuorovaikutusKierros?.palattuNahtavillaolosta || projekti.vahainenMenettely);
 }
