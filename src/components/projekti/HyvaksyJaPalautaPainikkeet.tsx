@@ -79,6 +79,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
         projekti={projekti}
         onClose={closeHyvaksy}
         isAineistoMuokkaus={!!julkaisu.aineistoMuokkaus}
+        julkaisu={julkaisu}
         tilasiirtymaTyyppi={tilasiirtymaTyyppi}
       />
     </>
