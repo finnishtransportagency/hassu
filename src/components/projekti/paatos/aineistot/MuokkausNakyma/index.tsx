@@ -4,8 +4,7 @@ import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import AineistoSivunPainikkeet from "../../AineistoSivunPainikkeet";
-import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
+import AineistoSivunPainikkeet from "../../../AineistoSivunPainikkeet";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
@@ -14,6 +13,11 @@ import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjekti
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
+import AineistoLomake from "./AineistoLomake";
+import TiedostoLomake from "./TiedostoLomake";
+import { getDialogInfoText, getSectionInfoText, getSectionTitle } from "./textsForDifferentPaatos";
+import Section from "@components/layout/Section2";
+import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -48,36 +52,6 @@ interface MuokkausnakymaFormProps {
   projekti: ProjektiLisatiedolla;
   paatosTyyppi: PaatosTyyppi;
 }
-
-const hyvaksymisPaatosSuunnitelmatJaAineistotProps: Omit<SuunnitelmatJaAineistotProps, "vaihe"> = {
-  sectionTitle: "Päätös ja päätöksen liitteenä oleva aineisto",
-  sectionInfoText:
-    "Liitä Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Jos päätöksestä on toimitettu kaksi versiota, lisää ei-henkilötietoja sisältävä kuulutusversio. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
-  dialogInfoText: "Valitse tiedostot, jotka haluat tuoda päätöksen liitteeksi.",
-  sectionSubtitle: "Päätöksen liitteenä oleva aineisto",
-  paatos: {
-    paatosInfoText:
-      "Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asiatunnus löytyvät Kuulutuksen tiedot -välilehdellä, jos ne on lisätty Käsittelyn tila -sivulle.",
-    paatosSubtitle: "Päätös *",
-  },
-};
-
-const jatkopaatosPaatosSuunnitelmatProps: Omit<SuunnitelmatJaAineistotProps, "vaihe"> = {
-  ...hyvaksymisPaatosSuunnitelmatJaAineistotProps,
-  sectionInfoText:
-    "Liitä kuulutukselle Liikenne- ja viestintäviraston päätös sekä jatkopäätös. Liitettävät päätökset sekä päätösten liitteenä olevat aineistot haetaan Projektivelhosta. Päätökset ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
-  paatos: {
-    paatosSubtitle: "Päätös ja jatkopäätös *",
-    paatosInfoText:
-      "Liitä Liikenne- ja viestintäviraston päätökset suunnitelman hyväksymisestä sekä päätös suunnitelman voimassaoloajan pidentämisestä. Jatkopäätöksen päivämäärä sekä asiatunnus löytyvät automaattisesti Kuulutuksen tiedot -välilehdeltä.",
-  },
-};
-
-const paatosTyyppiToSuunnitelmatJaAineistotPropsMap: Record<PaatosTyyppi, Omit<SuunnitelmatJaAineistotProps, "vaihe">> = {
-  HYVAKSYMISPAATOS: hyvaksymisPaatosSuunnitelmatJaAineistotProps,
-  JATKOPAATOS1: jatkopaatosPaatosSuunnitelmatProps,
-  JATKOPAATOS2: jatkopaatosPaatosSuunnitelmatProps,
-};
 
 function MuokkausnakymaForm({
   projekti,
@@ -138,7 +112,13 @@ function MuokkausnakymaForm({
     <FormProvider {...useFormReturn}>
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
-          <SuunnitelmatJaAineistot {...paatosTyyppiToSuunnitelmatJaAineistotPropsMap[paatosTyyppi]} vaihe={julkaisematonPaatos} />
+          <Section>
+            <h4 className="vayla-subtitle">{getSectionTitle(paatosTyyppi)}</h4>
+            <p>{getSectionInfoText(paatosTyyppi)}</p>
+            <AineistotSaavutettavuusOhje />
+            <TiedostoLomake vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
+            <AineistoLomake dialogInfoText={getDialogInfoText(paatosTyyppi)} vaihe={undefined} />
+          </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
             muokkausTila={julkaisematonPaatos?.muokkausTila}

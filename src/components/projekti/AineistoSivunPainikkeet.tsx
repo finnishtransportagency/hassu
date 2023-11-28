@@ -12,7 +12,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
-import { HyvaksymisPaatosVaiheAineistotFormValues } from "./paatos/aineistot/Muokkausnakyma";
+import { HyvaksymisPaatosVaiheAineistotFormValues } from "./paatos/aineistot/MuokkausNakyma";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { NahtavilleAsetettavatAineistotFormValues } from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/Muokkausnakyma";
 import HassuDialog from "@components/HassuDialog";
