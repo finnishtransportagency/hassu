@@ -1,14 +1,22 @@
-import { openSearchConfig } from "./openSearchConfig";
 import { HttpRequest } from "@aws-sdk/protocol-http";
+import { openSearchConfig } from "./openSearchConfig";
 import { sendSignedRequest } from "../aws/awsRequest";
 import { log } from "../logger";
-import { Kieli } from "hassu-common/graphql/apiModel";
 
 const domain = openSearchConfig.searchDomain || "search-domain-missing";
 const type = "_doc";
 
+export async function sendRequest(request: HttpRequest): Promise<unknown> {
+  return (await sendSignedRequest(request, "es")).body;
+}
+
 export interface SortOrder {
   order: "asc" | "desc";
+}
+
+export enum OpenSearchIndexType {
+  YLLAPITO = "yllapito",
+  JULKINEN = "julkinen",
 }
 
 export interface SearchOpts {
@@ -19,16 +27,7 @@ export interface SearchOpts {
   aggs?: unknown;
 }
 
-export async function sendRequest(request: HttpRequest): Promise<unknown> {
-  return (await sendSignedRequest(request, "es")).body;
-}
-
-export enum OpenSearchIndexType {
-  YLLAPITO = "yllapito",
-  JULKINEN = "julkinen",
-}
-
-export class OpenSearchClient {
+export default class OpenSearchClient {
   private index: string;
 
   constructor(index: string) {
@@ -156,28 +155,3 @@ export class OpenSearchClient {
     log.info(sendRequest(request));
   }
 }
-
-class OpenSearchClientYllapito extends OpenSearchClient {
-  constructor() {
-    super(openSearchConfig.opensearchYllapitoIndex);
-  }
-}
-
-class OpenSearchClientJulkinen extends OpenSearchClient {
-  constructor(kieli: Kieli) {
-    super(openSearchConfig.opensearchJulkinenIndexPrefix + kieli.toLowerCase());
-  }
-}
-
-class OpenSearchClientIlmoitustauluSyote extends OpenSearchClient {
-  constructor() {
-    super(openSearchConfig.opensearchIlmoitustauluSyoteIndex);
-  }
-}
-
-export const openSearchClientYllapito = new OpenSearchClientYllapito();
-export const openSearchClientJulkinen = {
-  [Kieli.SUOMI]: new OpenSearchClientJulkinen(Kieli.SUOMI),
-  [Kieli.RUOTSI]: new OpenSearchClientJulkinen(Kieli.RUOTSI),
-};
-export const openSearchClientIlmoitustauluSyote = new OpenSearchClientIlmoitustauluSyote();

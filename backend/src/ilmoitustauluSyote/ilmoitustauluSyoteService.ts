@@ -1,5 +1,5 @@
 import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
-import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
+import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClientIlmoitustauluSyote";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
 import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";

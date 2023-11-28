@@ -4,7 +4,7 @@ import { ilmoitustauluSyoteService } from "../../src/ilmoitustauluSyote/ilmoitus
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { projektiAdapterJulkinen } from "../../src/projekti/adapter/projektiAdapterJulkinen";
-import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClient";
+import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
 import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";

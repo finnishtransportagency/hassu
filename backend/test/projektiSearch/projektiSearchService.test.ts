@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
@@ -7,6 +6,8 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
 import { expect } from "chai";
+import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
+import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 
 const fakeSearchResponse = {
   took: 8,

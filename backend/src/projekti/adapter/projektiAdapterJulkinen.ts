@@ -95,7 +95,6 @@ class ProjektiAdapterJulkinen {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
     const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
-
     if (!aloitusKuulutusJulkaisu) {
       return {
         __typename: "ProjektiJulkinen",

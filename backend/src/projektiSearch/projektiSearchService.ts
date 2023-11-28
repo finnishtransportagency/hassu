@@ -6,7 +6,7 @@ import {
   adaptSearchResultsToProjektiHakutulosDokumenttis,
   ProjektiDocument,
 } from "./projektiSearchAdapter";
-import { OpenSearchClient, openSearchClientJulkinen, openSearchClientYllapito, SortOrder } from "./openSearchClient";
+import OpenSearchClient, { SortOrder } from "./openSearchClient";
 import { log, setLogContextOid } from "../logger";
 import {
   Kieli,
@@ -23,6 +23,8 @@ import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulk
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
+import openSearchClientYllapito from "./openSearchClientYllapito";
+import { openSearchClientJulkinen } from "./openSearchClientJulkinen";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
@@ -44,10 +46,9 @@ class ProjektiSearchService {
       await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
       projekti.tallennettu = true;
-
       const apiProjekti = await projektiAdapterJulkinen.adaptProjekti(projekti);
 
-      if (apiProjekti) {
+      if (apiProjekti?.status && Object.keys(Status).indexOf(Status.ALOITUSKUULUTUS) <= Object.keys(Status).indexOf(apiProjekti.status)) {
         await this.addProjektiToJulkinenIndex(apiProjekti, projekti);
       } else {
         await this.removeProjektiFromJulkinenIndex(projekti);
