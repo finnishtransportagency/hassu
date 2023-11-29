@@ -99,22 +99,22 @@ export function Kartta() {
           }),
           new VectorLayer({
             source: vectorSource,
-            opacity: 0.5,
+            opacity: 0.9,
             style: new Style({
               stroke: new Stroke({
-                color: "magenta",
+                color: "#0064AF",
                 width: 10,
               }),
               fill: new Fill({
-                color: "magenta",
+                color: "#0064AF",
               }),
               image: new CircleStyle({
                 radius: 10,
                 fill: new Fill({
-                  color: "magenta",
+                  color: "#0064AF",
                 }),
                 stroke: new Stroke({
-                  color: "magenta",
+                  color: "#0064AF",
                 }),
               }),
             }),
