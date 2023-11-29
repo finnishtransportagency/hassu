@@ -1,4 +1,3 @@
-import { openSearchClientIlmoitustauluSyote, openSearchClientJulkinen, openSearchClientYllapito } from "./openSearchClient";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSearchService } from "./projektiSearchService";
 import projektiSettings from "./projekti-settings.json";
@@ -6,6 +5,9 @@ import projektiMapping from "./projekti-mapping.json";
 import projektiJulkinenMapping from "./projekti-julkinen-mapping.json";
 import { log } from "../logger";
 import { DBProjekti } from "../database/model";
+import openSearchClientYllapito from "./openSearchClientYllapito";
+import { openSearchClientJulkinen } from "./openSearchClientJulkinen";
+import { openSearchClientIlmoitustauluSyote } from "./openSearchClientIlmoitustauluSyote";
 
 export type MaintenanceEvent = {
   action: "deleteIndex" | "index";

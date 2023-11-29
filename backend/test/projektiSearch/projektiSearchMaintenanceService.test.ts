@@ -1,16 +1,14 @@
 import { describe, it } from "mocha";
-import {
-  OpenSearchClient,
-  openSearchClientIlmoitustauluSyote,
-  openSearchClientJulkinen,
-  openSearchClientYllapito,
-} from "../../src/projektiSearch/openSearchClient";
 import * as sinon from "sinon";
 import { expect } from "chai";
 import { ProjektiSearchMaintenanceService } from "../../src/projektiSearch/projektiSearchMaintenanceService";
 import { ProjektiDatabase, projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { parameters } from "../../src/aws/parameters";
+import OpenSearchClient from "../../src/projektiSearch/openSearchClient";
+import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
+import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
+import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 
 describe("ProjektiSearchMaintenanceService", () => {
   let yllapitoStub: sinon.SinonStubbedInstance<OpenSearchClient>;

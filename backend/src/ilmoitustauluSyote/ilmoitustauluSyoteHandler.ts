@@ -1,6 +1,6 @@
 import { Kieli } from "hassu-common/graphql/apiModel";
 import RSS from "rss";
-import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
+import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClientIlmoitustauluSyote";
 import { IlmoitusKuulutus } from "./ilmoitusKuulutus";
 import { translate } from "../util/localization";
 import { kuntametadata } from "hassu-common/kuntametadata";

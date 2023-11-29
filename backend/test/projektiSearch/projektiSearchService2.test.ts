@@ -1,9 +1,4 @@
 import { describe, it } from "mocha";
-import {
-  openSearchClientIlmoitustauluSyote,
-  openSearchClientJulkinen,
-  openSearchClientYllapito,
-} from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
 import {
@@ -24,6 +19,9 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { expect } from "chai";
 import { createSandbox } from "sinon";
 import { parameters } from "../../src/aws/parameters";
+import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
+import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
+import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 
 const sandbox = createSandbox();
 

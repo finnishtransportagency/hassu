@@ -1,12 +1,6 @@
 import { describe, it } from "mocha";
 import { handleDynamoDBEvents } from "../../src/projektiSearch/dynamoDBStreamHandler";
 import { ProjektiSearchFixture } from "./projektiSearchFixture";
-import {
-  OpenSearchClient,
-  openSearchClientIlmoitustauluSyote,
-  openSearchClientJulkinen,
-  openSearchClientYllapito,
-} from "../../src/projektiSearch/openSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import sinon, { SinonStubbedInstance } from "sinon";
 import { expect } from "chai";
@@ -16,6 +10,10 @@ import { mockClient } from "aws-sdk-client-mock";
 import { SQSClient } from "@aws-sdk/client-sqs";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { MaintenanceEvent } from "../../src/projektiSearch/projektiSearchMaintenanceService";
+import OpenSearchClient from "../../src/projektiSearch/openSearchClient";
+import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
+import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
+import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -118,8 +116,10 @@ describe("dynamoDBStreamHandler", () => {
   it("should reindex the database successfully on maintenance event", async () => {
     sinon
       .stub(projektiDatabase, "scanProjektit")
-      .onFirstCall().resolves({ projektis: [projekti1, projekti2], startKey: 'startkey1' })
-      .onSecondCall().resolves({ projektis: [projekti3], startKey: undefined });
+      .onFirstCall()
+      .resolves({ projektis: [projekti1, projekti2], startKey: "startkey1" })
+      .onSecondCall()
+      .resolves({ projektis: [projekti3], startKey: undefined });
     sinon.stub(parameters, "getIndexerSQSUrl").resolves("mockedIndexerSQSUrl");
     const sqsStub = mockClient(SQSClient);
 
