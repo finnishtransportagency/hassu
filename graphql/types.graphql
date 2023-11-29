@@ -663,6 +663,26 @@ type Velho {
   kunnat: [Int!]
   linkki: String
   linkitetytProjektit: [LinkitettyVelhoProjekti!]
+  geometriat: Geometriat
+}
+
+type Geometriat {
+  piirretytGeometriat: [PiirrettyGeometria!]
+  keskipiste: PointGeometry
+}
+
+union PiirrettyGeometria = PointGeometry | PolygonGeometry | LineStringGeometry
+
+type PointGeometry {
+  pointCoordinates: [Float!]!
+}
+
+type PolygonGeometry {
+  polygonCoordinates: [[[Float!]!]!]!
+}
+
+type LineStringGeometry {
+  lineStringCoordinates: [[Float!]!]!
 }
 
 type VelhoJulkinen {
