@@ -11,6 +11,10 @@ import { Vector as VectorSource } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import GeoJSON from "ol/format/GeoJSON.js";
 import { getCenter } from "ol/extent";
+import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style.js";
+import Feature from "ol/Feature.js";
+import { Geometry } from "ol/geom";
+import { Type as GeometryType } from "ol/geom/Geometry";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -95,6 +99,25 @@ export function Kartta() {
           }),
           new VectorLayer({
             source: vectorSource,
+            opacity: 0.5,
+            style: new Style({
+              stroke: new Stroke({
+                color: "magenta",
+                width: 10,
+              }),
+              fill: new Fill({
+                color: "magenta",
+              }),
+              image: new CircleStyle({
+                radius: 10,
+                fill: new Fill({
+                  color: "magenta",
+                }),
+                stroke: new Stroke({
+                  color: "magenta",
+                }),
+              }),
+            }),
           }),
         ],
         view,
