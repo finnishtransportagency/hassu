@@ -35,7 +35,7 @@ export function getSuomiFiAuthenticationURL(): string | undefined {
     url.searchParams.set("redirect_uri", getSuomiFiUri());
     url.searchParams.set("response_type", "TOKEN");
     url.searchParams.set("client_id", clientId);
-    url.searchParams.set("scope", "email openid");
+    url.searchParams.set("scope", "email openid profile");
     return url.toString();
   }
 }

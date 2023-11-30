@@ -84,7 +84,7 @@ const SuomiFiLogin = styled((props) => {
             document.cookie = "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }}
         >
-          {data.email}
+          {data.etunimi} {data.sukunimi}
         </a>
       );
     }

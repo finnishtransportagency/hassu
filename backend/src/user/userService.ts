@@ -124,6 +124,11 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         suomifiEnabled: true,
         tunnistautunut: true,
         email: cognitoKayttaja.email,
+        etunimi: cognitoKayttaja.given_name,
+        sukunimi: cognitoKayttaja.family_name,
+        osoite: cognitoKayttaja.address?.street_address,
+        postinumero: cognitoKayttaja.address?.postal_code,
+        postitoimipaikka: cognitoKayttaja.address?.locality,
       };
     } else {
       return {

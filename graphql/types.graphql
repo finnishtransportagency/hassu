@@ -960,6 +960,11 @@ type SuomifiKayttaja {
   suomifiEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
+  etunimi: String
+  sukunimi: String
+  osoite: String
+  postitoimipaikka: String
+  postinumero: String
 }
 
 type Features {
