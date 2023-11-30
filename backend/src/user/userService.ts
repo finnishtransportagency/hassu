@@ -88,6 +88,10 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   if (response.status === 200) {
     const body = await response.text();
     const user = JSON.parse(body) as SuomiFiCognitoKayttaja;
+    // address is json string
+    if (typeof user.address === "string") {
+      user.address = JSON.parse(user.address as unknown as string);
+    }
     setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {

@@ -38,8 +38,10 @@ function ApiProvider({ children, updateIsUnauthorizedCallback, simultaneousUpdat
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
-  storeKansalaisUserAuthentication(router.asPath);
-
+  const data = storeKansalaisUserAuthentication(router.asPath);
+  if (data?.state) {
+    router.push(data.state);
+  }
   const value: API = useMemo(() => {
     const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
       showErrorMessage(generateErrorMessage({ errorResponse, isYllapito, t }));

@@ -6,13 +6,14 @@ export function storeKansalaisUserAuthentication(hash: string) {
     const idToken = params.get("id_token");
     const tokenType = params.get("token_type");
     const expiresIn = params.get("expires_in");
+    const state = params.get("state");
     if (accessToken && idToken && tokenType && expiresIn) {
       // Store access token to cookie that expires in "expiresId" seconds
       const expires = new Date(Date.now() + parseInt(expiresIn) * 1000);
       // set cookie as Secure AND SameSite=Strict
       const cookie = `x-vls-access-token=${accessToken};expires=${expires.toUTCString()};path=/;Secure;SameSite=Strict`;
       document.cookie = cookie;
-      return cookie;
+      return { cookie, state };
     }
   }
 }
@@ -25,7 +26,7 @@ function getSuomiFiUri() {
   }
 }
 
-export function getSuomiFiAuthenticationURL(): string | undefined {
+export function getSuomiFiAuthenticationURL(state?: string): string | undefined {
   const domain = process.env.SUOMI_FI_COGNITO_DOMAIN;
   const clientId = process.env.SUOMI_FI_USERPOOL_CLIENT_ID;
   if (domain && clientId) {
@@ -36,6 +37,7 @@ export function getSuomiFiAuthenticationURL(): string | undefined {
     url.searchParams.set("response_type", "TOKEN");
     url.searchParams.set("client_id", clientId);
     url.searchParams.set("scope", "email openid profile");
+    url.searchParams.set("state", state ?? "");
     return url.toString();
   }
 }
