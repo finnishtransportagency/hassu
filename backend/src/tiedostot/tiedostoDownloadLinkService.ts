@@ -25,7 +25,7 @@ import { fileService } from "../files/fileService";
 class TiedostoDownloadLinkService {
   private async adaptAineistoToLadattavaTiedosto(oid: string, aineisto: Aineisto): Promise<LadattavaTiedosto> {
     const { jarjestys, kategoriaId } = aineisto;
-    let nimi = aineisto.nimi;
+    const nimi = aineisto.nimi;
     let linkki;
     if (aineisto.tila == AineistoTila.VALMIS) {
       if (!aineisto.tiedosto) {
@@ -35,7 +35,6 @@ class TiedostoDownloadLinkService {
       }
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, aineisto.tiedosto);
     } else {
-      nimi = nimi + " (odottaa tuontia)";
       linkki = "";
     }
     return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
@@ -43,12 +42,11 @@ class TiedostoDownloadLinkService {
 
   private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
     const { jarjestys } = tiedosto;
-    let nimi: string = tiedosto.nimi || "";
+    const nimi: string = tiedosto.nimi || "";
     let linkki;
     if (tiedosto.tuotu) {
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
     } else {
-      nimi = nimi + " (odottaa tuontia)";
       linkki = "";
     }
     return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki };
