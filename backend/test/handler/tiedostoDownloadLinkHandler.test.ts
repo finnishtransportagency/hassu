@@ -315,7 +315,7 @@ describe("tiedostoDownloadLinkHandler", () => {
         },
         {
           __typename: "LadattavaTiedosto",
-          nimi: "aineisto_uusi.txt (odottaa tuontia)",
+          nimi: "aineisto_uusi.txt",
           jarjestys: 3,
           linkki: "",
         },
@@ -367,7 +367,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       muutAineistot: [
         {
           __typename: "LadattavaTiedosto",
-          nimi: "aineisto_4.txt (odottaa tuontia)",
+          nimi: "aineisto_4.txt",
           jarjestys: 1,
           linkki: "",
         },
@@ -387,7 +387,7 @@ describe("tiedostoDownloadLinkHandler", () => {
         },
         {
           __typename: "LadattavaTiedosto",
-          nimi: "tiedosto_1.txt (odottaa tuontia)",
+          nimi: "tiedosto_1.txt",
           jarjestys: 2,
           linkki: "",
         },

@@ -21,7 +21,7 @@ class LisaAineistoService {
 
     async function adaptLisaAineisto(aineisto: Aineisto): Promise<LadattavaTiedosto> {
       const { jarjestys, kategoriaId } = aineisto;
-      let nimi = aineisto.nimi;
+      const nimi = aineisto.nimi;
       let linkki;
       if (aineisto.tila == AineistoTila.VALMIS) {
         if (!aineisto.tiedosto) {
@@ -31,7 +31,6 @@ class LisaAineistoService {
         }
         linkki = await fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
       } else {
-        nimi = nimi + " (odottaa tuontia)";
         linkki = "";
       }
       return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };

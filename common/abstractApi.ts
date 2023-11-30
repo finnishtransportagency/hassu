@@ -510,20 +510,20 @@ export abstract class AbstractApi {
     } as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables);
   }
 
-  async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
-    return await this.callAPI(apiConfig.esikatseleLausuntoPyynnonTiedostot, {
+  async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyynto: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
+    return await this.callYllapitoAPI(apiConfig.esikatseleLausuntoPyynnonTiedostot, {
       oid,
-      lausuntoPyyntoInput,
+      lausuntoPyynto,
     } as EsikatseleLausuntoPyynnonTiedostotQueryVariables);
   }
 
   async esikatseleLausuntoPyynnonTaydennysTiedostot(
     oid: string,
-    lausuntoPyynnonTaydennysInput: LausuntoPyynnonTaydennysInput
+    lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput
   ): Promise<LadattavatTiedostot> {
-    return await this.callAPI(apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot, {
+    return await this.callYllapitoAPI(apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot, {
       oid,
-      lausuntoPyynnonTaydennysInput,
+      lausuntoPyynnonTaydennys,
     } as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables);
   }
 

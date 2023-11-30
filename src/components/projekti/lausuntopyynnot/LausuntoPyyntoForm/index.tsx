@@ -29,6 +29,8 @@ export default function LausuntoPyyntoForm({
     }
   }, [appendToPoistetut, getValues, index, remove]);
 
+  const formDataForThisLink = getValues(`lausuntoPyynnot.${index}`);
+
   return (
     <Section style={{ marginBottom: "6em" }}>
       <Stack direction="row" justifyContent="space-between">
@@ -45,7 +47,7 @@ export default function LausuntoPyyntoForm({
       </Stack>
       <PoistumisPaiva index={index} />
       <Muistiinpano index={index} />
-      <Linkki index={index} projekti={projekti} />
+      <Linkki index={index} projekti={projekti} uuid={formDataForThisLink.uuid} formData={formDataForThisLink} />
       <LisaAineistot index={index} projekti={projekti} />
       <VarmistusDialogi
         dialogiOnAuki={dialogOpen}

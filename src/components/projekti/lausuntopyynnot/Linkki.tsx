@@ -6,8 +6,26 @@ import { useMemo, useRef } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
 import Button from "@components/button/Button";
 import { kuntametadata } from "common/kuntametadata";
+import {
+  LausuntoPyynnonTaydennysLisakentilla,
+  LausuntoPyyntoLisakentilla,
+  adaptLausuntoPyynnonTaydennysLisakentillaToInput,
+  adaptLausuntoPyyntoLisakentillaToLausuntoPyyntoInput,
+} from "./types";
 
-export default function Linkki({ index, projekti, kunta }: Readonly<{ index: number; projekti: ProjektiLisatiedolla; kunta?: number }>) {
+export default function Linkki({
+  index,
+  projekti,
+  kunta,
+  uuid,
+  formData,
+}: Readonly<{
+  index: number;
+  projekti: ProjektiLisatiedolla;
+  kunta?: number;
+  uuid: string;
+  formData: LausuntoPyyntoLisakentilla | LausuntoPyynnonTaydennysLisakentilla;
+}>) {
   const linkRef = useRef<HTMLInputElement>(null);
 
   const lausuntoPyyntoOrTaydennys = kunta ? projekti.lausuntoPyynnonTaydennykset?.[index] : projekti.lausuntoPyynnot?.[index];
@@ -32,6 +50,8 @@ export default function Linkki({ index, projekti, kunta }: Readonly<{ index: num
 
   const buttonDisabled = !projekti.nahtavillaoloVaihe;
 
+  const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
+
   return (
     <SectionContent className="mt-16">
       <h3 className="vayla-subtitle mb-1">{title}</h3>
@@ -39,13 +59,35 @@ export default function Linkki({ index, projekti, kunta }: Readonly<{ index: num
       {kunta && <h4 className="vayla-small-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h4>}
       <Stack direction="row" alignItems="end">
         <TextInput name="linkki" label={inputLabel} style={{ flexGrow: 1 }} disabled value={linkHref || "-"} ref={linkRef} />
+        <a
+          className="hidden"
+          id={`esikatsele-link-${uuid}`}
+          target="_blank"
+          rel="noreferrer"
+          href={`/yllapito/projekti/${projekti.oid}/nahtavillaolo/lausuntopyynto/esikatsele-lausuntopyynnon-${
+            kunta ? "taydennys" : ""
+          }aineistot?uuid=${uuid}`}
+          ref={(e) => {
+            if (hiddenLinkRef) {
+              hiddenLinkRef.current = e;
+            }
+          }}
+        >
+          Hidden link
+        </a>
         <Button
           endIcon="external-link-alt"
           style={{ borderRadius: 0, textTransform: "none" }}
           type="button"
           disabled={buttonDisabled}
           onClick={() => {
-            /* TODO */
+            const adaptedInput = kunta
+              ? adaptLausuntoPyynnonTaydennysLisakentillaToInput(formData as LausuntoPyynnonTaydennysLisakentilla)
+              : adaptLausuntoPyyntoLisakentillaToLausuntoPyyntoInput(formData as LausuntoPyyntoLisakentilla);
+            localStorage.setItem(`lausuntoPyyntoInput.${uuid}`, JSON.stringify(adaptedInput));
+            if (hiddenLinkRef.current) {
+              hiddenLinkRef.current.click();
+            }
           }}
         >
           Esikatsele
