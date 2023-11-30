@@ -12,9 +12,7 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import GeoJSON from "ol/format/GeoJSON.js";
 import { getCenter } from "ol/extent";
 import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style.js";
-import Feature from "ol/Feature.js";
-import { Geometry } from "ol/geom";
-import { Type as GeometryType } from "ol/geom/Geometry";
+import { ZoomToExtent, defaults as defaultControls } from "ol/control.js";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -74,17 +72,14 @@ export function Kartta() {
   const mapElement = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   useEffect(() => {
+    const extent = vectorSource.getExtent();
     if (!mapRef.current) {
-      const view = new View({
-        projection,
-        center: getCenter(vectorSource.getExtent()),
-        resolutions,
-        resolution: 1,
-        extent: [61000, 6605000, 733000, 7777000],
-        constrainOnlyCenter: true,
-      });
-      view.fit(vectorSource.getExtent());
       mapRef.current = new Map({
+        controls: defaultControls({ rotate: false }).extend([
+          new ZoomToExtent({
+            extent: extent,
+          }),
+        ]),
         layers: [
           new TileLayer({
             source: new XYZ({
@@ -120,11 +115,19 @@ export function Kartta() {
             }),
           }),
         ],
-        view,
+        view: new View({
+          projection,
+          center: getCenter(extent),
+          resolutions,
+          resolution: 128,
+          extent: [61000, 6605000, 733000, 7777000],
+          constrainResolution: true,
+        }),
       });
     }
     if (mapElement.current && mapRef.current) {
       mapRef.current.setTarget(mapElement.current);
+      mapRef.current.getView().fit(extent);
     }
   }, []);
 
