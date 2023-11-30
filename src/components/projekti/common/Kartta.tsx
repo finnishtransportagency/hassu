@@ -11,8 +11,12 @@ import { Vector as VectorSource } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import GeoJSON from "ol/format/GeoJSON.js";
 import { getCenter } from "ol/extent";
-import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style.js";
+import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
 import { ZoomToExtent, FullScreen, defaults as defaultControls } from "ol/control.js";
+import { styled } from "@mui/system";
+import ReactDOM from "react-dom";
+import React from "react";
+import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -68,6 +72,17 @@ const vectorSource = new VectorSource({
   ],
 });
 
+const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
+  const element = document.createElement("span");
+  ReactDOM.render(
+    <React.StrictMode>
+      <FontAwesomeIcon icon={icon} color="#0064af" />
+    </React.StrictMode>,
+    element
+  );
+  return element;
+};
+
 export function Kartta() {
   const mapElement = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -75,11 +90,15 @@ export function Kartta() {
     const extent = vectorSource.getExtent();
     if (!mapRef.current) {
       mapRef.current = new Map({
-        controls: defaultControls({ rotate: false }).extend([
+        controls: defaultControls({
+          rotate: false,
+          zoomOptions: { zoomInLabel: createIconSpan("plus"), zoomOutLabel: createIconSpan("minus") },
+        }).extend([
           new ZoomToExtent({
             extent: extent,
+            label: createIconSpan("map-marker-alt"),
           }),
-          new FullScreen(),
+          new FullScreen({ label: createIconSpan("expand-alt"), labelActive: createIconSpan("times") }),
         ]),
         layers: [
           new TileLayer({
@@ -99,18 +118,13 @@ export function Kartta() {
             style: new Style({
               stroke: new Stroke({
                 color: "#0064AF",
-                width: 10,
-              }),
-              fill: new Fill({
-                color: "#0064AF",
+                width: 8,
               }),
               image: new CircleStyle({
-                radius: 10,
-                fill: new Fill({
-                  color: "#0064AF",
-                }),
+                radius: 12,
                 stroke: new Stroke({
                   color: "#0064AF",
+                  width: 8,
                 }),
               }),
             }),
@@ -132,5 +146,17 @@ export function Kartta() {
     }
   }, []);
 
-  return <div id="map" style={{ height: "300px" }} ref={mapElement} />;
+  return <StyledMap id="map" ref={mapElement} />;
 }
+
+const StyledMap = styled("div")({
+  height: "300px",
+  "& .ol-control button": {
+    backgroundColor: "white",
+    borderRadius: "4px",
+    width: "32px",
+    height: "32px",
+    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.2), 0 2px 15px -3px rgb(0 0 0 / 0.2)",
+    margin: "4px",
+  },
+});
