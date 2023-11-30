@@ -42,7 +42,12 @@ export class ProjektiTiedostoManager {
   }
 
   getLausuntoPyynnot(): LausuntoPyyntoTiedostoManager {
-    return new LausuntoPyyntoTiedostoManager(this.projekti.oid, this.projekti.lausuntoPyynnot, this.projekti.nahtavillaoloVaiheJulkaisut);
+    return new LausuntoPyyntoTiedostoManager(
+      this.projekti.oid,
+      this.projekti.lausuntoPyynnot,
+      this.projekti.nahtavillaoloVaihe,
+      this.projekti.nahtavillaoloVaiheJulkaisut
+    );
   }
 
   getLausuntoPyynnonTaydennykset(): LausuntoPyynnonTaydennyksetTiedostoManager {
