@@ -12,7 +12,7 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import GeoJSON from "ol/format/GeoJSON.js";
 import { getCenter } from "ol/extent";
 import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style.js";
-import { ZoomToExtent, defaults as defaultControls } from "ol/control.js";
+import { ZoomToExtent, FullScreen, defaults as defaultControls } from "ol/control.js";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -79,6 +79,7 @@ export function Kartta() {
           new ZoomToExtent({
             extent: extent,
           }),
+          new FullScreen(),
         ]),
         layers: [
           new TileLayer({
@@ -131,5 +132,5 @@ export function Kartta() {
     }
   }, []);
 
-  return <div id="map" style={{ width: "300px", height: "300px" }} ref={mapElement}></div>;
+  return <div id="map" style={{ height: "300px" }} ref={mapElement} />;
 }
