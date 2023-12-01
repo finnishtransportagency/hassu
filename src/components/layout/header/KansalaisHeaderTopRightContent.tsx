@@ -64,7 +64,7 @@ const LanguageSelector = styled(({ locale, activeLocale, setAsActiveLocale, ...p
 const SuomiFiLogin = styled((props) => {
   const { data } = useSuomifiUser();
   if (data?.suomifiEnabled) {
-    if (!data.email) {
+    if (!data.tunnistautunut) {
       const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL();
       if (!suomiFiAuthenticationURL) {
         return <></>;
