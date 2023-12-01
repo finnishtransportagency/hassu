@@ -225,6 +225,7 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
       linkitetytProjektit: linkitetytProjektit ? getLinkitetytProjektit(linkitetytProjektit) : null,
+      geoJSON: data.geometrycollection ? JSON.stringify(data.geometrycollection) : null,
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],

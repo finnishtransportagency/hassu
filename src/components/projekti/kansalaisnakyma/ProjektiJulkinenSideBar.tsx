@@ -8,7 +8,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
-import { Kartta } from "../common/Kartta";
+import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 
 const ProjektiSideNavigation = styled((props) => {
@@ -77,8 +77,12 @@ const ProjektiSideNavigation = styled((props) => {
         </SideCardContent>
       </SideCard>
       <SideCard>
-        <SideCardHeading>Suomiruotsi</SideCardHeading>
-        <Kartta />
+        {projekti.velho.geoJSON && (
+          <>
+            <SideCardHeading>{t("suunnitelma_kartalla")}</SideCardHeading>
+            <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+          </>
+        )}
       </SideCard>
     </Section>
   );
