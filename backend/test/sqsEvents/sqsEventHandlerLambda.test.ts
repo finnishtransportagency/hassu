@@ -18,6 +18,7 @@ import {
   zipLausuntoPyyntoDoesNothingForRemoved,
   aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu,
   aineistoAndFilesChangesHandlesCorrectlyLPTs,
+  filesChangedPersistsLausuntoPyyntoFiles,
 } from "./sqsEventHandlerLambdaTests";
 
 describe("sqsEventHandlerLambda handles event", () => {
@@ -41,6 +42,8 @@ describe("sqsEventHandlerLambda handles event", () => {
     "FILES_CHANGED by removing lausuntoPyynnonTaydennys that are marked to be removed and handling changed aineisto for others",
     filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChanges
   );
+
+  it("FILES_CHANGED by persisting lausuntoPyynto files when there is one lausuntoPyynto", filesChangedPersistsLausuntoPyyntoFiles);
 
   // ZIP_LAUSUNTOPYYNTO tests
 

@@ -146,7 +146,7 @@ export class FileService {
     const filePath = FileService.removePrefixFromFile(param.uploadedFileSource);
     const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
 
-    const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
+    const fileNameFromUpload = FileService.removeBucketFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
     try {
@@ -288,8 +288,8 @@ export class FileService {
     }
   }
 
-  private static getFileNameFromPath(uploadedFilePath: string): string {
-    return uploadedFilePath.replace(/^[0-9a-z-]+\//, "");
+  private static removeBucketFromPath(uploadedFilePath: string): string {
+    return uploadedFilePath.replace(/^\/?[.0-9a-z-]+\//, "");
   }
 
   private static removePrefixFromFile(uploadedFileSource: string) {

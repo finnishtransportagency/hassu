@@ -190,4 +190,50 @@ describe("adaptLausuntoPyynnot:", () => {
       },
     ]);
   });
+
+  it("adaptLausuntoPyynnot adapt non-persisted files succesfully", () => {
+    const dbProjekti: DBProjekti = {
+      oid: "1.2.246.578.5.1.2978288874.2711575506",
+      salt: "salt",
+    } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
+    const lausuntoPyynto: LausuntoPyynto = {
+      aineistopaketti: "/lausuntopyynto/ee626b8b-e719-4d47-b161-06f7455614b4/aineisto.zip",
+      muistiinpano: "ff",
+      poistumisPaiva: "2023-11-16",
+      uuid: "ee626b8b-e719-4d47-b161-06f7455614b4",
+      lisaAineistot: [
+        {
+          nimi: "Screenshot 2023-09-29 at 17.59.03.png",
+          jarjestys: 0,
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          tiedosto: "/e6169b47-2035-40e5-9343-46fec03f7e95/Screenshot 2023-09-29 at 17.59.03.png",
+        },
+        {
+          nimi: "Screenshot 2023-09-28 at 12.24.31.png",
+          jarjestys: 1,
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          tiedosto: "/e9ab1d6a-e8fd-4796-adea-d8e8e55e3481/Screenshot 2023-09-28 at 12.24.31.png",
+        },
+      ],
+    };
+    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
+    expect(adaptedLausuntoPyynto.lisaAineistot).to.eql([
+      {
+        __typename: "LadattuTiedosto",
+        tiedosto: "/e6169b47-2035-40e5-9343-46fec03f7e95/Screenshot 2023-09-29 at 17.59.03.png",
+        nimi: "Screenshot 2023-09-29 at 17.59.03.png",
+        tila: "ODOTTAA_PERSISTOINTIA",
+        jarjestys: 0,
+        tuotu: undefined,
+      },
+      {
+        __typename: "LadattuTiedosto",
+        tiedosto: "/e9ab1d6a-e8fd-4796-adea-d8e8e55e3481/Screenshot 2023-09-28 at 12.24.31.png",
+        nimi: "Screenshot 2023-09-28 at 12.24.31.png",
+        tila: "ODOTTAA_PERSISTOINTIA",
+        jarjestys: 1,
+        tuotu: undefined,
+      },
+    ]);
+  });
 });

@@ -49,7 +49,7 @@ export function adaptLadattuTiedostoToAPI(
     let fullPath: string = tiedosto;
     if (julkinen) {
       fullPath = fileService.getPublicPathForProjektiFile(projektiPath, tiedosto);
-    } else if (ladattuTiedosto.tila !== API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA) {
+    } else if (ladattuTiedosto.tila === API.LadattuTiedostoTila.VALMIS) {
       fullPath = fileService.getYllapitoPathForProjektiFile(projektiPath, tiedosto);
     }
     if (!fullPath.startsWith("/")) {
