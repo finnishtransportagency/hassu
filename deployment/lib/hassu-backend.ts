@@ -577,7 +577,15 @@ export class HassuBackendStack extends Stack {
 
     this.props.yllapitoBucket.grantReadWrite(importer);
     this.props.publicBucket.grantReadWrite(importer);
+    this.props.uploadBucket.grantRead(importer);
 
+    importer.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
     if (frontendStackOutputs?.CloudfrontDistributionId) {
       importer.addToRolePolicy(
         new PolicyStatement({
