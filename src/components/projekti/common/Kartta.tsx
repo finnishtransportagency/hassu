@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import Projection from "ol/proj/Projection";
@@ -12,11 +12,13 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import GeoJSON from "ol/format/GeoJSON.js";
 import { getCenter } from "ol/extent";
 import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
-import { ZoomToExtent, FullScreen, defaults as defaultControls } from "ol/control.js";
+import { ZoomToExtent, defaults as defaultControls } from "ol/control.js";
+import FullScreen from "ol/control/FullScreen";
 import { styled } from "@mui/system";
 import ReactDOM from "react-dom";
 import React from "react";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
+import { defaults as defaultInteractions } from "ol/interaction";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -76,7 +78,7 @@ const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
   const element = document.createElement("span");
   ReactDOM.render(
     <React.StrictMode>
-      <FontAwesomeIcon icon={icon} color="#0064af" />
+      <FontAwesomeIcon icon={icon} size="lg" color="#0064af" />
     </React.StrictMode>,
     element
   );
@@ -86,6 +88,7 @@ const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
 export function Kartta() {
   const mapElement = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
+  const [isFullScreen, setIsFullscreen] = useState(false);
   useEffect(() => {
     const extent = vectorSource.getExtent();
     if (!mapRef.current) {
@@ -138,6 +141,7 @@ export function Kartta() {
           extent: [61000, 6605000, 733000, 7777000],
           constrainResolution: true,
         }),
+        interactions: defaultInteractions(),
       });
     }
     if (mapElement.current && mapRef.current) {
@@ -146,17 +150,93 @@ export function Kartta() {
     }
   }, []);
 
-  return <StyledMap id="map" ref={mapElement} />;
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.getView().fit(vectorSource.getExtent());
+    }
+  }, [isFullScreen]);
+
+  const openMapFullScreen = useCallback(() => {
+    mapElement.current?.requestFullscreen();
+  }, []);
+
+  return (
+    <StyledMap id="map" isFullScreen={isFullScreen} ref={mapElement}>
+      <MobileOverlay isFullScreen={isFullScreen} onClick={openMapFullScreen} />
+    </StyledMap>
+  );
 }
 
-const StyledMap = styled("div")({
-  height: "300px",
-  "& .ol-control button": {
-    backgroundColor: "white",
-    borderRadius: "4px",
-    width: "32px",
-    height: "32px",
-    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.2), 0 2px 15px -3px rgb(0 0 0 / 0.2)",
-    margin: "4px",
+const MobileOverlay = styled("div")<{ isFullScreen: boolean }>(({ theme, isFullScreen }) => ({
+  display: "none",
+  [theme.breakpoints.down("md")]: {
+    display: isFullScreen ? "none" : "block",
+    cursor: isFullScreen ? "initial" : "pointer",
+    position: "absolute",
+    inset: 0,
+    zIndex: 1,
   },
-});
+}));
+
+const StyledMap = styled("div")<{ isFullScreen: boolean }>(({ theme, isFullScreen }) => ({
+  height: "300px",
+  zIndex: 0,
+  position: "relative",
+  "& .ol-control": {
+    display: "inline-block",
+    backgroundColor: "white",
+    position: "absolute",
+    borderRadius: "4px",
+    boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
+    right: isFullScreen ? "8px" : "24px",
+    margin: "4px",
+    [theme.breakpoints.down("md")]: {
+      display: isFullScreen ? "inline-block" : "none",
+    },
+    "& > button": {
+      width: "40px",
+      height: "40px",
+    },
+    "&.ol-full-screen": {
+      top: "16px",
+      [theme.breakpoints.up("md")]: {
+        display: isFullScreen ? "inline-block" : "none",
+      },
+    },
+    "&.ol-zoom-extent": {
+      bottom: "126px",
+    },
+    "&.ol-zoom": {
+      display: "flex",
+      [theme.breakpoints.down("md")]: {
+        display: isFullScreen ? "flex" : "none",
+      },
+      flexDirection: "column",
+      "& > button": {
+        height: "48px",
+        "&.ol-zoom-out": {
+          position: "relative",
+          "&::before": {
+            content: "''",
+            position: "absolute",
+            display: "block",
+            top: "-0.5px",
+            right: "3px",
+            left: "3px",
+            height: "1px",
+            backgroundColor: "#D8D8D8",
+          },
+        },
+      },
+      bottom: "16px",
+    },
+  },
+}));
