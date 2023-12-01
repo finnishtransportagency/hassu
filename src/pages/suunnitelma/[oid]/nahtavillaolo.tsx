@@ -23,6 +23,8 @@ import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useSuomifiUser from "src/hooks/useSuomifiUser";
+import { getSuomiFiAuthenticationURL } from "@services/userService";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -44,10 +46,11 @@ export default function Nahtavillaolo(): ReactElement {
   };
 
   const velho = projekti?.velho;
-  const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
+  const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(router.asPath.indexOf("#muistutus") !== -1);
   const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(true);
 
   const kieli = useKansalaiskieli();
+  const { data: kayttaja } = useSuomifiUser();
 
   if (!projekti || !kuulutus || !velho) {
     return <></>;
@@ -81,6 +84,8 @@ export default function Nahtavillaolo(): ReactElement {
   const kuulutusTekstit = projekti.nahtavillaoloVaihe?.kuulutusTekstit;
 
   const nahtavillaoloKuulutusPDFPath = kuulutus.kuulutusPDF?.[kieli];
+
+  const authUrl = getSuomiFiAuthenticationURL(`/suunnitelma/${projekti?.oid}/nahtavillaolo#muistutus`);
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
@@ -170,12 +175,22 @@ export default function Nahtavillaolo(): ReactElement {
               <br />
               <p>{t("muistutuslomake.muistutus_info_2")}</p>
             </Notification>
-            <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
+            <JataPalautettaNappi
+              teksti={t("muistutuslomake.jata_muistutus")}
+              onClick={() => {
+                if (!kayttaja?.suomifiEnabled || kayttaja?.tunnistautunut || !authUrl) {
+                  setMuistutusLomakeOpen(true);
+                } else {
+                  router.push(authUrl)
+                }
+              }}
+            />
             <MuistutusLomakeDialogi
               nahtavillaolo={kuulutus}
               open={muistutusLomakeOpen}
               onClose={() => setMuistutusLomakeOpen(false)}
               projekti={projekti}
+              kayttaja={kayttaja}
             />
           </ContentSpacer>
         )}

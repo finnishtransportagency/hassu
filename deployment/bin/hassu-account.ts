@@ -4,7 +4,7 @@ import { App } from "aws-cdk-lib";
 
 async function main() {
   const app = new App();
-  new HassuAccountStack(app);
+  await new HassuAccountStack(app).main();
 
   app.synth();
 }

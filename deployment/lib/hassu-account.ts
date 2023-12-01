@@ -9,6 +9,7 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import * as athena from "aws-cdk-lib/aws-athena";
+import { BastionHostLinux, InstanceInitiatedShutdownBehavior, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -27,6 +28,7 @@ export class HassuAccountStack extends Stack {
       terminationProtection: true,
       env: {
         region: "eu-west-1",
+        account: process.env.CDK_DEFAULT_ACCOUNT,
       },
       tags: Config.tags,
     });
@@ -34,10 +36,30 @@ export class HassuAccountStack extends Stack {
     if (!Config.isDevAccount() && !Config.isProdAccount()) {
       throw new Error("Only dev and prod accounts are supported");
     }
+  }
+
+  async main() {
+    const config = await Config.instance(this);
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureSNSForAlarms();
     this.configureAthenaForLogs();
+    if (Config.isDevAccount()) {
+      await this.createBastionHost(config);
+    }
+  }
+
+  private async createBastionHost(config: Config) {
+    // Bastion host that allows connection from systems manager
+    const vpcName = await config.getParameterNow("HassuVpcName");
+    const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
+    const bastionHost = new BastionHostLinux(this, "BastionHost", {
+      vpc,
+      subnetSelection: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
+      instanceName: "vls-bastion",
+    });
+    bastionHost.instance.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    bastionHost.instance.instance.instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.STOP;
   }
 
   private configureOpenSearch() {

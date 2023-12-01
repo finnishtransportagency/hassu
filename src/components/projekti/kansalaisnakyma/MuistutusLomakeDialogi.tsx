@@ -12,6 +12,7 @@ import {
   MuistutusInput,
   NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
+  SuomifiKayttaja,
   SuunnittelustaVastaavaViranomainen,
 } from "@services/api";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
@@ -37,6 +38,7 @@ interface Props {
   onClose: () => void;
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
   projekti: ProjektiJulkinen;
+  kayttaja?: SuomifiKayttaja
 }
 
 interface MuistutusFormInput {
@@ -55,18 +57,25 @@ const defaultValues = {
   liite: null,
 };
 
-export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtavillaolo }: Props): ReactElement {
+export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtavillaolo, kayttaja }: Props): ReactElement {
   const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
-
+  const newDefaultValues = {
+    etunimi: kayttaja?.etunimi ?? "",
+    sukunimi: kayttaja?.sukunimi ?? "",
+    katuosoite: kayttaja?.osoite ?? "",
+    postinumeroJaPostitoimipaikka: `${kayttaja?.postinumero ?? ""} ${kayttaja?.postitoimipaikka ?? ""}`.trim(),
+    sahkoposti: kayttaja?.email ?? "",
+    ...defaultValues,
+  };
   const formOptions: UseFormProps<MuistutusFormInput> = {
     resolver: yupResolver(muistutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues,
+    defaultValues: newDefaultValues,
   };
   const { showSuccessMessage } = useSnackbars();
   const useFormReturn = useForm<MuistutusFormInput>(formOptions);

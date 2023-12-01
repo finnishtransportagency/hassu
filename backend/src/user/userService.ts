@@ -88,6 +88,10 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   if (response.status === 200) {
     const body = await response.text();
     const user = JSON.parse(body) as SuomiFiCognitoKayttaja;
+    // address is json string
+    if (typeof user.address === "string") {
+      user.address = JSON.parse(user.address as unknown as string);
+    }
     setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {
@@ -124,6 +128,11 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         suomifiEnabled: true,
         tunnistautunut: true,
         email: cognitoKayttaja.email,
+        etunimi: cognitoKayttaja.given_name,
+        sukunimi: cognitoKayttaja.family_name,
+        osoite: cognitoKayttaja.address?.street_address,
+        postinumero: cognitoKayttaja.address?.postal_code,
+        postitoimipaikka: cognitoKayttaja.address?.locality,
       };
     } else {
       return {

@@ -64,7 +64,7 @@ const LanguageSelector = styled(({ locale, activeLocale, setAsActiveLocale, ...p
 const SuomiFiLogin = styled((props) => {
   const { data } = useSuomifiUser();
   if (data?.suomifiEnabled) {
-    if (!data.email) {
+    if (!data.tunnistautunut) {
       const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL();
       if (!suomiFiAuthenticationURL) {
         return <></>;
@@ -84,7 +84,7 @@ const SuomiFiLogin = styled((props) => {
             document.cookie = "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }}
         >
-          {data.email}
+          {data.etunimi} {data.sukunimi}
         </a>
       );
     }
