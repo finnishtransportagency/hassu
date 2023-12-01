@@ -1,7 +1,7 @@
 import sinon from "sinon";
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynto } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
-import { fakeEventInSqsQueue, getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa, stubBasics } from "./util/util";
+import { fakeEventInSqsQueue, getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa, stubBasics } from "./util/util";
 import {
   hyvaksymatonNahtavillaoloJulkaisuAineistoB,
   hyvaksyttyNahtavillaoloJulkaisuAineistoA,
@@ -11,10 +11,13 @@ import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../src/files/fileService";
 import { expect } from "chai";
 
-// eventSqsHandlerLambda reacts to event AINEISTO_CHANGED by removing lausuntoPyynto that is marked to be removed
-export const aineistoChangedRemovesLausuntoPyynto = async () => {
-  const handler = fakeEventInSqsQueue({ eventType: SqsEventType.AINEISTO_CHANGED, projektiOid: "1" });
-  const lisaAineistot: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa("lisa", "lausuntopyynto/joku-uuid");
+// eventSqsHandlerLambda reacts to event FILES_CHANGED by removing lausuntoPyynto that is marked to be removed
+export const filesChangedRemovesLausuntoPyynto = async () => {
+  const handler = fakeEventInSqsQueue({ eventType: SqsEventType.FILES_CHANGED, projektiOid: "1" });
+  const lisaAineistot: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "lisa",
+    lausuntoPyyntoUuid: "joku-uuid",
+  });
   const lausuntoPyynnot: LausuntoPyynto[] = [
     {
       uuid: "joku-uuid",

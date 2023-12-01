@@ -1,7 +1,7 @@
-import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
-import { TiedostoManager, AineistoPathsPair, getZipFolder } from ".";
+import { LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { TiedostoManager, AineistoPathsPair } from ".";
 import { config } from "../../config";
-import { LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../database/model";
+import { LausuntoPyynnonTaydennys } from "../../database/model";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
@@ -15,26 +15,32 @@ export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<
     }, [] as AineistoPathsPair[]);
   }
 
-  private getAineisto(lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys): AineistoPathsPair[] {
-    return [
-      {
-        paths: this.projektiPaths.lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys),
-        aineisto: lausuntoPyynnonTaydennys.muuAineisto,
-      },
-    ];
+  private getAineisto(_lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys): AineistoPathsPair[] {
+    return [];
   }
 
   getLadatutTiedostot(vaihe: LausuntoPyynnonTaydennys[]): LadattuTiedostoPathsPair[] {
     return (
       vaihe.reduce((tiedostot, lausuntoPyynnonTaydennys) => {
         const paths = this.projektiPaths.lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys);
-        tiedostot.push({ tiedostot: lausuntoPyynnonTaydennys.muistutukset, paths });
+        tiedostot.push({
+          tiedostot: lausuntoPyynnonTaydennys.muistutukset,
+          paths,
+          category: "Muistutukset",
+          uuid: lausuntoPyynnonTaydennys.uuid,
+        });
+        tiedostot.push({
+          tiedostot: lausuntoPyynnonTaydennys.muuAineisto,
+          paths,
+          category: "Muu aineisto",
+          uuid: lausuntoPyynnonTaydennys.uuid,
+        });
         return tiedostot;
       }, [] as LadattuTiedostoPathsPair[]) || []
     );
   }
 
-  async handleChanges(): Promise<LausuntoPyynnonTaydennys[] | undefined> {
+  async handleChangedTiedostot(): Promise<LausuntoPyynnonTaydennys[] | undefined> {
     // Hoidetaan poistettavaksi merkittyjen lausuntopyyntöjen täydennysten aineistojen ja aineistopaketin poistaminen.
     // Sen jälkeen filtteröidään ne pois paluuarvosta.
     // Tässä funktiossa palautettu lausuntopyyntöjen täydennykset -array tallennetaan kutsuvassa funktiossa projektin lausuntopyyntöjen täydennyksiksi,
@@ -57,7 +63,7 @@ export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<
         }
       });
     }, Promise.resolve());
-    const otherChanges = super.handleChanges();
+    const otherChanges = await super.handleChangedTiedostot();
     return somethingRemoved ? this.vaihe : otherChanges;
   }
 
@@ -68,26 +74,21 @@ export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<
 
     if (!lausuntoPyynnonTaydennys) return;
 
-    const aineistotPaths = this.getAineisto(lausuntoPyynnonTaydennys);
     const filesToZip: ZipSourceFile[] = [];
-    const yllapitoPath = this.projektiPaths.yllapitoFullPath;
-    for (const aineistot of aineistotPaths) {
-      if (aineistot.aineisto) {
-        for (const aineisto of aineistot.aineisto) {
-          if (aineisto.tila === AineistoTila.VALMIS) {
-            const categoryFolder = getZipFolder(aineisto.kategoriaId);
-            const folder = "Muu aineisto/" + (categoryFolder || "");
-            filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: folder });
+    const ladattuTiedostoPathsPairs = this.getLadatutTiedostot([lausuntoPyynnonTaydennys]).filter(
+      (pathsPair) => pathsPair.uuid === lausuntoPyynnonTaydennys.uuid
+    );
+    for (const tiedostotArray of ladattuTiedostoPathsPairs) {
+      if (tiedostotArray.tiedostot && tiedostotArray.paths) {
+        for (const tiedosto of tiedostotArray.tiedostot) {
+          if (tiedosto.tila === LadattuTiedostoTila.VALMIS) {
+            const zipFolder = tiedostotArray.category ? tiedostotArray.category + "/" : undefined;
+            filesToZip.push({ s3Key: this.projektiPaths.yllapitoFullPath + tiedosto.tiedosto, zipFolder });
           }
         }
       }
     }
-    const muistutuksetArray: LadattuTiedosto[] = this.getLadatutTiedostot([lausuntoPyynnonTaydennys])[0].tiedostot || [];
-    for (const muistutus of muistutuksetArray) {
-      if (muistutus.tila === LadattuTiedostoTila.VALMIS) {
-        filesToZip.push({ s3Key: yllapitoPath + muistutus.tiedosto, zipFolder: "muistutukset/" });
-      }
-    }
+
     await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
   }
 }

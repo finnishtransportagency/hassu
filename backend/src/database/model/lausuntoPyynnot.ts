@@ -1,10 +1,10 @@
-import { Aineisto, LadattuTiedosto } from "./common";
+import { LadattuTiedosto } from "./common";
 
 export type LausuntoPyynto = {
   uuid: string;
   legacy?: number; //nahtavillaoloVaiheId
   poistumisPaiva: string;
-  lisaAineistot?: Array<Aineisto>;
+  lisaAineistot?: Array<LadattuTiedosto>;
   aineistopaketti?: string;
   muistiinpano?: string;
   poistetaan?: boolean;
@@ -15,7 +15,7 @@ export type LausuntoPyynnonTaydennys = {
   uuid: string;
   poistumisPaiva: string;
   muistutukset?: Array<LadattuTiedosto>;
-  muuAineisto?: Array<Aineisto>;
+  muuAineisto?: Array<LadattuTiedosto>;
   aineistopaketti?: string;
   poistetaan?: boolean;
 };

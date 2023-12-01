@@ -1,6 +1,11 @@
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynto } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
-import { fakeEventInSqsQueue, getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa, stubBasics } from "./util/util";
+import {
+  fakeEventInSqsQueue,
+  getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa,
+  getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa,
+  stubBasics,
+} from "./util/util";
 import {
   hyvaksymatonNahtavillaoloJulkaisuAineistoB,
   hyvaksyttyNahtavillaoloJulkaisuAineistoA,
@@ -12,7 +17,10 @@ import { expect } from "chai";
 // eventSqsHandlerLambda reacts to event ZIP_LAUSUNTOPYYNTO by zipping lausuntoPyynto files, but not files that are to be removed or are not imported
 export const zipLausuntoPyyntoDoesNotZipNotReadyFiles = async () => {
   const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ZIP_LAUSUNTOPYYNTO, projektiOid: "1", uuid: "joku-uuid" });
-  const lisaAineistot: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa("lisa", "lausuntopyynto/joku-uuid");
+  const lisaAineistot: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "lisa",
+    lausuntoPyyntoUuid: "joku-uuid",
+  });
   const lausuntoPyynnot: LausuntoPyynto[] = [
     {
       uuid: "joku-uuid",
@@ -72,7 +80,7 @@ export const zipLausuntoPyyntoDoesNotZipNotReadyFiles = async () => {
         zipFolder: "Selostusosa/",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynto/joku-uuid/lisa_aineisto_valmis.txt",
+        s3Key: "yllapito/tiedostot/projekti/1/lausuntopyynto/joku-uuid/lisa_tiedosto_valmis.txt",
         zipFolder: "Lisäaineistot/",
       },
     ],

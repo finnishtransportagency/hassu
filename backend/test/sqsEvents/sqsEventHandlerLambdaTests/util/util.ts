@@ -149,10 +149,17 @@ export function getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
 export function getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
   name,
   lausuntoPyynnonTaydennysUuid,
+  lausuntoPyyntoUuid,
 }: {
   name: string;
-  lausuntoPyynnonTaydennysUuid: string;
+  lausuntoPyynnonTaydennysUuid?: string;
+  lausuntoPyyntoUuid?: string;
 }): LadattuTiedosto[] {
+  if (!lausuntoPyynnonTaydennysUuid && !lausuntoPyyntoUuid) {
+    throw new Error("Give either lausuntoPyynnonTaydennysUuid or lausuntoPyyntoUuid");
+  }
+  const path = lausuntoPyyntoUuid ? "lausuntopyynto" : "lausuntopyynnon_taydennys";
+  const uuid = lausuntoPyyntoUuid ?? lausuntoPyynnonTaydennysUuid;
   return [
     {
       tiedosto: `temporary-uploads-file-location/${name}_tiedosto_odottaa_persistointia.txt`,
@@ -161,14 +168,14 @@ export function getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaP
       jarjestys: 2,
     },
     {
-      tiedosto: `/lausuntopyynnon_taydennys/${lausuntoPyynnonTaydennysUuid}/${name}_tiedosto_valmis.txt`,
+      tiedosto: `/${path}/${uuid}/${name}_tiedosto_valmis.txt`,
       nimi: `${name}_tiedosto_valmis.txt`,
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 1,
       tuotu: "2021-06-01T01:01",
     },
     {
-      tiedosto: `/lausuntopyynnon_taydennys/${lausuntoPyynnonTaydennysUuid}/${name}_tiedosto_odottaa_poistoa.txt`,
+      tiedosto: `/${path}/${uuid}/${name}_tiedosto_odottaa_poistoa.txt`,
       nimi: `${name}_tiedosto_odottaa_poistoa.txt`,
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       jarjestys: 3,

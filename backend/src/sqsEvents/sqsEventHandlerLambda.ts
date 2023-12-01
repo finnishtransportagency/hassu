@@ -133,28 +133,16 @@ async function handleChangedAineisto(ctx: ImportContext) {
   const manager: ProjektiTiedostoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
   const nahtavillaoloVaihe = await manager.getNahtavillaoloVaihe().handleChanges();
-  const lausuntoPyynnot = await manager.getLausuntoPyynnot().handleChanges();
-  const lausuntoPyynnonTaydennykset = await manager.getLausuntoPyynnonTaydennykset().handleChanges();
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChanges();
   const jatkoPaatos1Vaihe = await manager.getJatkoPaatos1Vaihe().handleChanges();
   const jatkoPaatos2Vaihe = await manager.getJatkoPaatos2Vaihe().handleChanges();
   // Päivitä vain jos on muuttuneita tietoja
-  if (
-    vuorovaikutusKierros ||
-    nahtavillaoloVaihe ||
-    lausuntoPyynnot ||
-    lausuntoPyynnonTaydennykset ||
-    hyvaksymisPaatosVaihe ||
-    jatkoPaatos1Vaihe ||
-    jatkoPaatos2Vaihe
-  ) {
+  if (vuorovaikutusKierros || nahtavillaoloVaihe || hyvaksymisPaatosVaihe || jatkoPaatos1Vaihe || jatkoPaatos2Vaihe) {
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       versio: ctx.projekti.versio,
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
-      lausuntoPyynnot,
-      lausuntoPyynnonTaydennykset,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
@@ -171,12 +159,6 @@ async function handleChangedAineisto(ctx: ImportContext) {
 
   if (nahtavillaoloVaihe) {
     await eventSqsClient.zipNahtavillaoloAineisto(oid);
-  }
-  if (lausuntoPyynnot) {
-    await eventSqsClient.zipLausuntoPyyntoAineisto(oid);
-  }
-  if (lausuntoPyynnonTaydennykset) {
-    await eventSqsClient.zipLausuntoPyynnonTaydennysAineisto(oid);
   }
 }
 

@@ -1,11 +1,6 @@
 import sinon from "sinon";
-import {
-  fakeEventInSqsQueue,
-  getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa,
-  getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa,
-  stubBasics,
-} from "./util/util";
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
+import { fakeEventInSqsQueue, getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa, stubBasics } from "./util/util";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import * as API from "hassu-common/graphql/apiModel";
@@ -20,15 +15,18 @@ export const aineistoAndFilesChangesHandlesCorrectlyLPTs = async () => {
     name: "eka_muistutus",
     lausuntoPyynnonTaydennysUuid: "joku-uuid",
   });
-  const muuAineisto1: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa("eka", "lausuntopyynnon_taydennys/joku-uuid");
+  const muuAineisto1: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "eka",
+    lausuntoPyynnonTaydennysUuid: "joku-uuid",
+  });
   const muistutukset2: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
     name: "toka_muistutus",
     lausuntoPyynnonTaydennysUuid: "joku-toinen-uuid",
   });
-  const muuAineisto2: Aineisto[] = getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
-    "toka",
-    "lausuntopyynnon_taydennys/joku-toinen-uuid"
-  );
+  const muuAineisto2: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
+    name: "toka",
+    lausuntoPyynnonTaydennysUuid: "joku-toinen-uuid",
+  });
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [
     {
       uuid: "joku-uuid",
@@ -70,10 +68,10 @@ export const aineistoAndFilesChangesHandlesCorrectlyLPTs = async () => {
   expect(addEventZipLausuntoPyynnonTaydennysAineistoStub.callCount).to.eql(1);
   expect(saveProjektiInternalStub.callCount).to.eql(1);
   expect(updateJulkaisuToListStub.callCount).to.eql(0);
-  expect(createAineistoToProjektiStub.callCount).to.eql(2);
-  expect(deleteAineistoStub.callCount).to.eql(2);
-  expect(deleteFileStub.callCount).to.eql(2);
-  expect(persistFileStub?.callCount).to.eql(2);
+  expect(createAineistoToProjektiStub.callCount).to.eql(0);
+  expect(deleteAineistoStub.callCount).to.eql(0);
+  expect(deleteFileStub.callCount).to.eql(4);
+  expect(persistFileStub?.callCount).to.eql(4);
   expect(saveProjektiInternalStub.firstCall).to.exist;
   expect(saveProjektiInternalStub.firstCall.args).to.exist;
   expect(saveProjektiInternalStub.firstCall.args[0]).to.exist;
@@ -107,21 +105,17 @@ export const aineistoAndFilesChangesHandlesCorrectlyLPTs = async () => {
       ],
       muuAineisto: [
         {
-          tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/eka_aineisto_valmis.txt",
-          dokumenttiOid: "eka2",
-          nimi: "eka_aineisto_valmis.txt",
-          tila: API.AineistoTila.VALMIS,
+          tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/eka_tiedosto_odottaa_persistointia.txt",
+          nimi: "eka_tiedosto_odottaa_persistointia.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
           jarjestys: 2,
           tuotu: "***unittest***",
-          kategoriaId: undefined,
         },
         {
-          tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/eka_aineisto_odottaa_tuontia.txt",
-          dokumenttiOid: "/lausuntopyynnon_taydennys/joku-uuid/eka_aineisto_odottaa_tuontia.txt",
-          nimi: "eka_aineisto_odottaa_tuontia.txt",
-          tila: API.AineistoTila.VALMIS,
+          tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/eka_tiedosto_valmis.txt",
+          nimi: "eka_tiedosto_valmis.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
           jarjestys: 1,
-          kategoriaId: undefined,
           tuotu: "***unittest***",
         },
       ],
@@ -148,21 +142,17 @@ export const aineistoAndFilesChangesHandlesCorrectlyLPTs = async () => {
       ],
       muuAineisto: [
         {
-          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/toka_aineisto_valmis.txt",
-          dokumenttiOid: "toka2",
-          nimi: "toka_aineisto_valmis.txt",
-          tila: API.AineistoTila.VALMIS,
+          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/toka_tiedosto_odottaa_persistointia.txt",
+          nimi: "toka_tiedosto_odottaa_persistointia.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
           jarjestys: 2,
           tuotu: "***unittest***",
-          kategoriaId: undefined,
         },
         {
-          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/toka_aineisto_odottaa_tuontia.txt",
-          dokumenttiOid: "/lausuntopyynnon_taydennys/joku-toinen-uuid/toka_aineisto_odottaa_tuontia.txt",
-          nimi: "toka_aineisto_odottaa_tuontia.txt",
-          tila: API.AineistoTila.VALMIS,
+          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/toka_tiedosto_valmis.txt",
+          nimi: "toka_tiedosto_valmis.txt",
+          tila: API.LadattuTiedostoTila.VALMIS,
           jarjestys: 1,
-          kategoriaId: undefined,
           tuotu: "***unittest***",
         },
       ],

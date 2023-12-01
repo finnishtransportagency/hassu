@@ -12,10 +12,9 @@ export const noChanges = async () => {
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -34,9 +33,9 @@ export const noChanges = async () => {
         poistumisPaiva: "2022-01-02", // only this changed
         lisaAineistot: [
           {
-            dokumenttiOid: "foo",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
-            tila: API.AineistoTila.VALMIS,
+            tila: API.LadattuTiedostoTila.VALMIS,
           },
         ],
       },
@@ -49,13 +48,10 @@ export const noChanges = async () => {
       poistumisPaiva: "2022-01-02",
       lisaAineistot: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
-          jarjestys: undefined,
-          kategoriaId: undefined,
         },
       ],
     },

@@ -1,7 +1,6 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
-import { adaptAineistotToSave } from ".";
 import mergeWith from "lodash/mergeWith";
 import { log } from "../../../logger";
 import { ladattuTiedostoTilaEiPoistettu } from "hassu-common/util/tiedostoTilaUtil";
@@ -53,8 +52,9 @@ export function adaptLausuntoPyyntoToSave(
   const { lisaAineistot: dbLisaAineistot, ...restDbLP } = dbLausuntoPyynto || {};
   const { lisaAineistot, ...rest } = lausuntoPyyntoInput;
   const lisaAineistotAdapted = lausuntoPyyntoInput
-    ? adaptAineistotToSave(dbLisaAineistot, lisaAineistot, projektiAdaptationResult)
+    ? adaptTiedostotToSave(dbLisaAineistot, lisaAineistot, projektiAdaptationResult)
     : undefined;
+  if (lausuntoPyyntoInput.poistetaan) projektiAdaptationResult.filesChanged();
   return mergeWith({}, { ...restDbLP }, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
 
@@ -69,13 +69,14 @@ export function adaptLausuntoPyynnonTaydennysToSave(
   const { muuAineisto: dbMuuAineisto, muistutukset: dbMuistutukset, ...restDbLPT } = dbLausuntoPyynnonTaydennys || {};
   const { muuAineisto: muuAineistoInput, muistutukset: muistutuksetInput, ...restInput } = lausuntoPyynnonTaydennysInput;
   const muuAineisto = lausuntoPyynnonTaydennysInput
-    ? adaptAineistotToSave(dbMuuAineisto, muuAineistoInput, projektiAdaptationResult)
+    ? adaptTiedostotToSave(dbMuuAineisto, muuAineistoInput, projektiAdaptationResult)
     : undefined;
   const muistutukset: LadattuTiedosto[] | undefined | null = adaptTiedostotToSave(
     dbMuistutukset,
     muistutuksetInput,
     projektiAdaptationResult
   );
+  if (lausuntoPyynnonTaydennysInput.poistetaan) projektiAdaptationResult.filesChanged();
   return mergeWith({}, { ...restDbLPT }, { ...restInput, muuAineisto, muistutukset });
 }
 

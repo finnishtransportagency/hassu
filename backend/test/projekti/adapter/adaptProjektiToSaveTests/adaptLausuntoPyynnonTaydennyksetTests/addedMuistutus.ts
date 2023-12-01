@@ -4,7 +4,7 @@ import { projektiAdapter } from "../../../../../src/projekti/adapter/projektiAda
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
-export const addedTiedosto = async () => {
+export const addedMuistutus = async () => {
   const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPTs = [
     {
@@ -21,10 +21,9 @@ export const addedTiedosto = async () => {
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
         },
       ],
@@ -56,9 +55,9 @@ export const addedTiedosto = async () => {
         ],
         muuAineisto: [
           {
-            dokumenttiOid: "foo",
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
-            tila: API.AineistoTila.VALMIS,
+            tila: API.LadattuTiedostoTila.VALMIS,
           },
         ],
       },
@@ -85,13 +84,10 @@ export const addedTiedosto = async () => {
       ],
       muuAineisto: [
         {
-          dokumenttiOid: "foo",
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
-          tila: API.AineistoTila.VALMIS,
+          tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
-          jarjestys: undefined,
-          kategoriaId: undefined,
         },
       ],
     },

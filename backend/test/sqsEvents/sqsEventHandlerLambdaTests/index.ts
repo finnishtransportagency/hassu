@@ -1,7 +1,7 @@
-export * from "./AINEISTO_CHANGED_removesLausuntoPyynnonTaydennys";
-export * from "./AINEISTO_CHANGED_removesLausuntoPyynto";
-export * from "./AINEISTO_CHANGED_removesLausuntoPyyntoAndHandlesChanges";
-export * from "./AINEISTO_CHANGED_removesLausuntoPyynnonTaydennysAndHandlesAineistoChanges";
+export * from "./FILES_CHANGED_removesLausuntoPyynnonTaydennys";
+export * from "./FILES_CHANGED_removesLausuntoPyynto";
+export * from "./AINEISTO_AND_FILES_CHANGED_removesLausuntoPyyntoAndHandlesChanges";
+export * from "./FILES_CHANGED_removesLausuntoPyynnonTaydennysAndHandlesAineistoChanges";
 
 export * from "./FILES_CHANGED_persistsAndDeletesLausuntoPyynnonTaydennysFiles";
 

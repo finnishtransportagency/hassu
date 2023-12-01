@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../../src/database/model";
 import { adaptLausuntoPyynnonTaydennykset, adaptLausuntoPyynnot } from "../../../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
@@ -32,20 +32,18 @@ describe("adaptLausuntoPyynnot:", () => {
       oid: "123",
       salt: "salt",
     } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
-    const lisaAineistot: Aineisto[] = [
+    const lisaAineistot: LadattuTiedosto[] = [
       {
-        dokumenttiOid: "foo",
         tiedosto: "/lausuntopyynto/joku-uuid/Aineisto%201.txt",
         nimi: "Aineisto 1",
-        tila: API.AineistoTila.VALMIS,
+        tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
       },
       {
-        dokumenttiOid: "bar",
         tiedosto: "/lausuntopyynto/joku-uuid/Aineisto%202.txt",
         nimi: "Aineisto 2",
-        tila: API.AineistoTila.VALMIS,
+        tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
       },
@@ -61,8 +59,7 @@ describe("adaptLausuntoPyynnot:", () => {
     const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
     expect(adaptedLausuntoPyynto.lisaAineistot).to.eql([
       {
-        __typename: "Aineisto",
-        dokumenttiOid: "bar",
+        __typename: "LadattuTiedosto",
         tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynto/joku-uuid/Aineisto%202.txt",
         nimi: "Aineisto 2",
         tila: "VALMIS",
@@ -70,8 +67,7 @@ describe("adaptLausuntoPyynnot:", () => {
         jarjestys: 1,
       },
       {
-        __typename: "Aineisto",
-        dokumenttiOid: "foo",
+        __typename: "LadattuTiedosto",
         tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynto/joku-uuid/Aineisto%201.txt",
         nimi: "Aineisto 1",
         tila: "VALMIS",
@@ -113,20 +109,18 @@ describe("adaptLausuntoPyynnot:", () => {
       oid: "123",
       salt: "salt",
     } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
-    const muuAineisto: Aineisto[] = [
+    const muuAineisto: LadattuTiedosto[] = [
       {
-        dokumenttiOid: "foo",
         tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Aineisto%201.txt",
         nimi: "Aineisto 1",
-        tila: API.AineistoTila.VALMIS,
+        tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
       },
       {
-        dokumenttiOid: "bar",
         tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Aineisto%202.txt",
         nimi: "Aineisto 2",
-        tila: API.AineistoTila.VALMIS,
+        tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
       },
@@ -161,8 +155,7 @@ describe("adaptLausuntoPyynnot:", () => {
     ])?.pop() as API.LausuntoPyynnonTaydennys;
     expect(adaptedLausuntoPyynnonTaydennys.muuAineisto).to.eql([
       {
-        __typename: "Aineisto",
-        dokumenttiOid: "bar",
+        __typename: "LadattuTiedosto",
         tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynnon_taydennys/joku-uuid/Aineisto%202.txt",
         nimi: "Aineisto 2",
         tila: "VALMIS",
@@ -170,8 +163,7 @@ describe("adaptLausuntoPyynnot:", () => {
         jarjestys: 1,
       },
       {
-        __typename: "Aineisto",
-        dokumenttiOid: "foo",
+        __typename: "LadattuTiedosto",
         tiedosto: "/yllapito/tiedostot/projekti/123/lausuntopyynnon_taydennys/joku-uuid/Aineisto%201.txt",
         nimi: "Aineisto 1",
         tila: "VALMIS",

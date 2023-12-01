@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, LausuntoPyynto } from "../../../src/database/model";
+import { DBProjekti, LadattuTiedosto, LausuntoPyynto } from "../../../src/database/model";
 import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import { fakeEventInSqsQueue, stubBasics } from "./util/util";
 import {
@@ -12,12 +12,11 @@ import { expect } from "chai";
 //eventSqsHandlerLambda react to event ZIP_LAUSUNTOPYYNTO by zipping lausuntoPyynto files
 export const zipLausuntoPyyntoZipsLausuntoPyyntoFiles = async () => {
   const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ZIP_LAUSUNTOPYYNTO, projektiOid: "1", uuid: "joku-uuid" });
-  const lisaAineistot: Aineisto[] = [
+  const lisaAineistot: LadattuTiedosto[] = [
     {
       tiedosto: "/lausuntopyynto/joku-uuid/Tiedosto%201.txt",
-      dokumenttiOid: "foo",
       nimi: "Tiedosto%201.txt",
-      tila: API.AineistoTila.VALMIS,
+      tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
     },
   ];
