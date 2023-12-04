@@ -1397,6 +1397,12 @@
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/lähetekirje.eml"
           }
         ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
+        ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
@@ -1414,6 +1420,12 @@
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/lähetekirje.eml"
           }
         ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
+        ],
         "toimenpideTyyppi": "UUDELLEENKUULUTUS",
         "vaylaAsianhallinta": true
       },
@@ -1427,6 +1439,12 @@
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml"
           }
+        ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
         ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
@@ -1454,6 +1472,12 @@
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/lähetekirje.eml"
           }
         ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
+        ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
@@ -1470,6 +1494,12 @@
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
           }
+        ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
         ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
@@ -1497,6 +1527,12 @@
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"
           }
         ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
+        ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
@@ -1510,6 +1546,12 @@
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml"
           }
+        ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
         ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
@@ -1530,6 +1572,12 @@
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/lähetekirje.eml"
           }
+        ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
         ],
         "toimenpideTyyppi": "UUDELLEENKUULUTUS",
         "vaylaAsianhallinta": true
