@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, StrictMode, useEffect, useMemo, useRef, ComponentProps } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import Projection from "ol/proj/Projection";
@@ -13,14 +13,17 @@ import GeoJSON from "ol/format/GeoJSON.js";
 import { Extent, getCenter } from "ol/extent";
 import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
 import { ZoomToExtent, defaults as defaultControls } from "ol/control.js";
-import FullScreen from "ol/control/FullScreen";
+import { Options } from "ol/control/FullScreen";
 import { styled } from "@mui/system";
 import ReactDOM from "react-dom";
-import React from "react";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { defaults as defaultInteractions } from "ol/interaction";
 import BaseLayer from "ol/layer/Base";
 import { fromExtent as polygonFromExtent } from "ol/geom/Polygon.js";
+import { useIsFullScreen } from "src/hooks/useIsFullScreen";
+import useTranslation from "next-translate/useTranslation";
+import FullScreenControl from "./FullScreenControl";
+import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -28,23 +31,32 @@ const projection = getProjection("EPSG:3067") as Projection;
 projection.setExtent([-548576, 6291456, 1548576, 8388608]);
 const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
 
+const BREAKPOINT = "md";
+
 const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
   const element = document.createElement("span");
   ReactDOM.render(
-    <React.StrictMode>
+    <StrictMode>
       <FontAwesomeIcon icon={icon} size="lg" color="#0064af" />
-    </React.StrictMode>,
+    </StrictMode>,
     element
   );
   return element;
 };
 
+export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabel?: string };
+
 function zoomToExtent(map: Map, extent?: Extent) {
   const view = map.getView();
-  view.fitInternal(polygonFromExtent(extent || view.getProjection().getExtent()));
+  view.fitInternal(polygonFromExtent(extent ?? view.getProjection().getExtent()));
 }
 
-export function KarttaKansalaiselle({ geoJSON }: { geoJSON: string | null | undefined }) {
+type KarttaKansalaiselleProps = {
+  geoJSON: string | null | undefined;
+};
+
+export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaiselleProps>) {
+  const { t } = useTranslation("kartta");
   const vectorSource = useMemo(
     () =>
       geoJSON
@@ -64,106 +76,123 @@ export function KarttaKansalaiselle({ geoJSON }: { geoJSON: string | null | unde
   );
 
   const mapElement = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<Map | null>(null);
-  const [isFullScreen, setIsFullscreen] = useState(false);
-  useEffect(() => {
+
+  const map = useMemo(() => {
     const extent = vectorSource?.getExtent();
-    if (!mapRef.current) {
-      const layers: BaseLayer[] = [
-        new TileLayer({
-          source: new XYZ({
-            projection: projection,
-            tileGrid: new TileGrid({
-              resolutions,
-              tileSize: [256, 256],
-              extent: [-548576, 6291456, 1548576, 8388608],
-            }),
-            urls: ["/hassu/karttakuva/avoin/wmts/1.0.0/taustakartta/default/ETRS-TM35FIN/{z}/{y}/{x}.png"],
+
+    const layers: BaseLayer[] = [
+      new TileLayer({
+        source: new XYZ({
+          projection: projection,
+          tileGrid: new TileGrid({
+            resolutions,
+            tileSize: [256, 256],
+            extent: [-548576, 6291456, 1548576, 8388608],
           }),
+          urls: ["/hassu/karttakuva/avoin/wmts/1.0.0/taustakartta/default/ETRS-TM35FIN/{z}/{y}/{x}.png"],
         }),
-      ];
-      if (vectorSource) {
-        layers.push(
-          new VectorLayer({
-            source: vectorSource,
-            opacity: 0.9,
-            style: new Style({
+      }),
+    ];
+    if (vectorSource) {
+      layers.push(
+        new VectorLayer({
+          source: vectorSource,
+          opacity: 0.9,
+          style: new Style({
+            stroke: new Stroke({
+              color: "#0064AF",
+              width: 8,
+            }),
+            image: new CircleStyle({
+              radius: 12,
               stroke: new Stroke({
                 color: "#0064AF",
                 width: 8,
               }),
-              image: new CircleStyle({
-                radius: 12,
-                stroke: new Stroke({
-                  color: "#0064AF",
-                  width: 8,
-                }),
-              }),
             }),
-          })
-        );
-      }
-      mapRef.current = new Map({
-        controls: defaultControls({
-          rotate: false,
-          zoomOptions: { zoomInLabel: createIconSpan("plus"), zoomOutLabel: createIconSpan("minus") },
-        }).extend([
-          new ZoomToExtent({
-            extent: extent,
-            label: createIconSpan("map-marker-alt"),
           }),
-          new FullScreen({ label: createIconSpan("expand-alt"), labelActive: createIconSpan("times") }),
-        ]),
-        layers,
-        view: new View({
-          projection,
-          center: extent ? getCenter(extent) : getCenter([61000, 6605000, 733000, 7777000]),
-          resolutions,
-          resolution: 128,
-          extent: [61000, 6605000, 733000, 7777000],
-          constrainResolution: true,
+        })
+      );
+    }
+
+    return new Map({
+      controls: defaultControls({
+        rotate: false,
+        zoomOptions: {
+          zoomInLabel: createIconSpan("plus"),
+          zoomOutLabel: createIconSpan("minus"),
+          zoomInTipLabel: t("lahenna"),
+          zoomOutTipLabel: t("loitonna"),
+        },
+      }).extend([
+        new ZoomToExtent({
+          extent: extent,
+          label: createIconSpan("map-marker-alt"),
+          tipLabel: t("kohdenna"),
         }),
-        interactions: defaultInteractions(),
-      });
-    }
-
-    if (mapElement.current && mapRef.current) {
-      mapRef.current.setTarget(mapElement.current);
-      zoomToExtent(mapRef.current, extent);
-    }
-  }, [vectorSource]);
+        new FullScreenControl({
+          label: createIconSpan("expand-alt"),
+          labelActive: createIconSpan("times"),
+          inactiveTipLabel: t("avaa-koko-nayton-tila"),
+          activeTipLabel: t("sulje-koko-nayton-tila"),
+        }),
+      ]),
+      layers,
+      view: new View({
+        projection,
+        center: extent ? getCenter(extent) : getCenter([61000, 6605000, 733000, 7777000]),
+        resolutions,
+        resolution: 128,
+        extent: [61000, 6605000, 733000, 7777000],
+        constrainResolution: true,
+      }),
+      interactions: defaultInteractions(),
+    });
+  }, [t, vectorSource]);
 
   useEffect(() => {
-    function onFullscreenChange() {
-      setIsFullscreen(document.fullscreenElement === mapElement.current);
+    const extent = vectorSource?.getExtent();
+    if (mapElement.current && map) {
+      map.setTarget(mapElement.current);
+      zoomToExtent(map, extent);
     }
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
-  }, []);
+    return () => {
+      map.setTarget();
+    };
+  }, [map, vectorSource]);
+
+  const isFullScreen = useIsFullScreen(mapElement.current);
 
   useEffect(() => {
-    if (mapRef.current) {
-      zoomToExtent(mapRef.current, vectorSource?.getExtent());
-    }
-  }, [isFullScreen, vectorSource]);
+    zoomToExtent(map, vectorSource?.getExtent());
+  }, [isFullScreen, map, vectorSource]);
 
   const openMapFullScreen = useCallback(() => {
-    if (geoJSON) {
-      mapElement.current?.requestFullscreen();
-    }
-  }, [geoJSON]);
+    mapElement.current?.requestFullscreen();
+  }, []);
+
+  const isMobile = useIsBelowBreakpoint(BREAKPOINT);
+
+  const overlayProps: ComponentProps<typeof Overlay> = useMemo(() => {
+    const overlayVisible = isMobile && !isFullScreen;
+    return overlayVisible
+      ? { isFullScreen, role: "button", title: t("avaa-koko-nayton-tila"), onClick: openMapFullScreen }
+      : { isFullScreen };
+  }, [isFullScreen, isMobile, openMapFullScreen, t]);
 
   return (
     <StyledMap id="map" isFullScreen={isFullScreen} locationalDataExists={!!geoJSON} ref={mapElement}>
-      <Overlay locationalDataExists={!!geoJSON} isFullScreen={isFullScreen} onClick={openMapFullScreen}>
-        {!geoJSON && (
+      {geoJSON ? (
+        <Overlay {...overlayProps} />
+      ) : (
+        <EiVoidaNayttaaOverlay>
           <OverlayText>
             Projektia ei voida näyttää kartalla
             <br />
             Muokkaa projektia ja aseta geometriat Velhossa kohdasta Projektin geometriat
           </OverlayText>
-        )}
-      </Overlay>
+        </EiVoidaNayttaaOverlay>
+      )}
     </StyledMap>
   );
 }
@@ -177,32 +206,30 @@ const OverlayText = styled("p")(({ theme }) => ({
   width: "100%",
 }));
 
-const Overlay = styled("div")<{ isFullScreen: boolean; locationalDataExists: boolean }>(
-  ({ theme, isFullScreen, locationalDataExists }) => ({
-    display: locationalDataExists ? "none" : "flex",
-    [theme.breakpoints.down("md")]: {
-      display: isFullScreen ? "none" : "flex",
-      cursor: isFullScreen ? "initial" : "pointer",
-      position: "absolute",
-      inset: 0,
-      zIndex: 1,
-    },
-    ...(locationalDataExists
-      ? {}
-      : {
-          cursor: "initial",
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          backgroundColor: "rgb(216, 216, 216, 0.5)",
-          alignItems: "center",
-        }),
-  })
-);
+const Overlay = styled("div")<{ isFullScreen: boolean }>(({ theme, isFullScreen }) => ({
+  display: "none",
+  [theme.breakpoints.down(BREAKPOINT)]: {
+    display: isFullScreen ? "none" : "flex",
+    cursor: isFullScreen ? "initial" : "pointer",
+    position: "absolute",
+    inset: 0,
+    zIndex: 1,
+  },
+}));
+
+const EiVoidaNayttaaOverlay = styled("div")({
+  display: "flex",
+  cursor: "initial",
+  position: "absolute",
+  inset: 0,
+  zIndex: 1,
+  backgroundColor: "rgb(216, 216, 216, 0.5)",
+  alignItems: "center",
+});
 
 const StyledMap = styled("div")<{ isFullScreen: boolean; locationalDataExists: boolean }>(
   ({ theme, isFullScreen, locationalDataExists }) => ({
-    height: "300px",
+    height: "325px",
     zIndex: 0,
     position: "relative",
     "& .ol-control": {
@@ -213,7 +240,7 @@ const StyledMap = styled("div")<{ isFullScreen: boolean; locationalDataExists: b
       boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
       right: isFullScreen ? "8px" : "24px",
       margin: "4px",
-      [theme.breakpoints.down("md")]: {
+      [theme.breakpoints.down(BREAKPOINT)]: {
         display: isFullScreen ? "inline-block" : "none",
       },
       "& > button": {
@@ -222,7 +249,7 @@ const StyledMap = styled("div")<{ isFullScreen: boolean; locationalDataExists: b
       },
       "&.ol-full-screen": {
         top: "16px",
-        [theme.breakpoints.up("md")]: {
+        [theme.breakpoints.up(BREAKPOINT)]: {
           display: isFullScreen ? "inline-block" : "none",
         },
       },
@@ -231,7 +258,7 @@ const StyledMap = styled("div")<{ isFullScreen: boolean; locationalDataExists: b
       },
       "&.ol-zoom": {
         display: "flex",
-        [theme.breakpoints.down("md")]: {
+        [theme.breakpoints.down(BREAKPOINT)]: {
           display: isFullScreen ? "flex" : "none",
         },
         flexDirection: "column",
