@@ -120,6 +120,7 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
       asiatunnus,
       dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
     };
   }
 }
