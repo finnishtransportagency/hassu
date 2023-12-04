@@ -189,7 +189,7 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
           <OverlayText>
             Projektia ei voida näyttää kartalla
             <br />
-            Muokkaa projektia ja aseta geometriat Velhossa kohdasta Projektin geometriat
+            Muokkaa projektia ja aseta geometriat Projektivelhossa kohdasta Projektin geometriat
           </OverlayText>
         </EiVoidaNayttaaOverlay>
       )}
