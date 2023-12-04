@@ -1,11 +1,14 @@
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
 
 export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
-  projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut">
-): NahtavillaoloVaiheJulkaisu | undefined {
+  projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut" | "nahtavillaoloVaihe">
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined {
   if (projekti.nahtavillaoloVaiheJulkaisut) {
-    return projekti.nahtavillaoloVaiheJulkaisut.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop();
+    const latestHyvaksytty = projekti.nahtavillaoloVaiheJulkaisut
+      .filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY)
+      .pop();
+    return latestHyvaksytty ?? projekti.nahtavillaoloVaihe ?? undefined;
   } else {
     return undefined;
   }

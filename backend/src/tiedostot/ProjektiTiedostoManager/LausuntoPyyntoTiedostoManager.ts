@@ -1,7 +1,7 @@
 import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { TiedostoManager, AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, getZipFolder } from ".";
 import { config } from "../../config";
-import { LausuntoPyynto, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { LausuntoPyynto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
 import { findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu } from "../../util/lausuntoPyyntoUtil";
@@ -9,14 +9,17 @@ import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynto[]> {
+  private nahtavillaoloVaihe: NahtavillaoloVaihe | undefined;
   private nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | undefined;
 
   constructor(
     oid: string,
     vaihe: LausuntoPyynto[] | undefined | null,
+    nahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
     nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | undefined | null
   ) {
     super(oid, vaihe);
+    this.nahtavillaoloVaihe = nahtavillaoloVaihe || undefined;
     this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut || undefined;
   }
 
@@ -64,13 +67,13 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
   async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoUuid: string): Promise<LausuntoPyynto | undefined> {
     const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
     if (!lausuntoPyynto) return;
-    const latestHyvaksyttyNahtavillaoloVaiheJulkaisu = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu({
+    const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu({
+      nahtavillaoloVaihe: this.nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut: this.nahtavillaoloVaiheJulkaisut,
     });
-    // Meitä kiinnostaa vain nähtävilläolovaihejulkaisujen aineistot, joten voimme antaa nähtävilläoovaiheeksi undefined.
-    const nahtavillaoloAineistoPaths = latestHyvaksyttyNahtavillaoloVaiheJulkaisu
-      ? new NahtavillaoloVaiheTiedostoManager(this.oid, undefined, this.nahtavillaoloVaiheJulkaisut).getAineistot(
-          latestHyvaksyttyNahtavillaoloVaiheJulkaisu
+    const nahtavillaoloAineistoPaths = nahtavillaolo
+      ? new NahtavillaoloVaiheTiedostoManager(this.oid, this.nahtavillaoloVaihe, this.nahtavillaoloVaiheJulkaisut).getAineistot(
+          nahtavillaolo
         )
       : [];
     const filesToZip: ZipSourceFile[] = [];
