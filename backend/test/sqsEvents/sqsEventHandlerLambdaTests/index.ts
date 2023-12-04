@@ -1,12 +1,12 @@
 export * from "./FILES_CHANGED_removesLausuntoPyynnonTaydennys";
 export * from "./FILES_CHANGED_removesLausuntoPyynto";
-export * from "./AINEISTO_AND_FILES_CHANGED_removesLausuntoPyyntoAndHandlesChanges";
 export * from "./FILES_CHANGED_removesLausuntoPyynnonTaydennysAndHandlesAineistoChanges";
-
 export * from "./FILES_CHANGED_persistsAndDeletesLausuntoPyynnonTaydennysFiles";
+export * from "./FILES_CHANGED_persists_lausuntoPyynto_files";
 
 export * from "./AINEISTO_AND_FILES_CHANGED_handlesVuorovaikutusKierrosJulkaisu";
 export * from "./AINEISTO_AND_FILES_CHANGES_handlesCorrectlyLPTs";
+export * from "./AINEISTO_AND_FILES_CHANGED_removesLausuntoPyyntoAndHandlesChanges";
 
 export * from "./ZIP_LAUSUNTOPYYNTO_zipsLausuntoPyyntoFiles";
 export * from "./ZIP_LAUSUNTOPYYNTO_zipsSpecifiedLausuntoPyynto";

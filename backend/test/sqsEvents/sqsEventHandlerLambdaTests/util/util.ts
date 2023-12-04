@@ -73,7 +73,7 @@ export function stubBasics({
   const saveProjektiInternalStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
   const persistFileStub = sinon.stub(fileService, "persistFileToProjekti").callsFake((param: PersistFileProperties) => {
     const filePath = param.uploadedFileSource;
-    const fileNameFromUpload = filePath.replace(/^[0-9a-z-]+\//, "");
+    const fileNameFromUpload = filePath.replace(/^\/?[0-9a-z-]+\//, "");
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     return Promise.resolve(targetPath);
   });
