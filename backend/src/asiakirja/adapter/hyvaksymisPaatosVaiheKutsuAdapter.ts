@@ -1,19 +1,11 @@
-import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import {
-  DBProjekti,
-  HyvaksymisPaatosVaiheJulkaisu,
-  IlmoituksenVastaanottajat,
-  KasittelynTila,
-  SuunnitteluSopimus,
-  UudelleenKuulutus,
-  Yhteystieto,
-} from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
 function getPaatoksenPvm(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyyppi): string {
   if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
@@ -83,30 +75,17 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   };
 }
 
-export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
-  kuulutusPaiva: string;
-  kuulutusVaihePaattyyPaiva: string;
-  yhteystiedot: Yhteystieto[];
+export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends KuulutusKutsuAdapterProps {
   paatoksenPvm: string;
   asianumero: string;
   hallintoOikeus: HallintoOikeus;
   paatosTyyppi: PaatosTyyppi;
   viimeinenVoimassaolovuosi?: string | null;
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  uudelleenKuulutus?: UudelleenKuulutus | null;
-  suunnitteluSopimus?: SuunnitteluSopimus | null;
 }
 
-export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
-  readonly props: HyvaksymisPaatosVaiheKutsuAdapterProps;
-
+export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<HyvaksymisPaatosVaiheKutsuAdapterProps> {
   constructor(props: HyvaksymisPaatosVaiheKutsuAdapterProps) {
     super(props, "asiakirja.hyvaksymispaatoksesta_ilmoittaminen.");
-    this.props = props;
-  }
-
-  get kuulutusNahtavillaAika(): string {
-    return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
   }
 
   get lain(): string {
@@ -131,10 +110,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   asianumero_traficom(): string {
     return this.props.asianumero;
-  }
-
-  get kuulutusPaiva(): string {
-    return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
   }
 
   get kuulutusVaihePaattyyPaiva(): string {
@@ -164,19 +139,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.props.viimeinenVoimassaolovuosi;
   }
 
-  get laheteTekstiVastaanottajat(): string[] {
-    const result: string[] = [];
-    const kunnat = this.props.ilmoituksenVastaanottajat?.kunnat;
-    const viranomaiset = this.props.ilmoituksenVastaanottajat?.viranomaiset;
-    kunnat?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    viranomaiset?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    return result;
-  }
-
   get userInterfaceFields(): KuulutusTekstit | undefined {
     let kappale1;
     const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "hyvaksymispaatoksesta" : "jatkopaatos";
@@ -200,10 +162,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
       infoTekstit: [this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale5`)],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
-  }
-
-  get uudelleenKuulutusSeloste(): string | undefined {
-    return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
 
   get paatosYllapitoUrl(): string {

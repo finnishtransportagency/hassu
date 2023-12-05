@@ -5,7 +5,7 @@ import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavil
 import { EmailOptions } from "../model/emailOptions";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
-  let paragraphs = [
+  const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
@@ -17,9 +17,9 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),
     ...adapter.simple_yhteystiedot,
-  ];
-
-  paragraphs = paragraphs.filter((p) => !!p).map((p) => adapter.substituteText(p as string));
+  ]
+    .filter((p) => !!p)
+    .map((p) => adapter.substituteText(p as string));
   return paragraphs.join("\n\n");
 };
 
@@ -48,7 +48,6 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
 }
 
 const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
-  const yhteystiedot = adapter.yhteystiedotNahtavillaolo || "";
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
@@ -59,7 +58,8 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
-    adapter.text("asiakirja.lisatietoja_antavat").concat("\n").concat(yhteystiedot),
+    adapter.text("asiakirja.lisatietoja_antavat"),
+    ...adapter.simple_yhteystiedot,
   ]
     .filter((p) => !!p)
     .map((p) => adapter.substituteText(p as string));

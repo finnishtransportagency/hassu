@@ -345,7 +345,7 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
   return {
     subject,
     text: paragraphs.join("\n\n"),
-    to: adapter.laheteTekstiVastaanottajat,
+    to: adapter.laheteKirjeVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
@@ -369,7 +369,7 @@ export function createJatkopaatosHyvaksyttyViranomaisilleEmail(adapter: Hyvaksym
   return {
     subject,
     text: paragraphs.join("\n\n"),
-    to: adapter.laheteTekstiVastaanottajat,
+    to: adapter.laheteKirjeVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
