@@ -429,19 +429,21 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   oid: string,
   container: T | undefined | null,
   path: PathTuple,
-  ...keys: K[]
+  keys: K[],
+  asiakirjaTyypit: API.AsiakirjaTyyppi[]
 ): Promise<void> {
   if (!container) {
     return;
   }
-  for (const key of keys) {
-    const ladattuTiedosto = container[key];
+  for (let i = 0; i < keys.length; i++) {
+    const ladattuTiedosto = container[keys[i]];
     if (ladattuTiedosto) {
       await persistLadattuTiedosto({
         oid,
         ladattuTiedosto,
         targetFilePathInProjekti: path.yllapitoPath,
         poistetaan: !ladattuTiedosto.nimi,
+        asiakirjaTyyppi: asiakirjaTyypit[i],
       });
     }
   }
@@ -456,8 +458,8 @@ async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).aloituskuulutus(aloitusKuulutus),
-        "kuulutusPDF",
-        "kuulutusIlmoitusPDF"
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        [API.AsiakirjaTyyppi.ALOITUSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA]
       );
     }
   });
@@ -473,6 +475,7 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
         ladattuTiedosto: kutsuPDFLadattuTiedosto,
         targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
         poistetaan: !kutsuPDFLadattuTiedosto.nimi,
+        asiakirjaTyyppi: API.AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
       });
     }
   });
@@ -487,8 +490,8 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
-        "kuulutusPDF",
-        "kuulutusIlmoitusPDF"
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE]
       );
     }
   });
@@ -503,8 +506,8 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
-        "kuulutusPDF",
-        "kuulutusIlmoitusPDF"
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        [API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA]
       );
     }
   });
@@ -519,8 +522,8 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
-        "kuulutusPDF",
-        "kuulutusIlmoitusPDF"
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA]
       );
     }
   });
@@ -535,8 +538,8 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
-        "kuulutusPDF",
-        "kuulutusIlmoitusPDF"
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2]
       );
     }
   });

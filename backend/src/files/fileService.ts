@@ -83,7 +83,7 @@ export class FileMetadata {
   }
 }
 
-export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
+export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string; asiakirjaTyyppi?: AsiakirjaTyyppi };
 
 export type DeleteFileProperties = { filePathInProjekti: string; oid: string; reason: string };
 
@@ -150,12 +150,17 @@ export class FileService {
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
     try {
+      const metadata: { [key: string]: string } = {};
+      if (param.asiakirjaTyyppi) {
+        metadata[S3_METADATA_ASIAKIRJATYYPPI] = param.asiakirjaTyyppi;
+      }
       await getS3Client().send(
         new CopyObjectCommand({
           ...sourceFileProperties,
           Bucket: config.yllapitoBucketName,
           Key: targetBucketPath,
           MetadataDirective: "REPLACE",
+          Metadata: metadata,
         })
       );
       log.info(`Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`);

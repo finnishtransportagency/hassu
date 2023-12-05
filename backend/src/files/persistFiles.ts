@@ -2,18 +2,20 @@ import { fileService } from "./fileService";
 import { assertIsDefined } from "../util/assertions";
 import { localDateTimeString } from "../util/dateUtil";
 import { LadattuTiedosto } from "../database/model";
-import { LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { LadattuTiedostoTila, AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 
 export async function persistLadattuTiedosto({
   oid,
   ladattuTiedosto,
   targetFilePathInProjekti,
   poistetaan,
+  asiakirjaTyyppi,
 }: {
   oid: string;
   ladattuTiedosto: LadattuTiedosto | null | undefined;
   targetFilePathInProjekti: string;
   poistetaan: boolean;
+  asiakirjaTyyppi?: AsiakirjaTyyppi;
 }): Promise<{ fileWasRemoved: boolean; fileWasPersisted: boolean }> {
   let fileWasRemoved = false;
   let fileWasPersisted = false;
@@ -23,6 +25,7 @@ export async function persistLadattuTiedosto({
         uploadedFileSource: ladattuTiedosto.tiedosto,
         oid,
         targetFilePathInProjekti,
+        asiakirjaTyyppi,
       });
 
       const fileName = uploadedFile.split("/").pop();
