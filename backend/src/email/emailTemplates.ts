@@ -60,7 +60,7 @@ const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suu
 {{nimi}}
 hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{paatosYllapitoUrl}}
 
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const jatkopaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}";
@@ -106,7 +106,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 const jatkopaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Jatkopäätöskuulutus hyväksytty {{asiatunnus}}`;
 const jatkopaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} jatkopäätöskuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa {{jatkopaatosYllapitoUrl}}
+Voit tarkastella projektia osoitteessa {{paatosYllapitoUrl}}
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 

@@ -149,14 +149,14 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
-  get linkki_jatkopaatos(): string {
+  get linkki_paatos(): string {
     assertIsDefined(this.oid);
     if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
       return super.linkki_jatkopaatos1;
     } else if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
       return super.linkki_jatkopaatos2;
     } else {
-      return "";
+      return super.linkki_hyvaksymispaatos;
     }
   }
 
@@ -206,14 +206,14 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
 
-  get jatkopaatosYllapitoUrl(): string {
+  get paatosYllapitoUrl(): string {
     assertIsDefined(this.oid);
     if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
       return super.jatkopaatos1YllapitoUrl;
     } else if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
       return super.jatkopaatos2YllapitoUrl;
     } else {
-      return "";
+      return super.hyvaksymispaatosYllapitoUrl;
     }
   }
 }

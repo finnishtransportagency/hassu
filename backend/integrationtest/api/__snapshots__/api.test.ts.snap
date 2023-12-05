@@ -16443,7 +16443,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
 
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
@@ -20207,7 +20207,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
 
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
@@ -20303,7 +20303,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{jatkopaatosYllapitoUrl}}
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
 
 Sait tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
