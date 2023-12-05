@@ -33,6 +33,9 @@ const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2,
 
 const BREAKPOINT = "md";
 
+const IMAGE_CIRCLE_RADIUS = 10;
+const STROKE_WIDTH = 8;
+
 const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
   const element = document.createElement("span");
   ReactDOM.render(
@@ -101,13 +104,13 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
           style: new Style({
             stroke: new Stroke({
               color: "#0064AF",
-              width: 8,
+              width: STROKE_WIDTH,
             }),
             image: new CircleStyle({
-              radius: 12,
+              radius: IMAGE_CIRCLE_RADIUS,
               stroke: new Stroke({
                 color: "#0064AF",
-                width: 8,
+                width: STROKE_WIDTH,
               }),
             }),
           }),
