@@ -288,6 +288,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/3/2022",
         "asiatunnusVayla": "VAYLA/3/2022",
+        "geoJSON": undefined,
         "kunnat": Array [
           491,
           178,
@@ -1043,6 +1044,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/3/2022",
         "asiatunnusVayla": "VAYLA/3/2022",
+        "geoJSON": undefined,
         "kunnat": Array [
           491,
           178,

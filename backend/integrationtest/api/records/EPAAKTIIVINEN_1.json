@@ -133,6 +133,7 @@
         "tila": "PERUUTETTU",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -263,6 +264,7 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -539,6 +541,7 @@
         "tila": "PERUUTETTU",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -735,6 +738,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -977,6 +981,7 @@
       "uudelleenKuulutus": null,
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
+        "geoJSON": null,
         "kunnat": [
           91,
           92
@@ -1143,6 +1148,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -1340,6 +1346,7 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -1559,6 +1566,7 @@
     "vahainenMenettely": false,
     "velho": {
       "asiatunnusVayla": "HASSU/123/2023",
+      "geoJSON": null,
       "kunnat": [
         91,
         92

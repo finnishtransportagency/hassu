@@ -663,6 +663,7 @@ type Velho {
   kunnat: [Int!]
   linkki: String
   linkitetytProjektit: [LinkitettyVelhoProjekti!]
+  geoJSON: String
 }
 
 type VelhoJulkinen {
@@ -677,6 +678,7 @@ type VelhoJulkinen {
   maakunnat: [Int!]
   kunnat: [Int!]
   linkki: String
+  geoJSON: String
 }
 
 type LinkitettyVelhoProjekti {

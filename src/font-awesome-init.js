@@ -37,6 +37,10 @@ import {
   faTimes,
   faEquals,
   faMagic,
+  faMinus,
+  faPlus,
+  faMapMarkerAlt,
+  faExpandAlt,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -75,7 +79,11 @@ library.add(
   faBars,
   faTimes,
   faEquals,
-  faMagic
+  faMagic,
+  faMinus,
+  faPlus,
+  faMapMarkerAlt,
+  faExpandAlt
 );
 
 import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";

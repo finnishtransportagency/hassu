@@ -1,15 +1,15 @@
 import React, { ComponentProps } from "react";
-import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
-import SectionContent from "@components/layout/SectionContent";
 import { Kieli, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
+import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
+import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -31,20 +31,9 @@ const ProjektiSideNavigation = styled((props) => {
 
   return (
     <Section noDivider {...props}>
-      <div role="navigation" className={styles["side-nav"]}>
-        <div
-          className="flex justify-center"
-          style={{
-            height: "60px",
-            backgroundColor: "#0064AF",
-            color: "white",
-            alignItems: "center",
-            fontWeight: "700",
-          }}
-        >
-          <h4 className="vayla-title-small mb-0">{t("suunnitteluhankkeen_yhteystiedot")}</h4>
-        </div>
-        <SectionContent className={styles["side-nav-content"]}>
+      <SideCard>
+        <SideCardHeading>{t("suunnitteluhankkeen_yhteystiedot")}</SideCardHeading>
+        <SideCardContent>
           <HassuStack id="yhteystiedot">
             <img {...getTilaajaLogoImg()} />
             {projekti.projektiHenkilot?.map((yt) => {
@@ -85,8 +74,16 @@ const ProjektiSideNavigation = styled((props) => {
               </div>
             </HassuStack>
           )}
-        </SectionContent>
-      </div>
+        </SideCardContent>
+      </SideCard>
+      <SideCard>
+        {projekti.velho.geoJSON && (
+          <>
+            <SideCardHeading>{t("suunnitelma_kartalla")}</SideCardHeading>
+            <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+          </>
+        )}
+      </SideCard>
     </Section>
   );
 })<ComponentProps<typeof Section>>({});

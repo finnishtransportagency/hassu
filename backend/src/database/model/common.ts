@@ -122,6 +122,7 @@ export type Velho = {
   kunnat?: number[] | null;
   linkki?: string | null;
   linkitetytProjektit?: LinkitettyVelhoProjekti[] | null;
+  geoJSON?: string | null;
 };
 
 export type LadattuTiedosto = {

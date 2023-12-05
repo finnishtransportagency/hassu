@@ -4,7 +4,7 @@ module.exports = {
   pages: {
     "*": ["common", "projekti", "footer", "error", "header", "breadcrumbs", "tietoa-palvelusta/palautetta-palvelusta-dialog"],
     "/": ["etusivu", "main-page-sidebar"],
-    "rgx:^/suunnitelma/": ["projekti-side-bar"],
+    "rgx:^/suunnitelma/": ["projekti-side-bar", "kartta"],
     "rgx:^/tietoa-palvelusta": ["tietoa-palvelusta/navigation"],
     "/tietoa-palvelusta": ["tietoa-palvelusta/tietoa-palvelusta"],
     "/tietoa-palvelusta/tietoa-suunnittelusta": ["tietoa-palvelusta/tietoa-suunnittelusta"],
@@ -15,6 +15,7 @@ module.exports = {
     "/suunnitelma/[oid]/hyvaksymispaatos": ["aineisto", "paatos"],
     "/suunnitelma/[oid]/jatkopaatos1": ["aineisto", "paatos"],
     "/suunnitelma/[oid]/jatkopaatos2": ["aineisto", "paatos"],
+    "/yllapito/projekti/[oid]": ["kartta"],
     "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": ["aineisto"],
     "/yllapito/projekti/[oid]/hyvaksymispaatos/aineisto": ["aineisto"],
     "/yllapito/projekti/[oid]/jatkaminen1/aineisto": ["aineisto"],
