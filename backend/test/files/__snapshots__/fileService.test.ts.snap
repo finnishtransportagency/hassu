@@ -33,6 +33,7 @@ Object {
     "ContentType": "image/png",
     "CopySource": "hassu-localstack-upload%2F1-2-3-4%2Flogo%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.png",
     "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo ääkkösillä.png",
+    "Metadata": Object {},
     "MetadataDirective": "REPLACE",
   },
   "stub": "CopyObjectCommand",
