@@ -507,7 +507,7 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA]
+        [API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
       );
     }
   });
@@ -523,7 +523,7 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA]
+        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
       );
     }
   });
@@ -539,7 +539,7 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2]
+        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
       );
     }
   });
