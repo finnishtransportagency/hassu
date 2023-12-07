@@ -1139,11 +1139,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -1225,11 +1227,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -1312,12 +1316,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
@@ -2271,11 +2277,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
     "/2/T441 Kuulutus hyvaksymispaatoksen voimassaolon jatkamisesta.pdf": FileMetadata {
@@ -2321,11 +2329,13 @@ Object {
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -2416,12 +2426,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2040-06-02T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2040-06-02T00:00:00+03:00",
     },
@@ -2470,11 +2482,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
     },
   },
@@ -2556,11 +2570,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
     },
   },
@@ -2643,12 +2659,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
@@ -3602,11 +3620,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
     },
     "/2/T441 Kuulutus hyvaksymispaatoksen voimassaolon jatkamisesta.pdf": FileMetadata {
@@ -3652,11 +3672,13 @@ Object {
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
     },
   },
@@ -3747,12 +3769,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2040-06-01T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "JATKOPAATOSKUULUTUS2",
       "checksum": "ABC123",
       "publishDate": "2040-06-01T00:00:00+03:00",
     },

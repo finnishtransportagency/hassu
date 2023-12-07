@@ -24,6 +24,7 @@ Object {
     "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
     },
   },
@@ -67,6 +68,7 @@ Object {
     "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
     },
   },
@@ -111,6 +113,7 @@ Object {
     "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
       "publishDate": "2022-04-28T00:00:00+03:00",
     },
