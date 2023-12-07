@@ -20,7 +20,7 @@ export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
   let poistumisPaiva = data?.poistumisPaiva;
 
   if (!(poistumisPaiva && data)) {
-    return <></>;
+    return <>Tarvittu data esikatselua varten on unohtunut. Sulje välilehti ja avaa esikatselu uudestaan.</>;
   }
   const { lisaAineistot, ...restOfAineistot } = data;
 
