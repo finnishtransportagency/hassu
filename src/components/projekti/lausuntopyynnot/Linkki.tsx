@@ -48,7 +48,7 @@ export default function Linkki({
     ? "Linkki lausuntopyynnön täydennykseen liitettävään aineistoon"
     : "Linkki lausuntopyyntöön liitettävään aineistoon";
 
-  const buttonDisabled = !projekti.nahtavillaoloVaihe;
+  const buttonDisabled = !projekti.nahtavillaoloVaihe?.aineistoNahtavilla; // Array saa olla tyhjä, mutta sen pitää olla olemassa
 
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
 
