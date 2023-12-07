@@ -34,7 +34,7 @@ export default function Linkki({
     if (typeof window === "undefined" || !lausuntoPyyntoOrTaydennys) {
       return undefined;
     }
-    const address = kunta ? "lausuntopyynnontaydennysaineistot" : "lausuntopyyntoaineistot";
+    const address = kunta ? "lausuntopyynnon-taydennysaineistot" : "lausuntopyyntoaineistot";
     return `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti?.oid}/${address}?hash=${lausuntoPyyntoOrTaydennys?.hash}&uuid=${lausuntoPyyntoOrTaydennys?.uuid}`;
   }, [projekti, lausuntoPyyntoOrTaydennys, kunta]);
 
@@ -71,8 +71,8 @@ export default function Linkki({
           id={`esikatsele-link-${uuid}`}
           target="_blank"
           rel="noreferrer"
-          href={`/yllapito/projekti/${projekti.oid}/nahtavillaolo/lausuntopyynto/esikatsele-lausuntopyynnon-${
-            kunta ? "taydennys" : ""
+          href={`/yllapito/projekti/${projekti.oid}/nahtavillaolo/lausuntopyynto/esikatsele-${
+            kunta ? "lausuntopyynnon-taydennys" : "lausuntopyynto"
           }aineistot?uuid=${uuid}`}
           ref={(e) => {
             if (hiddenLinkRef) {
