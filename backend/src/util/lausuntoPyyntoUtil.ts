@@ -4,14 +4,11 @@ import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaih
 export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut" | "nahtavillaoloVaihe">
 ): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined {
-  if (projekti.nahtavillaoloVaiheJulkaisut) {
-    const latestHyvaksytty = projekti.nahtavillaoloVaiheJulkaisut
-      .filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY)
-      .pop();
-    return latestHyvaksytty ?? projekti.nahtavillaoloVaihe ?? undefined;
-  } else {
-    return undefined;
-  }
+  return (
+    projekti.nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
+    projekti.nahtavillaoloVaihe ??
+    undefined
+  );
 }
 
 export function findLausuntoPyyntoByUuid(projekti: DBProjekti, uuid: string): LausuntoPyynto | undefined {
