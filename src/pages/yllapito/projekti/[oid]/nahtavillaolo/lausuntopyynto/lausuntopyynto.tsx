@@ -18,6 +18,7 @@ import { LausuntoPyynnotFormValues, LausuntoPyyntoLisakentilla } from "@componen
 import { handleLadattuTiedostoArrayForDefaultValues } from "@components/projekti/lausuntopyynnot/util";
 import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut";
 import dayjs from "dayjs";
+import DownloadButtonLink from "@components/button/DownloadButtonLink";
 
 export default function LausuntoPyynnotWrapper() {
   useProjekti({ revalidateOnMount: true });
@@ -120,6 +121,32 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
             sisältö. Vie valmislausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
+          <div>
+            <DownloadButtonLink
+              id={"mallipohja-kunnalle-32T"}
+              href={
+                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/36e9a27e-46ea-42c0-812f-6de80d723274/32T_YSTS_Kunnan_l%c3%a4hetekirje_n%c3%a4ht%c3%a4ville_asettamisen_ilmoittamisesta_ja_lausuntopyynt%c3%b6.docx?a=true"
+              }
+            >
+              Mallipohja kunnalle 32T
+            </DownloadButtonLink>
+            <DownloadButtonLink
+              id={"mallipohja-elylle-41R"}
+              href={
+                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
+              }
+            >
+              Mallipohja ELY:le 41R
+            </DownloadButtonLink>
+            <DownloadButtonLink
+              id={"mallipohja-muille-lausunnonantajille-42T"}
+              href={
+                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0b4643d2-824e-41ed-9c6d-744f9e97d100/42T_YSTS_lausuntopyynto_muut_osapuolet.docx?a=true"
+              }
+            >
+              Mallipohja muille lausunnonantajille 42T
+            </DownloadButtonLink>
+          </div>
         </Section>
         <LausuntoPyynnotPainikkeet projekti={projekti} />
       </FormProvider>

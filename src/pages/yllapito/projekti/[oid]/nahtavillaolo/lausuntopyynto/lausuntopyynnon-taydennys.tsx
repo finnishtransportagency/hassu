@@ -4,7 +4,7 @@ import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/Pr
 import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
 import LausuntopyynnotPageLayout from "@components/projekti/lausuntopyynnot/LausuntoPyynnotPageLayout";
 import Section from "@components/layout/Section2";
-import { LadattuTiedosto, LausuntoPyynnonTaydennys } from "@services/api";
+import { LadattuTiedosto, LausuntoPyynnonTaydennys, ProjektiTyyppi } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { FormProvider, UseFormProps, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,6 +19,7 @@ import { LausuntoPyynnonTaydennysFormValues, LausuntoPyynnonTaydennysLisakentill
 import { handleLadattuTiedostoArrayForDefaultValues } from "@components/projekti/lausuntopyynnot/util";
 import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut";
 import dayjs from "dayjs";
+import DownloadButtonLink from "@components/button/DownloadButtonLink";
 
 export default function LausuntoPyynnonTaydennysWrapper() {
   useProjekti({ revalidateOnMount: true });
@@ -123,6 +124,28 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
             Alla löydät linkin viimeisimpiin lausuntopyynnön taydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
             tietokoneellesi ja täytä sen sisältö. Lausuntopyynnön täydennys lähetetään järjestelmän ulkopuolella.
           </p>
+          <div>
+            {projekti.tyyppi !== ProjektiTyyppi.RATA && (
+              <DownloadButtonLink
+                id={"mallipohja-kunnalle-33T"}
+                href={
+                  "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/fa3def9c-0aa9-45d8-8952-3e54c4563af8/33T_Lausuntopyynn%c3%b6n%20t%c3%a4ydent%c3%a4minen%20kunnalle.docx?a=true"
+                }
+              >
+                Mallipohja kunnalle 33T
+              </DownloadButtonLink>
+            )}
+            {projekti.tyyppi !== ProjektiTyyppi.TIE && (
+              <DownloadButtonLink
+                id={"mallipohja-kunnalle-33R"}
+                href={
+                  "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/4220e2fa-e681-483c-b3a2-a779af0f1254/33R%20Lausuntopyynn%c3%b6n%20t%c3%a4ydent%c3%a4minen%20kunnalle%20xx%20xxS.docx?a=true"
+                }
+              >
+                Mallipohja kunnalle 33R
+              </DownloadButtonLink>
+            )}
+          </div>
         </Section>
         <LausuntoPyynnonTaydennysPainikkeet projekti={projekti} />
       </FormProvider>
