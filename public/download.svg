@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="31px" viewBox="0 0 24 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon/Download</title>
+    <g id="Design-Library" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="General-icons" transform="translate(-318, -233)" fill="#0064AF">
+            <g id="Icon/Download" transform="translate(318, 233.5)">
+                <path d="M10.2042183,2.04053126 L11.3933713,0.871307534 C11.8968865,0.376230822 12.7110814,0.376230822 13.20924,0.871307534 L23.6223636,11.1046485 C24.1258788,11.5997252 24.1258788,12.4002748 23.6223636,12.8900847 L13.20924,23.1286925 C12.7057248,23.6237692 11.89153,23.6237692 11.3933713,23.1286925 L10.2042183,21.9594687 C9.6953465,21.4591253 9.70605959,20.6427754 10.2256445,20.1529654 L16.6802812,14.1067094 L1.28557081,14.1067094 C0.573150318,14.1067094 0,13.5431646 0,12.8426838 L0,11.1573162 C0,10.4568354 0.573150318,9.89329059 1.28557081,9.89329059 L16.6802812,9.89329059 L10.2256445,3.84703458 C9.70070305,3.35722464 9.68998996,2.54087474 10.2042183,2.04053126 Z" id="Path" fill-rule="nonzero" transform="translate(12, 12) rotate(90) translate(-12, -12)"></path>
+                <rect id="Rectangle" x="0" y="26.5" width="24" height="4" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
