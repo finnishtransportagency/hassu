@@ -8,7 +8,7 @@ import {
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
 import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "../util/lausuntoPyyntoUtil";
-import { NotFoundError } from "hassu-common/error";
+import { NotFoundError, LinkExpiredError } from "hassu-common/error";
 import { nyt, parseDate } from "../util/dateUtil";
 import { tiedostoDownloadLinkService } from "../tiedostot/tiedostoDownloadLinkService";
 
@@ -25,7 +25,7 @@ class TiedostoDownloadLinkHandler {
     if (projekti) {
       const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
       if (!lausuntoPyynto) {
-        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+        throw new NotFoundError("Lausuntopyyntöä ei löyty");
       }
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,7 +34,7 @@ class TiedostoDownloadLinkHandler {
 
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+        throw new LinkExpiredError("Lausuntopyynnon aineiston linkki on vanhentunut");
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyyntoTiedostot(projekti, params);
     } else {
@@ -54,7 +54,7 @@ class TiedostoDownloadLinkHandler {
     if (projekti) {
       const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
       if (!lausuntoPyynnonTaydennys) {
-        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+        throw new NotFoundError("Lausuntopyynnon täydennystä ei löydy");
       }
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -62,7 +62,7 @@ class TiedostoDownloadLinkHandler {
       tiedostoDownloadLinkService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+        throw new LinkExpiredError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyynnonTaydennyksenTiedostot(projekti, params);
     } else {
