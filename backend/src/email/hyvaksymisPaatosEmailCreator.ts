@@ -1,28 +1,16 @@
 import { assertIsDefined } from "../util/assertions";
-import { Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../database/model";
-import {
-  createHyvaksymispaatosHyvaksyttyLaatijalleEmail,
-  createHyvaksymispaatosHyvaksyttyPaallikkolleEmail,
-  createHyvaksymispaatosHyvaksyttyViranomaisilleEmail,
-  createJatkopaatosHyvaksyttyPaallikkolleEmail,
-  createJatkopaatosHyvaksyttyViranomaisilleEmail,
-  createJatkopaatosHyvaksyttyLaatijalleEmail,
-} from "./emailTemplates";
+import { createHyvaksymispaatosHyvaksyttyViranomaisilleEmail, createJatkopaatosHyvaksyttyViranomaisilleEmail } from "./emailTemplates";
 import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
   HyvaksymisPaatosVaiheKutsuAdapter,
 } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { EmailOptions } from "./model/emailOptions";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { KuulutusEmailCreator } from "./kuulutusEmailCreator";
 
-export class HyvaksymisPaatosEmailCreator {
-  private adapter!: HyvaksymisPaatosVaiheKutsuAdapter;
-
-  private constructor() {
-    // Ignore
-  }
-
+export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
   static async newInstance(
     projekti: DBProjekti,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu,
@@ -40,27 +28,11 @@ export class HyvaksymisPaatosEmailCreator {
     return this;
   }
 
-  createHyvaksyttyEmailMuokkaajalle(muokkaaja: Kayttaja): EmailOptions {
-    return createHyvaksymispaatosHyvaksyttyLaatijalleEmail(this.adapter, muokkaaja);
-  }
-
-  createJatkopaatosHyvaksyttyEmailMuokkaajalle(muokkaaja: Kayttaja): EmailOptions {
-    return createJatkopaatosHyvaksyttyLaatijalleEmail(this.adapter, muokkaaja);
-  }
-
-  createHyvaksyttyEmail(): EmailOptions {
-    return createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(this.adapter);
-  }
-
-  createJatkopaatosHyvaksyttyEmail(): EmailOptions {
-    return createJatkopaatosHyvaksyttyPaallikkolleEmail(this.adapter);
-  }
-
   createHyvaksymispaatosHyvaksyttyViranomaisille(): EmailOptions {
-    return createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(this.adapter);
+    return createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(this.adapter as HyvaksymisPaatosVaiheKutsuAdapter);
   }
 
   createJatkopaatosHyvaksyttyViranomaisille(): EmailOptions {
-    return createJatkopaatosHyvaksyttyViranomaisilleEmail(this.adapter);
+    return createJatkopaatosHyvaksyttyViranomaisilleEmail(this.adapter as HyvaksymisPaatosVaiheKutsuAdapter);
   }
 }

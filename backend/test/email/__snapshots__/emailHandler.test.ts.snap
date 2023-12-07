@@ -38,13 +38,11 @@ exports[`emailHandler aloituskuulutus approval should send emails and attachment
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-Testiprojekti 2
-aloituskuulutus on hyväksytty.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Testiprojekti 2 aloituskuulutus on hyväksytty.
 
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
 
-Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "matti.meikalainen@vayla.fi",
   },
   Object {
@@ -59,11 +57,9 @@ Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi
-Testiprojekti 2
-aloituskuulutus on hyväksytty.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Testiprojekti 2 aloituskuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 

@@ -61,6 +61,14 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
     this.vahainenMenettely = props.vahainenMenettely;
   }
 
+  get kuulutusNimiCapitalized(): string {
+    return "Nähtävilläolokuulutus";
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    return super.nahtavillaoloYllapitoUrl;
+  }
+
   get yhteystiedotNahtavillaolo(): string | undefined {
     return this.props?.yhteystiedot
       ?.map((y) => {

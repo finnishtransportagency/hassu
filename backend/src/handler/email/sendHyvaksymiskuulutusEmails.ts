@@ -181,7 +181,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
-    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmail();
+    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
     if (emailToProjektiPaallikko.to) {
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
@@ -260,7 +260,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
-    const emailToProjektiPaallikko = emailCreator.createJatkopaatosHyvaksyttyEmail();
+    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
     if (emailToProjektiPaallikko.to) {
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
@@ -327,7 +327,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
     assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
     const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
-    const jatkopaatosHyvaksyttyEmailMuokkajalle = emailCreator.createJatkopaatosHyvaksyttyEmailMuokkaajalle(muokkaaja);
+    const jatkopaatosHyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
     if (jatkopaatosHyvaksyttyEmailMuokkajalle.to) {
       await emailClient.sendEmail(jatkopaatosHyvaksyttyEmailMuokkajalle);
     } else {

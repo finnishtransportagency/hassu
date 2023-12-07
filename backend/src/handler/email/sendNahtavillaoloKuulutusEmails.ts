@@ -59,7 +59,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
     oid: string,
     projekti: DBProjekti
   ) {
-    const hyvaksyttyEmail = emailCreator.createHyvaksyttyEmail();
+    const hyvaksyttyEmail = emailCreator.createHyvaksyttyEmailPp();
     if (hyvaksyttyEmail.to) {
       const pdfPath = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloPDFPath;
       if (!pdfPath) {

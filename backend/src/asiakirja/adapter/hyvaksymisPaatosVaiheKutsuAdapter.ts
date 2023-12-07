@@ -88,6 +88,25 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
     super(props, "asiakirja.hyvaksymispaatoksesta_ilmoittaminen.");
   }
 
+  get kuulutusNimiCapitalized(): string {
+    const kuulutusNimet: Record<PaatosTyyppi, string> = {
+      HYVAKSYMISPAATOS: "Hyväksymispäätöskuulutus",
+      JATKOPAATOS1: "Jatkopäätöskuulutus",
+      JATKOPAATOS2: "Jatkopäätöskuulutus",
+    };
+    return kuulutusNimet[this.props.paatosTyyppi];
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    const yllapitoUrls: Record<PaatosTyyppi, string> = {
+      HYVAKSYMISPAATOS: super.hyvaksymispaatosYllapitoUrl,
+      JATKOPAATOS1: super.jatkopaatos1YllapitoUrl,
+      JATKOPAATOS2: super.jatkopaatos2YllapitoUrl,
+    };
+    return yllapitoUrls[this.props.paatosTyyppi];
+  }
+
   get lain(): string {
     return this.tieRataOptionTextFor("lain");
   }
@@ -162,16 +181,5 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
       infoTekstit: [this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale5`)],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
-  }
-
-  get paatosYllapitoUrl(): string {
-    assertIsDefined(this.oid);
-    if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
-      return super.jatkopaatos1YllapitoUrl;
-    } else if (this.props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-      return super.jatkopaatos2YllapitoUrl;
-    } else {
-      return super.hyvaksymispaatosYllapitoUrl;
-    }
   }
 }

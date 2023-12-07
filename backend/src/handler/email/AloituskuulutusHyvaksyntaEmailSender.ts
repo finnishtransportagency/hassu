@@ -42,7 +42,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
     aloituskuulutus: AloitusKuulutusJulkaisu,
     projekti: DBProjekti
   ): Promise<void> {
-    const aloituskuulutusHyvaksyttyEmail = emailCreator.createHyvaksyttyEmail();
+    const aloituskuulutusHyvaksyttyEmail = emailCreator.createHyvaksyttyEmailPp();
     if (aloituskuulutusHyvaksyttyEmail.to) {
       const pdfSuomiPath = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath;
       if (!pdfSuomiPath) {

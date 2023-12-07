@@ -69,6 +69,14 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     this.vahainenMenettely = vahainenMenettely;
   }
 
+  get kuulutusNimiCapitalized(): string {
+    return "Aloituskuulutus";
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    return super.aloituskuulutusYllapitoUrl;
+  }
+
   yhteystiedot(
     yhteystiedot: Yhteystieto[] | null | undefined,
     yhteysHenkilot?: string[] | null,

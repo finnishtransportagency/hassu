@@ -78,6 +78,13 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
     this.props = props;
   }
 
+  abstract get kuulutusNimiCapitalized(): string;
+  abstract get kuulutusYllapitoUrl(): string;
+
+  get kuulutusNimi(): string {
+    return this.kuulutusNimiCapitalized.toLowerCase();
+  }
+
   get laheteKirjeVastaanottajat(): string[] {
     const result: string[] = [];
     const kunnat = this.ilmoituksenVastaanottajat?.kunnat;

@@ -91,7 +91,7 @@ Array [
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
@@ -101,13 +101,11 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
   },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
 
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
-Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
   },
   Object {
@@ -118,11 +116,9 @@ Sait tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
@@ -1263,7 +1259,7 @@ Array [
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
@@ -1282,11 +1278,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
         "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
       },
     ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1
-nähtävillaolokuulutus on hyväksytty.
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 nähtävilläolokuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
@@ -2844,7 +2839,7 @@ Array [
 HASSU AUTOMAATTITESTIPROJEKTI1
 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
@@ -2863,11 +2858,10 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
         "filename": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
       },
     ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1
-nähtävillaolokuulutus on hyväksytty.
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 nähtävilläolokuulutus on hyväksytty.
 
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
 
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
