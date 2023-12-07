@@ -58,7 +58,14 @@ export default function Linkki({
       <p className="mt-8 mb-8">{infoText}</p>
       {kunta && <h4 className="vayla-small-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h4>}
       <Stack direction="row" alignItems="end">
-        <TextInput name="linkki" label={inputLabel} style={{ flexGrow: 1 }} disabled value={linkHref || "-"} ref={linkRef} />
+        <TextInput
+          name="linkki"
+          label={inputLabel}
+          style={{ flexGrow: 1 }}
+          disabled
+          value={!buttonDisabled ? linkHref || "-" : ""}
+          ref={linkRef}
+        />
         <a
           className="hidden"
           id={`esikatsele-link-${uuid}`}
