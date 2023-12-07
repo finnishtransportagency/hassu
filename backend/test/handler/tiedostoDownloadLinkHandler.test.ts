@@ -16,7 +16,7 @@ import { nyt, parseDate } from "../../src/util/dateUtil";
 import { fileService } from "../../src/files/fileService";
 import { parameters } from "../../src/aws/parameters";
 import { expect } from "chai";
-import { IllegalAccessError, NotFoundError } from "hassu-common/error";
+import { IllegalAccessError, LinkExpiredError } from "hassu-common/error";
 describe("tiedostoDownloadLinkHandler", () => {
   // Scroll down for test data definitions.
   // Test projekti has:
@@ -180,7 +180,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     }
   );
 
-  it("not not return lausuntoPyynto nor nahtavillaolo files for user, when they provide correct hash and uuid, but the link has expired", async () => {
+  it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
@@ -192,10 +192,10 @@ describe("tiedostoDownloadLinkHandler", () => {
         oid: "1",
         listaaLausuntoPyyntoTiedostotInput: { hash, lausuntoPyyntoUuid: lausuntoPyynto1.uuid },
       })
-    ).to.eventually.be.rejectedWith(NotFoundError);
+    ).to.eventually.be.rejectedWith(LinkExpiredError);
   });
 
-  it("not not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
+  it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
@@ -254,7 +254,7 @@ describe("tiedostoDownloadLinkHandler", () => {
         oid: "1",
         listaaLausuntoPyynnonTaydennyksenTiedostotInput: { hash, lausuntoPyynnonTaydennysUuid: lausuntoPyynnonTaydennys1.uuid },
       })
-    ).to.eventually.be.rejectedWith(NotFoundError);
+    ).to.eventually.be.rejectedWith(LinkExpiredError);
   });
 
   it("not not return lausuntoPyynnonTaydennys files for user, when they provide wrong hash", async () => {

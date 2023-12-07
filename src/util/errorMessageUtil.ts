@@ -51,6 +51,14 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "IllegalAccessError"),
     errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "IllegalAccessError", "Puuttuvat käyttöoikeudet. "),
   },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LinkExpiredError"),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "LinkExpiredError", ""),
+  },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "NotFoundError"),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "NotFoundError", ""),
+  },
 ];
 
 export const generateErrorMessage: GenerateErrorMessage = (props) => {
