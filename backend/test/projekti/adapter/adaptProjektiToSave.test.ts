@@ -11,7 +11,12 @@ import {
   noChanges,
   addedMuistutusAgainBeforePersisting,
 } from "./adaptProjektiToSaveTests/adaptLausuntoPyynnonTaydennyksetTests";
-import { addedLisaAineisto, removedLisaAineisto, noChanges as noChangesLP } from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
+import {
+  addedLisaAineisto,
+  removedLisaAineisto,
+  noChanges as noChangesLP,
+  changeFilesOrder,
+} from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
 
 describe("adaptProjektiToSave produces correct events and adapted projekti when saving changes to lausuntoPyynnonTaydennykset", () => {
   afterEach(() => {
@@ -52,4 +57,6 @@ describe("adaptProjektiToSave produces correct events and adapterd projekti when
   it("when removing aineisto", removedLisaAineisto);
 
   it("when making no changes to lisaAineisto", noChangesLP);
+
+  it("when changing the order of lisaAineisto", changeFilesOrder);
 });
