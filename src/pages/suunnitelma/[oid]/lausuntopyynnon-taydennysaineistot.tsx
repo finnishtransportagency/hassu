@@ -8,6 +8,7 @@ import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
 import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import { kuntametadata } from "common/kuntametadata";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useLausuntoPyynnonTaydennysAineistot().data;
@@ -24,10 +25,11 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
+      {data.kunta && <h2 className="vayla-title">{kuntametadata.nameForKuntaId(data.kunta, "fi")}</h2>}
       <Section>
         {muistutukset && (
           <SectionContent>
-            <h2 className="vayla-title">Muistutukset</h2>
+            <h2 className="vayla-subtitle">Muistutukset</h2>
             <ul style={{ listStyle: "none " }}>
               {muistutukset.map((tiedosto, index) => (
                 <li key={index}>{renderLadattavaTiedosto(tiedosto)}</li>
@@ -37,7 +39,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
         )}
         {muutAineistot && (
           <SectionContent>
-            <h2 className="vayla-title">Muu aineisto</h2>
+            <h2 className="vayla-subtitle">Muu aineisto</h2>
             <ul style={{ listStyle: "none " }}>
               {muutAineistot.map((tiedosto, index) => (
                 <li key={index}>{renderLadattavaTiedosto(tiedosto)}</li>
