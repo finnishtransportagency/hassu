@@ -61,6 +61,7 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
       toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
     };
   }
 

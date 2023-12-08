@@ -35,11 +35,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -114,11 +116,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -196,12 +200,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },

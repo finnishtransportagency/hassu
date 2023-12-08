@@ -416,10 +416,11 @@ export class HassuBackendStack extends Stack {
         tagOrDigest: ASIANHALLINTA_LAMBDA_VERSION,
       }),
       environment: {
-        PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "none",
+        PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "error",
         YLLAPITO_TABLE_NAME: this.props.projektiTable.tableName,
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
         ENVIRONMENT: Config.env,
+        TZ: "Europe/Helsinki",
       },
       memorySize: 1792,
       timeout: Duration.minutes(3),

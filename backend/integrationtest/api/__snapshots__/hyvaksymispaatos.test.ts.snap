@@ -35,11 +35,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -128,11 +130,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -230,12 +234,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
@@ -1216,11 +1222,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
     "/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
@@ -1273,11 +1281,13 @@ Object {
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -1375,12 +1385,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2039-01-02T00:00:00+02:00",
     },

@@ -1,12 +1,14 @@
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { getZipFolder, makeFilePathDeleted } from ".";
-import { Aineisto, DBProjekti, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
+import { Aineisto, DBProjekti, IlmoituksenVastaanottajat, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
 import { config } from "../../config";
-import { AineistoTila, Status } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Kieli, Status } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { TiedostoManager } from "./TiedostoManager";
+import { kuntametadata } from "hassu-common/kuntametadata";
+import { translate } from "../../util/localization";
 
 export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   public readonly julkaisut: J[] | undefined;
@@ -109,5 +111,19 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
       modified = true;
     }
     return modified;
+  }
+
+  protected getIlmoituksenVastaanottajat(vastaanottajat: IlmoituksenVastaanottajat | undefined | null) {
+    const ilmoituksenVastaanottajat: string[] = [];
+    for (const kunta of vastaanottajat?.kunnat || []) {
+      ilmoituksenVastaanottajat.push(kuntametadata.nameForKuntaId(kunta.id, Kieli.SUOMI));
+    }
+    for (const viranomainen of vastaanottajat?.viranomaiset || []) {
+      const viranomainenKaannos = translate("viranomainen." + viranomainen.nimi as string, Kieli.SUOMI);
+      if (viranomainenKaannos) {
+        ilmoituksenVastaanottajat.push(viranomainenKaannos);
+      }
+    }
+    return ilmoituksenVastaanottajat;
   }
 }

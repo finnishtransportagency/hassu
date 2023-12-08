@@ -42,7 +42,7 @@ function KorkeinHallintoOikeusContent(props: {
   return (
     <SectionContent>
       <h5 className="vayla-subtitle">Korkein hallinto-oikeus</h5>
-      <h4 className="vayla-small-title mt-6 mb-6">Korkeimman hallinto-oikeuden välipäätös</h4>
+      <h4 className="vayla-small-title mt-6 !mb-6">Korkeimman hallinto-oikeuden välipäätös</h4>
       {fieldState?.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
       <HassuDatePicker
         label="Päivämäärä"
@@ -80,7 +80,7 @@ function KorkeinHallintoOikeusContent(props: {
           minRows={3}
         ></Textarea>
       </div>
-      <h4 className="vayla-small-title mb-6">Korkeimman hallinto-oikeuden päätös</h4>
+      <h4 className="vayla-small-title !mb-6">Korkeimman hallinto-oikeuden päätös</h4>
       <HassuDatePicker
         label="Päivämäärä"
         textFieldProps={{ name: "kasittelynTila.korkeinHallintoOikeus.paatos.paiva" }}

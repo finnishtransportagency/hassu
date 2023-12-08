@@ -35,11 +35,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -214,11 +216,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -287,12 +291,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -482,11 +488,13 @@ Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
     },
     "/2/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -512,11 +520,13 @@ Object {
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
     },
   },
@@ -585,12 +595,14 @@ Object {
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
