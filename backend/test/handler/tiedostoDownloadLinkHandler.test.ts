@@ -62,6 +62,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+          tuotu: "2011-01-02",
         },
       ],
       lisaAineistot: [
@@ -70,6 +71,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -110,6 +112,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/2/AineistoB.txt",
+          tuotu: "2011-04-02",
         },
       ],
       lisaAineistot: [
@@ -118,6 +121,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -163,6 +167,7 @@ describe("tiedostoDownloadLinkHandler", () => {
             jarjestys: undefined,
             kategoriaId: "osa_a",
             linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+            tuotu: "2011-01-02",
           },
         ],
         lisaAineistot: [
@@ -171,6 +176,7 @@ describe("tiedostoDownloadLinkHandler", () => {
             nimi: "aineisto_1.txt",
             jarjestys: 2,
             linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+            tuotu: "2021-06-01T01:03",
           },
         ],
         poistumisPaiva: nyt().add(10, "day").format("YYYY-MM-DD"),
@@ -220,12 +226,14 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      kunta: 1,
       muistutukset: [
         {
           __typename: "LadattavaTiedosto",
           nimi: `tiedosto_1.txt`,
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
+          tuotu: "2021-06-01T01:01",
         },
       ],
       muutAineistot: [
@@ -234,6 +242,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_3.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -304,6 +313,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+          tuotu: "2011-01-02",
         },
       ],
       lisaAineistot: [
@@ -312,12 +322,14 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
         {
           __typename: "LadattavaTiedosto",
           nimi: "aineisto_uusi.txt",
           jarjestys: 3,
           linkki: "",
+          tuotu: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -364,18 +376,21 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      kunta: 1,
       muutAineistot: [
         {
           __typename: "LadattavaTiedosto",
           nimi: "aineisto_4.txt",
           jarjestys: 1,
           linkki: "",
+          tuotu: undefined,
         },
         {
           __typename: "LadattavaTiedosto",
           nimi: "aineisto_3.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       muistutukset: [
@@ -384,12 +399,14 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "tiedosto_1.txt",
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
+          tuotu: "2021-06-01T01:01",
         },
         {
           __typename: "LadattavaTiedosto",
           nimi: "tiedosto_1.txt",
           jarjestys: 2,
           linkki: "",
+          tuotu: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -421,6 +438,7 @@ const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
       nimi: "TiedostoA.txt",
       tiedosto: "/nahtavillaolo/1/AineistoA.txt",
       kategoriaId: "osa_a",
+      tuotu: "2011-01-02",
     },
   ],
   tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -442,6 +460,7 @@ const nahtavillaoloJulkaisu2: NahtavillaoloVaiheJulkaisu = {
       nimi: "TiedostoB.txt",
       tiedosto: "/nahtavillaolo/2/AineistoB.txt",
       kategoriaId: "osa_a",
+      tuotu: "2011-04-02",
     },
   ],
   tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
