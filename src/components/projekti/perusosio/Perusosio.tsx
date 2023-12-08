@@ -20,7 +20,7 @@ export default function ProjektinPerusosio({ projekti }: PerusosioProps) {
       </Section>
       <Section>
         <ProjektiKuntatiedot projekti={projekti} />
-        <H5>Projektiin liittyvät maakunnat ja kunnat</H5>
+        <H5>Projekti kartalla</H5>
         <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
       </Section>
     </>
