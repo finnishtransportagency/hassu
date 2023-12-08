@@ -9,6 +9,7 @@ import { useEsikatseleLausuntoPyynnonTaydennysAineistot } from "src/hooks/useEsi
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
 import { useProjekti } from "src/hooks/useProjekti";
+import { kuntametadata } from "common/kuntametadata";
 
 export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useEsikatseleLausuntoPyynnonTaydennysAineistot().data;
@@ -30,9 +31,10 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
           Esikatselutilassa voit nähdä, miltä linkin sisältö näyttää vastaanottajille. Varsinaisessa linkissä voi avata aineistoja uuteen
           välilehteen yksi kerrallaan tai ladata ne kaikki kerallaan omalle koneellesi.
         </Notification>
+        {data.kunta && <h2 className="vayla-title">{kuntametadata.nameForKuntaId(data.kunta, "fi")}</h2>}
         {!!muistutukset?.length && (
           <SectionContent>
-            <h2 className="vayla-title">Muistutukset</h2>
+            <h2 className="vayla-subtitle">Muistutukset</h2>
             <ul style={{ listStyle: "none" }}>
               {muistutukset.map((tiedosto, index) => {
                 return <li key={index}>{renderLadattavaTiedosto(tiedosto, { esikatselu: true })}</li>;
@@ -42,7 +44,7 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
         )}
         {!!muutAineistot?.length && (
           <SectionContent>
-            <h2 className="vayla-title">Muu aineisto</h2>
+            <h2 className="vayla-subtitle">Muu aineisto</h2>
             <ul style={{ listStyle: "none" }}>
               {muutAineistot.map((tiedosto, index) => {
                 return <li key={index}>{renderLadattavaTiedosto(tiedosto, { esikatselu: true })}</li>;
