@@ -228,7 +228,7 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
       linkitetytProjektit: linkitetytProjektit ? getLinkitetytProjektit(linkitetytProjektit) : null,
-      geoJSON: getGeometryCollection(data),
+      geoJSON: getGeoJSON(data),
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
@@ -236,24 +236,28 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
   };
 }
 
-function getGeometryCollection(data: ProjektiProjekti) {
-  if (!data["piirretyt-geometriat"]) {
-    return null;
-  }
+function getGeoJSON(data: ProjektiProjekti) {
   const geometries = data["piirretyt-geometriat"]
-    .map((piirretty) => piirretty["geometria-wgs84"])
+    ?.map((piirretty) => piirretty["geometria-wgs84"])
     .filter((wgs84): wgs84 is ProjektiProjektiLuontiMitattugeometriaGeometria => !!wgs84)
     .map(({ coordinates, type }) => ({ coordinates, type }));
 
-  if (geometries.length) {
+  // Jos geometrioita ei ole, palautetaan null
+  if (!geometries?.length) {
     return null;
   }
 
-  const geometryCollection: ProjektiProjektiGeometrycollection = {
+  const geometry: ProjektiProjektiGeometrycollection = {
     type: "GeometryCollection",
     geometries,
   };
-  return JSON.stringify(geometryCollection);
+
+  const geoJSON = {
+    type: "Feature",
+    geometry,
+  };
+
+  return JSON.stringify(geoJSON);
 }
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {

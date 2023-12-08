@@ -68,10 +68,7 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
               new GeoJSON({
                 dataProjection: "EPSG:4326",
                 featureProjection: "EPSG:3067",
-              }).readFeature({
-                type: "Feature",
-                geometry: JSON.parse(geoJSON),
-              }),
+              }).readFeature(geoJSON),
             ],
           })
         : undefined,
