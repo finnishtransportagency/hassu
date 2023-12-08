@@ -1,20 +1,14 @@
 import { assertIsDefined } from "../util/assertions";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
-import { Kayttaja, Kieli, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
+import { Kieli, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model";
-import { createAloituskuulutusHyvaksyttyEmail, createAloituskuulutusHyvaksyttyPDFEmail } from "./emailTemplates";
 import { createAloituskuulutusLahetekirjeEmail } from "./lahetekirje/lahetekirjeEmailTemplate";
 import { EmailOptions } from "./model/emailOptions";
+import { KuulutusEmailCreator } from "./kuulutusEmailCreator";
 
-export class AloituskuulutusEmailCreator {
-  private adapter!: AloituskuulutusKutsuAdapter;
-
-  private constructor() {
-    // Ignore
-  }
-
+export class AloituskuulutusEmailCreator extends KuulutusEmailCreator {
   static async newInstance(projekti: DBProjekti, aloituskuulutus: AloitusKuulutusJulkaisu): Promise<AloituskuulutusEmailCreator> {
     return new AloituskuulutusEmailCreator().asyncConstructor(projekti, aloituskuulutus);
   }
@@ -35,15 +29,7 @@ export class AloituskuulutusEmailCreator {
     return this;
   }
 
-  createHyvaksyttyEmailMuokkaajalle(muokkaaja: Kayttaja): EmailOptions {
-    return createAloituskuulutusHyvaksyttyEmail(this.adapter, muokkaaja);
-  }
-
-  createHyvaksyttyEmail(): EmailOptions {
-    return createAloituskuulutusHyvaksyttyPDFEmail(this.adapter);
-  }
-
   createLahetekirje(): EmailOptions {
-    return createAloituskuulutusLahetekirjeEmail(this.adapter);
+    return createAloituskuulutusLahetekirjeEmail(this.adapter as AloituskuulutusKutsuAdapter);
   }
 }

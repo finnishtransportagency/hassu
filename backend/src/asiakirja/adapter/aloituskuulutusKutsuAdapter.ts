@@ -1,4 +1,4 @@
-import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
+import { LokalisoituYhteystieto } from "./commonKutsuAdapter";
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
@@ -15,11 +15,9 @@ import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUs
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
-import { formatNimi } from "../../util/userUtil";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
-import { translate } from "../../util/localization";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
@@ -54,20 +52,12 @@ export async function createAloituskuulutusKutsuAdapterProps(
   };
 }
 
-export interface AloituskuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
-  kuulutusPaiva: string;
-  kuulutusVaihePaattyyPaiva?: string;
-  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  uudelleenKuulutus?: UudelleenKuulutus | null;
-  yhteystiedot: Yhteystieto[];
-}
+export interface AloituskuulutusKutsuAdapterProps extends KuulutusKutsuAdapterProps {}
 
-export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
+export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<AloituskuulutusKutsuAdapterProps> {
   readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
-  readonly props: AloituskuulutusKutsuAdapterProps;
   readonly vahainenMenettely: boolean | null | undefined;
 
   constructor(props: AloituskuulutusKutsuAdapterProps) {
@@ -77,7 +67,14 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.uudelleenKuulutus = uudelleenKuulutus;
     this.vahainenMenettely = vahainenMenettely;
-    this.props = props;
+  }
+
+  get kuulutusNimiCapitalized(): string {
+    return "Aloituskuulutus";
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    return super.aloituskuulutusYllapitoUrl;
   }
 
   yhteystiedot(
@@ -171,19 +168,6 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     return this.text("asiakirja.aloituskuulutus_vahainen_menettely_lakiviite_tie");
   }
 
-  get laheteKirjeVastaanottajat(): string[] {
-    const result: string[] = [];
-    const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
-    const viranomaiset = this.ilmoituksenVastaanottajat?.viranomaiset;
-    kunnat?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    viranomaiset?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    return result;
-  }
-
   get kuuluttaja(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {
@@ -198,33 +182,6 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
     }
     return super.kuuluttaja_pitka;
-  }
-
-  get uudelleenKuulutusSeloste(): string | undefined {
-    return this.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
-  }
-
-  get kuulutusPaiva(): string {
-    return this.props.kuulutusPaiva ? new Date(this.props.kuulutusPaiva).toLocaleDateString("fi") : "DD.MM.YYYY";
-  }
-
-  get kuulutusNahtavillaAika(): string {
-    return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
-  }
-
-  get simple_yhteystiedot(): string[] {
-    return this.props.yhteystiedot.map((y) => {
-      let organisaatio = y.organisaatio;
-      if (y.kunta) {
-        organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
-      } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
-        const kaannos = translate(`viranomainen.${y.elyOrganisaatio}`, this.kieli);
-        if (kaannos) {
-          organisaatio = kaannos;
-        }
-      }
-      return `${organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`;
-    });
   }
 
   kutsuja(): string | undefined {

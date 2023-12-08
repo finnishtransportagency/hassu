@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, Vaihe, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -99,7 +99,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     throw new Error("checkUudelleenkuulutusPriviledges ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     throw new Error("sendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 

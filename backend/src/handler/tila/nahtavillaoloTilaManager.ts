@@ -26,6 +26,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-commo
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
 import { isAllowedToMoveBack } from "hassu-common/util/operationValidators";
 import { findNahtavillaoloWaitingForApproval } from "../../projekti/projektiUtil";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 
 async function createNahtavillaoloVaihePDF(
@@ -231,7 +232,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
-  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("Nahtavillaolovaihe on jo olemassa odottamassa hyväksyntää");
@@ -258,6 +259,11 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
+    const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    if (!updatedProjekti) {
+      throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
+    }
+    await approvalEmailSender.sendEmails(updatedProjekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

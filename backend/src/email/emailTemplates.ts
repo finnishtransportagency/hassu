@@ -1,14 +1,19 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "hassu-common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
-import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
+import { DBProjekti, DBVaylaUser, Muistutus, Velho } from "../database/model";
 import { linkSuunnitteluVaiheYllapito } from "hassu-common/links";
-import { getAsiatunnus } from "../projekti/projektiUtil";
-import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import {
+  findHyvaksymisPaatosVaiheWaitingForApproval,
+  findJatkoPaatos1VaiheWaitingForApproval,
+  findJatkoPaatos2VaiheWaitingForApproval,
+  findNahtavillaoloWaitingForApproval,
+  getAsiatunnus,
+} from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
-import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { EmailOptions } from "./model/emailOptions";
+import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "../asiakirja/adapter/kuulutusKutsuAdapter";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -21,62 +26,65 @@ export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   };
 }
 
-const domain = config.frontendDomainName || "vayliensuunnittelu.fi";
+const domain = config.frontendDomainName ?? "vayliensuunnittelu.fi";
+
+const projektiPaallikkoSuffix = `Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const muokkaajaSuffix = `Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+
+const otsikko: (obj: { otsikkoSuffix: string }) => string = template`Valtion liikenneväylien suunnittelu: ${"otsikkoSuffix"}`;
+
 // Projektin perustaminen
-const perustamisOtsikko = template`Valtion liikenneväylien suunnittelu: Uusi projekti perustettu ${"asiatunnus"}`;
-const perustamisTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
+const perustamisOtsikko = (obj: { asiatunnus: string | undefined }) =>
+  otsikko({ otsikkoSuffix: `Uusi projekti perustettu ${obj.asiatunnus}` });
+const perustamisTeksti: (obj: {
+  velho: Velho | null | undefined;
+  oid: string;
+  suffix: string;
+  domain: string;
+}) => string = template`Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
 ${"velho.nimi"}
+
 Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+
+${"suffix"}`;
+
 // Aloituskuulutuksen hyvaksymispyynto
-const aloituskuulutusHyvaksyttavanaOtsikko = template`Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ${"asiatunnus"}`;
-const aloituskuulutusHyvaksyttavanaTeksti = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-${"velho.nimi"}
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-// Aloituskuulutuksen hyvksyminen ilmoitus laatijalle
-const aloituskuulutusHyvaksyttyOtsikko = "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}";
-const aloituskuulutusHyvaksyttyTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-aloituskuulutus on hyväksytty.
-Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko =
-  "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}";
-const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-hyväksymispäätöskuulutus on hyväksytty.
-Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-// Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
-// Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
-const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
-const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+const kuulutusHyvaksyttavanaOtsikko: (obj: {
+  kuulutusTyyppiUpperCase: string;
+  asiatunnus: string | undefined;
+}) => string = template`Valtion liikenneväylien suunnittelu: ${"kuulutusTyyppiUpperCase"} odottaa hyväksyntää ${"asiatunnus"}`;
+const kuulutusHyvaksyttavanaTeksti: (obj: {
+  velho: Velho | null | undefined;
+  kuulutusTyyppiLowerCase: string;
+  kuulutusKohde: string;
+  domain: string;
+  oid: string;
+  kuulutusPath: string;
+  suffix: string;
+}) => string = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi ${"velho.nimi"} on luotu ${"kuulutusTyyppiLowerCase"}, ${"kuulutusKohde"} hyväksyntääsi.
 
-Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
+Voit tarkastella kuulutusta osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}${"kuulutusPath"}
 
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-// Nähtävilläolovaihekuulutuksen hyväksyminen pdf projektipaallikolle
-const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty {{asiatunnus}}`;
-const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+${"suffix"}`;
 
-Voit tarkastella kuulutusta osoitteessa {{nahtavillaoloYllapitoUrl}}
+const kuulutusOtsikko: (obj: {
+  kuulutuksenTila: "hyväksytty" | "odottaa hyväksyntää";
+}) => string = template`Valtion liikenneväylien suunnittelu: {{kuulutusNimiCapitalized}} ${"kuulutuksenTila"} {{asiatunnus}}`;
 
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const kuulutusHyvaksyttyTeksti: ({
+  suffix,
+}: {
+  suffix: string;
+}) => string = template`Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} {{kuulutusNimi}} on hyväksytty.
 
-const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}`;
-const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella kuulutusta osoitteessa {{kuulutusYllapitoUrl}}
 
-Voit tarkastella projektia osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+${"suffix"}`;
 
-Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+const ppHyvaksyttySuffix = `Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
-Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+${projektiPaallikkoSuffix}`;
+
 const uudelleenkuulutusOtsikkoPrefix = `Korjaus/uudelleenkuulutus: `;
 const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
 const hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa1 = `Hei,`;
@@ -141,64 +149,119 @@ export function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUse
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
+  projekti.oid;
+  projekti.velho;
   return {
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
-    subject: perustamisOtsikko({ asiatunnus, ...projekti }),
-    text: perustamisTeksti({ domain, asiatunnus, ...projekti }),
+    subject: perustamisOtsikko({ asiatunnus }),
+    text: perustamisTeksti({ domain, oid: projekti.oid, velho: projekti.velho, suffix: projektiPaallikkoSuffix }),
   };
 }
 
-export function createAloituskuulutusHyvaksyttavanaEmail(projekti: DBProjekti): EmailOptions {
+function getKuulutusTyyppi(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
+      return "Aloituskuulutus";
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      return "Nähtävilläolokuulutus";
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      return "Hyväksymispäätöskuulutus";
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      return "Jatkopäätöskuulutus";
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      return "Jatkopäätöskuulutus";
+    default:
+      throw new Error(`TilasiirtymaTyyppi ('${tilasiirtymaTyyppi}') ei ole tuettu hyväksyttävänä emailin lähetyksessä`);
+  }
+}
+
+function getKuulutusPath(tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.ALOITUSKUULUTUS:
+      return "/aloituskuulutus";
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      return "/nahtavillaolo/kuulutus";
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      return "/hyvaksymispaatos/kuulutus";
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      return "/jatkaminen1/kuulutus";
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      return "/jatkaminen2/kuulutus";
+    default:
+      throw new Error(`TilasiirtymaTyyppi ('${tilasiirtymaTyyppi}') ei ole tuettu hyväksyttävänä emailin lähetyksessä`);
+  }
+}
+
+function getKuulutusKohde(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): string {
+  const aineistotOdottavat = "jonka muokatut aineistot odottavat";
+  const jokaOdottaa = "joka odottaa";
+  switch (tilasiirtymaTyyppi) {
+    case TilasiirtymaTyyppi.NAHTAVILLAOLO:
+      if (findNahtavillaoloWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+      return jokaOdottaa;
+    case TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE:
+      if (findHyvaksymisPaatosVaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+      return jokaOdottaa;
+    case TilasiirtymaTyyppi.JATKOPAATOS_1:
+      if (findJatkoPaatos1VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+      return jokaOdottaa;
+    case TilasiirtymaTyyppi.JATKOPAATOS_2:
+      if (findJatkoPaatos2VaiheWaitingForApproval(projekti)?.aineistoMuokkaus) {
+        return aineistotOdottavat;
+      }
+      return jokaOdottaa;
+    default:
+      return jokaOdottaa;
+  }
+}
+
+export function createKuulutusHyvaksyttavanaEmail(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
+  const kuulutusTyyppiUpperCase = getKuulutusTyyppi(tilasiirtymaTyyppi);
+  const kuulutusTyyppiLowerCase = kuulutusTyyppiUpperCase.toLowerCase();
+  const kuulutusKohde = getKuulutusKohde(projekti, tilasiirtymaTyyppi);
+  const kuulutusPath = getKuulutusPath(tilasiirtymaTyyppi);
+
   return {
-    subject: aloituskuulutusHyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
-    text: aloituskuulutusHyvaksyttavanaTeksti({ domain, ...projekti }),
+    subject: kuulutusHyvaksyttavanaOtsikko({
+      asiatunnus,
+      kuulutusTyyppiUpperCase,
+    }),
+    text: kuulutusHyvaksyttavanaTeksti({
+      kuulutusTyyppiLowerCase,
+      kuulutusPath,
+      kuulutusKohde,
+      domain,
+      oid: projekti.oid,
+      suffix: projektiPaallikkoSuffix,
+      velho: projekti.velho,
+    }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
 
-export function createAloituskuulutusHyvaksyttyEmail(adapter: AloituskuulutusKutsuAdapter, muokkaaja: Kayttaja): EmailOptions {
-  return {
-    subject: adapter.substituteText(aloituskuulutusHyvaksyttyOtsikko),
-    text: adapter.substituteText(aloituskuulutusHyvaksyttyTeksti),
-    to: muokkaaja.email || undefined,
-  };
-}
-
-export function createHyvaksymispaatosHyvaksyttyLaatijalleEmail(
-  adapter: HyvaksymisPaatosVaiheKutsuAdapter,
+export function createKuulutusHyvaksyttyLaatijalleEmail(
+  adapter: KuulutusKutsuAdapter<KuulutusKutsuAdapterProps>,
   muokkaaja: Kayttaja
 ): EmailOptions {
   return {
-    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyLaatijalleOtsikko),
-    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyLaatijalleTeksti),
-    to: muokkaaja.email || undefined,
+    subject: adapter.substituteText(kuulutusOtsikko({ kuulutuksenTila: "hyväksytty" })),
+    text: adapter.substituteText(kuulutusHyvaksyttyTeksti({ suffix: muokkaajaSuffix })),
+    to: muokkaaja.email ?? undefined,
   };
 }
 
-export function createAloituskuulutusHyvaksyttyPDFEmail(adapter: AloituskuulutusKutsuAdapter): EmailOptions {
+export function createKuulutusHyvaksyttyPpEmail(adapter: KuulutusKutsuAdapter<KuulutusKutsuAdapterProps>): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
-    subject: adapter.substituteText(aloituskuulutusHyvaksyttyPDFOtsikko),
-    text: adapter.substituteText(aloituskuulutusHyvaksyttyPDFTeksti),
-    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
-  };
-}
-
-export function createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
-  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
-  return {
-    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleOtsikko),
-    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleTeksti),
-    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
-  };
-}
-
-export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: NahtavillaoloVaiheKutsuAdapter): EmailOptions {
-  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
-  return {
-    subject: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko),
-    text: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti),
+    subject: adapter.substituteText(kuulutusOtsikko({ kuulutuksenTila: "hyväksytty" })),
+    text: adapter.substituteText(kuulutusHyvaksyttyTeksti({ suffix: ppHyvaksyttySuffix })),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
@@ -222,7 +285,7 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
   return {
     subject,
     text: paragraphs.join("\n\n"),
-    to: adapter.laheteTekstiVastaanottajat,
+    to: adapter.laheteKirjeVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
@@ -246,7 +309,7 @@ export function createJatkopaatosHyvaksyttyViranomaisilleEmail(adapter: Hyvaksym
   return {
     subject,
     text: paragraphs.join("\n\n"),
-    to: adapter.laheteTekstiVastaanottajat,
+    to: adapter.laheteKirjeVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
@@ -260,7 +323,7 @@ export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient:
 }
 
 export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
-  const asiatunnus = getAsiatunnus(projekti.velho) || "";
+  const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
   return {
     subject: muistutusOtsikko(muistutus),
     text: muistutusTeksti({ asiatunnus, ...muistutus }),
@@ -269,11 +332,11 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
 }
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
-  const asiatunnus = getAsiatunnus(projekti.velho) || "";
+  const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
   return {
     subject: muistuttajanOtsikko(muistutus),
     text: muistutusTeksti({ asiatunnus, ...muistutus }),
-    to: muistutus.sahkoposti || undefined,
+    to: muistutus.sahkoposti ?? undefined,
   };
 }
 

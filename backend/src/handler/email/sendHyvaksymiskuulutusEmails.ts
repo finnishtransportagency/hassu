@@ -34,20 +34,11 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu, this.getPaatosTyyppi());
 
-    assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
-    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
-    const hyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
-    if (hyvaksyttyEmailMuokkajalle.to) {
-      await emailClient.sendEmail(hyvaksyttyEmailMuokkajalle);
-    } else {
-      log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
-    }
-
     const projektinKielet = [julkaisu.kielitiedot?.ensisijainenKieli, julkaisu.kielitiedot?.toissijainenKieli].filter(
       (kieli): kieli is Kieli => !!kieli
     );
 
+    await this.sendEmailToMuokkaaja(julkaisu, emailCreator);
     await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
     await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
   }
@@ -105,7 +96,35 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
         if (!ilmoitusKunnallePdf) {
           throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKunnallePdf:ää ei löytynyt kielellä '${kieli}'`);
         }
+
         (await lahetettavatPDFt).push(ilmoitusKuulutusPdf, ilmoitusKunnallePdf);
+
+        if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+          const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+          if (!pdfSaamePath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+            );
+          }
+          const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+          if (!hyvaksyttyKuulutusSaamePDF) {
+            throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
+          }
+
+          const pdfIlmoitusSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto;
+          if (!pdfIlmoitusSaamePath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto on määrittelemättä`
+            );
+          }
+          const hyvaksyttyKuulutusIlmoitusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfIlmoitusSaamePath);
+          if (!hyvaksyttyKuulutusIlmoitusSaamePDF) {
+            throw new Error("HyvaksyttyKuulutusIlmoitusSaamePDF:n saaminen epäonnistui");
+          }
+
+          (await lahetettavatPDFt).push(hyvaksyttyKuulutusSaamePDF, hyvaksyttyKuulutusIlmoitusSaamePDF);
+        }
+
         return lahetettavatPDFt;
       }, Promise.resolve([]));
     const paatosTiedostot =
@@ -143,19 +162,22 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     await this.updateProjektiJulkaisut(projekti, julkaisu);
   }
 
-  private async sendEmailToProjektipaallikko(
+  protected async sendEmailToProjektipaallikko(
     emailCreator: HyvaksymisPaatosEmailCreator,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
-    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmail();
+    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
     if (emailToProjektiPaallikko.to) {
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
         .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
           const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
           const ilmoitusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
+          const ilmoitusLausunnonAntajallePdfPath = pdft.hyvaksymisIlmoitusLausunnonantajillePDFPath;
+          const ilmoitusMuistuttajillePdfPath = pdft.hyvaksymisIlmoitusMuistuttajillePDFPath;
+
           if (!kuulutusPdfPath) {
             throw new Error(
               `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisKuulutusPDFPath on määrittelemättä`
@@ -166,17 +188,51 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
               `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
             );
           }
+          if (!ilmoitusLausunnonAntajallePdfPath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusLausunnonantajillePDFPath on määrittelemättä`
+            );
+          }
+          if (!ilmoitusMuistuttajillePdfPath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusMuistuttajillePDFPath on määrittelemättä`
+            );
+          }
           const kuulutusPDF = await fileService.getFileAsAttachment(projekti.oid, kuulutusPdfPath);
           const ilmoitusPdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusPdfPath);
+          const ilmoitusLausunnonAntajallePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusLausunnonAntajallePdfPath);
+          const ilmoitusMuistuttajillePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusMuistuttajillePdfPath);
+
           if (!kuulutusPDF) {
             throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
           }
           if (!ilmoitusPdf) {
             throw new Error(`sendApprovalMailsAndAttachments: ilmoitusPdf:ää ei löytynyt kielellä '${kieli}'`);
           }
-          (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf);
+          if (!ilmoitusLausunnonAntajallePdf) {
+            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusLausunnonAntajallePdf:ää ei löytynyt kielellä '${kieli}'`);
+          }
+          if (!ilmoitusMuistuttajillePdf) {
+            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusMuistuttajillePdf:ää ei löytynyt kielellä '${kieli}'`);
+          }
+          (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf, ilmoitusLausunnonAntajallePdf, ilmoitusMuistuttajillePdf);
           return lahetettavatPDFt;
         }, Promise.resolve([]));
+
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+        const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+        if (!pdfSaamePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+        if (!hyvaksyttyKuulutusSaamePDF) {
+          throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
+        }
+        emailToProjektiPaallikko.attachments.push(hyvaksyttyKuulutusSaamePDF);
+      }
+
       await emailClient.sendEmail(emailToProjektiPaallikko);
     } else {
       log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
@@ -184,7 +240,90 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   }
 }
 
-class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+  protected async sendEmailToProjektipaallikko(
+    emailCreator: HyvaksymisPaatosEmailCreator,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    projektinKielet: Kieli[],
+    projekti: DBProjekti
+  ): Promise<void> {
+    const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
+    if (emailToProjektiPaallikko.to) {
+      emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
+        .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
+        .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
+          const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
+          const ilmoitusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
+          const ilmoitusLausunnonAntajallePdfPath = pdft.hyvaksymisIlmoitusLausunnonantajillePDFPath;
+
+          if (!kuulutusPdfPath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisKuulutusPDFPath on määrittelemättä`
+            );
+          }
+          if (!ilmoitusPdfPath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
+            );
+          }
+          if (!ilmoitusLausunnonAntajallePdfPath) {
+            throw new Error(
+              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusLausunnonantajillePDFPath on määrittelemättä`
+            );
+          }
+
+          const kuulutusPDF = await fileService.getFileAsAttachment(projekti.oid, kuulutusPdfPath);
+          const ilmoitusPdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusPdfPath);
+          const ilmoitusLausunnonAntajallePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusLausunnonAntajallePdfPath);
+
+          if (!kuulutusPDF) {
+            throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
+          }
+          if (!ilmoitusPdf) {
+            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusPdf:ää ei löytynyt kielellä '${kieli}'`);
+          }
+          if (!ilmoitusLausunnonAntajallePdf) {
+            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusLausunnonAntajallePdf:ää ei löytynyt kielellä '${kieli}'`);
+          }
+
+          (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf, ilmoitusLausunnonAntajallePdf);
+          return lahetettavatPDFt;
+        }, Promise.resolve([]));
+
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
+        const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
+        if (!pdfSaamePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+        if (!hyvaksyttyKuulutusSaamePDF) {
+          throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
+        }
+        emailToProjektiPaallikko.attachments.push(hyvaksyttyKuulutusSaamePDF);
+      }
+
+      await emailClient.sendEmail(emailToProjektiPaallikko);
+    } else {
+      log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
+    }
+  }
+
+  protected async sendEmailToMuokkaaja(julkaisu: HyvaksymisPaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
+    assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
+    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
+    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
+    const jatkopaatosHyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
+    if (jatkopaatosHyvaksyttyEmailMuokkajalle.to) {
+      await emailClient.sendEmail(jatkopaatosHyvaksyttyEmailMuokkajalle);
+    } else {
+      log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
+    }
+  }
+}
+
+class JatkoPaatos1HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
     return findHJatko1KuulutusLastApproved(projekti);
   }
@@ -210,7 +349,7 @@ class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
   }
 }
 
-class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+class JatkoPaatos2HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender {
   public findLastApproved(projekti: DBProjekti) {
     return findHJatko2KuulutusLastApproved(projekti);
   }

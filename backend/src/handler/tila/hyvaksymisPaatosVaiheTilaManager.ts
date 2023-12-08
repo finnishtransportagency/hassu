@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja, Vaihe } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -13,6 +13,7 @@ import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoSta
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -134,7 +135,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     return requireAdmin();
   }
 
-  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
+  async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("HyvaksymisPaatosVaihe on jo olemassa odottamassa hyväksyntää");
@@ -161,6 +162,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
+    const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    if (!updatedProjekti) {
+      throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
+    }
+    await approvalEmailSender.sendEmails(updatedProjekti, tilasiirtymaTyyppi);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

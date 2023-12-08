@@ -43,6 +43,7 @@ export type GenericDbKuulutusJulkaisu = Pick<
   | "aineistoMuokkaus"
   | "yhteystiedot"
   | "kuulutusYhteystiedot"
+  | "muokkaaja"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<

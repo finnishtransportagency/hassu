@@ -217,6 +217,13 @@ describe("apiHandler", () => {
                   aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
                 },
               },
+              aloituskuulutusSaamePDFt: {
+                POHJOISSAAME: {
+                  kuulutusPDF: {
+                    tiedosto: "/Saame.pdf",
+                  },
+                },
+              },
             },
           ];
         }

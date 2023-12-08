@@ -1,22 +1,17 @@
 import { assertIsDefined } from "../util/assertions";
 import { Kieli, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
-import { createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail } from "./emailTemplates";
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { createNahtavillaLahetekirjeEmail } from "./lahetekirje/lahetekirjeEmailTemplate";
 import { fileService } from "../files/fileService";
 import { EmailOptions } from "./model/emailOptions";
+import { KuulutusEmailCreator } from "./kuulutusEmailCreator";
 
-export class NahtavillaoloEmailCreator {
-  private adapter!: NahtavillaoloVaiheKutsuAdapter;
+export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
   private projekti!: DBProjekti;
   private julkaisu!: NahtavillaoloVaiheJulkaisu;
-
-  private constructor() {
-    // Ignore
-  }
 
   static async newInstance(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<NahtavillaoloEmailCreator> {
     return new NahtavillaoloEmailCreator().asyncConstructor(projekti, julkaisu);
@@ -41,12 +36,8 @@ export class NahtavillaoloEmailCreator {
     return this;
   }
 
-  createHyvaksyttyEmail(): EmailOptions {
-    return createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(this.adapter);
-  }
-
   createLahetekirje(): EmailOptions {
-    return createNahtavillaLahetekirjeEmail(this.adapter);
+    return createNahtavillaLahetekirjeEmail(this.adapter as NahtavillaoloVaiheKutsuAdapter);
   }
 
   async createLahetekirjeWithAttachments(): Promise<EmailOptions> {

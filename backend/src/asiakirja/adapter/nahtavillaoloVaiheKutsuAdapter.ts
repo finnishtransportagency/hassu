@@ -1,15 +1,7 @@
-import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import {
-  DBProjekti,
-  IlmoituksenVastaanottajat,
-  NahtavillaoloVaiheJulkaisu,
-  SuunnitteluSopimus,
-  UudelleenKuulutus,
-  Yhteystieto,
-} from "../../database/model";
+import { DBProjekti, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -17,6 +9,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
+import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
   projekti: Pick<
@@ -54,27 +47,26 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   };
 }
 
-export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
-  kuulutusPaiva: string;
-  kuulutusVaihePaattyyPaiva?: string;
+export interface NahtavillaoloVaiheKutsuAdapterProps extends KuulutusKutsuAdapterProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  uudelleenKuulutus?: UudelleenKuulutus | null;
-  suunnitteluSopimus?: SuunnitteluSopimus | null;
-  yhteystiedot?: Yhteystieto[];
 }
 
-export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
+export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<NahtavillaoloVaiheKutsuAdapterProps> {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly vahainenMenettely: boolean | null | undefined;
-  props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
-    const { ilmoituksenVastaanottajat, vahainenMenettely } = props;
-    this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
-    this.vahainenMenettely = vahainenMenettely;
-    this.props = props;
+    this.ilmoituksenVastaanottajat = props.ilmoituksenVastaanottajat;
+    this.vahainenMenettely = props.vahainenMenettely;
+  }
+
+  get kuulutusNimiCapitalized(): string {
+    return "Nähtävilläolokuulutus";
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    return super.nahtavillaoloYllapitoUrl;
   }
 
   get yhteystiedotNahtavillaolo(): string | undefined {
@@ -96,17 +88,6 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get subject(): string {
     return this.text("otsikko");
-  }
-
-  get kuulutusNahtavillaAika(): string {
-    return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
-  }
-
-  get uudelleenKuulutusSeloste(): string | undefined {
-    return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
-  }
-  get kuulutusPaiva(): string {
-    return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
   }
 
   get kuulutusVaihePaattyyPaiva(): string {
@@ -146,18 +127,5 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
       infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
-  }
-
-  get laheteKirjeVastaanottajat(): string[] {
-    const result: string[] = [];
-    const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
-    const viranomaiset = this.ilmoituksenVastaanottajat?.viranomaiset;
-    kunnat?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    viranomaiset?.forEach(({ sahkoposti }) => {
-      result.push(sahkoposti);
-    });
-    return result;
   }
 }
