@@ -4,6 +4,8 @@ import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
   ProjektiProjekti,
+  ProjektiProjektiGeometrycollection,
+  ProjektiProjektiLuontiMitattugeometriaGeometria,
   ProjektiProjektiLuontiOminaisuudet,
   ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos,
   ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus,
@@ -208,6 +210,7 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
   const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
   const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
+
   return {
     oid: "" + data.oid,
     versio: 1,
@@ -225,12 +228,32 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
       linkitetytProjektit: linkitetytProjektit ? getLinkitetytProjektit(linkitetytProjektit) : null,
-      geoJSON: data.geometrycollection ? JSON.stringify(data.geometrycollection) : null,
+      geoJSON: getGeometryCollection(data),
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
     asianhallinta: { inaktiivinen: false },
   };
+}
+
+function getGeometryCollection(data: ProjektiProjekti) {
+  if (!data["piirretyt-geometriat"]) {
+    return null;
+  }
+  const geometries = data["piirretyt-geometriat"]
+    .map((piirretty) => piirretty["geometria-wgs84"])
+    .filter((wgs84): wgs84 is ProjektiProjektiLuontiMitattugeometriaGeometria => !!wgs84)
+    .map(({ coordinates, type }) => ({ coordinates, type }));
+
+  if (geometries.length) {
+    return null;
+  }
+
+  const geometryCollection: ProjektiProjektiGeometrycollection = {
+    type: "GeometryCollection",
+    geometries,
+  };
+  return JSON.stringify(geometryCollection);
 }
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {
