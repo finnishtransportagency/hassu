@@ -120,6 +120,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -481,6 +482,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -675,6 +677,7 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -723,6 +726,7 @@
     "vahainenMenettely": true,
     "velho": {
       "asiatunnusVayla": "HASSU/123/2023",
+      "geoJSON": null,
       "kunnat": [
         91,
         92

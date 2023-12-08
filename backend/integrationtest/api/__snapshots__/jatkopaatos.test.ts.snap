@@ -342,6 +342,7 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
+        "geoJSON": null,
         "kunnat": Array [
           91,
           92,
@@ -452,7 +453,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": undefined,
+      "geoJSON": null,
       "kunnat": Array [
         91,
         92,
@@ -922,6 +923,7 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
+        "geoJSON": null,
         "kunnat": Array [
           91,
           92,
@@ -1032,7 +1034,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": undefined,
+      "geoJSON": null,
       "kunnat": Array [
         91,
         92,
