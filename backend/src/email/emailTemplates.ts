@@ -61,9 +61,7 @@ const kuulutusHyvaksyttavanaTeksti: (obj: {
   oid: string;
   kuulutusPath: string;
   suffix: string;
-}) => string = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-${"velho.nimi"}
-on luotu ${"kuulutusTyyppiLowerCase"}, ${"kuulutusKohde"} hyväksyntääsi.
+}) => string = template`Valtion liikenneväylien suunnittelu -järjestelmän projektistasi ${"velho.nimi"} on luotu ${"kuulutusTyyppiLowerCase"}, ${"kuulutusKohde"} hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://${"domain"}/yllapito/projekti/${"oid"}${"kuulutusPath"}
 

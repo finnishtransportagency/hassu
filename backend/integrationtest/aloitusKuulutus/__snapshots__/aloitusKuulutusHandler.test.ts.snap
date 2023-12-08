@@ -1227,9 +1227,7 @@ exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vai
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-Testiprojekti 1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
 
@@ -1240,9 +1238,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
   },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-Testiprojekti 1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
 

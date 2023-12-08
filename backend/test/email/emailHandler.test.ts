@@ -86,9 +86,7 @@ describe("emailHandler", () => {
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
-        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-          "Testiprojekti 2\n" +
-          "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 2 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n\n" +
           "Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/aloituskuulutus\n\n" +
           "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
       );
@@ -118,9 +116,7 @@ describe("emailHandler", () => {
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
-        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-          "Testiprojekti 2\n" +
-          "on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n\n" +
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 2 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.\n\n" +
           "Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/nahtavillaolo/kuulutus\n\n" +
           "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
       );
@@ -137,9 +133,7 @@ describe("emailHandler", () => {
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
-        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
-          "Testiprojekti 2\n" +
-          "on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n\n" +
+        "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 2 on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n\n" +
           "Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/5/hyvaksymispaatos/kuulutus\n\n" +
           "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
       );

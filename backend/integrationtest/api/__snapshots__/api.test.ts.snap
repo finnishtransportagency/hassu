@@ -113,9 +113,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
   },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
@@ -995,9 +993,7 @@ exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät oper
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
@@ -12034,9 +12030,7 @@ exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = 
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
@@ -13692,9 +13686,7 @@ exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = 
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu nähtävilläolokuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
@@ -15520,9 +15512,7 @@ Muistutus 1
   },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
@@ -16422,9 +16412,7 @@ exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
 
@@ -20184,9 +20172,7 @@ exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu hyväksymispäätöskuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu hyväksymispäätöskuulutus, jonka muokatut aineistot odottavat hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
 
@@ -20278,9 +20264,7 @@ CGI Suomi Oy",
   },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus
 

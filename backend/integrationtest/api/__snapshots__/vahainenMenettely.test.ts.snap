@@ -87,9 +87,7 @@ exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyv
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
 
@@ -1255,9 +1253,7 @@ exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyv
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
@@ -2835,9 +2831,7 @@ exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyv
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu nähtävilläolokuulutus, joka odottaa hyväksyntääsi.
 
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/kuulutus
 
