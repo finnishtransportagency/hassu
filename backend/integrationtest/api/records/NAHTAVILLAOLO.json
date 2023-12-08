@@ -133,7 +133,6 @@
         "tila": "PERUUTETTU",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
-          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -264,7 +263,6 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
-          "geoJSON": null,
           "kunnat": [
             91,
             92
@@ -459,7 +457,6 @@
     "vahainenMenettely": false,
     "velho": {
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": null,
       "kunnat": [
         91,
         92
