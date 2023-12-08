@@ -2,6 +2,9 @@
   "projektin_lataamisessa_virhe": "Projektet skulle inte laddas",
   "ladataan": "Laddar...",
   "sivua-ei-loydy": "Sidan hittas inte",
+  "sivua-ei-loytynyt": "Sidan hittades tyvärr inte",
+  "tiedostoa-ei-loydy": "Filen hittades inte",
+  "tiedostoa-ei-loytynyt": "Något gick fel och filen hittades tyvärr inte.",
   "siirrytaan-aktiiviseen-vaiheeseen": "Omdirigeras till den aktiva fasen...",
   "projekti_ei_ruotsin_kielella": "Projektet finns inte på svenska",
   "hallinto-oikeus": {

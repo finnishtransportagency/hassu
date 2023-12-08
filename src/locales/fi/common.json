@@ -2,6 +2,9 @@
   "projektin_lataamisessa_virhe": "Projektin lataamisessa tapahtui virhe",
   "ladataan": "Ladataan...",
   "sivua-ei-loydy": "Sivua ei löydy",
+  "sivua-ei-loytynyt": "Sivua ei valitettavasti löytynyt.",
+  "tiedostoa-ei-loydy": "Tiedostoa ei löydy",
+  "tiedostoa-ei-loytynyt": "Jotain meni pieleen ja tiedostoa ei valitettavasti löytynyt.",
   "siirrytaan-aktiiviseen-vaiheeseen": "Siirrytään aktiiviseen vaiheeseen...",
   "projekti_ei_ruotsin_kielella": "Projekti ei ole saatavilla ruotsin kielellä",
   "hallinto-oikeus": {
