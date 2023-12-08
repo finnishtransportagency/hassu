@@ -6,6 +6,7 @@ import ProjektinLinkit from "./ProjektinLinkit";
 import Section from "@components/layout/Section2";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { H5 } from "@components/Headings";
+import ContentSpacer from "@components/layout/ContentSpacer";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -20,8 +21,10 @@ export default function ProjektinPerusosio({ projekti }: PerusosioProps) {
       </Section>
       <Section>
         <ProjektiKuntatiedot projekti={projekti} />
-        <H5>Projekti kartalla</H5>
-        <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+        <ContentSpacer>
+          <H5>Projekti kartalla</H5>
+          <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+        </ContentSpacer>
       </Section>
     </>
   );
