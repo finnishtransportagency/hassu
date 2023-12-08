@@ -37,7 +37,7 @@ class TiedostoDownloadLinkService {
     } else {
       linkki = "";
     }
-    return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki, tuotu: aineisto.tuotu };
   }
 
   private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
@@ -49,7 +49,7 @@ class TiedostoDownloadLinkService {
     } else {
       linkki = "";
     }
-    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki };
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
   }
 
   async esikatseleLausuntoPyynnonTiedostot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
@@ -111,6 +111,7 @@ class TiedostoDownloadLinkService {
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
+      kunta: uusiLausuntoPyynnonTaydennys?.kunta,
       muutAineistot,
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
@@ -173,6 +174,7 @@ class TiedostoDownloadLinkService {
       : null;
     return {
       __typename: "LadattavatTiedostot",
+      kunta: lausuntoPyynnonTaydennys.kunta,
       muutAineistot,
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
