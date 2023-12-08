@@ -223,7 +223,7 @@ describe("emailHandler", () => {
         expect(vastaanottajaLista1).to.equal("matti.meikalainen@vayla.fi");
 
         // hyväksymisviesti projektipäällikölle
-        const vastaanottajaLista2 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+        const vastaanottajaLista2 = (emailClientStub.sendEmailStub.secondCall.firstArg as EmailOptions).to;
         const projektiPaallikonEmail = projekti.kayttoOikeudet.find(
           (kayttoOikeus) => kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
         )?.email;
