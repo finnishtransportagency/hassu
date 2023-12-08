@@ -191,11 +191,11 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
         </Overlay>
       ) : (
         <EiVoidaNayttaaOverlay>
-          <OverlayText2>
+          <EiVoidaNayttaaOverlayText>
             Projektia ei voida näyttää kartalla
             <br />
             Aseta geometriat Projektivelhossa kohdasta Projektin geometriat
-          </OverlayText2>
+          </EiVoidaNayttaaOverlayText>
         </EiVoidaNayttaaOverlay>
       )}
     </StyledMap>
@@ -214,7 +214,7 @@ const OverlayText = styled("p")({
   padding: "5px",
 });
 
-const OverlayText2 = styled("p")({
+const EiVoidaNayttaaOverlayText = styled("p")({
   textAlign: "center",
   padding: "10px",
   verticalAlign: "center",
