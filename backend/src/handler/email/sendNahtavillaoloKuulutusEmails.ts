@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
@@ -23,13 +23,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
 
     const emailCreator = await NahtavillaoloEmailCreator.newInstance(projekti, nahtavillakuulutus);
 
-    // aloituskuulutus.muokkaaja on määritelty
-    assertIsDefined(nahtavillakuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(nahtavillakuulutus.muokkaaja);
-    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
-
-    // TODO: tarkista miksi muokkaajaa ei käytetä mihinkään tässä
-    // TODO: Lisää kustomoitu aineistomuokkaus viesti?
+    await this.sendEmailToMuokkaaja(nahtavillakuulutus, emailCreator);
     await this.sendEmailToProjektipaallikko(emailCreator, nahtavillakuulutus, oid, projekti);
 
     if (!nahtavillakuulutus.aineistoMuokkaus) {

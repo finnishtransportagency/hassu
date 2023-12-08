@@ -163,19 +163,23 @@ describe("emailHandler", () => {
       await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
       expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
 
-      // Hyväksymisviesti projektipäällikölle ja ilmoitusviesti viranomaisille
-      expect(emailClientStub.sendEmailStub.calledTwice).to.be.true;
+      // Hyväksymisviesti laatijalle, projektipäällikölle ja ilmoitusviesti viranomaisille
+      expect(emailClientStub.sendEmailStub.calledThrice).to.be.true;
+
+      // Laatijalle osoitettu viesti lähtee
+      const vastaanottajaLista1 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+      expect(vastaanottajaLista1).to.equal("matti.meikalainen@vayla.fi");
 
       // Projektipäällikölle osoitettu viesti lähtee
-      const vastaanottajaLista1 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+      const vastaanottajaLista2 = (emailClientStub.sendEmailStub.secondCall.firstArg as EmailOptions).to;
       const projektiPaallikonEmail = projekti.kayttoOikeudet.find(
         (kayttoOikeus) => kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
       )?.email;
-      expect(vastaanottajaLista1).to.include.all.members([projektiPaallikonEmail]);
+      expect(vastaanottajaLista2).to.include.all.members([projektiPaallikonEmail]);
 
       // Ilmoitusviesti lähtee viranomaisille
-      const vastaanottajaLista2 = (emailClientStub.sendEmailStub.secondCall.firstArg as EmailOptions).to;
-      expect(vastaanottajaLista2).to.include.all.members([
+      const vastaanottajaLista3 = (emailClientStub.sendEmailStub.thirdCall.firstArg as EmailOptions).to;
+      expect(vastaanottajaLista3).to.include.all.members([
         "mikkeli@mikke.li",
         "juva@ju.va",
         "savonlinna@savonlin.na",
@@ -212,13 +216,18 @@ describe("emailHandler", () => {
         await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
 
-        // Ainoastaan Hyväksymisviesti projektipäällikölle
-        expect(emailClientStub.sendEmailStub.calledOnce).to.be.true;
+        // Viestit laatijalle ja projektipäällikölle
+        expect(emailClientStub.sendEmailStub.calledTwice).to.be.true;
+        // Laatijalle osoitettu viesti lähtee
         const vastaanottajaLista1 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+        expect(vastaanottajaLista1).to.equal("matti.meikalainen@vayla.fi");
+
+        // hyväksymisviesti projektipäällikölle
+        const vastaanottajaLista2 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
         const projektiPaallikonEmail = projekti.kayttoOikeudet.find(
           (kayttoOikeus) => kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
         )?.email;
-        expect(vastaanottajaLista1).to.include.all.members([projektiPaallikonEmail]);
+        expect(vastaanottajaLista2).to.include.all.members([projektiPaallikonEmail]);
       });
     });
   });

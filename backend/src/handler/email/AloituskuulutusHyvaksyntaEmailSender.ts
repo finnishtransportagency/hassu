@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
@@ -20,20 +20,9 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
     const aloituskuulutus: AloitusKuulutusJulkaisu | undefined = findAloitusKuulutusLastApproved(projekti);
     assertIsDefined(aloituskuulutus, "Aloituskuulutuksella ei ole hyväksyttyä julkaisua");
     const emailCreator = await AloituskuulutusEmailCreator.newInstance(projekti, aloituskuulutus);
-    // aloituskuulutus.muokkaaja on määritelty
-    assertIsDefined(aloituskuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(aloituskuulutus.muokkaaja);
-    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu. Muokkaaja:" + muokkaaja);
 
-    const hyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
-    if (hyvaksyttyEmailMuokkajalle.to) {
-      await emailClient.sendEmail(hyvaksyttyEmailMuokkajalle);
-    } else {
-      log.error("Aloituskuulutukselle ei loytynyt aloituskuulutuksen laatijan sahkopostiosoitetta");
-    }
-
+    await this.sendEmailToMuokkaaja(aloituskuulutus, emailCreator);
     await this.sendEmailToProjektipaallikko(emailCreator, aloituskuulutus, projekti);
-
     await this.sendLahetekirje(emailCreator, aloituskuulutus, projekti);
   }
 

@@ -34,26 +34,13 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu, this.getPaatosTyyppi());
 
-    await this.sendEmailToMuokkaaja(julkaisu, emailCreator);
-
     const projektinKielet = [julkaisu.kielitiedot?.ensisijainenKieli, julkaisu.kielitiedot?.toissijainenKieli].filter(
       (kieli): kieli is Kieli => !!kieli
     );
 
+    await this.sendEmailToMuokkaaja(julkaisu, emailCreator);
     await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
     await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
-  }
-
-  protected async sendEmailToMuokkaaja(julkaisu: HyvaksymisPaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
-    assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
-    assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
-    const hyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
-    if (hyvaksyttyEmailMuokkajalle.to) {
-      await emailClient.sendEmail(hyvaksyttyEmailMuokkajalle);
-    } else {
-      log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
-    }
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {

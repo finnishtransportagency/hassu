@@ -1264,6 +1264,15 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     ],
   },
   Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 nähtävilläolokuulutus on hyväksytty.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
+
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
@@ -2840,6 +2849,15 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
     ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 nähtävilläolokuulutus on hyväksytty.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
+
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamaki@cgi.com",
   },
   Object {
     "attachments": Array [
