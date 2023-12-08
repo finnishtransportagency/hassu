@@ -68,10 +68,7 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
               new GeoJSON({
                 dataProjection: "EPSG:4326",
                 featureProjection: "EPSG:3067",
-              }).readFeature({
-                type: "Feature",
-                geometry: JSON.parse(geoJSON),
-              }),
+              }).readFeature(geoJSON),
             ],
           })
         : undefined,
@@ -186,28 +183,43 @@ export function KarttaKansalaiselle({ geoJSON }: Readonly<KarttaKansalaisellePro
   return (
     <StyledMap id="map" isFullScreen={isFullScreen} locationalDataExists={!!geoJSON} ref={mapElement}>
       {geoJSON ? (
-        <Overlay {...overlayProps} />
+        <Overlay {...overlayProps}>
+          <OverlayText>{t("kosketa-karttaa")}</OverlayText>
+        </Overlay>
       ) : (
         <EiVoidaNayttaaOverlay>
-          <OverlayText>
+          <EiVoidaNayttaaOverlayText>
             Projektia ei voida näyttää kartalla
             <br />
-            Muokkaa projektia ja aseta geometriat Projektivelhossa kohdasta Projektin geometriat
-          </OverlayText>
+            Aseta geometriat Projektivelhossa kohdasta Projektin geometriat
+          </EiVoidaNayttaaOverlayText>
         </EiVoidaNayttaaOverlay>
       )}
     </StyledMap>
   );
 }
 
-const OverlayText = styled("p")(({ theme }) => ({
+const OverlayText = styled("p")({
+  backgroundColor: "rgb(216, 216, 216, 0.5)",
+  position: "absolute",
+  display: "block",
+  width: "100%",
+  bottom: 0,
   textAlign: "center",
-  padding: theme.spacing(6),
+  marginBottom: 0,
+  userSelect: "none",
+  padding: "5px",
+});
+
+const EiVoidaNayttaaOverlayText = styled("p")({
+  textAlign: "center",
+  padding: "10px",
   verticalAlign: "center",
+  marginBottom: "70px",
   backgroundColor: "rgb(255, 255, 255, 0.5)",
   display: "block",
   width: "100%",
-}));
+});
 
 const Overlay = styled("div")<{ isFullScreen: boolean }>(({ theme, isFullScreen }) => ({
   display: "none",
