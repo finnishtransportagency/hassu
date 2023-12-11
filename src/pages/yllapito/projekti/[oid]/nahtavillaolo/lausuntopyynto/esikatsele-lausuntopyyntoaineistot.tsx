@@ -36,7 +36,7 @@ export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
           Esikatselutilassa voit nähdä, miltä linkin sisältö näyttää vastaanottajille. Varsinaisessa linkissä voi avata aineistoja uuteen
           välilehteen yksi kerrallaan tai ladata ne kaikki kerallaan omalle koneellesi.
         </Notification>
-        <h2 className="vayla-title">Suunnitelma</h2>
+        {restOfAineistot?.aineistot?.length && <h2 className="vayla-title">Suunnitelma</h2>}
         <AineistoNahtavillaEsikatseluAccordion kategoriat={[...aineistoKategoriat.listKategoriat()]} data={restOfAineistot} />
         {!!lisaAineistot?.length && (
           <SectionContent>
