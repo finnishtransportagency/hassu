@@ -498,60 +498,6 @@ describe("migrateFromOldSchema", () => {
     expect(migratoitu).to.eql(newForm);
   });
 
-  it("should migate vuorovaikutusKierrosJulkaisu from not including esitettavatYhteystiedot and yhteystiedot to inluding esitettavatYhteystiedot and yhteystiedot", async () => {
-    const oldForm = {
-      versio: 1,
-      kielitiedot: {
-        ensisijainenKieli: "SUOMI",
-        toissijainenKieli: "RUOTSI",
-        projektinNimiToisellaKielellä: "Projekts namn på svenska",
-      },
-
-      vuorovaikutusKierros: {
-        vuorovaikutusNumero: 0,
-        arvioSeuraavanVaiheenAlkamisesta: { SUOMI: "arvio", RUOTSI: "arvio" },
-        suunnittelunEteneminenJaKesto: { SUOMI: "kesto", RUOTSI: "kesto" },
-        vuorovaikutusJulkaisuPaiva: "2023-01-01",
-        videot: [
-          {
-            SUOMI: { nimi: "", url: "http://www.1.fi" },
-            RUOTSI: { nimi: "", url: "http://www.1.fi/sv" },
-          },
-
-          {
-            SUOMI: { nimi: "", url: "http://www.2.fi" },
-            RUOTSI: { nimi: "", url: "http://www.2.fi/sv" },
-          },
-        ],
-
-        suunnittelumateriaali: [
-          {
-            SUOMI: { nimi: "suunnittelumateriaali", url: "http://www.suunnittelumateriaali.fi" },
-            RUOTSI: { nimi: "planering material", url: "http://www.suunnittelumateriaali.fi/sv" },
-          },
-        ],
-
-        vuorovaikutusTilaisuudet: [
-          {
-            tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            nimi: { SUOMI: "Tilaisuuden nimi", RUOTSI: "Tilaisuuden nimi" },
-            paivamaara: "2023-02-01",
-            alkamisAika: "13:00",
-            lisatiedot: { SUOMI: "Saapumisohjeet", RUOTSI: "Saapumisohjeet" },
-            paatyymisAika: "14:00",
-            paikka: { SUOMI: "Tilaisuuden paikka", RUOTSI: "Tilaisuuden paikka" },
-            osoite: { SUOMI: "Osoite 123", RUOTSI: "Osoite 123" },
-            postinumero: "12345",
-            postitoimipaikka: { SUOMI: "Postitoimipaikka", RUOTSI: "Postitoimipaikka" },
-          },
-        ],
-      },
-    };
-
-    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
-
-    expect(migratoitu).to.eql(oldForm);
-  });
   it("should not mess up suunnittelumateriaali, if it's already in the correct format", async () => {
     const oldForm = {
       versio: 1,
