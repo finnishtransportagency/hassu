@@ -28,6 +28,7 @@ import {
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   findPublishedKuulutusJulkaisu,
+  adaptProjektiHenkilo,
 } from "./common";
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
@@ -725,19 +726,7 @@ function adaptProjektiHenkilot(
   return kayttoOikeudet
     ?.filter((kayttoOikeus) => kayttoOikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO || !!kayttoOikeus.yleinenYhteystieto)
     ?.filter((kayttoOikeus) => kayttoOikeus.kayttajatunnus !== suunnitteluSopimuksenKayttajaTunnus)
-    ?.map((kayttoOikeus) => {
-      const result: API.ProjektiKayttajaJulkinen = {
-        __typename: "ProjektiKayttajaJulkinen",
-        etunimi: kayttoOikeus.etunimi,
-        sukunimi: kayttoOikeus.sukunimi,
-        email: kayttoOikeus.email,
-        puhelinnumero: kayttoOikeus.puhelinnumero,
-        organisaatio: kayttoOikeus.organisaatio,
-        projektiPaallikko: kayttoOikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        elyOrganisaatio: kayttoOikeus.elyOrganisaatio,
-      };
-      return result;
-    })
+    ?.map((kayttoOikeus) => adaptProjektiHenkilo(kayttoOikeus))
     ?.sort(sortByProjektiPaallikko);
 }
 

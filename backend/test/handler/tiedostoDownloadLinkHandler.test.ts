@@ -201,6 +201,16 @@ describe("tiedostoDownloadLinkHandler", () => {
       __typename: "LadattavatTiedostot",
       poistumisPaiva: lausuntoPyynto1.poistumisPaiva,
       linkkiVanhentunut: true,
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        projektiPaallikko: true,
+        etunimi: "Etunimi",
+        sukunimi: "Sukunimi",
+        email: "email@email.com",
+        puhelinnumero: "0123456789",
+        organisaatio: "Organisaatio",
+        elyOrganisaatio: API.ELY.HAME_ELY,
+      },
     });
   });
 
@@ -269,6 +279,16 @@ describe("tiedostoDownloadLinkHandler", () => {
       __typename: "LadattavatTiedostot",
       poistumisPaiva: lausuntoPyynnonTaydennys1.poistumisPaiva,
       linkkiVanhentunut: true,
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        projektiPaallikko: true,
+        etunimi: "Etunimi",
+        sukunimi: "Sukunimi",
+        email: "email@email.com",
+        puhelinnumero: "0123456789",
+        organisaatio: "Organisaatio",
+        elyOrganisaatio: API.ELY.HAME_ELY,
+      },
     });
   });
 
@@ -563,7 +583,20 @@ const lausuntoPyynnonTaydennys2: LausuntoPyynnonTaydennys = {
 const projekti: DBProjekti = {
   oid: "1",
   versio: 1,
-  kayttoOikeudet: [],
+  kayttoOikeudet: [
+    {
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      etunimi: "Etunimi",
+      sukunimi: "Sukunimi",
+      email: "email@email.com",
+      kayttajatunnus: "SECRET",
+      puhelinnumero: "0123456789",
+      organisaatio: "Organisaatio",
+      muokattavissa: false,
+      yleinenYhteystieto: true,
+      elyOrganisaatio: API.ELY.HAME_ELY,
+    },
+  ],
   salt: "salt",
   nahtavillaoloVaihe: nahtavillaolo,
   nahtavillaoloVaiheJulkaisut: [nahtavillaoloJulkaisu1, nahtavillaoloJulkaisu2],

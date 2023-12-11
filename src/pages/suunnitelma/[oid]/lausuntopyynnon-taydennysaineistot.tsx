@@ -9,13 +9,17 @@ import SectionContent from "@components/layout/SectionContent";
 import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { kuntametadata } from "common/kuntametadata";
+import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useLausuntoPyynnonTaydennysAineistot().data;
   const { data: projekti } = useProjektiJulkinen();
   let poistumisPaiva = data?.poistumisPaiva;
-  if (!(poistumisPaiva && data)) {
+  if (!(poistumisPaiva && data && projekti)) {
     return <></>;
+  }
+  if (data.linkkiVanhentunut) {
+    return <VanhentunutAineistolinkki projekti={projekti} data={data} />;
   }
   const { muutAineistot, muistutukset } = data;
   return (
