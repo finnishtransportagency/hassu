@@ -83,13 +83,14 @@ export async function testNahtavillaoloApproval(
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
     }
   );
-
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(dbProjekti.oid, Status.NAHTAVILLAOLO);
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu).to.be.an("object");
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-
+  dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[dbProjekti.nahtavillaoloVaiheJulkaisut.length - 1].aineistopaketti).to.exist;
   await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO, toiminto: TilasiirtymaToiminto.HYVAKSY });
   dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[dbProjekti.nahtavillaoloVaiheJulkaisut.length - 1].aineistopaketti).to.exist;
   expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(julkaisutLengthBeginning + 1);
   expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[julkaisutLengthBeginning].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);

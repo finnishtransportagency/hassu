@@ -76,6 +76,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";
 import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../commonTestUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -281,6 +282,9 @@ describe("Api", () => {
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
+    await eventSqsClientMock.processQueue(); // tehdään kahdesti, koska ekassa passissa laitetaan zippaus-event jonoon
+    const dbProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    expect(dbProjekti?.nahtavillaoloVaihe?.aineistopaketti).to.exist;
     await testNahtavillaoloApproval(
       projekti.oid,
       projektiPaallikko,
