@@ -35,7 +35,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
       <Section>
-        <h2 className="vayla-title">Suunnitelma</h2>
+        {restOfAineistot?.aineistot?.length && <h2 className="vayla-title">Suunnitelma</h2>}
         <AineistoNahtavillaAccordion kategoriat={[...aineistoKategoriat.listKategoriat()]} data={restOfAineistot} />
         {!!lisaAineistot?.length && (
           <SectionContent>
