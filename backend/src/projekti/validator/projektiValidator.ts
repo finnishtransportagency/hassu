@@ -266,7 +266,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
 function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   validateMuokkaustilaAllowsInput(projekti.nahtavillaoloVaihe, projekti.nahtavillaoloVaiheJulkaisut, input.nahtavillaoloVaihe);
 
-  const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
+  const { aineistoNahtavilla: aineistoNahtavilla, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
 
   const aineistotPresent = aineistoNahtavilla?.length;
