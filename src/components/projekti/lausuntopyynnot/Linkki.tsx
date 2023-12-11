@@ -6,6 +6,7 @@ import { useMemo, useRef } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
 import Button from "@components/button/Button";
 import { kuntametadata } from "common/kuntametadata";
+import Notification, { NotificationType } from "@components/notification/Notification";
 import {
   LausuntoPyynnonTaydennysLisakentilla,
   LausuntoPyyntoLisakentilla,
@@ -56,6 +57,11 @@ export default function Linkki({
     <SectionContent className="mt-16">
       <h3 className="vayla-subtitle mb-1">{title}</h3>
       <p className="mt-8 mb-8">{infoText}</p>
+      {buttonDisabled && (
+        <Notification type={NotificationType.WARN}>
+          Kuulutukselta suunnitelman nähtäville asettamisesta puuttuuvat aineistot. Lisää aineistot Nähtävilläolo-sivulta.
+        </Notification>
+      )}
       {kunta && <h4 className="vayla-small-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h4>}
       <Stack direction="row" alignItems="end">
         <TextInput
