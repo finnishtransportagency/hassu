@@ -1054,6 +1054,7 @@ type ProjektiHakutulosDokumentti {
 
 type LadattavatTiedostot {
   poistumisPaiva: String!
+  linkkiVanhentunut: Boolean
   kunta: Int
   aineistot: [LadattavaTiedosto!]
   lisaAineistot: [LadattavaTiedosto!]

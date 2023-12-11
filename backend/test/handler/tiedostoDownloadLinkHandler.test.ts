@@ -16,7 +16,7 @@ import { nyt, parseDate } from "../../src/util/dateUtil";
 import { fileService } from "../../src/files/fileService";
 import { parameters } from "../../src/aws/parameters";
 import { expect } from "chai";
-import { IllegalAccessError, LinkExpiredError } from "hassu-common/error";
+import { IllegalAccessError } from "hassu-common/error";
 describe("tiedostoDownloadLinkHandler", () => {
   // Scroll down for test data definitions.
   // Test projekti has:
@@ -186,19 +186,22 @@ describe("tiedostoDownloadLinkHandler", () => {
     }
   );
 
-  it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide correct hash and uuid, but the link has expired", async () => {
+  it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).add(1, "day").format());
-    await expect(
-      tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
-        oid: "1",
-        listaaLausuntoPyyntoTiedostotInput: { hash, lausuntoPyyntoUuid: lausuntoPyynto1.uuid },
-      })
-    ).to.eventually.be.rejectedWith(LinkExpiredError);
+    const actualResult = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
+      oid: "1",
+      listaaLausuntoPyyntoTiedostotInput: { hash, lausuntoPyyntoUuid: lausuntoPyynto1.uuid },
+    });
+    expect(actualResult).to.eql({
+      __typename: "LadattavatTiedostot",
+      poistumisPaiva: lausuntoPyynto1.poistumisPaiva,
+      linkkiVanhentunut: true,
+    });
   });
 
   it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
@@ -251,19 +254,22 @@ describe("tiedostoDownloadLinkHandler", () => {
     expect(files).to.eql(expectedFiles);
   });
 
-  it("not not return lausuntoPyynnonTaydennys files for user, when they provide correct hash and uuid, but the link has expired", async () => {
+  it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnonTaydennykset(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).add(1, "day").format());
-    await expect(
-      tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({
-        oid: "1",
-        listaaLausuntoPyynnonTaydennyksenTiedostotInput: { hash, lausuntoPyynnonTaydennysUuid: lausuntoPyynnonTaydennys1.uuid },
-      })
-    ).to.eventually.be.rejectedWith(LinkExpiredError);
+    const actualResult = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({
+      oid: "1",
+      listaaLausuntoPyynnonTaydennyksenTiedostotInput: { hash, lausuntoPyynnonTaydennysUuid: lausuntoPyynnonTaydennys1.uuid },
+    });
+    expect(actualResult).to.eql({
+      __typename: "LadattavatTiedostot",
+      poistumisPaiva: lausuntoPyynnonTaydennys1.poistumisPaiva,
+      linkkiVanhentunut: true,
+    });
   });
 
   it("not not return lausuntoPyynnonTaydennys files for user, when they provide wrong hash", async () => {

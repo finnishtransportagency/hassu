@@ -8,7 +8,7 @@ import {
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
 import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "../util/lausuntoPyyntoUtil";
-import { NotFoundError, LinkExpiredError } from "hassu-common/error";
+import { NotFoundError } from "hassu-common/error";
 import { nyt, parseDate } from "../util/dateUtil";
 import { tiedostoDownloadLinkService } from "../tiedostot/tiedostoDownloadLinkService";
 
@@ -34,7 +34,11 @@ class TiedostoDownloadLinkHandler {
 
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new LinkExpiredError("Lausuntopyynnon aineiston linkki on vanhentunut");
+        return Promise.resolve({
+          __typename: "LadattavatTiedostot",
+          poistumisPaiva: lausuntoPyynto.poistumisPaiva,
+          linkkiVanhentunut: true,
+        });
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyyntoTiedostot(projekti, params);
     } else {
@@ -62,7 +66,11 @@ class TiedostoDownloadLinkHandler {
       tiedostoDownloadLinkService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new LinkExpiredError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+        return Promise.resolve({
+          __typename: "LadattavatTiedostot",
+          poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
+          linkkiVanhentunut: true,
+        });
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyynnonTaydennyksenTiedostot(projekti, params);
     } else {
