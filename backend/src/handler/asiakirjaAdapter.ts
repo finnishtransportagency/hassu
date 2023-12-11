@@ -13,12 +13,12 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { VuorovaikutusKierrosTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import {
   adaptStandardiYhteystiedotToIncludePakotukset,
   adaptStandardiYhteystiedotToYhteystiedot,
 } from "../util/adaptStandardiYhteystiedot";
-import { findUserByKayttajatunnus } from "../projekti/projektiUtil";
+import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
 import { uuid } from "../util/uuid";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
@@ -66,10 +66,10 @@ export class AsiakirjaAdapter {
       return {
         kunta: suunnitteluSopimus.kunta,
         logo: suunnitteluSopimus.logo,
-        etunimi: yhteysHenkilo?.etunimi || "",
-        sukunimi: yhteysHenkilo?.sukunimi || "",
-        email: yhteysHenkilo?.email || "",
-        puhelinnumero: yhteysHenkilo?.puhelinnumero || "",
+        etunimi: yhteysHenkilo?.etunimi ?? "",
+        sukunimi: yhteysHenkilo?.sukunimi ?? "",
+        email: yhteysHenkilo?.email ?? "",
+        puhelinnumero: yhteysHenkilo?.puhelinnumero ?? "",
       };
     }
     return suunnitteluSopimus;
@@ -130,6 +130,14 @@ export class AsiakirjaAdapter {
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
       }
+      if (dbProjekti.nahtavillaoloVaihe.aineistoMuokkaus) {
+        // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
+        // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
+        const aiempiJulkaisu = findJulkaisuWithTila(dbProjekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+        if (aiempiJulkaisu) {
+          julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
+        }
+      }
       return julkaisu;
     }
     throw new Error("NahtavillaoloVaihe puuttuu");
@@ -151,6 +159,14 @@ export class AsiakirjaAdapter {
       };
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      if (hyvaksymisPaatosVaihe.aineistoMuokkaus) {
+        // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
+        // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
+        const aiempiJulkaisu = findJulkaisuWithTila(dbProjekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+        if (aiempiJulkaisu) {
+          julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
+        }
       }
       return julkaisu;
     }

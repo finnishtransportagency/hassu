@@ -128,6 +128,76 @@ Väylävirasto, Marika Ojanen, puh. 0299878787, marika.ojanen@vayla.fi",
 ]
 `;
 
+exports[`emailHandler hyväksymispäätös aineistomuokkaus approval wont send ilmoitus mails for aineistoMuokkaus 1`] = `
+Object {
+  "args": Array [
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+    },
+  ],
+  "stub": "s3Mock",
+}
+`;
+
+exports[`emailHandler hyväksymispäätös approval should send emails and attachments succesfully 1`] = `
+Object {
+  "args": Array [
+    Object {
+      "Body": "***unittest***",
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/lähetekirje.eml",
+      "Metadata": Object {
+        "asiakirjatyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
+      },
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+    },
+  ],
+  "stub": "s3Mock",
+}
+`;
+
 exports[`emailHandler nähtävilläolo aineistomuokkaus approval wont send ilmoitus mails for aineistoMuokkaus 1`] = `
 Object {
   "args": Array [
