@@ -63,13 +63,12 @@ type AineistoLisaysOptions = {
 type LisaaNahtavillaoloAineistotOptions = {
   oid: string;
   aineistoNahtavilla: AineistoLisaysOptions;
-  lisaAineisto: AineistoLisaysOptions;
   /**
    * The URL to visit. Behaves the same as the `url` argument.
    */
 };
 
-export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, lisaAineisto }: LisaaNahtavillaoloAineistotOptions) {
+export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNahtavillaoloAineistotOptions) {
   // This test had to be inserted here and can not be done
   // after publishing test below
   cy.login("A1");
@@ -84,28 +83,6 @@ export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, lisaAinei
     selectAllAineistotFromCategory(`#aineisto_accordion_${aineistoNahtavilla.toimeksianto}`);
   }
   cy.get("#select_valitut_aineistot_button").click();
-  cy.get("#kategorisoimattomat").click();
-
-  cy.get("body").then(($body) => {
-    const selector = "#kategorisoimattomat_table .category_selector select";
-    const numberOfSelectElements = $body.find(selector).length;
-    if (numberOfSelectElements > 0) {
-      for (let i = 0; i < numberOfSelectElements; i++) {
-        cy.get(selector).first().select("osa_a");
-      }
-    }
-  });
-
-  cy.get("#open_lisaaineisto_button").click();
-
-  if (lisaAineisto.aineistojenNimet) {
-    selectAineistotFromCategory(`#aineisto_accordion_${lisaAineisto.toimeksianto}`, lisaAineisto.aineistojenNimet);
-  } else {
-    selectAllAineistotFromCategory(`#aineisto_accordion_${lisaAineisto.toimeksianto}`);
-  }
-
-  cy.get("#select_valitut_aineistot_button").click();
-
   cy.get("#kategorisoimattomat").click();
 
   cy.get("body").then(($body) => {
