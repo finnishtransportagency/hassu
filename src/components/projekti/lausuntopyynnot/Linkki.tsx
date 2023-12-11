@@ -87,7 +87,7 @@ export default function Linkki({
           id={`esikatsele-link-${uuid}`}
           target="_blank"
           rel="noreferrer"
-          href={`/yllapito/projekti/${projekti.oid}/nahtavillaolo/lausuntopyynto/esikatsele-${
+          href={`/yllapito/projekti/${projekti.oid}/lausuntopyynto/esikatsele-${
             kunta ? "lausuntopyynnon-taydennys" : "lausuntopyynto"
           }aineistot?uuid=${uuid}`}
           ref={(e) => {
