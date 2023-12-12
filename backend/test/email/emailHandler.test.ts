@@ -16,21 +16,22 @@ import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
-import { TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import { TilasiirtymaTyyppi, KayttajaTyyppi, KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
 import { parameters } from "../../src/aws/parameters";
 import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
-import { KayttajaTyyppi, KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
+import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let updateNahtavillaoloKuulutusJulkaisuStub: sinon.SinonStub;
+  let updateHyvaksymisPaatosVaiheJulkaisutStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let fixture: ProjektiFixture;
@@ -45,10 +46,12 @@ describe("emailHandler", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     updateNahtavillaoloKuulutusJulkaisuStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
+    updateHyvaksymisPaatosVaiheJulkaisutStub = sinon.stub(projektiDatabase.hyvaksymisPaatosVaiheJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
     mockSaveProjektiToVelho();
   });
 
@@ -82,7 +85,7 @@ describe("emailHandler", () => {
       loadProjektiByOidStub.resolves(fixture.dbProjekti5());
     });
     it("should send email to projektipaallikko succesfully", async () => {
-      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.ALOITUSKUULUTUS);
+      const emailOptions = createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.ALOITUSKUULUTUS);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
@@ -112,7 +115,7 @@ describe("emailHandler", () => {
 
   describe("sendWaitingApprovalMailNahtavillaolokuulutus", () => {
     it("should send email to projektipaallikko succesfully", async () => {
-      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.NAHTAVILLAOLO);
+      const emailOptions = createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.NAHTAVILLAOLO);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
@@ -129,7 +132,7 @@ describe("emailHandler", () => {
       loadProjektiByOidStub.resolves(fixture.dbProjekti5());
     });
     it("should send email to projektipaallikko succesfully", async () => {
-      const emailOptions = await createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
+      const emailOptions = createKuulutusHyvaksyttavanaEmail(fixture.dbProjekti5(), TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE);
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää ELY/2/2022");
 
       expect(emailOptions.text).to.eq(
@@ -143,9 +146,6 @@ describe("emailHandler", () => {
 
   describe("nähtävilläolo", () => {
     let projekti: DBProjekti;
-    before(() => {
-      sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
-    });
     beforeEach(() => {
       projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
       loadProjektiByOidStub.resolves(projekti);
@@ -214,6 +214,96 @@ describe("emailHandler", () => {
           ContentType: "application/pdf",
         } as GetObjectCommandOutput);
         await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+        expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+
+        // Viestit laatijalle ja projektipäällikölle
+        expect(emailClientStub.sendEmailStub.calledTwice).to.be.true;
+        // Laatijalle osoitettu viesti lähtee
+        const vastaanottajaLista1 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+        expect(vastaanottajaLista1).to.equal("matti.meikalainen@vayla.fi");
+
+        // hyväksymisviesti projektipäällikölle
+        const vastaanottajaLista2 = (emailClientStub.sendEmailStub.secondCall.firstArg as EmailOptions).to;
+        const projektiPaallikonEmail = projekti.kayttoOikeudet.find(
+          (kayttoOikeus) => kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
+        )?.email;
+        expect(vastaanottajaLista2).to.include.all.members([projektiPaallikonEmail]);
+      });
+    });
+  });
+
+  describe("hyväksymispäätös", () => {
+    let projekti: DBProjekti;
+    beforeEach(() => {
+      projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.HYVAKSYMISPAATOS, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
+      loadProjektiByOidStub.resolves(projekti);
+    });
+
+    it("approval should send emails and attachments succesfully", async () => {
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      updateHyvaksymisPaatosVaiheJulkaisutStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
+
+      console.log(projekti.hyvaksymisPaatosVaiheJulkaisut);
+
+      await expect(hyvaksymisPaatosVaiheTilaManager.approve(projekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
+      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+
+      // Hyväksymisviesti laatijalle, projektipäällikölle ja ilmoitusviesti viranomaisille
+      expect(emailClientStub.sendEmailStub.calledThrice).to.be.true;
+
+      // Laatijalle osoitettu viesti lähtee
+      const vastaanottajaLista1 = (emailClientStub.sendEmailStub.firstCall.firstArg as EmailOptions).to;
+      expect(vastaanottajaLista1).to.equal("matti.meikalainen@vayla.fi");
+
+      // Projektipäällikölle osoitettu viesti lähtee
+      const vastaanottajaLista2 = (emailClientStub.sendEmailStub.secondCall.firstArg as EmailOptions).to;
+      const projektiPaallikonEmail = projekti.kayttoOikeudet.find(
+        (kayttoOikeus) => kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
+      )?.email;
+      expect(vastaanottajaLista2).to.include.all.members([projektiPaallikonEmail]);
+
+      // Ilmoitusviesti lähtee viranomaisille
+      const vastaanottajaLista3 = (emailClientStub.sendEmailStub.thirdCall.firstArg as EmailOptions).to;
+      expect(vastaanottajaLista3).to.include.all.members([
+        "mikkeli@mikke.li",
+        "juva@ju.va",
+        "savonlinna@savonlin.na",
+        "kirjaamo.etela-savo@ely-keskus.fi",
+      ]);
+    });
+
+    describe("aineistomuokkaus", () => {
+      beforeEach(() => {
+        projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.HYVAKSYMISPAATOS, VaiheenTila.HYVAKSYTTY);
+        assertIsDefined(projekti.hyvaksymisPaatosVaiheJulkaisut?.[0]?.hyvaksymisPaiva);
+
+        const julkaisu1 = projekti.hyvaksymisPaatosVaiheJulkaisut[0];
+        projekti.hyvaksymisPaatosVaiheJulkaisut = [
+          julkaisu1,
+          {
+            ...julkaisu1,
+            aineistoMuokkaus: { alkuperainenHyvaksymisPaiva: julkaisu1.hyvaksymisPaiva! },
+            tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          },
+        ];
+
+        loadProjektiByOidStub.resolves(projekti);
+      });
+
+      it("approval wont send ilmoitus mails for aineistoMuokkaus", async () => {
+        publishProjektiFileStub.resolves();
+        synchronizeProjektiFilesStub.resolves();
+        updateHyvaksymisPaatosVaiheJulkaisutStub.resolves();
+        s3Mock.s3Mock.on(GetObjectCommand).resolves({
+          Body: Readable.from(""),
+          ContentType: "application/pdf",
+        } as GetObjectCommandOutput);
+        await expect(hyvaksymisPaatosVaiheTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
 
         // Viestit laatijalle ja projektipäällikölle

@@ -715,11 +715,6 @@
             }
           ]
         },
-        "lahetekirje": {
-          "nimi": "lähetekirje.eml",
-          "tiedosto": "/deleted/hyvaksymispaatos/2/lähetekirje.eml",
-          "tuotu": null
-        },
         "muokkaaja": "A000112",
         "tila": "HYVAKSYTTY",
         "velho": {
@@ -1522,9 +1517,6 @@
           },
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"
           }
         ],
         "ilmoituksenVastaanottajat": [
@@ -2276,6 +2268,12 @@
     ]
   },
   "publicFiles": {
+    "hyvaksymispaatos/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
     "suunnittelusopimus/logo.png": {
       "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
@@ -2290,6 +2288,11 @@
     "euLogot/SV/logosv.png": {
       "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png"
+    },
+    "hyvaksymispaatos/2/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE"
     },
     "suunnittelusopimus/logo.png": {
       "ContentDisposition": "inline; filename*=UTF-8''logo.png",

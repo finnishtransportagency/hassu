@@ -729,11 +729,6 @@
             }
           ]
         },
-        "lahetekirje": {
-          "nimi": "lähetekirje.eml",
-          "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
-          "tuotu": "2025-01-01T00:00"
-        },
         "muokkaaja": "A000112",
         "tila": "HYVAKSYTTY",
         "velho": {
@@ -1549,9 +1544,6 @@
           },
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"
           }
         ],
         "ilmoituksenVastaanottajat": [

@@ -40,7 +40,9 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
     await this.sendEmailToMuokkaaja(julkaisu, emailCreator);
     await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
-    await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
+    if (!julkaisu.aineistoMuokkaus) {
+      await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
+    }
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
@@ -142,7 +144,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
         }
         (await tiedostot).push(aineistoTiedosto);
         return tiedostot;
-      }, Promise.resolve([]))) || [];
+      }, Promise.resolve([]))) ?? [];
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
     const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
 
@@ -170,7 +172,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   ): Promise<void> {
     const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
     if (emailToProjektiPaallikko.to) {
-      emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
+      emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
         .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
           const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
@@ -249,7 +251,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
   ): Promise<void> {
     const emailToProjektiPaallikko = emailCreator.createHyvaksyttyEmailPp();
     if (emailToProjektiPaallikko.to) {
-      emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
+      emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
         .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
           const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;

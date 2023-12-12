@@ -12964,18 +12964,21 @@ Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -12983,6 +12986,7 @@ Object {
           Object {
             "__typename": "ViranomaisVastaanottaja",
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -17427,18 +17431,21 @@ Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
@@ -17446,6 +17453,7 @@ Object {
           Object {
             "__typename": "ViranomaisVastaanottaja",
             "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -17857,11 +17865,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lahetekirje": Object {
-        "nimi": "lähetekirje.eml",
-        "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
-        "tuotu": "2025-01-01T00:00",
       },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
@@ -20239,45 +20242,6 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-      },
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-      },
-      Object {
-        "contentType": "text/plain",
-        "filename": "aineisto3.txt",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
-    "text": "Hei,
-
-Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
-
-Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
-
-
-Ystävällisin terveisin
-
-A-tunnus1 Hassu
-
-CGI Suomi Oy",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
     ],
   },
   Object {

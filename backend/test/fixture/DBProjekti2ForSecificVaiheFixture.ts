@@ -47,6 +47,8 @@ export enum VaiheenTila {
   HYVAKSYTTY = "HYVAKSYTTY",
 }
 
+type OptinalNullableString = string | null | undefined;
+
 export class DBProjektiForSpecificVaiheFixture {
   public PROJEKTI_NIMI = "Testiprojekti 2";
   public PROJEKTI_OID = "2";
@@ -129,12 +131,6 @@ export class DBProjektiForSpecificVaiheFixture {
       kielitiedot: this.haeKielitiedot(),
       euRahoitus: false,
       vahainenMenettely: false,
-      liittyvatSuunnitelmat: [
-        {
-          asiatunnus: "atunnus123",
-          nimi: "Littyva suunnitelma 1 nimi",
-        },
-      ],
       kasittelynTila: {
         hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
       },
@@ -165,27 +161,33 @@ export class DBProjektiForSpecificVaiheFixture {
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS2),
           "/jatkopaatos2/1"
         );
+      // fall through
       case Vaihe.JATKOPAATOS:
         projekti.jatkoPaatos1Vaihe = this.hyvaksymisPaatosVaihe("/jatkopaatos1/1");
         projekti.jatkoPaatos1VaiheJulkaisut = this.hyvaksymisPaatosVaiheJulkaisut(
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS),
           "/jatkopaatos1/1"
         );
+      // fall through
       case Vaihe.HYVAKSYMISPAATOS:
         projekti.hyvaksymisPaatosVaihe = this.hyvaksymisPaatosVaihe("/hyvaksymispaatos/1");
         projekti.hyvaksymisPaatosVaiheJulkaisut = this.hyvaksymisPaatosVaiheJulkaisut(
           haeVaiheenTila(currentVaihe, Vaihe.HYVAKSYMISPAATOS),
           "/hyvaksymispaatos/1"
         );
+      // fall through
       case Vaihe.NAHTAVILLAOLO:
         projekti.nahtavillaoloVaihe = this.haeNahtavillaolo();
         projekti.nahtavillaoloVaiheJulkaisut = this.haeNahtavillaoloJulkaisut(haeVaiheenTila(currentVaihe, Vaihe.NAHTAVILLAOLO));
+      // fall through
       case Vaihe.SUUNNITTELU:
         projekti.vuorovaikutusKierros = this.haeVuorovaikutus();
         projekti.vuorovaikutusKierrosJulkaisut = this.haeVuorovaikutusJulkaisut(haeVaiheenTila(currentVaihe, Vaihe.SUUNNITTELU));
+      // fall through
       case Vaihe.ALOITUSKUULUTUS:
         projekti.aloitusKuulutus = this.haeAloituskuulutus();
         projekti.aloitusKuulutusJulkaisut = this.haeAloituskuulutusJulkaisu(haeVaiheenTila(currentVaihe, Vaihe.ALOITUSKUULUTUS));
+      // fall through
     }
 
     return projekti;
@@ -230,7 +232,7 @@ export class DBProjektiForSpecificVaiheFixture {
     ];
   }
 
-  private muokkaaja(): string | null | undefined {
+  private muokkaaja(): OptinalNullableString {
     return DBProjektiForSpecificVaiheFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus;
   }
 
@@ -438,7 +440,7 @@ export class DBProjektiForSpecificVaiheFixture {
         kuulutusYhteystiedot: this.kuulutusYhteystiedot(),
         muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
         muokkaaja: this.muokkaaja(),
-        tila: vaiheenTila === VaiheenTila.HYVAKSYTTY ? KuulutusJulkaisuTila.HYVAKSYTTY : KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        tila: this.julkaisunTila(vaiheenTila),
         velho: this.velho(),
         nahtavillaoloPDFt: {
           SUOMI: {
@@ -518,7 +520,7 @@ export class DBProjektiForSpecificVaiheFixture {
         kuulutusPaiva: "2022-06-09",
         kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
         muokkaaja: this.muokkaaja(),
-        tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+        tila: this.julkaisunTila(vaiheenTila),
         velho: this.velho(),
         yhteystiedot: this.yhteystiedot(),
         kuulutusYhteystiedot: this.kuulutusYhteystiedot(),
