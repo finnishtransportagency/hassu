@@ -13,14 +13,16 @@ export function adaptLausuntoPyynnotToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
-  return lausuntoPyyntoInput.map(
-    (lausuntoPyynto) =>
-      adaptLausuntoPyyntoToSave(
-        dbLausuntoPyynnot?.find((pyynto) => pyynto.uuid === lausuntoPyynto.uuid),
-        lausuntoPyynto,
-        projektiAdaptationResult
-      ) as LausuntoPyynto
-  );
+  return lausuntoPyyntoInput
+    .map(
+      (lausuntoPyynto) =>
+        adaptLausuntoPyyntoToSave(
+          dbLausuntoPyynnot?.find((pyynto) => pyynto.uuid === lausuntoPyynto.uuid),
+          lausuntoPyynto,
+          projektiAdaptationResult
+        ) as LausuntoPyynto
+    )
+    .concat(dbLausuntoPyynnot?.filter((lp) => !!lp.legacy) ?? []);
 }
 
 export function adaptLausuntoPyynnonTaydennyksetToSave(
