@@ -1061,6 +1061,7 @@ type LadattavatTiedostot {
   muutAineistot: [LadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
   aineistopaketti: String
+  projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }
 
 type LadattavaTiedosto {

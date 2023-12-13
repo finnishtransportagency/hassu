@@ -12,15 +12,21 @@ import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
 import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
+import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useLisaAineisto().data;
   const { data: projekti } = useProjektiJulkinen();
   let poistumisPaiva = data?.poistumisPaiva;
-  if (!(poistumisPaiva && data)) {
+  if (!(poistumisPaiva && data && projekti)) {
     return <></>;
   }
   const { lisaAineistot, ...restOfAineistot } = data;
+
+  if (data.linkkiVanhentunut) {
+    return <VanhentunutAineistolinkki projekti={projekti} data={data} />;
+  }
+
   return (
     <>
       <h1 className="vayla-header">Lausuntopyynnön aineisto</h1>
