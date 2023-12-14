@@ -6,6 +6,7 @@ import { SqsEventType } from "../../../src/sqsEvents/sqsEvent";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 import { cleanupVuorovaikutusKierrosTimestamps } from "../../../commonTestUtil/cleanUpFunctions";
+import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 // eventSqsHandlerLambda reacts to event AINEISTO_AND_FILES_CHANGED by handling vuorovaikutusKierrosJulkaisu aineistos
 export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async () => {
@@ -17,11 +18,18 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
       id: 1,
       yhteystiedot: [],
       esitettavatYhteystiedot: {},
-      esittelyaineistot: getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa("esittelyaineisto", "suunnitteluvaihe/vuorovaikutus_1"),
-      suunnitelmaluonnokset: getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
-        "suunnitelmaluonnos",
-        "suunnitteluvaihe/vuorovaikutus_1"
-      ),
+      aineistot: [
+        ...getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
+          "esittelyaineisto",
+          "suunnitteluvaihe/vuorovaikutus_1",
+          VuorovaikutusAineistoKategoria.ESITTELYAINEISTO
+        ),
+        ...getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
+          "suunnitelmaluonnos",
+          "suunnitteluvaihe/vuorovaikutus_1",
+          VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS
+        ),
+      ],
       hankkeenKuvaus: { SUOMI: "" },
       ilmoituksenVastaanottajat: {},
     },
@@ -29,8 +37,7 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
       id: 2,
       yhteystiedot: [],
       esitettavatYhteystiedot: {},
-      esittelyaineistot: [],
-      suunnitelmaluonnokset: [],
+      aineistot: [],
       hankkeenKuvaus: { SUOMI: "" },
       ilmoituksenVastaanottajat: {},
     },

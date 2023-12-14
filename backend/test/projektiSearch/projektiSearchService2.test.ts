@@ -236,8 +236,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         },
       ],
     },
-    esittelyaineistot: undefined,
-    suunnitelmaluonnokset: undefined,
+    aineistot: undefined,
   },
   vuorovaikutusKierrosJulkaisut: [
     {
@@ -320,8 +319,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           },
         ],
       },
-      esittelyaineistot: undefined,
-      suunnitelmaluonnokset: undefined,
+      aineistot: undefined,
       vuorovaikutusPDFt: {
         SUOMI: {
           kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf",

@@ -27,8 +27,7 @@ export type VuorovaikutusKierros = {
   suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  esittelyaineistot?: Aineisto[] | null;
-  suunnitelmaluonnokset?: Aineisto[] | null;
+  aineistot?: Aineisto[] | null;
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
   selosteVuorovaikutuskierrokselle?: string | null;
   palattuNahtavillaolosta?: boolean;
@@ -53,8 +52,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   yhteystiedot: Yhteystieto[];
   esitettavatYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  esittelyaineistot?: Aineisto[] | null;
-  suunnitelmaluonnokset?: Aineisto[] | null;
+  aineistot?: Aineisto[] | null;
   vuorovaikutusPDFt?: LocalizedMap<VuorovaikutusPDF>;
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
   lahetekirje?: LadattuTiedosto | null;

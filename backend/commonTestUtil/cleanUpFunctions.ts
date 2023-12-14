@@ -21,7 +21,7 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks<P extends APIorDBPal
 
 type APIorDBAineistoOrLadattuTiedosto = Pick<API.Aineisto, "tuotu">;
 type APIorDBIlmoituksenVastaanottaja = Pick<API.KuntaVastaanottaja | API.ViranomaisVastaanottaja, "lahetetty">;
-type APIorDBVuorovaikutusKierros = {
+type APIVuorovaikutusKierros = {
   esittelyaineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
   suunnitelmaluonnokset?: APIorDBAineistoOrLadattuTiedosto[] | null;
   ilmoituksenVastaanottajat?: {
@@ -51,7 +51,7 @@ function cleanupIlmoituksenVastaanottaja<V extends APIorDBIlmoituksenVastaanotta
  * @param vuorovaikutusKierros : VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, API.VuorovaikutusJulkinen, API.VuorovaikutusKierros, API.VuorovaikutusKierrosJulkaisu
  * @returns vuorovaikutusKierros, mutta aineistoista on korvattu tuotu-aikaleimat ja ilmoituksen vastaanottajista lahettey-aikaleimat ***unittest***:lla. Parametria ei muokata.
  */
-export function cleanupVuorovaikutusKierrosTimestamps<A extends APIorDBVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
+export function cleanupVuorovaikutusKierrosTimestamps<A extends APIVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
   const cleanVuorovaikutusKierros = { ...vuorovaikutusKierros };
   cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
   cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(

@@ -480,6 +480,34 @@
     },
     "versio": 1,
     "vuorovaikutusKierros": {
+      "aineistot": [
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
+          "jarjestys": 12,
+          "kategoriaId": "ESITTELYAINEISTO",
+          "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00:01+03:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 11,
+          "kategoriaId": "SUUNNITELMALUONNOS",
+          "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00:01+03:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+          "kategoriaId": "SUUNNITELMALUONNOS",
+          "nimi": "Radan risteämärekisteriote_1203.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00:01+03:00"
+        }
+      ],
       "arvioSeuraavanVaiheenAlkamisesta": {
         "SUOMI": "huomenna"
       },
@@ -497,16 +525,6 @@
           }
         ]
       },
-      "esittelyaineistot": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
-          "jarjestys": 12,
-          "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
-        }
-      ],
       "hankkeenKuvaus": {
         "SUOMI": "Hankkeen kuvaus"
       },
@@ -535,23 +553,6 @@
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
       "palautteidenVastaanottajat": [
         "A000111"
-      ],
-      "suunnitelmaluonnokset": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
-          "jarjestys": 11,
-          "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
-        },
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
-          "nimi": "Radan risteämärekisteriote_1203.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
-        }
       ],
       "suunnittelunEteneminenJaKesto": {
         "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
@@ -652,6 +653,26 @@
     },
     "vuorovaikutusKierrosJulkaisut": [
       {
+        "aineistot": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
+            "jarjestys": 12,
+            "kategoriaId": "ESITTELYAINEISTO",
+            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+            "jarjestys": 11,
+            "kategoriaId": "SUUNNITELMALUONNOS",
+            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
+          }
+        ],
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1"
         },
@@ -671,16 +692,6 @@
             }
           ]
         },
-        "esittelyaineistot": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
-            "jarjestys": 12,
-            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
-          }
-        ],
         "hankkeenKuvaus": {
           "SUOMI": "Hankkeen kuvaus"
         },
@@ -710,16 +721,6 @@
         "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
         "palautteidenVastaanottajat": [
           "A000111"
-        ],
-        "suunnitelmaluonnokset": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
-            "jarjestys": 11,
-            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
-          }
         ],
         "suunnittelunEteneminenJaKesto": {
           "SUOMI": "Uusi suunnittelun eteneminen ja kesto, nro 1"
@@ -898,6 +899,34 @@
         ]
       },
       {
+        "aineistot": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
+            "jarjestys": 12,
+            "kategoriaId": "ESITTELYAINEISTO",
+            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+            "jarjestys": 11,
+            "kategoriaId": "SUUNNITELMALUONNOS",
+            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+            "kategoriaId": "SUUNNITELMALUONNOS",
+            "nimi": "Radan risteämärekisteriote_1203.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
+          }
+        ],
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "huomenna"
         },
@@ -917,16 +946,6 @@
             }
           ]
         },
-        "esittelyaineistot": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
-            "jarjestys": 12,
-            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
-          }
-        ],
         "hankkeenKuvaus": {
           "SUOMI": "Hankkeen kuvaus"
         },
@@ -956,23 +975,6 @@
         "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
         "palautteidenVastaanottajat": [
           "A000111"
-        ],
-        "suunnitelmaluonnokset": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
-            "jarjestys": 11,
-            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
-          },
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
-            "nimi": "Radan risteämärekisteriote_1203.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
-          }
         ],
         "suunnittelunEteneminenJaKesto": {
           "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"

@@ -1902,9 +1902,11 @@ Object {
     "ilmoituksenVastaanottajat": undefined,
     "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+    "palattuNahtavillaolosta": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
+    "selosteVuorovaikutuskierrokselle": undefined,
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
     "suunnittelunEteneminenJaKesto": Object {
@@ -1913,6 +1915,7 @@ Object {
     },
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
+    "vuorovaikutusJulkaisuPaiva": undefined,
     "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": undefined,
@@ -1986,9 +1989,11 @@ Object {
     },
     "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+    "palattuNahtavillaolosta": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
+    "selosteVuorovaikutuskierrokselle": undefined,
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
     "suunnittelunEteneminenJaKesto": Object {
@@ -2353,9 +2358,11 @@ Object {
     },
     "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+    "palattuNahtavillaolosta": undefined,
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
+    "selosteVuorovaikutuskierrokselle": undefined,
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
     "suunnittelunEteneminenJaKesto": Object {
@@ -2546,14 +2553,7 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
-      "lahetekirje": Object {
-        "nimi": "lähetekirje.eml",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
-        "tuotu": "2022-02-03T00:00",
-      },
-      "palautteidenVastaanottajat": Array [
-        "A000111",
-      ],
+      "selosteVuorovaikutuskierrokselle": undefined,
       "suunnitelmaluonnokset": undefined,
       "suunnittelumateriaali": undefined,
       "suunnittelunEteneminenJaKesto": Object {

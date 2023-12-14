@@ -28,6 +28,7 @@ import { parseDate } from "../../../src/util/dateUtil";
 import { uploadFile } from "../../util/s3Util";
 
 import { expect } from "chai";
+import { haeKategorianAineistot, VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 export async function testAineistoProcessing(
   oid: string,
@@ -421,13 +422,14 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
   const { versio } = projekti;
   const kierros = projekti?.vuorovaikutusKierros;
   assertIsDefined(kierros);
-  const { vuorovaikutusNumero, kysymyksetJaPalautteetViimeistaan, suunnitelmaluonnokset } = kierros;
+  const { vuorovaikutusNumero, kysymyksetJaPalautteetViimeistaan, aineistot } = kierros;
   assertIsDefined(kysymyksetJaPalautteetViimeistaan);
-  assertIsDefined(suunnitelmaluonnokset);
-  const suunnitelmaluonnoksetInput: API.AineistoInput[] = suunnitelmaluonnokset.map((aineisto) => {
-    const { dokumenttiOid, nimi, kategoriaId, jarjestys } = aineisto;
-    return { dokumenttiOid, nimi, kategoriaId, jarjestys };
-  });
+  assertIsDefined(aineistot);
+  const suunnitelmaluonnoksetInput: API.AineistoInput[] =
+    haeKategorianAineistot(aineistot, VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS)?.map((aineisto) => {
+      const { dokumenttiOid, nimi, kategoriaId, jarjestys } = aineisto;
+      return { dokumenttiOid, nimi, kategoriaId, jarjestys };
+    }) ?? [];
 
   const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "Radan risteämärekisteriote_1203.pdf");
   expect(velhoAineistos.length).to.be.greaterThan(0);

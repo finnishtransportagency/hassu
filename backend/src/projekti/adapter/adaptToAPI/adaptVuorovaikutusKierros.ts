@@ -31,6 +31,7 @@ import { adaptLadattuTiedostoToAPI } from ".";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 import { assertIsDefined } from "../../../util/assertions";
+import { jaotteleVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
@@ -39,34 +40,52 @@ export function adaptVuorovaikutusKierros(
   vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] | null | undefined
 ): API.VuorovaikutusKierros | undefined {
   if (vuorovaikutusKierros) {
-    const { hankkeenKuvaus, tila, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
-      vuorovaikutusKierros;
+    const {
+      hankkeenKuvaus,
+      tila,
+      arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
+      palautteidenVastaanottajat,
+      aineistot,
+      videot,
+      vuorovaikutusNumero,
+      esitettavatYhteystiedot,
+      ilmoituksenVastaanottajat,
+      kysymyksetJaPalautteetViimeistaan,
+      palattuNahtavillaolosta,
+      selosteVuorovaikutuskierrokselle,
+      suunnittelumateriaali,
+      vuorovaikutusJulkaisuPaiva,
+      vuorovaikutusSaamePDFt,
+      vuorovaikutusTilaisuudet,
+    } = vuorovaikutusKierros;
     if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
       return { __typename: "VuorovaikutusKierros", tila, vuorovaikutusNumero: vuorovaikutusKierros.vuorovaikutusNumero };
     }
 
     const paths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutusKierros);
 
-    const videot: Array<API.LokalisoituLinkki> | undefined =
-      (vuorovaikutusKierros.videot
-        ?.map((video) => adaptLokalisoituLinkki(video))
-        .filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
+    const { esittelyaineistot, suunnitelmaluonnokset } = jaotteleVuorovaikutusAineistot(aineistot) ?? {};
     return {
       __typename: "VuorovaikutusKierros",
-      ...(vuorovaikutusKierros as Omit<VuorovaikutusKierros, "vuorovaikutusPDFt">),
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutusKierros.ilmoituksenVastaanottajat),
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, vuorovaikutusKierros.esitettavatYhteystiedot),
-      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(kayttoOikeudet, vuorovaikutusKierros.vuorovaikutusTilaisuudet),
-      suunnittelumateriaali: adaptLokalisoidutLinkit(vuorovaikutusKierros.suunnittelumateriaali),
-      videot,
-      esittelyaineistot: adaptAineistot(vuorovaikutusKierros.esittelyaineistot, paths),
-      suunnitelmaluonnokset: adaptAineistot(vuorovaikutusKierros.suunnitelmaluonnokset, paths),
+      vuorovaikutusNumero,
+      kysymyksetJaPalautteetViimeistaan,
+      palattuNahtavillaolosta,
+      selosteVuorovaikutuskierrokselle,
+      vuorovaikutusJulkaisuPaiva,
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot),
+      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(kayttoOikeudet, vuorovaikutusTilaisuudet),
+      suunnittelumateriaali: adaptLokalisoidutLinkit(suunnittelumateriaali),
+      videot: (videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined,
+      esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
+      suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
       tila,
       arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
       suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
-      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusKierros.vuorovaikutusSaamePDFt, false),
+      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false),
       isOkToMakeNewVuorovaikutusKierros: isOkToMakeNewVuorovaikutusKierros({
         nahtavillaoloVaiheJulkaisut: true,
         vuorovaikutusKierros,
@@ -95,8 +114,7 @@ function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkais
     vuorovaikutusTilaisuudet,
     suunnittelumateriaali,
     videot,
-    esittelyaineistot,
-    suunnitelmaluonnokset,
+    aineistot,
     tila,
     hankkeenKuvaus,
     vuorovaikutusPDFt: _vuorovaikutusPDFt,
@@ -104,7 +122,10 @@ function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkais
     suunnittelunEteneminenJaKesto,
     vuorovaikutusSaamePDFt,
     asianhallintaEventId,
-    ...fieldsToCopyAsIs
+    id,
+    kysymyksetJaPalautteetViimeistaan,
+    selosteVuorovaikutuskierrokselle,
+    vuorovaikutusJulkaisuPaiva,
   } = julkaisu;
 
   if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
@@ -125,9 +146,14 @@ function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkais
     throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.yhteystiedot määrittelemättä");
   }
 
+  const { esittelyaineistot, suunnitelmaluonnokset } = jaotteleVuorovaikutusAineistot(aineistot) ?? {};
+
   const paths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
   const apiJulkaisu: API.VuorovaikutusKierrosJulkaisu = {
-    ...fieldsToCopyAsIs,
+    id,
+    kysymyksetJaPalautteetViimeistaan,
+    selosteVuorovaikutuskierrokselle,
+    vuorovaikutusJulkaisuPaiva,
     __typename: "VuorovaikutusKierrosJulkaisu",
     tila,
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),

@@ -26,13 +26,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
 
   getAineistot(vaihe: VuorovaikutusKierros): AineistoPathsPair[] {
     const filePathInProjekti = this.projektiPaths.vuorovaikutus(vaihe).aineisto;
-    return [
-      { aineisto: vaihe.esittelyaineistot, paths: filePathInProjekti },
-      {
-        aineisto: vaihe.suunnitelmaluonnokset,
-        paths: filePathInProjekti,
-      },
-    ];
+    return [{ aineisto: vaihe.aineistot, paths: filePathInProjekti }];
   }
 
   getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedostoPathsPair[] {
@@ -99,9 +93,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
           }
         });
 
-        const aineistot: Aineisto[] = ([] as Aineisto[])
-          .concat(julkaisu.esittelyaineistot || [])
-          .concat(julkaisu.suunnitelmaluonnokset || []);
+        const aineistot: Aineisto[] = julkaisu.aineistot || [];
         if (aineistot && (await this.deleteAineistot(aineistot))) {
           modifiedJulkaisut.add(julkaisu);
         }

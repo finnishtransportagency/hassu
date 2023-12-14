@@ -92,12 +92,13 @@ export function adaptStandardiYhteystiedotToSave(
 export function adaptAineistotToSave(
   dbAineistot: Aineisto[] | undefined | null,
   aineistotInput: API.AineistoInput[] | undefined | null,
-  projektiAdaptationResult: ProjektiAdaptationResult
+  projektiAdaptationResult: ProjektiAdaptationResult,
+  iteratee = (a: Aineisto) => a.dokumenttiOid + a.tila + a.nimi
 ): Aineisto[] | undefined {
   const resultAineistot: Aineisto[] = [];
 
   if (!aineistotInput) {
-    return dbAineistot || undefined;
+    return dbAineistot ?? undefined;
   }
 
   const inputs = cloneDeep(aineistotInput);
@@ -109,7 +110,7 @@ export function adaptAineistotToSave(
     resultAineistot.push({
       dokumenttiOid: aineistoInput.dokumenttiOid,
       nimi: aineistoInput.nimi,
-      kategoriaId: aineistoInput.kategoriaId || undefined,
+      kategoriaId: aineistoInput.kategoriaId ?? undefined,
       jarjestys: aineistoInput.jarjestys,
       tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
     });
@@ -121,7 +122,7 @@ export function adaptAineistotToSave(
   }
 
   // Poistetaan duplikaatit
-  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
+  return uniqBy(resultAineistot, iteratee);
 }
 
 function examineAndUpdateExistingDocuments(
@@ -158,10 +159,10 @@ function examineAndUpdateExistingDocuments(
       if (updateAineistoInput) {
         // Update existing one
         dbAineisto.jarjestys = updateAineistoInput.jarjestys;
-        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId || undefined;
+        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId ?? undefined;
         if (dbAineisto.nimi !== updateAineistoInput.nimi) {
           hasPendingChanges = true;
-          resultAineistot.push(Object.assign({}, { ...dbAineisto, tila: API.AineistoTila.ODOTTAA_POISTOA }));
+          resultAineistot.push({ ...dbAineisto, tila: API.AineistoTila.ODOTTAA_POISTOA });
           dbAineisto.tila = API.AineistoTila.ODOTTAA_TUONTIA;
           dbAineisto.nimi = updateAineistoInput.nimi;
         }
