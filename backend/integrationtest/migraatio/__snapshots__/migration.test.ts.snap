@@ -811,8 +811,6 @@ Object {
     },
     "vuorovaikutukset": Object {
       "__typename": "VuorovaikutusJulkinen",
-      "esittelyaineistot": undefined,
-      "suunnitelmaluonnokset": undefined,
       "tila": "MIGROITU",
       "vuorovaikutusNumero": 1,
       "yhteystiedot": Array [],
@@ -1813,8 +1811,6 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
     },
     "vuorovaikutukset": Object {
       "__typename": "VuorovaikutusJulkinen",
-      "esittelyaineistot": undefined,
-      "suunnitelmaluonnokset": undefined,
       "tila": "MIGROITU",
       "vuorovaikutusNumero": 1,
       "yhteystiedot": Array [],
