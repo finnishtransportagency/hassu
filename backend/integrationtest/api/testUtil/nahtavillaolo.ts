@@ -87,6 +87,7 @@ export async function testNahtavillaoloApproval(
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu).to.be.an("object");
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
   dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.nahtavillaoloVaihe?.aineistopaketti).to.exist;
   expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[dbProjekti.nahtavillaoloVaiheJulkaisut.length - 1].aineistopaketti).to.exist;
   await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO, toiminto: TilasiirtymaToiminto.HYVAKSY });
   dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
