@@ -6,7 +6,7 @@ import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
-import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
+import LadattavaTiedosto from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { kuntametadata } from "common/kuntametadata";
 import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
@@ -36,7 +36,9 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
             <h2 className="vayla-subtitle">Muistutukset</h2>
             <ul style={{ listStyle: "none " }}>
               {muistutukset.map((tiedosto, index) => (
-                <li key={index}>{renderLadattavaTiedosto(tiedosto)}</li>
+                <li key={index}>
+                  <LadattavaTiedosto tiedosto={tiedosto} />
+                </li>
               ))}
             </ul>
           </SectionContent>
@@ -46,7 +48,9 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
             <h2 className="vayla-subtitle">Muu aineisto</h2>
             <ul style={{ listStyle: "none " }}>
               {muutAineistot.map((tiedosto, index) => (
-                <li key={index}>{renderLadattavaTiedosto(tiedosto)}</li>
+                <li key={index}>
+                  <LadattavaTiedosto tiedosto={tiedosto} />
+                </li>
               ))}
             </ul>
           </SectionContent>

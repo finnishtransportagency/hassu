@@ -11,7 +11,7 @@ import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
 import { useEsikatseleLausuntoPyynnonAineistot } from "src/hooks/useEsikatseleLausuntoPyynnonAineistot";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
+import LadattavaTiedostoComponent from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjekti } from "src/hooks/useProjekti";
 
 export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
@@ -43,7 +43,11 @@ export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
             <h2 className="vayla-title">Lausuntopyyntöön liitetty lisäaineisto</h2>
             <ul style={{ listStyle: "none" }}>
               {lisaAineistot.map((tiedosto, index) => {
-                return <li key={index}>{renderLadattavaTiedosto(tiedosto, { esikatselu: true })}</li>;
+                return (
+                  <li key={index}>
+                    <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu />
+                  </li>
+                );
               })}
             </ul>
           </SectionContent>
@@ -103,7 +107,11 @@ const AineistoNahtavillaEsikatseluAccordion: FunctionComponent<AineistoNahtavill
                   {aineistot
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto, index) => {
-                      return <span key={index}>{renderLadattavaTiedosto(aineisto, { esikatselu: true })}</span>;
+                      return (
+                        <span key={index}>
+                          <LadattavaTiedostoComponent tiedosto={aineisto} esikatselu />
+                        </span>
+                      );
                     })}
                 </Stack>
               )}

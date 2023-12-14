@@ -10,7 +10,7 @@ import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
-import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
+import LadattavaTiedostoComponent from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 
@@ -42,7 +42,9 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
             <h2 className="vayla-title">Lisäaineistot</h2>
             <ul style={{ listStyle: "none" }}>
               {lisaAineistot.map((tiedosto, index) => (
-                <li key={index}>{renderLadattavaTiedosto(tiedosto)}</li>
+                <li key={index}>
+                  <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                </li>
               ))}
             </ul>
           </SectionContent>
@@ -102,7 +104,9 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                   {aineistot
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto, index) => (
-                      <span key={index}>{renderLadattavaTiedosto(aineisto)}</span>
+                      <span key={index}>
+                        <LadattavaTiedostoComponent tiedosto={aineisto} />
+                      </span>
                     ))}
                 </Stack>
               )}

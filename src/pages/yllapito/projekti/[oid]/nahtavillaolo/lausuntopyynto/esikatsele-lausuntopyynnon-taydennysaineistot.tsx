@@ -7,7 +7,7 @@ import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
 import { useEsikatseleLausuntoPyynnonTaydennysAineistot } from "src/hooks/useEsikatseleLausuntoPyynnonTaydennysAineistot";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { renderLadattavaTiedosto } from "@components/projekti/lausuntopyynnot/renderLadattavaTiedosto";
+import LadattavaTiedosto from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjekti } from "src/hooks/useProjekti";
 import { kuntametadata } from "common/kuntametadata";
 
@@ -37,7 +37,11 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
             <h2 className="vayla-subtitle">Muistutukset</h2>
             <ul style={{ listStyle: "none" }}>
               {muistutukset.map((tiedosto, index) => {
-                return <li key={index}>{renderLadattavaTiedosto(tiedosto, { esikatselu: true })}</li>;
+                return (
+                  <li key={index}>
+                    <LadattavaTiedosto tiedosto={tiedosto} esikatselu />
+                  </li>
+                );
               })}
             </ul>
           </SectionContent>
@@ -47,7 +51,11 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
             <h2 className="vayla-subtitle">Muu aineisto</h2>
             <ul style={{ listStyle: "none" }}>
               {muutAineistot.map((tiedosto, index) => {
-                return <li key={index}>{renderLadattavaTiedosto(tiedosto, { esikatselu: true })}</li>;
+                return (
+                  <li key={index}>
+                    <LadattavaTiedosto tiedosto={tiedosto} esikatselu />
+                  </li>
+                );
               })}
             </ul>
           </SectionContent>
