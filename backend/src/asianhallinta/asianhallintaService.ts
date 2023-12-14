@@ -54,7 +54,7 @@ class AsianhallintaService {
       asianhallintaEventId,
       correlationId: getCorrelationId() || uuid.v4(),
       hyvaksyja: getVaylaUser()?.uid ?? undefined,
-      hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.etunimi} ${getVaylaUser()?.sukunimi}` : undefined,
+      hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined,
       asianNimi: projekti.velho?.nimi,
     };
     const messageParams: SendMessageRequest = {
