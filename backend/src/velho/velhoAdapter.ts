@@ -237,10 +237,13 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
 }
 
 function getGeoJSON(data: ProjektiProjekti) {
-  const geometries = data["piirretyt-geometriat"]
-    ?.map((piirretty) => piirretty["geometria-wgs84"])
-    .filter((wgs84): wgs84 is ProjektiProjektiLuontiMitattugeometriaGeometria => !!wgs84)
-    .map(({ coordinates, type }) => ({ coordinates, type }));
+  const geometrycollection = data.geometrycollection?.geometries;
+  const geometriaEiOleKeskipiste = (geometry: ProjektiProjektiLuontiMitattugeometriaGeometria): boolean =>
+    !isEqual(geometry, data.keskipiste?.["geometria-wgs84"]);
+  const muutGeometriat = geometrycollection?.filter(geometriaEiOleKeskipiste);
+
+  // Jos on muitakin geometrioita kuin keskipiste, suodatetaan keskipisteet pois
+  const geometries = muutGeometriat?.length ? muutGeometriat : geometrycollection;
 
   // Jos geometrioita ei ole, palautetaan null
   if (!geometries?.length) {
