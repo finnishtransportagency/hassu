@@ -2,7 +2,7 @@ import TextInput from "@components/form/TextInput";
 import SectionContent from "@components/layout/SectionContent";
 import { Stack } from "@mui/material";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
 import Button from "@components/button/Button";
 import { kuntametadata } from "common/kuntametadata";
@@ -52,6 +52,16 @@ export default function Linkki({
   const buttonDisabled = !projekti.nahtavillaoloVaihe?.aineistoNahtavilla; // Array saa olla tyhjä, mutta sen pitää olla olemassa
 
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
+
+  useEffect(() => {
+    const listener = () => {
+      localStorage.removeItem(`lausuntoPyyntoInput.${uuid}`);
+    };
+    window.addEventListener("beforeunload", listener);
+    return () => {
+      window.removeEventListener("beforeunload", listener);
+    };
+  }, [uuid]);
 
   return (
     <SectionContent className="mt-16">

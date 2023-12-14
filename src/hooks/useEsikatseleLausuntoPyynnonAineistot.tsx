@@ -29,16 +29,6 @@ export function useEsikatseleLausuntoPyynnonAineistot() {
     return parsed;
   }, [uuid]);
 
-  useEffect(() => {
-    const listener = () => {
-      localStorage.removeItem(`lausuntoPyyntoInput.${uuid}`);
-    };
-    window.addEventListener("beforeunload", listener);
-    return () => {
-      window.removeEventListener("beforeunload", listener);
-    };
-  }, [uuid]);
-
   const esikatseleLausuntoPyyntoTiedostoLoader = getEsikatseleLausuntoPyyntoTiedostoLoader(api);
 
   const data = useSWR(
