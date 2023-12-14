@@ -63,59 +63,56 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
   expect(updateJulkaisuToListStub.callCount).to.eql(1);
   expect(velhoGetAineistoStub.callCount).to.eql(2);
   expect(createAineistoToProjektiStub.callCount).to.eql(2);
-  const expectedUpdateJulkaisuToListStubFirstParamsSecondVuorovaikutusKierrosJulkaisu = {
+  const expectedUpdateJulkaisuToListStubFirstParamsSecondVuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu = {
     id: 2,
     yhteystiedot: [],
     esitettavatYhteystiedot: {},
-    esittelyaineistot: [],
-    suunnitelmaluonnokset: [],
+    aineistot: [],
     hankkeenKuvaus: { SUOMI: "" },
     ilmoituksenVastaanottajat: {},
   };
   expect(updateJulkaisuToListStub.firstCall.args[0]?.vuorovaikutusKierrosJulkaisut?.[1]).to.eql(
     expectedUpdateJulkaisuToListStubFirstParamsSecondVuorovaikutusKierrosJulkaisu
   );
-  const expectedUpdateJulkaisuToListStubSecondParam = {
+  const expectedUpdateJulkaisuToListStubSecondParam: VuorovaikutusKierrosJulkaisu = {
     id: 1,
     yhteystiedot: [],
     esitettavatYhteystiedot: {},
-    esittelyaineistot: [
+    aineistot: [
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/esittelyaineisto_aineisto_valmis.txt",
         dokumenttiOid: "esittelyaineisto2",
         nimi: "esittelyaineisto_aineisto_valmis.txt",
-        tila: "VALMIS",
+        tila: API.AineistoTila.VALMIS,
         jarjestys: 2,
         tuotu: "***unittest***",
-        kategoriaId: undefined,
+        kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
       },
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/esittelyaineisto_aineisto_odottaa_tuontia.txt",
         dokumenttiOid: "/suunnitteluvaihe/vuorovaikutus_1/esittelyaineisto_aineisto_odottaa_tuontia.txt",
         nimi: "esittelyaineisto_aineisto_odottaa_tuontia.txt",
-        tila: "VALMIS",
+        tila: API.AineistoTila.VALMIS,
         jarjestys: 1,
-        kategoriaId: undefined,
+        kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
         tuotu: "***unittest***",
       },
-    ],
-    suunnitelmaluonnokset: [
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/suunnitelmaluonnos_aineisto_valmis.txt",
         dokumenttiOid: "suunnitelmaluonnos2",
         nimi: "suunnitelmaluonnos_aineisto_valmis.txt",
-        tila: "VALMIS",
+        tila: API.AineistoTila.VALMIS,
         jarjestys: 2,
         tuotu: "***unittest***",
-        kategoriaId: undefined,
+        kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
       },
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/suunnitelmaluonnos_aineisto_odottaa_tuontia.txt",
         dokumenttiOid: "/suunnitteluvaihe/vuorovaikutus_1/suunnitelmaluonnos_aineisto_odottaa_tuontia.txt",
         nimi: "suunnitelmaluonnos_aineisto_odottaa_tuontia.txt",
-        tila: "VALMIS",
+        tila: API.AineistoTila.VALMIS,
         jarjestys: 1,
-        kategoriaId: undefined,
+        kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
         tuotu: "***unittest***",
       },
     ],

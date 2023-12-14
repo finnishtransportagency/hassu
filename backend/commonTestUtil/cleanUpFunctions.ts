@@ -21,9 +21,10 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks<P extends APIorDBPal
 
 type APIorDBAineistoOrLadattuTiedosto = Pick<API.Aineisto, "tuotu">;
 type APIorDBIlmoituksenVastaanottaja = Pick<API.KuntaVastaanottaja | API.ViranomaisVastaanottaja, "lahetetty">;
-type APIVuorovaikutusKierros = {
+type APIorDBVuorovaikutusKierros = {
   esittelyaineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
   suunnitelmaluonnokset?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  aineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
   ilmoituksenVastaanottajat?: {
     kunnat?: APIorDBIlmoituksenVastaanottaja[] | null;
     viranomaiset?: APIorDBIlmoituksenVastaanottaja[] | null;
@@ -51,12 +52,19 @@ function cleanupIlmoituksenVastaanottaja<V extends APIorDBIlmoituksenVastaanotta
  * @param vuorovaikutusKierros : VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, API.VuorovaikutusJulkinen, API.VuorovaikutusKierros, API.VuorovaikutusKierrosJulkaisu
  * @returns vuorovaikutusKierros, mutta aineistoista on korvattu tuotu-aikaleimat ja ilmoituksen vastaanottajista lahettey-aikaleimat ***unittest***:lla. Parametria ei muokata.
  */
-export function cleanupVuorovaikutusKierrosTimestamps<A extends APIVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
+export function cleanupVuorovaikutusKierrosTimestamps<A extends APIorDBVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
   const cleanVuorovaikutusKierros = { ...vuorovaikutusKierros };
-  cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
-  cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(
-    aineistoOrLadattuTiedostoCleanupFunc
-  );
+  if (cleanVuorovaikutusKierros.esittelyaineistot) {
+    cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
+  if (cleanVuorovaikutusKierros.suunnitelmaluonnokset) {
+    cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(
+      aineistoOrLadattuTiedostoCleanupFunc
+    );
+  }
+  if (cleanVuorovaikutusKierros.aineistot) {
+    cleanVuorovaikutusKierros.aineistot = cleanVuorovaikutusKierros.aineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
   if (vuorovaikutusKierros.ilmoituksenVastaanottajat) {
     const cleanIlmoituksenVastaanottajat = {
       ...vuorovaikutusKierros.ilmoituksenVastaanottajat,
