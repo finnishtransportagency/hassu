@@ -14,12 +14,14 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
 
   const lausuntoPyynnonTaydennysInput = useMemo(() => {
     let parsed;
-    const localStorageData = localStorage.getItem(`lausuntoPyyntoInput.${uuid}`);
     try {
-      if (localStorageData) {
-        parsed = JSON.parse(localStorageData) as LausuntoPyynnonTaydennysInput;
-      } else {
-        return new PreviewExpiredError("Tarvittu data esikatselua varten on unohtunut.", undefined);
+      if (typeof window !== "undefined") {
+        const localStorageData = localStorage.getItem(`lausuntoPyyntoInput.${uuid}`);
+        if (localStorageData) {
+          parsed = JSON.parse(localStorageData) as LausuntoPyynnonTaydennysInput;
+        } else {
+          return new PreviewExpiredError("Tarvittu data esikatselua varten on unohtunut.", undefined);
+        }
       }
     } catch (e) {
       throw new Error("Esikatselua varten tallennettu lausuntopyyntö-data on korruptoitunut");
