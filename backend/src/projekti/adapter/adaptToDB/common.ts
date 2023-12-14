@@ -92,8 +92,7 @@ export function adaptStandardiYhteystiedotToSave(
 export function adaptAineistotToSave(
   dbAineistot: Aineisto[] | undefined | null,
   aineistotInput: API.AineistoInput[] | undefined | null,
-  projektiAdaptationResult: ProjektiAdaptationResult,
-  iteratee = (a: Aineisto) => a.dokumenttiOid + a.tila + a.nimi
+  projektiAdaptationResult: ProjektiAdaptationResult
 ): Aineisto[] | undefined {
   const resultAineistot: Aineisto[] = [];
 
@@ -122,7 +121,7 @@ export function adaptAineistotToSave(
   }
 
   // Poistetaan duplikaatit
-  return uniqBy(resultAineistot, iteratee);
+  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
 }
 
 function examineAndUpdateExistingDocuments(

@@ -1,5 +1,4 @@
 import {
-  Aineisto,
   DBProjekti,
   Kielitiedot,
   Linkki,
@@ -53,8 +52,7 @@ export function adaptVuorovaikutusKierrosToSave(
     const aineistot = adaptAineistotToSave(
       dbVuorovaikutusKierros?.aineistot,
       yhdistaVuorovaikutusAineistot({ esittelyaineistot, suunnitelmaluonnokset }),
-      projektiAdaptationResult,
-      (a) => a.dokumenttiOid + a.tila + a.nimi + a.kategoriaId
+      projektiAdaptationResult
     );
 
     if (vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet) {
@@ -127,14 +125,13 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
     } = perustiedotInput.vuorovaikutusKierros;
     const dbVuorovaikutusKierros: VuorovaikutusKierros | undefined = dbProjekti.vuorovaikutusKierros ?? undefined;
 
-    const aineistot: Aineisto[] | undefined = adaptAineistotToSave(
+    const aineistot = adaptAineistotToSave(
       dbVuorovaikutusKierros?.aineistot,
       yhdistaVuorovaikutusAineistot({
         esittelyaineistot,
         suunnitelmaluonnokset,
       }),
-      projektiAdaptationResult,
-      (a) => a.dokumenttiOid + a.tila + a.nimi + a.kategoriaId
+      projektiAdaptationResult
     );
 
     const kielitiedot = dbProjekti.kielitiedot;
