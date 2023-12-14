@@ -4,6 +4,7 @@ import {
   LadattavatTiedostot,
   ListaaLausuntoPyynnonTiedostotQueryVariables,
   ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
+  KayttajaTyyppi,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
@@ -11,6 +12,8 @@ import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "..
 import { NotFoundError } from "hassu-common/error";
 import { nyt, parseDate } from "../util/dateUtil";
 import { tiedostoDownloadLinkService } from "../tiedostot/tiedostoDownloadLinkService";
+import { adaptProjektiHenkilo } from "../projekti/adapter/common/adaptProjektiHenkiloJulkinen";
+import { assertIsDefined } from "../util/assertions";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonTiedostot({
@@ -25,7 +28,7 @@ class TiedostoDownloadLinkHandler {
     if (projekti) {
       const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
       if (!lausuntoPyynto) {
-        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+        throw new NotFoundError("Lausuntopyyntöä ei löyty");
       }
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,7 +37,14 @@ class TiedostoDownloadLinkHandler {
 
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new NotFoundError("Lausuntopyynnon aineiston linkki on vanhentunut");
+        const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+        assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+        return Promise.resolve({
+          __typename: "LadattavatTiedostot",
+          poistumisPaiva: lausuntoPyynto.poistumisPaiva,
+          linkkiVanhentunut: true,
+          projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
+        });
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyyntoTiedostot(projekti, params);
     } else {
@@ -54,7 +64,7 @@ class TiedostoDownloadLinkHandler {
     if (projekti) {
       const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
       if (!lausuntoPyynnonTaydennys) {
-        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+        throw new NotFoundError("Lausuntopyynnon täydennystä ei löydy");
       }
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -62,7 +72,14 @@ class TiedostoDownloadLinkHandler {
       tiedostoDownloadLinkService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        throw new NotFoundError("Lausuntopyynnon täydennysaineiston linkki on vanhentunut");
+        const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+        assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+        return Promise.resolve({
+          __typename: "LadattavatTiedostot",
+          poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
+          linkkiVanhentunut: true,
+          projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
+        });
       }
       return tiedostoDownloadLinkService.listaaLausuntoPyynnonTaydennyksenTiedostot(projekti, params);
     } else {

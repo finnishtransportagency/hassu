@@ -1,7 +1,7 @@
 import { config } from "../config";
 import { log } from "../logger";
 import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
-import { uuid } from "../util/uuid";
+import { uuid } from "hassu-common/util/uuid";
 import { Dayjs } from "dayjs";
 import {
   CopyObjectCommand,

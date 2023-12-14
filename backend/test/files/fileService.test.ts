@@ -1,13 +1,13 @@
 import { describe, it } from "mocha";
 import { fileService } from "../../src/files/fileService";
 import * as sinon from "sinon";
-import { uuid } from "../../src/util/uuid";
 import { parseDate } from "../../src/util/dateUtil";
 import { expectAwsCalls, S3Mock } from "../aws/awsMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { CopyObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { expect } from "chai";
+import { uuid } from "hassu-common/util/uuid";
 
 describe("UploadService", () => {
   const s3Mock = new S3Mock();

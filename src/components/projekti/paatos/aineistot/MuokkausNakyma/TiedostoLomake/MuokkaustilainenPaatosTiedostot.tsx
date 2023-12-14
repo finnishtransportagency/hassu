@@ -1,13 +1,12 @@
 import Button from "@components/button/Button";
-import { AineistoInput, VelhoAineisto } from "@services/api";
 import HyvaksymisPaatosTiedostot from "./HyvaksymisPaatosTiedostotTaulu";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
-import find from "lodash/find";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import { getPaatosInfoText } from "../textsForDifferentPaatos";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "..";
+import { adaptVelhoAineistoToAineistoInput, combineOldAndNewAineisto } from "@components/projekti/common/Aineistot/util";
 
 type Props = {
   paatosTyyppi: PaatosTyyppi;
@@ -46,32 +45,4 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props)
       />
     </>
   );
-}
-
-function combineOldAndNewAineisto({
-  oldAineisto,
-  oldPoistetut,
-  newAineisto,
-}: {
-  oldAineisto?: AineistoInput[];
-  oldPoistetut?: AineistoInput[];
-  newAineisto: AineistoInput[];
-}) {
-  return newAineisto.reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
-    (acc, velhoAineisto) => {
-      if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-        acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
-      }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-      return acc;
-    },
-    { lisatyt: oldAineisto || [], poistetut: oldPoistetut || [] }
-  );
-}
-
-function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto): AineistoInput {
-  return {
-    dokumenttiOid: velhoAineisto.oid,
-    nimi: velhoAineisto.tiedosto,
-  };
 }

@@ -25,7 +25,7 @@ import { fileService } from "../files/fileService";
 class TiedostoDownloadLinkService {
   private async adaptAineistoToLadattavaTiedosto(oid: string, aineisto: Aineisto): Promise<LadattavaTiedosto> {
     const { jarjestys, kategoriaId } = aineisto;
-    let nimi = aineisto.nimi;
+    const nimi = aineisto.nimi;
     let linkki;
     if (aineisto.tila == AineistoTila.VALMIS) {
       if (!aineisto.tiedosto) {
@@ -35,23 +35,21 @@ class TiedostoDownloadLinkService {
       }
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, aineisto.tiedosto);
     } else {
-      nimi = nimi + " (odottaa tuontia)";
       linkki = "";
     }
-    return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki };
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki, tuotu: aineisto.tuotu };
   }
 
   private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
     const { jarjestys } = tiedosto;
-    let nimi: string = tiedosto.nimi || "";
+    const nimi: string = tiedosto.nimi || "";
     let linkki;
     if (tiedosto.tuotu) {
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
     } else {
-      nimi = nimi + " (odottaa tuontia)";
       linkki = "";
     }
-    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki };
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
   }
 
   async esikatseleLausuntoPyynnonTiedostot(projekti: DBProjekti, lausuntoPyyntoInput: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
@@ -113,6 +111,7 @@ class TiedostoDownloadLinkService {
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
+      kunta: uusiLausuntoPyynnonTaydennys?.kunta,
       muutAineistot,
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
@@ -175,6 +174,7 @@ class TiedostoDownloadLinkService {
       : null;
     return {
       __typename: "LadattavatTiedostot",
+      kunta: lausuntoPyynnonTaydennys.kunta,
       muutAineistot,
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,

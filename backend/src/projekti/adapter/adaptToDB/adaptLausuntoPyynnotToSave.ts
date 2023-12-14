@@ -86,12 +86,19 @@ function adaptTiedostotToSave(
   projektiAdaptationResult: ProjektiAdaptationResult
 ): LadattuTiedosto[] | undefined | null {
   const vanhatEiPoistamistaOdottavat = dbTiedostot?.filter((tiedosto) => ladattuTiedostoTilaEiPoistettu(tiedosto.tila));
-  const vanhatPidettavat = vanhatEiPoistamistaOdottavat?.filter((vanhaTiedosto) => {
-    const vastineInputissa = tiedostotInput?.find((tiedosto) => tiedosto.tiedosto === vanhaTiedosto.tiedosto);
-    return (
-      vastineInputissa && vastineInputissa.tila === API.LadattuTiedostoTila.VALMIS && vanhaTiedosto.tila === API.LadattuTiedostoTila.VALMIS
-    );
-  });
+  const vanhatPidettavat = vanhatEiPoistamistaOdottavat
+    ?.reduce((vanhatPidettavat, vanhaTiedosto) => {
+      const vastineInputissa = tiedostotInput?.find((tiedosto) => tiedosto.tiedosto === vanhaTiedosto.tiedosto);
+      if (
+        vastineInputissa &&
+        vastineInputissa.tila === API.LadattuTiedostoTila.VALMIS &&
+        vanhaTiedosto.tila === API.LadattuTiedostoTila.VALMIS
+      ) {
+        vanhatPidettavat.push(adaptTiedostoToSave(vanhaTiedosto, vastineInputissa, projektiAdaptationResult));
+      }
+      return vanhatPidettavat;
+    }, [] as LadattuTiedosto[])
+    .sort((a, b) => (a.jarjestys ?? 0) - (b.jarjestys ?? 0));
   const vanhatPoistamistaOdottavat = dbTiedostot?.filter((tiedosto) => !ladattuTiedostoTilaEiPoistettu(tiedosto.tila));
   const uudet = tiedostotInput
     ?.filter((tiedosto) => tiedosto.tila === API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA)

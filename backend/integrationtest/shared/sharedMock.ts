@@ -1,8 +1,8 @@
 import * as _uuid from "uuid";
 import mocha from "mocha";
 import * as sinon from "sinon";
-import { uuid } from "../../src/util/uuid";
 import crypto from "crypto";
+import { uuid } from "hassu-common/util/uuid";
 // Koodia, jota voi käyttää sekä yksikkö-, että integraatiotesteissä
 
 // Mockataan UUID:n generointi tuottamaan joka testiajolla samat arvot

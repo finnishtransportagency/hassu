@@ -1054,11 +1054,14 @@ type ProjektiHakutulosDokumentti {
 
 type LadattavatTiedostot {
   poistumisPaiva: String!
+  linkkiVanhentunut: Boolean
+  kunta: Int
   aineistot: [LadattavaTiedosto!]
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
   aineistopaketti: String
+  projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }
 
 type LadattavaTiedosto {
@@ -1074,6 +1077,7 @@ type LadattavaTiedosto {
   Kayttajalle esitettava tiedostonimi
   """
   nimi: String!
+  tuotu: String
   """
   Numero jarjestamista varten
   """

@@ -16,7 +16,7 @@ import { nyt, parseDate } from "../../src/util/dateUtil";
 import { fileService } from "../../src/files/fileService";
 import { parameters } from "../../src/aws/parameters";
 import { expect } from "chai";
-import { IllegalAccessError, NotFoundError } from "hassu-common/error";
+import { IllegalAccessError } from "hassu-common/error";
 describe("tiedostoDownloadLinkHandler", () => {
   // Scroll down for test data definitions.
   // Test projekti has:
@@ -62,6 +62,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+          tuotu: "2011-01-02",
         },
       ],
       lisaAineistot: [
@@ -70,6 +71,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -110,6 +112,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/2/AineistoB.txt",
+          tuotu: "2011-04-02",
         },
       ],
       lisaAineistot: [
@@ -118,6 +121,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -163,6 +167,7 @@ describe("tiedostoDownloadLinkHandler", () => {
             jarjestys: undefined,
             kategoriaId: "osa_a",
             linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+            tuotu: "2011-01-02",
           },
         ],
         lisaAineistot: [
@@ -171,6 +176,7 @@ describe("tiedostoDownloadLinkHandler", () => {
             nimi: "aineisto_1.txt",
             jarjestys: 2,
             linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+            tuotu: "2021-06-01T01:03",
           },
         ],
         poistumisPaiva: nyt().add(10, "day").format("YYYY-MM-DD"),
@@ -180,22 +186,35 @@ describe("tiedostoDownloadLinkHandler", () => {
     }
   );
 
-  it("not not return lausuntoPyynto nor nahtavillaolo files for user, when they provide correct hash and uuid, but the link has expired", async () => {
+  it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).add(1, "day").format());
-    await expect(
-      tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
-        oid: "1",
-        listaaLausuntoPyyntoTiedostotInput: { hash, lausuntoPyyntoUuid: lausuntoPyynto1.uuid },
-      })
-    ).to.eventually.be.rejectedWith(NotFoundError);
+    const actualResult = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
+      oid: "1",
+      listaaLausuntoPyyntoTiedostotInput: { hash, lausuntoPyyntoUuid: lausuntoPyynto1.uuid },
+    });
+    expect(actualResult).to.eql({
+      __typename: "LadattavatTiedostot",
+      poistumisPaiva: lausuntoPyynto1.poistumisPaiva,
+      linkkiVanhentunut: true,
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        projektiPaallikko: true,
+        etunimi: "Etunimi",
+        sukunimi: "Sukunimi",
+        email: "email@email.com",
+        puhelinnumero: "0123456789",
+        organisaatio: "Organisaatio",
+        elyOrganisaatio: API.ELY.HAME_ELY,
+      },
+    });
   });
 
-  it("not not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
+  it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
@@ -220,12 +239,14 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      kunta: 1,
       muistutukset: [
         {
           __typename: "LadattavaTiedosto",
           nimi: `tiedosto_1.txt`,
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
+          tuotu: "2021-06-01T01:01",
         },
       ],
       muutAineistot: [
@@ -234,6 +255,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_3.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -242,19 +264,32 @@ describe("tiedostoDownloadLinkHandler", () => {
     expect(files).to.eql(expectedFiles);
   });
 
-  it("not not return lausuntoPyynnonTaydennys files for user, when they provide correct hash and uuid, but the link has expired", async () => {
+  it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).subtract(1, "day").format());
     const hash = adaptLausuntoPyynnonTaydennykset(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).add(1, "day").format());
-    await expect(
-      tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({
-        oid: "1",
-        listaaLausuntoPyynnonTaydennyksenTiedostotInput: { hash, lausuntoPyynnonTaydennysUuid: lausuntoPyynnonTaydennys1.uuid },
-      })
-    ).to.eventually.be.rejectedWith(NotFoundError);
+    const actualResult = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({
+      oid: "1",
+      listaaLausuntoPyynnonTaydennyksenTiedostotInput: { hash, lausuntoPyynnonTaydennysUuid: lausuntoPyynnonTaydennys1.uuid },
+    });
+    expect(actualResult).to.eql({
+      __typename: "LadattavatTiedostot",
+      poistumisPaiva: lausuntoPyynnonTaydennys1.poistumisPaiva,
+      linkkiVanhentunut: true,
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        projektiPaallikko: true,
+        etunimi: "Etunimi",
+        sukunimi: "Sukunimi",
+        email: "email@email.com",
+        puhelinnumero: "0123456789",
+        organisaatio: "Organisaatio",
+        elyOrganisaatio: API.ELY.HAME_ELY,
+      },
+    });
   });
 
   it("not not return lausuntoPyynnonTaydennys files for user, when they provide wrong hash", async () => {
@@ -304,6 +339,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: undefined,
           kategoriaId: "osa_a",
           linkki: "download-link-for-/nahtavillaolo/1/AineistoA.txt",
+          tuotu: "2011-01-02",
         },
       ],
       lisaAineistot: [
@@ -312,12 +348,14 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "aineisto_1.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
+          tuotu: "2021-06-01T01:03",
         },
         {
           __typename: "LadattavaTiedosto",
-          nimi: "aineisto_uusi.txt (odottaa tuontia)",
+          nimi: "aineisto_uusi.txt",
           jarjestys: 3,
           linkki: "",
+          tuotu: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -364,18 +402,21 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      kunta: 1,
       muutAineistot: [
         {
           __typename: "LadattavaTiedosto",
-          nimi: "aineisto_4.txt (odottaa tuontia)",
+          nimi: "aineisto_4.txt",
           jarjestys: 1,
           linkki: "",
+          tuotu: undefined,
         },
         {
           __typename: "LadattavaTiedosto",
           nimi: "aineisto_3.txt",
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
+          tuotu: "2021-06-01T01:03",
         },
       ],
       muistutukset: [
@@ -384,12 +425,14 @@ describe("tiedostoDownloadLinkHandler", () => {
           nimi: "tiedosto_1.txt",
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
+          tuotu: "2021-06-01T01:01",
         },
         {
           __typename: "LadattavaTiedosto",
-          nimi: "tiedosto_1.txt (odottaa tuontia)",
+          nimi: "tiedosto_1.txt",
           jarjestys: 2,
           linkki: "",
+          tuotu: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -421,6 +464,7 @@ const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
       nimi: "TiedostoA.txt",
       tiedosto: "/nahtavillaolo/1/AineistoA.txt",
       kategoriaId: "osa_a",
+      tuotu: "2011-01-02",
     },
   ],
   tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -442,6 +486,7 @@ const nahtavillaoloJulkaisu2: NahtavillaoloVaiheJulkaisu = {
       nimi: "TiedostoB.txt",
       tiedosto: "/nahtavillaolo/2/AineistoB.txt",
       kategoriaId: "osa_a",
+      tuotu: "2011-04-02",
     },
   ],
   tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
@@ -538,7 +583,20 @@ const lausuntoPyynnonTaydennys2: LausuntoPyynnonTaydennys = {
 const projekti: DBProjekti = {
   oid: "1",
   versio: 1,
-  kayttoOikeudet: [],
+  kayttoOikeudet: [
+    {
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      etunimi: "Etunimi",
+      sukunimi: "Sukunimi",
+      email: "email@email.com",
+      kayttajatunnus: "SECRET",
+      puhelinnumero: "0123456789",
+      organisaatio: "Organisaatio",
+      muokattavissa: false,
+      yleinenYhteystieto: true,
+      elyOrganisaatio: API.ELY.HAME_ELY,
+    },
+  ],
   salt: "salt",
   nahtavillaoloVaihe: nahtavillaolo,
   nahtavillaoloVaiheJulkaisut: [nahtavillaoloJulkaisu1, nahtavillaoloJulkaisu2],

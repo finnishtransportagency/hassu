@@ -91,3 +91,31 @@ export function combineOldAndNewAineistoWithCategories({
     { lisatyt: oldAineisto || {}, poistetut: oldPoistetut || [] }
   );
 }
+
+export function combineOldAndNewAineisto({
+  oldAineisto,
+  oldPoistetut,
+  newAineisto,
+}: {
+  oldAineisto?: AineistoInput[];
+  oldPoistetut?: AineistoInput[];
+  newAineisto: AineistoInput[];
+}) {
+  return newAineisto.reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+    (acc, velhoAineisto) => {
+      if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+        acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+      }
+      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+      return acc;
+    },
+    { lisatyt: oldAineisto || [], poistetut: oldPoistetut || [] }
+  );
+}
+
+export function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto): AineistoInput {
+  return {
+    dokumenttiOid: velhoAineisto.oid,
+    nimi: velhoAineisto.tiedosto,
+  };
+}
