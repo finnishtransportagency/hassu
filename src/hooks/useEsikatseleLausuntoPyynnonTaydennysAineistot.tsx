@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useEffect, useMemo } from "react";
+import { PreviewExpiredError } from "common/error/PreviewExpiredError";
 
 export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
   const api = useApi();
@@ -13,10 +14,15 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
 
   const lausuntoPyynnonTaydennysInput = useMemo(() => {
     let parsed;
+    const localStorageData = localStorage.getItem(`lausuntoPyyntoInput.${uuid}`);
     try {
-      parsed = JSON.parse(localStorage.getItem(`lausuntoPyyntoInput.${uuid}`) ?? "");
+      if (localStorageData) {
+        parsed = JSON.parse(localStorageData) as LausuntoPyynnonTaydennysInput;
+      } else {
+        return new PreviewExpiredError("Tarvittu data esikatselua varten on unohtunut.", undefined);
+      }
     } catch (e) {
-      console.log(`Parsing input saved in localstorage at lausuntoPyyntoInput.${uuid} failed`, e);
+      throw new Error("Esikatselua varten tallennettu lausuntopyyntö-data on korruptoitunut");
     }
     return parsed;
   }, [uuid]);
@@ -33,10 +39,11 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
 
   const esikatseleLausuntoPyyntoTiedostoLoader = getEsikatseleLausuntoPyynnonTaydennysTiedostoLoader(api);
 
-  return useSWR(
+  const data = useSWR(
     [apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot.graphql, oid, lausuntoPyynnonTaydennysInput],
     esikatseleLausuntoPyyntoTiedostoLoader
   );
+  return lausuntoPyynnonTaydennysInput instanceof PreviewExpiredError ? { data: lausuntoPyynnonTaydennysInput } : data;
 }
 
 const getEsikatseleLausuntoPyynnonTaydennysTiedostoLoader =

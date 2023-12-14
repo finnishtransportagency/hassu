@@ -10,15 +10,23 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import LadattavaTiedosto from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjekti } from "src/hooks/useProjekti";
 import { kuntametadata } from "common/kuntametadata";
+import { PreviewExpiredError } from "common/error/PreviewExpiredError";
 
 export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElement {
-  const data: null | undefined | LadattavatTiedostot = useEsikatseleLausuntoPyynnonTaydennysAineistot().data;
+  const data: null | undefined | LadattavatTiedostot | PreviewExpiredError = useEsikatseleLausuntoPyynnonTaydennysAineistot().data;
   const { data: projekti } = useProjekti();
-  let poistumisPaiva = data?.poistumisPaiva;
-  if (!(poistumisPaiva && data)) {
+
+  if (data instanceof PreviewExpiredError) {
+    return <>Tarvittu data esikatselua varten on unohtunut. Sulje välilehti ja avaa esikatselu uudestaan.</>;
+  }
+
+  if (!data) {
     return <></>;
   }
+
+  let poistumisPaiva = data?.poistumisPaiva;
   const { muutAineistot, muistutukset } = data;
+
   return (
     <>
       <h1 className="vayla-header">Lausuntopyynnön täydennysaineisto (esikatselu)</h1>
