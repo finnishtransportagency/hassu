@@ -49,8 +49,8 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
 }
 
 const getEsikatseleLausuntoPyynnonTaydennysTiedostoLoader =
-  (api: API) => async (_query: string, oid: string, lausuntoPyyntoTaydennysInput: LausuntoPyynnonTaydennysInput) => {
-    if (!oid || !lausuntoPyyntoTaydennysInput) {
+  (api: API) => async (_query: string, oid: string, lausuntoPyyntoTaydennysInput: LausuntoPyynnonTaydennysInput | PreviewExpiredError) => {
+    if (!oid || !lausuntoPyyntoTaydennysInput || lausuntoPyyntoTaydennysInput instanceof PreviewExpiredError) {
       return null;
     }
     return await api.esikatseleLausuntoPyynnonTaydennysTiedostot(oid, lausuntoPyyntoTaydennysInput);

@@ -3,7 +3,7 @@ import { LausuntoPyyntoInput, apiConfig } from "@services/api";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { PreviewExpiredError } from "common/error/PreviewExpiredError";
 
 export function useEsikatseleLausuntoPyynnonAineistot() {
@@ -39,8 +39,8 @@ export function useEsikatseleLausuntoPyynnonAineistot() {
 }
 
 const getEsikatseleLausuntoPyyntoTiedostoLoader =
-  (api: API) => async (_query: string, oid: string, lausuntoPyyntoInput: LausuntoPyyntoInput) => {
-    if (!oid || !lausuntoPyyntoInput) {
+  (api: API) => async (_query: string, oid: string, lausuntoPyyntoInput: LausuntoPyyntoInput | PreviewExpiredError) => {
+    if (!oid || !lausuntoPyyntoInput || lausuntoPyyntoInput instanceof PreviewExpiredError) {
       return null;
     }
     return await api.esikatseleLausuntoPyynnonTiedostot(oid, lausuntoPyyntoInput);
