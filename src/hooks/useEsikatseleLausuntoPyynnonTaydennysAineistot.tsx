@@ -22,9 +22,13 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
   }, [uuid]);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", () => {
+    const listener = () => {
       localStorage.removeItem(`lausuntoPyyntoInput.${uuid}`);
-    });
+    };
+    window.addEventListener("beforeunload", listener);
+    return () => {
+      window.removeEventListener("beforeunload", listener);
+    };
   }, [uuid]);
 
   const esikatseleLausuntoPyyntoTiedostoLoader = getEsikatseleLausuntoPyynnonTaydennysTiedostoLoader(api);
