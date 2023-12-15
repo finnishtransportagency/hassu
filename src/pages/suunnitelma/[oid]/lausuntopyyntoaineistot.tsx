@@ -12,7 +12,7 @@ import ButtonLink from "@components/button/ButtonLink";
 import SectionContent from "@components/layout/SectionContent";
 import LadattavaTiedostoComponent from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAIneistolinkki";
+import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useLisaAineisto().data;
