@@ -9,8 +9,8 @@ import { fileService } from "../../../src/files/fileService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-
 import { expect } from "chai";
+import { parameters } from "../../../src/aws/parameters";
 
 describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
   let projekti: DBProjekti;
@@ -36,6 +36,8 @@ describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
     userFixture.loginAs(UserFixture.hassuAdmin);
     deleteFiles = sinon.stub(fileService, "deleteProjektiFilesRecursively");
     saveProjekti = sinon.stub(projektiDatabase, "saveProjekti");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(() => {
