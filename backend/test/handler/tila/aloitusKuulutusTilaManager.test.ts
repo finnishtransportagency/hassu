@@ -7,13 +7,14 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { DBProjekti } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { dateToString, nyt } from "../../../src/util/dateUtil";
-import { UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
+import { LadattuTiedostoTila, UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { expect } from "chai";
 import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
 import { parameters } from "../../../src/aws/parameters";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
@@ -109,5 +110,54 @@ describe("aloitusKuulutusTilaManager", () => {
       alkuperainenHyvaksymisPaiva: "2022-03-21",
       alkuperainenKuulutusPaiva: projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva,
     });
+  });
+
+  it("should remove saamePDFs from old kuulutus when making uudelleenkuulutus", async function () {
+    projekti.aloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: 1,
+      aloituskuulutusSaamePDFt: {
+        POHJOISSAAME: {
+          kuulutusPDF: {
+            tiedosto: "/aloituskuulutus/1/kuulutus.pdf",
+            nimi: "Saamenkielinen kuulutus",
+            tuotu: "2023-01-01",
+            tila: LadattuTiedostoTila.VALMIS,
+          },
+          kuulutusIlmoitusPDF: {
+            tiedosto: "/aloituskuulutus/1/kuulutusilmoitus.pdf",
+            nimi: "Saamenkielinen kuulutus ilmoitus",
+            tuotu: "2023-01-01",
+            tila: LadattuTiedostoTila.VALMIS,
+          },
+        },
+      },
+    };
+    assertIsDefined(projekti.aloitusKuulutusJulkaisut);
+    projekti.aloitusKuulutusJulkaisut = [
+      {
+        ...projekti.aloitusKuulutusJulkaisut?.[0],
+        id: 1,
+        aloituskuulutusSaamePDFt: {
+          POHJOISSAAME: {
+            kuulutusPDF: {
+              tiedosto: "/aloituskuulutus/1/kuulutus.pdf",
+              nimi: "Saamenkielinen kuulutus",
+              tuotu: "2023-01-01",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+            kuulutusIlmoitusPDF: {
+              tiedosto: "/aloituskuulutus/1/kuulutusilmoitus.pdf",
+              nimi: "Saamenkielinen kuulutus ilmoitus",
+              tuotu: "2023-01-01",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+          },
+        },
+      },
+    ];
+    await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
+    const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
+    expect(savedProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt).to.eql(undefined);
   });
 });
