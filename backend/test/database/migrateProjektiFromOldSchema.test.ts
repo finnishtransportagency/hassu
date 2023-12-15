@@ -1,9 +1,13 @@
 import { describe, it } from "mocha";
-import { Kieli, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
-import { DBProjekti } from "../../src/database/model";
+import { AineistoTila, Kieli, Vaihe, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
+import { Aineisto, DBProjekti, VuorovaikutusKierros } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
 
 import { expect } from "chai";
+import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
+import { assertIsDefined } from "../../src/util/assertions";
+import { cloneDeep } from "lodash";
+import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 describe("migrateFromOldSchema", () => {
   it("should migate suunnitteluvaihe from before multi language support to the new form", async () => {
@@ -1200,5 +1204,60 @@ describe("migrateFromOldSchema", () => {
     const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
 
     expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot", async () => {
+    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
+    const suunnitelmaluonnokset: Aineisto[] = [
+      { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
+    ];
+    const oldProjekti: Partial<DBProjekti> = {
+      versio: 1,
+      vuorovaikutusKierros: { vuorovaikutusNumero: 1, ...{ esittelyaineistot, suunnitelmaluonnokset } },
+    };
+    const newProjekti: Partial<DBProjekti> = {
+      versio: 1,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        aineistot: [
+          ...esittelyaineistot.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO })),
+          ...suunnitelmaluonnokset.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS })),
+        ],
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldProjekti as DBProjekti);
+
+    expect(migratoitu).to.eql(newProjekti);
+  });
+
+  it("should not migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot if there is already aineistot field present", async () => {
+    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
+    const suunnitelmaluonnokset: Aineisto[] = [
+      { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
+    ];
+    const aineistot: Aineisto[] = [
+      {
+        dokumenttiOid: "esittelyaineistodokumentti",
+        nimi: "Aineistonimi",
+        tila: AineistoTila.VALMIS,
+        kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+      },
+    ];
+    const oldProjekti: Partial<DBProjekti> = {
+      versio: 1,
+      vuorovaikutusKierros: { vuorovaikutusNumero: 1, aineistot, ...{ esittelyaineistot, suunnitelmaluonnokset } },
+    };
+    const newProjekti: Partial<DBProjekti> = {
+      versio: 1,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        aineistot,
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldProjekti as DBProjekti);
+
+    expect(migratoitu).to.eql(newProjekti);
   });
 });

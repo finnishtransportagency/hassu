@@ -9,10 +9,7 @@ export class VuorovaikutusKierrosJulkaisuTiedostoManager extends VaiheTiedostoMa
 
   getAineistot(julkaisu: VuorovaikutusKierrosJulkaisu): AineistoPathsPair[] {
     const paths = this.projektiPaths.vuorovaikutus(julkaisu).aineisto;
-    return [
-      { aineisto: julkaisu.esittelyaineistot, paths },
-      { aineisto: julkaisu.suunnitelmaluonnokset, paths },
-    ];
+    return [{ aineisto: julkaisu.aineistot, paths }];
   }
 
   getLadatutTiedostot(): LadattuTiedostoPathsPair[] {

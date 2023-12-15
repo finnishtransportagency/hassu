@@ -5,10 +5,12 @@ import {
   KuntaVastaanottaja,
   Linkki,
   LocalizedMap,
+  VuorovaikutusKierros,
   VuorovaikutusTilaisuus,
 } from "./model";
 import cloneDeepWith from "lodash/cloneDeepWith";
 import { kuntametadata } from "hassu-common/kuntametadata";
+import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
 import { Kieli } from "hassu-common/graphql/apiModel";
@@ -287,5 +289,50 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
     }
   });
 
+  updateVuorovaikutusAineistot(p);
+
   return p;
+}
+
+function updateVuorovaikutusAineistot(p: DBProjekti) {
+  if (p.vuorovaikutusKierros && !p.vuorovaikutusKierros?.aineistot) {
+    const esittelyaineistot: VuorovaikutusKierros["aineistot"] = (p.vuorovaikutusKierros as any)?.["esittelyaineistot"];
+    const suunnitelmaluonnokset: VuorovaikutusKierros["aineistot"] = (p.vuorovaikutusKierros as any)?.["suunnitelmaluonnokset"];
+
+    if (esittelyaineistot || suunnitelmaluonnokset) {
+      p.vuorovaikutusKierros.aineistot = combineEsittelyAineistotAndSuunnitelmaluonnokset(esittelyaineistot, suunnitelmaluonnokset);
+    }
+  }
+  delete (p.vuorovaikutusKierros as any)?.["esittelyaineistot"];
+  delete (p.vuorovaikutusKierros as any)?.["suunnitelmaluonnokset"];
+
+  p.vuorovaikutusKierrosJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu?.aineistot) {
+      const esittelyaineistot: VuorovaikutusKierros["aineistot"] = (julkaisu as any)?.["esittelyaineistot"];
+      const suunnitelmaluonnokset: VuorovaikutusKierros["aineistot"] = (julkaisu as any)?.["suunnitelmaluonnokset"];
+
+      if (esittelyaineistot || suunnitelmaluonnokset) {
+        julkaisu.aineistot = combineEsittelyAineistotAndSuunnitelmaluonnokset(esittelyaineistot, suunnitelmaluonnokset);
+      }
+    }
+    delete (julkaisu as any)?.["esittelyaineistot"];
+    delete (julkaisu as any)?.["suunnitelmaluonnokset"];
+  });
+}
+
+function combineEsittelyAineistotAndSuunnitelmaluonnokset(
+  esittelyaineistot: VuorovaikutusKierros["aineistot"],
+  suunnitelmaluonnokset: VuorovaikutusKierros["aineistot"]
+): VuorovaikutusKierros["aineistot"] {
+  const esittelyaineistoKategorisoitu =
+    esittelyaineistot?.map((aineisto) => ({
+      ...aineisto,
+      kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+    })) ?? [];
+  const suunnitelmaluonnoksetKategorisoitu =
+    suunnitelmaluonnokset?.map((aineisto) => ({
+      ...aineisto,
+      kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
+    })) ?? [];
+  return [...esittelyaineistoKategorisoitu, ...suunnitelmaluonnoksetKategorisoitu];
 }

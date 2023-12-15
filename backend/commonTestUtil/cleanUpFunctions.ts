@@ -24,6 +24,7 @@ type APIorDBIlmoituksenVastaanottaja = Pick<API.KuntaVastaanottaja | API.Viranom
 type APIorDBVuorovaikutusKierros = {
   esittelyaineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
   suunnitelmaluonnokset?: APIorDBAineistoOrLadattuTiedosto[] | null;
+  aineistot?: APIorDBAineistoOrLadattuTiedosto[] | null;
   ilmoituksenVastaanottajat?: {
     kunnat?: APIorDBIlmoituksenVastaanottaja[] | null;
     viranomaiset?: APIorDBIlmoituksenVastaanottaja[] | null;
@@ -53,10 +54,17 @@ function cleanupIlmoituksenVastaanottaja<V extends APIorDBIlmoituksenVastaanotta
  */
 export function cleanupVuorovaikutusKierrosTimestamps<A extends APIorDBVuorovaikutusKierros>(vuorovaikutusKierros: A): A {
   const cleanVuorovaikutusKierros = { ...vuorovaikutusKierros };
-  cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
-  cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(
-    aineistoOrLadattuTiedostoCleanupFunc
-  );
+  if (cleanVuorovaikutusKierros.esittelyaineistot) {
+    cleanVuorovaikutusKierros.esittelyaineistot = cleanVuorovaikutusKierros.esittelyaineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
+  if (cleanVuorovaikutusKierros.suunnitelmaluonnokset) {
+    cleanVuorovaikutusKierros.suunnitelmaluonnokset = cleanVuorovaikutusKierros.suunnitelmaluonnokset?.map(
+      aineistoOrLadattuTiedostoCleanupFunc
+    );
+  }
+  if (cleanVuorovaikutusKierros.aineistot) {
+    cleanVuorovaikutusKierros.aineistot = cleanVuorovaikutusKierros.aineistot?.map(aineistoOrLadattuTiedostoCleanupFunc);
+  }
   if (vuorovaikutusKierros.ilmoituksenVastaanottajat) {
     const cleanIlmoituksenVastaanottajat = {
       ...vuorovaikutusKierros.ilmoituksenVastaanottajat,

@@ -102,7 +102,7 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
 
     const expectedResult: VuorovaikutusKierros = cloneDeep({
       ...dbProjekti.vuorovaikutusKierros,
-      esittelyaineistot: [],
+      aineistot: [],
     });
 
     const result = adaptVuorovaikutusKierrosToSave(dbProjekti, vuorovaikutusKierrosInput, new ProjektiAdaptationResult(dbProjekti));

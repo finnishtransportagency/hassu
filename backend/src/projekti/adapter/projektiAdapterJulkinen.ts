@@ -65,6 +65,7 @@ import {
   ProjektiScheduleManager,
 } from "../../sqsEvents/projektiScheduleManager";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { jaotteleVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
   if (
@@ -365,6 +366,9 @@ class ProjektiAdapterJulkinen {
       const isAineistoVisible = new ProjektiScheduleManager(dbProjekti)
         .getVuorovaikutusKierros()
         .isAineistoVisible(viimeisinVuorovaikutusKierros);
+
+      const { esittelyaineistot, suunnitelmaluonnokset } = jaotteleVuorovaikutusAineistot(viimeisinVuorovaikutusKierros.aineistot) ?? {};
+
       const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
         __typename: "VuorovaikutusJulkinen",
         vuorovaikutusNumero: viimeisinVuorovaikutusKierros.id,
@@ -381,10 +385,10 @@ class ProjektiAdapterJulkinen {
         videot: videotAdaptoituna,
         suunnittelumateriaali: adaptLokalisoidutLinkit(viimeisinVuorovaikutusKierros.suunnittelumateriaali),
         esittelyaineistot: isAineistoVisible
-          ? adaptAineistotJulkinen(viimeisinVuorovaikutusKierros.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+          ? adaptAineistotJulkinen(esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
           : undefined,
         suunnitelmaluonnokset: isAineistoVisible
-          ? adaptAineistotJulkinen(viimeisinVuorovaikutusKierros.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+          ? adaptAineistotJulkinen(suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
           : undefined,
         yhteystiedot: adaptYhteystiedotByAddingTypename(viimeisinVuorovaikutusKierros.yhteystiedot) as API.Yhteystieto[],
         vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(vuorovaikutusPaths, viimeisinVuorovaikutusKierros),

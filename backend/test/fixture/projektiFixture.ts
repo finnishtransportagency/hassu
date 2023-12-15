@@ -541,7 +541,7 @@ export class ProjektiFixture {
 
   // NAHTAVILLAOLO_AINEISTOT tilainen projekti
   dbProjektiLackingNahtavillaoloVaihe(): DBProjekti {
-    return {
+    const projekti: DBProjekti = {
       kayttoOikeudet: [
         {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -774,6 +774,7 @@ export class ProjektiFixture {
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,
     };
+    return projekti;
   }
 
   // Suunnitteluvaihe
@@ -2357,8 +2358,7 @@ export class ProjektiFixture {
       },
     ],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
-    esittelyaineistot: [],
-    suunnitelmaluonnokset: [],
+    aineistot: [],
     esitettavatYhteystiedot: {
       yhteysTiedot: [
         {
