@@ -81,6 +81,10 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  returnKuulutusWithoutSaamePDFs(kuulutus: NahtavillaoloVaihe): NahtavillaoloVaihe {
+    const { nahtavillaoloSaamePDFt: _leaveOut, ...rest } = kuulutus;
+    return rest;
+  }
   constructor() {
     super(Vaihe.NAHTAVILLAOLO);
   }
