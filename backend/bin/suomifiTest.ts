@@ -91,30 +91,44 @@ app.post("/hae", (req, res) => {
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
       <soapenv:Body xmlns:asi="http://www.suomi.fi/asiointitili">
-      <asi:HaeAsiakkaitaResponse>
-        <asi:HaeAsiakkaitaResult>
-          <asi:TilaKoodi>
-            <asi:TilaKoodi>0</asi:TilaKoodi>
-            <asi:TilaKoodiKuvaus>Onnistui</asi:TilaKoodiKuvaus>
-            <asi:SanomaTunniste>1524033786_837807286</asi:SanomaTunniste>
-          </asi:TilaKoodi>
-          <asi:Asiakkaat>
-            <asi:Asiakas AsiakasTunnus="010101-0101" TunnusTyyppi="SSN">
-              <asi:Tila>300</asi:Tila>
-              <asi:TilaPvm>2018-02-22T11:00:41.143+02:00</asi:TilaPvm>
-              <asi:TiliPassivoitu>0</asi:TiliPassivoitu>
-            </asi:Asiakas>
-            <asi:Asiakas AsiakasTunnus="010101-123N" TunnusTyyppi="SSN">
-              <asi:Tila>300</asi:Tila>
-              <asi:TilaPvm>2018-04-18T10:16:34.877+03:00</asi:TilaPvm>
-              <asi:TiliPassivoitu>0</asi:TiliPassivoitu>
-            </asi:Asiakas>
-          </asi:Asiakkaat>
-        </asi:HaeAsiakkaitaResult>
-      </asi:HaeAsiakkaitaResponse>
-    </soapenv:Body>
-  </soapenv:Envelope>`);
+        <asi:HaeAsiakkaitaResponse>
+          <asi:HaeAsiakkaitaResult>
+            <asi:TilaKoodi>
+              <asi:TilaKoodi>0</asi:TilaKoodi>
+              <asi:TilaKoodiKuvaus>Onnistui</asi:TilaKoodiKuvaus>
+              <asi:SanomaTunniste>1524033786_837807286</asi:SanomaTunniste>
+            </asi:TilaKoodi>
+            <asi:Asiakkaat>
+              <asi:Asiakas AsiakasTunnus="010101-0101" TunnusTyyppi="SSN">
+                <asi:Tila>300</asi:Tila>
+                <asi:TilaPvm>2018-02-22T11:00:41.143+02:00</asi:TilaPvm>
+                <asi:TiliPassivoitu>0</asi:TiliPassivoitu>
+              </asi:Asiakas>
+              <asi:Asiakas AsiakasTunnus="010101-123N" TunnusTyyppi="SSN">
+                <asi:Tila>300</asi:Tila>
+                <asi:TilaPvm>2018-04-18T10:16:34.877+03:00</asi:TilaPvm>
+                <asi:TiliPassivoitu>0</asi:TiliPassivoitu>
+              </asi:Asiakas>
+            </asi:Asiakkaat>
+          </asi:HaeAsiakkaitaResult>
+        </asi:HaeAsiakkaitaResponse>
+      </soapenv:Body>
+    </soapenv:Envelope>`);
 });
+app.post("/fault", (req, res) => {
+  logRequest(req);
+  res.status(500).send(`
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+      <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
+      <soapenv:Body xmlns:asi="http://www.suomi.fi/asiointitili">
+        <soapenv:Fault>
+          <faultcode>server</faultcode>
+          <faultstring>temporary exception</faultstring>
+        </soapenv:Fault>
+      </soapenv:Body>
+    </soapenv:Envelope>`);
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
@@ -147,6 +161,8 @@ getSuomiFiClient({
       });
     } else if (process.argv[2] === "hae") {
       return client.haeAsiakas("010120-3319");
+    } else if (process.argv[2] === "fault") {
+      return client.rajapinnanTila();;
     } else {
       return new Promise((resolve, reject) => reject("Väärä toiminto!"));
     }
