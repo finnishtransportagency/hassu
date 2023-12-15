@@ -150,6 +150,7 @@ export abstract class KuulutusTilaManager<
 
   private getUpdatedVaiheTiedotForUudelleenkuulutus(projekti: DBProjekti, kuulutusLuonnos: T, hyvaksyttyJulkaisu: Y, julkaisut: Y[]) {
     const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+    const kuulutusLuonnosIlmanSaamePDFia = this.returnKuulutusWithoutSaamePDFs(kuulutusLuonnos);
     const uudelleenKuulutus = julkinenUudelleenKuulutus
       ? {
           tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
@@ -161,9 +162,8 @@ export abstract class KuulutusTilaManager<
 
     const uusiId = julkaisut.length + 1;
     const projektiPaths = new ProjektiPaths(projekti.oid);
-    const aineistot = this.getUpdatedAineistotForVaihe(kuulutusLuonnos, uusiId, projektiPaths);
-
-    return { ...kuulutusLuonnos, uudelleenKuulutus, id: uusiId, ...aineistot };
+    const aineistot = this.getUpdatedAineistotForVaihe(kuulutusLuonnosIlmanSaamePDFia, uusiId, projektiPaths);
+    return { ...kuulutusLuonnosIlmanSaamePDFia, uudelleenKuulutus, id: uusiId, ...aineistot };
   }
 
   private getUpdatedVaiheTiedotForAineistoMuokkaus(projekti: DBProjekti, kuulutusLuonnos: T, viimeisinJulkaisu: Y, julkaisut: Y[]) {
@@ -304,6 +304,8 @@ export abstract class KuulutusTilaManager<
   checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
     return requirePermissionMuokkaa(projekti);
   }
+
+  abstract returnKuulutusWithoutSaamePDFs(kuulutus: T): T;
 
   abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;
 

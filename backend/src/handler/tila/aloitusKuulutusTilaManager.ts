@@ -1,4 +1,12 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  Status,
+  TilasiirtymaTyyppi,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -81,6 +89,11 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  returnKuulutusWithoutSaamePDFs(kuulutus: AloitusKuulutus): AloitusKuulutus {
+    const { aloituskuulutusSaamePDFt: _leaveOut, ...rest } = kuulutus;
+    return rest;
+  }
+
   constructor() {
     super(Vaihe.ALOITUSKUULUTUS);
   }
