@@ -303,6 +303,8 @@ function updateVuorovaikutusAineistot(p: DBProjekti) {
       p.vuorovaikutusKierros.aineistot = combineEsittelyAineistotAndSuunnitelmaluonnokset(esittelyaineistot, suunnitelmaluonnokset);
     }
   }
+  delete (p.vuorovaikutusKierros as any)?.["esittelyaineistot"];
+  delete (p.vuorovaikutusKierros as any)?.["suunnitelmaluonnokset"];
 
   p.vuorovaikutusKierrosJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu?.aineistot) {
@@ -313,6 +315,8 @@ function updateVuorovaikutusAineistot(p: DBProjekti) {
         julkaisu.aineistot = combineEsittelyAineistotAndSuunnitelmaluonnokset(esittelyaineistot, suunnitelmaluonnokset);
       }
     }
+    delete (julkaisu as any)?.["esittelyaineistot"];
+    delete (julkaisu as any)?.["suunnitelmaluonnokset"];
   });
 }
 
