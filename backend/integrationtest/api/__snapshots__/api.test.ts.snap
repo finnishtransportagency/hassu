@@ -11010,13 +11010,6 @@ Object {
         },
       ],
     },
-    "lisaAineisto": undefined,
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 1,
-      "poistumisPaiva": "***unittest***",
-    },
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
@@ -11142,21 +11135,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
@@ -11239,71 +11217,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `Array []`;
-
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
-Object {
-  "description": "lisaAineisto",
-  "mockedtime": "2023-12-31T00:00",
-  "obj": Object {
-    "aineistot": Array [
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 1,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "aineisto3.txt",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 2,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 3,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 4,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 5,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "Yksityistie_lunastukset.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": undefined,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "TYHJÄ.txt",
-      },
-    ],
-    "lisaAineistot": Array [
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 1,
-        "kategoriaId": undefined,
-        "linkki": "***unittest***",
-        "nimi": "Yksityistie_lunastukset.pdf",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2023-12-31T00:00",
@@ -11432,23 +11346,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
@@ -11597,23 +11494,6 @@ Object {
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2023-12-31T00:00",
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
@@ -11679,7 +11559,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApprovalButNotPublic",
   "mockedtime": "2023-12-31T00:00",
@@ -11687,7 +11567,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "Nähtävilläolojulkaisu hyväksytty, schedule",
   "mockedtime": "2023-12-31T00:00",
@@ -11746,7 +11626,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -11819,7 +11699,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "yllapito S3 files Nähtävilläolo hyväksytty mutta ei vielä julki.": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -11988,7 +11868,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "public S3 files Nähtävilläolo hyväksytty mutta ei vielä julki.": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12088,7 +11968,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -12180,7 +12060,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
 Object {
   "description": "testNahtavillaoloAineistomuokkaus ennen scheduleria ja sqs-jononkäsittelyä",
   "mockedtime": "2023-12-31T00:00",
@@ -12303,16 +12183,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "nahtavillaoloSaamePDFt": undefined,
     },
@@ -12320,7 +12190,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -12461,7 +12331,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "testNahtavillaoloAineistomuokkaus schedulerin ja sqs-jononkäsittelyn jälkeen",
   "mockedtime": "2023-12-31T00:00",
@@ -12586,16 +12456,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "nahtavillaoloSaamePDFt": undefined,
     },
@@ -12603,7 +12463,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "testNahtavillaoloAineistoMuokkausAfterImport",
   "mockedtime": "2023-12-31T00:00",
@@ -12745,23 +12605,6 @@ Object {
         },
       ],
     },
-    "lisaAineisto": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-        "jarjestys": 1,
-        "nimi": "Yksityistie_lunastukset.pdf",
-        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-        "tila": "VALMIS",
-        "tuotu": "***unittest***",
-      },
-    ],
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 2,
-      "poistumisPaiva": "***unittest***",
-    },
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "AINEISTO_MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
@@ -12770,7 +12613,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "testNahtavillaOloAfterSendAineistoMuokkausForApproval",
   "mockedtime": "2023-12-31T00:00",
@@ -12912,23 +12755,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
@@ -13083,23 +12909,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
@@ -13165,7 +12974,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -13306,7 +13115,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13475,7 +13284,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13611,7 +13420,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApprovalAndPublic",
   "mockedtime": "2024-01-01T00:00",
@@ -13757,7 +13566,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -13774,7 +13583,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -13922,7 +13731,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 24`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -14068,23 +13877,6 @@ Object {
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2023-12-31T00:00",
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "muokkausTila": "MUOKKAUS",
@@ -14129,7 +13921,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 25`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14276,23 +14068,6 @@ Object {
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2023-12-31T00:00",
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
@@ -14379,7 +14154,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 26`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 24`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14526,23 +14301,6 @@ Object {
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
         "tuotu": "2024-01-01T00:00",
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
@@ -14629,7 +14387,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 27`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -14775,23 +14533,6 @@ Object {
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2023-12-31T00:00",
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "muokkausTila": "LUKU",
@@ -14830,7 +14571,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 28`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 26`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -14996,7 +14737,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 29`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 27`] = `
 Object {
   "description": "Nähtävilläolon uudelleenkuulutus julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -15065,7 +14806,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 30`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 28`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -15189,7 +14930,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 31`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 29`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15421,7 +15162,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 32`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 30`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15557,7 +15298,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 33`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 31`] = `
 Array [
   Object {
     "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
@@ -15679,7 +15420,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 34`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 32`] = `
 Array [
   Object {
     "subject": "Muistutus - 00000003-0be9-455d-a434-0fab721acaa2",

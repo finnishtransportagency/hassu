@@ -946,13 +946,6 @@ Object {
         },
       ],
     },
-    "lisaAineisto": undefined,
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 1,
-      "poistumisPaiva": "***unittest***",
-    },
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
@@ -1080,13 +1073,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
@@ -1165,6 +1151,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -1224,13 +1211,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
@@ -1301,6 +1281,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -1376,13 +1357,6 @@ Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2024-01-01T00:00",
-      },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
@@ -1829,18 +1803,6 @@ Object {
         "Paths": Object {
           "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/*",
           ],
           "Quantity": 1,
         },
