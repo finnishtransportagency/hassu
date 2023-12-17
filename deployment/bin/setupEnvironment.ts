@@ -54,6 +54,7 @@ async function main() {
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
       SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
       SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
+      KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
