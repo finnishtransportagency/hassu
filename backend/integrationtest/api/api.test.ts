@@ -76,7 +76,6 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";
 import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../commonTestUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
