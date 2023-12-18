@@ -1,21 +1,19 @@
-export function storeKansalaisUserAuthentication(hash: string) {
-  if (hash && hash.includes("#")) {
-    const paramsStr = hash.substring(hash.indexOf("#") + 1);
-    const params = new URLSearchParams(paramsStr);
-    const accessToken = params.get("access_token");
-    const idToken = params.get("id_token");
-    const tokenType = params.get("token_type");
-    const expiresIn = params.get("expires_in");
-    const state = params.get("state");
-    if (accessToken && idToken && tokenType && expiresIn) {
-      // Store access token to cookie that expires in "expiresId" seconds
-      const expires = new Date(Date.now() + parseInt(expiresIn) * 1000);
-      // set cookie as Secure AND SameSite=Strict
-      const cookie = `x-vls-access-token=${accessToken};expires=${expires.toUTCString()};path=/;Secure;SameSite=Strict`;
-      document.cookie = cookie;
-      return { cookie, state };
+import { NextRouter } from "next/router";
+import { useEffect } from "react";
+
+export function useStoreKansalaisUserAuthentication(router: NextRouter) {
+  const path = router.asPath;
+  useEffect(() => { 
+    if (path && path.includes("?code=")) {
+      const paramsStr = path.substring(path.indexOf("?") + 1);
+      const params = new URLSearchParams(paramsStr);
+      const code = params.get("code");
+      const state = params.get("state") ?? "";
+      if (code) {
+        router.push("/api/token?code=" + code + "&state=" + state + "&client_id=" + process.env.SUOMI_FI_USERPOOL_CLIENT_ID + "&redirect_uri=" + getSuomiFiUri());
+      }
     }
-  }
+  }, [router, path]);
 }
 
 function getAppDomainUri() {

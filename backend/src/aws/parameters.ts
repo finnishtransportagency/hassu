@@ -114,6 +114,10 @@ class Parameters {
     return this.getParamOrVariable("outputs/SuomifiCognitoDomain", "SUOMI_FI_COGNITO_DOMAIN");
   }
 
+  async getSuomifiCognitoClientSecret() {
+    return this.getParameter("SuomifiCognitoClientSecret");
+  }
+
   async isSuomiFiIntegrationEnabled(): Promise<boolean> {
     return (await this.getParameter("SuomiFiIntegrationEnabled")) === "true";
   }
