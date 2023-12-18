@@ -169,8 +169,8 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateUudelleenKuulutus(projekti, input);
   validateAloituskuulutus(projekti, input.aloitusKuulutus);
   validateNahtavillaoloVaihe(projekti, apiProjekti, input);
-  validateLausuntoPyynnot(projekti, input.lausuntoPyynnot);
-  validateLausuntoPyyntojenTaydennykset(projekti, input.lausuntoPyynnonTaydennykset);
+  validateLausuntoPyynnot(projekti, input);
+  validateLausuntoPyyntojenTaydennykset(projekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   validateAsianhallinnanAktivointikytkin(apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);
@@ -283,8 +283,13 @@ function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti,
   }
 }
 
-function validateLausuntoPyynnot(projekti: DBProjekti, lausuntoPyynnot: LausuntoPyyntoInput[] | undefined | null) {
+function validateLausuntoPyynnot(projekti: DBProjekti, input: TallennaProjektiInput) {
   const legacyLausuntoPyyntoUuids = projekti.lausuntoPyynnot?.filter((lp) => lp.legacy).map((lp) => lp.uuid);
+  const lausuntoPyynnot = input.lausuntoPyynnot;
+  if (lausuntoPyynnot === undefined) {
+    return;
+  }
+
   if (lausuntoPyynnot?.some((lp) => legacyLausuntoPyyntoUuids?.includes(lp.uuid))) {
     throw new IllegalArgumentError("Et voi muokata vanhassa järjestelmässä luotuja lisäaineistoja");
   }
@@ -294,11 +299,13 @@ function validateLausuntoPyynnot(projekti: DBProjekti, lausuntoPyynnot: Lausunto
   }
 }
 
-function validateLausuntoPyyntojenTaydennykset(
-  projekti: DBProjekti,
-  lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennysInput[] | undefined | null
-) {
+function validateLausuntoPyyntojenTaydennykset(projekti: DBProjekti, input: TallennaProjektiInput) {
   const currentLausuntoPyyntoUuids = projekti.lausuntoPyynnonTaydennykset?.map((lp) => lp.uuid);
+  const lausuntoPyynnonTaydennykset = input.lausuntoPyynnonTaydennykset;
+  if (lausuntoPyynnonTaydennykset === undefined) {
+    return;
+  }
+
   if (currentLausuntoPyyntoUuids?.some((lpuuid) => !lausuntoPyynnonTaydennykset?.find((lp) => lp.uuid == lpuuid))) {
     throw new IllegalArgumentError("Poistetut lausuntopyynnon täydennyksen aineistolinkit on merkittävä poistettaviksi inputissa.");
   }
