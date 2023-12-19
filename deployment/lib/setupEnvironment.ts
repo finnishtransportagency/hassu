@@ -115,7 +115,8 @@ export type HassuSSMParameters = {
   SuomifiUserPoolClientId: string;
   SuomifiLocalhostUserPoolClientId: string;
   KeycloakClientId: string;
-  KeycloakLogoutPath: string,
+  KeycloakLogoutPath: string;
+  SuomifiUserPoolClientSecret: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {

@@ -10,7 +10,7 @@ export function useStoreKansalaisUserAuthentication(router: NextRouter) {
       const code = params.get("code");
       const state = params.get("state") ?? "";
       if (code) {
-        router.push("/api/token?code=" + code + "&state=" + state + "&client_id=" + process.env.SUOMI_FI_USERPOOL_CLIENT_ID + "&redirect_uri=" + getSuomiFiUri());
+        router.push("/api/token?code=" + code + "&state=" + state + "&client_id=" + process.env.SUOMI_FI_USERPOOL_CLIENT_ID + "&redirect_uri=" + getAppDomainUri());
       }
     }
   }, [router, path]);
@@ -36,7 +36,7 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
     url.pathname = "/oauth2/authorize";
     url.searchParams.set("identity_provider", "Suomi.fi");
     url.searchParams.set("redirect_uri", getAppDomainUri());
-    url.searchParams.set("response_type", "TOKEN");
+    url.searchParams.set("response_type", "CODE");
     url.searchParams.set("client_id", clientId);
     url.searchParams.set("scope", "email openid profile");
     url.searchParams.set("state", state ?? "");

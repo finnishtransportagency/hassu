@@ -56,6 +56,7 @@ async function main() {
       SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
       KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
+      SUOMI_FI_USERPOOL_CLIENT_SECRET: variables.SuomifiUserPoolClientSecret,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
