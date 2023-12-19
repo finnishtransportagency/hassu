@@ -113,6 +113,7 @@ export class HassuFrontendStack extends Stack {
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       SUOMI_FI_COGNITO_DOMAIN: ssmParameters.SuomifiCognitoDomain,
       SUOMI_FI_USERPOOL_CLIENT_ID: ssmParameters.SuomifiUserPoolClientId,
+      KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;

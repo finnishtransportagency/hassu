@@ -18,11 +18,27 @@ export function storeKansalaisUserAuthentication(hash: string) {
   }
 }
 
-function getSuomiFiUri() {
-  if (process.env.NODE_ENV === 'development') {
+function getAppDomainUri() {
+  if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000/";
   } else {
     return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+  }
+}
+function getKeycloakDomainUri() {
+  if (process.env.NODE_ENV === "development") {
+    return "https://hassudev.testivaylapilvi.fi/";
+  } else {
+    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+  }
+}
+function getKeycoakLogoutUri() {
+  const keycloakClientId = process.env.KEYCLOAK_CLIENT_ID;
+  const uri = getKeycloakDomainUri() + "keycloak/auth/realms/suomifi/protocol/openid-connect/logout?client_id=" + keycloakClientId;
+  if (process.env.NODE_ENV === "development") {
+    return uri;
+  } else {
+    return uri + "&post_logout_redirect_uri=" + getAppDomainUri();
   }
 }
 
@@ -33,7 +49,7 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
     const url = new URL(domain);
     url.pathname = "/oauth2/authorize";
     url.searchParams.set("identity_provider", "Suomi.fi");
-    url.searchParams.set("redirect_uri", getSuomiFiUri());
+    url.searchParams.set("redirect_uri", getAppDomainUri());
     url.searchParams.set("response_type", "TOKEN");
     url.searchParams.set("client_id", clientId);
     url.searchParams.set("scope", "email openid profile");
@@ -45,11 +61,13 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
 export function getSuomiFiLogoutURL(): string | undefined {
   const domain = process.env.SUOMI_FI_COGNITO_DOMAIN;
   const clientId = process.env.SUOMI_FI_USERPOOL_CLIENT_ID;
+  const keycloakRedirectUri = getKeycoakLogoutUri();
+
   if (domain && clientId) {
     const url = new URL(domain);
     url.pathname = "/logout";
-    url.searchParams.set("logout_uri", getSuomiFiUri());
-    url.searchParams.set("redirect_uri", getSuomiFiUri());
+    url.searchParams.set("logout_uri", keycloakRedirectUri);
+    url.searchParams.set("redirect_uri", keycloakRedirectUri);
     url.searchParams.set("client_id", clientId);
     return url.toString();
   }
