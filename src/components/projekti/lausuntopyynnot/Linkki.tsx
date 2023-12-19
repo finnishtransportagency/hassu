@@ -43,7 +43,7 @@ export default function Linkki({
 
   const title = kunta ? "Lausuntopyynnön täydennykseen liitettävä linkki" : "Lausuntopyyntöön liitettävä linkki";
   const infoText = kunta
-    ? "Alle muodostuu linkki lausuntopyynnön täydennyksen aineistoihin. Linkin takana oleva sisältö on koostettu kunnalle kohdistetuista muistutuksista sekä xxxx. Liitä linkki lausuntopyynnön täydennykseen."
+    ? "Alle muodostuu linkki lausuntopyynnön täydennyksen aineistoihin. Linkin takana oleva sisältö on koostettu kunnalle kohdistetuista muistutuksista sekä mahdollisista lisäaineistoista. Liitä linkki lausuntopyynnön täydennykseen."
     : "Alle muodostuu linkki lausuntopyynnön aineistoihin. Linkin takana oleva sisältö on koostettu nähtäville asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta. Liitä linkki lausuntopyyntöön.";
   const inputLabel = kunta
     ? "Linkki lausuntopyynnön täydennykseen liitettävään aineistoon"
