@@ -28,7 +28,7 @@ class Parameters {
     if (envName) {
       name = "/" + envName + "/" + paramName;
     } else {
-      name = paramName.startsWith("/") ? paramName : "/" + paramName;
+      name = paramName;
     }
     if (config.isInTest) {
       const credentials = defaultProvider({ profile: "hassudev" });

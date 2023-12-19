@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 const ssm = new SSM({ region: "eu-west-1" });
 
 async function getParameter(name: string, envVariable: string): Promise<string> {
+  console.log("parameter: " + name);
   if (process.env[envVariable]) {
     return process.env[envVariable] as string;
   }
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const state = req.query["state"] as string;
   const redirect_uri = req.query["redirect_uri"] as string;
   const client_id = req.query["client_id"] as string;
-  const userPoolUrlStr = await getParameter("/outputs/SuomifiCognitoDomain", "SUOMI_FI_COGNITO_DOMAIN");
+  const userPoolUrlStr = await getParameter(`/${process.env.ENVIRONMENT}/outputs/SuomifiCognitoDomain`, "SUOMI_FI_COGNITO_DOMAIN");
   const userPoolUrl = new URL(userPoolUrlStr);
   userPoolUrl.pathname = "/oauth2/token";
   const details: Record<string, string> = {
@@ -32,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(details[key]))
     .join("&");
 
-  const clientSecret = await getParameter("/SuomifiCognitoClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
+  const clientSecret = await getParameter("SuomifiCognitoClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
   const response = await fetch(userPoolUrl.toString(), {
     headers: {
       Authorization: "Basic " + Buffer.from(client_id + ":" + clientSecret).toString("base64"),
