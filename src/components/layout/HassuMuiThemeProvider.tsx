@@ -45,6 +45,7 @@ export const createLocalizedTheme = (locale: Localization) =>
         h3: { fontSize: "1.4375rem", lineHeight: 1.174, fontWeight: 700, margin: undefined },
         h4: { fontSize: "1.25rem", lineHeight: 1.1, fontWeight: 700, margin: undefined },
         h5: { fontSize: "1rem", lineHeight: 1.5, fontWeight: 700, margin: undefined },
+        lead: { fontSize: "1.5rem", fontWeight: 400, lineHeight: 1.333, margin: undefined },
       },
       spacing,
       components: {
