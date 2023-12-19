@@ -10317,6 +10317,7 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+        "jarjestys": undefined,
         "kategoriaId": "SUUNNITELMALUONNOS",
         "nimi": "Radan risteämärekisteriote_1203.pdf",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan%20ristea%CC%88ma%CC%88rekisteriote_1203.pdf",
@@ -10770,6 +10771,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+          "jarjestys": undefined,
           "kategoriaId": "SUUNNITELMALUONNOS",
           "nimi": "Radan risteämärekisteriote_1203.pdf",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan%20ristea%CC%88ma%CC%88rekisteriote_1203.pdf",
@@ -10945,9 +10947,11 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tila": "ODOTTAA_TUONTIA",
+        "tuotu": undefined,
       },
     ],
     "hankkeenKuvaus": Object {
@@ -11034,6 +11038,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -11042,6 +11047,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -11050,6 +11056,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -11058,6 +11065,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -11066,13 +11074,16 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "Yksityistie_lunastukset.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hankkeenKuvaus": Object {
@@ -11279,6 +11290,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -11409,6 +11421,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -12537,6 +12550,7 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -12688,6 +12702,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -12831,6 +12846,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -13793,6 +13809,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -13983,6 +14000,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -14216,6 +14234,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -14449,6 +14468,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -15497,6 +15517,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
@@ -15507,8 +15528,10 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
@@ -15723,6 +15746,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -15814,6 +15838,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -16882,6 +16907,7 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
@@ -16897,6 +16923,7 @@ Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
         "jarjestys": 1,
+        "kategoriaId": undefined,
         "nimi": "aineisto3.txt",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
         "tila": "VALMIS",
@@ -17041,6 +17068,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
@@ -17056,6 +17084,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -17192,6 +17221,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
@@ -17208,6 +17238,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -17417,6 +17448,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
@@ -17432,6 +17464,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -17568,6 +17601,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
@@ -17585,6 +17619,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -18675,6 +18710,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
@@ -18690,6 +18726,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -18838,6 +18875,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
@@ -18854,6 +18892,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -19071,6 +19110,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
@@ -19088,6 +19128,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
@@ -19315,6 +19356,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
@@ -19330,6 +19372,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto3.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",

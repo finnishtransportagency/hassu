@@ -1,5 +1,4 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { AineistoTila } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import {
   Aineisto,
@@ -134,13 +133,13 @@ function examineAndUpdateExistingDocuments(
     const aineistot = cloneDeep(dbAineistot);
     // Jos pyydetään aineiston poistoa, poista aineisto ja jatka muuta käsittelyä vasta sen jälkeen
     const deletedInputs = inputs
-      .filter((ai) => ai.tila == AineistoTila.ODOTTAA_POISTOA)
+      .filter((ai) => ai.tila == API.AineistoTila.ODOTTAA_POISTOA)
       .map((ai) => {
         // Poista kaikki poistettavat aineistot listasta
         // Varmista kaikkien tilaksi ODOTTAA_POISTOA
         resultAineistot.push(
           ...remove(aineistot, (a) => a.dokumenttiOid == ai.dokumenttiOid).map((a) => {
-            a.tila = AineistoTila.ODOTTAA_POISTOA;
+            a.tila = API.AineistoTila.ODOTTAA_POISTOA;
             return a;
           })
         );
@@ -158,7 +157,11 @@ function examineAndUpdateExistingDocuments(
       if (updateAineistoInput) {
         // Update existing one
         dbAineisto.jarjestys = updateAineistoInput.jarjestys;
-        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId ?? undefined;
+        if (dbAineisto.kategoriaId !== updateAineistoInput.kategoriaId) {
+          dbAineisto.kategoriaId = updateAineistoInput.kategoriaId ?? undefined;
+          dbAineisto.kategoriaMuuttunut = true;
+          hasPendingChanges = true;
+        }
         if (dbAineisto.nimi !== updateAineistoInput.nimi) {
           hasPendingChanges = true;
           resultAineistot.push({ ...dbAineisto, tila: API.AineistoTila.ODOTTAA_POISTOA });
@@ -178,9 +181,9 @@ export function pickAineistoFromInputByDocumenttiOid(
 ): API.AineistoInput | undefined {
   if (aineistotInput) {
     const sortedAineistotInput = aineistotInput.sort((a, b) => {
-      if (a.tila == AineistoTila.ODOTTAA_POISTOA) {
+      if (a.tila == API.AineistoTila.ODOTTAA_POISTOA) {
         return -1;
-      } else if (b.tila == AineistoTila.ODOTTAA_POISTOA) {
+      } else if (b.tila == API.AineistoTila.ODOTTAA_POISTOA) {
         return 1;
       }
       return 0;

@@ -196,9 +196,11 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tila": "ODOTTAA_TUONTIA",
+        "tuotu": undefined,
       },
     ],
     "hankkeenKuvaus": Object {
@@ -285,6 +287,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -293,6 +296,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -301,6 +305,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -309,6 +314,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -317,13 +323,16 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "Yksityistie_lunastukset.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hankkeenKuvaus": Object {
@@ -459,6 +468,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -589,6 +599,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -1516,6 +1527,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -1661,6 +1673,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -1873,6 +1886,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -2096,6 +2110,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",

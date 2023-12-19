@@ -357,6 +357,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "FOO",
           "nimi": "foo.pdf",
           "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -467,6 +468,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "FOO",
           "nimi": "foo.pdf",
           "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -649,6 +651,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "FOO",
           "nimi": "foo.pdf",
           "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/TYHJ%C3%84.txt",
@@ -842,6 +845,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "FOO",
           "nimi": "foo.pdf",
           "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/TYHJ%C3%84.txt",
