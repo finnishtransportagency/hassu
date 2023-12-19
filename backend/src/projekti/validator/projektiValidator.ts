@@ -10,6 +10,8 @@ import {
   AloitusKuulutusInput,
   HyvaksymisPaatosVaiheInput,
   KayttajaTyyppi,
+  LausuntoPyynnonTaydennysInput,
+  LausuntoPyyntoInput,
   MuokkausTila,
   NahtavillaoloVaiheInput,
   Projekti,
@@ -167,6 +169,8 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateUudelleenKuulutus(projekti, input);
   validateAloituskuulutus(projekti, input.aloitusKuulutus);
   validateNahtavillaoloVaihe(projekti, apiProjekti, input);
+  validateLausuntoPyynnot(projekti, input);
+  validateLausuntoPyyntojenTaydennykset(projekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   validateAsianhallinnanAktivointikytkin(apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);
@@ -266,7 +270,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
 function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   validateMuokkaustilaAllowsInput(projekti.nahtavillaoloVaihe, projekti.nahtavillaoloVaiheJulkaisut, input.nahtavillaoloVaihe);
 
-  const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
+  const { aineistoNahtavilla: aineistoNahtavilla, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
 
   const aineistotPresent = aineistoNahtavilla?.length;
@@ -276,6 +280,34 @@ function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti,
   const aineistotOk = !!aineistotPresent && !hasAineistotLackingKategoria;
   if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.NAHTAVILLAOLO) && !aineistotOk) {
     throw new IllegalArgumentError("Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
+  }
+}
+
+function validateLausuntoPyynnot(projekti: DBProjekti, input: TallennaProjektiInput) {
+  const legacyLausuntoPyyntoUuids = projekti.lausuntoPyynnot?.filter((lp) => lp.legacy).map((lp) => lp.uuid);
+  const lausuntoPyynnot = input.lausuntoPyynnot;
+  if (lausuntoPyynnot === undefined) {
+    return;
+  }
+
+  if (lausuntoPyynnot?.some((lp) => legacyLausuntoPyyntoUuids?.includes(lp.uuid))) {
+    throw new IllegalArgumentError("Et voi muokata vanhassa järjestelmässä luotuja lisäaineistoja");
+  }
+  const currentLausuntoPyyntoUuids = projekti.lausuntoPyynnot?.filter((lp) => !lp.legacy).map((lp) => lp.uuid);
+  if (currentLausuntoPyyntoUuids?.some((lpuuid) => !lausuntoPyynnot?.find((lp) => lp.uuid == lpuuid))) {
+    throw new IllegalArgumentError("Poistetut lausuntopyyntöjen aineistolinkit on merkittävä poistettaviksi inputissa.");
+  }
+}
+
+function validateLausuntoPyyntojenTaydennykset(projekti: DBProjekti, input: TallennaProjektiInput) {
+  const currentLausuntoPyyntoUuids = projekti.lausuntoPyynnonTaydennykset?.map((lp) => lp.uuid);
+  const lausuntoPyynnonTaydennykset = input.lausuntoPyynnonTaydennykset;
+  if (lausuntoPyynnonTaydennykset === undefined) {
+    return;
+  }
+
+  if (currentLausuntoPyyntoUuids?.some((lpuuid) => !lausuntoPyynnonTaydennykset?.find((lp) => lp.uuid == lpuuid))) {
+    throw new IllegalArgumentError("Poistetut lausuntopyynnon täydennyksen aineistolinkit on merkittävä poistettaviksi inputissa.");
   }
 }
 
@@ -352,7 +384,7 @@ function validateMuokkaustilaAllowsInput(
     throw new IllegalArgumentError("Adminin on avattava uudelleenkuulutus voidaksesi muokata migroitua vaihetta.");
   } else if (muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS) {
     Object.keys(input).forEach((key) => {
-      const allowedInputKeys: (keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)[] = ["aineistoNahtavilla", "lisaAineisto"];
+      const allowedInputKeys: (keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)[] = ["aineistoNahtavilla"];
       if (!allowedInputKeys.includes(key as keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)) {
         throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }

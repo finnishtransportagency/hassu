@@ -11,18 +11,20 @@ export function adaptLausuntoPyynnot(
   lausuntoPyynnot?: Array<LausuntoPyynto> | null
 ): Array<API.LausuntoPyynto> | undefined {
   const oid = dbProjekti.oid;
-  return lausuntoPyynnot?.map((lausuntoPyynto: LausuntoPyynto) => {
-    const { lisaAineistot, legacy: _legacy, ...rest } = lausuntoPyynto;
-    assertIsDefined(dbProjekti.salt);
-    const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
-    const apiLausuntoPyynto: API.LausuntoPyynto = {
-      __typename: "LausuntoPyynto",
-      ...rest,
-      lisaAineistot: adaptLadatutTiedostotToApi(lisaAineistot, paths),
-      hash: tiedostoDownloadLinkService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.uuid, dbProjekti.salt),
-    };
-    return apiLausuntoPyynto;
-  });
+  return lausuntoPyynnot
+    ?.filter((lp) => !lp.legacy)
+    .map((lausuntoPyynto: LausuntoPyynto) => {
+      const { lisaAineistot, legacy: _l, ...rest } = lausuntoPyynto;
+      assertIsDefined(dbProjekti.salt);
+      const paths = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto);
+      const apiLausuntoPyynto: API.LausuntoPyynto = {
+        __typename: "LausuntoPyynto",
+        ...rest,
+        lisaAineistot: adaptLadatutTiedostotToApi(lisaAineistot, paths),
+        hash: tiedostoDownloadLinkService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.uuid, dbProjekti.salt),
+      };
+      return apiLausuntoPyynto;
+    });
 }
 
 export function adaptLausuntoPyynnonTaydennykset(

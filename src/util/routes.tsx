@@ -11,6 +11,7 @@ export interface Route {
   visible?: VisibilityHandler | boolean;
   id: string;
   requireExactMatch?: boolean;
+  isSubPath?: boolean;
 }
 
 export const PROJEKTIN_HENKILOT_ROUTE: Route = {
@@ -70,6 +71,31 @@ export const NAHTAVILLAOLO_KUULUTUS_ROUTE: Route = {
   id: "nahtavillaolovaihe_kuulutus",
   requiredStatus: Status.NAHTAVILLAOLO,
   pathname: `/yllapito/projekti/[oid]/nahtavillaolo/kuulutus`,
+  visible: false,
+};
+
+export const LAUSUNTOPYYNNOT_MAIN_ROUTE: Route = {
+  title: "Lausuntopyyntöjen aineistolinkit",
+  id: "lausuntopyynnot_main",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/lausuntopyynto`,
+  visible: true,
+  isSubPath: true,
+};
+
+export const LAUSUNTOPYYNNOT_ROUTE: Route = {
+  title: "Lausuntopyyntöjen aineistolinkit",
+  id: "lausuntopyynnot",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/lausuntopyynto/lausuntopyynto`,
+  visible: false,
+};
+
+export const LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE: Route = {
+  title: "Lausuntopyyntöjen täydennysten aineistolinkit",
+  id: "lausuntopyyntojen_taydennykset",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/lausuntopyynto/lausuntopyynnon-taydennys`,
   visible: false,
 };
 
@@ -153,6 +179,9 @@ const routes: Route[] = [
   NAHTAVILLAOLO_ROUTE,
   NAHTAVILLAOLO_AINEISTOT_ROUTE,
   NAHTAVILLAOLO_KUULUTUS_ROUTE,
+  LAUSUNTOPYYNNOT_MAIN_ROUTE,
+  LAUSUNTOPYYNNOT_ROUTE,
+  LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE,
   HYVAKSYMINEN_ROUTE,
   HYVAKSYMINEN_AINEISTO_ROUTE,
   HYVAKSYMINEN_KUULUTUS_ROUTE,
@@ -168,6 +197,7 @@ export const projektinVaiheetNavigaatiossa: Route[] = [
   ALOITUSKUULUTUS_ROUTE,
   SUUNNITTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
+  LAUSUNTOPYYNNOT_MAIN_ROUTE,
   HYVAKSYMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_ROUTE,
   TOINEN_JATKAMINEN_ROUTE,

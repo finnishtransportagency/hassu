@@ -55,7 +55,6 @@ import {
   testNahtavillaolo,
   testNahtavillaoloAineistoSendForApproval,
   testNahtavillaoloApproval,
-  testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
   sendHyvaksymisPaatosForApproval,
@@ -282,8 +281,9 @@ describe("Api", () => {
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    await eventSqsClientMock.processQueue(); // tehdään kahdesti, koska ekassa passissa laitetaan zippaus-event jonoon
+    const dbProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    expect(dbProjekti?.nahtavillaoloVaihe?.aineistopaketti).to.exist;
     await testNahtavillaoloApproval(
       projekti.oid,
       projektiPaallikko,

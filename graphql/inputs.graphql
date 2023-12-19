@@ -206,7 +206,6 @@ input VuorovaikutusTilaisuusPaivitysInput {
 
 input NahtavillaoloVaiheInput {
   aineistoNahtavilla: [AineistoInput!]
-  lisaAineisto: [AineistoInput!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String

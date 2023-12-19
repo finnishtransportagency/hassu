@@ -3,7 +3,7 @@ import { LausuntoPyynnonTaydennysInput, apiConfig } from "@services/api";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { PreviewExpiredError } from "common/error/PreviewExpiredError";
 
 export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
@@ -27,16 +27,6 @@ export function useEsikatseleLausuntoPyynnonTaydennysAineistot() {
       throw new Error("Esikatselua varten tallennettu lausuntopyyntö-data on korruptoitunut");
     }
     return parsed;
-  }, [uuid]);
-
-  useEffect(() => {
-    const listener = () => {
-      localStorage.removeItem(`lausuntoPyyntoInput.${uuid}`);
-    };
-    window.addEventListener("beforeunload", listener);
-    return () => {
-      window.removeEventListener("beforeunload", listener);
-    };
   }, [uuid]);
 
   const esikatseleLausuntoPyyntoTiedostoLoader = getEsikatseleLausuntoPyynnonTaydennysTiedostoLoader(api);

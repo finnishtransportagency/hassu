@@ -11,9 +11,12 @@ import { nyt } from "../../util/dateUtil";
 import { persistLadattuTiedosto } from "../../files/persistFiles";
 import { translate } from "../../util/localization";
 import { AineistoKategoria, aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { omit } from "lodash";
 
 export function getZipFolder(kategoriaId: string | undefined | null): string | undefined {
-  if (!kategoriaId) return undefined;
+  if (!kategoriaId) {
+    return undefined;
+  }
   let path = "";
   let category: AineistoKategoria | undefined = aineistoKategoriat.findById(kategoriaId);
   while (category) {
@@ -46,15 +49,18 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
   let hasChanges = false;
   const originalAineistot = aineistot.splice(0, aineistot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
   for (const aineisto of originalAineistot) {
-    if (aineisto.tila == AineistoTila.ODOTTAA_POISTOA) {
-      await fileService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+    if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA) {
+      await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
       hasChanges = true;
-    } else if (aineisto.tila == AineistoTila.ODOTTAA_TUONTIA) {
+    } else if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
       await importAineisto(aineisto, oid, paths);
-      aineistot.push(aineisto);
+      aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
+      hasChanges = true;
+    } else if (aineisto.kategoriaMuuttunut) {
+      aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
       hasChanges = true;
     } else {
-      aineistot.push(aineisto);
+      aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
     }
   }
 

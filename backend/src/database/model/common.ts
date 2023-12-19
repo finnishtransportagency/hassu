@@ -56,6 +56,7 @@ export type Aineisto = {
   // Numero jarjestamista varten
   jarjestys?: number | null;
   tila: AineistoTila;
+  kategoriaMuuttunut?: boolean;
 };
 
 export type StandardiYhteystiedot = {

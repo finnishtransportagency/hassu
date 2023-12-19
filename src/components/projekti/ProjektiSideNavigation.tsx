@@ -65,7 +65,9 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
           <ProjektiVaiheDropdownButton router={router} dropdownOpen={dropdownOpen} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
           {dropdownOpen &&
             projektinVaiheetNavigaatiossa
-              .filter((route) => isVisible(projekti, route))
+              .filter(
+                (route) => isVisible(projekti, route) && (projektiMeetsMinimumStatus(projekti, route.requiredStatus) || !route.isSubPath)
+              )
               .map((route, index) => <RouteButtonInternal route={route} key={index + 3} />)}
         </ul>
       </div>
@@ -94,12 +96,14 @@ function RouteButton({
         style={isSelected ? { fontWeight: "bold" } : {}}
         className={classNames(
           "block pr-12 p-4 border-l-4",
-          isSelected ? "border-primary" : "border-transparent",
+          isSelected && !route.isSubPath ? "border-primary" : "border-transparent",
           isSelected && topLevel ? "bg-gray-light" : "",
           statusDisabled ? "text-gray" : "hover:bg-gray-light hover:underline"
         )}
       >
-        {route.title}
+        <span style={{ whiteSpace: "nowrap" }} className={`${route.isSubPath ? "ml-8" : ""}`}>
+          {route.title}
+        </span>
       </HassuLink>
     </li>
   );

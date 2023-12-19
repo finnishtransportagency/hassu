@@ -27,7 +27,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     lisaaNahtavillaoloAineistot({
       oid,
       aineistoNahtavilla: { toimeksianto: "Toimeksianto1" },
-      lisaAineisto: { toimeksianto: "Toimeksianto1" },
     });
 
     cy.get("#aineisto_tab").click({ force: true });
@@ -97,10 +96,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     lisaaNahtavillaoloAineistot({
       oid,
       aineistoNahtavilla: {
-        toimeksianto: "Suunnitelma-aineisto",
-        aineistojenNimet,
-      },
-      lisaAineisto: {
         toimeksianto: "Suunnitelma-aineisto",
         aineistojenNimet,
       },

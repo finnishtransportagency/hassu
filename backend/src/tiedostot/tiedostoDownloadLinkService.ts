@@ -6,11 +6,20 @@ import {
   LadattavatTiedostot,
   ListaaLausuntoPyynnonTaydennyksenTiedostotInput,
   ListaaLausuntoPyyntoTiedostotInput,
+  ListaaLisaAineistoInput,
 } from "hassu-common/graphql/apiModel";
 import { aineistoEiOdotaPoistoaTaiPoistettu, ladattuTiedostoEiOdotaPoistoaTaiPoistettu } from "hassu-common/util/tiedostoTilaUtil";
 import crypto from "crypto";
 import { IllegalAccessError } from "hassu-common/error";
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../database/model";
+import {
+  Aineisto,
+  DBProjekti,
+  LadattuTiedosto,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 import { log } from "../logger";
 import {
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
@@ -182,6 +191,27 @@ class TiedostoDownloadLinkService {
     };
   }
 
+  async listaaLisaAineistoLegacy(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
+    const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
+    const aineistot =
+      (
+        await Promise.all(
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaTiedostot) || [];
+    const lausuntoPyynto = projekti.lausuntoPyynnot?.find((lp) => lp.legacy === params.nahtavillaoloVaiheId);
+    const lisaAineistot =
+      (
+        await Promise.all(
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+        )
+      ).sort(jarjestaTiedostot) || [];
+    const aineistopaketti = nahtavillaolo?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
+      : null;
+    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+  }
+
   generateHashForLausuntoPyynto(oid: string, uuid: string, salt: string): string {
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
@@ -239,3 +269,18 @@ class TiedostoDownloadLinkService {
 }
 
 export const tiedostoDownloadLinkService = new TiedostoDownloadLinkService();
+
+function findNahtavillaoloVaiheById(
+  projekti: DBProjekti,
+  nahtavillaoloVaiheId: number
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined {
+  let lista: (NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined)[] = [];
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    lista = lista.concat(projekti.nahtavillaoloVaiheJulkaisut);
+  }
+  if (projekti.nahtavillaoloVaihe) {
+    lista = lista.concat(projekti.nahtavillaoloVaihe);
+  }
+  lista = lista.filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId);
+  return lista.pop();
+}

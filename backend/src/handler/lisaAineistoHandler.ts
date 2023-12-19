@@ -3,6 +3,7 @@ import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { NotFoundError } from "hassu-common/error";
 import { lisaAineistoService } from "../tiedostot/lisaAineistoService";
+import { tiedostoDownloadLinkService } from "../tiedostot/tiedostoDownloadLinkService";
 
 class LisaAineistoHandler {
   async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LadattavatTiedostot> {
@@ -16,7 +17,7 @@ class LisaAineistoHandler {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       lisaAineistoService.validateHash(oid, projekti.salt, params);
-      return lisaAineistoService.listaaLisaAineisto(projekti, params);
+      return tiedostoDownloadLinkService.listaaLisaAineistoLegacy(projekti, params);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }

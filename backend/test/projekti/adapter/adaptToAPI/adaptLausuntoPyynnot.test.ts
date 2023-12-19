@@ -236,4 +236,35 @@ describe("adaptLausuntoPyynnot:", () => {
       },
     ]);
   });
+
+  it("adaptLausuntoPyynnot does not return legacy lausuntoPyynnot", () => {
+    const dbProjekti: DBProjekti = {
+      oid: "1.2.246.578.5.1.2978288874.2711575506",
+      salt: "salt",
+    } as any as DBProjekti; // adaptLausuntoPyynnot does not require anything else from dbProjekti
+    const lausuntoPyynto: LausuntoPyynto = {
+      aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+      legacy: 1,
+      poistumisPaiva: "2023-11-16",
+      uuid: "ee626b8b-e719-4d47-b161-06f7455614b4",
+      lisaAineistot: [
+        {
+          tiedosto: "/nahtavillaolo/1/Aineisto%201.txt",
+          nimi: "Aineisto 1",
+          tila: API.LadattuTiedostoTila.VALMIS,
+          tuotu: "2021-12-01T01:01",
+          jarjestys: 2,
+        },
+        {
+          tiedosto: "/nahtavillaolo/1/joku-uuid/Aineisto%202.txt",
+          nimi: "Aineisto 2",
+          tila: API.LadattuTiedostoTila.VALMIS,
+          tuotu: "2021-12-01T01:02",
+          jarjestys: 1,
+        },
+      ],
+    };
+    const adaptedLausuntoPyynnot: API.LausuntoPyynto[] = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto]) as API.LausuntoPyynto[];
+    expect(adaptedLausuntoPyynnot).to.eql([]);
+  });
 });

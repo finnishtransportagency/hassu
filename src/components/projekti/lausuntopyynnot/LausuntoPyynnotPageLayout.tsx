@@ -11,6 +11,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { KuulutusJulkaisuTila, Vaihe } from "@services/api";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
+import { LAUSUNTOPYYNNOT_ROUTE, LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE } from "src/util/routes";
 
 export default function LausuntoPyynnotPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -26,7 +27,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
     const lausuntoPyynnotTab: LinkTabProps = {
       linkProps: {
         href: {
-          pathname: `/yllapito/projekti/[oid]/nahtavillaolo/lausuntopyynto/lausuntopyynto`,
+          pathname: LAUSUNTOPYYNNOT_ROUTE.pathname,
           query: { oid: projekti.oid },
         },
       },
@@ -36,7 +37,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
     const lausuntoPyynnonTaydennyksetTab: LinkTabProps = {
       linkProps: {
         href: {
-          pathname: `/yllapito/projekti/[oid]/nahtavillaolo/lausuntopyynto/lausuntopyynnon-taydennys`,
+          pathname: LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE.pathname,
           query: { oid: projekti.oid },
         },
       },

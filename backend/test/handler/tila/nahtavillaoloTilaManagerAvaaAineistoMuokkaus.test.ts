@@ -69,7 +69,7 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
   it("should set aineistoMuokkaus to nahtavillaoloVaihe and increase id by one when making avaaAineistoMuokkaus", async function () {
     MockDate.set("2022-06-18");
     // For the test, we create a project with POHJOISSAAME as toissijainen kieli, and we set up aineistot,
-    // lisaAineistot and nahtavillaoloSaamePDFt to test that they are copied.
+    // and nahtavillaoloSaamePDFt to test that they are copied.
     const kielitiedot: Kielitiedot = {
       ensisijainenKieli: Kieli.SUOMI,
       toissijainenKieli: Kieli.POHJOISSAAME,
@@ -82,14 +82,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         tiedosto: "nahtavillaolo/1/tiedostoA.pdf",
-      },
-    ];
-    const lisaAineisto: Aineisto[] = [
-      {
-        dokumenttiOid: "2",
-        nimi: "Lisa-aineistonimi",
-        tila: AineistoTila.VALMIS,
-        tiedosto: "nahtavillaolo/1/tiedostoB.pdf",
       },
     ];
     const nahtavillaoloSaamePDFt: KuulutusSaamePDFt = {
@@ -112,7 +104,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         ...projekti.nahtavillaoloVaihe,
         id: 1,
         aineistoNahtavilla,
-        lisaAineisto,
         nahtavillaoloSaamePDFt,
         uudelleenKuulutus: undefined,
       },
@@ -121,7 +112,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
           ...(projekti.nahtavillaoloVaiheJulkaisut?.[0] as NahtavillaoloVaiheJulkaisu),
           kielitiedot,
           aineistoNahtavilla,
-          lisaAineisto,
           nahtavillaoloSaamePDFt,
           uudelleenKuulutus: undefined,
         },
@@ -134,14 +124,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         tiedosto: "nahtavillaolo/2/tiedostoA.pdf",
-      },
-    ];
-    const lisaAineistoUusi: Aineisto[] = [
-      {
-        dokumenttiOid: "2",
-        nimi: "Lisa-aineistonimi",
-        tila: AineistoTila.VALMIS,
-        tiedosto: "nahtavillaolo/2/tiedostoB.pdf",
       },
     ];
     const nahtavillaoloSaamePDFtUusi: KuulutusSaamePDFt = {
@@ -165,7 +147,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         alkuperainenHyvaksymisPaiva: projektiAineistoilla.nahtavillaoloVaiheJulkaisut?.[0]?.hyvaksymisPaiva as string,
       },
       aineistoNahtavilla: aineistoNahtavillaUusi,
-      lisaAineisto: lisaAineistoUusi,
       nahtavillaoloSaamePDFt: nahtavillaoloSaamePDFtUusi,
       uudelleenKuulutus: undefined,
     };
@@ -209,7 +190,6 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         alkuperainenHyvaksymisPaiva: "2022-06-01",
       },
       aineistoNahtavilla: undefined,
-      lisaAineisto: undefined,
       nahtavillaoloSaamePDFt: undefined,
     };
     expect(saveProjekti.getCall(0).args[0]).to.eql({

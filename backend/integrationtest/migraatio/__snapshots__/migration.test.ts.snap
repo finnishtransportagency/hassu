@@ -60,6 +60,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
@@ -70,8 +71,10 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
@@ -181,6 +184,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto4.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
@@ -272,6 +276,7 @@ Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
+          "kategoriaId": undefined,
           "nimi": "aineisto4.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
@@ -881,9 +886,11 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tila": "ODOTTAA_TUONTIA",
+        "tuotu": undefined,
       },
     ],
     "hankkeenKuvaus": Object {
@@ -946,13 +953,6 @@ Object {
         },
       ],
     },
-    "lisaAineisto": undefined,
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 1,
-      "poistumisPaiva": "***unittest***",
-    },
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
@@ -979,6 +979,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto1.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -987,6 +988,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -995,6 +997,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -1003,6 +1006,7 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto2.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
@@ -1011,13 +1015,16 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto5.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
         },
       ],
       "hankkeenKuvaus": Object {
@@ -1079,13 +1086,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
@@ -1158,6 +1158,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -1165,6 +1166,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -1224,13 +1226,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
@@ -1294,6 +1289,7 @@ Object {
         Object {
           "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/TYHJ%C3%84.txt",
@@ -1301,6 +1297,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -1376,13 +1373,6 @@ Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
         "tuotu": "2024-01-01T00:00",
-      },
-      "lisaAineisto": undefined,
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
@@ -1829,18 +1819,6 @@ Object {
         "Paths": Object {
           "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/*",
           ],
           "Quantity": 1,
         },
