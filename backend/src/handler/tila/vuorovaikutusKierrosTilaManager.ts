@@ -286,13 +286,13 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
-
-    const sendResult = await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+    const emailOptionsWithRecipients = { ...emailOptions, to: recipients, cc };
+    const sendResult = await emailClient.sendEmail(emailOptionsWithRecipients);
 
     julkaisu.lahetekirje = await saveEmailAsFile(
       projekti.oid,
       new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu),
-      emailOptions,
+      emailOptionsWithRecipients,
       AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
     );
 
