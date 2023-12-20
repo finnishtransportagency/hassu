@@ -117,10 +117,11 @@ class AsianhallintaService {
     };
     log.info("getAsiaId", { body });
     const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "GET_ASIA_ID"));
+    log.info("getAsiaId", { result });
     if (result) {
       const response: GetAsiaIdResponse = JSON.parse(result);
-      log.info("getAsiaId", { response });
       if (response.asiaId) {
+        log.info("getAsiaId", { response });
         return response.asiaId;
       } else {
         log.error("getAsiaId", { response });
