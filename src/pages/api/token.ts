@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const state = req.query["state"] as string;
   const redirect_uri = req.query["redirect_uri"] as string;
   const client_id = req.query["client_id"] as string;
-  const userPoolUrlStr = await getParameter(`/${process.env.ENVIRONMENT}/outputs/SuomifiCognitoDomain`, "SUOMI_FI_COGNITO_DOMAIN");
+  const userPoolUrlStr = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/outputs/SuomifiCognitoDomain`, "SUOMI_FI_COGNITO_DOMAIN");
   const userPoolUrl = new URL(userPoolUrlStr);
   userPoolUrl.pathname = "/oauth2/token";
   const details: Record<string, string> = {
