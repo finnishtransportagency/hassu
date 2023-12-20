@@ -6,8 +6,23 @@ import { Velho } from "../../src/database/model";
 import { ProjektiProjekti } from "../../src/velho/projektirekisteri";
 
 import { expect } from "chai";
+import sinon from "sinon";
+import { parameters } from "../../src/aws/parameters";
 
 describe("VelhoAdapter", () => {
+  let isAsianhallintaIntegrationEnabledStub: sinon.SinonStub;
+  let isUspaIntegrationEnabledStub: sinon.SinonStub;
+
+  before(() => {
+    isAsianhallintaIntegrationEnabledStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled");
+    isUspaIntegrationEnabledStub = sinon.stub(parameters, "isUspaIntegrationEnabled");
+  });
+
+  beforeEach(() => {
+    isAsianhallintaIntegrationEnabledStub.returns(Promise.resolve(false));
+    isUspaIntegrationEnabledStub.returns(Promise.resolve(false));
+  });
+
   it("should adapt project from Velho successfully", async () => {
     expect(await adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti)).toMatchSnapshot();
   });

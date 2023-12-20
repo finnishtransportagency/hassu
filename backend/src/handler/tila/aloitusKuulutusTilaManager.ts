@@ -1,4 +1,12 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  Status,
+  TilasiirtymaTyyppi,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -26,6 +34,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-commo
 import { velho } from "../../velho/velhoClient";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUtil";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -46,6 +55,7 @@ async function createAloituskuulutusPDF(
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
     vahainenMenettely: projekti.vahainenMenettely,
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 
   return fileService.createFileToProjekti({

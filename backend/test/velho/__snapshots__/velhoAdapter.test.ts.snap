@@ -3,6 +3,7 @@
 exports[`VelhoAdapter should adapt project from Velho successfully 1`] = `
 Object {
   "asianhallinta": Object {
+    "asiaId": undefined,
     "inaktiivinen": false,
   },
   "kasittelynTila": undefined,
@@ -39,6 +40,7 @@ Object {
 exports[`VelhoAdapter should adapt project with kunta and maakunta keys from Velho successfully 1`] = `
 Object {
   "asianhallinta": Object {
+    "asiaId": undefined,
     "inaktiivinen": false,
   },
   "kasittelynTila": undefined,
