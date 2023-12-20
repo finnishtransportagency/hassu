@@ -177,7 +177,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
-                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
+                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} id="vapaasanahaku" />
                 </HassuGridItem>
                 <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
                   {kuntaOptions.map((option) => {
