@@ -30,6 +30,7 @@ export class AsiakirjaService {
     lyhytOsoite,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu,
+    linkkiAsianhallintaan,
     kieli,
     luonnos,
     kayttoOikeudet,
@@ -51,6 +52,7 @@ export class AsiakirjaService {
       lyhytOsoite,
       kayttoOikeudet,
       kieli,
+      linkkiAsianhallintaan,
       aloitusKuulutusJulkaisu,
       euRahoitusLogot,
       vahainenMenettely
@@ -95,11 +97,13 @@ export class AsiakirjaService {
     suunnitteluSopimus,
     euRahoitusLogot,
     vahainenMenettely,
+    linkkiAsianhallintaan,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
       nahtavillaoloVaihe,
-      kieli
+      kieli,
+      linkkiAsianhallintaan
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
@@ -125,6 +129,7 @@ export class AsiakirjaService {
     asiakirjaTyyppi,
     kayttoOikeudet,
     euRahoitusLogot,
+    linkkiAsianhallintaan,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
     log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
@@ -132,7 +137,8 @@ export class AsiakirjaService {
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
       hyvaksymisPaatosVaihe,
-      getPaatosTyyppi(asiakirjaTyyppi)
+      getPaatosTyyppi(asiakirjaTyyppi),
+      linkkiAsianhallintaan
     );
 
     if (

@@ -17,7 +17,8 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     "oid" | "lyhytOsoite" | "kayttoOikeudet" | "suunnitteluSopimus" | "euRahoitusLogot" | "vahainenMenettely" | "velho"
   >,
   julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: KaannettavaKieli
+  kieli: KaannettavaKieli,
+  linkkiAsianhallintaan: string | undefined
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
 
@@ -44,6 +45,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     euRahoitusLogot,
     yhteystiedot: julkaisu.yhteystiedot,
     vahainenMenettely,
+    linkkiAsianhallintaan,
   };
 }
 

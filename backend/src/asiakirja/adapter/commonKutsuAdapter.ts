@@ -27,6 +27,7 @@ import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -38,19 +39,30 @@ export interface CommonKutsuAdapterProps {
   hankkeenKuvaus?: LocalizedMap<string>;
   euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
+  linkkiAsianhallintaan: string | undefined;
 }
 
 /**
  * Poimii annetusta objektista vain CommonKutsuAdapterProps:ssa esitellyt kentät
  */
-export function pickCommonAdapterProps(
+export async function pickCommonAdapterProps(
   projekti: DBProjekti,
   hankkeenKuvaus: LocalizedMap<string>,
   kieli: KaannettavaKieli
-): CommonKutsuAdapterProps {
+): Promise<CommonKutsuAdapterProps> {
   const { oid, kielitiedot, velho, kayttoOikeudet, lyhytOsoite } = projekti;
+
   assertIsDefined(velho);
-  return { oid, kielitiedot, velho, kayttoOikeudet, kieli, hankkeenKuvaus, lyhytOsoite };
+  return {
+    oid,
+    kielitiedot,
+    velho,
+    kayttoOikeudet,
+    kieli,
+    hankkeenKuvaus,
+    lyhytOsoite,
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+  };
 }
 
 export type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta"> & { organisaatio: string };
@@ -63,6 +75,7 @@ export class CommonKutsuAdapter {
   readonly projektiTyyppi: ProjektiTyyppi;
   readonly kayttoOikeudet?: DBVaylaUser[];
   readonly kielitiedot: Kielitiedot;
+  readonly linkkiAsianhallintaan: string | undefined;
   private templateResolvers: unknown[] = [];
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
   private localizationKeyPrefix?: string;
@@ -71,7 +84,7 @@ export class CommonKutsuAdapter {
   linkableProjekti: LinkableProjekti;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
-    const { oid, lyhytOsoite, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot } = params;
+    const { oid, lyhytOsoite, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot, linkkiAsianhallintaan } = params;
     this.oid = oid;
     this.linkableProjekti = { oid, lyhytOsoite };
     this.velho = velho;
@@ -87,6 +100,7 @@ export class CommonKutsuAdapter {
     this.hankkeenKuvausParam = hankkeenKuvaus;
     this.localizationKeyPrefix = localizationKeyPrefix;
     this.euRahoitusLogot = euRahoitusLogot;
+    this.linkkiAsianhallintaan = linkkiAsianhallintaan;
   }
 
   addTemplateResolver(value: unknown): void {

@@ -84,6 +84,9 @@ ${"suffix"}`;
 const ppHyvaksyttySuffix = `Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 ${projektiPaallikkoSuffix}`;
+const ppHyvaksyttyLinkkiAsianhallintaanSuffix = `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan {{linkkiAsianhallintaan}}.
+
+${projektiPaallikkoSuffix}`;
 
 const uudelleenkuulutusOtsikkoPrefix = `Korjaus/uudelleenkuulutus: `;
 const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
@@ -261,7 +264,9 @@ export function createKuulutusHyvaksyttyPpEmail(adapter: KuulutusKutsuAdapter<Ku
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(kuulutusOtsikko({ kuulutuksenTila: "hyväksytty" })),
-    text: adapter.substituteText(kuulutusHyvaksyttyTeksti({ suffix: ppHyvaksyttySuffix })),
+    text: adapter.substituteText(
+      kuulutusHyvaksyttyTeksti({ suffix: adapter.linkkiAsianhallintaan ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix })
+    ),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }

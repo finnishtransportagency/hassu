@@ -13,6 +13,7 @@ import { S3Mock } from "../aws/awsMock";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 import { expect } from "chai";
+import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
 
 const projektiFixture = new ProjektiFixture();
 
@@ -163,6 +164,7 @@ async function doTestGenerateKuulutus(
     asiakirjaTyyppi,
     !!vahainenMenettely,
     projekti.velho,
+    await getLinkkiAsianhallintaan(projekti),
     projektiTyyppi,
     suunnitteluSopimus ? "suunnittelusopimus" : ""
   );
@@ -176,6 +178,7 @@ async function testKuulutusWithLanguage(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
   vahainenMenettely: boolean,
   velho: Velho,
+  linkkiAsianhallintaan: string | undefined,
   ...description: string[]
 ): Promise<void> {
   const nahtavillaoloKuulutusPdfOptions: CreateNahtavillaoloKuulutusPdfOptions = {
@@ -188,6 +191,7 @@ async function testKuulutusWithLanguage(
     vahainenMenettely,
     velho,
     asiakirjaTyyppi,
+    linkkiAsianhallintaan,
   };
   const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf(nahtavillaoloKuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);

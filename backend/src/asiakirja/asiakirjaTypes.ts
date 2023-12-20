@@ -39,6 +39,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
+  linkkiAsianhallintaan: string | undefined;
 };
 
 export type CreatePalautteetPdfOptions = {
@@ -62,6 +63,7 @@ export type AloituskuulutusPdfOptions = {
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
+  linkkiAsianhallintaan: string | undefined;
 };
 
 export type EnhancedPDF = PDF & { textContent: string };
@@ -76,6 +78,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: LocalizedMap<string> | null;
+  linkkiAsianhallintaan: string | undefined;
 };
 
 export function determineAsiakirjaMuoto(

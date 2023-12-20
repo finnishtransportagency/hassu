@@ -31,7 +31,8 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,
   kieli: KaannettavaKieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-  paatosTyyppi: PaatosTyyppi
+  paatosTyyppi: PaatosTyyppi,
+  linkkiAsianhallintaan: string | undefined
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
@@ -72,6 +73,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     suunnitteluSopimus,
     paatosTyyppi,
     viimeinenVoimassaolovuosi: hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi,
+    linkkiAsianhallintaan,
   };
 }
 

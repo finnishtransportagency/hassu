@@ -24,6 +24,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   kieli: KaannettavaKieli,
+  linkkiAsianhallintaan: string | undefined,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
   euRahoitusLogot?: LocalizedMap<string> | null,
   vahainenMenettely?: boolean | null
@@ -49,6 +50,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
     uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
     euRahoitusLogot: euRahoitusLogot || undefined,
     vahainenMenettely,
+    linkkiAsianhallintaan,
   };
 }
 

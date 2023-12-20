@@ -46,6 +46,8 @@ import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustom
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 import { persistLadattuTiedosto } from "../files/persistFiles";
+import { asianhallintaService } from "../asianhallinta/asianhallintaService";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -335,10 +337,15 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const projektiAvaimetJoissaIlmoitetuksenVastaanottajat = getUpdatedIlmoituksenVastaanottajat(projektiFromDB, projektiFromVelho.velho);
 
-    const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet"> = {
+    const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projektiFromDB))
+      ? await asianhallintaService.getAsiaId(oid)
+      : undefined;
+
+    const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet" | "asianhallinta"> = {
       oid,
       velho: projektiFromVelho.velho,
       kayttoOikeudet: kayttoOikeudetNew,
+      asianhallinta: { ...(projektiFromDB.asianhallinta ?? {}), asiaId },
       ...projektiAvaimetJoissaIlmoitetuksenVastaanottajat,
     };
 
@@ -507,7 +514,10 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
+        [
+          API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        ]
       );
     }
   });
@@ -539,7 +549,10 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
+        [
+          API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
+          API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        ]
       );
     }
   });

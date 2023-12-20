@@ -9,6 +9,8 @@ import {
   CheckAsianhallintaStateResponse,
   RequestType,
   AsiakirjaTyyppi,
+  GetAsiaIdCommand,
+  GetAsiaIdResponse,
 } from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -88,7 +90,7 @@ class AsianhallintaService {
       correlationId: getCorrelationId() ?? uuid.v4(),
     };
     log.info("checkAsianhallintaState", { body });
-    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body));
+    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "CHECK"));
     if (result) {
       const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       log.info("checkAsianhallintaState", { response });
@@ -96,6 +98,32 @@ class AsianhallintaService {
         return synkronointiTilaToAsianTilaMap[response.synkronointiTila];
       } else {
         log.error("checkAsianhallintaState", { response });
+      }
+    }
+  }
+
+  async getAsiaId(oid: string): Promise<number | undefined> {
+    const projekti = await this.haeProjekti(oid);
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+      return;
+    }
+    assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
+    const body: GetAsiaIdCommand = {
+      asiatunnus,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
+      correlationId: getCorrelationId() ?? uuid.v4(),
+    };
+    log.info("getAsiaId", { body });
+    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "GET_ASIA_ID"));
+    if (result) {
+      const response: GetAsiaIdResponse = JSON.parse(result);
+      log.info("getAsiaId", { response });
+      if (response.asiaId) {
+        return response.asiaId;
+      } else {
+        log.error("getAsiaId", { response });
       }
     }
   }
@@ -108,7 +136,7 @@ class AsianhallintaService {
     return projekti;
   }
 
-  private wrapAsFakeSQSEvent(body: unknown) {
+  private wrapAsFakeSQSEvent(body: unknown, requestType: RequestType) {
     return JSON.stringify({
       Records: [
         {
@@ -116,7 +144,7 @@ class AsianhallintaService {
           messageAttributes: {
             requestType: {
               dataType: "String",
-              stringValue: "CHECK" as RequestType,
+              stringValue: requestType,
             },
           },
         },

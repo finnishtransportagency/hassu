@@ -9,7 +9,7 @@ import { expect } from "chai";
 
 describe("VelhoAdapter", () => {
   it("should adapt project from Velho successfully", async () => {
-    expect(adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti)).toMatchSnapshot();
+    expect(await adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti)).toMatchSnapshot();
   });
 
   it("should adapt project with kunta and maakunta keys from Velho successfully", async () => {
@@ -21,11 +21,11 @@ describe("VelhoAdapter", () => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     velhoData.ominaisuudet.maakunta = new Set<object>(["maakunta/maakunta001"] as unknown as object[]);
     delete velhoData.ominaisuudet["muu-maakunta"];
-    expect(adaptProjekti(velhoData)).toMatchSnapshot();
+    expect(await adaptProjekti(velhoData)).toMatchSnapshot();
   });
 
   it("should find updated Velho fields successfully", async () => {
-    const oldVelho: Velho = adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti).velho!;
+    const oldVelho: Velho = (await adaptProjekti(velhoTieProjecti.data as unknown as ProjektiProjekti)).velho!;
     const newVelho: Velho = cloneDeep(oldVelho);
     newVelho.nimi = "Uusi nimi";
     newVelho.vaylamuoto = ["rata"];

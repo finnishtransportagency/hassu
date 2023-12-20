@@ -31,6 +31,7 @@ import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -68,6 +69,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
     expect(pdf.sisalto.length).to.be.greaterThan(30000);
@@ -105,6 +107,7 @@ describe("asiakirjaService", () => {
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projekti.kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu: julkaisu,
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
       velho,
       kielitiedot: projekti.kielitiedot,
       suunnitteluSopimus: projekti.suunnitteluSopimus,
@@ -157,6 +160,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     pdf.textContent = cleanupUrlsInPDF(pdf.textContent);
     expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
@@ -221,6 +225,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
   }
@@ -296,6 +301,7 @@ describe("asiakirjaService", () => {
         suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       },
       kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
+      linkkiAsianhallintaan: "https://www.linkki.asianhallintaan.com/asia/123",
     });
     expect(adapter.htmlText("asiakirja.tietosuoja")).toMatchSnapshot();
   });
