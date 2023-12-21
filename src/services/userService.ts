@@ -25,21 +25,9 @@ function getAppDomainUri() {
     return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
   }
 }
-function getKeycloakDomainUri() {
-  if (process.env.NODE_ENV === "development") {
-    return "https://hassudev.testivaylapilvi.fi/";
-  } else {
-    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
-  }
-}
+
 function getKeycoakLogoutUri() {
-  const keycloakClientId = process.env.KEYCLOAK_CLIENT_ID;
-  const uri = getKeycloakDomainUri() + "keycloak/auth/realms/suomifi/protocol/openid-connect/logout?client_id=" + keycloakClientId;
-  if (process.env.NODE_ENV === "development") {
-    return uri;
-  } else {
-    return uri + "&post_logout_redirect_uri=" + getAppDomainUri();
-  }
+  return getAppDomainUri() + "api/slo";
 }
 
 export function getSuomiFiAuthenticationURL(state?: string): string | undefined {
@@ -66,9 +54,8 @@ export function getSuomiFiLogoutURL(): string | undefined {
   if (domain && clientId) {
     const url = new URL(domain);
     url.pathname = "/logout";
-    url.searchParams.set("logout_uri", keycloakRedirectUri);
-    url.searchParams.set("redirect_uri", keycloakRedirectUri);
     url.searchParams.set("client_id", clientId);
+    url.searchParams.set("logout_uri", keycloakRedirectUri);
     return url.toString();
   }
 }

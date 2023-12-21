@@ -120,6 +120,7 @@ module.exports = (phase) => {
     SUOMI_FI_COGNITO_DOMAIN: process.env.SUOMI_FI_COGNITO_DOMAIN,
     SUOMI_FI_USERPOOL_CLIENT_ID: process.env.SUOMI_FI_USERPOOL_CLIENT_ID,
     KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_LOGOUT_PATH: process.env.KEYCLOAK_LOGOUT_PATH,
   };
 
   if (BaseConfig.env !== "prod") {
