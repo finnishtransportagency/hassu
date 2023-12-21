@@ -15,11 +15,19 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
   throw new Error("Getting parameter " + name  + " failed");
 }
 
+function getRedirectUri() {
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000/";
+  } else {
+    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+  }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
-  const redirect_uri = req.query["redirect_uri"] as string;
-  const client_id = req.query["client_id"] as string;
+  const redirect_uri = getRedirectUri();
+  const client_id = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/outputs/SuomifiUserPoolClientId`, "SUOMI_FI_USERPOOL_CLIENT_ID");
   const userPoolUrlStr = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/outputs/SuomifiCognitoDomain`, "SUOMI_FI_COGNITO_DOMAIN");
   const userPoolUrl = new URL(userPoolUrlStr);
   userPoolUrl.pathname = "/oauth2/token";
@@ -27,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     grant_type: "authorization_code",
     client_id,
     code,
-    redirect_uri,
+    redirect_uri: redirect_uri + "api/token",
   };
   const formBody = Object.keys(details)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(details[key]))

@@ -1,21 +1,3 @@
-import { NextRouter } from "next/router";
-import { useEffect } from "react";
-
-export function useStoreKansalaisUserAuthentication(router: NextRouter) {
-  const path = router.asPath;
-  useEffect(() => { 
-    if (path && path.includes("?code=")) {
-      const paramsStr = path.substring(path.indexOf("?") + 1);
-      const params = new URLSearchParams(paramsStr);
-      const code = params.get("code");
-      const state = params.get("state") ?? "";
-      if (code) {
-        router.push("/api/token?code=" + code + "&state=" + state + "&client_id=" + process.env.SUOMI_FI_USERPOOL_CLIENT_ID + "&redirect_uri=" + getAppDomainUri());
-      }
-    }
-  }, [router, path]);
-}
-
 function getAppDomainUri() {
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000/";
@@ -35,7 +17,7 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
     const url = new URL(domain);
     url.pathname = "/oauth2/authorize";
     url.searchParams.set("identity_provider", "Suomi.fi");
-    url.searchParams.set("redirect_uri", getAppDomainUri());
+    url.searchParams.set("redirect_uri", getAppDomainUri() + "api/token");
     url.searchParams.set("response_type", "CODE");
     url.searchParams.set("client_id", clientId);
     url.searchParams.set("scope", "email openid profile");
