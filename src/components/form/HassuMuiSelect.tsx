@@ -58,11 +58,10 @@ const HassuMuiSelect = (
             <>
               <Select<string>
                 MenuProps={{ sx: { maxHeight: 750 } }}
-                id={name}
                 className={classNames("w-100", error && "error")}
                 displayEmpty
                 IconComponent={KeyboardArrowDownIcon}
-                input={<HassuSelectInput />}
+                input={<HassuSelectInput id={name} />}
                 labelId={labelId}
                 label={label}
                 onChange={(...args) => {
