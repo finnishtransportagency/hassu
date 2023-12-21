@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const keycloakClientId = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/KeycloakClientId`, "KEYCLOAK_CLIENT_ID");
   const keycloakLogoutPath = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/KeycloakLogoutPath`, "KEYCLOAK_LOGOUT_PATH");
-  const domain = currenturl.hostname == "localhost" ? "http://hassudev.testivaylapilvi.fi" : currenturl.origin;
+  const domain = currenturl.hostname == "localhost" ? "https://hassudev.testivaylapilvi.fi" : currenturl.origin;
 
   const redirect_uri = new URL(domain);
   redirect_uri.pathname = keycloakLogoutPath;
