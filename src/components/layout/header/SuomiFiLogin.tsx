@@ -21,16 +21,7 @@ const SuomiFiLogin = styled((props) => {
       );
     } else {
       const logoutURL = getSuomiFiLogoutURL();
-      return (
-        <ButtonLink
-          href={logoutURL}
-          onClick={() => {
-            document.cookie = "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          }}
-        >
-          {t("kirjaudu-ulos")}
-        </ButtonLink>
-      );
+      return <ButtonLink href={logoutURL}>{t("kirjaudu-ulos")}</ButtonLink>;
     }
   } else {
     return <></>;

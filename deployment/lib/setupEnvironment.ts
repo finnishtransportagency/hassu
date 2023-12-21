@@ -115,6 +115,7 @@ export type HassuSSMParameters = {
   SuomifiUserPoolClientId: string;
   SuomifiLocalhostUserPoolClientId: string;
   KeycloakClientId: string;
+  KeycloakLogoutPath: string,
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -191,5 +192,6 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
     SUOMI_FI_LOCALHOST_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
     KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
+    KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
   };
 }
