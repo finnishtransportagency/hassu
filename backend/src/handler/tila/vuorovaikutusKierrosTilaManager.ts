@@ -171,7 +171,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
     );
 
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
 
     await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
@@ -264,7 +264,6 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
     assert(
