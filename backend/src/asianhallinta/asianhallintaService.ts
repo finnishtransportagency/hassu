@@ -10,7 +10,6 @@ import {
   RequestType,
   AsiakirjaTyyppi,
   GetAsiaIdCommand,
-  GetAsiaIdResponse,
 } from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
@@ -119,7 +118,7 @@ class AsianhallintaService {
     const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "GET_ASIA_ID"));
     log.info("getAsiaId", { result });
     if (result) {
-      const response: GetAsiaIdResponse = JSON.parse(result);
+      const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       if (response.asiaId) {
         log.info("getAsiaId", { response });
         return response.asiaId;
