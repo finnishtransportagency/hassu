@@ -100,7 +100,7 @@ export class CommonKutsuAdapter {
     this.hankkeenKuvausParam = hankkeenKuvaus;
     this.localizationKeyPrefix = localizationKeyPrefix;
     this.euRahoitusLogot = euRahoitusLogot;
-    this.linkkiAsianhallintaan = linkkiAsianhallintaan;
+    this.linkkiAsianhallintaan = linkkiAsianhallintaan ? " " + linkkiAsianhallintaan : "";
   }
 
   addTemplateResolver(value: unknown): void {

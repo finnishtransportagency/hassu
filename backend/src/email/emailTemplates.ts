@@ -84,7 +84,7 @@ ${"suffix"}`;
 const ppHyvaksyttySuffix = `Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 ${projektiPaallikkoSuffix}`;
-const ppHyvaksyttyLinkkiAsianhallintaanSuffix = `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan {{linkkiAsianhallintaan}}.
+const ppHyvaksyttyLinkkiAsianhallintaanSuffix = `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan{{linkkiAsianhallintaan}}.
 
 ${projektiPaallikkoSuffix}`;
 

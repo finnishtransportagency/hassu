@@ -81,6 +81,9 @@ class AsianhallintaService {
     }
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
+    if (!asiatunnus) {
+      return;
+    }
     assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
     const body: CheckAsianhallintaStateCommand = {
       asiatunnus,
@@ -108,6 +111,9 @@ class AsianhallintaService {
     }
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
+    if (!asiatunnus) {
+      return;
+    }
     assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
     const body: GetAsiaIdCommand = {
       asiatunnus,
