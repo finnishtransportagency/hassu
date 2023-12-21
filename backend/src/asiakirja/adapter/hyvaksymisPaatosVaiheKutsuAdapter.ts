@@ -32,6 +32,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   kieli: KaannettavaKieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
   paatosTyyppi: PaatosTyyppi,
+  asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
@@ -73,6 +74,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     suunnitteluSopimus,
     paatosTyyppi,
     viimeinenVoimassaolovuosi: hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi,
+    asianhallintaPaalla,
     linkkiAsianhallintaan,
   };
 }

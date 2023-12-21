@@ -35,6 +35,7 @@ import { velho } from "../../velho/velhoClient";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUtil";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -55,6 +56,7 @@ async function createAloituskuulutusPDF(
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
     vahainenMenettely: projekti.vahainenMenettely,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 

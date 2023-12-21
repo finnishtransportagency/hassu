@@ -14,6 +14,7 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 import { expect } from "chai";
 import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
 
 const projektiFixture = new ProjektiFixture();
 
@@ -164,6 +165,7 @@ async function doTestGenerateKuulutus(
     asiakirjaTyyppi,
     !!vahainenMenettely,
     projekti.velho,
+    await isProjektiAsianhallintaIntegrationEnabled(projekti),
     await getLinkkiAsianhallintaan(projekti),
     projektiTyyppi,
     suunnitteluSopimus ? "suunnittelusopimus" : ""
@@ -178,6 +180,7 @@ async function testKuulutusWithLanguage(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
   vahainenMenettely: boolean,
   velho: Velho,
+  asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
   ...description: string[]
 ): Promise<void> {
@@ -191,6 +194,7 @@ async function testKuulutusWithLanguage(
     vahainenMenettely,
     velho,
     asiakirjaTyyppi,
+    asianhallintaPaalla,
     linkkiAsianhallintaan,
   };
   const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf(nahtavillaoloKuulutusPdfOptions);

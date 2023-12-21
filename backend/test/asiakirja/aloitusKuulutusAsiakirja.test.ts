@@ -14,6 +14,7 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 import { expect } from "chai";
 import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
 
 const projektiFixture = new ProjektiFixture();
 
@@ -82,6 +83,7 @@ async function doTestGenerateKuulutus(
     projekti.kayttoOikeudet,
     asiakirjaTyyppi,
     !!vahainenMenettely,
+    await isProjektiAsianhallintaIntegrationEnabled(projekti),
     await getLinkkiAsianhallintaan(projekti),
     projektiTyyppi,
     suunnitteluSopimus ? "suunnittelusopimus" : "",
@@ -96,6 +98,7 @@ async function testKuulutusWithLanguage(
   kayttoOikeudet: DBVaylaUser[],
   asiakirjaTyyppi: AsiakirjaTyyppi,
   vahainenMenettely: boolean,
+  asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
   ...description: string[]
 ): Promise<void> {
@@ -108,6 +111,7 @@ async function testKuulutusWithLanguage(
     luonnos: true,
     kayttoOikeudet,
     vahainenMenettely,
+    asianhallintaPaalla,
     linkkiAsianhallintaan,
   };
   const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);

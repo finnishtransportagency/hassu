@@ -29,6 +29,7 @@ import { findNahtavillaoloWaitingForApproval } from "../../projekti/projektiUtil
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -53,6 +54,7 @@ async function createNahtavillaoloVaihePDF(
     luonnos: false,
     euRahoitusLogot: projekti.euRahoitusLogot,
     vahainenMenettely: projekti.vahainenMenettely,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
   return fileService.createFileToProjekti({

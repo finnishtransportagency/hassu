@@ -265,7 +265,7 @@ export function createKuulutusHyvaksyttyPpEmail(adapter: KuulutusKutsuAdapter<Ku
   return {
     subject: adapter.substituteText(kuulutusOtsikko({ kuulutuksenTila: "hyväksytty" })),
     text: adapter.substituteText(
-      kuulutusHyvaksyttyTeksti({ suffix: adapter.linkkiAsianhallintaan ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix })
+      kuulutusHyvaksyttyTeksti({ suffix: adapter.asianhallintaPaalla ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix })
     ),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };

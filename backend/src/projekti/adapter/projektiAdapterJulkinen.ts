@@ -67,6 +67,7 @@ import {
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { jaotteleVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
   if (
@@ -233,6 +234,7 @@ class ProjektiAdapterJulkinen {
           projekti.lyhytOsoite,
           projekti.kayttoOikeudet,
           kieli,
+          await isProjektiAsianhallintaIntegrationEnabled(projekti),
           await getLinkkiAsianhallintaan(projekti),
           julkaisu,
           undefined,
@@ -337,7 +339,13 @@ class ProjektiAdapterJulkinen {
       const velho = dbProjekti.velho;
       assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti, julkaisu, kieli, await getLinkkiAsianhallintaan(dbProjekti))
+        await createNahtavillaoloVaiheKutsuAdapterProps(
+          dbProjekti,
+          julkaisu,
+          kieli,
+          await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+          await getLinkkiAsianhallintaan(dbProjekti)
+        )
       ).userInterfaceFields;
     }
     if (nahtavillaoloSaamePDFt) {
@@ -487,7 +495,14 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu, paatosTyyppi, await getLinkkiAsianhallintaan(dbProjekti))
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(
+          dbProjekti,
+          kieli,
+          julkaisu,
+          paatosTyyppi,
+          await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+          await getLinkkiAsianhallintaan(dbProjekti)
+        )
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;

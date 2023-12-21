@@ -32,6 +32,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -69,6 +70,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
@@ -107,6 +109,7 @@ describe("asiakirjaService", () => {
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projekti.kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu: julkaisu,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
       velho,
       kielitiedot: projekti.kielitiedot,
@@ -160,6 +163,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     pdf.textContent = cleanupUrlsInPDF(pdf.textContent);
@@ -225,6 +229,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
@@ -301,7 +306,8 @@ describe("asiakirjaService", () => {
         suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       },
       kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
-      linkkiAsianhallintaan: "https://www.linkki.asianhallintaan.com/asia/123",
+      asianhallintaPaalla: false,
+      linkkiAsianhallintaan: undefined,
     });
     expect(adapter.htmlText("asiakirja.tietosuoja")).toMatchSnapshot();
   });

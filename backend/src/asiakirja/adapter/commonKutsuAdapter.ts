@@ -28,6 +28,7 @@ import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -39,6 +40,7 @@ export interface CommonKutsuAdapterProps {
   hankkeenKuvaus?: LocalizedMap<string>;
   euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
+  asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
 }
 
@@ -61,6 +63,7 @@ export async function pickCommonAdapterProps(
     kieli,
     hankkeenKuvaus,
     lyhytOsoite,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   };
 }
@@ -75,6 +78,7 @@ export class CommonKutsuAdapter {
   readonly projektiTyyppi: ProjektiTyyppi;
   readonly kayttoOikeudet?: DBVaylaUser[];
   readonly kielitiedot: Kielitiedot;
+  readonly asianhallintaPaalla: boolean;
   readonly linkkiAsianhallintaan: string | undefined;
   private templateResolvers: unknown[] = [];
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
@@ -84,7 +88,18 @@ export class CommonKutsuAdapter {
   linkableProjekti: LinkableProjekti;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
-    const { oid, lyhytOsoite, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot, linkkiAsianhallintaan } = params;
+    const {
+      oid,
+      lyhytOsoite,
+      velho,
+      kielitiedot,
+      kieli,
+      kayttoOikeudet,
+      hankkeenKuvaus,
+      euRahoitusLogot,
+      asianhallintaPaalla,
+      linkkiAsianhallintaan,
+    } = params;
     this.oid = oid;
     this.linkableProjekti = { oid, lyhytOsoite };
     this.velho = velho;
@@ -100,6 +115,7 @@ export class CommonKutsuAdapter {
     this.hankkeenKuvausParam = hankkeenKuvaus;
     this.localizationKeyPrefix = localizationKeyPrefix;
     this.euRahoitusLogot = euRahoitusLogot;
+    this.asianhallintaPaalla = asianhallintaPaalla;
     this.linkkiAsianhallintaan = linkkiAsianhallintaan ? " " + linkkiAsianhallintaan : "";
   }
 
