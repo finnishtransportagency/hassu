@@ -462,7 +462,7 @@ export class CommonKutsuAdapter {
       }
 
       // Return text as it is if it was resolved
-      if (resolvedText) {
+      if (resolvedText !== undefined && resolvedText !== null) {
         return resolvedText;
       }
       return "{{" + part + "}}";

@@ -206,6 +206,8 @@ export class CloudFrontStub {
 export class ParametersStub {
   private stub!: sinon.SinonStub;
   asianhallintaEnabled = false;
+  ashaOsoite = "https://www.fake-asha-testiasianhallinta.com";
+  uspaOsoite = "https://www.fake-uspa-testiasianhallinta.com";
 
   constructor() {
     mocha.before(() => {
@@ -213,6 +215,8 @@ export class ParametersStub {
     });
     mocha.beforeEach(() => {
       this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(() => String(this.asianhallintaEnabled));
+      this.stub.withArgs("AshaBaseUrl").callsFake(() => String(this.ashaOsoite));
+      this.stub.withArgs("UspaBaseUrl").callsFake(() => String(this.uspaOsoite));
     });
   }
 }
@@ -333,13 +337,16 @@ export function mockPersonSearchUpdaterClient(): void {
 }
 
 let checkAsianhallintaStateLambdaStub: sinon.SinonStub;
+let getAsiaIdLambdaStub: sinon.SinonStub;
 
 export function mockAsianhallintaService(): void {
   mocha.before(() => {
     checkAsianhallintaStateLambdaStub = sinon.stub(asianhallintaService, "checkAsianhallintaState");
+    getAsiaIdLambdaStub = sinon.stub(asianhallintaService, "getAsiaId");
   });
   mocha.beforeEach(() => {
     checkAsianhallintaStateLambdaStub.callsFake(() => AsianTila.VALMIS_VIENTIIN);
+    getAsiaIdLambdaStub.callsFake(() => 11212);
   });
 }
 

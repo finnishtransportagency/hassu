@@ -143,6 +143,7 @@ Array [
       },
       "aktivoitavissa": false,
       "inaktiivinen": true,
+      "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
@@ -252,6 +253,7 @@ Array [
       },
       "aktivoitavissa": false,
       "inaktiivinen": true,
+      "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
@@ -360,6 +362,7 @@ Array [
       },
       "aktivoitavissa": false,
       "inaktiivinen": true,
+      "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
@@ -612,6 +615,7 @@ Array [
       },
       "aktivoitavissa": false,
       "inaktiivinen": true,
+      "linkkiAsianhallintaan": undefined,
     },
     "euRahoitus": false,
     "julkinenStatus": "EI_JULKAISTU",
@@ -915,6 +919,7 @@ Object {
     },
     "aktivoitavissa": false,
     "inaktiivinen": true,
+    "linkkiAsianhallintaan": undefined,
   },
   "euRahoitus": false,
   "julkinenStatus": "ALOITUSKUULUTUS",
