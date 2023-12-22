@@ -6,11 +6,9 @@ export type SuomiFiCognitoKayttaja = {
   given_name: string;
   family_name: string;
   ["custom:hetu"]: string;
-  address?: Address
-}
-
-type Address = {
-  street_address: string;
-  locality: string;
-  postal_code: string; 
+  ["custom:lahiosoite"]: string;
+  ["custom:postitoimipaikka"]: string;
+  ["custom:postinumero"]: string;
+  ["custom:ulkomainenlahiosoite"]: string;
+  ["custom:ulkomainenkunta"]: string;
 }

@@ -53,7 +53,7 @@ async function main() {
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
       SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
-      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
+      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiUserPoolClientId,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
       KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
       SUOMI_FI_USERPOOL_CLIENT_SECRET: variables.SuomifiUserPoolClientSecret,

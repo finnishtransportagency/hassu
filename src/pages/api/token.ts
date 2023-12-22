@@ -4,7 +4,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 const ssm = new SSM({ region: "eu-west-1" });
 
 async function getParameter(name: string, envVariable: string): Promise<string> {
-  console.log("parameter: " + name);
   if (process.env[envVariable]) {
     return process.env[envVariable] as string;
   }
@@ -27,9 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
   const redirect_uri = getRedirectUri();
-  const client_id = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/outputs/SuomifiUserPoolClientId`, "SUOMI_FI_USERPOOL_CLIENT_ID");
-  const userPoolUrlStr = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/outputs/SuomifiCognitoDomain`, "SUOMI_FI_COGNITO_DOMAIN");
-  const userPoolUrl = new URL(userPoolUrlStr);
+  const client_id = process.env.SUOMI_FI_USERPOOL_CLIENT_ID!;
+  const userPoolUrl = new URL(process.env.SUOMI_FI_COGNITO_DOMAIN!);
   userPoolUrl.pathname = "/oauth2/token";
   const details: Record<string, string> = {
     grant_type: "authorization_code",

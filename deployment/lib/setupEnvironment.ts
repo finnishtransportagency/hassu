@@ -113,7 +113,6 @@ export type HassuSSMParameters = {
 
   SuomifiCognitoDomain: string;
   SuomifiUserPoolClientId: string;
-  SuomifiLocalhostUserPoolClientId: string;
   KeycloakClientId: string;
   KeycloakLogoutPath: string;
   SuomifiUserPoolClientSecret: string;
@@ -191,7 +190,6 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
 
     SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
-    SUOMI_FI_LOCALHOST_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
     KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
     KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
   };
