@@ -85,7 +85,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const nahtavillaoloKuulutusPDFPath = kuulutus.kuulutusPDF?.[kieli];
 
-  const authUrl = getSuomiFiAuthenticationURL(`/suunnitelma/${projekti?.oid}/nahtavillaolo#muistutus`);
+  const authUrl = getSuomiFiAuthenticationURL(`suunnitelma/${projekti?.oid}/nahtavillaolo#muistutus`);
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
