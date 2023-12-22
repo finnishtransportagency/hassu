@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(details[key]))
     .join("&");
 
-  const clientSecret = await getParameter("SuomifiCognitoClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
+  const clientSecret = await getParameter("SuomifiUserPoolClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
   const response = await fetch(userPoolUrl.toString(), {
     headers: {
       Authorization: "Basic " + Buffer.from(client_id + ":" + clientSecret).toString("base64"),
