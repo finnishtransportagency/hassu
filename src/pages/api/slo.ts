@@ -4,7 +4,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 const ssm = new SSM({ region: "eu-west-1" });
 
 async function getParameter(name: string, envVariable: string): Promise<string> {
-  console.log("parameter: " + name);
   if (process.env[envVariable]) {
     return process.env[envVariable] as string;
   }
