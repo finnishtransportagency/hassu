@@ -119,7 +119,7 @@
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
-          "email": "mikko.haapamaki@cgi.com",
+          "email": "mikko.haapamaki1@cgi.com",
           "etunimi": "Testi1",
           "kunta": 536,
           "logo": {
@@ -156,7 +156,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -210,7 +210,7 @@
         "sukunimi": "Hassu"
       },
       {
-        "email": "mikko.haapamaki@cgi.com",
+        "email": "mikko.haapamaki1@cgi.com",
         "etunimi": "Testi1",
         "kayttajatunnus": "LX581241",
         "muokattavissa": true,

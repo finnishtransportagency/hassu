@@ -141,7 +141,7 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Lisätietoja antaa 
 
-Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
+Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki1@cgi.com
 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 
@@ -184,7 +184,7 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Lisätietoja antaa 
 Testi1 Hassu (Nokia), 
-puh. 123, mikko.haapamaki(at)cgi.com 
+puh. 123, mikko.haapamaki1(at)cgi.com 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
 ",
@@ -206,7 +206,7 @@ Kuulutus julkaistaan 1.1.2031 osoitteessa https://localhost:3000/s/3c1d/aloitusk
 Kuulutus on nähtävillä 1.1.2031 - 31.1.2031 välisen ajan
 Lisätietoja antaa 
 Testi1 Hassu (Nokia), 
-puh. 123, mikko.haapamaki(at)cgi.com 
+puh. 123, mikko.haapamaki1(at)cgi.com 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
 ",
@@ -273,7 +273,7 @@ Object {
     "siirtyySuunnitteluVaiheeseen": "2023-01-01",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
-      "email": "mikko.haapamaki@cgi.com",
+      "email": "mikko.haapamaki1@cgi.com",
       "etunimi": "Testi1",
       "kunta": 536,
       "logo": Object {
@@ -325,7 +325,7 @@ Object {
         "kunta": 536,
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamaki@cgi.com",
+        "sahkoposti": "mikko.haapamaki1@cgi.com",
         "sukunimi": "Hassu",
       },
       Object {
