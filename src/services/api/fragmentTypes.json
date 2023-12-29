@@ -327,6 +327,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "KiinteistonOmistajat",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "KirjaamoOsoite",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -542,6 +548,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "MmlYhteystieto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "MmlYhteystietoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "MuistutusInput",
         "possibleTypes": null,
@@ -610,6 +628,18 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "OikeudenPaatosInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Omistaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "OmistajaInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

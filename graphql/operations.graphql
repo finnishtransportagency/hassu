@@ -29,6 +29,7 @@ type Query {
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
+  haeKiinteistonOmistajat(oid: String!, sivu: Int!, muutOmistajat: Boolean!, sivuKoko: Int): KiinteistonOmistajat
 }
 
 type Mutation {
@@ -48,4 +49,8 @@ type Mutation {
   annaPalautettaPalvelusta(palveluPalauteInput: PalveluPalauteInput!): String
 
   suoritaTestiKomento(testiKomento: TestiKomentoInput!): String
+
+  tallennaKiinteistotunnukset(oid: String!, kiinteistotunnukset: [String!]!): String
+  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): String
+  poistaKiinteistonOmistajat(oid: String!, omistajat: [String!]!): String
 }

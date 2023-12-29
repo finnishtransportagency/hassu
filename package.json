@@ -97,7 +97,7 @@
     "swr": "^1.3.0",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
-    "xml2js": "^0.5.0",
+    "xml2js": "^0.6.2",
     "yaml": "^2.3.3",
     "yup": "^0.32.11"
   },
@@ -297,6 +297,7 @@
     "log:frontend:nextjsapi": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-${ENVIRONMENT}ApiV2",
     "log:frontend:nextjsapi:dev": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-devApiV2",
     "log:asianhallinta": "aws logs tail --follow --since 1h /aws/lambda/hassu-asianhallinta-${ENVIRONMENT}",
+    "log:kiinteistohandler": "aws logs tail --follow --since 1h /aws/lambda/hassu-kiinteisto-$ENVIRONMENT",
     "sonar": "cross-env LATEST_VERSION=\"$(git describe --tags --abbrev=0 --contains test)\" node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local",
     "opensearch:getmapping": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getmapping projekti backend/src/projektiSearch/projekti-mapping.json",
     "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json",
@@ -305,7 +306,8 @@
     "maintenancemode": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/maintenanceMode.ts dotenv_config_path=.env.test",
     "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i",
     "switchenv": "ts-node -T --project=tsconfig.cdk.json  ./deployment/bin/switchEnv.ts && direnv exec . npm run setupenvironment",
-    "generate:puml": "npx node-plantuml generate doc/suomifi_tunnistautuminen.puml -o doc/suomifi_tunnistautuminen.png"
+    "generate:puml": "npx node-plantuml generate doc/suomifi_tunnistautuminen.puml -o doc/suomifi_tunnistautuminen.png",
+    "mml:test": "ts-node --project=backend/tsconfig.json ./backend/bin/mmlTest.ts"
   },
   "browserslist": {
     "production": [

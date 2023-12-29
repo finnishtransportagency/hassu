@@ -178,6 +178,8 @@ export type DBProjekti = {
   synkronoinnit?: Record<string, AsianhallintaSynkronointi>;
   annetutMuistutukset?: string[];
   asianhallinta?: Asianhallinta;
+  omistajat?: string[];
+  muutOmistajat?: string[];
 };
 
 export type Asianhallinta = {

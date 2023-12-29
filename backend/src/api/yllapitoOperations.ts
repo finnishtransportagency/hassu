@@ -24,6 +24,10 @@ import {
   TallennaProjektiMutationVariables,
   EsikatseleLausuntoPyynnonTiedostotQueryVariables,
   EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
+  TallennaKiinteistotunnuksetMutationVariables,
+  HaeKiinteistonOmistajatQueryVariables,
+  TallennaKiinteistonOmistajatMutationVariables,
+  PoistaKiinteistonOmistajatMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -51,6 +55,12 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { testHandler } from "../testing/testHandler";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
+import {
+  haeKiinteistonOmistajat,
+  poistaKiinteistonOmistajat,
+  tallennaKiinteistonOmistajat,
+  tallennaKiinteistotunnukset,
+} from "../mml/kiinteistoHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -116,6 +126,14 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
+    case apiConfig.tallennaKiinteistotunnukset.name:
+      return await tallennaKiinteistotunnukset(event.arguments as TallennaKiinteistotunnuksetMutationVariables);
+    case apiConfig.tallennaKiinteistonOmistajat.name:
+      return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
+    case apiConfig.haeKiinteistonOmistajat.name:
+      return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
+    case apiConfig.poistaKiinteistonOmistajat.name:
+      return await poistaKiinteistonOmistajat(event.arguments as PoistaKiinteistonOmistajatMutationVariables);
     default:
       return null;
   }

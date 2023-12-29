@@ -64,6 +64,9 @@ import {
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
+  TallennaKiinteistotunnuksetMutationVariables,
+  HaeKiinteistonOmistajatQueryVariables,
+  OmistajaInput,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -286,6 +289,30 @@ export const apiConfig: ApiConfig = {
     name: "suoritaTestiKomento",
     operationType: OperationType.Mutation,
     graphql: mutations.suoritaTestiKomento,
+    isYllapitoOperation: true,
+  },
+  tallennaKiinteistotunnukset: {
+    name: "tallennaKiinteistotunnukset",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaKiinteistotunnukset,
+    isYllapitoOperation: true,
+  },
+  haeKiinteistonOmistajat: {
+    name: "haeKiinteistonOmistajat",
+    operationType: OperationType.Query,
+    graphql: queries.haeKiinteistonOmistajat,
+    isYllapitoOperation: true,
+  },
+  tallennaKiinteistonOmistajat: {
+    name: "tallennaKiinteistonOmistajat",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaKiinteistonOmistajat,
+    isYllapitoOperation: true,
+  },
+  poistaKiinteistonOmistajat: {
+    name: "poistaKiinteistonOmistajat",
+    operationType: OperationType.Mutation,
+    graphql: mutations.poistaKiinteistonOmistajat,
     isYllapitoOperation: true,
   },
 };
@@ -531,6 +558,35 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.suoritaTestiKomento, {
       testiKomento,
     } as SuoritaTestiKomentoMutationVariables);
+  }
+
+  async tallennaKiinteistotunnukset(oid: string, kiinteistotunnukset: string[]): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistotunnukset, {
+      oid,
+      kiinteistotunnukset,
+    } as TallennaKiinteistotunnuksetMutationVariables);
+  }
+
+  async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, {
+      oid,
+      omistajat,
+    });
+  }
+
+  async poistaKiinteistonOmistajat(oid: string, omistajat: string[]): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.poistaKiinteistonOmistajat, {
+      oid,
+      omistajat,
+    });
+  }
+
+  async haeKiinteistonOmistajat(oid: string, sivu: number, sivuKoko?: number): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
+      oid,
+      sivu,
+      sivuKoko,
+    } as HaeKiinteistonOmistajatQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;
