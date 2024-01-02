@@ -9,10 +9,10 @@ import { dateToString, nyt } from "../util/dateUtil";
 export const BANK_HOLIDAYS_CACHE_KEY = "bankHolidays.json";
 export const BANK_HOLIDAYS_CACHE_TTL_MILLIS = 365 * 24 * 60 * 60 * 1000; // one year
 
-async function getBankHolidays(invalidateCache = true): Promise<BankHolidays> {
+async function getBankHolidays(useCachedValue = true): Promise<BankHolidays> {
   try {
     return await wrapXRayAsync("getBankHolidays", async () => {
-      const bankholidays: string[] = invalidateCache
+      const bankholidays: string[] = useCachedValue
         ? await s3Cache.get(
             BANK_HOLIDAYS_CACHE_KEY,
             BANK_HOLIDAYS_CACHE_TTL_MILLIS,
