@@ -152,8 +152,6 @@ export function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUse
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
-  projekti.oid;
-  projekti.velho;
   return {
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
     subject: perustamisOtsikko({ asiatunnus }),
