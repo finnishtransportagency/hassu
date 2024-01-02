@@ -13,7 +13,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 export type SiirraButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<TilaSiirtymaInput, "oid">;
 
-const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = (props) => {
+const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = ({ oid, reloadProjekti }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -29,16 +29,12 @@ const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = (props) => {
       <Button onClick={openDialog} id="siirra_button">
         Siirrä
       </Button>
-      <SiirraModal open={isDialogOpen} onClose={closeDialog} buttonProps={props} />
+      <SiirraModal open={isDialogOpen} onClose={closeDialog} oid={oid} reloadProjekti={reloadProjekti} />
     </>
   );
 };
 
-export const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: SiirraButtonProps }> = ({
-  buttonProps: { oid, reloadProjekti },
-  onClose,
-  ...dialogProps
-}) => {
+export const SiirraModal: VoidFunctionComponent<DialogProps & SiirraButtonProps> = ({ oid, reloadProjekti, onClose, ...dialogProps }) => {
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
 
   const mountedRef = useRef(false);
@@ -57,25 +53,25 @@ export const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: Sii
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const siirraSuunnitteluun: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await api.siirraTila({
-              oid,
-              toiminto: TilasiirtymaToiminto.PALAA,
-              tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
-            });
-            await router.push({ pathname: "/yllapito/projekti/[oid]/suunnittelu", query: { oid } });
-            await reloadProjekti();
-            showSuccessMessage("Projekti on palautettu suunnitteluvaiheeseen");
-          } catch (error) {
-            log.log("Siirrä Error", error);
-            showErrorMessage("Palaaminen suunnitteluvaiheeseen epäonnistui");
-          }
-          closeDialog(event);
-        })()
-      ),
+    (event) => {
+      const siirraTilaJaPaivitaSivu = async () => {
+        try {
+          await api.siirraTila({
+            oid,
+            toiminto: TilasiirtymaToiminto.PALAA,
+            tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+          });
+          await router.push({ pathname: "/yllapito/projekti/[oid]/suunnittelu", query: { oid } });
+          await reloadProjekti();
+          showSuccessMessage("Projekti on palautettu suunnitteluvaiheeseen");
+        } catch (error) {
+          log.log("Siirrä Error", error);
+          showErrorMessage("Palaaminen suunnitteluvaiheeseen epäonnistui");
+        }
+        closeDialog(event);
+      };
+      withLoadingSpinner(siirraTilaJaPaivitaSivu());
+    },
     [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, withLoadingSpinner]
   );
 
