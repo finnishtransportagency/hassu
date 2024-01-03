@@ -182,7 +182,6 @@ const VirkamiesHomePage = () => {
   return (
     <>
       <h1 className="vayla-title">Projektit</h1>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <SearchSection noDivider>
           <h3 className="vayla-subtitle">Etsi projekteja</h3>
@@ -414,16 +413,16 @@ const FrontPageTable = (props: FrontPageTableProps) => {
     manualPagination: true,
     manualSorting: true,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-    onPaginationChange: async (updater) => {
+    onPaginationChange: (updater) => {
       const { pageIndex } = typeof updater === "function" ? updater(pagination) : updater;
       const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
-      await fetchProjektit({ ...listaaProjektiInput, sivunumero: pageIndex });
+      fetchProjektit({ ...listaaProjektiInput, sivunumero: pageIndex });
     },
-    onSortingChange: async (updater) => {
+    onSortingChange: (updater) => {
       const sortingRules = typeof updater === "function" ? updater(sorting) : updater;
       const { id, desc } = sortingRules?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
       const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
-      await fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
+      fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
     },
     meta: {
       rowHref: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
