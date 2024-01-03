@@ -337,9 +337,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const projektiAvaimetJoissaIlmoitetuksenVastaanottajat = getUpdatedIlmoituksenVastaanottajat(projektiFromDB, projektiFromVelho.velho);
 
-    const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projektiFromDB))
-      ? await asianhallintaService.getAsiaId(oid)
-      : undefined;
+    const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projektiFromDB)) ? await haeAsiaId(oid) : undefined;
 
     const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet" | "asianhallinta"> = {
       oid,
@@ -354,6 +352,15 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
   } catch (e) {
     log.error(e);
     throw e;
+  }
+}
+
+async function haeAsiaId(oid: string) {
+  try {
+    return await asianhallintaService.getAsiaId(oid);
+  } catch (e) {
+    log.info(e, "asiaId:tä ei voitu hakea");
+    return undefined;
   }
 }
 

@@ -236,13 +236,20 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
     kayttoOikeudet: [],
   };
 
-  const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projekti))
-    ? await asianhallintaService.getAsiaId(projekti.oid)
-    : undefined;
+  const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
 
   projekti.asianhallinta = { inaktiivinen: false, asiaId };
 
   return projekti;
+}
+
+async function haeAsiaId(projekti: DBProjekti) {
+  try {
+    return await asianhallintaService.getAsiaId(projekti.oid);
+  } catch (e) {
+    log.info(e, "asiaId:tä ei voitu hakea");
+    return undefined;
+  }
 }
 
 function getGeoJSON(data: ProjektiProjekti) {
