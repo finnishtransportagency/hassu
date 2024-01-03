@@ -129,7 +129,7 @@ export class CommonKutsuAdapter {
 
   hankkeenKuvaus(): string {
     assertIsDefined(this.hankkeenKuvausParam);
-    return this.hankkeenKuvausParam[this.kieli] || "";
+    return this.hankkeenKuvausParam[this.kieli] ?? "";
   }
 
   onKyseVahaisestaMenettelystaParagraph(): string {
@@ -139,7 +139,7 @@ export class CommonKutsuAdapter {
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
-      translate("viranomainen_keskipitka." + suunnittelustaVastaavaViranomainen, this.kieli) ||
+      translate("viranomainen_keskipitka." + suunnittelustaVastaavaViranomainen, this.kieli) ??
       "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
   }
@@ -147,7 +147,7 @@ export class CommonKutsuAdapter {
   get tilaajaOrganisaatioLyhyt(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
-      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
+      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ?? "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
   }
 
@@ -157,7 +157,7 @@ export class CommonKutsuAdapter {
 
   get viranomainen(): string {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) || "";
+      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) ?? "";
       if (!kaannos) {
         throw new Error("Käännös puuttuu VAYLAVIRASTO:lle!");
       }
@@ -168,7 +168,7 @@ export class CommonKutsuAdapter {
 
   get viranomainenLyhyt(): string {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) || "";
+      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) ?? "";
       if (!kaannos) {
         throw new Error("Käännös puuttuu VAYLAVIRASTO:lle!");
       }
@@ -179,7 +179,7 @@ export class CommonKutsuAdapter {
 
   get tilaajaOrganisaatiota(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
-    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "";
+    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ?? "";
     if (!kaannos) {
       throw new Error(`Käänbös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
     }
@@ -188,7 +188,7 @@ export class CommonKutsuAdapter {
 
   get tilaajaOrganisaatiolle(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
-    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "";
+    const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ?? "";
     if (!kaannos) {
       throw new Error(`Käännös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
     }
@@ -215,7 +215,7 @@ export class CommonKutsuAdapter {
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {
-    return translate("viranomainen." + viranomainen, kieli) || "<Tilaajaorganisaation tieto puuttuu>";
+    return translate("viranomainen." + viranomainen, kieli) ?? "<Tilaajaorganisaation tieto puuttuu>";
   }
 
   viranomaisen(): string {
@@ -226,7 +226,7 @@ export class CommonKutsuAdapter {
     return (
       (this.asiakirjanMuoto == AsiakirjanMuoto.RATA
         ? translate("suunnitelma.tien_rata", this.kieli)
-        : translate("suunnitelma.tien_tie", this.kieli)) || ""
+        : translate("suunnitelma.tien_tie", this.kieli)) ?? ""
     );
   }
 
@@ -237,7 +237,7 @@ export class CommonKutsuAdapter {
       return defaultValue;
     }
     if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
-      return (this.kieli == Kieli.RUOTSI ? translate("vaylavirasto", this.kieli) : translate("vaylaviraston", this.kieli)) || defaultValue;
+      return (this.kieli == Kieli.RUOTSI ? translate("vaylavirasto", this.kieli) : translate("vaylaviraston", this.kieli)) ?? defaultValue;
     }
     return tilaajaOrganisaatio.replace("keskus", "keskuksen");
   }
@@ -251,19 +251,19 @@ export class CommonKutsuAdapter {
   }
 
   protected get suunnitelma(): string {
-    return translate("suunnitelma." + this.projektiTyyppi + ".perusmuoto", this.kieli) || "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".perusmuoto", this.kieli) ?? "";
   }
 
   get suunnitelmaa(): string {
-    return translate("suunnitelma." + this.projektiTyyppi + ".partitiivi", this.kieli) || "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".partitiivi", this.kieli) ?? "";
   }
 
   get suunnitelman(): string {
-    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) || "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) ?? "";
   }
 
   get suunnitelman_isolla(): string {
-    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi_isolla", this.kieli) || "";
+    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi_isolla", this.kieli) ?? "";
   }
 
   get suunnitelman_nimi(): string {
@@ -378,7 +378,7 @@ export class CommonKutsuAdapter {
     yhteysHenkilot?: string[] | null,
     pakotaProjariTaiKunnanEdustaja?: boolean
   ): LokalisoituYhteystieto[] {
-    let yt: Yhteystieto[] = yhteystiedot || [];
+    let yt: Yhteystieto[] = yhteystiedot ?? [];
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
@@ -456,7 +456,7 @@ export class CommonKutsuAdapter {
 
       // Function from this class
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const resolvedText = (this as any)[part];
+      const resolvedText: any = (this as any)[part];
       if (typeof resolvedText == "function") {
         return resolvedText.bind(this)();
       }
@@ -469,7 +469,7 @@ export class CommonKutsuAdapter {
     });
   }
 
-  findTextFromResolver(part: string): string | unknown {
+  findTextFromResolver(part: string): unknown {
     let textFromResolver;
     for (const templateResolver of this.templateResolvers) {
       // Function from given templateResolver
@@ -516,7 +516,7 @@ export class CommonKutsuAdapter {
     titteli,
     elyOrganisaatio,
   }: Yhteystieto): LokalisoituYhteystieto {
-    let organisaatioTeksti = organisaatio || "";
+    let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
     } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {

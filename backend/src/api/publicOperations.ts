@@ -14,7 +14,6 @@ import { apiConfig, OperationName } from "hassu-common/abstractApi";
 import { createUploadURLForFile } from "../handler/fileHandler";
 import { lisaAineistoHandler } from "../handler/lisaAineistoHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
-import { AppSyncEventArguments } from "./common";
 import { loadProjektiJulkinen } from "../projekti/projektiHandlerJulkinen";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import { log } from "../logger";
@@ -23,7 +22,7 @@ import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJu
 import { getSuomiFiKayttaja } from "../user/userService";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 
-export async function executePublicOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
+export async function executePublicOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
     const error = new Error("Yritettiin kutsua ylläpidon operaatiota julkisesta apista");
     log.error(error);
