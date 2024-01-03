@@ -182,6 +182,7 @@ export type DBProjekti = {
 
 export type Asianhallinta = {
   inaktiivinen?: boolean;
+  asiaId?: number;
 };
 
 export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;

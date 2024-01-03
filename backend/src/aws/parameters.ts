@@ -105,6 +105,14 @@ class Parameters {
     return (await this.getParameter("UspaIntegrationEnabled")) === "true";
   }
 
+  async getUspaBaseUrl(): Promise<string | undefined> {
+    return await this.getParameter("UspaBaseUrl");
+  }
+
+  async getAshaBaseUrl(): Promise<string | undefined> {
+    return await this.getParameter("AshaBaseUrl");
+  }
+
   async getAsianhallintaSQSUrl() {
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
     return this.getParamOrVariable("outputs/AsianhallintaSQSUrl", "ASIANHALLINTA_SQS_URL");

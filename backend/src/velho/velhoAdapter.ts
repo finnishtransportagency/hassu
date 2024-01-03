@@ -25,6 +25,8 @@ import { assertIsDefined } from "../util/assertions";
 import { IllegalArgumentError } from "hassu-common/error";
 import { parseDate } from "../util/dateUtil";
 import isEqual from "lodash/isEqual";
+import { asianhallintaService } from "../asianhallinta/asianhallintaService";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
 let metaDataJSON: any;
 
@@ -205,13 +207,13 @@ function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjek
   return linkitetytProjektit;
 }
 
-export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: ProjektiProjekti[]): DBProjekti {
+export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: ProjektiProjekti[]): Promise<DBProjekti> {
   const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
   const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
   const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
 
-  return {
+  const projekti: DBProjekti = {
     oid: "" + data.oid,
     versio: 1,
     tyyppi: projektiTyyppi,
@@ -232,8 +234,15 @@ export function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: Proj
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
-    asianhallinta: { inaktiivinen: false },
   };
+
+  const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projekti))
+    ? await asianhallintaService.getAsiaId(projekti.oid)
+    : undefined;
+
+  projekti.asianhallinta = { inaktiivinen: false, asiaId };
+
+  return projekti;
 }
 
 function getGeoJSON(data: ProjektiProjekti) {

@@ -5,6 +5,8 @@ import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { DBProjekti } from "../../src/database/model";
 import { kuntametadata } from "hassu-common/kuntametadata";
+import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
 
 describe.skip("Email", () => {
   it("should send test email successfully", async function () {
@@ -38,6 +40,8 @@ describe.skip("Email", () => {
       kieli: Kieli.SUOMI,
       luonnos: false,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
 
     await emailClient.sendTurvapostiEmail({

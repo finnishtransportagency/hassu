@@ -8,7 +8,7 @@ import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { DBProjekti } from "../../../src/database/model";
 import { EmailClientStub } from "../../../integrationtest/api/testUtil/util";
-import { AsianTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AsianTila, SuunnittelustaVastaavaViranomainen, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { asianhallintaService } from "../../../src/asianhallinta/asianhallintaService";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -62,7 +62,9 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
   it("sendForApprovalInternal should throw if asianhallintaintegraatio is not in correct state", async () => {
     for (const incorrectTila of incorrectAsianTila) {
       checkAsianhallintaStateStub.returns(Promise.resolve(incorrectTila));
-      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti)).to.eventually.be.rejectedWith(
+      await expect(
+        aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)
+      ).to.eventually.be.rejectedWith(
         IllegalArgumentError,
         `Suunnitelman asia ei ole valmis vientiin. Vaihe: ALOITUSKUULUTUS, tila: ${incorrectTila}`
       );
@@ -72,7 +74,8 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
 
   it("sendForApprovalInternal should not throw if asianhallintaintegraatio is in correct state", async () => {
     checkAsianhallintaStateStub.returns(Promise.resolve(AsianTila.VALMIS_VIENTIIN));
-    await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti)).to.eventually.be.fulfilled;
+    await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
+      .fulfilled;
     expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
   });
 
@@ -81,7 +84,8 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
 
     for (const tila of asianTilat) {
       checkAsianhallintaStateStub.returns(Promise.resolve(tila));
-      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti)).to.eventually.be.fulfilled;
+      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
+        .fulfilled;
     }
     expect(checkAsianhallintaStateStub.notCalled).to.be.true;
   });
@@ -92,7 +96,8 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
 
     for (const tila of asianTilat) {
       checkAsianhallintaStateStub.returns(Promise.resolve(tila));
-      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti)).to.eventually.be.fulfilled;
+      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
+        .fulfilled;
     }
     expect(checkAsianhallintaStateStub.notCalled).to.be.true;
   });
@@ -102,7 +107,8 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
 
     for (const tila of asianTilat) {
       checkAsianhallintaStateStub.returns(Promise.resolve(tila));
-      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti)).to.eventually.be.fulfilled;
+      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
+        .fulfilled;
     }
     expect(checkAsianhallintaStateStub.notCalled).to.be.true;
   });

@@ -303,6 +303,7 @@
       }
     ],
     "asianhallinta": {
+      "asiaId": 11212,
       "inaktiivinen": false
     },
     "euRahoitus": true,

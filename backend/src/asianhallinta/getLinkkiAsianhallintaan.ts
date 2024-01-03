@@ -1,0 +1,25 @@
+import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
+import { parameters } from "../aws/parameters";
+import { DBProjekti } from "../database/model";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+
+type LinkkiAsianhallintaanFunc = (projekti: DBProjekti) => Promise<string | undefined>;
+
+export const getLinkkiAsianhallintaan: LinkkiAsianhallintaanFunc = async (projekti) => {
+  const asiaId = projekti.asianhallinta?.asiaId;
+  if (!asiaId || !(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+    return undefined;
+  }
+  const baseUrl = isVaylaAsianhallinta(projekti) ? await parameters.getAshaBaseUrl() : await parameters.getUspaBaseUrl();
+  if (!baseUrl) {
+    return undefined;
+  }
+
+  return constructLinkkiAsianhallintaan(isVaylaAsianhallinta(projekti), baseUrl, asiaId);
+};
+
+export function constructLinkkiAsianhallintaan(vaylaAsianhallinta: boolean, baseUrl: string, asiaId: number): string | undefined {
+  return vaylaAsianhallinta
+    ? `${baseUrl}/group/asianhallinta/asianhallinta/-/case/${asiaId}/view`
+    : `${baseUrl}/Asia.aspx?AsiaId=${asiaId}`;
+}
