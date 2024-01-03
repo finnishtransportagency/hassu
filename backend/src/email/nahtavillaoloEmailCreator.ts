@@ -22,7 +22,7 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     assertIsDefined(julkaisu.kuulutusPaiva);
     assertIsDefined(julkaisu.hankkeenKuvaus);
     this.adapter = new NahtavillaoloVaiheKutsuAdapter({
-      ...pickCommonAdapterProps(projekti, julkaisu.hankkeenKuvaus, Kieli.SUOMI),
+      ...(await pickCommonAdapterProps(projekti, julkaisu.hankkeenKuvaus, Kieli.SUOMI)),
       ...julkaisu,
       kuulutusPaiva: julkaisu.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: await calculateEndDate({

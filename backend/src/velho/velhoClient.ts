@@ -128,7 +128,7 @@ export class VelhoClient {
         linkitResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitGet(oid);
       }
 
-      const result = adaptProjekti(response.data, linkitResponse?.data as unknown as ProjektiRekisteri.ProjektiProjekti[]);
+      const result = await adaptProjekti(response.data, linkitResponse?.data as unknown as ProjektiRekisteri.ProjektiProjekti[]);
       return result;
     } catch (e: unknown) {
       throw this.checkVelhoError(e);

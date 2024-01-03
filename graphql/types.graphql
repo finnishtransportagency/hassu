@@ -190,6 +190,7 @@ type Asianhallinta {
   aktiivinenTila: AktiivisenVaiheenAsianhallinnanTila
   inaktiivinen: Boolean!
   aktivoitavissa: Boolean!
+  linkkiAsianhallintaan: String
 }
 
 type AktiivisenVaiheenAsianhallinnanTila {

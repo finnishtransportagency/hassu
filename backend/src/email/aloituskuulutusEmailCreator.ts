@@ -18,7 +18,7 @@ export class AloituskuulutusEmailCreator extends KuulutusEmailCreator {
     assertIsDefined(aloituskuulutus.kuulutusPaiva);
     assertIsDefined(aloituskuulutus.hankkeenKuvaus);
     this.adapter = new AloituskuulutusKutsuAdapter({
-      ...pickCommonAdapterProps(projekti, aloituskuulutus.hankkeenKuvaus, Kieli.SUOMI),
+      ...(await pickCommonAdapterProps(projekti, aloituskuulutus.hankkeenKuvaus, Kieli.SUOMI)),
       ...aloituskuulutus,
       kuulutusPaiva: aloituskuulutus.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: await calculateEndDate({

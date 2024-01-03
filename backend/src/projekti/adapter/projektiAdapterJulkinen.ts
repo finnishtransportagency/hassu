@@ -66,6 +66,8 @@ import {
 } from "../../sqsEvents/projektiScheduleManager";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { jaotteleVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
   if (
@@ -116,7 +118,7 @@ class ProjektiAdapterJulkinen {
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const euRahoitusLogot = adaptLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
     const projektiScheduleManager = new ProjektiScheduleManager(dbProjekti);
-    const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+    const hyvaksymisPaatosVaihe = await ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
@@ -125,7 +127,7 @@ class ProjektiAdapterJulkinen {
       PaatosTyyppi.HYVAKSYMISPAATOS,
       kieli
     );
-    const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+    const jatkoPaatos1Vaihe = await ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos1VaiheJulkaisut,
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
@@ -134,7 +136,7 @@ class ProjektiAdapterJulkinen {
       PaatosTyyppi.JATKOPAATOS1,
       kieli
     );
-    const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+    const jatkoPaatos2Vaihe = await ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos2VaiheJulkaisut,
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
@@ -232,6 +234,8 @@ class ProjektiAdapterJulkinen {
           projekti.lyhytOsoite,
           projekti.kayttoOikeudet,
           kieli,
+          await isProjektiAsianhallintaIntegrationEnabled(projekti),
+          await getLinkkiAsianhallintaan(projekti),
           julkaisu,
           undefined,
           projekti.vahainenMenettely
@@ -335,7 +339,13 @@ class ProjektiAdapterJulkinen {
       const velho = dbProjekti.velho;
       assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti, julkaisu, kieli)
+        await createNahtavillaoloVaiheKutsuAdapterProps(
+          dbProjekti,
+          julkaisu,
+          kieli,
+          await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+          await getLinkkiAsianhallintaan(dbProjekti)
+        )
       ).userInterfaceFields;
     }
     if (nahtavillaoloSaamePDFt) {
@@ -406,7 +416,7 @@ class ProjektiAdapterJulkinen {
     return undefined;
   }
 
-  private static adaptHyvaksymisPaatosVaihe(
+  private static async adaptHyvaksymisPaatosVaihe(
     dbProjekti: DBProjekti,
     paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
@@ -414,7 +424,7 @@ class ProjektiAdapterJulkinen {
     paatosVaiheAineisto: HyvaksymisPaatosVaiheScheduleManager,
     paatosTyyppi: PaatosTyyppi,
     kieli?: KaannettavaKieli
-  ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
+  ): Promise<API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined> {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
     if (!julkaisu) {
       return undefined;
@@ -485,7 +495,14 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu, paatosTyyppi)
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(
+          dbProjekti,
+          kieli,
+          julkaisu,
+          paatosTyyppi,
+          await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+          await getLinkkiAsianhallintaan(dbProjekti)
+        )
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;

@@ -58,6 +58,9 @@ Object {
     },
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
+  "asianhallinta": Object {
+    "asiaId": undefined,
+  },
   "kayttoOikeudet": Array [
     Object {
       "elyOrganisaatio": undefined,
