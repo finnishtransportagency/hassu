@@ -32,7 +32,7 @@ export function adaptLokalisoituTekstiEiPakollinen(
     if (lokalisoituTekstiEiPakollinen?.SUOMI || lokalisoituTekstiEiPakollinen?.RUOTSI) {
       projektiAdaptationResult?.logoFilesChanged();
     }
-    return { ...rest, SUOMI: SUOMI || alkuperaisetArvot?.SUOMI || "", RUOTSI: RUOTSI || alkuperaisetArvot?.RUOTSI };
+    return { ...rest, SUOMI: SUOMI ?? alkuperaisetArvot?.SUOMI ?? "", RUOTSI: RUOTSI ?? alkuperaisetArvot?.RUOTSI };
   }
   return lokalisoituTekstiEiPakollinen;
 }

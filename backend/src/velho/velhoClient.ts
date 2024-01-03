@@ -156,7 +156,7 @@ export class VelhoClient {
                 __typename: "VelhoAineisto",
                 oid: aineisto.oid,
                 tiedosto: tiedostoNimi,
-                kuvaus: aineisto.metatiedot.kuvaus || "",
+                kuvaus: aineisto.metatiedot.kuvaus ?? "",
                 dokumenttiTyyppi,
                 muokattu: dayjs(muokattu).format(),
               };
@@ -233,7 +233,7 @@ export class VelhoClient {
   @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidGet")
   public async saveProjektiAloituskuulutusPaiva(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): Promise<void> {
     await this.saveProjekti(oid, (projekti) =>
-      applyAloitusKuulutusPaivaToVelho(projekti, aloitusKuulutusJulkaisu.kuulutusPaiva || undefined)
+      applyAloitusKuulutusPaivaToVelho(projekti, aloitusKuulutusJulkaisu.kuulutusPaiva ?? undefined)
     );
   }
 

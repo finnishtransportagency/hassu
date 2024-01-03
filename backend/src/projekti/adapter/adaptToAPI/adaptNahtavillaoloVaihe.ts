@@ -42,7 +42,7 @@ export function adaptNahtavillaoloVaihe(
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus || undefined),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus ?? undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
@@ -58,9 +58,9 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ??
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (julkaisu) {

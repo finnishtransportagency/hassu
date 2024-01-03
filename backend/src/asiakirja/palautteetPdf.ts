@@ -20,7 +20,7 @@ export class PalautteetPdf {
       title: this.projektiNimi + " palautteet",
       headers: [{ label: "Nimi" }, { label: "Kysymys tai palaute" }, { label: "Vastaanotettu" }, { label: "Liite", align: "center" }],
       rows: this.palautteet.map((p) => {
-        let kysymysTaiPalaute = p.kysymysTaiPalaute || "";
+        let kysymysTaiPalaute = p.kysymysTaiPalaute ?? "";
         if (p.yhteydenottotapaPuhelin || p.yhteydenottotapaEmail) {
           kysymysTaiPalaute += "\n\n";
           if (p.yhteydenottotapaPuhelin && p.puhelinnumero) {
@@ -30,8 +30,8 @@ export class PalautteetPdf {
             kysymysTaiPalaute += "Kansalainen toivoo yhteydenottoa sähköpostitse: " + p.sahkoposti + "\n";
           }
         }
-        const etunimi = p.etunimi?.trim() || "";
-        const sukunimi = p.sukunimi?.trim() || "";
+        const etunimi = p.etunimi?.trim() ?? "";
+        const sukunimi = p.sukunimi?.trim() ?? "";
         let nimi: string;
         if (etunimi || sukunimi) {
           nimi = p.etunimi + " " + p.sukunimi;

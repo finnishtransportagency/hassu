@@ -11,16 +11,16 @@ class AsianhallintaVientiTool {
     const julkaisut: {
       asianhallintaEventId?: string | null;
     }[] = [
-      ...(projekti.aloitusKuulutusJulkaisut || []),
-      ...(projekti.vuorovaikutusKierrosJulkaisut || []),
-      ...(projekti.nahtavillaoloVaiheJulkaisut || []),
-      ...(projekti.hyvaksymisPaatosVaiheJulkaisut || []),
+      ...(projekti.aloitusKuulutusJulkaisut ?? []),
+      ...(projekti.vuorovaikutusKierrosJulkaisut ?? []),
+      ...(projekti.nahtavillaoloVaiheJulkaisut ?? []),
+      ...(projekti.hyvaksymisPaatosVaiheJulkaisut ?? []),
     ];
 
     for (const julkaisu of julkaisut) {
       if (julkaisu?.asianhallintaEventId) {
         const synkronointi = projekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
-        if (synkronointi && synkronointi.dokumentit) {
+        if (synkronointi?.dokumentit) {
           console.log("Käynnistetään asianhallinta-synkronointi", synkronointi.asianhallintaEventId);
           await asianhallintaService.enqueueSynchronization(projekti.oid, synkronointi.asianhallintaEventId);
         }

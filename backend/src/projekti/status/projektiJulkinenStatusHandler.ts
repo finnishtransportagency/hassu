@@ -63,11 +63,9 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
       if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
-      } else {
-        if (isKuulutusVaihePaattyyPaivaInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
-          projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
-          super.handle(p); // Continue evaluating next rules
-        }
+      } else if (isKuulutusVaihePaattyyPaivaInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
+        projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;
+        super.handle(p); // Continue evaluating next rules
       }
     }
   })();
@@ -77,17 +75,17 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
       const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
       if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
         super.handle(p); // Continue evaluating next rules
-      } else {
-        if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva, "start-of-day")) {
-          projekti.status = API.Status.HYVAKSYTTY;
-          super.handle(p); // Continue evaluating next rules
-        }
+      } else if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva, "start-of-day")) {
+        projekti.status = API.Status.HYVAKSYTTY;
+        super.handle(p); // Continue evaluating next rules
       }
     }
   })();
 
+  type PaatosEndDateAndTila = HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined;
+
   const epaAktiivinen1 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
-    getPaatosVaihe(p: API.ProjektiJulkinen): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined {
+    getPaatosVaihe(p: API.ProjektiJulkinen): PaatosEndDateAndTila {
       return p.hyvaksymisPaatosVaihe;
     }
   })(true, API.Status.EPAAKTIIVINEN_1);
@@ -103,7 +101,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   })();
 
   const epaAktiivinen2 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
-    getPaatosVaihe(p: API.ProjektiJulkinen): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined {
+    getPaatosVaihe(p: API.ProjektiJulkinen): PaatosEndDateAndTila {
       return p.jatkoPaatos1Vaihe;
     }
   })(false, Status.EPAAKTIIVINEN_2);
@@ -119,7 +117,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   })();
 
   const epaAktiivinen3 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
-    getPaatosVaihe(p: API.ProjektiJulkinen): HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined {
+    getPaatosVaihe(p: API.ProjektiJulkinen): PaatosEndDateAndTila {
       return p.jatkoPaatos2Vaihe;
     }
   })(false, Status.EPAAKTIIVINEN_3);

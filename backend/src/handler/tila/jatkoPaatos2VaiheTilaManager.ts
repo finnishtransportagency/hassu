@@ -83,7 +83,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-    return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
+    return projekti.jatkoPaatos2VaiheJulkaisut ?? undefined;
   }
 
   async validateUudelleenkuulutus(

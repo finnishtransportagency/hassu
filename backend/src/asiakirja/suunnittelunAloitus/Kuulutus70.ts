@@ -95,9 +95,9 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
   asianumero_traficom(): string {
     if (this.asiakirjaTyyppi === AsiakirjaTyyppi.JATKOPAATOSKUULUTUS) {
-      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "";
     } else {
-      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "";
     }
   }
 
@@ -165,7 +165,7 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
-      const kaannos = translate("vaylavirasto", this.kieli) || "";
+      const kaannos = translate("vaylavirasto", this.kieli) ?? "";
       if (!kaannos) {
         throw new Error("Puuttuu käännös sanalta vaylavirasto");
       }

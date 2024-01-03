@@ -53,7 +53,7 @@ class AsianhallintaService {
     const body: AsianhallintaEvent = {
       oid,
       asianhallintaEventId,
-      correlationId: getCorrelationId() || uuid.v4(),
+      correlationId: getCorrelationId() ?? uuid.v4(),
       hyvaksyja: getVaylaUser()?.uid ?? undefined,
       hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined,
       asianNimi: projekti.velho?.nimi,

@@ -51,7 +51,7 @@ class TiedostoDownloadLinkService {
 
   private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
     const { jarjestys } = tiedosto;
-    const nimi: string = tiedosto.nimi || "";
+    const nimi: string = tiedosto.nimi ?? "";
     let linkki;
     if (tiedosto.tuotu) {
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
@@ -70,17 +70,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           nahtavillaolo?.aineistoNahtavilla
             ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const lisaAineistot =
       (
         await Promise.all(
           uusiLausuntoPyynto?.lisaAineistot
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -106,17 +106,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
       (
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -138,15 +138,15 @@ class TiedostoDownloadLinkService {
     const aineistot =
       (
         await Promise.all(
-          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const lisaAineistot =
       (
         await Promise.all(
-          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
@@ -167,17 +167,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           lausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
       (
         await Promise.all(
           lausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) || []
+            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
@@ -196,16 +196,16 @@ class TiedostoDownloadLinkService {
     const aineistot =
       (
         await Promise.all(
-          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const lausuntoPyynto = projekti.lausuntoPyynnot?.find((lp) => lp.legacy === params.nahtavillaoloVaiheId);
     const lisaAineistot =
       (
         await Promise.all(
-          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;

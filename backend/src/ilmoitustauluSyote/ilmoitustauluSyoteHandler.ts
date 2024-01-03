@@ -11,7 +11,7 @@ import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
 
 class IlmoitustauluSyoteHandler {
   async getFeed(kieli: KaannettavaKieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
-    const siteUrl = process.env.FRONTEND_DOMAIN_NAME || "";
+    const siteUrl = process.env.FRONTEND_DOMAIN_NAME ?? "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 

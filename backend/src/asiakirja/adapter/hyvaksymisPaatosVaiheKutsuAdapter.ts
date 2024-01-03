@@ -70,7 +70,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     hallintoOikeus: hyvaksymisPaatosVaihe.hallintoOikeus,
     euRahoitusLogot,
     ilmoituksenVastaanottajat: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat,
-    uudelleenKuulutus: hyvaksymisPaatosVaihe.uudelleenKuulutus || undefined,
+    uudelleenKuulutus: hyvaksymisPaatosVaihe.uudelleenKuulutus ?? undefined,
     suunnitteluSopimus,
     paatosTyyppi,
     viimeinenVoimassaolovuosi: hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi,

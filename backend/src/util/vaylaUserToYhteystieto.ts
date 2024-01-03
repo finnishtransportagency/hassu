@@ -8,7 +8,7 @@ export function vaylaUserToYhteystieto(
   return {
     etunimi: vaylaUser.etunimi,
     sukunimi: vaylaUser.sukunimi,
-    puhelinnumero: vaylaUser.puhelinnumero || "",
+    puhelinnumero: vaylaUser.puhelinnumero ?? "",
     sahkoposti: vaylaUser.email,
     organisaatio: vaylaUser.organisaatio,
     elyOrganisaatio: vaylaUser.elyOrganisaatio,

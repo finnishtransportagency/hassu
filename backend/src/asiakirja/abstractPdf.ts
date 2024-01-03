@@ -50,9 +50,9 @@ export abstract class AbstractPdf {
     const parts = text.split(linkExtractRegEx);
     if (parts.length == 1) {
       const strings = text.split("*");
-      if (strings.length == 1 || !options?.markupAllowed) {
+      if (strings.length === 1 || !options?.markupAllowed) {
         return this.doc.struct("P", {}, [
-          () => this.doc.text(text, { baseline: this.baseline }).moveDown(1 + (options?.spacingAfter || 0)),
+          () => this.doc.text(text, { baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0)),
         ]);
       } else {
         return this.getParagraphWithBoldText(strings, options);
@@ -77,17 +77,15 @@ export abstract class AbstractPdf {
           })
         );
         linkOpen = true;
+      } else if (linkOpen) {
+        linkOpen = false;
+        children.push(() => {
+          this.doc.fillColor("black").text(part, { link: undefined, underline: false, continued: true, baseline: this.baseline });
+        });
       } else {
-        if (linkOpen) {
-          linkOpen = false;
-          children.push(() => {
-            this.doc.fillColor("black").text(part, { link: undefined, underline: false, continued: true, baseline: this.baseline });
-          });
-        } else {
-          children.push(() => {
-            this.doc.text(part, { continued: true, baseline: this.baseline });
-          });
-        }
+        children.push(() => {
+          this.doc.text(part, { continued: true, baseline: this.baseline });
+        });
       }
     }
 
@@ -97,7 +95,7 @@ export abstract class AbstractPdf {
       });
     }
 
-    children.push(() => this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(2 + (options?.spacingAfter || 0)));
+    children.push(() => this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(2 + (options?.spacingAfter ?? 0)));
 
     return this.doc.struct("P", {}, children);
   }
@@ -124,7 +122,7 @@ export abstract class AbstractPdf {
           this.doc.text(string, { continued: true, baseline: this.baseline });
           bold = !bold;
         }
-        this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter || 0));
+        this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0));
       },
     ]);
   }

@@ -44,11 +44,11 @@ export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partia
 
   const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
-    projektiTyyppi: projekti.velho.tyyppi || undefined,
-    suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
-    asiatunnus: safeTrim(getAsiatunnus(projekti.velho) || ""),
+    projektiTyyppi: projekti.velho.tyyppi ?? undefined,
+    suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen ?? undefined,
+    asiatunnus: safeTrim(getAsiatunnus(projekti.velho) ?? ""),
     maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
-    vaihe: apiProjektiJulkinen?.status || undefined,
+    vaihe: apiProjektiJulkinen?.status ?? undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
@@ -84,15 +84,15 @@ export function adaptProjektiToJulkinenIndex(
   const docWithoutOid: Omit<ProjektiDocument, "oid"> = {
     nimi: safeTrim(nimi),
     hankkeenKuvaus,
-    projektiTyyppi: projekti.velho.tyyppi || undefined,
+    projektiTyyppi: projekti.velho.tyyppi ?? undefined,
     kunnat: projekti.velho.kunnat?.map(kuntametadata.idForKuntaName),
     maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
-    vaihe: projekti.status || undefined,
+    vaihe: projekti.status ?? undefined,
     viimeinenTilaisuusPaattyy: findViimeinenTilaisuusPaattyy(projekti.vuorovaikutukset),
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
-    paivitetty: projekti.paivitetty || undefined,
+    paivitetty: projekti.paivitetty ?? undefined,
     viimeisinJulkaisu: findLastPublicJulkaisuDate(projekti),
-    publishTimestamp: publishTimestamp || dayjs(0).format(),
+    publishTimestamp: publishTimestamp ?? dayjs(0).format(),
     saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
   };
   return docWithoutOid;
@@ -112,7 +112,7 @@ function getBaseDataForIndexing(
       throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
     }
     // Use texts from projekti
-    hankkeenKuvaus = vuorovaikutus?.hankkeenKuvaus?.[kieli] || undefined;
+    hankkeenKuvaus = vuorovaikutus?.hankkeenKuvaus?.[kieli] ?? undefined;
     nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
   } else if (aloitusKuulutusJulkaisu) {
     if (!aloitusKuulutusJulkaisu.hankkeenKuvaus) {
@@ -123,7 +123,7 @@ function getBaseDataForIndexing(
       throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva puuttuu");
     }
     // Use texts from aloituskuulutusjulkaisu
-    hankkeenKuvaus = aloitusKuulutusJulkaisu.hankkeenKuvaus[kieli] || undefined;
+    hankkeenKuvaus = aloitusKuulutusJulkaisu.hankkeenKuvaus[kieli] ?? undefined;
     nimi = selectNimi(aloitusKuulutusJulkaisu.velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
     publishTimestamp = parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format();
   }
@@ -153,7 +153,7 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
     log.error(results);
     throw new Error("Projektihaussa tapahtui virhe");
   }
-  return results.hits?.hits?.map(mapProjektiDocumentHitToHakutulosDokumentti) || [];
+  return results.hits?.hits?.map(mapProjektiDocumentHitToHakutulosDokumentti) ?? [];
 }
 
 function safeTrim(s: string): string {
@@ -165,7 +165,7 @@ function selectNimi(nimi: string | null | undefined, kielitiedot: API.Kielitiedo
     if (kieli == API.Kieli.SUOMI) {
       return nimi;
     } else {
-      return kielitiedot.projektinNimiVieraskielella || undefined;
+      return kielitiedot.projektinNimiVieraskielella ?? undefined;
     }
   }
 }
@@ -196,7 +196,7 @@ function findLastPublicJulkaisuDate(projekti: API.ProjektiJulkinen): string | un
   if (!projekti.status) {
     return undefined;
   }
-  return julkaisuDateForStatus[projekti.status](projekti) || undefined;
+  return julkaisuDateForStatus[projekti.status](projekti) ?? undefined;
 }
 
 function getOikeusMuokata(muokkaajat: string[] | undefined) {
@@ -205,7 +205,7 @@ function getOikeusMuokata(muokkaajat: string[] | undefined) {
     return false;
   }
 
-  const userIsMuokkaja = [...(muokkaajat || [])].includes(user.uid);
+  const userIsMuokkaja = [...(muokkaajat ?? [])].includes(user.uid);
   const userIsAdmin = !!user?.roolit?.includes("hassu_admin");
 
   return userIsMuokkaja || userIsAdmin;

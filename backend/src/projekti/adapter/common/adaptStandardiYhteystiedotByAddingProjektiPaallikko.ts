@@ -8,7 +8,7 @@ export function adaptStandardiYhteystiedotByAddingProjektiPaallikko(
   yhteystiedot: StandardiYhteystiedot | undefined,
   suunnitteluSopimus?: SuunnitteluSopimus | null
 ): API.StandardiYhteystiedot {
-  const yhteysHenkilot = yhteystiedot?.yhteysHenkilot || [];
+  const yhteysHenkilot = yhteystiedot?.yhteysHenkilot ?? [];
   const projektipaallikko = kayttoOikeudet.find(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
   if (suunnitteluSopimus?.yhteysHenkilo && !yhteysHenkilot.find((kayttajatunnus) => kayttajatunnus === suunnitteluSopimus.yhteysHenkilo)) {
     yhteysHenkilot.push(suunnitteluSopimus.yhteysHenkilo);

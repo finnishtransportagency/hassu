@@ -9,8 +9,8 @@ const XRAY_ENV_NAME = "_X_AMZN_TRACE_ID";
 const TRACE_ID_REGEX = /^Root=(.+);Parent=(.+);/;
 
 export const getCorrelationId = (): string | undefined => {
-  const tracingInfo = process.env[XRAY_ENV_NAME] || "";
-  const matches = tracingInfo.match(TRACE_ID_REGEX) || ["", "", ""];
+  const tracingInfo = process.env[XRAY_ENV_NAME] ?? "";
+  const matches = tracingInfo.match(TRACE_ID_REGEX) ?? ["", "", ""];
 
   const correlationId = matches[1];
   if (correlationId) {
@@ -61,7 +61,7 @@ export function getAxios(): AxiosStatic {
 
 export function setupLambdaMonitoringMetaData(subsegment: AWSXRay.Subsegment | undefined): void {
   const correlationId = getCorrelationId();
-  subsegment?.addAnnotation("env", config.env || "undefined");
+  subsegment?.addAnnotation("env", config.env ?? "undefined");
   if (correlationId) {
     subsegment?.addAnnotation("correlationId", correlationId);
   }

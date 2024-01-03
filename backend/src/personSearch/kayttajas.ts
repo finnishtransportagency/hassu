@@ -48,8 +48,8 @@ export class Kayttajas {
           map[kayttaja.uid] = {
             etuNimi: kayttaja.etunimi,
             sukuNimi: kayttaja.sukunimi,
-            organisaatio: kayttaja.organisaatio || undefined,
-            puhelinnumero: kayttaja.puhelinnumero || undefined,
+            organisaatio: kayttaja.organisaatio ?? undefined,
+            puhelinnumero: kayttaja.puhelinnumero ?? undefined,
             email: [kayttaja.email],
           };
         }

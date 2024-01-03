@@ -86,7 +86,7 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
           return this.kieli == Kieli.RUOTSI
             ? this.kutsuAdapter.text("viranomainen." + viranomainen.nimi)
             : this.kutsuAdapter.text("viranomaiselle." + viranomainen.nimi);
-        }) || []
+        }) ?? []
       ),
       this.kieli
     );
@@ -125,7 +125,7 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
-      const kaannos = translate("vaylavirasto", this.kieli) || "";
+      const kaannos = translate("vaylavirasto", this.kieli) ?? "";
       if (!kaannos) {
         throw new Error("Puuttuu käännös sanalta vaylavirasto");
       }

@@ -38,8 +38,8 @@ export type IdentifyUserFunc = (event: AppSyncResolverEvent<unknown>) => Promise
 const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<unknown>): Promise<NykyinenKayttaja | undefined> => {
   const headers = event.request?.headers;
 
-  if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
-    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] || "", config.cognitoURL);
+  if (headers?.["x-iam-accesstoken"] && config.cognitoURL) {
+    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] ?? "", config.cognitoURL);
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {
@@ -203,7 +203,7 @@ function isHassuAdmin(kayttaja: KayttajaPermissions) {
 
 // Role: kayttaja
 function isHassuKayttaja(kayttaja: KayttajaPermissions) {
-  return kayttaja.roolit?.includes("hassu_kayttaja") || isHassuAdmin(kayttaja);
+  return kayttaja.roolit?.includes("hassu_kayttaja") ?? isHassuAdmin(kayttaja);
 }
 
 export function requirePermissionLuku(): NykyinenKayttaja {

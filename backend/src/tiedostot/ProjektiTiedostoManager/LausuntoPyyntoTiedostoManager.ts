@@ -19,8 +19,8 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | undefined | null
   ) {
     super(oid, vaihe);
-    this.nahtavillaoloVaihe = nahtavillaoloVaihe || undefined;
-    this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut || undefined;
+    this.nahtavillaoloVaihe = nahtavillaoloVaihe ?? undefined;
+    this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut ?? undefined;
   }
 
   getLadatutTiedostot(vaihe: LausuntoPyynto[]): LadattuTiedostoPathsPair[] {

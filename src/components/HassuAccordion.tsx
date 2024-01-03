@@ -16,14 +16,7 @@ const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
   <MuiAccordionSummary
-    expandIcon={
-      <FontAwesomeIcon
-        icon="angle-right"
-        className="text-primary-dark"
-        size="lg"
-        style={{ margin: "auto", height: "100%" }}
-      />
-    }
+    expandIcon={<FontAwesomeIcon icon="angle-right" className="text-primary-dark" size="lg" style={{ margin: "auto", height: "100%" }} />}
     {...props}
   />
 ))(({ theme }) => ({
@@ -64,22 +57,20 @@ export default function CustomizedAccordions(props: Props) {
   const { items, singular } = props;
   const uncontrolledExpanded = useState<Key[]>([]);
 
-  const [expanded, setExpanded] = props.expandedState || uncontrolledExpanded;
+  const [expanded, setExpanded] = props.expandedState ?? uncontrolledExpanded;
 
   const handleChange = (panel: Key) => (_: React.SyntheticEvent, newExpanded: boolean) => {
     if (singular) {
       setExpanded(newExpanded ? [panel] : []);
     } else {
-      setExpanded(
-        newExpanded ? [...expanded, panel] : (expanded as number[] | []).filter((panelId) => panelId !== panel)
-      );
+      setExpanded(newExpanded ? [...expanded, panel] : (expanded as number[] | []).filter((panelId) => panelId !== panel));
     }
   };
 
   return (
     <div>
       {items.map((item, index) => {
-        const key = item.id || index;
+        const key = item.id ?? index;
         return (
           <Accordion
             key={key}

@@ -21,7 +21,7 @@ export class ImportContext {
       throw new Error("Projektin statusta ei voitu määrittää: " + this.oid);
     }
     this._projektiStatus = projektiStatus;
-    this._julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(this.dbProjekti))?.status || undefined;
+    this._julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(this.dbProjekti))?.status ?? undefined;
     return this;
   }
 

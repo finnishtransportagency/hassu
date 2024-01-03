@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";

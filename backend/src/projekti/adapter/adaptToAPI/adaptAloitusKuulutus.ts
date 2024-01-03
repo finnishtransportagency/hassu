@@ -49,9 +49,9 @@ export function adaptAloitusKuulutusJulkaisu(
   aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[] | null | undefined
 ): API.AloitusKuulutusJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.PERUUTETTU) ||
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ??
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.PERUUTETTU) ??
     findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
   if (!julkaisu) {
     return undefined;
