@@ -176,7 +176,7 @@ export class SimpleHyvaksymisPaatosVaiheTilaManager extends SimpleAbstractHyvaks
 
   async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
-    if (julkaisu && julkaisu.aineistoMuokkaus) {
+    if (julkaisu?.aineistoMuokkaus) {
       const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
       assertIsDefined(hyvaksymisPaatosVaihe, "Hyväksymispäätösvaiheen pitäisi olla määritelty, jos julkaisukin on");
       hyvaksymisPaatosVaihe.palautusSyy = syy;
@@ -191,7 +191,7 @@ export class SimpleHyvaksymisPaatosVaiheTilaManager extends SimpleAbstractHyvaks
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-    return projekti.hyvaksymisPaatosVaiheJulkaisut || undefined;
+    return projekti.hyvaksymisPaatosVaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {
     return new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(kuulutus);
@@ -212,7 +212,7 @@ export class SimpleJatkoPaatos1VaiheTilaManager extends SimpleAbstractHyvaksymis
 
   async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findJatkoPaatos1VaiheWaitingForApproval(projekti);
-    if (julkaisu && julkaisu.aineistoMuokkaus) {
+    if (julkaisu?.aineistoMuokkaus) {
       const jatkoPaatos1Vaihe = this.getVaihe(projekti);
       assertIsDefined(jatkoPaatos1Vaihe, "Jatkopäätös1vaiheen pitäisi olla määritelty, jos julkaisukin on");
       jatkoPaatos1Vaihe.palautusSyy = syy;
@@ -227,7 +227,7 @@ export class SimpleJatkoPaatos1VaiheTilaManager extends SimpleAbstractHyvaksymis
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-    return projekti.jatkoPaatos1VaiheJulkaisut || undefined;
+    return projekti.jatkoPaatos1VaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {
     return new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(kuulutus);
@@ -248,7 +248,7 @@ export class SimpleJatkoPaatos2VaiheTilaManager extends SimpleAbstractHyvaksymis
 
   async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findJatkoPaatos2VaiheWaitingForApproval(projekti);
-    if (julkaisu && julkaisu.aineistoMuokkaus) {
+    if (julkaisu?.aineistoMuokkaus) {
       const jatkoPaatos2Vaihe = this.getVaihe(projekti);
       assertIsDefined(jatkoPaatos2Vaihe, "Jatkopäätös2vaiheen pitäisi olla määritelty, jos julkaisukin on");
       jatkoPaatos2Vaihe.palautusSyy = syy;
@@ -263,7 +263,7 @@ export class SimpleJatkoPaatos2VaiheTilaManager extends SimpleAbstractHyvaksymis
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
-    return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
+    return projekti.jatkoPaatos2VaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {
     return new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(kuulutus);

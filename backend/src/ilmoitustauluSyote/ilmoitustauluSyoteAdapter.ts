@@ -16,10 +16,12 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
 import { sortedUniq } from "lodash";
 
+type LyhytOsoite = string | undefined | null;
+
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
     oid: string,
-    lyhytOsoite: string | undefined | null,
+    lyhytOsoite: LyhytOsoite,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -43,7 +45,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
-    const url = linkAloituskuulutus({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
+    const url = linkAloituskuulutus({ oid, lyhytOsoite: lyhytOsoite ?? undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: getTitle(kieli, nimi),
@@ -67,7 +69,7 @@ class IlmoitustauluSyoteAdapter {
 
   adaptVuorovaikutusKierrosJulkaisu(
     oid: string,
-    lyhytOsoite: string | undefined | null,
+    lyhytOsoite: LyhytOsoite,
     vuorovaikutus: VuorovaikutusJulkinen,
     kieli: Kieli,
     kielitiedot: Kielitiedot | null | undefined,
@@ -137,7 +139,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
-    const url = linkNahtavillaOlo({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
+    const url = linkNahtavillaOlo({ oid, lyhytOsoite: lyhytOsoite ?? undefined }, kieli);
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
@@ -185,7 +187,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
-    const url = linkHyvaksymisPaatos({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
+    const url = linkHyvaksymisPaatos({ oid, lyhytOsoite: lyhytOsoite ?? undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: getTitle(kieli, nimi),

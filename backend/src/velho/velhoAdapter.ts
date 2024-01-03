@@ -316,15 +316,15 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
   const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
   if (hyvaksymispaatos) {
-    kasittelynTila.hyvaksymispaatos = kasittelynTila.hyvaksymispaatos || {};
+    kasittelynTila.hyvaksymispaatos = kasittelynTila.hyvaksymispaatos ?? {};
     kasittelynTila.hyvaksymispaatos.paatoksenPvm = objectToString(hyvaksymispaatos.annettu);
     kasittelynTila.hyvaksymispaatos.asianumero = objectToString(ominaisuudet["asiatunnus-traficom"]);
     if (hyvaksymispaatos.jatkopaatos?.["ensimmainen-annettu"]) {
-      kasittelynTila.ensimmainenJatkopaatos = kasittelynTila.ensimmainenJatkopaatos || {};
+      kasittelynTila.ensimmainenJatkopaatos = kasittelynTila.ensimmainenJatkopaatos ?? {};
       kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm = objectToString(hyvaksymispaatos.jatkopaatos["ensimmainen-annettu"]);
     }
     if (hyvaksymispaatos.jatkopaatos?.["toinen-annettu"]) {
-      kasittelynTila.toinenJatkopaatos = kasittelynTila.toinenJatkopaatos || {};
+      kasittelynTila.toinenJatkopaatos = kasittelynTila.toinenJatkopaatos ?? {};
       kasittelynTila.toinenJatkopaatos.paatoksenPvm = objectToString(hyvaksymispaatos.jatkopaatos["toinen-annettu"]);
     }
   }
@@ -370,7 +370,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
       "palautettu-laatijalle": null,
       osapaatos: null,
     };
-    ominaisuudet.hyvaksymispaatos = ominaisuudet.hyvaksymispaatos || defaultHyvaksymisPaatos;
+    ominaisuudet.hyvaksymispaatos = ominaisuudet.hyvaksymispaatos ?? defaultHyvaksymisPaatos;
     const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
     assertIsDefined(hyvaksymispaatos);
     setIfDefined(params.hyvaksymispaatos?.paatoksenPvm, (value) => (hyvaksymispaatos.annettu = toLocalDate(value)));
@@ -396,7 +396,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
         ominaisuudet.lainvoimaisuus = { alkaen: toLocalDate(params.lainvoimaAlkaen), paattyen: toLocalDate(params.lainvoimaPaattyen) };
       }
     }
-    if (params.korkeinHallintoOikeus && params.korkeinHallintoOikeus.hyvaksymisPaatosKumottu !== undefined) {
+    if (params.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu !== undefined) {
       const kho: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus = {
         "hyvaksymispaatos-kumottu": params.korkeinHallintoOikeus.hyvaksymisPaatosKumottu,
         paatos: null,
@@ -407,7 +407,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
         (value) =>
           (kho["valipaatos"] = {
             annettu: value.paiva ? toLocalDate(value.paiva) : null,
-            sisalto: value.sisalto || null,
+            sisalto: value.sisalto ?? null,
           })
       );
       setIfDefined(
@@ -415,12 +415,12 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
         (value) =>
           (kho["paatos"] = {
             annettu: value.paiva ? toLocalDate(value.paiva) : null,
-            sisalto: value.sisalto || null,
+            sisalto: value.sisalto ?? null,
           })
       );
       ominaisuudet["korkein-hallinto-oikeus"] = kho;
     }
-    if (params.hallintoOikeus && params.hallintoOikeus.hyvaksymisPaatosKumottu !== undefined) {
+    if (params.hallintoOikeus?.hyvaksymisPaatosKumottu !== undefined) {
       const ho: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus = {
         "hyvaksymispaatos-kumottu": params.hallintoOikeus.hyvaksymisPaatosKumottu,
         paatos: null,
@@ -431,7 +431,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
         (value) =>
           (ho["valipaatos"] = {
             annettu: value.paiva ? toLocalDate(value.paiva) : null,
-            sisalto: value.sisalto || null,
+            sisalto: value.sisalto ?? null,
           })
       );
       setIfDefined(
@@ -439,7 +439,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
         (value) =>
           (ho["paatos"] = {
             annettu: value.paiva ? toLocalDate(value.paiva) : null,
-            sisalto: value.sisalto || null,
+            sisalto: value.sisalto ?? null,
           })
       );
       ominaisuudet["hallinto-oikeus"] = ho;

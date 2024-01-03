@@ -6,10 +6,9 @@ import { ErrorResponse } from "apollo-link-error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { GraphQLError } from "graphql";
-import { NoHassuAccessError, NoVaylaAuthenticationError } from "hassu-common/error";
+import { NoHassuAccessError, NoVaylaAuthenticationError, SimultaneousUpdateError } from "hassu-common/error";
 import Cookies from "js-cookie";
 import { generateErrorMessage } from "../util/errorMessageUtil";
-import { SimultaneousUpdateError } from "hassu-common/error";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
 

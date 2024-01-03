@@ -10,7 +10,7 @@ export type HassuDialogProps = {
 const HassuDialog = (props: HassuDialogProps): ReactElement => {
   const { children, title, hideCloseButton, PaperProps, ...dialogProps } = props;
 
-  const { sx: paperSx, ...paperProps } = PaperProps || {};
+  const { sx: paperSx, ...paperProps } = PaperProps ?? {};
 
   return (
     <Dialog

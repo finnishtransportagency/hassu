@@ -146,7 +146,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
       ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
       vuorovaikutusTilaisuudet,
     };
-    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut || [];
+    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut ?? [];
     const affectedJulkaisu = vuorovaikutusKierrosJulkaisut.find((kierros) => kierros.id == input.vuorovaikutusNumero);
     if (!affectedJulkaisu) {
       throw new IllegalArgumentError("Ei löydy julkaisua annetulla id:llä!");
@@ -382,7 +382,7 @@ function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velh
         if (!oldVuorovaikutusKierros || vuorovaikutusNumero === undefined) {
           throw new Error("Vuorovaikutuskierrokselta puuttuu vuorovaikutusnumero");
         }
-        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset || [];
+        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset ?? [];
         dataToSave[vaiheKey] = {
           ...oldVuorovaikutusKierros,
           vuorovaikutusNumero,
@@ -394,7 +394,7 @@ function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velh
         if (!oldVaiheData || id === undefined) {
           throw new Error(`'${vaiheKey}' vaiheelta puuttuu id-tieto`);
         }
-        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset || [];
+        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset ?? [];
         dataToSave[vaiheKey] = {
           ...oldVaiheData,
           id,
@@ -413,9 +413,9 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
   const kunnat: IlmoituksenVastaanottajat["kunnat"] = defaultKunnat?.map((defaultKunta) => {
     const vanhaKuntatieto = vanhatKuntatiedot?.find((kunta) => kunta.id === defaultKunta.id);
     return {
-      ...(vanhaKuntatieto || {}),
+      ...(vanhaKuntatieto ?? {}),
       id: defaultKunta.id,
-      sahkoposti: vanhaKuntatieto?.sahkoposti || defaultKunta.sahkoposti,
+      sahkoposti: vanhaKuntatieto?.sahkoposti ?? defaultKunta.sahkoposti,
     };
   });
   return kunnat;

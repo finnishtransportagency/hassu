@@ -99,8 +99,8 @@ class EmailClient {
 
     const smtpConfig = await getSMTPConfig();
 
-    const to = config.emailsTo || options.to;
-    const cc = config.emailsTo || options.cc;
+    const to = config.emailsTo ?? options.to;
+    const cc = config.emailsTo ?? options.cc;
     const from = smtpConfig.EMAILS_FROM;
     const mailOptions = {
       from,

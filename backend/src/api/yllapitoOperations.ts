@@ -49,11 +49,10 @@ import { listKirjaamoOsoitteet } from "../kirjaamoOsoitteet/kirjaamoOsoitteetHan
 import { palauteHandler } from "../palaute/palauteHandler";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
-import { AppSyncEventArguments } from "./common";
 import { testHandler } from "../testing/testHandler";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 
-export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
+export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
     const error = new Error("Yritettiin kutsua julkista operaatiota ylläpidon apista");
     log.error(error);

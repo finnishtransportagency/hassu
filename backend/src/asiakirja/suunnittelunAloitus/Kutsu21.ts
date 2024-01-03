@@ -22,7 +22,7 @@ export class Kutsu21 {
     kieli,
     suunnitteluSopimus,
   }: YleisotilaisuusKutsuPdfOptions) {
-    if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
+    if (!(velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli;
@@ -46,7 +46,7 @@ export class Kutsu21 {
       kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu,
       hankkeenKuvaus: vuorovaikutusKierrosJulkaisu.hankkeenKuvaus,
-      suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined,
+      suunnitteluSopimus: suunnitteluSopimusJulkaisu ?? undefined,
     });
   }
 

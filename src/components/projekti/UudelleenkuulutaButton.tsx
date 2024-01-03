@@ -15,7 +15,7 @@ export type UudelleenkuulutaButtonProps = { reloadProjekti: KeyedMutator<Projekt
   "oid" | "tyyppi"
 >;
 
-const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps> = (props) => {
+const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps> = ({ oid, reloadProjekti, tyyppi }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -31,13 +31,15 @@ const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps>
       <Button onClick={openDialog} id="uudelleenkuuluta_button">
         Uudelleenkuuluta
       </Button>
-      <UudelleenkuulutaModal open={isDialogOpen} onClose={closeDialog} buttonProps={props} />
+      <UudelleenkuulutaModal open={isDialogOpen} onClose={closeDialog} oid={oid} reloadProjekti={reloadProjekti} tyyppi={tyyppi} />
     </>
   );
 };
 
-export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
-  buttonProps: { oid, reloadProjekti, tyyppi },
+export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & UudelleenkuulutaButtonProps> = ({
+  oid,
+  reloadProjekti,
+  tyyppi,
   onClose,
   ...dialogProps
 }) => {
@@ -50,7 +52,7 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) =>
+    (event) => {
       withLoadingSpinner(
         (async () => {
           try {
@@ -67,34 +69,33 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
           }
           closeDialog(event);
         })()
-      ),
+      );
+    },
     [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi, withLoadingSpinner]
   );
 
   return (
-    <>
-      <HassuDialog title="Uudelleenkuuluta kuulutus" onClose={onClose} {...dialogProps}>
-        <DialogContent>
-          <p>
-            Olet avaamassa kuulutusta uudelleenkuulutettavaksi. Tarkastathan projektipäälliköltä ennen uuden kuulutuksen avaamista, että
-            olemassaolevan kuulutuksen pdf-tiedostot on viety asianhallintaan. Avaa suunnitelma uudelleenkuulutettavaksi vasta, kun olet
-            saanut vahvistuksen tiedostojen viennistä asianhallintaan.
-          </p>
-          <p>
-            Klikkaamalla Kyllä -painiketta vahvistat kuulutuksen avaamisen muokattavaksi. Kuulutus avataan muokkaustilassa automaattisesti
-            painikkeen klikkaamisen jälkeen.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" id="avaa_uudelleenkuulutettavaksi" primary onClick={avaaUudelleenkuulutettavaksi}>
-            Kyllä
-          </Button>
-          <Button type="button" id="peruuta_avaa_uudelleenkuulutettavaksi" onClick={closeDialog}>
-            Peruuta
-          </Button>
-        </DialogActions>
-      </HassuDialog>
-    </>
+    <HassuDialog title="Uudelleenkuuluta kuulutus" onClose={onClose} {...dialogProps}>
+      <DialogContent>
+        <p>
+          Olet avaamassa kuulutusta uudelleenkuulutettavaksi. Tarkastathan projektipäälliköltä ennen uuden kuulutuksen avaamista, että
+          olemassaolevan kuulutuksen pdf-tiedostot on viety asianhallintaan. Avaa suunnitelma uudelleenkuulutettavaksi vasta, kun olet
+          saanut vahvistuksen tiedostojen viennistä asianhallintaan.
+        </p>
+        <p>
+          Klikkaamalla Kyllä -painiketta vahvistat kuulutuksen avaamisen muokattavaksi. Kuulutus avataan muokkaustilassa automaattisesti
+          painikkeen klikkaamisen jälkeen.
+        </p>
+      </DialogContent>
+      <DialogActions>
+        <Button type="button" id="avaa_uudelleenkuulutettavaksi" primary onClick={avaaUudelleenkuulutettavaksi}>
+          Kyllä
+        </Button>
+        <Button type="button" id="peruuta_avaa_uudelleenkuulutettavaksi" onClick={closeDialog}>
+          Peruuta
+        </Button>
+      </DialogActions>
+    </HassuDialog>
   );
 };
 

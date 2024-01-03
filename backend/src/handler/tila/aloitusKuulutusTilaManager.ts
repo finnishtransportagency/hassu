@@ -198,7 +198,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   getJulkaisut(projekti: DBProjekti) {
-    return projekti.aloitusKuulutusJulkaisut || undefined;
+    return projekti.aloitusKuulutusJulkaisut ?? undefined;
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {

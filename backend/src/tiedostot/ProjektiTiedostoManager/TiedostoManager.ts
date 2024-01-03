@@ -10,7 +10,7 @@ export abstract class TiedostoManager<T> {
 
   constructor(oid: string, vaihe: T | undefined | null) {
     this.oid = oid;
-    this.vaihe = vaihe || undefined;
+    this.vaihe = vaihe ?? undefined;
     this.projektiPaths = new ProjektiPaths(oid);
   }
 

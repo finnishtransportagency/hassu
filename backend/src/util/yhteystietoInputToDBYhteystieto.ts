@@ -15,8 +15,8 @@ export function yhteystietoInputToDBYhteystieto({
     puhelinnumero,
     sahkoposti,
     sukunimi,
-    kunta: kunta || undefined,
-    organisaatio: organisaatio || "",
-    titteli: titteli || undefined,
+    kunta: kunta ?? undefined,
+    organisaatio: organisaatio ?? "",
+    titteli: titteli ?? undefined,
   };
 }

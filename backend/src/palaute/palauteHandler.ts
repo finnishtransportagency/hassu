@@ -22,7 +22,7 @@ class PalauteHandler {
     requirePermissionLuku();
     setLogContextOid(oid);
     log.info("listaaPalautteet");
-    const palautteet = (await feedbackDatabase.listFeedback(oid)) || [];
+    const palautteet = (await feedbackDatabase.listFeedback(oid)) ?? [];
     let apiPalautteet = adaptPalautteetToAPI(palautteet);
     if (apiPalautteet && apiPalautteet.length > 0) {
       apiPalautteet = orderBy(apiPalautteet, ["vastaanotettu"], ["desc"]);
@@ -38,9 +38,9 @@ class PalauteHandler {
     requirePermissionLuku();
     setLogContextOid(oid);
     log.info("lataaPalautteetPDF");
-    const palautteet = (await feedbackDatabase.listFeedback(oid)) || [];
+    const palautteet = (await feedbackDatabase.listFeedback(oid)) ?? [];
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
-    return pdfGeneratorClient.createPalautteetPDF(projekti?.velho?.nimi || "", palautteet);
+    return pdfGeneratorClient.createPalautteetPDF(projekti?.velho?.nimi ?? "", palautteet);
   }
 }
 

@@ -155,7 +155,7 @@ export abstract class KuulutusTilaManager<
     const uudelleenKuulutus = julkinenUudelleenKuulutus
       ? {
           tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
-          alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+          alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva ?? undefined,
         }
       : {
           tila: UudelleenkuulutusTila.PERUUTETTU,
@@ -170,7 +170,7 @@ export abstract class KuulutusTilaManager<
 
   private getUpdatedVaiheTiedotForAineistoMuokkaus(projekti: DBProjekti, kuulutusLuonnos: T, viimeisinJulkaisu: Y, julkaisut: Y[]) {
     const aineistoMuokkaus = {
-      alkuperainenHyvaksymisPaiva: viimeisinJulkaisu.hyvaksymisPaiva || undefined,
+      alkuperainenHyvaksymisPaiva: viimeisinJulkaisu.hyvaksymisPaiva ?? undefined,
     };
 
     const uusiId = julkaisut.length + 1;

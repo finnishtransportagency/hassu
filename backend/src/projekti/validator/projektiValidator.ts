@@ -10,8 +10,6 @@ import {
   AloitusKuulutusInput,
   HyvaksymisPaatosVaiheInput,
   KayttajaTyyppi,
-  LausuntoPyynnonTaydennysInput,
-  LausuntoPyyntoInput,
   MuokkausTila,
   NahtavillaoloVaiheInput,
   Projekti,
@@ -248,7 +246,7 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, projekti: Projekti, i
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
   const nbr = input.vuorovaikutusKierros?.vuorovaikutusNumero;
-  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) => id !== undefined) || [0];
+  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) => id !== undefined) ?? [0];
   const suurinJulkaisuId = Math.max(...julkaisujenIdt);
   if (!projekti.vuorovaikutusKierros && nbr !== undefined && nbr !== suurinJulkaisuId + 1) {
     throw new IllegalArgumentError(
@@ -260,7 +258,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
   }
   const julkaisupaiva = input.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva;
   const edellisenJulkaisupaiva = projekti.vuorovaikutusKierrosJulkaisut?.find(
-    (julkaisu) => julkaisu.id === (nbr || 1) - 1
+    (julkaisu) => julkaisu.id === (nbr ?? 1) - 1
   )?.vuorovaikutusJulkaisuPaiva;
   if (julkaisupaiva && edellisenJulkaisupaiva && dayjs(julkaisupaiva).isBefore(edellisenJulkaisupaiva, "day")) {
     throw new IllegalArgumentError("Uutta vuorovaikutuskierrosta ei voi julkaista ennen edellistä!");
@@ -270,7 +268,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
 function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   validateMuokkaustilaAllowsInput(projekti.nahtavillaoloVaihe, projekti.nahtavillaoloVaiheJulkaisut, input.nahtavillaoloVaihe);
 
-  const { aineistoNahtavilla: aineistoNahtavilla, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
+  const { aineistoNahtavilla, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe ?? {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
 
   const aineistotPresent = aineistoNahtavilla?.length;
@@ -324,7 +322,7 @@ function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiProjekti: 
   ];
 
   paatosKeyStatusArray.forEach(([key, status]) => {
-    const { aineistoNahtavilla, hyvaksymisPaatos, ...kuulutuksenTiedot } = input[key] || {};
+    const { aineistoNahtavilla, hyvaksymisPaatos, ...kuulutuksenTiedot } = input[key] ?? {};
     const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
     const aineistotPresent = !!aineistoNahtavilla?.length;
     const paatosAineistoPresent = !!hyvaksymisPaatos?.length;

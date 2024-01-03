@@ -64,7 +64,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
         } else {
           return Promise.resolve(true);
         }
-      }, Promise.resolve(true))) || true
+      }, Promise.resolve(true))) ?? true
     );
   }
 
@@ -93,7 +93,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
           }
         });
 
-        const aineistot: Aineisto[] = julkaisu.aineistot || [];
+        const aineistot: Aineisto[] = julkaisu.aineistot ?? [];
         if (aineistot && (await this.deleteAineistot(aineistot))) {
           modifiedJulkaisut.add(julkaisu);
         }
@@ -110,7 +110,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
     asianhallintaEventId: string | null | undefined
   ): AsianhallintaSynkronointi | undefined {
     const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
-    if (!julkaisu || !julkaisu.asianhallintaEventId) {
+    if (!julkaisu?.asianhallintaEventId) {
       // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
       return;
     }

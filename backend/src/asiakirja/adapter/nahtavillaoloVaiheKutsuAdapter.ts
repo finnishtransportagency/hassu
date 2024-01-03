@@ -32,7 +32,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   const kirjaamoOsoitteet = await kirjaamoOsoitteetService.listKirjaamoOsoitteet();
   return {
     oid,
-    lyhytOsoite: lyhytOsoite || undefined,
+    lyhytOsoite: lyhytOsoite ?? undefined,
     kayttoOikeudet,
     kieli,
     kielitiedot: julkaisu.kielitiedot,
@@ -41,7 +41,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     velho,
     hankkeenKuvaus: julkaisu.hankkeenKuvaus,
     kirjaamoOsoitteet,
-    uudelleenKuulutus: julkaisu.uudelleenKuulutus || undefined,
+    uudelleenKuulutus: julkaisu.uudelleenKuulutus ?? undefined,
     suunnitteluSopimus,
     euRahoitusLogot,
     yhteystiedot: julkaisu.yhteystiedot,

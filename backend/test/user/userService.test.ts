@@ -6,7 +6,6 @@ import { UserFixture } from "../fixture/userFixture";
 import { apiConfig } from "hassu-common/abstractApi";
 import { GetParameterCommand, SSM } from "@aws-sdk/client-ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { AppSyncEventArguments } from "../../src/api/common";
 import { defaultUnitTestMocks } from "../mocks";
 import { mockClient } from "aws-sdk-client-mock";
 
@@ -47,7 +46,7 @@ describe("userService", () => {
     await userService.identifyUser({
       info: { fieldName: apiConfig.nykyinenKayttaja.name },
       request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
-    } as unknown as AppSyncResolverEvent<AppSyncEventArguments>);
+    } as unknown as AppSyncResolverEvent<unknown>);
     const user = userService.requireVaylaUser();
     expect(user).to.deep.include(UserFixture.mattiMeikalainen);
     expect(user.keksit).to.have.length(3);
@@ -63,7 +62,7 @@ describe("userService", () => {
     });
     await userService.identifyUser({
       request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
-    } as unknown as AppSyncResolverEvent<AppSyncEventArguments>);
+    } as unknown as AppSyncResolverEvent<unknown>);
     const user = userService.requireVaylaUser();
     expect(user.roolit).to.eql(["abc", "def", "HassuAdmin", "hassu_admin", "hassu_kayttaja"]);
   });

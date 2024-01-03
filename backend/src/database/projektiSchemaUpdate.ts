@@ -28,7 +28,7 @@ function isValueArrayOfStrings(value: unknown) {
  */
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
   const projektiAsAny: any = projekti as any;
-  const lausuntoPyynnot = projekti.lausuntoPyynnot || [];
+  const lausuntoPyynnot = projekti.lausuntoPyynnot ?? [];
   const nahtavillaoloVaiheJulkaisut = projektiAsAny["nahtavillaoloVaiheJulkaisut"];
   nahtavillaoloVaiheJulkaisut?.map((julkaisu: any) => {
     const lisaAineisto = julkaisu["lisaAineisto"];
@@ -128,7 +128,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
           // Remove possible key "SAAME" by not including it
           const videoLokalisoituna: LocalizedMap<Linkki> = video as LocalizedMap<Linkki>;
           const newVideo: LocalizedMap<Linkki> = {
-            [Kieli.SUOMI]: videoLokalisoituna?.[Kieli.SUOMI] || undefined,
+            [Kieli.SUOMI]: videoLokalisoituna?.[Kieli.SUOMI] ?? undefined,
           };
           if (videoLokalisoituna && Object.keys(videoLokalisoituna).includes("RUOTSI")) {
             newVideo[Kieli.RUOTSI] = videoLokalisoituna[Kieli.RUOTSI];

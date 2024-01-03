@@ -55,13 +55,11 @@ class Parameters {
       if (response.ok) {
         const data = (await response.json()) as ParameterStoreResponse;
         return data.Parameter.Value;
+      } else if (!envName) {
+        log.error("getParameter(" + name + ") failed", { response });
       } else {
-        if (!envName) {
-          log.error("getParameter(" + name + ") failed", { response });
-        } else {
-          // ei lokiteta virhettä kun ympäristökohtaista parametria ei välttämättä löydy
-          log.info("getParameter(" + name + ") failed", { response });
-        }
+        // ei lokiteta virhettä kun ympäristökohtaista parametria ei välttämättä löydy
+        log.info("getParameter(" + name + ") failed", { response });
       }
     }
     return undefined;

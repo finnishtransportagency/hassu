@@ -47,7 +47,7 @@ async function createNahtavillaoloVaihePDF(
     lyhytOsoite: projekti.lyhytOsoite,
     asiakirjaTyyppi,
     velho,
-    suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
+    suunnitteluSopimus: projekti.suunnitteluSopimus ?? undefined,
     kayttoOikeudet: projekti.kayttoOikeudet,
     nahtavillaoloVaihe: julkaisu,
     kieli,
@@ -84,7 +84,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
-    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+    if (julkaisuWaitingForApproval?.aineistoMuokkaus) {
       projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
     }
     await this.peruAineistoMuokkaus(projekti);
@@ -155,7 +155,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {
-    return projekti.nahtavillaoloVaiheJulkaisut || undefined;
+    return projekti.nahtavillaoloVaiheJulkaisut ?? undefined;
   }
 
   async validateUudelleenkuulutus(
@@ -323,12 +323,9 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       isKieliTranslatable(kielitiedot.ensisijainenKieli),
       "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
     );
-    const nahtavillaoloPDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisuWaitingForApproval);
+    const nahtavillaoloPDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
     if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
-      pdfs[kielitiedot.toissijainenKieli as KaannettavaKieli] = await generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli as KaannettavaKieli,
-        julkaisuWaitingForApproval
-      );
+      pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
     }
     pdfs[kielitiedot.ensisijainenKieli] = await nahtavillaoloPDFs;
     return pdfs;

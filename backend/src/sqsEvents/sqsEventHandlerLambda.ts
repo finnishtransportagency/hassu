@@ -271,7 +271,7 @@ async function handleChangedAineistoAndFiles(ctx: ImportContext) {
 
   for (const julkaisuAineisto of manager.getVuorovaikutusKierrosJulkaisut()) {
     let changes = await julkaisuAineisto.handleChangedTiedostot();
-    changes = (await julkaisuAineisto.handleChanges()) || changes;
+    changes = (await julkaisuAineisto.handleChanges()) ?? changes;
     if (changes) {
       log.info("Päivitetään vuorovaikutusKierrosJulkaisu tiedostojen poiston jälkeen", { vuorovaikutusKierrosJulkaisu: changes });
       await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(ctx.projekti, changes);

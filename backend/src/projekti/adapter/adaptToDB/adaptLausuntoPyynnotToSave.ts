@@ -51,7 +51,7 @@ export function adaptLausuntoPyyntoToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
-  const { lisaAineistot: dbLisaAineistot, ...restDbLP } = dbLausuntoPyynto || {};
+  const { lisaAineistot: dbLisaAineistot, ...restDbLP } = dbLausuntoPyynto ?? {};
   const { lisaAineistot, ...rest } = lausuntoPyyntoInput;
   const lisaAineistotAdapted = lausuntoPyyntoInput
     ? adaptTiedostotToSave(dbLisaAineistot, lisaAineistot, projektiAdaptationResult)
@@ -59,6 +59,8 @@ export function adaptLausuntoPyyntoToSave(
   if (lausuntoPyyntoInput.poistetaan) projektiAdaptationResult.filesChanged();
   return mergeWith({}, { ...restDbLP }, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
+
+type LausuntoPyynnotDB = LadattuTiedosto[] | undefined | null;
 
 export function adaptLausuntoPyynnonTaydennysToSave(
   dbLausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null,
@@ -68,16 +70,12 @@ export function adaptLausuntoPyynnonTaydennysToSave(
   if (!lausuntoPyynnonTaydennysInput) {
     return undefined;
   }
-  const { muuAineisto: dbMuuAineisto, muistutukset: dbMuistutukset, ...restDbLPT } = dbLausuntoPyynnonTaydennys || {};
+  const { muuAineisto: dbMuuAineisto, muistutukset: dbMuistutukset, ...restDbLPT } = dbLausuntoPyynnonTaydennys ?? {};
   const { muuAineisto: muuAineistoInput, muistutukset: muistutuksetInput, ...restInput } = lausuntoPyynnonTaydennysInput;
   const muuAineisto = lausuntoPyynnonTaydennysInput
     ? adaptTiedostotToSave(dbMuuAineisto, muuAineistoInput, projektiAdaptationResult)
     : undefined;
-  const muistutukset: LadattuTiedosto[] | undefined | null = adaptTiedostotToSave(
-    dbMuistutukset,
-    muistutuksetInput,
-    projektiAdaptationResult
-  );
+  const muistutukset: LausuntoPyynnotDB = adaptTiedostotToSave(dbMuistutukset, muistutuksetInput, projektiAdaptationResult);
   if (lausuntoPyynnonTaydennysInput.poistetaan) projektiAdaptationResult.filesChanged();
   return mergeWith({}, { ...restDbLPT }, { ...restInput, muuAineisto, muistutukset });
 }
@@ -86,7 +84,7 @@ function adaptTiedostotToSave(
   dbTiedostot: LadattuTiedosto[] | undefined | null,
   tiedostotInput: API.LadattuTiedostoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
-): LadattuTiedosto[] | undefined | null {
+): LausuntoPyynnotDB {
   const vanhatEiPoistamistaOdottavat = dbTiedostot?.filter((tiedosto) => ladattuTiedostoTilaEiPoistettu(tiedosto.tila));
   const vanhatPidettavat = vanhatEiPoistamistaOdottavat
     ?.reduce((vanhatPidettavat, vanhaTiedosto) => {
@@ -130,11 +128,11 @@ function adaptTiedostotToSave(
   if (uudetPoistettavat?.length || uudet?.length) {
     projektiAdaptationResult.filesChanged();
   }
-  return (uudet || [])
-    .concat(vanhatPidettavat || [])
-    .concat(uudetPoistettavat || [])
-    .concat(vanhatPoistamistaOdottavat || [])
-    .concat(unohdetut || []);
+  return (uudet ?? [])
+    .concat(vanhatPidettavat ?? [])
+    .concat(uudetPoistettavat ?? [])
+    .concat(vanhatPoistamistaOdottavat ?? [])
+    .concat(unohdetut ?? []);
 }
 
 function adaptTiedostoToSave(

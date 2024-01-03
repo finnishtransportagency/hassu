@@ -98,7 +98,7 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   protected async deleteAineistot(...aineistoArrays: (Array<Aineisto> | null | undefined)[]): Promise<boolean> {
     let modified = false;
     // Yhdistä kaikki aineistot yhdeksi taulukoksi
-    const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur || []), [] as Aineisto[]);
+    const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur ?? []), [] as Aineisto[]);
 
     for (const aineisto of aineistot) {
       await fileService.deleteAineisto(
@@ -116,11 +116,11 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
 
   protected getIlmoituksenVastaanottajat(vastaanottajat: IlmoituksenVastaanottajat | undefined | null) {
     const ilmoituksenVastaanottajat: string[] = [];
-    for (const kunta of vastaanottajat?.kunnat || []) {
+    for (const kunta of vastaanottajat?.kunnat ?? []) {
       ilmoituksenVastaanottajat.push(kuntametadata.nameForKuntaId(kunta.id, Kieli.SUOMI));
     }
-    for (const viranomainen of vastaanottajat?.viranomaiset || []) {
-      const viranomainenKaannos = translate(("viranomainen." + viranomainen.nimi) as string, Kieli.SUOMI);
+    for (const viranomainen of vastaanottajat?.viranomaiset ?? []) {
+      const viranomainenKaannos = translate("viranomainen." + viranomainen.nimi, Kieli.SUOMI);
       if (viranomainenKaannos) {
         ilmoituksenVastaanottajat.push(viranomainenKaannos);
       }

@@ -15,8 +15,8 @@ export const getAsianhallintaSynchronizationStatus = (
 
     const tilat = synkronointi.dokumentit.map((dokumentti) => dokumentti.synkronointiTila);
     const virheTila =
-      getTilaIfExists(tilat, "ASIANHALLINTA_VAARASSA_TILASSA") ||
-      getTilaIfExists(tilat, "ASIAA_EI_LOYDY") ||
+      getTilaIfExists(tilat, "ASIANHALLINTA_VAARASSA_TILASSA") ??
+      getTilaIfExists(tilat, "ASIAA_EI_LOYDY") ??
       getTilaIfExists(tilat, "VIRHE");
     if (virheTila) {
       return synkronointiTilaToAsianTilaMap[virheTila];

@@ -68,12 +68,12 @@ async function handleYleisotilaisuusKutsu(
   assert(velho, "Velho puuttuu");
   const vuorovaikutusKierros = projektiWithChanges.vuorovaikutusKierros;
   const kielitiedot = projektiWithChanges.kielitiedot;
-  const suunnitteluSopimus = projektiWithChanges.suunnitteluSopimus || undefined;
+  const suunnitteluSopimus = projektiWithChanges.suunnitteluSopimus ?? undefined;
   assert(vuorovaikutusKierros && kielitiedot);
   return pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
     oid: projektiWithChanges.oid,
     lyhytOsoite: projekti.lyhytOsoite,
-    hankkeenKuvaus: vuorovaikutusKierros.hankkeenKuvaus || undefined,
+    hankkeenKuvaus: vuorovaikutusKierros.hankkeenKuvaus ?? undefined,
     velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     vuorovaikutusKierrosJulkaisu: await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projektiWithChanges),
@@ -96,7 +96,7 @@ async function handleNahtavillaoloKuulutus(
   const velho = projekti.velho;
   assert(velho);
   projektiWithChanges.velho = velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-  const suunnitteluSopimus = projekti.suunnitteluSopimus || undefined;
+  const suunnitteluSopimus = projekti.suunnitteluSopimus ?? undefined;
   projektiWithChanges.suunnitteluSopimus = suunnitteluSopimus;
   return pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
     oid: projekti.oid,
@@ -149,7 +149,7 @@ async function handleHyvaksymisPaatosKuulutus(
 
 export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
   const vaylaUser = requirePermissionLuku();
-  const kaytettavaKieli: KaannettavaKieli = isKieliTranslatable(kieli) ? (kieli as KaannettavaKieli) : Kieli.SUOMI;
+  const kaytettavaKieli: KaannettavaKieli = isKieliTranslatable(kieli) ? kieli : Kieli.SUOMI;
   if (vaylaUser) {
     log.info("Loading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);

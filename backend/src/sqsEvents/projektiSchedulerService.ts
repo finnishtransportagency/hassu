@@ -94,7 +94,7 @@ class ProjektiSchedulerService {
         assertIsDefined(sch.Name);
         result[sch.Name] = sch;
         return result;
-      }, {} as Record<string, ScheduleSummary>) || {}
+      }, {} as Record<string, ScheduleSummary>) ?? {}
     );
   }
 
@@ -173,27 +173,24 @@ function typeSuffix(type: SqsEventType, publishOrExpire: PublishOrExpireEventTyp
     return "EJ2";
   } else if (type == SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS) {
     return "ENA";
+  } else if (publishOrExpire === PublishOrExpireEventType.EXPIRE) {
+    return "EXP";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH) {
+    return "PUB";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+    return "PAK";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+    return "PHP";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE) {
+    return "PJ1";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE) {
+    return "PJ2";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+    return "PNA";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS) {
+    return "PVU";
   } else {
-    // SYNCHRONIZE
-    if (publishOrExpire === PublishOrExpireEventType.EXPIRE) {
-      return "EXP";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH) {
-      return "PUB";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
-      return "PAK";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
-      return "PHP";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE) {
-      return "PJ1";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE) {
-      return "PJ2";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
-      return "PNA";
-    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS) {
-      return "PVU";
-    } else {
-      return "PVT";
-    }
+    return "PVT";
   }
 }
 

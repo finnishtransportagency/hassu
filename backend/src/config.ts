@@ -20,7 +20,7 @@ const config = {
   personSearchUsernameProd: process.env.PERSON_SEARCH_API_USERNAME_PROD,
   personSearchPasswordProd: process.env.PERSON_SEARCH_API_PASSWORD_PROD,
   personSearchAccountTypes: process.env.PERSON_SEARCH_API_ACCOUNT_TYPES?.split(","),
-  personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN || "",
+  personSearchUpdaterLambdaArn: process.env.PERSON_SEARCH_UPDATER_LAMBDA_ARN ?? "",
 
   env: process.env.ENVIRONMENT,
 
@@ -29,10 +29,10 @@ const config = {
 
   frontendPublicKeyId: process.env.FRONTEND_PUBLIC_KEY_ID,
 
-  uploadBucketName: process.env.UPLOAD_BUCKET_NAME || "UPLOAD_BUCKET_NAME puuttuu!",
-  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME || "YLLAPITO_BUCKET_NAME puuttuu!",
-  publicBucketName: process.env.PUBLIC_BUCKET_NAME || "PUBLIC_BUCKET_NAME puuttuu!",
-  internalBucketName: process.env.INTERNAL_BUCKET_NAME || "unset",
+  uploadBucketName: process.env.UPLOAD_BUCKET_NAME ?? "UPLOAD_BUCKET_NAME puuttuu!",
+  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME ?? "YLLAPITO_BUCKET_NAME puuttuu!",
+  publicBucketName: process.env.PUBLIC_BUCKET_NAME ?? "PUBLIC_BUCKET_NAME puuttuu!",
+  internalBucketName: process.env.INTERNAL_BUCKET_NAME ?? "unset",
 
   emailsOn: process.env.EMAILS_ON,
   emailsTo: process.env.EMAILS_TO,
@@ -40,12 +40,12 @@ const config = {
   ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
 
-  eventSqsUrl: process.env.EVENT_SQS_URL || "",
-  eventSqsArn: process.env.EVENT_SQS_ARN || "",
-  schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN || "",
+  eventSqsUrl: process.env.EVENT_SQS_URL ?? "",
+  eventSqsArn: process.env.EVENT_SQS_ARN ?? "",
+  schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN ?? "",
 
-  pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
-  isInTest: typeof (global as unknown as Record<string,unknown>).it === "function",
+  pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN ?? "",
+  isInTest: typeof (global as unknown as Record<string, unknown>).it === "function",
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";

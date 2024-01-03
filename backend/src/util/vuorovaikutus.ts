@@ -31,7 +31,7 @@ export function collectVuorovaikutusKierrosJulkaistu<T extends EssentialVuorovai
 export function collectVuorovaikutusJulkinen(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) return [];
   return collectVuorovaikutusKierrosJulkinen(dbProjekti.vuorovaikutusKierrosJulkaisut).reduce(
-    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet || []),
+    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet ?? []),
     [] as VuorovaikutusTilaisuusJulkaisu[]
   ); // koosta kaikkien julisten kierrosten tilaisuudet
 }
@@ -39,7 +39,7 @@ export function collectVuorovaikutusJulkinen(dbProjekti: ProjektiVuorovaikutuksi
 export function collectVuorovaikutusJulkaistu(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) return [];
   return collectVuorovaikutusKierrosJulkaistu(dbProjekti.vuorovaikutusKierrosJulkaisut).reduce(
-    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet || []),
+    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet ?? []),
     [] as VuorovaikutusTilaisuusJulkaisu[]
   ); // koosta kaikkien julisten kierrosten tilaisuudet
 }
