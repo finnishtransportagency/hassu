@@ -30,13 +30,18 @@ type TiedostoLinkkiProps = {
 
 export function TiedostoLinkki({ tiedosto, julkaisupaiva, tiedostoNimi, isUusiAineisto }: TiedostoLinkkiProps): JSX.Element {
   const { t } = useTranslation("aineisto");
-  const { fileExt, fileName, path } = useMemo(() => splitFilePath(tiedosto), [tiedosto]);
+  const { fileExt, fileName, fileNameWithExt, path } = useMemo(() => splitFilePath(tiedosto), [tiedosto]);
+  let ariaLabel: string | undefined = undefined;
+  const isPdf: boolean = fileExt == "pdf";
+  if (isPdf) {
+    ariaLabel = t("aineisto:pdf_saavutettava_label", { tiedostoNimi: fileNameWithExt, pvm: formatDate(julkaisupaiva) });
+  }
 
   return (
     <li>
-      <ExtLink className="file_download" sx={{ marginRight: 8 }} href={path || ""}>
-        {tiedostoNimi || fileName}{" "}
-        <span className="text-black ml-2">
+      <ExtLink className="file_download" {...(ariaLabel && { "aria-label": ariaLabel })} sx={{ marginRight: 8 }} href={path || ""}>
+        <span aria-hidden={isPdf}> {tiedostoNimi || fileName} </span>
+        <span className="text-black ml-2" aria-hidden={isPdf}>
           ({fileExt}) {formatDate(julkaisupaiva)}
         </span>
       </ExtLink>
