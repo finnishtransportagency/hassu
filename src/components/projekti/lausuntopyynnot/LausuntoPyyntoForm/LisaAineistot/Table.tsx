@@ -26,7 +26,7 @@ export default function AineistoTable({
     () =>
       fields.map((field) => {
         const aineistoData = joTallennetutLisaAineistot || [];
-        const { tuotu } = aineistoData.find(({ nimi }) => nimi === field.nimi) || {};
+        const { tuotu } = aineistoData.find(({ nimi, tila }) => nimi === field.nimi && field.tila == tila) || {};
 
         return { tuotu, ...field };
       }),
