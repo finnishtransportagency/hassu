@@ -134,5 +134,5 @@ export type LadattuTiedosto = {
   tuotu?: string | null;
   //Numero jarjestamista varten
   jarjestys?: number;
-  tila?: LadattuTiedostoTila;
+  tila: LadattuTiedostoTila;
 };
