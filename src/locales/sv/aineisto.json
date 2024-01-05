@@ -34,6 +34,5 @@
   "uusi-aineisto": "Nytt material",
   "sulje_kaikki": "Stäng alla kategorier",
   "avaa_kaikki": "Öppna alla kategorier",
-  "ei_aineistoa": "Kategorin innehåller inget material",
-  "pdf_saavutettava_label": "Länk till PDF-fil {{tiedostoNimi}} {{pvm}}"
+  "ei_aineistoa": "Kategorin innehåller inget material"
 }

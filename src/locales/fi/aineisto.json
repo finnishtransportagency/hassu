@@ -35,6 +35,5 @@
   "uusi-aineisto": "Uusi aineisto",
   "sulje_kaikki": "Sulje kaikki kategoriat",
   "avaa_kaikki": "Avaa kaikki kategoriat",
-  "ei_aineistoa": "Kategoriassa ei ole aineistoa",
-  "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}"
+  "ei_aineistoa": "Kategoriassa ei ole aineistoa"
 }

@@ -34,7 +34,7 @@ export function TiedostoLinkki({ tiedosto, julkaisupaiva, tiedostoNimi, isUusiAi
   let ariaLabel: string | undefined = undefined;
   const isPdf: boolean = fileExt == "pdf";
   if (isPdf) {
-    ariaLabel = t("aineisto:pdf_saavutettava_label", { tiedostoNimi: fileNameWithExt, pvm: formatDate(julkaisupaiva) });
+    ariaLabel = t("common:pdf_saavutettava_label", { tiedostoNimi: fileNameWithExt, pvm: formatDate(julkaisupaiva) });
   }
 
   return (
