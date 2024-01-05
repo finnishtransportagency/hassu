@@ -26,7 +26,7 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import { ProjektiAdaptationResult, ProjektiEvent, ProjektiEventType } from "./adapter/projektiAdaptationResult";
-import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
+import { validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import {
   adaptStandardiYhteystiedotInputToYhteystiedotToSave,
@@ -48,6 +48,8 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 import { persistLadattuTiedosto } from "../files/persistFiles";
 import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
+import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
