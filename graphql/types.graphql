@@ -509,7 +509,7 @@ type Aineisto {
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: AineistoTila
+  tila: AineistoTila!
 }
 
 enum AineistoTila {
@@ -767,7 +767,7 @@ type LadattuTiedosto {
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: LadattuTiedostoTila
+  tila: LadattuTiedostoTila!
 }
 
 type AloitusKuulutusPDF {

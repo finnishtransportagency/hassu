@@ -270,7 +270,7 @@ input AineistoInput {
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: AineistoTila
+  tila: AineistoTila!
 }
 
 input LadattuTiedostoInput {
@@ -286,7 +286,7 @@ input LadattuTiedostoInput {
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: LadattuTiedostoTila
+  tila: LadattuTiedostoTila!
 }
 
 input ProjektiKayttajaInput {
