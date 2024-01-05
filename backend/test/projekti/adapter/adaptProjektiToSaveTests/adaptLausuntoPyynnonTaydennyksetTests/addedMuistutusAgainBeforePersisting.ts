@@ -85,5 +85,5 @@ export const addedMuistutusAgainBeforePersisting = async () => {
   await handleEvents(projektiAdaptationResult);
   expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
-  expect(handleChangedTiedostotStub.callCount).to.eql(1); // We'd like the event to fire again, in case there was an error earlier
+  expect(handleChangedTiedostotStub.callCount).to.eql(0);
 };

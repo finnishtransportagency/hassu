@@ -53,15 +53,15 @@ export const addedLisaAineisto = async () => {
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          tiedosto: "uploads/235235235.txt",
-          nimi: "aineisto2.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
-        },
-        {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+        },
+        {
+          tiedosto: "uploads/235235235.txt",
+          nimi: "aineisto2.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
       ],
     },
