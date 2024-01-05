@@ -72,7 +72,7 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
     return false;
   }
   let hasChanges = false;
-  const originalTiedostot = tiedostot.splice(0, tiedostot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  const originalTiedostot = tiedostot.splice(0, tiedostot.length).sort((a, _b) => (a.tila == LadattuTiedostoTila.ODOTTAA_POISTOA ? -1 : 1)); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
   for (const tiedosto of originalTiedostot) {
     const { fileWasRemoved, fileWasPersisted } = await persistLadattuTiedosto({
       oid,
