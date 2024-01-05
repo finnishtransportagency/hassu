@@ -171,6 +171,7 @@ export default function Nahtavillaolo(): ReactElement {
               onClose={() => setMuistutusInfoOpen(false)}
               closable
             >
+              <h4 className="vayla-small-title">{t("muistutuslomake.muistutus_info_otsikko")}</h4>
               <p>{t("muistutuslomake.muistutus_info_1")}</p>
               <br />
               <p>{t("muistutuslomake.muistutus_info_2")}</p>
@@ -181,7 +182,7 @@ export default function Nahtavillaolo(): ReactElement {
                 if (!kayttaja?.suomifiEnabled || kayttaja?.tunnistautunut || !authUrl) {
                   setMuistutusLomakeOpen(true);
                 } else {
-                  router.push(authUrl)
+                  router.push(authUrl);
                 }
               }}
             />
