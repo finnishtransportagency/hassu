@@ -30,7 +30,7 @@ export default function AineistoTable() {
         const aineistoData = projekti?.hyvaksymisPaatosVaihe?.hyvaksymisPaatos || [];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
+        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
     [fields, projekti]
   );

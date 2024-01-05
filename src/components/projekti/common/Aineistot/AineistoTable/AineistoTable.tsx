@@ -33,7 +33,7 @@ export function AineistoTable(props: AineistoTableProps) {
         const aineistoData = props.aineisto || [];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
+        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
     [fields, props.aineisto]
   );
@@ -87,6 +87,7 @@ export function AineistoTable(props: AineistoTableProps) {
                         nimi: aineisto.nimi,
                         kategoriaId: newKategoria,
                         jarjestys: values.length,
+                        tila: aineisto.tila,
                       });
                       setValue(`aineistoNahtavilla.${newKategoria}`, values);
                     }

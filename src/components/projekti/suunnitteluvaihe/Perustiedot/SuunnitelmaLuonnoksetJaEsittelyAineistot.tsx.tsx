@@ -1,5 +1,5 @@
 import Section from "@components/layout/Section2";
-import { AineistoInput, VuorovaikutusKierros } from "@services/api";
+import { AineistoInput, VuorovaikutusKierros, AineistoTila } from "@services/api";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import ButtonFlat from "@components/button/ButtonFlat";
@@ -138,6 +138,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
+              tila: AineistoTila.ODOTTAA_TUONTIA,
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
@@ -177,6 +178,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
+              tila: AineistoTila.ODOTTAA_TUONTIA,
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
