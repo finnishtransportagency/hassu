@@ -71,15 +71,15 @@ export const addedMuistutus = async () => {
       poistumisPaiva: "2022-01-01",
       muistutukset: [
         {
-          tiedosto: "upload/23435345.txt",
-          nimi: "tiedosto2.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
-        },
-        {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
           nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+        },
+        {
+          tiedosto: "upload/23435345.txt",
+          nimi: "tiedosto2.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
         },
       ],
       muuAineisto: [

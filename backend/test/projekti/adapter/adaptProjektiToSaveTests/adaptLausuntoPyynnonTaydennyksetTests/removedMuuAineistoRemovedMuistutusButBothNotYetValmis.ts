@@ -62,20 +62,8 @@ export const removedMuuAineistoRemovedMuistutusButBothNotYetValmis = async () =>
       uuid: "jotain",
       kunta: 1,
       poistumisPaiva: "2022-01-01",
-      muistutukset: [
-        {
-          tiedosto: "uploads/345345235.txt",
-          nimi: "odottaa_persistointia_muistutus.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
-        },
-      ],
-      muuAineisto: [
-        {
-          tiedosto: "uploads/235325345.txt",
-          nimi: "odottaa_persistointia_muu_aineisto.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
-        },
-      ],
+      muistutukset: [],
+      muuAineisto: [],
     },
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
