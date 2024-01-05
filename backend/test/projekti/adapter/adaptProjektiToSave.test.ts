@@ -16,6 +16,9 @@ import {
   removedLisaAineisto,
   noChanges as noChangesLP,
   changeFilesOrder,
+  removedLisaAineistoNotYetPersisted,
+  threeFilesWithSameName,
+  inputHasOldInfo,
 } from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
 
 describe("adaptProjektiToSave produces correct events and adapted projekti when saving changes to lausuntoPyynnonTaydennykset", () => {
@@ -59,4 +62,10 @@ describe("adaptProjektiToSave produces correct events and adapterd projekti when
   it("when making no changes to lisaAineisto", noChangesLP);
 
   it("when changing the order of lisaAineisto", changeFilesOrder);
+
+  it("when removing a file not yet persisted", removedLisaAineistoNotYetPersisted);
+
+  it("when trying to remove something 'twice', and db has three files with same name", threeFilesWithSameName);
+
+  it("when input has old info about file readiness", inputHasOldInfo);
 });
