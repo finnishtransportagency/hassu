@@ -84,7 +84,7 @@ const AineistoTable = ({
         const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
+        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
     [fields, vuorovaikutus]
   );
