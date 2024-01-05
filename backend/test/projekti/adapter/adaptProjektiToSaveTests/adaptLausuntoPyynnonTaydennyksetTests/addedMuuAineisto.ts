@@ -50,14 +50,14 @@ export const addedMuuAineisto = async () => {
         ],
         muuAineisto: [
           {
-            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
-            nimi: "aineisto.txt",
-            tila: API.LadattuTiedostoTila.VALMIS,
-          },
-          {
             tiedosto: "jokupolku/2352352352345.txt",
             nimi: "aineisto2.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          },
+          {
+            tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
+            nimi: "aineisto.txt",
+            tila: API.LadattuTiedostoTila.VALMIS,
           },
         ],
       },

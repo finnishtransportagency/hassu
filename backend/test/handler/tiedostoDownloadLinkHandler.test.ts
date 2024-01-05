@@ -370,7 +370,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       muistutukset: [
         {
           tiedosto: `joku-hassu-polku/124235235.txt`,
-          nimi: `tiedosto_1.txt`,
+          nimi: `tiedosto_2.txt`,
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           jarjestys: 2,
         },
@@ -429,7 +429,7 @@ describe("tiedostoDownloadLinkHandler", () => {
         },
         {
           __typename: "LadattavaTiedosto",
-          nimi: "tiedosto_1.txt",
+          nimi: "tiedosto_2.txt",
           jarjestys: 2,
           linkki: "",
           tuotu: undefined,
