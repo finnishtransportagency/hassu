@@ -282,6 +282,8 @@ export class FileService {
     if (!config.uploadBucketName) {
       throw new Error("config.uploadBucketName määrittelemättä");
     }
+    // Sometimes path starts with / and sometimes not(?!)
+    uploadedFileSource = uploadedFileSource.replace(/^\//, "");
     try {
       const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
       if (!headObject) {
