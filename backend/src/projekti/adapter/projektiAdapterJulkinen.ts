@@ -563,6 +563,7 @@ function adaptAineistotJulkinen(
           jarjestys,
           kategoriaId,
           tuotu,
+          tila: API.AineistoTila.VALMIS,
         };
       });
   }
