@@ -40,6 +40,8 @@ export abstract class TiedostoManager<T> {
           return handleTiedostot(this.oid, element.tiedostot, element.paths);
         })
       );
+      log.info("changesPromise", changesPromise);
+      log.info("this.vaihe", this.vaihe);
       const changes = changesPromise.some((change) => change);
       if (changes) {
         return this.vaihe;
