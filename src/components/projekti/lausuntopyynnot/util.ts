@@ -35,12 +35,13 @@ export const reduceToLisatytJaPoistetutLadattuTiedosto =
     return acc;
   };
 
-const mapLadattuTiedostoToInput = ({ nimi, jarjestys, tila, tiedosto, tuotu }: LadattuTiedosto): LadattuTiedostoInputWithTuotu => ({
+const mapLadattuTiedostoToInput = ({ nimi, jarjestys, tila, tiedosto, tuotu, uuid }: LadattuTiedosto): LadattuTiedostoInputWithTuotu => ({
   tiedosto,
   jarjestys,
   nimi,
   tila,
   tuotu,
+  uuid,
 });
 
 export function combineOldAndNewLadattuTiedosto({
