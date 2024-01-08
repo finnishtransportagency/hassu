@@ -88,6 +88,7 @@ export function AineistoTable(props: AineistoTableProps) {
                         kategoriaId: newKategoria,
                         jarjestys: values.length,
                         tila: aineisto.tila,
+                        uuid: aineisto.uuid,
                       });
                       setValue(`aineistoNahtavilla.${newKategoria}`, values);
                     }

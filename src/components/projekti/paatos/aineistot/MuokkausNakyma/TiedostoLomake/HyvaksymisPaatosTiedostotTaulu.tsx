@@ -120,7 +120,12 @@ const ActionsColumn = styled(({ index, remove, aineisto, appendToPoistetut, ...p
         onClick={() => {
           remove(index);
           if (aineisto.tila) {
-            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+            appendToPoistetut({
+              dokumenttiOid: aineisto.dokumenttiOid,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              nimi: aineisto.nimi,
+              uuid: aineisto.uuid,
+            });
           }
         }}
         icon="trash"

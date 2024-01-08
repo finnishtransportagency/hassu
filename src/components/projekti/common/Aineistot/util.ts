@@ -1,5 +1,6 @@
 import { SelectOption } from "@components/form/Select";
 import { Aineisto, AineistoInput, AineistoTila, VelhoAineisto } from "@services/api";
+import { uuid } from "common/util/uuid";
 import { AineistoKategoria, aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import { Translate } from "next-translate";
@@ -62,6 +63,7 @@ export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineis
     nimi: velhoAineisto.tiedosto,
     kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
     tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: uuid.v4(),
   }));
 }
 
@@ -119,5 +121,6 @@ export function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto):
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
     tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: uuid.v4(),
   };
 }

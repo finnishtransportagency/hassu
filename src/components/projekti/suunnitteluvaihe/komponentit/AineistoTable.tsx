@@ -126,6 +126,7 @@ const AineistoTable = ({
                       nimi: aineisto.nimi,
                       tila: aineisto.tila,
                       jarjestys: otherAineistoWatch?.length,
+                      uuid: aineisto.uuid,
                     });
                   }
                   remove(index);
@@ -216,7 +217,12 @@ const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appen
         onClick={() => {
           remove(index);
           if (aineisto.tila) {
-            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+            appendToPoistetut({
+              dokumenttiOid: aineisto.dokumenttiOid,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              nimi: aineisto.nimi,
+              uuid: aineisto.uuid,
+            });
           }
         }}
         icon="trash"
