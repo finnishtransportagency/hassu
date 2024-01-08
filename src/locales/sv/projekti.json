@@ -185,7 +185,8 @@
     "jata_muistutus_mennessa": "Lämna en anmärkning om projektet senast {{pvm}}",
     "muistutus_info_otsikko": "Vad betyder anmärkning?",
     "muistutus_info_1": "Anmärkningen är ett fritt formulerat skriftligt ställningstagande till den myndighet som ansvarar för utarbetandet av planen. Svaret på anmärkningen ges i Transport- och kommunikationsverkets beslut om godkännande av planen.",
-    "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen."
+    "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
+    "lue_lisaa": "Läs mer"
   },
   "asiakirja": {
     "aloituskuulutus": {

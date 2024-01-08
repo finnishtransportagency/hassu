@@ -157,6 +157,7 @@ export default function Nahtavillaolo(): ReactElement {
                   icon="info-circle"
                   type={NotificationType.INFO_GRAY}
                   onClick={() => setMuistutusInfoOpen(true)}
+                  aria-label={t("muistutuslomake.lue_lisaa")}
                 />
               )}
             </H3>
