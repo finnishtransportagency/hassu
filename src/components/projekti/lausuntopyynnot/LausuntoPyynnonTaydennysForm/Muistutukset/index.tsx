@@ -9,6 +9,7 @@ import { LausuntoPyynnonTaydennysFormValues, LausuntoPyynnonTaydennysLisakentill
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { combineOldAndNewLadattuTiedosto } from "../../util";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import { uuid } from "common/util/uuid";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, control, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
@@ -40,6 +41,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
               nimi: files[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
+              uuid: uuid.v4(),
             }));
             const { poistetut, lisatyt } = combineOldAndNewLadattuTiedosto({
               oldTiedostot: muistutukset,
