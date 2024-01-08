@@ -71,23 +71,28 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
   if (!tiedostot) {
     return false;
   }
-  let hasChanges = false;
   const originalTiedostot = tiedostot.splice(0, tiedostot.length).sort((a, _b) => (a.tila == LadattuTiedostoTila.ODOTTAA_POISTOA ? -1 : 1)); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
-  for (const tiedosto of originalTiedostot) {
-    const { fileWasRemoved, fileWasPersisted } = await persistLadattuTiedosto({
-      oid,
-      ladattuTiedosto: tiedosto,
-      targetFilePathInProjekti: paths.yllapitoPath,
-      poistetaan: tiedosto.tila === LadattuTiedostoTila.ODOTTAA_POISTOA,
-    });
+
+  const infoAboutHandledFiles = await Promise.all(
+    originalTiedostot.map((tiedosto) =>
+      persistLadattuTiedosto({
+        oid,
+        ladattuTiedosto: tiedosto,
+        targetFilePathInProjekti: paths.yllapitoPath,
+        poistetaan: tiedosto.tila === LadattuTiedostoTila.ODOTTAA_POISTOA,
+      })
+    )
+  );
+  let hasChanges = false;
+  originalTiedostot.forEach((tiedosto, index) => {
+    const { fileWasPersisted, fileWasRemoved } = infoAboutHandledFiles[index];
     if (!fileWasRemoved) {
       tiedostot.push(tiedosto);
     }
     if (fileWasRemoved || fileWasPersisted) {
       hasChanges = true;
     }
-  }
-
+  });
   return hasChanges;
 }
 

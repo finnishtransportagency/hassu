@@ -30,14 +30,15 @@ export abstract class TiedostoManager<T> {
 
   async handleChangedTiedostot(): Promise<T | undefined> {
     if (this.vaihe) {
-      let changes = false;
       // Tiedostot, joita saadaan ulos this.getLadatutTiedostot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
-      for (const element of this.getLadatutTiedostot(this.vaihe)) {
-        // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
-        // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
-        const changesInThisElement = await handleTiedostot(this.oid, element.tiedostot, element.paths);
-        changes = changes || changesInThisElement;
-      }
+      const changesPromise = await Promise.all(
+        this.getLadatutTiedostot(this.vaihe).map((element: LadattuTiedostoPathsPair) => {
+          // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
+          // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
+          return handleTiedostot(this.oid, element.tiedostot, element.paths);
+        })
+      );
+      const changes = changesPromise.some((change) => change);
       if (changes) {
         return this.vaihe;
       }
