@@ -2,6 +2,7 @@ import { LadattuTiedosto } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../../projektiAdaptationResult";
 import mergeWith from "lodash/mergeWith";
+import { log } from "../../../../logger";
 
 export type LausuntoPyynnotDB = LadattuTiedosto[] | undefined | null;
 
@@ -10,12 +11,14 @@ export function adaptTiedostotToSave(
   tiedostotInput: API.LadattuTiedostoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
 ): LausuntoPyynnotDB {
+  log.info("dbTiedostot", dbTiedostot);
   const uudetTiedostot = tiedostotInput
     ?.map((inputtiedosto) => {
       const vastaavaVanhaTiedosto = dbTiedostot?.find((dbtiedosto) => dbtiedosto.uuid == inputtiedosto.uuid);
       return adaptTiedostoToSave(vastaavaVanhaTiedosto, inputtiedosto, projektiAdaptationResult);
     })
     .filter((tiedosto) => !(tiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_POISTOA && !tiedosto.tuotu));
+  log.info("uudetTiedostot", uudetTiedostot);
   return uudetTiedostot;
 }
 
