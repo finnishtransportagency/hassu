@@ -16,6 +16,7 @@ export const removedMuuAineistoRemovedMuistutusButBothNotYetValmis = async () =>
           tiedosto: "uploads/345345235.txt",
           nimi: "odottaa_persistointia_muistutus.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "muistutus_op",
         },
       ],
       muuAineisto: [
@@ -23,6 +24,7 @@ export const removedMuuAineistoRemovedMuistutusButBothNotYetValmis = async () =>
           tiedosto: "uploads/235325345.txt",
           nimi: "odottaa_persistointia_muu_aineisto.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "aineisto_op",
         },
       ],
     },
@@ -44,6 +46,7 @@ export const removedMuuAineistoRemovedMuistutusButBothNotYetValmis = async () =>
             tiedosto: "uploads/345345235.txt",
             nimi: "odottaa_persistointia_muistutus.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            uuid: "muistutus_op",
           },
         ],
         muuAineisto: [
@@ -51,6 +54,7 @@ export const removedMuuAineistoRemovedMuistutusButBothNotYetValmis = async () =>
             tiedosto: "uploads/235325345.txt",
             nimi: "odottaa_persistointia_muu_aineisto.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            uuid: "aineisto_op",
           },
         ],
       },
