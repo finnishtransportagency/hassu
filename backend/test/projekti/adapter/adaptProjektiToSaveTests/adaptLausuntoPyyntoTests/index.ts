@@ -5,3 +5,4 @@ export * from "./changeFilesOrder";
 export * from "./removedLisaAineistoNotYetPersisted";
 export * from "./threeFilesWithSameName";
 export * from "./inputHasOldInfo";
+export * from "./addedLisaAineistoNotYetRemoved";
