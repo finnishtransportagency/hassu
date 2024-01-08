@@ -8,6 +8,7 @@ import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineis
 import { uuid } from "hassu-common/util/uuid";
 import sinon from "sinon";
 import { nyt } from "../../src/util/dateUtil";
+import cloneDeepWith from "lodash/cloneDeepWith";
 
 describe("migrateFromOldSchema", () => {
   it("should migate suunnitteluvaihe from before multi language support to the new form", async () => {
@@ -1153,8 +1154,10 @@ describe("migrateFromOldSchema", () => {
   });
 
   it("should migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot", async () => {
-    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
-    const suunnitelmaluonnokset: Aineisto[] = [
+    const esittelyaineistot: Omit<Aineisto, "uuid">[] = [
+      { dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS },
+    ];
+    const suunnitelmaluonnokset: Omit<Aineisto, "uuid">[] = [
       { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
     ];
     const oldProjekti: Partial<DBProjekti> = {
@@ -1166,20 +1169,39 @@ describe("migrateFromOldSchema", () => {
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 1,
         aineistot: [
-          ...esittelyaineistot.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO })),
-          ...suunnitelmaluonnokset.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS })),
+          ...esittelyaineistot.map((aineisto) => ({
+            ...aineisto,
+            kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+            uuid: "***migrationtest***",
+          })),
+          ...suunnitelmaluonnokset.map((aineisto) => ({
+            ...aineisto,
+            kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
+            uuid: "***migrationtest***",
+          })),
         ],
       },
     };
 
-    const migratoitu = migrateFromOldSchema(oldProjekti as DBProjekti);
+    const migratoitu = replaceTiedostoAineistoUuid(migrateFromOldSchema(oldProjekti as DBProjekti), "***migrationtest***");
 
     expect(migratoitu).to.eql(newProjekti);
   });
 
+  function replaceTiedostoAineistoUuid(projekti: Partial<DBProjekti>, replacement: string) {
+    return cloneDeepWith(projekti, (value, key) => {
+      console.log("key", value);
+      if (key == "uuid") {
+        return replacement;
+      }
+    });
+  }
+
   it("should not migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot if there is already aineistot field present", async () => {
-    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
-    const suunnitelmaluonnokset: Aineisto[] = [
+    const esittelyaineistot: Omit<Aineisto, "uuid">[] = [
+      { dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS },
+    ];
+    const suunnitelmaluonnokset: Omit<Aineisto, "uuid">[] = [
       { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
     ];
     const aineistot: Aineisto[] = [
@@ -1188,6 +1210,7 @@ describe("migrateFromOldSchema", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+        uuid: "jotain",
       },
     ];
     const oldProjekti: Partial<DBProjekti> = {
@@ -1206,9 +1229,9 @@ describe("migrateFromOldSchema", () => {
 
     expect(migratoitu).to.eql(newProjekti);
   });
+
   it("should migrate nahtavillaoloVaiheJulkaisu's lisaAineistot to lausuntoPyynto", async () => {
     MockDate.set("2023-12-12");
-    sinon.stub(uuid, "v4").returns("kissa");
     const oldForm = {
       oid: "1.2.246.578.5.1.2978288874.2711575506",
       asianhallinta: {
@@ -1298,6 +1321,7 @@ describe("migrateFromOldSchema", () => {
             tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
             tila: "VALMIS",
             tuotu: "2023-12-12T10:34:22+02:00",
+            uuid: "***migrationtest***",
           },
         ],
         lisaAineisto: [
@@ -1325,6 +1349,7 @@ describe("migrateFromOldSchema", () => {
               tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
               tila: "VALMIS",
               tuotu: "2023-12-12T10:34:22+02:00",
+              uuid: "***migrationtest***",
             },
           ],
           lisaAineisto: [
@@ -1346,7 +1371,7 @@ describe("migrateFromOldSchema", () => {
       ],
       lausuntoPyynnot: [
         {
-          uuid: "kissa",
+          uuid: "***migrationtest***",
           poistumisPaiva: nyt().add(180, "day").format("YYYY-MM-DD"),
           lisaAineistot: [
             {
@@ -1355,6 +1380,7 @@ describe("migrateFromOldSchema", () => {
               tiedosto: "/nahtavillaolo/1/aineisto4.txt",
               tila: "VALMIS",
               tuotu: "2023-12-12T10:34:36+02:00",
+              uuid: "***migrationtest***",
             },
           ],
           legacy: 1,
@@ -1367,7 +1393,7 @@ describe("migrateFromOldSchema", () => {
       velho: {},
       versio: 7,
     };
-    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    const migratoitu = replaceTiedostoAineistoUuid(migrateFromOldSchema(oldForm as any as DBProjekti), "***migrationtest***");
     expect(migratoitu).to.eql(newForm);
     MockDate.reset();
   });

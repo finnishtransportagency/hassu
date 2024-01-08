@@ -17,6 +17,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
           tiedosto: "upload/23435345.txt",
           nimi: "tiedosto2.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "tiedosto2",
         },
       ],
       muuAineisto: [
@@ -25,6 +26,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },
@@ -46,6 +48,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
             tiedosto: "upload/23435345.txt",
             nimi: "tiedosto2.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+            uuid: "tiedosto2",
           },
         ],
         muuAineisto: [
@@ -53,6 +56,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
             tila: API.LadattuTiedostoTila.VALMIS,
+            uuid: "aineisto",
           },
         ],
       },
@@ -69,6 +73,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
           tiedosto: "upload/23435345.txt",
           nimi: "tiedosto2.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "tiedosto2",
         },
       ],
       muuAineisto: [
@@ -77,6 +82,7 @@ export const addedMuistutusAgainBeforePersisting = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },

@@ -18,12 +18,14 @@ const projektiInDB: DBProjekti = {
           nimi: "tiedosto1.txt",
           tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           tiedosto: "/6d0437e7-b159-4ac7-8d89-1687d78efc78/tiedosto1.txt",
+          uuid: "tiedosto1toka",
         },
         {
           nimi: "tiedosto1.txt",
           tila: LadattuTiedostoTila.ODOTTAA_POISTOA,
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto1.txt",
           tuotu: "2022-01-01T02:01",
+          uuid: "tiedosto1eka",
         },
       ],
     },
@@ -43,11 +45,13 @@ const input: TallennaProjektiInput = {
           nimi: "tiedosto1.txt",
           tila: LadattuTiedostoTila.ODOTTAA_POISTOA,
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto1.txt",
+          uuid: "tiedosto1eka",
         },
         {
           nimi: "tiedosto1.txt",
           tila: LadattuTiedostoTila.ODOTTAA_POISTOA,
           tiedosto: "/6d0437e7-b159-4ac7-8d89-1687d78efc78/tiedosto1.txt",
+          uuid: "tiedosto1toka",
         },
       ],
     },
@@ -63,6 +67,7 @@ export const threeFilesWithSameName = async () => {
       tila: LadattuTiedostoTila.ODOTTAA_POISTOA,
       tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto1.txt",
       tuotu: "2022-01-01T02:01",
+      uuid: "tiedosto1eka",
     },
   ]);
   await handleEvents(projektiAdaptationResult);
