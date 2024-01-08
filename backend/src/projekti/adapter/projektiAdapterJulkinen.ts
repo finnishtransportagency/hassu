@@ -545,7 +545,7 @@ function adaptAineistotJulkinen(
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
         }
-        const { nimi, dokumenttiOid, jarjestys, kategoriaId, tuotu } = aineisto;
+        const { nimi, dokumenttiOid, jarjestys, kategoriaId, tuotu, uuid } = aineisto;
         let tiedosto = fileService.getPublicPathForProjektiFile(paths, aineisto.tiedosto);
         // Enkoodaa tiedoston polku jos se ei ole jo enkoodattu
         const parts = tiedosto.split("/");
@@ -563,6 +563,7 @@ function adaptAineistotJulkinen(
           jarjestys,
           kategoriaId,
           tuotu,
+          uuid,
           tila: API.AineistoTila.VALMIS,
         };
       });
