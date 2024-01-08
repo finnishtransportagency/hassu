@@ -12,13 +12,7 @@ export function adaptTiedostotToSave(
 ): LausuntoPyynnotDB {
   const uudetTiedostot = tiedostotInput
     ?.map((inputtiedosto) => {
-      const vastaavaVanhaTiedosto = dbTiedostot?.find(
-        (dbtiedosto) =>
-          dbtiedosto.nimi == inputtiedosto.nimi &&
-          (dbtiedosto.tiedosto == inputtiedosto.tiedosto ||
-            // kattaa tilanteen, jossa tiedosto on persistoitu tallennusten välillä
-            (dbtiedosto.tila == API.LadattuTiedostoTila.VALMIS && inputtiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA))
-      );
+      const vastaavaVanhaTiedosto = dbTiedostot?.find((dbtiedosto) => dbtiedosto.uuid == inputtiedosto.uuid);
       return adaptTiedostoToSave(vastaavaVanhaTiedosto, inputtiedosto, projektiAdaptationResult);
     })
     .filter((tiedosto) => !(tiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_POISTOA && !tiedosto.tuotu));
@@ -30,17 +24,13 @@ function adaptTiedostoToSave(
   tiedostoInput: API.LadattuTiedostoInput,
   projektiAdaptationResult: ProjektiAdaptationResult
 ): LadattuTiedosto {
-  const vanhaTila = dbTiedosto?.tila;
-  const uusiTila = tiedostoInput.tila;
-  const vanhaTiedosto = dbTiedosto?.tiedosto;
-  const uusiTiedosto = tiedostoInput.tiedosto;
-  const uudessaTiedostossaOnVanhentunutTuontiTieto =
-    vanhaTila == API.LadattuTiedostoTila.VALMIS && uusiTila == API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA;
-  const tallennettavaTila = uudessaTiedostossaOnVanhentunutTuontiTieto ? vanhaTila : uusiTila;
-  const tallennettavaTiedosto = uudessaTiedostossaOnVanhentunutTuontiTieto ? vanhaTiedosto : uusiTiedosto;
-
-  if (!dbTiedosto || dbTiedosto.tila !== tiedostoInput.tila || dbTiedosto.tiedosto !== tiedostoInput.tiedosto) {
+  if (!dbTiedosto || dbTiedosto.tila !== tiedostoInput.tila) {
     projektiAdaptationResult.filesChanged();
   }
-  return mergeWith({}, dbTiedosto, { ...tiedostoInput, tila: tallennettavaTila, tiedosto: tallennettavaTiedosto });
+  const preventTiedostoOverWrite = dbTiedosto?.tila == API.LadattuTiedostoTila.VALMIS;
+  const tiedosto = preventTiedostoOverWrite ? dbTiedosto?.tiedosto : tiedostoInput.tiedosto;
+  const preventTilaOverWrite =
+    dbTiedosto?.tila == API.LadattuTiedostoTila.VALMIS && tiedostoInput.tila == API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA;
+  const tila = preventTilaOverWrite ? API.LadattuTiedostoTila.VALMIS : tiedostoInput.tila;
+  return mergeWith({}, dbTiedosto, { ...tiedostoInput, tiedosto, tila });
 }
