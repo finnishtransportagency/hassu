@@ -320,10 +320,12 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
   updateVuorovaikutusAineistot(p);
 
   p.lausuntoPyynnot = lausuntoPyynnot;
+
   if (p.lausuntoPyynnot && !p.lausuntoPyynnot.length) {
     delete p.lausuntoPyynnot;
   }
-  return p;
+
+  return addUuidToAineistoAndLadattuTiedosto(p);
 }
 
 function updateVuorovaikutusAineistot(p: DBProjekti) {
@@ -367,4 +369,44 @@ function combineEsittelyAineistotAndSuunnitelmaluonnokset(
       kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
     })) ?? [];
   return [...esittelyaineistoKategorisoitu, ...suunnitelmaluonnoksetKategorisoitu];
+}
+
+function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
+  return cloneDeepWith(p as any, (value, key) => {
+    if (
+      key &&
+      typeof key == "string" &&
+      ["aineistot", "aineistoNahtavilla", "muuAineisto", "muistutukset", "lisaAineistot", "hyvaksymisPaatos"].includes(key) &&
+      Array.isArray(value)
+    ) {
+      if (!value.every((item) => !!item.uuid)) {
+        return value.map((item) => ({ ...item, uuid: uuid.v4() }));
+      } else {
+        return value;
+      }
+    } else if (
+      key &&
+      typeof key == "string" &&
+      ["lahetekirje", "kuulutusPDF", "kuulutusIlmoitusPDF"].includes(key) &&
+      typeof value == "object"
+    ) {
+      if (!value.uuid) {
+        return { ...value, uuid: uuid.v4() };
+      } else {
+        return value;
+      }
+    } else if (key == "vuorovaikutusSaamePDFt" && typeof value == "object" && value.POHJOISSAAME) {
+      if (!value.POHJOISSAAME.uuid) {
+        return {
+          ...value,
+          POHJOISSAAME: {
+            ...value.POHJOISSAAME,
+            uuid: uuid.v4(),
+          },
+        };
+      } else {
+        return value;
+      }
+    }
+  });
 }
