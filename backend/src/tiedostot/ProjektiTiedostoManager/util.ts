@@ -12,6 +12,7 @@ import { persistLadattuTiedosto } from "../../files/persistFiles";
 import { translate } from "../../util/localization";
 import { AineistoKategoria, aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { omit } from "lodash";
+import { log } from "../../logger";
 
 export function getZipFolder(kategoriaId: string | undefined | null): string | undefined {
   if (!kategoriaId) {
@@ -83,6 +84,7 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
       })
     )
   );
+  log.info("infoAboutHandledFiles", infoAboutHandledFiles);
   let hasChanges = false;
   originalTiedostot.forEach((tiedosto, index) => {
     const { fileWasPersisted, fileWasRemoved } = infoAboutHandledFiles[index];

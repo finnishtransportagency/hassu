@@ -2,6 +2,7 @@ import { AineistoPathsPair, handleAineistot, handleTiedostot } from ".";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
+import { log } from "../../logger";
 
 export abstract class TiedostoManager<T> {
   public readonly oid: string;
@@ -35,6 +36,7 @@ export abstract class TiedostoManager<T> {
         this.getLadatutTiedostot(this.vaihe).map((element: LadattuTiedostoPathsPair) => {
           // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
           // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
+          log.info("Handles tiedostot", element.tiedostot);
           return handleTiedostot(this.oid, element.tiedostot, element.paths);
         })
       );
