@@ -490,6 +490,10 @@ type Aineisto {
   """
   dokumenttiOid: String!
   """
+  Tunniste, joka luodaan, kun tiedosto valitaan
+  """
+  uuid: String!
+  """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
   """
   kategoriaId: String
@@ -762,6 +766,10 @@ type LadattuTiedosto {
   Kayttajalle esitettava tiedostonimi
   """
   nimi: String!
+  """
+  Tunniste, joka luodaan, kun tiedosto valitaan
+  """
+  uuid: String!
   tuotu: String
   """
   Numero jarjestamista varten

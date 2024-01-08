@@ -266,6 +266,7 @@ input AineistoInput {
   """
   kategoriaId: String
   nimi: String!
+  uuid: String!
   """
   Numero jarjestamista varten
   """
@@ -282,6 +283,7 @@ input LadattuTiedostoInput {
   Kayttajalle esitettava tiedostonimi
   """
   nimi: String!
+  uuid: String!
   """
   Numero jarjestamista varten
   """
