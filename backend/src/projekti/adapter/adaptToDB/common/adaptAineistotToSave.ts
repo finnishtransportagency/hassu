@@ -28,6 +28,7 @@ export function adaptAineistotToSave(
       kategoriaId: aineistoInput.kategoriaId ?? undefined,
       jarjestys: aineistoInput.jarjestys,
       tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
+      uuid: aineistoInput.uuid,
     });
     hasPendingChanges = true;
   }
