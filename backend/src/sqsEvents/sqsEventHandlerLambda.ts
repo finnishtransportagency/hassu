@@ -185,6 +185,7 @@ async function handleChangedFiles(ctx: ImportContext): Promise<void> {
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChangedTiedostot();
   const jatkoPaatos1Vaihe = await manager.getJatkoPaatos1Vaihe().handleChangedTiedostot();
   const jatkoPaatos2Vaihe = await manager.getJatkoPaatos2Vaihe().handleChangedTiedostot();
+  log.info("lausuntopyynnot (kasittelyn jälkeen)", lausuntoPyynnot);
   // Päivitä vain jos on muuttuneita tietoja.
   if (
     vuorovaikutusKierros ||
@@ -197,6 +198,7 @@ async function handleChangedFiles(ctx: ImportContext): Promise<void> {
   ) {
     // Tässä tallennetaan tieto siitä, että aineistot on tuotu, ja poistettavaksi merkityt
     // aineistot, lausuntopyynnöt ja lausuntopyynnön täydennykset poistetaan oikeasti.
+
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       versio: ctx.projekti.versio,
