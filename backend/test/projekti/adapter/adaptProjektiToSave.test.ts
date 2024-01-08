@@ -19,6 +19,7 @@ import {
   removedLisaAineistoNotYetPersisted,
   threeFilesWithSameName,
   inputHasOldInfo,
+  addedLisaAineistoNotYetRemoved,
 } from "./adaptProjektiToSaveTests/adaptLausuntoPyyntoTests";
 
 describe("adaptProjektiToSave produces correct events and adapted projekti when saving changes to lausuntoPyynnonTaydennykset", () => {
@@ -68,4 +69,6 @@ describe("adaptProjektiToSave produces correct events and adapterd projekti when
   it("when trying to remove something 'twice', and db has three files with same name", threeFilesWithSameName);
 
   it("when input has old info about file readiness", inputHasOldInfo);
+
+  it("when trying to add back a file that is not yet removed", addedLisaAineistoNotYetRemoved);
 });
