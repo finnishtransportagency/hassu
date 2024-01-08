@@ -216,7 +216,12 @@ const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appen
         onClick={() => {
           remove(index);
           if (aineisto.tila) {
-            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+            appendToPoistetut({
+              dokumenttiOid: aineisto.dokumenttiOid,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              nimi: aineisto.nimi,
+              uuid: aineisto.uuid,
+            });
           }
         }}
         icon="trash"
