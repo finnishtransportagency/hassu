@@ -11,11 +11,12 @@ export const handleLadattuTiedostoArraysForSave = (
 ];
 
 function adaptLadattuTiedostoInputFEtoBE(ladattuTiedosto: LadattuTiedostoInput): LadattuTiedostoInput {
-  const { nimi, tiedosto, tila, jarjestys } = ladattuTiedosto;
+  const { nimi, tiedosto, tila, jarjestys, uuid } = ladattuTiedosto;
   return {
     nimi,
     tila,
     jarjestys,
     tiedosto: tiedosto.replace(/^\/?yllapito\/tiedostot\/projekti\/[0-9\.]+\//, "/"),
+    uuid,
   };
 }

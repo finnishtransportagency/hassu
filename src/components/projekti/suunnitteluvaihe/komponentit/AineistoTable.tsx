@@ -82,7 +82,7 @@ const AineistoTable = ({
     () =>
       fields.map((field) => {
         const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
 
         return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
@@ -113,19 +113,20 @@ const AineistoTable = ({
         header: "Kategoria",
         id: "kategoria",
         accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
           return (
             <Select
               defaultValue={aineistoTyyppi}
               onChange={(event) => {
                 const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
                 if (tyyppi !== aineistoTyyppi) {
-                  if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                  if (!find(otherAineistoWatch, { uuid: aineisto.uuid })) {
                     appendToOtherArray({
                       dokumenttiOid: aineisto.dokumenttiOid,
                       nimi: aineisto.nimi,
                       tila: aineisto.tila,
                       jarjestys: otherAineistoWatch?.length,
+                      uuid: aineisto.uuid,
                     });
                   }
                   remove(index);
@@ -144,7 +145,7 @@ const AineistoTable = ({
         header: "",
         id: "actions",
         accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
           return (
             <ActionsColumn
               index={index}
@@ -216,7 +217,12 @@ const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appen
         onClick={() => {
           remove(index);
           if (aineisto.tila) {
-            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+            appendToPoistetut({
+              dokumenttiOid: aineisto.dokumenttiOid,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              nimi: aineisto.nimi,
+              uuid: aineisto.uuid,
+            });
           }
         }}
         icon="trash"
