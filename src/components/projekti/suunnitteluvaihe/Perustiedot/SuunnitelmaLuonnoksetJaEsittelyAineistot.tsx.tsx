@@ -13,6 +13,7 @@ import HassuAccordion from "@components/HassuAccordion";
 import AineistoTable, { SuunnitteluVaiheAineistoTyyppi } from "../komponentit/AineistoTable";
 import Button from "@components/button/Button";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
+import { uuid } from "common/util/uuid";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierros | null | undefined;
@@ -139,6 +140,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
               tila: AineistoTila.ODOTTAA_TUONTIA,
+              uuid: uuid.v4(),
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
@@ -179,6 +181,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
               tila: AineistoTila.ODOTTAA_TUONTIA,
+              uuid: uuid.v4(),
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
