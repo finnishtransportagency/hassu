@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import LisaAineistotTable from "./Table";
@@ -7,17 +7,14 @@ import { lataaTiedosto } from "src/util/fileUtil";
 import { LadattuTiedostoInput, LadattuTiedostoTila, api } from "@services/api";
 import { LausuntoPyynnotFormValues } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { combineOldAndNewLadattuTiedosto } from "../../util";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
-  const { watch, control, setValue } = useFormContext<LausuntoPyynnotFormValues>();
+  const { watch, setValue } = useFormContext<LausuntoPyynnotFormValues>();
 
   const lausuntoPyynto = watch(`lausuntoPyynnot.${index}`);
-  const { replace: replacePoistetutLisaAineistot } = useFieldArray({ control, name: `lausuntoPyynnot.${index}.poistetutLisaAineistot` });
   const lisaAineistot = watch(`lausuntoPyynnot.${index}.lisaAineistot`);
-  const poistetutLisaAineistot = watch(`lausuntoPyynnot.${index}.poistetutLisaAineistot`);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -42,17 +39,11 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
-            const { poistetut, lisatyt } = combineOldAndNewLadattuTiedosto({
-              oldTiedostot: lisaAineistot,
-              oldPoistetut: poistetutLisaAineistot,
-              newTiedostot: tiedostoInputs,
-            });
-            replacePoistetutLisaAineistot(poistetut);
-            setValue(`lausuntoPyynnot.${index}.lisaAineistot`, lisatyt, { shouldDirty: true });
+            setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
       ),
-    [index, lisaAineistot, poistetutLisaAineistot, replacePoistetutLisaAineistot, setValue, withLoadingSpinner]
+    [index, lisaAineistot, setValue, withLoadingSpinner]
   );
 
   return (
