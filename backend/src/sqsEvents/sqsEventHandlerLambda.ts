@@ -38,7 +38,7 @@ async function handleNahtavillaoloZipping(ctx: ImportContext) {
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
   const nahtavillaoloVaihe = { ...ctx.projekti.nahtavillaoloVaihe };
   log.info("paivitetaan dbprojekti nähtävilläolon aineistopaketti-tiedolla: " + aineistopakettiRelativeS3Key);
-  await projektiDatabase.saveProjektiWithoutLocking({
+  await projektiDatabase.saveProjektiWithoutIncreasingVersio({
     oid,
     versio: ctx.projekti.versio,
     nahtavillaoloVaihe: { ...nahtavillaoloVaihe, aineistopaketti: "/" + aineistopakettiRelativeS3Key },
@@ -83,7 +83,7 @@ async function handleLausuntoPyyntoZipping(ctx: ImportContext, uuid: string) {
 
   const lausuntoPyyntoWithAineistopaketti = { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
   log.info("paivitetaan dbprojekti lausuntoPyynnon aineistopaketti-tiedolla: " + lausuntoPyyntoWithAineistopaketti.aineistopaketti);
-  await projektiDatabase.saveProjektiWithoutLocking({
+  await projektiDatabase.saveProjektiWithoutIncreasingVersio({
     oid,
     versio: ctx.projekti.versio,
     lausuntoPyynnot: lausuntoPyynnot.map((lausuntoPyynto) => {
@@ -113,7 +113,7 @@ async function handleLausuntoPyynnonTaydennyksetZipping(ctx: ImportContext) {
     "paivitetaan dbprojekti lausuntoPyyntojenTaydennysten aineistopaketti-tiedolla: " +
       lausuntoPyynnonTaydennykset.map((lausuntoPyynto) => lausuntoPyynto.aineistopaketti).toString()
   );
-  await projektiDatabase.saveProjektiWithoutLocking({
+  await projektiDatabase.saveProjektiWithoutIncreasingVersio({
     oid,
     versio: ctx.projekti.versio,
     lausuntoPyynnonTaydennykset,
@@ -150,7 +150,7 @@ async function handleChangedAineisto(ctx: ImportContext) {
   const jatkoPaatos2Vaihe = await manager.getJatkoPaatos2Vaihe().handleChanges();
   // Päivitä vain jos on muuttuneita tietoja
   if (vuorovaikutusKierros || nahtavillaoloVaihe || hyvaksymisPaatosVaihe || jatkoPaatos1Vaihe || jatkoPaatos2Vaihe) {
-    await projektiDatabase.saveProjektiWithoutLocking({
+    await projektiDatabase.saveProjektiWithoutIncreasingVersio({
       oid,
       versio: ctx.projekti.versio,
       vuorovaikutusKierros,
@@ -199,7 +199,7 @@ async function handleChangedFiles(ctx: ImportContext): Promise<void> {
     // Tässä tallennetaan tieto siitä, että aineistot on tuotu, ja poistettavaksi merkityt
     // aineistot, lausuntopyynnöt ja lausuntopyynnön täydennykset poistetaan oikeasti.
 
-    await projektiDatabase.saveProjektiWithoutLocking({
+    await projektiDatabase.saveProjektiWithoutIncreasingVersio({
       oid,
       versio: ctx.projekti.versio,
       vuorovaikutusKierros,
@@ -258,7 +258,7 @@ async function handleChangedAineistoAndFiles(ctx: ImportContext) {
     jatkoPaatos1Vaihe ||
     jatkoPaatos2Vaihe
   ) {
-    await projektiDatabase.saveProjektiWithoutLocking({
+    await projektiDatabase.saveProjektiWithoutIncreasingVersio({
       oid,
       versio: ctx.projekti.versio,
       vuorovaikutusKierros,

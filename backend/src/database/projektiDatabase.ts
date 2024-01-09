@@ -170,6 +170,10 @@ export class ProjektiDatabase {
     return this.saveProjektiInternal(dbProjekti);
   }
 
+  async saveProjektiWithoutIncreasingVersio(dbProjekti: PartialDBProjekti): Promise<number> {
+    return this.saveProjektiInternal(dbProjekti, false, false, true);
+  }
+
   async saveProjektiWithoutLocking(dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">): Promise<number> {
     return this.saveProjektiInternal(dbProjekti, false, true);
   }
@@ -183,7 +187,8 @@ export class ProjektiDatabase {
   protected async saveProjektiInternal(
     dbProjekti: Partial<DBProjekti>,
     forceUpdateInTests = false,
-    bypassLocking = false
+    bypassLocking = false,
+    doNotIncreaseVersion = false
   ): Promise<number> {
     if (log.isLevelEnabled("debug")) {
       log.debug("Updating projekti to Hassu", { projekti: dbProjekti });
@@ -201,6 +206,8 @@ export class ProjektiDatabase {
     let nextVersion: number;
     if (bypassLocking) {
       nextVersion = dbProjekti.versio ?? 0; // Value 0 should not be meaningful when locking is bypassed
+    } else if (doNotIncreaseVersion) {
+      nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams, true);
     } else {
       nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
     }
@@ -258,19 +265,20 @@ export class ProjektiDatabase {
     }
   }
 
-  private handleOptimisticLocking(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams) {
+  private handleOptimisticLocking(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams, doNotIncreaseVersion?: boolean) {
     const versioFromInput = dbProjekti.versio;
     if (!versioFromInput) {
       assert(versioFromInput, "projektin versio pitää olla tallennettaessa asetettu");
     }
-    const nextVersion = versioFromInput + 1;
+    const nextVersion = doNotIncreaseVersion ? versioFromInput : versioFromInput + 1;
     updateParams.attributeNames["#versio"] = "versio";
 
     updateParams.conditionExpression = "attribute_not_exists(#versio) OR #versio = :versioFromInput";
     updateParams.attributeValues[":versioFromInput"] = versioFromInput;
-
-    updateParams.setExpression.push("#versio = :versio");
-    updateParams.attributeValues[":versio"] = nextVersion;
+    if (!doNotIncreaseVersion) {
+      updateParams.setExpression.push("#versio = :versio");
+      updateParams.attributeValues[":versio"] = nextVersion;
+    }
     return nextVersion;
   }
 
