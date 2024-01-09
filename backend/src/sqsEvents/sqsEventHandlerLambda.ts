@@ -180,7 +180,9 @@ async function handleChangedFiles(ctx: ImportContext): Promise<void> {
   const manager: ProjektiTiedostoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChangedTiedostot();
   const nahtavillaoloVaihe = await manager.getNahtavillaoloVaihe().handleChangedTiedostot();
+  log.info("Nähtävilläolovaihe handled", nahtavillaoloVaihe);
   const lausuntoPyynnot = await manager.getLausuntoPyynnot().handleChangedTiedostot();
+  log.info("Lausuntopyynnöt handled", lausuntoPyynnot);
   const lausuntoPyynnonTaydennykset = await manager.getLausuntoPyynnonTaydennykset().handleChangedTiedostot();
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChangedTiedostot();
   const jatkoPaatos1Vaihe = await manager.getJatkoPaatos1Vaihe().handleChangedTiedostot();
