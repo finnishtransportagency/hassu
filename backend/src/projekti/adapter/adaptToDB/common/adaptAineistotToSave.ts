@@ -1,10 +1,8 @@
-import { Aineisto, LadattuTiedosto } from "../../../../database/model";
+import { Aineisto } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../../projektiAdaptationResult";
 import mergeWith from "lodash/mergeWith";
 import { log } from "../../../../logger";
-
-export type LausuntoPyynnotDB = LadattuTiedosto[] | undefined | null;
 
 export function adaptAineistotToSave(
   dbAineistot: Aineisto[] | undefined | null,
