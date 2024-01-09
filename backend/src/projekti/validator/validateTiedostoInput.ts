@@ -6,16 +6,15 @@ export function validateTiedostoInput(
   dbTiedostot: LadattuTiedosto[] | undefined | null,
   inputTiedostot: LadattuTiedostoInput[] | undefined | null
 ) {
-  if (
-    dbTiedostot &&
-    inputTiedostot !== undefined &&
-    !dbTiedostot.every(
-      (dbtiedosto) =>
-        dbtiedosto.tila == LadattuTiedostoTila.ODOTTAA_POISTOA ||
-        inputTiedostot?.find((inputtiedosto) => inputtiedosto.uuid == dbtiedosto.uuid)
-    )
-  ) {
-    throw new IllegalArgumentError("Jokainen db:ssä oleva tiedosto on mainittava inputissa.");
+  const dbTiedostoJotaEiMainitaInputissa = dbTiedostot?.find(
+    (dbtiedosto) =>
+      dbtiedosto.tila != LadattuTiedostoTila.ODOTTAA_POISTOA &&
+      !inputTiedostot?.find((inputtiedosto) => inputtiedosto.uuid == dbtiedosto.uuid)
+  );
+  if (dbTiedostot && inputTiedostot !== undefined && dbTiedostoJotaEiMainitaInputissa) {
+    throw new IllegalArgumentError(
+      `Jokainen db:ssä oleva tiedosto on mainittava inputissa. Puuttuu: ${dbTiedostoJotaEiMainitaInputissa?.uuid}`
+    );
   }
   if (
     inputTiedostot &&
