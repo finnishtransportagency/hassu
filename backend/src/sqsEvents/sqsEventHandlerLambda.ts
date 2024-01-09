@@ -17,7 +17,7 @@ import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManag
 import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
-import { AineistoMuokkausError } from "hassu-common/error";
+import { AineistoMuokkausError, SimultaneousUpdateError } from "hassu-common/error";
 import { LausuntoPyynnonTaydennys } from "../database/model";
 import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/ProjektiTiedostoManager/LausuntoPyynnonTaydennysTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
@@ -397,6 +397,10 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           } catch (e) {
             if (e instanceof AineistoMuokkausError) {
               log.info("Scheduled event cancelled. All ok.", e.message);
+            } else if (e instanceof SimultaneousUpdateError) {
+              log.info("Projektin versio oli kasvanut tallennusten välissä. Laitetaan event sqs jonoon uudestaan.", sqsEvent.type);
+              await eventSqsClient.addEventToSqsQueue(sqsEvent);
+              return;
             } else {
               throw e;
             }
