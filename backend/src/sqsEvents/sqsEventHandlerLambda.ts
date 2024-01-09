@@ -412,7 +412,7 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           }
           if (!successfulSynchronization) {
             // Yritä uudelleen minuutin päästä
-            await eventSqsClient.addEventToSqsQueue(sqsEvent, true);
+            await eventSqsClient.addEventToSqsQueue({ ...sqsEvent, type: SqsEventType.SYNCHRONIZE }, true);
           }
         }),
       Promise.resolve()
