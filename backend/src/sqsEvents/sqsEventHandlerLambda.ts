@@ -425,5 +425,5 @@ export const handlerFactory = (event: SQSEvent) => async () => {
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  return wrapXRayAsync("handler", handlerFactory(event));
+  return handlerFactory(event)();
 };
