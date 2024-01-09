@@ -10,14 +10,20 @@ export function adaptTiedostotToSave(
   dbTiedostot: LadattuTiedosto[] | undefined | null,
   tiedostotInput: API.LadattuTiedostoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
-): LausuntoPyynnotDB {
+): LadattuTiedosto[] | undefined | null {
   log.info("dbTiedostot", dbTiedostot);
   const uudetTiedostot = tiedostotInput
     ?.map((inputtiedosto) => {
       const vastaavaVanhaTiedosto = dbTiedostot?.find((dbtiedosto) => dbtiedosto.uuid == inputtiedosto.uuid);
       return adaptTiedostoToSave(vastaavaVanhaTiedosto, inputtiedosto, projektiAdaptationResult);
     })
-    .filter((tiedosto) => !(tiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_POISTOA && !tiedosto.tuotu));
+    .filter((tiedosto) => !(tiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_POISTOA && !tiedosto.tuotu))
+    .concat(
+      (dbTiedostot ?? []).filter(
+        (dbtiedosto) =>
+          dbtiedosto.tila == API.LadattuTiedostoTila.ODOTTAA_POISTOA && !tiedostotInput.find((tiedosto) => tiedosto.uuid == dbtiedosto.uuid)
+      )
+    );
   log.info("uudetTiedostot", uudetTiedostot);
   return uudetTiedostot;
 }
