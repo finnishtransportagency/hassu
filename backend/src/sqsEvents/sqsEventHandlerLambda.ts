@@ -331,88 +331,90 @@ async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
 
 export const handlerFactory = (event: SQSEvent) => async () => {
   try {
-    for (const record of event.Records) {
-      const sqsEvent: SqsEvent = JSON.parse(record.body);
-      const uuid: string | undefined = sqsEvent.uuid;
-      if (sqsEvent.scheduleName) {
-        await projektiSchedulerService.deletePastSchedule(sqsEvent.scheduleName);
-      }
-      log.info("sqsEvent", sqsEvent);
-      const { oid } = sqsEvent;
-      const projekti = await projektiDatabase.loadProjektiByOid(oid);
-      if (!projekti) {
-        throw new Error("Projektia " + oid + " ei löydy");
-      }
-
-      const ctx = await new ImportContext(projekti).init();
-      try {
-        switch (sqsEvent.type) {
-          case SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
-            await nahtavillaoloTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            break;
-          case SqsEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
-            await hyvaksymisPaatosVaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            break;
-          case SqsEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
-            await jatkoPaatos1VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            break;
-          case SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
-            await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            break;
-          // deprecated, kept until next production deployment
-          // Tämä on täällä vielä siltä varalta, että tuotantoon viemisen hetkellä sqs-jonossa on IMPORT-eventtejä
-          case SqsEventType.IMPORT:
-            await handleChangedAineisto(ctx);
-            break;
-          case SqsEventType.AINEISTO_CHANGED:
-            await handleChangedAineisto(ctx);
-            break;
-          case SqsEventType.FILES_CHANGED:
-            await handleChangedFiles(ctx);
-            break;
-          case SqsEventType.AINEISTO_AND_FILES_CHANGED:
-            await handleChangedAineistoAndFiles(ctx);
-            break;
-          case SqsEventType.ZIP:
-            await handleNahtavillaoloZipping(ctx);
-            break;
-          case SqsEventType.ZIP_NAHTAVILLAOLO:
-            await handleNahtavillaoloZipping(ctx);
-            break;
-          case SqsEventType.ZIP_LAUSUNTOPYYNNOT:
-            await handleLausuntoPyynnotZipping(ctx);
-            break;
-          case SqsEventType.ZIP_LAUSUNTOPYYNTO:
-            assertIsDefined(uuid, "ZIP_LAUSUNTOPYYNTO event should have uuid information");
-            await handleLausuntoPyyntoZipping(ctx, uuid);
-            break;
-          case SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET:
-            await handleLausuntoPyynnonTaydennyksetZipping(ctx);
-            break;
-          default:
-            break;
+    await Promise.all(
+      event.Records.map(async (record) => {
+        const sqsEvent: SqsEvent = JSON.parse(record.body);
+        const uuid: string | undefined = sqsEvent.uuid;
+        if (sqsEvent.scheduleName) {
+          await projektiSchedulerService.deletePastSchedule(sqsEvent.scheduleName);
         }
-      } catch (e) {
-        if (e instanceof AineistoMuokkausError) {
-          log.info("Scheduled event cancelled. All ok.", e.message);
-        } else {
-          throw e;
+        log.info("sqsEvent", sqsEvent);
+        const { oid } = sqsEvent;
+        const projekti = await projektiDatabase.loadProjektiByOid(oid);
+        if (!projekti) {
+          throw new Error("Projektia " + oid + " ei löydy");
         }
-      }
 
-      await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+        const ctx = await new ImportContext(projekti).init();
+        try {
+          switch (sqsEvent.type) {
+            case SqsEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
+              await nahtavillaoloTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case SqsEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
+              await hyvaksymisPaatosVaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case SqsEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
+              await jatkoPaatos1VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            case SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
+              await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              break;
+            // deprecated, kept until next production deployment
+            // Tämä on täällä vielä siltä varalta, että tuotantoon viemisen hetkellä sqs-jonossa on IMPORT-eventtejä
+            case SqsEventType.IMPORT:
+              await handleChangedAineisto(ctx);
+              break;
+            case SqsEventType.AINEISTO_CHANGED:
+              await handleChangedAineisto(ctx);
+              break;
+            case SqsEventType.FILES_CHANGED:
+              await handleChangedFiles(ctx);
+              break;
+            case SqsEventType.AINEISTO_AND_FILES_CHANGED:
+              await handleChangedAineistoAndFiles(ctx);
+              break;
+            case SqsEventType.ZIP:
+              await handleNahtavillaoloZipping(ctx);
+              break;
+            case SqsEventType.ZIP_NAHTAVILLAOLO:
+              await handleNahtavillaoloZipping(ctx);
+              break;
+            case SqsEventType.ZIP_LAUSUNTOPYYNNOT:
+              await handleLausuntoPyynnotZipping(ctx);
+              break;
+            case SqsEventType.ZIP_LAUSUNTOPYYNTO:
+              assertIsDefined(uuid, "ZIP_LAUSUNTOPYYNTO event should have uuid information");
+              await handleLausuntoPyyntoZipping(ctx, uuid);
+              break;
+            case SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET:
+              await handleLausuntoPyynnonTaydennyksetZipping(ctx);
+              break;
+            default:
+              break;
+          }
+        } catch (e) {
+          if (e instanceof AineistoMuokkausError) {
+            log.info("Scheduled event cancelled. All ok.", e.message);
+          } else {
+            throw e;
+          }
+        }
 
-      // Synkronoidaan tiedostot aina
-      const successfulSynchronization = await synchronizeAll(ctx);
+        await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
 
-      if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
-        await projektiSearchService.indexProjekti(projekti);
-      }
-      if (!successfulSynchronization) {
-        // Yritä uudelleen minuutin päästä
-        await eventSqsClient.addEventToSqsQueue(sqsEvent, true);
-      }
-    }
+        // Synkronoidaan tiedostot aina
+        const successfulSynchronization = await synchronizeAll(ctx);
+
+        if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
+          await projektiSearchService.indexProjekti(projekti);
+        }
+        if (!successfulSynchronization) {
+          // Yritä uudelleen minuutin päästä
+          await eventSqsClient.addEventToSqsQueue(sqsEvent, true);
+        }
+      })
+    );
   } catch (e: unknown) {
     log.error(e);
     throw e;
