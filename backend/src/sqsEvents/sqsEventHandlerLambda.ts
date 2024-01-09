@@ -429,5 +429,7 @@ export const handlerFactory = (event: SQSEvent) => async () => {
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  return handlerFactory(event)();
+  const jotain = await handlerFactory(event)();
+  log.info("LOPUSSA", "LOPUSSA");
+  return jotain;
 };
