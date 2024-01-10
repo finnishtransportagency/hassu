@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import MuuAineistoTable from "./Table";
@@ -8,17 +8,11 @@ import { lataaTiedosto } from "src/util/fileUtil";
 import { LausuntoPyynnonTaydennysFormValues, LausuntoPyynnonTaydennysLisakentilla } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
-import { combineOldAndNewLadattuTiedosto } from "../../util";
 import { uuid } from "common/util/uuid";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
-  const { watch, control, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
-  const { replace: replacePoistetutMuuAineisto } = useFieldArray({
-    control,
-    name: `lausuntoPyynnonTaydennykset.${index}.poistetutMuuAineisto`,
-  });
+  const { watch, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
   const muuAineisto = watch(`lausuntoPyynnonTaydennykset.${index}.muuAineisto`);
-  const poistetutMuuAineisto = watch(`lausuntoPyynnonTaydennykset.${index}.poistetutMuuAineisto`);
   const lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysLisakentilla | undefined = watch(`lausuntoPyynnonTaydennykset.${index}`);
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const onButtonClick = () => {
@@ -43,17 +37,11 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
-            const { poistetut, lisatyt } = combineOldAndNewLadattuTiedosto({
-              oldTiedostot: muuAineisto,
-              oldPoistetut: poistetutMuuAineisto,
-              newTiedostot: tiedostoInputs,
-            });
-            replacePoistetutMuuAineisto(poistetut);
-            setValue(`lausuntoPyynnonTaydennykset.${index}.muuAineisto`, lisatyt, { shouldDirty: true });
+            setValue(`lausuntoPyynnonTaydennykset.${index}.muuAineisto`, (muuAineisto ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
       ),
-    [index, muuAineisto, poistetutMuuAineisto, replacePoistetutMuuAineisto, setValue, withLoadingSpinner]
+    [index, muuAineisto, setValue, withLoadingSpinner]
   );
   return (
     <SectionContent className="mt-16">
