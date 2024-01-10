@@ -110,7 +110,6 @@ export const Footer = () => {
         </div>
         <div style={{ width: "100%" }}>
           <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
-            s
             <ContentSpacer gap={4}>
               <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
               <SocialMediaLinkList>

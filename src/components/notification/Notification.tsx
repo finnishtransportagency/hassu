@@ -86,7 +86,7 @@ const Notification = styled(
     onClose: controlledOnClose,
     ...props
   }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement => {
-    const { t, lang } = useTranslation("common");
+    const { t } = useTranslation("common");
     const isControlled = controlledOpen !== undefined;
     const defaultIcon = type && defaultIcons[type];
     const iconComponent = icon ? <FontAwesomeStartIcon icon={icon} /> : defaultIcon;
