@@ -31,7 +31,7 @@ export function AineistoTable(props: AineistoTableProps) {
     () =>
       fields.map((field) => {
         const aineistoData = props.aineisto || [];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
 
         return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
@@ -45,7 +45,7 @@ export function AineistoTable(props: AineistoTableProps) {
         meta: { minWidth: 250, widthFractions: 4 },
         id: "aineisto",
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           const errorpath = props.kategoriaId;
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
           return (
@@ -79,9 +79,9 @@ export function AineistoTable(props: AineistoTableProps) {
                   const newKategoria = event.target.value;
                   if (newKategoria !== props.kategoriaId) {
                     const values: AineistoInput[] = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
-                    const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+                    const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
 
-                    if (!find(values, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                    if (!find(values, { uuid: aineisto.uuid })) {
                       values.push({
                         dokumenttiOid: aineisto.dokumenttiOid,
                         nimi: aineisto.nimi,
@@ -105,7 +105,7 @@ export function AineistoTable(props: AineistoTableProps) {
         header: "",
         id: "actions",
         accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
           return (
             <ActionsColumn
               fields={fields}

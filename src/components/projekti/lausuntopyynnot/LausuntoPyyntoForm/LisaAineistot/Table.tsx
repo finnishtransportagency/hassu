@@ -26,8 +26,7 @@ export default function AineistoTable({
     () =>
       fields.map((field) => {
         const aineistoData = joTallennetutLisaAineistot || [];
-        const { tuotu } = aineistoData.find(({ nimi }) => nimi === field.nimi) || {};
-
+        const { tuotu } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
         return { tuotu, ...field };
       }),
     [fields, joTallennetutLisaAineistot]
@@ -39,7 +38,7 @@ export default function AineistoTable({
         header: "Tiedosto",
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
-          const aineistoIndex = enrichedFields.findIndex((row) => row.nimi === aineisto.nimi);
+          const aineistoIndex = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           const errorMessage = (formState.errors.lausuntoPyynnot?.[lausuntoPyyntoIndex].lisaAineistot?.[aineistoIndex] as any | undefined)
             ?.message;
           return (
@@ -66,7 +65,7 @@ export default function AineistoTable({
         id: "actions",
         meta: { minWidth: 120, widthFractions: 2 },
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.tiedosto === aineisto.tiedosto);
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           return <ActionsColumn index={index} remove={remove} aineisto={aineisto} appendToPoistetut={appendToPoistetut} />;
         },
       },
