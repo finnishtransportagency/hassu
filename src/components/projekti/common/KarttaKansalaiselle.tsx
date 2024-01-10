@@ -22,7 +22,7 @@ import BaseLayer from "ol/layer/Base";
 import { fromExtent as polygonFromExtent } from "ol/geom/Polygon.js";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
 import useTranslation from "next-translate/useTranslation";
-import FullScreenControl from "./FullScreenControl";
+import FullScreenControl from "../../../map/FullScreenControl";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
