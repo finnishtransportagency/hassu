@@ -69,51 +69,33 @@ export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineis
 
 export function combineOldAndNewAineistoWithCategories({
   oldAineisto,
-  oldPoistetut,
   newAineisto,
 }: {
   oldAineisto: AineistotKategorioittain;
-  oldPoistetut: AineistoInput[];
   newAineisto: AineistoInput[];
 }) {
-  return newAineisto.reduce<{ lisatyt: AineistotKategorioittain; poistetut: AineistoInput[] }>(
-    (acc, velhoAineisto) => {
-      if (!find(Object.values(acc.lisatyt || {}).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-        if (!velhoAineisto.kategoriaId && !acc.lisatyt[kategorisoimattomatId]) {
-          acc.lisatyt[kategorisoimattomatId] = [];
-        }
-        if (velhoAineisto.kategoriaId && !acc.lisatyt[velhoAineisto.kategoriaId]) {
-          acc.lisatyt[velhoAineisto.kategoriaId] = [];
-        }
-        const kategorianAineistot = acc.lisatyt[velhoAineisto.kategoriaId || kategorisoimattomatId];
-        kategorianAineistot.push({ ...velhoAineisto, jarjestys: kategorianAineistot.length });
+  return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
+    if (!find(Object.values(combinedNewAndOld).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+      if (!velhoAineisto.kategoriaId && !combinedNewAndOld[kategorisoimattomatId]) {
+        combinedNewAndOld[kategorisoimattomatId] = [];
       }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-      return acc;
-    },
-    { lisatyt: oldAineisto || {}, poistetut: oldPoistetut || [] }
-  );
+      if (velhoAineisto.kategoriaId && !combinedNewAndOld[velhoAineisto.kategoriaId]) {
+        combinedNewAndOld[velhoAineisto.kategoriaId] = [];
+      }
+      const kategorianAineistot = combinedNewAndOld[velhoAineisto.kategoriaId || kategorisoimattomatId];
+      kategorianAineistot.push({ ...velhoAineisto, jarjestys: kategorianAineistot.length });
+    }
+    return combinedNewAndOld;
+  }, oldAineisto || {});
 }
 
-export function combineOldAndNewAineisto({
-  oldAineisto,
-  oldPoistetut,
-  newAineisto,
-}: {
-  oldAineisto?: AineistoInput[];
-  oldPoistetut?: AineistoInput[];
-  newAineisto: AineistoInput[];
-}) {
-  return newAineisto.reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
-    (acc, velhoAineisto) => {
-      if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-        acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
-      }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-      return acc;
-    },
-    { lisatyt: oldAineisto || [], poistetut: oldPoistetut || [] }
-  );
+export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAineisto?: AineistoInput[]; newAineisto: AineistoInput[] }) {
+  return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
+    if (!find(combinedNewAndOld, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+      combinedNewAndOld.push({ ...velhoAineisto, jarjestys: combinedNewAndOld.length });
+    }
+    return combinedNewAndOld;
+  }, oldAineisto || []);
 }
 
 export function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto): AineistoInput {

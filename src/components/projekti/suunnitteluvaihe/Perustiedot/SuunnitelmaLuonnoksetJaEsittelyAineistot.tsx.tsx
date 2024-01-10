@@ -36,9 +36,6 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
-  const poistetutEsittelyaineistot = watch("vuorovaikutusKierros.poistetutEsittelyaineistot");
-  const poistetutSuunnitelmaluonnokset = watch("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset");
-
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
   return (
@@ -135,7 +132,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const { poistetutEa, lisatytEa, lisatytSl, poistetutSl } = aineistot
+          const { lisatytEa, lisatytSl } = aineistot
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
@@ -144,29 +141,27 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
-              poistetutEa: AineistoInput[];
               lisatytSl: AineistoInput[];
-              poistetutSl: AineistoInput[];
             }>(
               (acc, velhoAineisto) => {
-                if (!find(acc.lisatytEa, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-                  acc.lisatytEa.push({ ...velhoAineisto, jarjestys: acc.lisatytEa.length });
+                const aineistoInSl = suunnitelmaluonnokset?.find((ea) => ea.dokumenttiOid == velhoAineisto.dokumenttiOid);
+                if (aineistoInSl) {
+                  // Jos valittu aineisto oli jo toisessa kategoriassa, siirrä se sieltä tähän kategoriaan
+                  acc.lisatytSl = acc.lisatytSl.filter((slAineisto) => slAineisto.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                  acc.lisatytEa.push(aineistoInSl);
+                } else {
+                  if (!find(acc.lisatytEa, { uuid: velhoAineisto.uuid })) {
+                    acc.lisatytEa.push({ ...velhoAineisto, jarjestys: acc.lisatytEa.length });
+                  }
                 }
-                acc.lisatytSl = acc.lisatytSl.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-                acc.poistetutEa = acc.poistetutEa.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-                acc.poistetutSl = acc.poistetutSl.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
                 return acc;
               },
               {
                 lisatytEa: esittelyaineistot || [],
-                poistetutEa: poistetutEsittelyaineistot || [],
                 lisatytSl: suunnitelmaluonnokset || [],
-                poistetutSl: poistetutSuunnitelmaluonnokset || [],
               }
             );
-          setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", poistetutEa, { shouldDirty: true });
           setValue("vuorovaikutusKierros.esittelyaineistot", lisatytEa, { shouldDirty: true });
-          setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", poistetutSl, { shouldDirty: true });
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", lisatytSl, { shouldDirty: true });
         }}
       />
@@ -176,7 +171,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const { poistetutEa, lisatytEa, lisatytSl, poistetutSl } = aineistot
+          const { lisatytEa, lisatytSl } = aineistot
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
@@ -185,29 +180,27 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
             }))
             .reduce<{
               lisatytEa: AineistoInput[];
-              poistetutEa: AineistoInput[];
               lisatytSl: AineistoInput[];
-              poistetutSl: AineistoInput[];
             }>(
               (acc, velhoAineisto) => {
-                if (!find(acc.lisatytSl, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-                  acc.lisatytSl.push({ ...velhoAineisto, jarjestys: acc.lisatytSl.length });
+                const aineistoInEa = esittelyaineistot?.find((ea) => ea.dokumenttiOid == velhoAineisto.dokumenttiOid);
+                if (aineistoInEa) {
+                  // Jos valittu aineisto oli jo toisessa kategoriassa, siirrä se sieltä tähän kategoriaan
+                  acc.lisatytEa = acc.lisatytEa.filter((slAineisto) => slAineisto.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                  acc.lisatytSl.push(aineistoInEa);
+                } else {
+                  if (!find(acc.lisatytSl, { uuid: velhoAineisto.uuid })) {
+                    acc.lisatytSl.push({ ...velhoAineisto, jarjestys: acc.lisatytSl.length });
+                  }
                 }
-                acc.lisatytEa = acc.lisatytEa.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-                acc.poistetutEa = acc.poistetutEa.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-                acc.poistetutSl = acc.poistetutSl.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
                 return acc;
               },
               {
                 lisatytEa: esittelyaineistot || [],
-                poistetutEa: poistetutEsittelyaineistot || [],
                 lisatytSl: suunnitelmaluonnokset || [],
-                poistetutSl: poistetutSuunnitelmaluonnokset || [],
               }
             );
-          setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", poistetutEa, { shouldDirty: true });
           setValue("vuorovaikutusKierros.esittelyaineistot", lisatytEa, { shouldDirty: true });
-          setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", poistetutSl, { shouldDirty: true });
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", lisatytSl, { shouldDirty: true });
         }}
       />
