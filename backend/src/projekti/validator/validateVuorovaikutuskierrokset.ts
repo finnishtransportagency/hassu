@@ -2,6 +2,8 @@ import { DBProjekti } from "../../database/model";
 import { TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import dayjs from "dayjs";
+import { validateAineistoInput } from "./validateAineistoInput";
+import { yhdistaVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 export function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
   const nbr = input.vuorovaikutusKierros?.vuorovaikutusNumero;
@@ -22,4 +24,11 @@ export function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: Tal
   if (julkaisupaiva && edellisenJulkaisupaiva && dayjs(julkaisupaiva).isBefore(edellisenJulkaisupaiva, "day")) {
     throw new IllegalArgumentError("Uutta vuorovaikutuskierrosta ei voi julkaista ennen edellistä!");
   }
+  validateAineistoInput(
+    projekti.vuorovaikutusKierros?.aineistot,
+    yhdistaVuorovaikutusAineistot({
+      esittelyaineistot: input.vuorovaikutusKierros?.esittelyaineistot,
+      suunnitelmaluonnokset: input.vuorovaikutusKierros?.suunnitelmaluonnokset,
+    })
+  );
 }

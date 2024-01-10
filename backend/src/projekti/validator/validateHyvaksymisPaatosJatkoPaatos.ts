@@ -4,6 +4,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { validateMuokkaustilaAllowsInput } from "./validateMuokkaustilaAllowsInput";
+import { validateAineistoInput } from "./validateAineistoInput";
 
 type PaatosKey = keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">;
 
@@ -30,4 +31,10 @@ export function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiPro
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });
+  validateAineistoInput(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla, input.hyvaksymisPaatosVaihe?.aineistoNahtavilla);
+  validateAineistoInput(projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos, input.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
+  validateAineistoInput(projekti.jatkoPaatos1Vaihe?.aineistoNahtavilla, input.jatkoPaatos1Vaihe?.aineistoNahtavilla);
+  validateAineistoInput(projekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos, input.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
+  validateAineistoInput(projekti.jatkoPaatos2Vaihe?.aineistoNahtavilla, input.jatkoPaatos2Vaihe?.aineistoNahtavilla);
+  validateAineistoInput(projekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos, input.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
 }
