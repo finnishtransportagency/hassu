@@ -12,7 +12,7 @@ import {
   VelhoAineisto,
   VelhoToimeksianto,
 } from "hassu-common/graphql/apiModel";
-import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot } from "./util";
+import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot, adaptAPIAineistoToInput } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { cleanupNahtavillaoloTimestamps } from "../../../commonTestUtil/cleanUpFunctions";
@@ -64,7 +64,7 @@ export async function testNahtavillaoloApproval(
         kuulutusVaihePaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
         muistutusoikeusPaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
         hankkeenKuvaus: {
-          SUOMI: dbProjekti.nahtavillaoloVaihe?.hankkeenKuvaus?.SUOMI || "",
+          SUOMI: dbProjekti.nahtavillaoloVaihe?.hankkeenKuvaus?.SUOMI ?? "",
           RUOTSI: dbProjekti.nahtavillaoloVaihe?.hankkeenKuvaus?.RUOTSI,
         },
         kuulutusYhteystiedot: {
@@ -83,6 +83,7 @@ export async function testNahtavillaoloApproval(
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
     }
   );
+
   const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(dbProjekti.oid, Status.NAHTAVILLAOLO);
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu).to.be.an("object");
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
@@ -152,18 +153,22 @@ export async function testLisaaMuistutusIncrement(
 
 export async function testImportNahtavillaoloAineistot(projekti: Projekti, velhoToimeksiannot: VelhoToimeksianto[]): Promise<Projekti> {
   const { oid, versio } = projekti;
-  const osaB = velhoToimeksiannot
+  const osaA = velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
       toimeksianto.aineistot.forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
+  const aineistoNahtavilla = [
+    ...adaptAPIAineistoToInput(projekti.nahtavillaoloVaihe?.aineistoNahtavilla ?? []),
+    ...adaptAineistoToInput(osaA).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
+  ];
   await api.tallennaProjekti({
     oid,
     versio,
     nahtavillaoloVaihe: {
-      aineistoNahtavilla: adaptAineistoToInput(osaB).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
+      aineistoNahtavilla,
     },
   });
 

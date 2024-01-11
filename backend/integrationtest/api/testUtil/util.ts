@@ -1,6 +1,15 @@
 import { cleanupGeneratedIds } from "../../../commonTestUtil/cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, AsianTila, IlmoitettavaViranomainen, KirjaamoOsoite, Status, VelhoAineisto } from "hassu-common/graphql/apiModel";
+import {
+  Aineisto,
+  AineistoInput,
+  AineistoTila,
+  AsianTila,
+  IlmoitettavaViranomainen,
+  KirjaamoOsoite,
+  Status,
+  VelhoAineisto,
+} from "hassu-common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -75,9 +84,26 @@ export function expectToMatchSnapshot(description: string, obj: unknown): void {
 
 export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[] {
   return aineistot
-    .map((aineisto, index) => {
+    .map<AineistoInput>((aineisto, index) => {
       const { oid: dokumenttiOid, tiedosto: nimi } = aineisto;
-      return { jarjestys: index + 1, nimi, dokumenttiOid };
+      const input: AineistoInput = {
+        jarjestys: index + 1,
+        nimi,
+        dokumenttiOid,
+        tila: AineistoTila.ODOTTAA_TUONTIA,
+        uuid: dokumenttiOid + (index + 1),
+      };
+      return input;
+    })
+    .slice(0, 5); // Optimization: don't copy all files
+}
+
+export function adaptAPIAineistoToInput(aineistot: Aineisto[]): AineistoInput[] {
+  return aineistot
+    .map<AineistoInput>((aineisto, index) => {
+      const { dokumenttiOid, tiedosto: nimi, uuid, tila } = aineisto;
+      const input: AineistoInput = { jarjestys: index + 1, nimi: nimi ?? "unnamed", dokumenttiOid, tila, uuid };
+      return input;
     })
     .slice(0, 5); // Optimization: don't copy all files
 }

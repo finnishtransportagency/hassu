@@ -427,14 +427,19 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
   assertIsDefined(aineistot);
   const suunnitelmaluonnoksetInput: API.AineistoInput[] =
     haeKategorianAineistot(aineistot, VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS)?.map((aineisto) => {
-      const { dokumenttiOid, nimi, kategoriaId, jarjestys } = aineisto;
-      return { dokumenttiOid, nimi, kategoriaId, jarjestys };
+      const { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila } = aineisto;
+      return { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila };
     }) ?? [];
 
   const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "Radan risteämärekisteriote_1203.pdf");
   expect(velhoAineistos.length).to.be.greaterThan(0);
   const velhoAineisto = velhoAineistos[0];
-  suunnitelmaluonnoksetInput.push({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto });
+  suunnitelmaluonnoksetInput.push({
+    dokumenttiOid: velhoAineisto.oid,
+    nimi: velhoAineisto.tiedosto,
+    tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "aineisto234",
+  });
   await api.paivitaPerustiedot({
     oid,
     versio,
@@ -533,18 +538,20 @@ export async function testImportAineistot(
     "1400-73Y-6710-5_Pituusleikkaus_Y5.pdf"
   );
 
-  let index = 1;
-  const esittelyaineistot: API.AineistoInput[] = [aineistot[0], aineistot[2]].map((aineisto) => ({
+  const esittelyaineistot: API.AineistoInput[] = [aineistot[0], aineistot[2]].map((aineisto, index) => ({
     dokumenttiOid: aineisto.oid,
-    jarjestys: index++,
+    jarjestys: index + 1,
     nimi: aineisto.tiedosto,
+    tila: API.AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "ea" + (index + 1),
   }));
 
-  index = 1;
-  const suunnitelmaluonnokset = [aineistot[1]].map((aineisto) => ({
+  const suunnitelmaluonnokset: API.AineistoInput[] = [aineistot[1]].map((aineisto, index) => ({
     dokumenttiOid: aineisto.oid,
-    jarjestys: index++,
+    jarjestys: index + 1,
     nimi: aineisto.tiedosto,
+    tila: API.AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "sl" + (index + 1),
   }));
 
   const p2 = await saveAndVerifyAineistoSave(
@@ -559,11 +566,11 @@ export async function testImportAineistot(
   );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
-    aineisto.jarjestys = (aineisto.jarjestys || 0) + 10;
+    aineisto.jarjestys = (aineisto.jarjestys ?? 0) + 10;
   });
   suunnitelmaluonnokset.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
-    aineisto.jarjestys = aineisto.jarjestys + 10;
+    aineisto.jarjestys = (aineisto.jarjestys ?? 0) + 10;
   });
   const p3 = await saveAndVerifyAineistoSave(
     oid,
