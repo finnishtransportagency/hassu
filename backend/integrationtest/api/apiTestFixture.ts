@@ -1,5 +1,6 @@
 import cloneDeep from "lodash/cloneDeep";
 import {
+  AineistoTila,
   AloitusKuulutus,
   AloitusKuulutusInput,
   IlmoitettavaViranomainen,
@@ -449,6 +450,9 @@ class ApiTestFixture {
         dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
         kategoriaId: "osa_a",
         nimi: "TYHJÄ.txt",
+        tila: AineistoTila.ODOTTAA_TUONTIA,
+        uuid: "aineisto123",
+        jarjestys: 1,
       },
     ],
   });
