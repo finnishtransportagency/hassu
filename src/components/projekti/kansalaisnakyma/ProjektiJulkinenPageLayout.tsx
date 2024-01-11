@@ -38,7 +38,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
         {!smallScreen && (
           <div>
             {velho?.linkki && (
-              <HassuWidget>
+              <HassuWidget title={t("hankesivut_otsikko")}>
                 <p>{t("lue_hankesivulta")}</p>
                 <p>
                   <ExtLink href={velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>

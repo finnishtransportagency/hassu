@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import classNames from "classnames";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { experimental_sx as sx, styled } from "@mui/system";
+import useTranslation from "next-translate/useTranslation";
 
 export enum NotificationType {
   DEFAULT = "default",
@@ -85,6 +86,7 @@ const Notification = styled(
     onClose: controlledOnClose,
     ...props
   }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement => {
+    const { t } = useTranslation("common");
     const isControlled = controlledOpen !== undefined;
     const defaultIcon = type && defaultIcons[type];
     const iconComponent = icon ? <FontAwesomeStartIcon icon={icon} /> : defaultIcon;
@@ -101,7 +103,7 @@ const Notification = styled(
     return (
       <div {...props} className={classNames(className, type)}>
         {closable && (
-          <CloseButton type="button" onClick={onClose}>
+          <CloseButton type="button" onClick={onClose} aria-label={t("common:sulje")}>
             <CloseIcon />
           </CloseButton>
         )}
