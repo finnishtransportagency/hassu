@@ -1,8 +1,6 @@
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
-import { getZipFolder, makeFilePathDeleted } from ".";
+import { makeFilePathDeleted } from ".";
 import { Aineisto, DBProjekti, IlmoituksenVastaanottajat, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
-import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../zipFiles";
-import { config } from "../../config";
 import { AineistoTila, Kieli, Status } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
@@ -24,25 +22,6 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
     projekti: DBProjekti,
     asianhallintaEventId: string | null | undefined
   ): AsianhallintaSynkronointi | undefined;
-
-  async createZipOfAineisto(zipFileS3Key: string): Promise<T | undefined> {
-    if (!this.vaihe) {
-      return undefined;
-    }
-    const aineistotPaths = this.getAineistot(this.vaihe);
-    const filesToZip: ZipSourceFile[] = [];
-    const yllapitoPath = this.projektiPaths.yllapitoFullPath;
-
-    aineistotPaths
-      .flatMap((aineistot) => aineistot.aineisto ?? [])
-      .filter((aineisto) => aineisto.tila === AineistoTila.VALMIS)
-      .forEach((aineisto) => {
-        const zipFolder = getZipFolder(aineisto.kategoriaId);
-        filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder });
-      });
-
-    await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
-  }
 
   abstract deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<J[]>;
 

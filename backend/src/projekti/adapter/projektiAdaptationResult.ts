@@ -50,8 +50,8 @@ export class ProjektiAdaptationResult {
     return this.dbProjekti;
   }
 
-  async onEvents(thisHasHappened: (events: ProjektiEvent[]) => boolean, eventHandler: (oid: string) => Promise<void>): Promise<void> {
-    if (thisHasHappened(this.events)) {
+  async onEvent(eventType: ProjektiEventType, eventHandler: (oid: string) => Promise<void>): Promise<void> {
+    if (this.events.some((event) => event.eventType == eventType)) {
       await eventHandler(this.projekti.oid);
     }
   }

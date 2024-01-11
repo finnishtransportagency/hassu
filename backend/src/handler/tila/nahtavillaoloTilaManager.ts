@@ -141,7 +141,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     await super.approve(projekti, hyvaksyja);
     //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
-    await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
+    await Promise.all((projekti.lausuntoPyynnot || []).map((lp) => eventSqsClient.zipLausuntoPyynto(projekti.oid, lp.uuid)));
   }
 
   getVaihe(projekti: DBProjekti): NahtavillaoloVaihe {

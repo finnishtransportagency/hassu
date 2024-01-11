@@ -5,44 +5,83 @@ import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
 class EventSqsClient {
+  async handleAineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_CHANGED, oid });
+  }
+
+  async handleTiedostotChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.TIEDOSTOT_CHANGED, oid });
+  }
+
   async zipNahtavillaoloAineisto(oid: string) {
     await this.addEventToSqsQueue({ type: SqsEventType.ZIP_NAHTAVILLAOLO, oid });
   }
 
-  async zipLausuntoPyyntoAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNOT, oid });
+  async zipLausuntoPyynto(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNOT, oid, uuid });
   }
 
-  async zipSingleLausuntoPyynto(oid: string, uuid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNTO, oid, uuid });
+  async zipLausuntoPyynnonTaydennysAineisto(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYS, oid, uuid });
   }
 
-  async zipLausuntoPyynnonTaydennysAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET, oid });
+  async handleVuorovaikutusAineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.VUOROVAIKUTUS_AINEISTO_CHANGED, oid });
   }
 
-  async handleChangedAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_CHANGED, oid });
+  async handleNahtavillaoloAineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.NAHTAVILLAOLO_AINEISTO_NAHTAVILLA_CHANGED, oid });
   }
 
-  async handleChangedTiedostot(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.FILES_CHANGED, oid });
+  async handleLausuntoPyynnotLisaAineistoChanged(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.LISA_AINEISTO_CHANGED, oid, uuid });
   }
 
-  async handleChangedAineistotAndTiedostot(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_AND_FILES_CHANGED, oid });
+  async handleLausuntoPyynnonTaydennysMuuAineistoChanged(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.MUU_AINEISTO_CHANGED, oid, uuid });
   }
 
-  async synchronizeAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid });
+  async handleLausuntoPyynnonTaydennysMuistutuksetChanged(oid: string, uuid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.MUISTUTUKSET_CHANGED, oid, uuid });
+  }
+
+  async handleHyvaksymisvaiheAineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.HYVAKSYMISVAIHE_AINEISTO_NAHTAVILLA_CHANGED, oid });
+  }
+
+  async handleHyvaksymisvaiheHyvaksymispaatosChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.HYVAKSYMISVAIHE_HYVAKSYMISPAATOS_CHANGED, oid });
+  }
+
+  async handleJatkopaatos1AineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.JATKOPAATOS1_AINEISTO_NAHTAVILLA_CHANGED, oid });
+  }
+
+  async handleJatkopaatos1HyvaksymispaatosChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.JATKOPAATOS1_HYVAKSYMISPAATOS_CHANGED, oid });
+  }
+
+  async handleJatkopaatos2AineistoChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.JATKOPAATOS2_AINEISTO_NAHTAVILLA_CHANGED, oid });
+  }
+
+  async handleJatkopaatos2HyvaksymispaatosChanged(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.JATKOPAATOS2_HYVAKSYMISPAATOS_CHANGED, oid });
+  }
+
+  async handleVuorovaikutusKierrosJulkaisuAineistoChanged(oid: string, id: number) {
+    await this.addEventToSqsQueue({ type: SqsEventType.VUOROVAIKUTUS_JULKAISU_AINEISTO_CHANGED, oid, id });
+  }
+
+  async synchronizeAineistoAndIndexProjekti(oid: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE_AND_INDEX, oid });
   }
 
   async addEventToSqsQueue(params: SqsEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
-      log.info("addEventToSqsQueue", { messageParams });
-      const result = await getSQS().sendMessage(messageParams);
-      log.info("addEventToSqsQueue", { result });
+      await getSQS().sendMessage(messageParams);
+      log.info("added event to sqsl queue", params);
     }
   }
 

@@ -1,4 +1,4 @@
-import { AineistoPathsPair, handleAineistot, handleTiedostot } from ".";
+import { AineistoPathsPair } from ".";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
@@ -12,36 +12,6 @@ export abstract class TiedostoManager<T> {
     this.oid = oid;
     this.vaihe = vaihe ?? undefined;
     this.projektiPaths = new ProjektiPaths(oid);
-  }
-
-  async handleChanges(): Promise<T | undefined> {
-    if (this.vaihe) {
-      let changes = false;
-      // Aineistot, joita saadaan ulos this.getAineistot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
-      for (const element of this.getAineistot(this.vaihe)) {
-        // Tämä taikafunktio handlaa aineistot siten, että this.vaihe:een sisältö muuttuu sellaiseksi, jossa aineistot on merkitty käsitellyksi.
-        changes = (await handleAineistot(this.oid, element.aineisto, element.paths)) || changes;
-      }
-      if (changes) {
-        return this.vaihe;
-      }
-    }
-  }
-
-  async handleChangedTiedostot(): Promise<T | undefined> {
-    if (this.vaihe) {
-      let changes = false;
-      // Tiedostot, joita saadaan ulos this.getLadatutTiedostot():sta, on sellaisia, että this.vaihe yhä viittaa niihin.
-      for (const element of this.getLadatutTiedostot(this.vaihe)) {
-        // Tämä taikafunktio handlaa tiedotot siten, että this.vaihe:een sisältö muuttuu sellaiseksi,
-        // jossa poistettavat tiedotot on poistettu ja persistoitavat peristoitu ja merkitty valmiiksi.
-        const changesInThisElement = await handleTiedostot(this.oid, element.tiedostot, element.paths);
-        changes = changes || changesInThisElement;
-      }
-      if (changes) {
-        return this.vaihe;
-      }
-    }
   }
 
   // On äärimmäisen tärkeää handleChanges()-funktion toiminnan kannnalta,

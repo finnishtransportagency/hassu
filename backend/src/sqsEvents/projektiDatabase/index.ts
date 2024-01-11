@@ -1,19 +1,15 @@
-import { log, setLogContextOid } from "../logger";
+import { log, setLogContextOid } from "../../logger";
 import {
   Aineisto,
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
+  LadattuTiedosto,
   NahtavillaoloVaiheJulkaisu,
-  PartialDBProjekti,
   VuorovaikutusKierrosJulkaisu,
-} from "./model";
-import { config } from "../config";
-import { migrateFromOldSchema } from "./projektiSchemaUpdate";
-import { getDynamoDBDocumentClient } from "../aws/client";
-import assert from "assert";
-import { SimultaneousUpdateError } from "hassu-common/error";
-import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
+} from "../../database/model";
+import { config } from "../../config";
+import { getDynamoDBDocumentClient } from "../../aws/client";
 import {
   GetCommand,
   PutCommand,
@@ -23,23 +19,10 @@ import {
   UpdateCommand,
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
-import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
-import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
+import { nyt } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
-
-const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
-const skipAutomaticUpdateFields = [
-  "aloitusKuulutusJulkaisut",
-  "nahtavillaoloVaiheJulkaisut",
-  "hyvaksymisPaatosVaiheJulkaisut",
-  "jatkoPaatos1VaiheJulkaisut",
-  "jatkoPaatos2VaiheJulkaisut",
-  "synkronoinnit",
-] as (keyof DBProjekti)[] as string[];
-
-function createExpression(expression: string, properties: string[]) {
-  return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
-}
+import { migrateFromOldSchema } from "../../database/projektiSchemaUpdate";
+import { saveAineistotOrTiedostot } from "./saveAineistotOrTiedostot";
 
 type JulkaisuWithId = { id: number };
 
@@ -82,14 +65,6 @@ export class JulkaisuFunctions<
     return this.projektiDatabase.deleteAllJulkaisu(projekti, this.julkaisutFieldName, this.description);
   }
 }
-
-type UpdateParams = {
-  setExpression: string[];
-  removeExpression: string[];
-  attributeNames: Record<string, string>;
-  attributeValues: Record<string, NativeAttributeValue>;
-  conditionExpression?: string;
-};
 
 export class ProjektiDatabase {
   constructor(projektiTableName: string, feedbackTableName: string) {
@@ -160,119 +135,6 @@ export class ProjektiDatabase {
       log.error(e);
       throw e;
     }
-  }
-
-  /**
-   *
-   * @param dbProjekti Tallennettava projekti
-   * @return tallennetun projektin versio
-   */
-  async saveProjekti(dbProjekti: PartialDBProjekti): Promise<number> {
-    return this.saveProjektiInternal(dbProjekti);
-  }
-
-  async saveProjektiWithoutLocking(dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">): Promise<number> {
-    return this.saveProjektiInternal(dbProjekti, false, true);
-  }
-
-  /**
-   *
-   * @param dbProjekti Projekti, joka päivitetään tietokantaan
-   * @param forceUpdateInTests Salli kaikkien kenttien päivittäminen. Sallittua käyttää vain testeissä.
-   * @param bypassLocking Ohita projektin lukitusmekanismi. Voidaan käyttää päivityksissä, jotka eivät liity käytt
-   */
-  protected async saveProjektiInternal(
-    dbProjekti: Partial<DBProjekti>,
-    forceUpdateInTests = false,
-    bypassLocking = false
-  ): Promise<number> {
-    if (log.isLevelEnabled("debug")) {
-      log.debug("Updating projekti to Hassu", { projekti: dbProjekti });
-    } else {
-      log.info("Updating projekti to Hassu", { oid: dbProjekti.oid });
-    }
-
-    const updateParams: UpdateParams = {
-      setExpression: [],
-      removeExpression: [],
-      attributeNames: {},
-      attributeValues: {},
-    };
-
-    let nextVersion: number;
-    if (bypassLocking) {
-      nextVersion = dbProjekti.versio ?? 0; // Value 0 should not be meaningful when locking is bypassed
-    } else {
-      nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
-    }
-
-    dbProjekti.paivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-    this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
-
-    const updateExpression =
-      createExpression("SET", updateParams.setExpression) + " " + createExpression("REMOVE", updateParams.removeExpression);
-
-    const params = new UpdateCommand({
-      TableName: this.projektiTableName,
-      Key: {
-        oid: dbProjekti.oid,
-      },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames: updateParams.attributeNames,
-      ExpressionAttributeValues: updateParams.attributeValues,
-      ConditionExpression: updateParams.conditionExpression,
-    });
-
-    if (log.isLevelEnabled("debug")) {
-      log.debug("Updating projekti to Hassu with params", { params });
-    }
-
-    try {
-      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      await dynamoDBDocumentClient.send(params);
-      return nextVersion;
-    } catch (e) {
-      if (e instanceof ConditionalCheckFailedException) {
-        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
-      }
-      log.error(e instanceof Error ? e.message : String(e), { params });
-      throw e;
-    }
-  }
-
-  private handleFieldsToSave(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams, forceUpdateInTests: boolean) {
-    for (const property in dbProjekti) {
-      if (specialFields.includes(property) || (skipAutomaticUpdateFields.includes(property) && !forceUpdateInTests)) {
-        continue;
-      }
-      const value = dbProjekti[property as keyof DBProjekti];
-      if (value === undefined) {
-        continue;
-      }
-      if (value === null) {
-        updateParams.removeExpression.push(property);
-      } else {
-        updateParams.setExpression.push(`#${property} = :${property}`);
-        updateParams.attributeNames["#" + property] = property;
-        updateParams.attributeValues[":" + property] = value;
-      }
-    }
-  }
-
-  private handleOptimisticLocking(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams) {
-    const versioFromInput = dbProjekti.versio;
-    if (!versioFromInput) {
-      assert(versioFromInput, "projektin versio pitää olla tallennettaessa asetettu");
-    }
-    const nextVersion = versioFromInput + 1;
-    updateParams.attributeNames["#versio"] = "versio";
-
-    updateParams.conditionExpression = "attribute_not_exists(#versio) OR #versio = :versioFromInput";
-    updateParams.attributeValues[":versioFromInput"] = versioFromInput;
-
-    updateParams.setExpression.push("#versio = :versio");
-    updateParams.attributeValues[":versio"] = nextVersion;
-    return nextVersion;
   }
 
   async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
@@ -506,84 +368,230 @@ export class ProjektiDatabase {
     );
   }
 
-  public async saveSuunnitteluvaiheAineistot(oid: string, versio: number, uusiAineistot: Array<Aineisto> | null): Promise<void> {
-    const uusiPaivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+  //
 
-    const updateExpression = "SET vuorovaikutusKierros.aineistot = :uusiAineistot, paivitetty = :uusiPaivitetty";
-
-    const params = new UpdateCommand({
-      TableName: this.projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames: {
-        "#versio": "versio",
-      },
-      ExpressionAttributeValues: {
-        ":uusiAineistot": uusiAineistot,
-        ":uusiPaivitetty": uusiPaivitetty,
-        ":versio": versio,
-      },
-      ConditionExpression: "attribute_not_exists(#versio) OR #versio = :versio",
+  public async saveSuunnitteluvaiheAineistot({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "vuorovaikutusKierros.aineistot",
     });
-
-    if (log.isLevelEnabled("debug")) {
-      log.debug("Updating projekti to Hassu with params", { params });
-    }
-
-    try {
-      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      await dynamoDBDocumentClient.send(params);
-    } catch (e) {
-      if (e instanceof ConditionalCheckFailedException) {
-        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
-      }
-      log.error(e instanceof Error ? e.message : String(e), { params });
-      throw e;
-    }
   }
 
-  public async saveNahtavillaoloAineistotNahtavilla(
-    oid: string,
-    versio: number,
-    uusiAineistotNahtavilla: Array<Aineisto> | null
-  ): Promise<void> {
-    const uusiPaivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-
-    const updateExpression = "SET nahtavillaoloVaihe.aineistotNahtavilla = :uusiAineistotNahtavilla, paivitetty = :uusiPaivitetty";
-
-    const params = new UpdateCommand({
-      TableName: this.projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames: {
-        "#versio": "versio",
-      },
-      ExpressionAttributeValues: {
-        ":uusiAineistoNahtavilla": uusiAineistotNahtavilla,
-        ":uusiPaivitetty": uusiPaivitetty,
-        ":versio": versio,
-      },
-      ConditionExpression: "attribute_not_exists(#versio) OR #versio = :versio",
+  public async saveNahtavillaoloAineistotNahtavilla({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "nahtavillaoloVaihe.aineistoNahtavilla",
     });
+  }
 
-    if (log.isLevelEnabled("debug")) {
-      log.debug("Updating projekti to Hassu with params", { params });
-    }
+  public async saveLausuntoPyyntoLisaAineistot({
+    oid,
+    projektiVersio,
+    lausuntoPyyntoIndex,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    lausuntoPyyntoIndex: number;
+    uusiAineistot: Array<LadattuTiedosto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: `lausuntoPyynnot.[${lausuntoPyyntoIndex}].lisaAineistot`,
+    });
+  }
 
-    try {
-      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      await dynamoDBDocumentClient.send(params);
-    } catch (e) {
-      if (e instanceof ConditionalCheckFailedException) {
-        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
-      }
-      log.error(e instanceof Error ? e.message : String(e), { params });
-      throw e;
-    }
+  public async saveLausuntoPyynnonTaydennysMuuAineisto({
+    oid,
+    projektiVersio,
+    lausuntoPyynnonTaydennysIndex,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    lausuntoPyynnonTaydennysIndex: number;
+    uusiAineistot: Array<LadattuTiedosto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: `lausuntoPyynnonTaydennykset.[${lausuntoPyynnonTaydennysIndex}].muuAineisto`,
+    });
+  }
+
+  public async saveLausuntoPyynnonTaydennysMuistutukset({
+    oid,
+    projektiVersio,
+    lausuntoPyynnonTaydennysIndex,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    lausuntoPyynnonTaydennysIndex: number;
+    uusiAineistot: Array<LadattuTiedosto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: `lausuntoPyynnonTaydennykset.[${lausuntoPyynnonTaydennysIndex}].muistutukset`,
+    });
+  }
+
+  public async saveHyvaksymisPaatosVaiheAineistotNahtavilla({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "hyvaksymisPaatosVaihe.aineistoNahtavilla",
+    });
+  }
+
+  public async saveHyvaksymisPaatosVaiheHyvaksymispaatos({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "hyvaksymisPaatosVaihe.hyvaksymispaatos",
+    });
+  }
+
+  public async saveJatkoPaatos1VaiheAineistotNahtavilla({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "jatkoPaatos1Vaihe.aineistoNahtavilla",
+    });
+  }
+
+  public async saveJatkoPaatos1VaiheAineistotHyvaksymispaatos({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "jatkoPaatos1Vaihe.hyvaksymispaatos",
+    });
+  }
+
+  public async saveJatkoPaatos2VaiheAineistotNahtavilla({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "jatkoPaatos2Vaihe.aineistoNahtavilla",
+    });
+  }
+
+  public async saveJatkoPaatos2VaiheAineistotHyvaksymispaatos({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: "jatkoPaatos2Vaihe.hyvaksymispaatos",
+    });
+  }
+
+  public async saveVuorovaikutusKierrosJulkaisuAineistot({
+    oid,
+    projektiVersio,
+    uusiAineistot,
+    vuorovaikutusKierrosIndex,
+  }: {
+    oid: string;
+    projektiVersio: number;
+    uusiAineistot: Array<Aineisto>;
+    vuorovaikutusKierrosIndex: number;
+  }): Promise<void> {
+    return saveAineistotOrTiedostot({
+      projektiTableName: this.projektiTableName,
+      oid,
+      projektiVersio,
+      uusiAineistot,
+      pathToAineistot: `vuorovaikutusKierrosJulkaisut[${vuorovaikutusKierrosIndex}].aineistot`,
+    });
   }
 }
 

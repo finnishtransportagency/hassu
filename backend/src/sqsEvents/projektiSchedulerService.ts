@@ -20,7 +20,7 @@ import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
-    await eventSqsClient.synchronizeAineisto(oid);
+    await eventSqsClient.synchronizeAineistoAndIndexProjekti(oid);
   }
 
   public async updateProjektiSynchronizationSchedule(oid: string) {
@@ -57,7 +57,7 @@ class ProjektiSchedulerService {
             break;
         }
         // always create schedule for SYNCHRONIZE event
-        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.SYNCHRONIZE);
+        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.SYNCHRONIZE_AND_INDEX);
       }
     }
 
