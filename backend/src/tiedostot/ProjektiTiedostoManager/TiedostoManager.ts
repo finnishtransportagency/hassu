@@ -34,8 +34,11 @@ export abstract class TiedostoManager<T> {
     function hasAllLadattuTiedostoValmis(element: LadattuTiedostoPathsPair): boolean {
       if (!element.tiedostot) {
         return true;
+      } else if (Array.isArray(element.tiedostot)) {
+        return element.tiedostot?.every((a) => a.tila == LadattuTiedostoTila.VALMIS || a.tiedosto);
+      } else {
+        return element.tiedostot.tila == LadattuTiedostoTila.VALMIS || !!element.tiedostot.tiedosto;
       }
-      return element.tiedostot?.every((a) => a.tila == LadattuTiedostoTila.VALMIS || a.tiedosto);
     }
 
     let ready = true;

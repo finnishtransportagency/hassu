@@ -18,7 +18,7 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
 
   getLadatutTiedostot(vaihe: AloitusKuulutus): LadattuTiedostoPathsPair[] {
     const paths = this.projektiPaths.aloituskuulutus(vaihe);
-    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.aloituskuulutusSaamePDFt), paths }];
+    return getKuulutusSaamePDFt(vaihe.aloituskuulutusSaamePDFt, paths, "aloitusKuulutus.aloituskuulutusSaamePDFt");
   }
 
   async synchronize(): Promise<boolean> {

@@ -3,13 +3,15 @@ import { VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
 export class VuorovaikutusKierrosJulkaisuTiedostoManager extends VaiheTiedostoManager<VuorovaikutusKierrosJulkaisu, unknown> {
-  constructor(oid: string, julkaisu: VuorovaikutusKierrosJulkaisu | undefined | null) {
+  private index: number;
+  constructor(oid: string, julkaisu: VuorovaikutusKierrosJulkaisu | undefined | null, index: number) {
     super(oid, julkaisu, undefined);
+    this.index = index;
   }
 
   getAineistot(julkaisu: VuorovaikutusKierrosJulkaisu): AineistoPathsPair[] {
     const paths = this.projektiPaths.vuorovaikutus(julkaisu).aineisto;
-    return [{ aineisto: julkaisu.aineistot, paths }];
+    return [{ aineisto: julkaisu.aineistot, paths, pathInDBProjekti: `vuorovaikutusKierrosJulkaisut.${this.index}.aineistot` }];
   }
 
   getLadatutTiedostot(): LadattuTiedostoPathsPair[] {

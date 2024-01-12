@@ -61,7 +61,7 @@ export class ProjektiTiedostoManager {
   getVuorovaikutusKierrosJulkaisut(): VuorovaikutusKierrosJulkaisuTiedostoManager[] {
     return (
       this.projekti.vuorovaikutusKierrosJulkaisut?.map(
-        (julkaisu) => new VuorovaikutusKierrosJulkaisuTiedostoManager(this.projekti.oid, julkaisu)
+        (julkaisu, index) => new VuorovaikutusKierrosJulkaisuTiedostoManager(this.projekti.oid, julkaisu, index)
       ) ?? []
     );
   }

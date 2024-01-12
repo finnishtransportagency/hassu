@@ -1,6 +1,6 @@
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, S3Paths, VaiheTiedostoManager } from ".";
-import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
+import { Aineisto, DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
@@ -26,22 +26,22 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
 
   getAineistot(vaihe: VuorovaikutusKierros): AineistoPathsPair[] {
     const filePathInProjekti = this.projektiPaths.vuorovaikutus(vaihe).aineisto;
-    return [{ aineisto: vaihe.aineistot, paths: filePathInProjekti }];
+    return [{ aineisto: vaihe.aineistot, paths: filePathInProjekti, pathInDBProjekti: "vuorovaikutusKierros.aineistot" }];
   }
 
   getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedostoPathsPair[] {
-    const tiedostot: LadattuTiedosto[] = [];
+    const tiedostot: LadattuTiedostoPathsPair[] = [];
     const saamePDFt = vaihe.vuorovaikutusSaamePDFt;
+    const paths = this.projektiPaths.vuorovaikutus(vaihe);
     if (saamePDFt) {
       forEverySaameDo((kieli) => {
         const pdft = saamePDFt[kieli];
         if (pdft) {
-          tiedostot.push(pdft);
+          tiedostot.push({ tiedostot: [pdft], paths, pathInDBProjekti: `vuorovaikutusKierros.vuorovaikutusSaamePDFt.${kieli}` });
         }
       });
     }
-    const paths = this.projektiPaths.vuorovaikutus(vaihe);
-    return [{ tiedostot, paths }];
+    return tiedostot;
   }
 
   async synchronize(): Promise<boolean> {

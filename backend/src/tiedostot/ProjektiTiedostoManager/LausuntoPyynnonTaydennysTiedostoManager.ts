@@ -16,19 +16,17 @@ export class LausuntoPyynnonTaydennyksetTiedostoManager extends TiedostoManager<
 
   getLadatutTiedostot(vaihe: LausuntoPyynnonTaydennys[]): LadattuTiedostoPathsPair[] {
     return (
-      vaihe.reduce((tiedostot, lausuntoPyynnonTaydennys) => {
+      vaihe.reduce((tiedostot, lausuntoPyynnonTaydennys, index) => {
         const paths = this.projektiPaths.lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys);
         tiedostot.push({
           tiedostot: lausuntoPyynnonTaydennys.muistutukset,
           paths,
-          category: "Muistutukset",
-          uuid: lausuntoPyynnonTaydennys.uuid,
+          pathInDBProjekti: `lausuntoPyynnonTaydennykset.${index}.muistutukset`,
         });
         tiedostot.push({
           tiedostot: lausuntoPyynnonTaydennys.muuAineisto,
           paths,
-          category: "Muu aineisto",
-          uuid: lausuntoPyynnonTaydennys.uuid,
+          pathInDBProjekti: `lausuntoPyynnonTaydennykset.${index}.muuAineisto`,
         });
         return tiedostot;
       }, [] as LadattuTiedostoPathsPair[]) || []

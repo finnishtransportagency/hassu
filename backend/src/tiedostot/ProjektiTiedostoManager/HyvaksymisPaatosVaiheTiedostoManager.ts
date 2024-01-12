@@ -15,14 +15,14 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
     const paths = this.projektiPaths.hyvaksymisPaatosVaihe(this.vaihe);
     return [
-      { aineisto: vaihe.aineistoNahtavilla, paths },
-      { aineisto: vaihe.hyvaksymisPaatos, paths: paths.paatos },
+      { aineisto: vaihe.aineistoNahtavilla, paths, pathInDBProjekti: "hyvaksymisPaatosVaihe.aineistoNahtavilla" },
+      { aineisto: vaihe.hyvaksymisPaatos, paths: paths.paatos, pathInDBProjekti: "hyvaksymisPaatosVaihe.hyvaksymisPaatos" },
     ];
   }
 
   getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedostoPathsPair[] {
     const paths = this.projektiPaths.hyvaksymisPaatosVaihe(vaihe);
-    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt), paths }];
+    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt, paths, "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt");
   }
 
   async synchronize(): Promise<boolean> {

@@ -5,9 +5,9 @@ import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynto[]> {
   getLadatutTiedostot(vaihe: LausuntoPyynto[]): LadattuTiedostoPathsPair[] {
     return (
-      vaihe.reduce((tiedostot, lausuntoPyynto) => {
+      vaihe.reduce((tiedostot, lausuntoPyynto, index) => {
         const paths = this.projektiPaths.lausuntoPyynto(lausuntoPyynto);
-        tiedostot.push({ tiedostot: lausuntoPyynto.lisaAineistot, paths, category: "Lisäaineistot", uuid: lausuntoPyynto.uuid });
+        tiedostot.push({ tiedostot: lausuntoPyynto.lisaAineistot, paths, pathInDBProjekti: `lausuntoPyynnot.${index}.lisaAineistot` });
         return tiedostot;
       }, [] as LadattuTiedostoPathsPair[]) || []
     );

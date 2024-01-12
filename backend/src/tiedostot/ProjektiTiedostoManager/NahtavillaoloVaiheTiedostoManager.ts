@@ -14,12 +14,12 @@ import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getAineistot(vaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): AineistoPathsPair[] {
     const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
-    return [{ aineisto: vaihe.aineistoNahtavilla, paths }];
+    return [{ aineisto: vaihe.aineistoNahtavilla, paths, pathInDBProjekti: "nahtavillaoloVaihe.aineistoNahtavilla" }];
   }
 
   getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedostoPathsPair[] {
     const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
-    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt), paths }];
+    return getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt, paths, "nahtavillaoloVaihe.nahtavillaoloSaamePDFt");
   }
 
   async synchronize(): Promise<boolean> {
