@@ -158,6 +158,26 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
       },
       bottom: "16px",
     },
+    "&.ol-draw": {
+      display: "flex",
+      top: "24px",
+      backgroundColor: "transparent",
+      boxShadow: "none",
+      pointerEvents: "none !important",
+      gap: "8px",
+      "& > button": {
+        pointerEvents: "auto",
+        backgroundColor: "white",
+        borderRadius: "4px",
+        boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
+        "&.draw-active": {
+          backgroundColor: "green",
+        },
+        "&:disabled": {
+          backgroundColor: "gray",
+        },
+      },
+    },
   },
 });
 
@@ -229,6 +249,15 @@ export function defaultControls(t: Translate, source: VectorSource<Geometry>, in
       label: createIconSpan("map-marker-alt"),
       tipLabel: t("kohdenna"),
     }),
-    new DrawControl({ interactions, source }),
+    new DrawControl({
+      interactions,
+      source,
+      drawStringLine: { label: createIconSpan("slash"), tipLabel: t("lahenna") },
+      drawPolygon: { label: createIconSpan("draw-polygon"), tipLabel: t("lahenna") },
+      drawBox: { label: createIconSpan("square"), tipLabel: t("lahenna") },
+      undo: { label: createIconSpan("undo"), tipLabel: t("lahenna") },
+      removeFeature: { label: createIconSpan("minus"), tipLabel: t("lahenna") },
+      clear: { label: createIconSpan("trash"), tipLabel: t("lahenna") },
+    }),
   ]);
 }

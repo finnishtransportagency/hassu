@@ -5,10 +5,36 @@ import Draw, { createBox } from "ol/interaction/Draw";
 import Modify from "ol/interaction/Modify";
 import VectorSource from "ol/source/Vector";
 
-type DrawLineControlProps = Options & {
+type ButtonProps = {
+  label: string | HTMLElement;
+  tipLabel: string;
+  className: string;
+};
+
+enum ButtonType {
+  DRAW_STRING_LINE = "drawStringLine",
+  DRAW_BOX = "drawBox",
+  DRAW_POLYGON = "drawPolygon",
+  UNDO = "undo",
+  REMOVE_FEATURE = "removeFeature",
+  CLEAR = "clear",
+}
+
+type DrawingButtonProps = Record<ButtonType, ButtonProps>;
+
+const defaultDrawingButtonProps: DrawingButtonProps = {
+  drawStringLine: { className: "ol-draw-line-string", label: "L", tipLabel: "Draw line string" },
+  drawPolygon: { className: "ol-draw-polygon", label: "P", tipLabel: "Draw polygon" },
+  drawBox: { className: "ol-draw-box", label: "B", tipLabel: "Draw box" },
+  undo: { className: "ol-draw-undo", label: "U", tipLabel: "Undo" },
+  removeFeature: { className: "ol-remove-feature", label: "R", tipLabel: "Remove selected feature" },
+  clear: { className: "ol-draw-clear", label: "C", tipLabel: "Clear all geometries" },
+};
+
+type DrawControlProps = Options & {
   interactions: DrawToolInteractions;
   source: VectorSource<Geometry>;
-};
+} & Partial<Record<ButtonType, Partial<ButtonProps>>>;
 
 enum DrawType {
   LINE_STRING = "LineString",
@@ -32,47 +58,74 @@ class DrawControl extends Control {
 
   private drawToolButtons: Readonly<Record<DrawType, HTMLButtonElement>>;
 
-  constructor(options: DrawLineControlProps) {
+  constructor(options: DrawControlProps) {
     const element = document.createElement("div");
-    element.className = "ol-draw ol-unselectable ol-control";
 
     super({
       element: element,
       target: options.target,
     });
 
-    const clearButton = document.createElement("button");
-    clearButton.className = "ol-draw-clear";
-    clearButton.innerHTML = "C";
+    element.className = "ol-draw ol-unselectable ol-control";
 
-    const removeFeatureButton = document.createElement("button");
-    removeFeatureButton.className = "ol-draw-remove-feature";
-    removeFeatureButton.innerHTML = "R";
-    removeFeatureButton.disabled = true;
+    function createButton({
+      clickListener,
+      options,
+      type,
+      disabled,
+    }: {
+      options: DrawControlProps;
+      type: ButtonType;
+      clickListener: (this: HTMLButtonElement, ev: MouseEvent) => any;
+      disabled?: boolean;
+    }) {
+      const buttonOptions = options[type];
+      const defaultOptions = defaultDrawingButtonProps[type];
+      const button = document.createElement("button");
+      button.className = buttonOptions?.className ?? defaultOptions.className;
+      const label = buttonOptions?.label ?? defaultOptions.label;
 
-    const lineButton = document.createElement("button");
-    lineButton.className = "ol-draw-line-string";
-    lineButton.innerHTML = "L";
+      button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
+      button.title = buttonOptions?.tipLabel ?? defaultOptions.tipLabel;
+      button.disabled = !!disabled;
+      button.addEventListener("click", clickListener, false);
+      element.appendChild(button);
+      return button;
+    }
 
-    const polygonButton = document.createElement("button");
-    polygonButton.className = "ol-draw-polygon";
-    polygonButton.innerHTML = "P";
+    const undoButton = createButton({
+      options,
+      type: ButtonType.UNDO,
+      clickListener: this.undo.bind(this),
+      disabled: true,
+    });
 
-    const boxButton = document.createElement("button");
-    boxButton.className = "ol-draw-box";
-    boxButton.innerHTML = "B";
+    const removeFeatureButton = createButton({
+      options,
+      type: ButtonType.REMOVE_FEATURE,
+      clickListener: this.removeSelectedFeature.bind(this),
+      disabled: true,
+    });
 
-    const undoButton = document.createElement("button");
-    undoButton.className = "ol-draw-undo";
-    undoButton.innerHTML = "U";
-    undoButton.disabled = true;
+    const lineButton = createButton({
+      options,
+      type: ButtonType.DRAW_STRING_LINE,
+      clickListener: this.toggleDrawOfType.bind(this, DrawType.LINE_STRING),
+    });
 
-    element.appendChild(lineButton);
-    element.appendChild(polygonButton);
-    element.appendChild(boxButton);
-    element.appendChild(undoButton);
-    element.appendChild(removeFeatureButton);
-    element.appendChild(clearButton);
+    const polygonButton = createButton({
+      options,
+      type: ButtonType.DRAW_POLYGON,
+      clickListener: this.toggleDrawOfType.bind(this, DrawType.POLYGON),
+    });
+
+    const boxButton = createButton({
+      options,
+      type: ButtonType.DRAW_BOX,
+      clickListener: this.toggleDrawOfType.bind(this, DrawType.BOX),
+    });
+
+    const clearButton = createButton({ options, type: ButtonType.CLEAR, clickListener: this.removeAllFeatures.bind(this) });
 
     this.drawType = null;
 
@@ -82,27 +135,27 @@ class DrawControl extends Control {
     this.select = options.interactions.SELECT;
     this.drawToolButtons = { Box: boxButton, LineString: lineButton, Polygon: polygonButton };
 
-    const selectedFeatures = this.select.getFeatures();
-    this.select.on("change:active", function () {
-      selectedFeatures.forEach(function (feature) {
-        selectedFeatures.remove(feature);
-      });
-    });
-
     Object.values(this.drawTools).forEach((draw) => {
       draw.on("drawstart", () => {
         undoButton.disabled = false;
+        removeFeatureButton.disabled = false;
       });
       draw.on("drawend", () => {
         undoButton.disabled = true;
+        removeFeatureButton.disabled = true;
       });
       draw.on("drawabort", () => {
         undoButton.disabled = true;
+        removeFeatureButton.disabled = true;
       });
     });
 
     this.select.on("select", (e) => {
       removeFeatureButton.disabled = !e.selected.length;
+    });
+
+    this.select.getFeatures().on("change:length", () => {
+      removeFeatureButton.disabled = !this.select.getFeatures().getLength();
     });
 
     this.source.on("addfeature", () => {
@@ -112,13 +165,6 @@ class DrawControl extends Control {
     this.source.on("removefeature", () => {
       clearButton.disabled = !this.source.getFeatures().length;
     });
-
-    lineButton.addEventListener("click", this.toggleDrawOfType.bind(this, DrawType.LINE_STRING), false);
-    boxButton.addEventListener("click", this.toggleDrawOfType.bind(this, DrawType.BOX), false);
-    polygonButton.addEventListener("click", this.toggleDrawOfType.bind(this, DrawType.POLYGON), false);
-    undoButton.addEventListener("click", this.undo.bind(this), false);
-    removeFeatureButton.addEventListener("click", this.removeSelectedFeature.bind(this), false);
-    clearButton.addEventListener("click", this.removeAllFeatures.bind(this), false);
   }
 
   private removeAllFeatures() {
@@ -128,8 +174,10 @@ class DrawControl extends Control {
   }
 
   private removeSelectedFeature() {
+    this.currentDrawTool()?.abortDrawing();
     this.select.getFeatures().forEach((feature) => {
       this.source.removeFeature(feature);
+      this.select.getFeatures().remove(feature);
     });
   }
 
@@ -150,6 +198,7 @@ class DrawControl extends Control {
     this.setDrawToolActive(true);
     this.modify.setActive(false);
     this.select.setActive(false);
+    this.select.getFeatures().clear();
   }
 
   private setDrawToolActive(active: boolean) {
