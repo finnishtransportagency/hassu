@@ -6,10 +6,10 @@ import { createTileLayer, createVectorLayer, defaultControls, StyledMap } from "
 import { Dialog, DialogProps, styled } from "@mui/material";
 import Button from "@components/button/Button";
 import { MapOptions } from "ol/Map";
-import { defaults as defaultInteractions, Interaction, Modify, Snap } from "ol/interaction";
+import { defaults as defaultInteractions, Interaction, Snap } from "ol/interaction";
 import * as geozi from "./some.json";
 import useTranslation from "next-translate/useTranslation";
-import DrawControl from "../../../map/DrawControl";
+// import DrawControl from "../../../map/DrawControl";
 import DeleteFeatureControl from "src/map/DeleteFeatureControl";
 
 export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabel?: string };
@@ -48,7 +48,7 @@ export function KarttaKiinteistonomistajistaDialog({ geoJSON: _geoJSON, ...dialo
     let options: Partial<MapOptions> = {
       interactions: defaultInteractions().extend(extendInteractions),
       controls: defaultControls(t, vectorSource.getExtent()).extend([
-        new DrawControl({ source: vectorSource }),
+        // new DrawControl({ source: vectorSource }),
         new DeleteFeatureControl({ source: vectorSource, layer: vectorLayer }),
       ]),
       layers: [createTileLayer(), vectorLayer],

@@ -2,7 +2,6 @@ import Control, { Options } from "ol/control/Control";
 import Feature from "ol/Feature";
 import Geometry from "ol/geom/Geometry";
 import { Select } from "ol/interaction";
-import BaseLayer from "ol/layer/Base";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Fill, Stroke, Style } from "ol/style";
