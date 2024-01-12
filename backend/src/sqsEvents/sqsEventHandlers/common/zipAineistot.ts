@@ -29,7 +29,7 @@ export async function zipAineistot({
   await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
 }
 
-function getZipFolder(kategoriaId: string | undefined | null): string | undefined {
+export function getZipFolder(kategoriaId: string | undefined | null): string | undefined {
   if (!kategoriaId) {
     return undefined;
   }

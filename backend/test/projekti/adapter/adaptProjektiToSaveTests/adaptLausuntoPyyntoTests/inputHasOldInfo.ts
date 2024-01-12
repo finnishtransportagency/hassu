@@ -5,7 +5,7 @@ import { DBProjekti, LausuntoPyynto } from "../../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
 export const inputHasOldInfo = async () => {
-  const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
+  const { handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPs = [
     {
       uuid: "jotain",
@@ -61,7 +61,6 @@ export const inputHasOldInfo = async () => {
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnot).to.eql(expectedLausuntoPyynnot);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
   expect(handleChangedTiedostotStub.callCount).to.eql(1); // We don't mind that we trigger the event here unnecessarily
 };

@@ -7,7 +7,7 @@ import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
 import MockDate from "mockdate";
-import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
+import { DBProjekti, LausuntoPyynto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
@@ -63,9 +63,17 @@ describe("nahtavillaoloTilaManager", () => {
   });
 
   it("should leave one published kuulutus when making uudelleenkuulutus", async function () {
-    const addZipEventStub = sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    const addZipEventStub = sinon.stub(eventSqsClient, "zipLausuntoPyynto");
     const originalKuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
-    projekti = { ...projekti, nahtavillaoloVaihe: { ...(projekti.nahtavillaoloVaihe as NahtavillaoloVaihe), aineistoNahtavilla: [] } };
+    const lausuntoPyynto: LausuntoPyynto = {
+      uuid: "jotain",
+      poistumisPaiva: "2012-01-01",
+    };
+    projekti = {
+      ...projekti,
+      lausuntoPyynnot: [lausuntoPyynto],
+      nahtavillaoloVaihe: { ...(projekti.nahtavillaoloVaihe as NahtavillaoloVaihe), aineistoNahtavilla: [] },
+    };
     MockDate.set("2023-01-01");
     sinon
       .stub(pdfGeneratorClient, "createNahtavillaoloKuulutusPdf")

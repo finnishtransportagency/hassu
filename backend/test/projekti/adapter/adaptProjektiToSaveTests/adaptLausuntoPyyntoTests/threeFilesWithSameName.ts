@@ -59,7 +59,7 @@ const input: TallennaProjektiInput = {
 };
 
 export const threeFilesWithSameName = async () => {
-  const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
+  const { handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
   expect(projektiAdaptationResult.projekti.lausuntoPyynnot?.[0]?.lisaAineistot).to.eql([
     {
@@ -71,7 +71,6 @@ export const threeFilesWithSameName = async () => {
     },
   ]);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
   expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

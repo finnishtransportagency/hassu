@@ -10,17 +10,15 @@ class MockKayttoOikeudetManager {
   applyChanges() {}
 }
 export function stubBasics(): {
-  handleChangedAineistotAndTiedostotStub: sinon.SinonStub<[oid: string], Promise<void>>;
   handleChangedAineistoStub: sinon.SinonStub<[oid: string], Promise<void>>;
   handleChangedTiedostotStub: sinon.SinonStub<[oid: string], Promise<void>>;
 } {
   sinon.stub(personSearch, "getKayttajas").returns(Promise.resolve({} as Kayttajas));
   sinon.stub(KayttoOikeudetManager, "prototype").returns(MockKayttoOikeudetManager);
   sinon.stub(lisaAineistoService, "generateSalt").returns("salt");
-  const handleChangedAineistotAndTiedostotStub = sinon.stub(eventSqsClient, "handleChangedAineistotAndTiedostot");
-  const handleChangedAineistoStub = sinon.stub(eventSqsClient, "handleChangedAineisto");
-  const handleChangedTiedostotStub = sinon.stub(eventSqsClient, "handleChangedTiedostot");
-  return { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub };
+  const handleChangedAineistoStub = sinon.stub(eventSqsClient, "handleAineistoChanged");
+  const handleChangedTiedostotStub = sinon.stub(eventSqsClient, "handleTiedostotChanged");
+  return { handleChangedAineistoStub, handleChangedTiedostotStub };
 }
 
 export const testDbProjekti: DBProjekti = {

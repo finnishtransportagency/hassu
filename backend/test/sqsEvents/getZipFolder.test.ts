@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { getZipFolder } from "../../../src/tiedostot/ProjektiTiedostoManager/util";
+import { getZipFolder } from "../../src/sqsEvents/sqsEventHandlers/common/zipAineistot";
 
 describe("getZipFolder", () => {
   it("returns correct folder for 'rataan_liittyvat_toimenpiteet_tiesuunnitelmassa'", () => {

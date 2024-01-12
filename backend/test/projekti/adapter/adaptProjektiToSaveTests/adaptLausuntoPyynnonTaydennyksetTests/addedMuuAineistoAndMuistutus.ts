@@ -5,7 +5,7 @@ import { DBProjekti, LausuntoPyynnonTaydennys } from "../../../../../src/databas
 import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
 export const addedMuuAineistoAndMuistutus = async () => {
-  const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
+  const { handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const projektiInDB: DBProjekti = testDbProjekti;
   const input: API.TallennaProjektiInput = {
     oid: projektiInDB.oid,
@@ -60,7 +60,6 @@ export const addedMuuAineistoAndMuistutus = async () => {
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
   expect(handleChangedTiedostotStub.callCount).to.eql(1);
 };

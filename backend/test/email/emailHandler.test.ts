@@ -23,7 +23,6 @@ import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBPro
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 import { EmailOptions } from "../../src/email/model/emailOptions";
-import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
 
 describe("emailHandler", () => {
@@ -51,7 +50,6 @@ describe("emailHandler", () => {
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
-    sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
     mockSaveProjektiToVelho();
   });
 

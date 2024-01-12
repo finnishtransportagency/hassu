@@ -6,7 +6,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { handleEvents } from "../../../../../src/projekti/projektiHandler";
 
 export const addedMuistutusAgainBeforePersisting = async () => {
-  const { handleChangedAineistotAndTiedostotStub, handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
+  const { handleChangedAineistoStub, handleChangedTiedostotStub } = stubBasics();
   const oldLPTs = [
     {
       uuid: "jotain",
@@ -89,7 +89,6 @@ export const addedMuistutusAgainBeforePersisting = async () => {
   ];
   expect(projektiAdaptationResult.projekti.lausuntoPyynnonTaydennykset).to.eql(expectedLausuntoPyynnonTaydennykset);
   await handleEvents(projektiAdaptationResult);
-  expect(handleChangedAineistotAndTiedostotStub.callCount).to.eql(0);
   expect(handleChangedAineistoStub.callCount).to.eql(0);
   expect(handleChangedTiedostotStub.callCount).to.eql(0);
 };

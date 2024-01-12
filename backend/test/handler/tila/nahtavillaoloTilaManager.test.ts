@@ -2,7 +2,7 @@
 
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { DBProjekti } from "../../../src/database/model";
+import { DBProjekti, LausuntoPyynto } from "../../../src/database/model";
 import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
@@ -47,8 +47,13 @@ describe("nahtavillaoloTilaManager", () => {
 
   it("should create ZIP_LAUSUNTOPYYNNOT event on nahtavillaolo approve", async function () {
     assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
+    const lausuntoPyynto: LausuntoPyynto = {
+      uuid: "jotain",
+      poistumisPaiva: "2012-01-01",
+    };
     const projekti1: DBProjekti = {
       ...projekti,
+      lausuntoPyynnot: [lausuntoPyynto],
       nahtavillaoloVaiheJulkaisut: [
         {
           ...projekti.nahtavillaoloVaiheJulkaisut[0],
@@ -56,7 +61,7 @@ describe("nahtavillaoloTilaManager", () => {
         },
       ],
     };
-    const zipLausuntoPyyntoAineistoStub = sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    const zipLausuntoPyyntoAineistoStub = sinon.stub(eventSqsClient, "zipLausuntoPyynto");
     sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti1);
     sinon.stub(projektiDatabase, "updateJulkaisuToList");
     sinon.stub(nahtavillaoloTilaManager, "updateProjektiSchedule");
