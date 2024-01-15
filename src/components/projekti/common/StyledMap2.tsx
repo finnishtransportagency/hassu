@@ -11,14 +11,13 @@ import { register } from "ol/proj/proj4";
 import TileGrid from "ol/tilegrid/TileGrid";
 import { Vector as VectorSource } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
-import { Extent, getCenter, isEmpty } from "ol/extent";
+import { Extent, getCenter } from "ol/extent";
 import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
-import { ZoomToExtent, defaults as olDefaultControls } from "ol/control.js";
+import { defaults as olDefaultControls } from "ol/control.js";
 import { Options } from "ol/control/FullScreen";
 import ReactDOM from "react-dom";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import BaseLayer from "ol/layer/Base";
-import { fromExtent as polygonFromExtent } from "ol/geom/Polygon.js";
 import { StrictMode, useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
@@ -28,6 +27,11 @@ import DrawControl, { createDrawToolInteractions, DrawToolInteractions } from "s
 import GeoJSON from "ol/format/GeoJSON";
 import * as geozi from "src/components/projekti/common/some.json";
 import { defaults as defaultInteractions } from "ol/interaction";
+import GeoJsonFileInputControl from "src/map/GeoJsonFileInputControl";
+import useSnackbars from "src/hooks/useSnackbars";
+import { ShowMessage } from "@components/HassuSnackbarProvider";
+import { zoomToExtent } from "src/map/zoomToExtent";
+import ZoomToSourceExtent from "src/map/ZoomToSourceExtent";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -38,30 +42,21 @@ const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2,
 export const IMAGE_CIRCLE_RADIUS = 10;
 export const STROKE_WIDTH = 8;
 
-export const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
+export const createElement = (children: JSX.Element) => {
   const element = document.createElement("span");
-  ReactDOM.render(
-    <StrictMode>
-      <FontAwesomeIcon icon={icon} size="lg" color="#0064af" />
-    </StrictMode>,
-    element
-  );
+  ReactDOM.render(<StrictMode>{children}</StrictMode>, element);
   return element;
 };
 
-export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabel?: string };
+export const createIconSpan = (icon: FontAwesomeIconProps["icon"]) =>
+  createElement(<FontAwesomeIcon icon={icon} size="lg" color="#0064af" />);
 
-function zoomToExtent(map: Map, extent?: Extent) {
-  const view = map.getView();
-  const extentToFit = extent ?? view.getProjection().getExtent();
-  if (!isEmpty(extentToFit)) {
-    view.fitInternal(polygonFromExtent(extentToFit));
-  }
-}
+export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabel?: string };
 
 type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
+  const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const vectorSource = useMemo(
     () =>
       new VectorSource({
@@ -86,12 +81,12 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
       drawToolInteractions.SNAP,
     ];
     return new Map({
-      controls: defaultControls(t, vectorSource, drawToolInteractions),
+      controls: defaultControls(t, vectorSource, drawToolInteractions, showErrorMessage, showSuccessMessage),
       layers: defaultLayers(vectorSource),
       view: defaultView(extent),
       interactions: defaultInteractions().extend(interactions),
     });
-  }, [t, vectorSource]);
+  }, [showErrorMessage, showSuccessMessage, t, vectorSource]);
 
   useEffect(() => {
     const extent = vectorSource?.getExtent();
@@ -122,14 +117,17 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
   "& .ol-control": {
     display: "inline-block",
     position: "absolute",
-    borderRadius: "4px",
     right: "24px",
-    backgroundColor: "white",
-    boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
-    margin: "4px",
     "& > button": {
+      backgroundColor: "white",
+      borderRadius: "4px",
+      boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
+      margin: "4px",
       width: "40px",
       height: "40px",
+      "&:disabled": {
+        backgroundColor: "gray",
+      },
     },
     "&.ol-full-screen": {
       top: "16px",
@@ -140,8 +138,15 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
     "&.ol-zoom": {
       display: "flex",
       flexDirection: "column",
+      backgroundColor: "white",
+      borderRadius: "4px",
+      boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
+      margin: "4px",
       "& > button": {
         height: "48px",
+        borderRadius: "0px",
+        boxShadow: "none",
+        margin: "0px",
         "&.ol-zoom-out": {
           position: "relative",
           "&::before": {
@@ -162,21 +167,19 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
       display: "flex",
       top: "24px",
       backgroundColor: "transparent",
-      boxShadow: "none",
       pointerEvents: "none !important",
-      gap: "8px",
+      gap: "4px",
       "& > button": {
         pointerEvents: "auto",
-        backgroundColor: "white",
-        borderRadius: "4px",
-        boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
         "&.draw-active": {
           backgroundColor: "green",
         },
-        "&:disabled": {
-          backgroundColor: "gray",
-        },
       },
+    },
+    "&.ol-geo-json": {
+      top: "24px",
+      left: "24px",
+      right: "unset",
     },
   },
 });
@@ -234,7 +237,13 @@ export function defaultView(extent: Extent | undefined) {
   });
 }
 
-export function defaultControls(t: Translate, source: VectorSource<Geometry>, interactions: DrawToolInteractions) {
+export function defaultControls(
+  t: Translate,
+  source: VectorSource<Geometry>,
+  interactions: DrawToolInteractions,
+  showErrorMessage: ShowMessage,
+  showSuccessMessage: ShowMessage
+) {
   return olDefaultControls({
     rotate: false,
     zoomOptions: {
@@ -244,8 +253,8 @@ export function defaultControls(t: Translate, source: VectorSource<Geometry>, in
       zoomOutTipLabel: t("loitonna"),
     },
   }).extend([
-    new ZoomToExtent({
-      extent: source.getExtent(),
+    new ZoomToSourceExtent({
+      source,
       label: createIconSpan("map-marker-alt"),
       tipLabel: t("kohdenna"),
     }),
@@ -259,5 +268,6 @@ export function defaultControls(t: Translate, source: VectorSource<Geometry>, in
       removeFeature: { label: createIconSpan("minus"), tipLabel: t("lahenna") },
       clear: { label: createIconSpan("trash"), tipLabel: t("lahenna") },
     }),
+    new GeoJsonFileInputControl({ source, showErrorMessage, showSuccessMessage }),
   ]);
 }
