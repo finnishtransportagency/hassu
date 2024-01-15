@@ -24,19 +24,26 @@ export class EventSqsClientMock {
     });
   }
 
+  private timeToHandleEventIsNow(event: SqsEvent) {
+    return !event.date || (event.date && parseDate(event.date).isBefore(nyt()));
+  }
+
   async processQueue(): Promise<void> {
-    const deletedIndexes: number[] = [];
-    await this.fakeEventQueue.reduce((promiseChain, event, index) => {
-      return promiseChain.then(async () => {
-        assert(event.Records && event.Records.length);
+    let nothingToHandle = false;
+    while (this.fakeEventQueue.length && !nothingToHandle) {
+      const eventsToHandleNow: SQSEvent[] = this.fakeEventQueue.filter((event) => {
+        assert(event.Records?.length);
         const firstEvent = event.Records[event.Records.length - 1];
-        const parsedFirstEvent: SqsEvent = JSON.parse(firstEvent.body);
-        if (!parsedFirstEvent.date || (parsedFirstEvent.date && parseDate(parsedFirstEvent.date).isBefore(nyt()))) {
-          await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
-          deletedIndexes.push(index);
-        }
+        const parsedEvent: SqsEvent = JSON.parse(firstEvent.body);
+        return this.timeToHandleEventIsNow(parsedEvent);
       });
-    }, Promise.resolve());
-    this.fakeEventQueue = this.fakeEventQueue.filter((_event, index) => !deletedIndexes.includes(index));
+      if (eventsToHandleNow.length == 0) {
+        nothingToHandle = true;
+      }
+      for (const event of eventsToHandleNow) {
+        await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
+      }
+      this.fakeEventQueue = this.fakeEventQueue.filter((event) => eventsToHandleNow.indexOf(event) == -1);
+    }
   }
 }

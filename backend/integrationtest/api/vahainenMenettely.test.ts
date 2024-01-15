@@ -85,7 +85,6 @@ describe("Api", () => {
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await eventSqsClientMock.processQueue(); // Tehdään tämä kahdesti, koska ensimmäinen passi laittaa uuden eventin jonoon.
     await testNahtavillaoloApproval(
       projekti.oid,
       projektiPaallikko,
