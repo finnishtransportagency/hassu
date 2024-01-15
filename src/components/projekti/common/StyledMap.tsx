@@ -15,11 +15,11 @@ import { Extent, getCenter, isEmpty } from "ol/extent";
 import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
 import { ZoomToExtent, defaults as olDefaultControls } from "ol/control.js";
 import { Options } from "ol/control/FullScreen";
-import ReactDOM from "react-dom";
+import * as ReactDOMServer from "react-dom/server";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import BaseLayer from "ol/layer/Base";
 import { fromExtent as polygonFromExtent } from "ol/geom/Polygon.js";
-import { StrictMode, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
 import { Translate } from "next-translate";
@@ -36,12 +36,8 @@ export const STROKE_WIDTH = 8;
 
 export const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
   const element = document.createElement("span");
-  ReactDOM.render(
-    <StrictMode>
-      <FontAwesomeIcon icon={icon} size="lg" color="#0064af" />
-    </StrictMode>,
-    element
-  );
+  const content = ReactDOMServer.renderToStaticMarkup(<FontAwesomeIcon icon={icon} size="lg" color="#0064af" />);
+  element.innerHTML = content;
   return element;
 };
 

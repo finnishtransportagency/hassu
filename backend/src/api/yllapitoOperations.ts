@@ -28,6 +28,7 @@ import {
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   PoistaKiinteistonOmistajaMutationVariables,
+  TuoKarttarajausQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -61,6 +62,7 @@ import {
   tallennaKiinteistonOmistajat,
   tallennaKiinteistotunnukset,
 } from "../mml/kiinteistoHandler";
+import { tuoKarttarajaus } from "../handler/karttarajausHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -134,6 +136,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
     case apiConfig.poistaKiinteistonOmistaja.name:
       return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
+    case apiConfig.tuoKarttarajaus.name:
+      return await tuoKarttarajaus(event.arguments as TuoKarttarajausQueryVariables);
     default:
       return null;
   }

@@ -1,4 +1,4 @@
-import React, { useCallback, StrictMode, useEffect, useMemo, useRef, ComponentProps } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, ComponentProps } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import Projection from "ol/proj/Projection";
@@ -15,7 +15,7 @@ import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
 import { ZoomToExtent, defaults as defaultControls } from "ol/control.js";
 import { Options } from "ol/control/FullScreen";
 import { styled } from "@mui/system";
-import ReactDOM from "react-dom";
+import * as ReactDOMServer from "react-dom/server";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { defaults as defaultInteractions } from "ol/interaction";
 import BaseLayer from "ol/layer/Base";
@@ -38,12 +38,8 @@ const STROKE_WIDTH = 8;
 
 const createIconSpan = (icon: FontAwesomeIconProps["icon"]) => {
   const element = document.createElement("span");
-  ReactDOM.render(
-    <StrictMode>
-      <FontAwesomeIcon icon={icon} size="lg" color="#0064af" />
-    </StrictMode>,
-    element
-  );
+  const content = ReactDOMServer.renderToStaticMarkup(<FontAwesomeIcon icon={icon} size="lg" color="#0064af" />);
+  element.innerHTML = content;
   return element;
 };
 

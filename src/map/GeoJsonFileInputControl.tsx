@@ -14,6 +14,7 @@ type GeoJsonFileInputControlProps = Options & {
 };
 
 const GEOJSON_MIME = "application/geo+json";
+
 class GeoJsonFileInputControl extends Control {
   private source: VectorSource<Geometry>;
   private input: HTMLInputElement;
@@ -97,7 +98,7 @@ class GeoJsonFileInputControl extends Control {
       // Clear input value so onchange will trigger for the same file
       this.input.value = "";
       zoomToExtent(map, this.source.getExtent());
-      this.showSuccessMessage("Geometriat lisätty tiedostosta");
+      this.showSuccessMessage("Karttarajaus luettu tiedostosta");
     } catch {
       this.showErrorMessage("Tiedoston lukeminen epäonnistui");
     }

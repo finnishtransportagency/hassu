@@ -67,6 +67,7 @@ import {
   TallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   OmistajaInput,
+  TuoKarttarajausQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -164,6 +165,12 @@ export const apiConfig: ApiConfig = {
     name: "valmisteleTiedostonLataus",
     operationType: OperationType.Query,
     graphql: queries.valmisteleTiedostonLataus,
+  },
+  tuoKarttarajaus: {
+    name: "tuoKarttarajaus",
+    operationType: OperationType.Query,
+    graphql: queries.tuoKarttarajaus,
+    isYllapitoOperation: true,
   },
   laskePaattymisPaiva: {
     name: "laskePaattymisPaiva",
@@ -385,6 +392,14 @@ export abstract class AbstractApi {
       contentType,
     };
     return await this.callAPI(apiConfig.valmisteleTiedostonLataus, variables);
+  }
+
+  async tuoKarttarajaus(oid: string, geoJSON: string): Promise<string> {
+    const variables: TuoKarttarajausQueryVariables = {
+      oid,
+      geoJSON,
+    };
+    return await this.callYllapitoAPI(apiConfig.tuoKarttarajaus, variables);
   }
 
   async annaPalvelustaPalautetta(palveluPalauteInput: PalveluPalauteInput): Promise<string> {

@@ -1,5 +1,6 @@
 import { styled } from "@mui/system";
 import { DetailedHTMLProps, HTMLAttributes, useRef } from "react";
+import * as ReactDOMServer from "react-dom/server";
 
 import Map from "ol/Map";
 import View from "ol/View";
@@ -15,10 +16,9 @@ import { Extent, getCenter } from "ol/extent";
 import { Circle as CircleStyle, Stroke, Style } from "ol/style.js";
 import { defaults as olDefaultControls } from "ol/control.js";
 import { Options } from "ol/control/FullScreen";
-import ReactDOM from "react-dom";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import BaseLayer from "ol/layer/Base";
-import { StrictMode, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
 import { Translate } from "next-translate";
@@ -32,6 +32,10 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { ShowMessage } from "@components/HassuSnackbarProvider";
 import { zoomToExtent } from "src/map/zoomToExtent";
 import ZoomToSourceExtent from "src/map/ZoomToSourceExtent";
+import TallennaControl from "src/map/TallennaControl";
+import useApi from "src/hooks/useApi";
+import { API } from "@services/api/commonApi";
+import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -44,7 +48,8 @@ export const STROKE_WIDTH = 8;
 
 export const createElement = (children: JSX.Element) => {
   const element = document.createElement("span");
-  ReactDOM.render(<StrictMode>{children}</StrictMode>, element);
+  const content = ReactDOMServer.renderToStaticMarkup(children);
+  element.innerHTML = content;
   return element;
 };
 
@@ -53,9 +58,10 @@ export const createIconSpan = (icon: FontAwesomeIconProps["icon"]) =>
 
 export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabel?: string };
 
-type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & { projekti: ProjektiLisatiedolla };
 
-export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
+export const StyledMap2 = styled(({ children, projekti, ...props }: StyledMapProps) => {
+  const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const vectorSource = useMemo(
     () =>
@@ -81,12 +87,12 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
       drawToolInteractions.SNAP,
     ];
     return new Map({
-      controls: defaultControls(t, vectorSource, drawToolInteractions, showErrorMessage, showSuccessMessage),
+      controls: defaultControls(t, vectorSource, drawToolInteractions, showErrorMessage, showSuccessMessage, api, projekti.oid),
       layers: defaultLayers(vectorSource),
       view: defaultView(extent),
       interactions: defaultInteractions().extend(interactions),
     });
-  }, [showErrorMessage, showSuccessMessage, t, vectorSource]);
+  }, [api, projekti.oid, showErrorMessage, showSuccessMessage, t, vectorSource]);
 
   useEffect(() => {
     const extent = vectorSource?.getExtent();
@@ -181,6 +187,10 @@ export const StyledMap2 = styled(({ children, ...props }: StyledMapProps) => {
       left: "24px",
       right: "unset",
     },
+    "&.ol-save-as-geo-json": {
+      bottom: "24px",
+      right: "100px",
+    },
   },
 });
 
@@ -242,7 +252,9 @@ export function defaultControls(
   source: VectorSource<Geometry>,
   interactions: DrawToolInteractions,
   showErrorMessage: ShowMessage,
-  showSuccessMessage: ShowMessage
+  showSuccessMessage: ShowMessage,
+  api: API,
+  oid: string
 ) {
   return olDefaultControls({
     rotate: false,
@@ -269,5 +281,6 @@ export function defaultControls(
       clear: { label: createIconSpan("trash"), tipLabel: t("lahenna") },
     }),
     new GeoJsonFileInputControl({ source, showErrorMessage, showSuccessMessage }),
+    new TallennaControl({ source, showErrorMessage, showSuccessMessage, api, oid }),
   ]);
 }
