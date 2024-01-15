@@ -115,7 +115,6 @@ describe("Migraatio", () => {
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await eventSqsClientMock.processQueue();
-    await eventSqsClientMock.processQueue(); // Ajetaan tämä kahdesti, koska ensimmäisessä passissa laitetaan jonoon uusi event
     await testNahtavillaoloApproval(
       projekti.oid,
       projektipaallikko,
