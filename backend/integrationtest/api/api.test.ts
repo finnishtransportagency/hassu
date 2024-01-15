@@ -281,7 +281,6 @@ describe("Api", () => {
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await eventSqsClientMock.processQueue(); // tehdään kahdesti, koska ekassa passissa laitetaan zippaus-event jonoon
     const dbProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     expect(dbProjekti?.nahtavillaoloVaihe?.aineistopaketti).to.exist;
     await testNahtavillaoloApproval(
