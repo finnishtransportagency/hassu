@@ -27,4 +27,7 @@ export function validateAineistoInput(dbAineistot: Aineisto[] | undefined | null
       `Inputissa on merkitty sellainen aineisto valmiiksi, joka ei ole valmis. Sen uuid on ${dbAineistoJokaMuutettuInputissaValmiiksi.uuid}`
     );
   }
+  if (inputAineistot?.some((aineisto) => (aineisto as Record<string, any>).tiedosto)) {
+    throw new IllegalArgumentError("Input-aineistoissa ei saa olla tiedosto-tietoa mukana!");
+  }
 }
