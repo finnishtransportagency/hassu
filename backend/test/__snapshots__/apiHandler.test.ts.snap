@@ -856,7 +856,9 @@ Object {
     "lahetekirje": Object {
       "nimi": "lähetekirje.eml",
       "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+      "tila": "VALMIS",
       "tuotu": "2022-01-02T00:00",
+      "uuid": "00000001-9fb0-4b22-995e-20a9a256a9f9",
     },
     "muokkaaja": "A123",
     "siirtyySuunnitteluVaiheeseen": "2999-01-01",
