@@ -1,6 +1,8 @@
 import { DBProjekti } from "../../database/model";
 import { VuorovaikutusKierrosTila, VuorovaikutusPerustiedotInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
+import { validateAineistoInput } from "./validateAineistoInput";
+import { yhdistaVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 
 export function validatePaivitaPerustiedot(projekti: DBProjekti, input: VuorovaikutusPerustiedotInput): void {
   if (projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA) {
@@ -15,4 +17,11 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
   if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
     throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
   }
+  validateAineistoInput(
+    projekti.vuorovaikutusKierros?.aineistot,
+    yhdistaVuorovaikutusAineistot({
+      esittelyaineistot: input.vuorovaikutusKierros?.esittelyaineistot,
+      suunnitelmaluonnokset: input.vuorovaikutusKierros?.suunnitelmaluonnokset,
+    })
+  );
 }
