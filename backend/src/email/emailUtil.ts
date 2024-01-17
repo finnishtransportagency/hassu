@@ -1,7 +1,7 @@
 import MailComposer from "nodemailer/lib/mail-composer";
 import { LadattuTiedosto, SahkopostiVastaanottaja } from "../database/model";
 import { PathTuple } from "../files/ProjektiPath";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { fileService } from "../files/fileService";
 import { dateTimeToString } from "../util/dateUtil";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { log } from "../logger";
 import { config } from "../config";
 import { EmailOptions } from "./model/emailOptions";
+import { uuid } from "hassu-common/util/uuid";
 
 export async function saveEmailAsFile(
   oid: string,
@@ -31,6 +32,8 @@ export async function saveEmailAsFile(
     nimi: fileName,
     tiedosto: filePath,
     tuotu: dateTimeToString(dayjs()),
+    uuid: uuid.v4(),
+    tila: LadattuTiedostoTila.VALMIS,
   };
 }
 

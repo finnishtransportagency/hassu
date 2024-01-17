@@ -17,6 +17,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
           nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "tiedosto",
         },
       ],
       muuAineisto: [
@@ -25,6 +26,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },
@@ -46,6 +48,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
             nimi: "tiedosto.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            uuid: "tiedosto",
           },
         ],
         muuAineisto: [
@@ -53,6 +56,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
+            uuid: "aineisto",
           },
         ],
       },
@@ -70,6 +74,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
           nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           tuotu: "2021-01-01T01:01",
+          uuid: "tiedosto",
         },
       ],
       muuAineisto: [
@@ -78,6 +83,7 @@ export const removedMuuAineistoRemovedMuistutus = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },

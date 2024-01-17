@@ -28,9 +28,9 @@ export default function AineistoTable() {
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.hyvaksymisPaatosVaihe?.hyvaksymisPaatos || [];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
+        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
     [fields, projekti]
   );
@@ -41,7 +41,7 @@ export default function AineistoTable() {
         header: "Tiedosto",
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           const errorMessage = (formState.errors.hyvaksymisPaatos?.[index] as any | undefined)?.message;
           return (
             <>
@@ -63,7 +63,7 @@ export default function AineistoTable() {
         id: "actions",
         meta: { minWidth: 120, widthFractions: 2 },
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           return <ActionsColumn index={index} remove={remove} aineisto={aineisto} appendToPoistetut={appendToPoistetut} />;
         },
       },
@@ -120,7 +120,12 @@ const ActionsColumn = styled(({ index, remove, aineisto, appendToPoistetut, ...p
         onClick={() => {
           remove(index);
           if (aineisto.tila) {
-            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+            appendToPoistetut({
+              dokumenttiOid: aineisto.dokumenttiOid,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              nimi: aineisto.nimi,
+              uuid: aineisto.uuid,
+            });
           }
         }}
         icon="trash"

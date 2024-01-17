@@ -3,6 +3,7 @@ export * from "./FILES_CHANGED_removesLausuntoPyynto";
 export * from "./FILES_CHANGED_removesLausuntoPyynnonTaydennysAndHandlesAineistoChanges";
 export * from "./FILES_CHANGED_persistsAndDeletesLausuntoPyynnonTaydennysFiles";
 export * from "./FILES_CHANGED_persists_lausuntoPyynto_files";
+export * from "./FILES_CHANGED_handles_odottaa_poistoa_and_odottaa_persistointia_for_same_file";
 
 export * from "./AINEISTO_AND_FILES_CHANGED_handlesVuorovaikutusKierrosJulkaisu";
 export * from "./AINEISTO_AND_FILES_CHANGES_handlesCorrectlyLPTs";

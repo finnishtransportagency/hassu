@@ -3,7 +3,7 @@ import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import useTranslation from "next-translate/useTranslation";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { formatDateTime } from "common/util/dateUtils";
@@ -18,22 +18,31 @@ interface AineistoTableProps {
 }
 
 export function AineistoTable(props: AineistoTableProps) {
-  const { control, formState, register, getValues, setValue } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
+  const { control, formState, register, getValues, setValue, watch } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
-  const { fields, remove, update: updateFieldArray, move } = useFieldArray({ name: aineistoRoute, control });
+  const { fields, remove, update: updateFieldArray, move, replace } = useFieldArray({ name: aineistoRoute, control });
 
   const { append: appendToPoistetut } = useFieldArray({ name: "poistetutAineistoNahtavilla", control });
   const { t } = useTranslation("aineisto");
 
   const allOptions = useMemo(() => getAllOptionsForKategoriat({ kategoriat: aineistoKategoriat.listKategoriat(true), t }), [t]);
 
+  const aineistotInCategory = watch(aineistoRoute);
+
+  useEffect(() => {
+    // Ilman tätä uudet tuodut aineistot eivät tule näkyviin.
+    if (aineistotInCategory.length > fields.length) {
+      replace(aineistotInCategory);
+    }
+  }, [aineistotInCategory, replace, fields]);
+
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
         const aineistoData = props.aineisto || [];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
+        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
       }),
     [fields, props.aineisto]
   );
@@ -45,7 +54,7 @@ export function AineistoTable(props: AineistoTableProps) {
         meta: { minWidth: 250, widthFractions: 4 },
         id: "aineisto",
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
           const errorpath = props.kategoriaId;
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
           return (
@@ -79,14 +88,16 @@ export function AineistoTable(props: AineistoTableProps) {
                   const newKategoria = event.target.value;
                   if (newKategoria !== props.kategoriaId) {
                     const values: AineistoInput[] = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
-                    const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+                    const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
 
-                    if (!find(values, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                    if (!find(values, { uuid: aineisto.uuid })) {
                       values.push({
                         dokumenttiOid: aineisto.dokumenttiOid,
                         nimi: aineisto.nimi,
                         kategoriaId: newKategoria,
                         jarjestys: values.length,
+                        tila: aineisto.tila,
+                        uuid: aineisto.uuid,
                       });
                       setValue(`aineistoNahtavilla.${newKategoria}`, values);
                     }
@@ -103,7 +114,7 @@ export function AineistoTable(props: AineistoTableProps) {
         header: "",
         id: "actions",
         accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
           return (
             <ActionsColumn
               fields={fields}

@@ -20,6 +20,7 @@ export const addedMuuAineistoAndMuistutus = async () => {
             tiedosto: "uploads/345345235.txt",
             nimi: "odottaa_persistointia_muistutus.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+            uuid: "muistutus_op",
           },
         ],
         muuAineisto: [
@@ -27,6 +28,7 @@ export const addedMuuAineistoAndMuistutus = async () => {
             tiedosto: "uploads/345345234.txt",
             nimi: "odottaa_persistointia_muu_aineisto.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+            uuid: "aineisto_op",
           },
         ],
       },
@@ -43,6 +45,7 @@ export const addedMuuAineistoAndMuistutus = async () => {
           tiedosto: "uploads/345345234.txt",
           nimi: "odottaa_persistointia_muu_aineisto.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "aineisto_op",
         },
       ],
       muistutukset: [
@@ -50,6 +53,7 @@ export const addedMuuAineistoAndMuistutus = async () => {
           tiedosto: "uploads/345345235.txt",
           nimi: "odottaa_persistointia_muistutus.txt",
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "muistutus_op",
         },
       ],
     },

@@ -1,6 +1,14 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import {
+  Aineisto,
+  AineistoInput,
+  AineistoTila,
+  Kieli,
+  Status,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
@@ -8,6 +16,7 @@ import {
   defaultMocks,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
+  removeTiedosto,
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
@@ -50,12 +59,25 @@ describe("Nähtävilläolovaihe", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const aineistoNahtavillaVanha = dbProjekti.nahtavillaoloVaihe?.aineistoNahtavilla;
     await api.tallennaProjekti({
       oid,
       versio: p.versio,
       nahtavillaoloVaihe: {
         ...nahtavillaoloVaihe,
-        aineistoNahtavilla: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044" }],
+        aineistoNahtavilla: (
+          (aineistoNahtavillaVanha
+            ? aineistoNahtavillaVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+            : []) as AineistoInput[]
+        ).concat([
+          {
+            kategoriaId: "FOO",
+            nimi: "foo.pdf",
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+            uuid: "jotain",
+          },
+        ]),
         nahtavillaoloSaamePDFt: {
           POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
         },

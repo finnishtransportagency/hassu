@@ -12,7 +12,7 @@ import {
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
-import { expectToMatchSnapshot, PATH_EU_LOGO, takeS3Snapshot, verifyProjektiSchedule } from "./util";
+import { expectToMatchSnapshot, PATH_EU_LOGO, removeTiedosto, takeS3Snapshot, verifyProjektiSchedule } from "./util";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
@@ -427,14 +427,24 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
   assertIsDefined(aineistot);
   const suunnitelmaluonnoksetInput: API.AineistoInput[] =
     haeKategorianAineistot(aineistot, VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS)?.map((aineisto) => {
-      const { dokumenttiOid, nimi, kategoriaId, jarjestys } = aineisto;
-      return { dokumenttiOid, nimi, kategoriaId, jarjestys };
+      const { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila } = aineisto;
+      return { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila };
     }) ?? [];
 
   const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "Radan risteämärekisteriote_1203.pdf");
   expect(velhoAineistos.length).to.be.greaterThan(0);
   const velhoAineisto = velhoAineistos[0];
-  suunnitelmaluonnoksetInput.push({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto });
+  suunnitelmaluonnoksetInput.push({
+    dokumenttiOid: velhoAineisto.oid,
+    nimi: velhoAineisto.tiedosto,
+    tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "aineisto234",
+  });
+  const esittelyaineistotInput: API.AineistoInput[] =
+    haeKategorianAineistot(aineistot, VuorovaikutusAineistoKategoria.ESITTELYAINEISTO)?.map((aineisto) => {
+      const { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila } = aineisto;
+      return { dokumenttiOid, nimi, kategoriaId, jarjestys, uuid, tila };
+    }) ?? [];
   await api.paivitaPerustiedot({
     oid,
     versio,
@@ -442,6 +452,7 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
       vuorovaikutusNumero,
       kysymyksetJaPalautteetViimeistaan,
       suunnitelmaluonnokset: suunnitelmaluonnoksetInput,
+      esittelyaineistot: esittelyaineistotInput,
     },
   });
 }
@@ -533,18 +544,20 @@ export async function testImportAineistot(
     "1400-73Y-6710-5_Pituusleikkaus_Y5.pdf"
   );
 
-  let index = 1;
-  const esittelyaineistot: API.AineistoInput[] = [aineistot[0], aineistot[2]].map((aineisto) => ({
+  const esittelyaineistot: API.AineistoInput[] = [aineistot[0], aineistot[2]].map((aineisto, index) => ({
     dokumenttiOid: aineisto.oid,
-    jarjestys: index++,
+    jarjestys: index + 1,
     nimi: aineisto.tiedosto,
+    tila: API.AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "ea" + (index + 1),
   }));
 
-  index = 1;
-  const suunnitelmaluonnokset = [aineistot[1]].map((aineisto) => ({
+  const suunnitelmaluonnokset: API.AineistoInput[] = [aineistot[1]].map((aineisto, index) => ({
     dokumenttiOid: aineisto.oid,
-    jarjestys: index++,
+    jarjestys: index + 1,
     nimi: aineisto.tiedosto,
+    tila: API.AineistoTila.ODOTTAA_TUONTIA,
+    uuid: "sl" + (index + 1),
   }));
 
   const p2 = await saveAndVerifyAineistoSave(
@@ -559,11 +572,11 @@ export async function testImportAineistot(
   );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
-    aineisto.jarjestys = (aineisto.jarjestys || 0) + 10;
+    aineisto.jarjestys = (aineisto.jarjestys ?? 0) + 10;
   });
   suunnitelmaluonnokset.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
-    aineisto.jarjestys = aineisto.jarjestys + 10;
+    aineisto.jarjestys = (aineisto.jarjestys ?? 0) + 10;
   });
   const p3 = await saveAndVerifyAineistoSave(
     oid,
@@ -641,10 +654,10 @@ export async function julkaiseSuunnitteluvaihe(projekti: Projekti, description: 
           peruttu: tilaisuus.peruttu,
         })),
         esittelyaineistot: projekti.vuorovaikutusKierros?.esittelyaineistot?.map(
-          (aineisto) => removeTypeName(aineisto) as API.AineistoInput
+          (aineisto) => removeTiedosto(removeTypeName(aineisto)) as API.AineistoInput
         ),
         suunnitelmaluonnokset: projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(
-          (aineisto) => removeTypeName(aineisto) as API.AineistoInput
+          (aineisto) => removeTiedosto(removeTypeName(aineisto)) as API.AineistoInput
         ),
         videot: projekti.vuorovaikutusKierros?.videot?.map((video) => ({
           SUOMI: removeTypeName(video.SUOMI) as API.LinkkiInput,

@@ -124,6 +124,7 @@ export function getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
       jarjestys: 2,
       tuotu: "2021-06-01T01:03",
       kategoriaId,
+      uuid: `${kategoriaId ?? "no-category"}1`,
     },
     {
       tiedosto: "",
@@ -133,6 +134,7 @@ export function getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
       tila: API.AineistoTila.ODOTTAA_TUONTIA,
       jarjestys: 1,
       kategoriaId,
+      uuid: `${kategoriaId ?? "no-category"}2`,
     },
     {
       tiedosto: `/${phaseFolder}/${name}_aineisto_odottaa_poistoa.txt`,
@@ -142,6 +144,7 @@ export function getThreeAineistosValmisAndOdottaaTuontiaAndOdottaaPoistoa(
       jarjestys: 3,
       tuotu: "2021-06-01T01:04",
       kategoriaId,
+      uuid: `${kategoriaId ?? "no-category"}3`,
     },
   ];
 }
@@ -166,6 +169,7 @@ export function getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaP
       nimi: `${name}_tiedosto_odottaa_persistointia.txt`,
       tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
       jarjestys: 2,
+      uuid: "1",
     },
     {
       tiedosto: `/${path}/${uuid}/${name}_tiedosto_valmis.txt`,
@@ -173,6 +177,7 @@ export function getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaP
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 1,
       tuotu: "2021-06-01T01:01",
+      uuid: "2",
     },
     {
       tiedosto: `/${path}/${uuid}/${name}_tiedosto_odottaa_poistoa.txt`,
@@ -180,6 +185,7 @@ export function getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaP
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       jarjestys: 3,
       tuotu: "2021-06-01T01:02",
+      uuid: "3",
     },
   ];
 }

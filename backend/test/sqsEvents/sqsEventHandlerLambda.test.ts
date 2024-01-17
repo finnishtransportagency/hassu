@@ -19,6 +19,7 @@ import {
   aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu,
   aineistoAndFilesChangesHandlesCorrectlyLPTs,
   filesChangedPersistsLausuntoPyyntoFiles,
+  filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile,
 } from "./sqsEventHandlerLambdaTests";
 
 describe("sqsEventHandlerLambda handles event", () => {
@@ -44,6 +45,11 @@ describe("sqsEventHandlerLambda handles event", () => {
   );
 
   it("FILES_CHANGED by persisting lausuntoPyynto files when there is one lausuntoPyynto", filesChangedPersistsLausuntoPyyntoFiles);
+
+  it(
+    "FILES CHANGED by deleting old file and adding a file with the same name",
+    filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile
+  );
 
   // ZIP_LAUSUNTOPYYNTO tests
 

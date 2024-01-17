@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import MuistutuksetTable from "./Table";
@@ -7,17 +7,12 @@ import { LadattuTiedostoInput, LadattuTiedostoTila, api } from "@services/api";
 import { lataaTiedosto } from "src/util/fileUtil";
 import { LausuntoPyynnonTaydennysFormValues, LausuntoPyynnonTaydennysLisakentilla } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { combineOldAndNewLadattuTiedosto } from "../../util";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import { uuid } from "common/util/uuid";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
-  const { watch, control, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
-  const { replace: replacePoistetutMuistutukset } = useFieldArray({
-    control,
-    name: `lausuntoPyynnonTaydennykset.${index}.poistetutMuuAineisto`,
-  });
+  const { watch, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
   const muistutukset = watch(`lausuntoPyynnonTaydennykset.${index}.muistutukset`);
-  const poistetutMuistutukset = watch(`lausuntoPyynnonTaydennykset.${index}.poistetutMuistutukset`);
   const lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysLisakentilla | undefined = watch(`lausuntoPyynnonTaydennykset.${index}`);
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const onButtonClick = () => {
@@ -40,18 +35,15 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
               nimi: files[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
+              uuid: uuid.v4(),
             }));
-            const { poistetut, lisatyt } = combineOldAndNewLadattuTiedosto({
-              oldTiedostot: muistutukset,
-              oldPoistetut: poistetutMuistutukset,
-              newTiedostot: tiedostoInputs,
+            setValue(`lausuntoPyynnonTaydennykset.${index}.muistutukset`, (muistutukset ?? []).concat(tiedostoInputs), {
+              shouldDirty: true,
             });
-            replacePoistetutMuistutukset(poistetut);
-            setValue(`lausuntoPyynnonTaydennykset.${index}.muistutukset`, lisatyt, { shouldDirty: true });
           }
         })()
       ),
-    [index, muistutukset, poistetutMuistutukset, replacePoistetutMuistutukset, setValue, withLoadingSpinner]
+    [index, muistutukset, setValue, withLoadingSpinner]
   );
   return (
     <SectionContent className="mt-16">

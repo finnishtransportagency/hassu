@@ -113,7 +113,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
-          "tuotu": "2022-01-02T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-01-02T00:00",
+          "uuid": "00000001-473f-49e2-a1d1-51228ae6f158"
         },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
@@ -220,11 +222,13 @@
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "aineisto123"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -233,7 +237,8 @@
           "nimi": "aineisto3.txt",
           "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -242,7 +247,8 @@
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -251,7 +257,8 @@
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -260,7 +267,8 @@
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -269,7 +277,8 @@
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
-          "tuotu": "2024-01-01T00:00:01+02:00"
+          "tuotu": "2024-01-01T00:00:01+02:00",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi"
         }
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -332,11 +341,13 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "aineisto123"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -345,7 +356,8 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/1/aineisto3.txt",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -354,7 +366,8 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -363,7 +376,8 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -372,7 +386,8 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -381,7 +396,8 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi"
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -448,7 +464,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
-          "tuotu": "2024-01-01T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2024-01-01T00:00",
+          "uuid": "00000030-473f-49e2-a1d1-51228ae6f158"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000112",
@@ -507,11 +525,13 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "aineisto123"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -520,7 +540,8 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -529,7 +550,8 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -538,7 +560,8 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -547,7 +570,8 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -556,7 +580,8 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "VALMIS",
-            "tuotu": "2024-01-01T00:00:01+02:00"
+            "tuotu": "2024-01-01T00:00:01+02:00",
+            "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi"
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -623,7 +648,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
-          "tuotu": "2024-01-01T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2024-01-01T00:00",
+          "uuid": "00000033-473f-49e2-a1d1-51228ae6f158"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",

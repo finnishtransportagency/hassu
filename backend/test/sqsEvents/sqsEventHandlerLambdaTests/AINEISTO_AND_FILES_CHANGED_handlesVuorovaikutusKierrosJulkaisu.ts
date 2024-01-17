@@ -87,6 +87,7 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
         jarjestys: 2,
         tuotu: "***unittest***",
         kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+        uuid: "ESITTELYAINEISTO1",
       },
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/esittelyaineisto_aineisto_odottaa_tuontia.txt",
@@ -96,6 +97,7 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
         jarjestys: 1,
         kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
         tuotu: "***unittest***",
+        uuid: "ESITTELYAINEISTO2",
       },
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/suunnitelmaluonnos_aineisto_valmis.txt",
@@ -105,6 +107,8 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
         jarjestys: 2,
         tuotu: "***unittest***",
         kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
+
+        uuid: "SUUNNITELMALUONNOS1",
       },
       {
         tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/suunnitelmaluonnos_aineisto_odottaa_tuontia.txt",
@@ -114,6 +118,8 @@ export const aineistoAndFilesChangedHandlesVuorovaikutusKierrosJulkaisu = async 
         jarjestys: 1,
         kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
         tuotu: "***unittest***",
+
+        uuid: "SUUNNITELMALUONNOS2",
       },
     ],
     hankkeenKuvaus: { SUOMI: "" },
