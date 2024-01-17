@@ -8,7 +8,7 @@ import * as mime from "mime-types";
 import contentDisposition from "content-disposition";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { nyt } from "../../util/dateUtil";
-import { persistLadattuTiedosto } from "../../files/persistFiles";
+import { deleteFile, persistLadattuTiedosto } from "../../files/persistFiles";
 import { translate } from "../../util/localization";
 import { AineistoKategoria, aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { omit } from "lodash";
@@ -47,7 +47,8 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
     return false;
   }
   let hasChanges = false;
-  const originalAineistot = aineistot.splice(0, aineistot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  const originalAineistot = aineistot.splice(0, aineistot.length);
   for (const aineisto of originalAineistot) {
     if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA) {
       await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
@@ -71,24 +72,44 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
   if (!tiedostot) {
     return false;
   }
-  let hasChanges = false;
-  const originalTiedostot = tiedostot.splice(0, tiedostot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
-  for (const tiedosto of originalTiedostot) {
-    const { fileWasRemoved, fileWasPersisted } = await persistLadattuTiedosto({
-      oid,
-      ladattuTiedosto: tiedosto,
-      targetFilePathInProjekti: paths.yllapitoPath,
-      poistetaan: tiedosto.tila === LadattuTiedostoTila.ODOTTAA_POISTOA,
-    });
-    if (!fileWasRemoved) {
-      tiedostot.push(tiedosto);
+  // parametrina annetut 'tiedostot' tyhjennetään, ja uudet arvot pushataan tilalle
+  const { poistettavat, valmiit, persistoitavat } = tiedostot.splice(0, tiedostot.length).reduce(
+    ({ poistettavat, valmiit, persistoitavat }, tiedosto) => {
+      switch (tiedosto.tila) {
+        case LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA:
+          persistoitavat.push(tiedosto);
+          break;
+        case LadattuTiedostoTila.ODOTTAA_POISTOA:
+          poistettavat.push(tiedosto);
+          break;
+        default:
+          valmiit.push(tiedosto);
+          break;
+      }
+      return { poistettavat, valmiit, persistoitavat };
+    },
+    { poistettavat: [], valmiit: [], persistoitavat: [] } as {
+      poistettavat: LadattuTiedosto[];
+      valmiit: LadattuTiedosto[];
+      persistoitavat: LadattuTiedosto[];
     }
-    if (fileWasRemoved || fileWasPersisted) {
-      hasChanges = true;
-    }
+  );
+  await Promise.all(poistettavat.map((tiedosto) => deleteFile({ oid, tiedosto })));
+  const persistoidutTiedostot = await Promise.all(
+    persistoitavat.map((tiedosto) =>
+      persistLadattuTiedosto({
+        oid,
+        ladattuTiedosto: tiedosto,
+        targetFilePathInProjekti: paths.yllapitoPath,
+      })
+    )
+  );
+  tiedostot.push(...valmiit.concat(persistoidutTiedostot).sort((a, b) => (a.jarjestys ?? 0) - (b.jarjestys ?? 0)));
+  if (poistettavat.length || persistoitavat.length) {
+    return true;
+  } else {
+    return false;
   }
-
-  return hasChanges;
 }
 
 export async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) {

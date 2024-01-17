@@ -45,7 +45,7 @@ import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
-import { persistLadattuTiedosto } from "../files/persistFiles";
+import { persistLadattuTiedostoOld } from "../files/persistFiles";
 import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
@@ -454,7 +454,7 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   for (let i = 0; i < keys.length; i++) {
     const ladattuTiedosto = container[keys[i]];
     if (ladattuTiedosto) {
-      await persistLadattuTiedosto({
+      await persistLadattuTiedostoOld({
         oid,
         ladattuTiedosto,
         targetFilePathInProjekti: path.yllapitoPath,
@@ -486,7 +486,7 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
     const vuorovaikutusKierros = dbProjekti.vuorovaikutusKierros;
     const kutsuPDFLadattuTiedosto = vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
     if (kutsuPDFLadattuTiedosto) {
-      await persistLadattuTiedosto({
+      await persistLadattuTiedostoOld({
         oid: dbProjekti.oid,
         ladattuTiedosto: kutsuPDFLadattuTiedosto,
         targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
