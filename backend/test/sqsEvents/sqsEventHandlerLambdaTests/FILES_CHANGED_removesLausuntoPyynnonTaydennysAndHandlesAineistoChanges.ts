@@ -17,6 +17,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChange
       tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
       tuotu: "2021-12-01T01:05",
       jarjestys: 2,
+      uuid: "1",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto-valmis2.txt",
@@ -24,6 +25,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChange
       tila: API.LadattuTiedostoTila.VALMIS,
       tuotu: "2021-12-01T01:04",
       jarjestys: 1,
+      uuid: "2",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto-valmis2.txt",
@@ -31,6 +33,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChange
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       tuotu: "2021-12-01T01:04",
       jarjestys: 3,
+      uuid: "3",
     },
   ];
   const muuAineisto = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({
@@ -98,18 +101,20 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysAndHandlesAineistoChange
       poistumisPaiva: "2022-01-01",
       muuAineisto: [
         {
-          jarjestys: 2,
-          nimi: "muu_tiedosto_odottaa_persistointia.txt",
-          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/muu_tiedosto_odottaa_persistointia.txt",
-          tila: "VALMIS",
-          tuotu: "***unittest***",
-        },
-        {
           tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/muu_tiedosto_valmis.txt",
           nimi: "muu_tiedosto_valmis.txt",
           tila: "VALMIS",
           jarjestys: 1,
           tuotu: "***unittest***",
+          uuid: "2",
+        },
+        {
+          jarjestys: 2,
+          nimi: "muu_tiedosto_odottaa_persistointia.txt",
+          tiedosto: "/lausuntopyynnon_taydennys/joku-toinen-uuid/muu_tiedosto_odottaa_persistointia.txt",
+          tila: "VALMIS",
+          tuotu: "***unittest***",
+          uuid: "1",
         },
       ],
       kunta: 1,
