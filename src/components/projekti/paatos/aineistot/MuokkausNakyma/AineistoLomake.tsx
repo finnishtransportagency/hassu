@@ -7,7 +7,7 @@ import { HyvaksymisPaatosVaihe } from "@services/api";
 import { aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   combineOldAndNewAineistoWithCategories,
   findKategoriaForVelhoAineisto,
@@ -24,11 +24,8 @@ export interface AineistoLomakeProps {
 }
 
 export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe }: AineistoLomakeProps) {
-  const { watch, setValue, getValues, control } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
-  const { replace: replacePoistetutAineistoNahtavilla } = useFieldArray({ control, name: "poistetutAineistoNahtavilla" });
-
+  const { watch, setValue, getValues } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
-  const poistetutAineistoNahtavilla = watch("poistetutAineistoNahtavilla");
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(aineistoNahtavilla));
 
@@ -71,13 +68,11 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
           const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot);
-          const { poistetut, lisatyt } = combineOldAndNewAineistoWithCategories({
+          const newAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
             oldAineisto: aineistoNahtavilla,
-            oldPoistetut: poistetutAineistoNahtavilla,
             newAineisto,
           });
-          replacePoistetutAineistoNahtavilla(poistetut);
-          setValue("aineistoNahtavilla", lisatyt, { shouldDirty: true });
+          setValue("aineistoNahtavilla", newAineistoNahtavilla, { shouldDirty: true });
 
           const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);
 

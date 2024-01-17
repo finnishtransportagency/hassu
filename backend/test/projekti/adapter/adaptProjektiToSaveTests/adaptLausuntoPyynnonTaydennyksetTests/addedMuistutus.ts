@@ -17,6 +17,7 @@ export const addedMuistutus = async () => {
           nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "tiedosto",
         },
       ],
       muuAineisto: [
@@ -25,6 +26,7 @@ export const addedMuistutus = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },
@@ -46,11 +48,13 @@ export const addedMuistutus = async () => {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
             nimi: "tiedosto.txt",
             tila: API.LadattuTiedostoTila.VALMIS,
+            uuid: "tiedosto",
           },
           {
             tiedosto: "upload/23435345.txt",
             nimi: "tiedosto2.txt",
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+            uuid: "tiedosto2",
           },
         ],
         muuAineisto: [
@@ -58,6 +62,7 @@ export const addedMuistutus = async () => {
             tiedosto: "/lausuntopyynnon_taydennys/jotain/aineisto.txt",
             nimi: "aineisto.txt",
             tila: API.LadattuTiedostoTila.VALMIS,
+            uuid: "aineisto",
           },
         ],
       },
@@ -71,15 +76,17 @@ export const addedMuistutus = async () => {
       poistumisPaiva: "2022-01-01",
       muistutukset: [
         {
-          tiedosto: "upload/23435345.txt",
-          nimi: "tiedosto2.txt",
-          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
-        },
-        {
           tiedosto: "/lausuntopyynnon_taydennys/jotain/tiedosto.txt",
           nimi: "tiedosto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "tiedosto",
+        },
+        {
+          tiedosto: "upload/23435345.txt",
+          nimi: "tiedosto2.txt",
+          tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
+          uuid: "tiedosto2",
         },
       ],
       muuAineisto: [
@@ -88,6 +95,7 @@ export const addedMuistutus = async () => {
           nimi: "aineisto.txt",
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-01-01T01:01",
+          uuid: "aineisto",
         },
       ],
     },

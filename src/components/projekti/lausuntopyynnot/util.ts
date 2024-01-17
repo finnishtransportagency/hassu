@@ -1,6 +1,5 @@
 import { LadattuTiedosto, LadattuTiedostoInput, LadattuTiedostoTila } from "@services/api";
 import { LadattuTiedostoInputWithTuotu, SplitLadattuTiedostoInput } from "./types";
-import find from "lodash/find";
 
 export const handleLadattuTiedostoArrayForDefaultValues = (
   aineistot: LadattuTiedosto[] | null | undefined,
@@ -35,31 +34,11 @@ export const reduceToLisatytJaPoistetutLadattuTiedosto =
     return acc;
   };
 
-const mapLadattuTiedostoToInput = ({ nimi, jarjestys, tila, tiedosto, tuotu }: LadattuTiedosto): LadattuTiedostoInputWithTuotu => ({
+const mapLadattuTiedostoToInput = ({ nimi, jarjestys, tila, tiedosto, tuotu, uuid }: LadattuTiedosto): LadattuTiedostoInputWithTuotu => ({
   tiedosto,
   jarjestys,
   nimi,
   tila,
   tuotu,
+  uuid,
 });
-
-export function combineOldAndNewLadattuTiedosto({
-  oldTiedostot,
-  oldPoistetut,
-  newTiedostot,
-}: {
-  oldTiedostot?: LadattuTiedostoInputWithTuotu[];
-  oldPoistetut?: LadattuTiedostoInputWithTuotu[];
-  newTiedostot: LadattuTiedostoInputWithTuotu[];
-}) {
-  return newTiedostot.reduce<{ lisatyt: LadattuTiedostoInputWithTuotu[]; poistetut: LadattuTiedostoInputWithTuotu[] }>(
-    (acc, tiedosto) => {
-      if (!find(acc.lisatyt, { nimi: tiedosto.nimi })) {
-        acc.lisatyt.push({ ...tiedosto, jarjestys: acc.lisatyt.length });
-      }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.nimi !== tiedosto.nimi);
-      return acc;
-    },
-    { lisatyt: oldTiedostot || [], poistetut: oldPoistetut || [] }
-  );
-}

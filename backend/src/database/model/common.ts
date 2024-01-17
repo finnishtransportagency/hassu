@@ -51,6 +51,8 @@ export type Aineisto = {
   tiedosto?: string;
   // Tiedostonimi naytettavaksi
   nimi: string;
+  // Tunniste, joka on luotu FE:ssä, kun tiedosto on valittu. Ei muutu.
+  uuid: string;
   // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   tuotu?: string;
   // Numero jarjestamista varten
@@ -131,8 +133,9 @@ export type LadattuTiedosto = {
   tiedosto: string;
   // Kayttajalle esitettava tiedostonimi
   nimi?: string | null;
+  uuid: string;
   tuotu?: string | null;
   //Numero jarjestamista varten
   jarjestys?: number;
-  tila?: LadattuTiedostoTila;
+  tila: LadattuTiedostoTila;
 };

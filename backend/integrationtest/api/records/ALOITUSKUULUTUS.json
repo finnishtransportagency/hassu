@@ -114,7 +114,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
-          "tuotu": "2022-01-02T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-01-02T00:00",
+          "uuid": "00000003-9f2d-4f4c-bebc-fcb7e44be544"
         },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",

@@ -16,6 +16,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysFiles = async () => {
       tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
       tuotu: "2021-12-01T01:05",
       jarjestys: 2,
+      uuid: "1",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto-valmis2.txt",
@@ -23,6 +24,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysFiles = async () => {
       tila: API.LadattuTiedostoTila.VALMIS,
       tuotu: "2021-12-01T01:04",
       jarjestys: 1,
+      uuid: "2",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto-valmis2.txt",
@@ -30,6 +32,7 @@ export const filesChangedRemovesLausuntoPyynnonTaydennysFiles = async () => {
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       tuotu: "2021-12-01T01:04",
       jarjestys: 3,
+      uuid: "3",
     },
   ];
   const muuAineisto = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({

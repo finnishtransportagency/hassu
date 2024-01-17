@@ -14,6 +14,7 @@ export const filesChangedPersistsAndDeletesLausuntoPyynnonTaydennysFiles = async
       nimi: "tiedosto_odottaa_persistointia.txt",
       tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
       jarjestys: 2,
+      uuid: "uuid1",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%202.txt",
@@ -21,6 +22,7 @@ export const filesChangedPersistsAndDeletesLausuntoPyynnonTaydennysFiles = async
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       tuotu: "2021-12-01T01:04",
       jarjestys: 1,
+      uuid: "uuid2",
     },
   ];
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [
@@ -68,6 +70,7 @@ export const filesChangedPersistsAndDeletesLausuntoPyynnonTaydennysFiles = async
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "***unittest***",
           jarjestys: 2,
+          uuid: "uuid1",
         },
       ],
       kunta: 1,

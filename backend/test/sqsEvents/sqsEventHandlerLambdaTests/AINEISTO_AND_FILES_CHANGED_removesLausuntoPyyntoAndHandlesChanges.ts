@@ -75,18 +75,20 @@ export const aineistoAndFilesChangedRemovesLausuntoPyyntoAndHandlesChanges = asy
       poistumisPaiva: "2022-01-01",
       lisaAineistot: [
         {
-          jarjestys: 2,
-          nimi: "lisa_tiedosto_odottaa_persistointia.txt",
-          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_tiedosto_odottaa_persistointia.txt",
-          tila: "VALMIS",
-          tuotu: "***unittest***",
-        },
-        {
           jarjestys: 1,
           nimi: "lisa_tiedosto_valmis.txt",
           tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_tiedosto_valmis.txt",
           tila: "VALMIS",
           tuotu: "***unittest***",
+          uuid: "2",
+        },
+        {
+          jarjestys: 2,
+          nimi: "lisa_tiedosto_odottaa_persistointia.txt",
+          tiedosto: "/lausuntopyynto/joku-toinen-uuid/lisa_tiedosto_odottaa_persistointia.txt",
+          tila: "VALMIS",
+          tuotu: "***unittest***",
+          uuid: "1",
         },
       ],
     },

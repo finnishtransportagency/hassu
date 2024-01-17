@@ -39,6 +39,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
+        uuid: "Aineisto 1",
       },
       {
         tiedosto: "/lausuntopyynto/joku-uuid/Aineisto%202.txt",
@@ -46,6 +47,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
+        uuid: "Aineisto 2",
       },
     ];
     const lausuntoPyynto: LausuntoPyynto = {
@@ -65,6 +67,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
+        uuid: "Aineisto 2",
       },
       {
         __typename: "LadattuTiedosto",
@@ -73,6 +76,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
+        uuid: "Aineisto 1",
       },
     ]);
   });
@@ -116,6 +120,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
+        uuid: "Aineisto 1",
       },
       {
         tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Aineisto%202.txt",
@@ -123,6 +128,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
+        uuid: "Aineisto 2",
       },
     ];
     const muistutukset: LadattuTiedosto[] = [
@@ -132,6 +138,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:03",
         jarjestys: 2,
+        uuid: "Tiedosto 1",
       },
       {
         tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/Tiedosto%202.txt",
@@ -139,6 +146,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: API.LadattuTiedostoTila.VALMIS,
         tuotu: "2021-12-01T01:04",
         jarjestys: 1,
+        uuid: "Tiedosto 2",
       },
     ];
     const lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys = {
@@ -161,6 +169,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:02",
         jarjestys: 1,
+        uuid: "Aineisto 2",
       },
       {
         __typename: "LadattuTiedosto",
@@ -169,6 +178,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:01",
         jarjestys: 2,
+        uuid: "Aineisto 1",
       },
     ]);
     expect(adaptedLausuntoPyynnonTaydennys.muistutukset).to.eql([
@@ -179,6 +189,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:04",
         jarjestys: 1,
+        uuid: "Tiedosto 2",
       },
       {
         __typename: "LadattuTiedosto",
@@ -187,6 +198,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "VALMIS",
         tuotu: "2021-12-01T01:03",
         jarjestys: 2,
+        uuid: "Tiedosto 1",
       },
     ]);
   });
@@ -207,12 +219,14 @@ describe("adaptLausuntoPyynnot:", () => {
           jarjestys: 0,
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           tiedosto: "/e6169b47-2035-40e5-9343-46fec03f7e95/Screenshot 2023-09-29 at 17.59.03.png",
+          uuid: "03",
         },
         {
           nimi: "Screenshot 2023-09-28 at 12.24.31.png",
           jarjestys: 1,
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           tiedosto: "/e9ab1d6a-e8fd-4796-adea-d8e8e55e3481/Screenshot 2023-09-28 at 12.24.31.png",
+          uuid: "31",
         },
       ],
     };
@@ -225,6 +239,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "ODOTTAA_PERSISTOINTIA",
         jarjestys: 0,
         tuotu: undefined,
+        uuid: "03",
       },
       {
         __typename: "LadattuTiedosto",
@@ -233,6 +248,7 @@ describe("adaptLausuntoPyynnot:", () => {
         tila: "ODOTTAA_PERSISTOINTIA",
         jarjestys: 1,
         tuotu: undefined,
+        uuid: "31",
       },
     ]);
   });
@@ -254,6 +270,7 @@ describe("adaptLausuntoPyynnot:", () => {
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-12-01T01:01",
           jarjestys: 2,
+          uuid: "Aineisto 1",
         },
         {
           tiedosto: "/nahtavillaolo/1/joku-uuid/Aineisto%202.txt",
@@ -261,6 +278,7 @@ describe("adaptLausuntoPyynnot:", () => {
           tila: API.LadattuTiedostoTila.VALMIS,
           tuotu: "2021-12-01T01:02",
           jarjestys: 1,
+          uuid: "Aineisto 2",
         },
       ],
     };

@@ -1,10 +1,10 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { Status, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Status, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
-import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, removeTiedosto, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { asetaAika, findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
@@ -15,6 +15,7 @@ import {
   doTestApproveAndPublishHyvaksymisPaatos,
   tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa,
 } from "./testUtil/hyvaksymisPaatosVaihe";
+import { Aineisto } from "../../src/database/model";
 
 describe("Hyväksymispäätös", () => {
   const userFixture = new UserFixture(userService);
@@ -46,12 +47,28 @@ describe("Hyväksymispäätös", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const hyvaksymisPaatosVanha = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos;
+    const aineistotNahtavillaVanha = dbProjekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla;
     await api.tallennaProjekti({
       oid,
       versio: p.versio,
       hyvaksymisPaatosVaihe: {
         ...hyvaksymisPaatosVaihe,
-        hyvaksymisPaatos: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044" }],
+        aineistoNahtavilla: aineistotNahtavillaVanha
+          ? aineistotNahtavillaVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : [],
+        hyvaksymisPaatos: (hyvaksymisPaatosVanha
+          ? hyvaksymisPaatosVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : []
+        ).concat([
+          {
+            kategoriaId: "FOO",
+            nimi: "foo.pdf",
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            uuid: "jotain",
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+          },
+        ]),
         hyvaksymisPaatosVaiheSaamePDFt: {
           POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
         },

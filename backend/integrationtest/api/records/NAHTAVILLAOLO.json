@@ -116,7 +116,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
-          "tuotu": "2022-01-02T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-01-02T00:00",
+          "uuid": "00000003-9f2d-4f4c-bebc-fcb7e44be544"
         },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
@@ -237,7 +239,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
-          "tuotu": "2022-10-01T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00",
+          "uuid": "00000002-5860-4054-b0de-bddf24ce6eb4"
         },
         "muokkaaja": "A000111",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
@@ -435,8 +439,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000003-8557-4a58-8a93-64ade8cd137b": {
-        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
+      "00000004-8557-4a58-8a93-64ade8cd137b": {
+        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -489,7 +493,8 @@
           "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "ea2"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -498,7 +503,8 @@
           "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "sl1"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
@@ -506,7 +512,8 @@
           "nimi": "Radan risteämärekisteriote_1203.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "aineisto234"
         }
       ],
       "arvioSeuraavanVaiheenAlkamisesta": {
@@ -662,7 +669,8 @@
             "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "ea2"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -671,7 +679,8 @@
             "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "sl1"
           }
         ],
         "arvioSeuraavanVaiheenAlkamisesta": {
@@ -908,7 +917,8 @@
             "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "ea2"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -917,7 +927,8 @@
             "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "sl1"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
@@ -925,13 +936,14 @@
             "nimi": "Radan risteämärekisteriote_1203.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "aineisto234"
           }
         ],
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "huomenna"
         },
-        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
+        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "esitettavatYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",
