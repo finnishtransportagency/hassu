@@ -8,17 +8,16 @@ export function adaptLadattuTiedostoToSave(
 ): LadattuTiedosto | undefined | null {
   if (inputTiedostoPath == null) {
     if (dbLadattuTiedosto) {
-      dbLadattuTiedosto.nimi = null;
+      return {
+        ...dbLadattuTiedosto,
+        tila: LadattuTiedostoTila.ODOTTAA_POISTOA,
+      };
     }
   }
   if (inputTiedostoPath) {
-    if (!dbLadattuTiedosto) {
-      dbLadattuTiedosto = { uuid: uuid.v4(), tiedosto: inputTiedostoPath, tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA };
-    } else if (!inputTiedostoPath.endsWith(dbLadattuTiedosto.tiedosto)) {
-      // Jos APIin lähetetty absoluuttinen polku ei osoita samaan tiedostoon joka on ladattu, korvataan se
-      dbLadattuTiedosto.tiedosto = inputTiedostoPath;
-      dbLadattuTiedosto.tuotu = undefined;
-      dbLadattuTiedosto.nimi = undefined;
+    // Jos APIin lähetetty absoluuttinen polku ei osoita samaan tiedostoon joka on ladattu, korvataan se
+    if (!dbLadattuTiedosto || !inputTiedostoPath.endsWith(dbLadattuTiedosto.tiedosto)) {
+      return { uuid: uuid.v4(), tiedosto: inputTiedostoPath, tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA };
     }
   }
   return dbLadattuTiedosto;
