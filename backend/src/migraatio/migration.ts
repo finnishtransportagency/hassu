@@ -11,6 +11,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { statusOrder } from "hassu-common/statusOrder";
 import {
   AloitusKuulutusJulkaisu,
+  KasittelynTila,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
@@ -18,13 +19,15 @@ import {
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 
-export type TargetStatuses = typeof Status["SUUNNITTELU" | "NAHTAVILLAOLO" | "HYVAKSYMISMENETTELYSSA" | "EPAAKTIIVINEN_1"];
+export type TargetStatuses = (typeof Status)["SUUNNITTELU" | "NAHTAVILLAOLO" | "HYVAKSYMISMENETTELYSSA" | "EPAAKTIIVINEN_1"];
 export type ImportProjektiParams = {
   oid: string;
   kayttaja: NykyinenKayttaja;
   targetStatus: TargetStatuses;
   hyvaksymispaatosAsianumero?: string;
   hyvaksymispaatosPaivamaara?: Date;
+  jatkopaatosAsianumero?: string;
+  jatkopaatosPaivamaara?: Date;
 };
 
 export async function importProjekti(params: ImportProjektiParams): Promise<void> {
@@ -82,6 +85,10 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
   }
 
+  const kasittelynTila: KasittelynTila = {
+    ...projekti.kasittelynTila,
+  };
+
   if (targetStatusRank >= statusOrder[Status.EPAAKTIIVINEN_1]) {
     const { hyvaksymispaatosAsianumero, hyvaksymispaatosPaivamaara } = params;
     if (!hyvaksymispaatosAsianumero || !hyvaksymispaatosPaivamaara) {
@@ -97,16 +104,40 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       muokkaaja: kayttaja.uid,
     };
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, hyvaksymisPaatosVaiheJulkaisu);
+    kasittelynTila.hyvaksymispaatos = {
+      asianumero: hyvaksymispaatosAsianumero,
+      paatoksenPvm: dayjs(hyvaksymispaatosPaivamaara).format("YYYY-MM-DD"),
+      aktiivinen: true,
+    };
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
-      kasittelynTila: {
-        ... projekti.kasittelynTila,
-        hyvaksymispaatos: {
-          asianumero: hyvaksymispaatosAsianumero,
-          paatoksenPvm: dayjs(hyvaksymispaatosPaivamaara).format("YYYY-MM-DD"),
-          aktiivinen: true,
-        },
-      },
+      kasittelynTila,
+    });
+  }
+
+  if (targetStatusRank >= statusOrder[Status.EPAAKTIIVINEN_2]) {
+    const { jatkopaatosAsianumero, jatkopaatosPaivamaara } = params;
+    if (!jatkopaatosAsianumero || !jatkopaatosPaivamaara) {
+      log.error("Jatkopäätös puuttuu!", { oid });
+    }
+    const jatkoPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+      kielitiedot,
+      id: 1,
+      tila: KuulutusJulkaisuTila.MIGROITU,
+      yhteystiedot: [],
+      kuulutusYhteystiedot: {},
+      velho: cloneDeep(projekti.velho),
+      muokkaaja: kayttaja.uid,
+    };
+    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, jatkoPaatosVaiheJulkaisu);
+    kasittelynTila.ensimmainenJatkopaatos = {
+      asianumero: jatkopaatosAsianumero,
+      paatoksenPvm: dayjs(jatkopaatosPaivamaara).format("YYYY-MM-DD"),
+      aktiivinen: true,
+    };
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid,
+      kasittelynTila,
     });
   }
 }
