@@ -48,8 +48,11 @@ export default function HenkilotPage(): ReactElement {
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    let isOpen = false;
+    if (typeof window !== "undefined") {
+      const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
+      isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    }
     return isOpen;
   });
   const ohjeetOnClose = useCallback(() => {

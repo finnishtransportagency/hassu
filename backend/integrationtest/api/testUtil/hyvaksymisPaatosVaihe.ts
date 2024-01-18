@@ -22,7 +22,14 @@ import {
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";
-import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot, takeYllapitoS3Snapshot } from "./util";
+import {
+  SchedulerMock,
+  adaptAineistoToInput,
+  expectToMatchSnapshot,
+  removeTiedosto,
+  takePublicS3Snapshot,
+  takeYllapitoS3Snapshot,
+} from "./util";
 import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../../commonTestUtil/cleanUpFunctions";
 import capitalize from "lodash/capitalize";
@@ -99,10 +106,10 @@ export async function testMuokkaaAineistojaHyvaksymisPaatosVaihe(
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  const nykyinenAineisto: Aineisto[] = projekti.nahtavillaoloVaihe?.aineistoNahtavilla as Aineisto[];
+  const nykyinenAineisto: Aineisto[] = projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla as Aineisto[];
   const aineistoInput: AineistoInput[] = nykyinenAineisto
-    .map((aineisto) => removeTypeName(aineisto) as AineistoInput)
-    .concat(adaptAineistoToInput(uudetAineistot).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })));
+    .map((aineisto) => removeTiedosto(removeTypeName(aineisto)) as AineistoInput)
+    .concat(adaptAineistoToInput(uudetAineistot, "uusi").map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })));
 
   await api.tallennaProjekti({
     oid: projekti.oid,
@@ -229,9 +236,11 @@ export function sendHyvaksymisPaatosForApproval(projekti: Projekti): Promise<str
       oid: projekti.oid,
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: {
-        hyvaksymisPaatos: projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map((aineisto) => removeTypeName(aineisto) as AineistoInput),
+        hyvaksymisPaatos: projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map(
+          (aineisto) => removeTiedosto(removeTypeName(aineisto)) as AineistoInput
+        ),
         aineistoNahtavilla: projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla?.map(
-          (aineisto) => removeTypeName(aineisto) as AineistoInput
+          (aineisto) => removeTiedosto(removeTypeName(aineisto)) as AineistoInput
         ),
         kuulutusYhteystiedot: {
           yhteysHenkilot: projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot,

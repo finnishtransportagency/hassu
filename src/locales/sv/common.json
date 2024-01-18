@@ -182,5 +182,6 @@
   "puh": "tel.",
   "takaisin_sivun_alkuun": "Tillbaka till toppen av sidan",
   "vayla_tietosuoja_url": "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
-  "valitse": "Välj"
+  "valitse": "Välj",
+  "pdf_saavutettava_label": "Länk till PDF-fil {{tiedostoNimi}} {{pvm}}"
 }

@@ -7,7 +7,8 @@ export function splitFilePath(path?: string) {
   }
   const fileName = path.replace(/.*\//, "").replace(/\.\w+$/, "");
   const fileExt = path.replace(/.*\./, "");
-  return { path, fileName, fileExt };
+  const fileNameWithExt = fileName + "." + fileExt;
+  return { path, fileName, fileExt, fileNameWithExt };
 }
 
 export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
@@ -25,4 +26,3 @@ export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
   await axios.post(url, form);
   return response.tiedostoPolku;
 }
-

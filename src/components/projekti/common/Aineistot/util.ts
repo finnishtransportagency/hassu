@@ -1,5 +1,6 @@
 import { SelectOption } from "@components/form/Select";
-import { Aineisto, AineistoInput, VelhoAineisto } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila, VelhoAineisto } from "@services/api";
+import { uuid } from "common/util/uuid";
 import { AineistoKategoria, aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import { Translate } from "next-translate";
@@ -61,61 +62,47 @@ export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineis
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
     kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
+    tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: uuid.v4(),
   }));
 }
 
 export function combineOldAndNewAineistoWithCategories({
   oldAineisto,
-  oldPoistetut,
   newAineisto,
 }: {
   oldAineisto: AineistotKategorioittain;
-  oldPoistetut: AineistoInput[];
   newAineisto: AineistoInput[];
 }) {
-  return newAineisto.reduce<{ lisatyt: AineistotKategorioittain; poistetut: AineistoInput[] }>(
-    (acc, velhoAineisto) => {
-      if (!find(Object.values(acc.lisatyt || {}).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-        if (!velhoAineisto.kategoriaId && !acc.lisatyt[kategorisoimattomatId]) {
-          acc.lisatyt[kategorisoimattomatId] = [];
-        }
-        if (velhoAineisto.kategoriaId && !acc.lisatyt[velhoAineisto.kategoriaId]) {
-          acc.lisatyt[velhoAineisto.kategoriaId] = [];
-        }
-        const kategorianAineistot = acc.lisatyt[velhoAineisto.kategoriaId || kategorisoimattomatId];
-        kategorianAineistot.push({ ...velhoAineisto, jarjestys: kategorianAineistot.length });
+  return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
+    if (!find(Object.values(combinedNewAndOld).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+      if (!velhoAineisto.kategoriaId && !combinedNewAndOld[kategorisoimattomatId]) {
+        combinedNewAndOld[kategorisoimattomatId] = [];
       }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-      return acc;
-    },
-    { lisatyt: oldAineisto || {}, poistetut: oldPoistetut || [] }
-  );
+      if (velhoAineisto.kategoriaId && !combinedNewAndOld[velhoAineisto.kategoriaId]) {
+        combinedNewAndOld[velhoAineisto.kategoriaId] = [];
+      }
+      const kategorianAineistot = combinedNewAndOld[velhoAineisto.kategoriaId || kategorisoimattomatId];
+      kategorianAineistot.push({ ...velhoAineisto, jarjestys: kategorianAineistot.length });
+    }
+    return combinedNewAndOld;
+  }, oldAineisto || {});
 }
 
-export function combineOldAndNewAineisto({
-  oldAineisto,
-  oldPoistetut,
-  newAineisto,
-}: {
-  oldAineisto?: AineistoInput[];
-  oldPoistetut?: AineistoInput[];
-  newAineisto: AineistoInput[];
-}) {
-  return newAineisto.reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
-    (acc, velhoAineisto) => {
-      if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-        acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
-      }
-      acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-      return acc;
-    },
-    { lisatyt: oldAineisto || [], poistetut: oldPoistetut || [] }
-  );
+export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAineisto?: AineistoInput[]; newAineisto: AineistoInput[] }) {
+  return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
+    if (!find(combinedNewAndOld, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+      combinedNewAndOld.push({ ...velhoAineisto, jarjestys: combinedNewAndOld.length });
+    }
+    return combinedNewAndOld;
+  }, oldAineisto || []);
 }
 
 export function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto): AineistoInput {
   return {
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
+    tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: uuid.v4(),
   };
 }

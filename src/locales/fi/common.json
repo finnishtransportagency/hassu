@@ -182,5 +182,6 @@
   "puh": "puh.",
   "takaisin_sivun_alkuun": "Takaisin sivun alkuun",
   "vayla_tietosuoja_url": "https://www.vayla.fi/tietosuoja",
-  "valitse": "Valitse"
+  "valitse": "Valitse",
+  "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}"
 }

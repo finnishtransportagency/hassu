@@ -19,7 +19,7 @@ export function adaptAineistot(
       .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
       .sort(jarjestaTiedostot)
       .map((aineisto) => {
-        const { dokumenttiOid, jarjestys, kategoriaId, nimi, tuotu, tila } = aineisto;
+        const { dokumenttiOid, jarjestys, kategoriaId, nimi, tuotu, tila, uuid } = aineisto;
         const apiAineisto: API.Aineisto = {
           __typename: "Aineisto",
           dokumenttiOid,
@@ -28,6 +28,7 @@ export function adaptAineistot(
           nimi,
           tila,
           tuotu,
+          uuid,
         };
 
         if (aineisto.tiedosto) {

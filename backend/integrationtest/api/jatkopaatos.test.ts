@@ -12,7 +12,14 @@ import {
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
-import { KuulutusJulkaisuTila, ProjektiKayttaja, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import {
+  AineistoTila,
+  KuulutusJulkaisuTila,
+  ProjektiKayttaja,
+  Status,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "hassu-common/graphql/apiModel";
 import { api } from "./apiClient";
 import {
   doTestApproveAndPublishHyvaksymisPaatos,
@@ -25,6 +32,7 @@ import {
   expectJulkinenNotFound,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
+  removeTiedosto,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
 import { expect } from "chai";
@@ -33,6 +41,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
+import { Aineisto } from "../../src/database/model";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -137,12 +146,29 @@ describe("Jatkopäätökset", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const hyvaksymisPaatosVanha = dbProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos;
+    const aineistotNahtavillaVanha = dbProjekti.jatkoPaatos1Vaihe?.aineistoNahtavilla;
+
     await api.tallennaProjekti({
       oid,
       versio: p.versio,
       jatkoPaatos1Vaihe: {
         ...jatkoPaatos1Vaihe,
-        hyvaksymisPaatos: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044" }],
+        aineistoNahtavilla: aineistotNahtavillaVanha
+          ? aineistotNahtavillaVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : [],
+        hyvaksymisPaatos: (hyvaksymisPaatosVanha
+          ? hyvaksymisPaatosVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : []
+        ).concat([
+          {
+            kategoriaId: "FOO",
+            nimi: "foo.pdf",
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+            uuid: "jotain",
+          },
+        ]),
         hyvaksymisPaatosVaiheSaamePDFt: {
           POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
         },
@@ -207,12 +233,28 @@ describe("Jatkopäätökset", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const hyvaksymisPaatosVanha = dbProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos;
+    const aineistotNahtavillaVanha = dbProjekti.jatkoPaatos2Vaihe?.aineistoNahtavilla;
     await api.tallennaProjekti({
       oid,
       versio: p.versio,
       jatkoPaatos2Vaihe: {
         ...jatkoPaatos2Vaihe,
-        hyvaksymisPaatos: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044" }],
+        aineistoNahtavilla: aineistotNahtavillaVanha
+          ? aineistotNahtavillaVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : [],
+        hyvaksymisPaatos: (hyvaksymisPaatosVanha
+          ? hyvaksymisPaatosVanha.map((item) => removeTiedosto(item) as Omit<Aineisto, "tiedosto">)
+          : []
+        ).concat([
+          {
+            kategoriaId: "FOO",
+            nimi: "foo.pdf",
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            uuid: "jotain",
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+          },
+        ]),
         hyvaksymisPaatosVaiheSaamePDFt: {
           POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
         },

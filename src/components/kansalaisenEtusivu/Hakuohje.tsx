@@ -39,7 +39,7 @@ const Hakuohje = () => {
             paddingLeft: 24,
           }}
         >
-          <h4 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h4>
+          <h2 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h2>
         </AccordionSummary>
         <AccordionDetails>
           <p>{t(`hakuohje1`)}</p>
