@@ -63,6 +63,7 @@ build
 .sonar
 migration-cli/node_modules
 migration-cli/~*
+migration-cli/migraatio.xlsx
 
 /migration-cli/.env.test
 
