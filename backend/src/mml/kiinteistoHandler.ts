@@ -40,6 +40,7 @@ type DBOmistaja = {
     postinumero?: string | null;
     paikkakunta?: string | null;
   };
+  expires?: number;
 };
 
 let mmlClient: MmlClient | undefined = undefined;
@@ -79,6 +80,11 @@ function suomifiLahetys(omistaja: DBOmistaja): boolean {
   );
 }
 
+function getExpires() {
+  // omistajien tiedot säilyvät seitsemän vuotta auditointilokia varten
+  return Math.round(Date.now() / 1000) + 60 * 60 * 24 * 365 * 7;
+}
+
 const handlerFactory = (event: SQSEvent) => async () => {
   try {
     const client = await getClient();
@@ -91,6 +97,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
       log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
       const dbOmistajat: DBOmistaja[] = [];
       const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+      const expires = getExpires();
       kiinteistot.forEach((k) => {
         k.omistajat.forEach((o) => {
           dbOmistajat.push({
@@ -108,6 +115,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
               postinumero: o.yhteystiedot?.postinumero,
               paikkakunta: o.yhteystiedot?.paikkakunta,
             },
+            expires,
           });
         });
       });
@@ -127,7 +135,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
           })
         );
       }
-      dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { id: o.id }));
+      dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
       const omistajat = dbOmistajat.filter(suomifiLahetys).map((o) => o.id);
       const muutOmistajat = dbOmistajat.filter((o) => !suomifiLahetys(o)).map((o) => o.id);
       auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
@@ -171,7 +179,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         throw new Error("Omistajaa " + omistaja.id + " ei löydy");
       }
       dbOmistaja.paivitetty = now;
-      auditLog.info("Päivitetään omistajan tiedot", { id: dbOmistaja.id });
+      auditLog.info("Päivitetään omistajan tiedot", { omistajaId: dbOmistaja.id });
     } else {
       dbOmistaja = {
         id: uuid.v4(),
@@ -182,7 +190,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         sukunimi: omistaja.sukunimi,
         nimi: omistaja.nimi,
       };
-      auditLog.info("Lisätään omistajan tiedot", { id: dbOmistaja.id });
+      auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
     }
     dbOmistaja.yhteystiedot = {
       jakeluosoite: omistaja.yhteystiedot?.jakeluosoite,
@@ -198,41 +206,21 @@ export async function poistaKiinteistonOmistajat(input: PoistaKiinteistonOmistaj
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   const omistajat = projekti?.omistajat ?? [];
   const muutOmistajat = projekti?.muutOmistajat ?? [];
-  const projektinOmistajat = [];
   for (const id of input.omistajat) {
     let idx = omistajat.indexOf(id);
     if (idx !== -1) {
       omistajat.splice(idx, 1);
-      auditLog.info("Poistetaan Suomi.fi omistaja", { id });
-      projektinOmistajat.push(id);
+      auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: id });
     } else {
       idx = muutOmistajat.indexOf(id);
       if (idx !== -1) {
         muutOmistajat.splice(idx, 1);
-        auditLog.info("Poistetaan muu omistaja", { id });
-        projektinOmistajat.push(id);
+        auditLog.info("Poistetaan muu omistaja", { omistajaId: id });
       }
     }
   }
-  if (projektinOmistajat.length > 0) {
-    projektiDatabase.setKiinteistonOmistajat(input.oid, omistajat, muutOmistajat);
-    const omistajatChunks = chunkArray(projektinOmistajat, 25);
-    for (const chunk of omistajatChunks) {
-      const deleteRequests = chunk.map((id) => ({
-        DeleteRequest: {
-          Key: { id },
-        },
-      }));
-      log.info("Poistetaan " + deleteRequests.length + " omistaja(a)");
-      await getDynamoDBDocumentClient().send(
-        new BatchWriteCommand({
-          RequestItems: {
-            [getTableName()]: deleteRequests,
-          },
-        })
-      );
-    }
-  }
+  auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });
+  projektiDatabase.setKiinteistonOmistajat(input.oid, omistajat, muutOmistajat);
 }
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
@@ -256,7 +244,7 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
     });
     const response = await getDynamoDBDocumentClient().send(command);
     const dbOmistajat = response.Responses ? (response.Responses[getTableName()] as DBOmistaja[]) : [];
-    dbOmistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { id: o.id }));
+    dbOmistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
     return {
       __typename: "KiinteistonOmistajat",
       hakutulosMaara: omistajat.length,

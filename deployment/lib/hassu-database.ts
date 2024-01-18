@@ -140,6 +140,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
 
