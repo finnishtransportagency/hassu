@@ -137,4 +137,120 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen lähettää hyväksyt
       ],
     ]);
   });
+
+  it("tallennetaan db:hen hyväksymispäätösvaihe oikeilla tiedoilla", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.tallennaJaSiirraTilaa(projektiInput, {
+      oid: projektiAlkutilassa.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+    const saveProjektiArgs = saveProjektiStub.firstCall?.args?.[0];
+    expect(saveProjektiArgs).to.exist;
+    for (const key of Object.keys(saveProjektiArgs)) {
+      switch (key) {
+        case "hyvaksymisPaatosVaihe":
+          expect(saveProjektiArgs[key]).to.eql({
+            aineistoMuokkaus: null,
+            aineistoNahtavilla: [
+              {
+                tiedosto: "/hyvaksymispaatos/3/aineisto3.txt",
+                dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+                jarjestys: 1,
+                kategoriaId: "osa_a",
+                nimi: "aineisto3.txt",
+                tila: "VALMIS",
+                tuotu: "2025-01-01T00:00:01+02:00",
+                uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+              },
+              {
+                tiedosto: "/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+                dokumenttiOid: "1.2.246.578.5.100.2698246895.2362169760",
+                jarjestys: 1,
+                kategoriaId: "osa_a",
+                nimi: "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+                tila: "VALMIS",
+                tuotu: "2025-01-01T00:00:01+02:00",
+                uuid: "00000005-e436-4256-a2d2-74ab6778d07f1.20uusi",
+              },
+            ],
+            hallintoOikeus: "HAMEENLINNA",
+            hyvaksymisPaatos: [
+              {
+                dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+                jarjestys: 1,
+                nimi: "aineisto3.txt",
+                tiedosto: "/hyvaksymispaatos/3/paatos/aineisto3.txt",
+                tila: "VALMIS",
+                tuotu: "2025-01-01T00:00:01+02:00",
+                uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+                kategoriaId: undefined,
+              },
+            ],
+            id: 3,
+            ilmoituksenVastaanottajat: {
+              kunnat: [
+                { id: 491, sahkoposti: "mikkeli@mikke.li" },
+                { id: 178, sahkoposti: "juva@ju.va" },
+                { id: 740, sahkoposti: "savonlinna@savonlin.na" },
+              ],
+              viranomaiset: [
+                {
+                  nimi: "ETELA_SAVO_ELY",
+                  sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+                },
+              ],
+            },
+            kuulutusPaiva: "2025-01-02",
+            kuulutusVaihePaattyyPaiva: "2025-02-02",
+            kuulutusYhteystiedot: {
+              yhteysHenkilot: ["A000112"],
+              yhteysTiedot: [
+                {
+                  etunimi: "Etunimi",
+                  sukunimi: "Sukunimi",
+                  organisaatio: undefined,
+                  kunta: undefined,
+                  puhelinnumero: "0293121213",
+                  sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                },
+                {
+                  etunimi: "Joku",
+                  sukunimi: "Jokunen",
+                  organisaatio: undefined,
+                  kunta: undefined,
+                  puhelinnumero: "02998765",
+                  sahkoposti: "Joku.Jokunen@vayla.fi",
+                },
+              ],
+            },
+            uudelleenKuulutus: {
+              tila: "PERUUTETTU",
+              selosteKuulutukselle: { SUOMI: "Seloste kuulutukselle" },
+              selosteLahetekirjeeseen: { SUOMI: "Seloste lähetekirjeeseen" },
+            },
+            viimeinenVoimassaolovuosi: undefined,
+            hyvaksymisPaatosVaiheSaamePDFt: {
+              POHJOISSAAME: { kuulutusPDF: undefined, kuulutusIlmoitusPDF: undefined },
+            },
+          });
+          break;
+        case "salt":
+          expect(saveProjektiArgs[key]).to.eql("salt123");
+          break;
+        case "oid":
+          expect(saveProjektiArgs[key]).to.eql("1.2.246.578.5.1.2978288874.2711575506");
+          break;
+        case "versio":
+          expect(saveProjektiArgs[key]).to.eql(1);
+          break;
+        case "kayttoOikeudet":
+          expect(saveProjektiArgs[key]).to.eql(projektiAlkutilassa.kayttoOikeudet);
+          break;
+        default:
+          expect(saveProjektiArgs[key]).to.eql(undefined);
+          break;
+      }
+    }
+  });
 });
