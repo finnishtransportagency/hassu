@@ -27,7 +27,7 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen lähettää hyväksyt
   let saveProjektiStub: sinon.SinonStub;
   const userFixture = new UserFixture(userService);
   let fileServiceCopyYllapitoFolderStub: sinon.SinonStub;
-  let updateJulkaisutStub: sinon.SinonStub;
+  let insertJulkaisutStub: sinon.SinonStub;
   let projektiAlkutilassa: DBProjekti;
   let loadProjektiByOidStub: sinon.SinonStub;
   let projektiInput: API.TallennaProjektiInput;
@@ -53,7 +53,7 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen lähettää hyväksyt
 
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     fileServiceCopyYllapitoFolderStub = sinon.stub(fileService, "copyYllapitoFolder");
-    updateJulkaisutStub = sinon.stub(projektiDatabase.hyvaksymisPaatosVaiheJulkaisut, "update");
+    insertJulkaisutStub = sinon.stub(projektiDatabase.hyvaksymisPaatosVaiheJulkaisut, "insert");
     assertIsDefined(projektiAlkutilassa.hyvaksymisPaatosVaihe, "projektiAlkutilassa.hyvaksymisPaatosVaihe on määritelty");
     projektiInput = {
       oid: projektiAlkutilassa.oid,
@@ -252,5 +252,148 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen lähettää hyväksyt
           break;
       }
     }
+  });
+
+  it("tallennetaan db:hen hyväksymispäätösvaihejulkaisu oikeilla tiedoilla", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.tallennaJaSiirraTilaa(projektiInput, {
+      oid: projektiAlkutilassa.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+    expect(insertJulkaisutStub.args?.[0]?.[1]).to.eql({
+      aineistoMuokkaus: null,
+      aineistoNahtavilla: [
+        {
+          tiedosto: "/hyvaksymispaatos/3/aineisto3.txt",
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tila: "VALMIS",
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+        {
+          tiedosto: "/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          dokumenttiOid: "1.2.246.578.5.100.2698246895.2362169760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          tila: "VALMIS",
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000005-e436-4256-a2d2-74ab6778d07f1.20uusi",
+        },
+      ],
+      hallintoOikeus: "HAMEENLINNA",
+      hyvaksymisPaatos: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/3/paatos/aineisto3.txt",
+          tila: "VALMIS",
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+      ],
+      id: 3,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2022-03-11T14:54",
+            nimi: "ETELA_SAVO_ELY",
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kuulutusPaiva: "2025-01-02",
+      kuulutusVaihePaattyyPaiva: "2025-02-02",
+      uudelleenKuulutus: { tila: "PERUUTETTU" },
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+        tyyppi: "TIE",
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            sukunimi: "Sukunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          },
+          {
+            etunimi: "Joku",
+            sukunimi: "Jokunen",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+          },
+        ],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          sukunimi: "Hassu",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          organisaatio: "CGI Suomi Oy",
+          elyOrganisaatio: undefined,
+          kunta: undefined,
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+      kielitiedot: { ensisijainenKieli: "SUOMI" },
+      tila: "ODOTTAA_HYVAKSYNTAA",
+      muokkaaja: "A000111",
+      hyvaksymisPaatosVaihePDFt: {
+        SUOMI: {
+          hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/3/HYVAKSYMISPAATOSKUULUTUS.pdf",
+          hyvaksymisIlmoitusLausunnonantajillePDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE.pdf",
+          hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+            "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA.pdf",
+        },
+      },
+    });
   });
 });
