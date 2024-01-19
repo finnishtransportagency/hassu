@@ -1,0 +1,2204 @@
+import { DBProjekti } from "../../../src/database/model";
+import * as API from "hassu-common/graphql/apiModel";
+
+export const hyvaksymisPaatosUudelleenKuulutusOdottaaHyvaksyntaa: DBProjekti = {
+  aloitusKuulutus: {
+    hankkeenKuvaus: {
+      RUOTSI: "På Svenska",
+      SUOMI: "Lorem Ipsum",
+    },
+    id: 2,
+    ilmoituksenVastaanottajat: {
+      kunnat: [
+        {
+          id: 491,
+          lahetetty: "2022-03-11T14:54",
+          sahkoposti: "mikkeli@mikke.li",
+        },
+        {
+          id: 178,
+          lahetetty: "2022-03-11T14:54",
+          sahkoposti: "juva@ju.va",
+        },
+        {
+          id: 740,
+          lahetetty: "2022-03-11T14:54",
+          sahkoposti: "savonlinna@savonlin.na",
+        },
+      ],
+      viranomaiset: [
+        {
+          lahetetty: "2022-03-11T14:54",
+          nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+          sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    kuulutusPaiva: "2022-01-02",
+    kuulutusYhteystiedot: {
+      yhteysHenkilot: [],
+      yhteysTiedot: [
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+    siirtyySuunnitteluVaiheeseen: "2023-01-01",
+    uudelleenKuulutus: null,
+  },
+  aloitusKuulutusJulkaisut: [
+    {
+      aloituskuulutusPDFt: {
+        SUOMI: {
+          aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+        },
+      },
+      asianhallintaEventId: "00000002-9f2d-4f4c-bebc-fcb7e44be544",
+      hankkeenKuvaus: {
+        RUOTSI: "På Svenska",
+        SUOMI: "Lorem Ipsum",
+      },
+      hyvaksyja: "A000112",
+      hyvaksymisPaiva: "2022-01-02T00:00:01+02:00",
+      id: 1,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2022-01-02T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2022-01-02T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2022-01-02T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2022-01-02T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2022-01-02",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241"],
+        yhteysTiedot: [
+          {
+            etunimi: "Marko",
+            organisaatio: "Kajaani",
+            puhelinnumero: "0293121213",
+            sahkoposti: "markku.koi@koi.com",
+            sukunimi: "Koi",
+          },
+        ],
+      },
+      lahetekirje: {
+        nimi: "lähetekirje.eml",
+        tiedosto: "/aloituskuulutus/1/lähetekirje.eml",
+        tila: API.LadattuTiedostoTila.VALMIS,
+        tuotu: "2022-01-02T00:00",
+        uuid: "00000003-9f2d-4f4c-bebc-fcb7e44be544",
+      },
+      muokkaaja: "A000112",
+      siirtyySuunnitteluVaiheeseen: "2023-01-01",
+      suunnitteluSopimus: {
+        email: "mikko.haapamaki1@cgi.com",
+        etunimi: "Testi1",
+        kunta: 536,
+        logo: {
+          SUOMI: "/suunnittelusopimus/logo.png",
+        },
+        puhelinnumero: "123",
+        sukunimi: "Hassu",
+      },
+      tila: API.KuulutusJulkaisuTila.PERUUTETTU,
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "Testi1",
+          kunta: 536,
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamaki1@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+    {
+      aloituskuulutusPDFt: {
+        SUOMI: {
+          aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          aloituskuulutusPDFPath: "/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
+        },
+      },
+      asianhallintaEventId: "00000001-5860-4054-b0de-bddf24ce6eb4",
+      hankkeenKuvaus: {
+        RUOTSI: "På Svenska",
+        SUOMI: "Lorem Ipsum",
+      },
+      hyvaksyja: "A000112",
+      hyvaksymisPaiva: "2022-10-01T00:00:01+03:00",
+      id: 2,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2022-10-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2022-10-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2022-10-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2022-10-01T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2022-01-02",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241"],
+        yhteysTiedot: [
+          {
+            etunimi: "Marko",
+            organisaatio: "Kajaani",
+            puhelinnumero: "0293121213",
+            sahkoposti: "markku.koi@koi.com",
+            sukunimi: "Koi",
+          },
+        ],
+      },
+      lahetekirje: {
+        nimi: "lähetekirje.eml",
+        tiedosto: "/aloituskuulutus/2/lähetekirje.eml",
+        tila: API.LadattuTiedostoTila.VALMIS,
+        tuotu: "2022-10-01T00:00",
+        uuid: "00000002-5860-4054-b0de-bddf24ce6eb4",
+      },
+      muokkaaja: "A000111",
+      siirtyySuunnitteluVaiheeseen: "2023-01-01",
+      suunnitteluSopimus: {
+        email: "mikko.haapamaki1@cgi.com",
+        etunimi: "Testi1",
+        kunta: 536,
+        logo: {
+          SUOMI: "/suunnittelusopimus/logo.png",
+        },
+        puhelinnumero: "123",
+        sukunimi: "Hassu",
+      },
+      tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2022-01-02T00:00:01+02:00",
+        selosteKuulutukselle: {
+          SUOMI: "Kuulutetaan uudelleen kuulutusteksti ...",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ...",
+        },
+        tila: API.UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "Testi1",
+          kunta: 536,
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamaki1@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+  ],
+  annetutMuistutukset: ["2023-12-31T22:00:01.000Z", "2023-12-31T22:00:01.000Z"],
+  asianhallinta: {
+    asiaId: 11212,
+    inaktiivinen: false,
+  },
+  euRahoitus: true,
+  euRahoitusLogot: {
+    RUOTSI: "/euLogot/SV/logosv.png",
+    SUOMI: "/euLogot/FI/logofi.png",
+  },
+  hyvaksymisPaatosVaihe: {
+    aineistoMuokkaus: null,
+    aineistoNahtavilla: [
+      {
+        tiedosto: "/hyvaksymispaatos/3/aineisto3.txt",
+        dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+        jarjestys: 1,
+        kategoriaId: "osa_a",
+        nimi: "aineisto3.txt",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2025-01-01T00:00:01+02:00",
+        uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+      },
+      {
+        tiedosto: "/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        dokumenttiOid: "1.2.246.578.5.100.2698246895.2362169760",
+        jarjestys: 1,
+        kategoriaId: "osa_a",
+        nimi: "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2025-01-01T00:00:01+02:00",
+        uuid: "00000005-e436-4256-a2d2-74ab6778d07f1.20uusi",
+      },
+    ],
+    hallintoOikeus: API.HallintoOikeus.HAMEENLINNA,
+    hyvaksymisPaatos: [
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+        jarjestys: 1,
+        nimi: "aineisto3.txt",
+        tiedosto: "/hyvaksymispaatos/3/paatos/aineisto3.txt",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2025-01-01T00:00:01+02:00",
+        uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+        kategoriaId: undefined,
+      },
+    ],
+    id: 3,
+    ilmoituksenVastaanottajat: {
+      kunnat: [
+        { id: 491, sahkoposti: "mikkeli@mikke.li" },
+        { id: 178, sahkoposti: "juva@ju.va" },
+        { id: 740, sahkoposti: "savonlinna@savonlin.na" },
+      ],
+      viranomaiset: [
+        {
+          nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+          sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    kuulutusPaiva: "2025-01-02",
+    kuulutusVaihePaattyyPaiva: "2025-02-02",
+    kuulutusYhteystiedot: {
+      yhteysHenkilot: ["A000112"],
+      yhteysTiedot: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          organisaatio: undefined,
+          kunta: undefined,
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+        },
+        {
+          etunimi: "Joku",
+          sukunimi: "Jokunen",
+          organisaatio: undefined,
+          kunta: undefined,
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+        },
+      ],
+    },
+    uudelleenKuulutus: {
+      tila: API.UudelleenkuulutusTila.PERUUTETTU,
+      selosteKuulutukselle: { SUOMI: "Seloste kuulutukselle" },
+      selosteLahetekirjeeseen: { SUOMI: "Seloste lähetekirjeeseen" },
+    },
+    viimeinenVoimassaolovuosi: undefined,
+    hyvaksymisPaatosVaiheSaamePDFt: {
+      POHJOISSAAME: { kuulutusPDF: undefined, kuulutusIlmoitusPDF: undefined },
+    },
+  },
+  hyvaksymisPaatosVaiheJulkaisut: [
+    {
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/1/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+      ],
+      asianhallintaEventId: "00000003-e436-4256-a2d2-74ab6778d07f",
+      hallintoOikeus: API.HallintoOikeus.HAMEENLINNA,
+      hyvaksyja: "A000112",
+      hyvaksymisPaatos: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/1/paatos/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+      ],
+      hyvaksymisPaatosVaihePDFt: {
+        SUOMI: {
+          hyvaksymisIlmoitusLausunnonantajillePDFPath: "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+            "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+      hyvaksymisPaiva: "2025-01-01T00:00:01+02:00",
+      id: 1,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2025-01-02",
+      kuulutusVaihePaattyyPaiva: "2025-02-02",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+      lahetekirje: {
+        nimi: "lähetekirje.eml",
+        tiedosto: "/hyvaksymispaatos/1/lähetekirje.eml",
+        tila: API.LadattuTiedostoTila.VALMIS,
+        tuotu: "2025-01-01T00:00",
+        uuid: "00000004-e436-4256-a2d2-74ab6778d07f",
+      },
+      muokkaaja: "A000112",
+      tila: API.KuulutusJulkaisuTila.PERUUTETTU,
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+    },
+    {
+      aineistoMuokkaus: {
+        alkuperainenHyvaksymisPaiva: "2025-01-01T00:00:01+02:00",
+      },
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/2/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2698246895.2362169760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          tiedosto: "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000005-e436-4256-a2d2-74ab6778d07f1.20uusi",
+        },
+      ],
+      asianhallintaEventId: "00000006-e436-4256-a2d2-74ab6778d07f",
+      hallintoOikeus: API.HallintoOikeus.HAMEENLINNA,
+      hyvaksyja: "A000112",
+      hyvaksymisPaatos: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+      ],
+      hyvaksymisPaatosVaihePDFt: {
+        SUOMI: {
+          hyvaksymisIlmoitusLausunnonantajillePDFPath: "/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+            "/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+      hyvaksymisPaiva: "2025-01-01T00:00:01+02:00",
+      id: 2,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2025-01-01T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2025-01-02",
+      kuulutusVaihePaattyyPaiva: "2025-02-02",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+      muokkaaja: "A000112",
+      tila: API.KuulutusJulkaisuTila.PERUUTETTU,
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+    },
+    {
+      aineistoMuokkaus: null,
+      aineistoNahtavilla: [
+        {
+          tiedosto: "/hyvaksymispaatos/3/aineisto3.txt",
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000002-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+        {
+          tiedosto: "/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          dokumenttiOid: "1.2.246.578.5.100.2698246895.2362169760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000005-e436-4256-a2d2-74ab6778d07f1.20uusi",
+        },
+      ],
+      hallintoOikeus: API.HallintoOikeus.HAMEENLINNA,
+      hyvaksymisPaatos: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          nimi: "aineisto3.txt",
+          tiedosto: "/hyvaksymispaatos/3/paatos/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2025-01-01T00:00:01+02:00",
+          uuid: "00000001-e436-4256-a2d2-74ab6778d07f1.20",
+        },
+      ],
+      id: 3,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2022-03-11T14:54",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2022-03-11T14:54",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kuulutusPaiva: "2025-01-02",
+      kuulutusVaihePaattyyPaiva: "2025-02-02",
+      uudelleenKuulutus: { tila: API.UudelleenkuulutusTila.PERUUTETTU },
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            sukunimi: "Sukunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          },
+          {
+            etunimi: "Joku",
+            sukunimi: "Jokunen",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+          },
+        ],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          sukunimi: "Hassu",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          organisaatio: "CGI Suomi Oy",
+          elyOrganisaatio: undefined,
+          kunta: undefined,
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+      tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+      muokkaaja: "A000111",
+      hyvaksymisPaatosVaihePDFt: {
+        SUOMI: {
+          hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/3/HYVAKSYMISPAATOSKUULUTUS.pdf",
+          hyvaksymisIlmoitusLausunnonantajillePDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE.pdf",
+          hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+            "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE.pdf",
+          ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/3/ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA.pdf",
+        },
+      },
+    },
+  ],
+  kasittelynTila: {
+    hyvaksymispaatos: {
+      aktiivinen: true,
+      asianumero: "asianro123",
+      paatoksenPvm: "2022-06-09",
+    },
+  },
+  kayttoOikeudet: [
+    {
+      email: "mikko.haapamki@cgi.com",
+      etunimi: "A-tunnus1",
+      kayttajatunnus: "A000112",
+      muokattavissa: false,
+      organisaatio: "CGI Suomi Oy",
+      puhelinnumero: "123",
+      sukunimi: "Hassu",
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      yleinenYhteystieto: true,
+    },
+    {
+      email: "mikko.haapamaki02@cgi.com",
+      etunimi: "A-tunnus3",
+      kayttajatunnus: "A000114",
+      muokattavissa: false,
+      organisaatio: "CGI Suomi Oy",
+      puhelinnumero: "123",
+      sukunimi: "Hassu",
+      tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+      yleinenYhteystieto: false,
+    },
+    {
+      email: "mikko.haapamaki@cgi.com",
+      etunimi: "A-Tunnus",
+      kayttajatunnus: "A000111",
+      muokattavissa: true,
+      organisaatio: "CGI Suomi Oy",
+      puhelinnumero: "123",
+      sukunimi: "Hassu",
+    },
+    {
+      email: "mikko.haapamaki1@cgi.com",
+      etunimi: "Testi1",
+      kayttajatunnus: "LX581241",
+      muokattavissa: true,
+      organisaatio: "CGI Suomi Oy",
+      puhelinnumero: "123",
+      sukunimi: "Hassu",
+      yleinenYhteystieto: true,
+    },
+  ],
+  kielitiedot: {
+    ensisijainenKieli: API.Kieli.SUOMI,
+  },
+  lyhytOsoite: "3c1d",
+  nahtavillaoloVaihe: {
+    aineistoMuokkaus: null,
+    aineistoNahtavilla: [
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+        jarjestys: 1,
+        kategoriaId: "osa_a",
+        nimi: "TYHJÄ.txt",
+        tiedosto: "/nahtavillaolo/2/TYHJÄ.txt",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "aineisto123",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+        jarjestys: 1,
+        kategoriaId: "osa_a",
+        nimi: "aineisto3.txt",
+        tiedosto: "/nahtavillaolo/2/aineisto3.txt",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "00000001-0be9-455d-a434-0fab721acaa21.20uusi",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2185347489.309440961",
+        jarjestys: 2,
+        kategoriaId: "osa_a",
+        nimi: "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+        tiedosto: "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "00000002-0be9-455d-a434-0fab721acaa21.21uusi",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2221505037.1294104490",
+        jarjestys: 3,
+        kategoriaId: "osa_a",
+        nimi: "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        tiedosto: "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "00000003-0be9-455d-a434-0fab721acaa21.22uusi",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+        jarjestys: 4,
+        kategoriaId: "osa_a",
+        nimi: "1400-72J-6709-1_Johtokartta_1.pdf",
+        tiedosto: "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "00000004-0be9-455d-a434-0fab721acaa21.23uusi",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2277114557.2905560869",
+        jarjestys: 5,
+        kategoriaId: "osa_a",
+        nimi: "Yksityistie_lunastukset.pdf",
+        tiedosto: "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2023-12-31T00:00:01+02:00",
+        uuid: "00000005-0be9-455d-a434-0fab721acaa21.24uusi",
+      },
+    ],
+    aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+    hankkeenKuvaus: {
+      SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+    },
+    id: 2,
+    ilmoituksenVastaanottajat: {
+      kunnat: [
+        {
+          id: 491,
+          lahetetty: "2023-12-31T00:00",
+          messageId: "messageId_test",
+          sahkoposti: "mikkeli@mikke.li",
+        },
+        {
+          id: 178,
+          lahetetty: "2023-12-31T00:00",
+          messageId: "messageId_test",
+          sahkoposti: "juva@ju.va",
+        },
+        {
+          id: 740,
+          lahetetty: "2023-12-31T00:00",
+          messageId: "messageId_test",
+          sahkoposti: "savonlinna@savonlin.na",
+        },
+      ],
+      viranomaiset: [
+        {
+          lahetetty: "2023-12-31T00:00",
+          messageId: "messageId_test",
+          nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+          sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    kuulutusPaiva: "2024-06-01",
+    kuulutusVaihePaattyyPaiva: "2024-07-01",
+    kuulutusYhteystiedot: {
+      yhteysHenkilot: ["LX581241", "A000112"],
+      yhteysTiedot: [
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+    },
+    muistutusoikeusPaattyyPaiva: "2024-01-31",
+    uudelleenKuulutus: null,
+  },
+  nahtavillaoloVaiheJulkaisut: [
+    {
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "TYHJÄ.txt",
+          tiedosto: "/nahtavillaolo/1/TYHJÄ.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "aineisto123",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tiedosto: "/nahtavillaolo/1/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000001-0be9-455d-a434-0fab721acaa21.20uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2185347489.309440961",
+          jarjestys: 2,
+          kategoriaId: "osa_a",
+          nimi: "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          tiedosto: "/nahtavillaolo/1/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000002-0be9-455d-a434-0fab721acaa21.21uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2221505037.1294104490",
+          jarjestys: 3,
+          kategoriaId: "osa_a",
+          nimi: "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          tiedosto: "/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000003-0be9-455d-a434-0fab721acaa21.22uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+          jarjestys: 4,
+          kategoriaId: "osa_a",
+          nimi: "1400-72J-6709-1_Johtokartta_1.pdf",
+          tiedosto: "/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000004-0be9-455d-a434-0fab721acaa21.23uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2277114557.2905560869",
+          jarjestys: 5,
+          kategoriaId: "osa_a",
+          nimi: "Yksityistie_lunastukset.pdf",
+          tiedosto: "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000005-0be9-455d-a434-0fab721acaa21.24uusi",
+        },
+      ],
+      aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+      asianhallintaEventId: "0000002f-0be9-455d-a434-0fab721acaa2",
+      hankkeenKuvaus: {
+        SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+      },
+      hyvaksyja: "A000112",
+      hyvaksymisPaiva: "2023-12-31T00:00:01+02:00",
+      id: 1,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2023-12-31T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2023-12-31T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2023-12-31T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2023-12-31T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2024-01-01",
+      kuulutusVaihePaattyyPaiva: "2024-01-30",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+      lahetekirje: {
+        nimi: "lähetekirje.eml",
+        tiedosto: "/nahtavillaolo/1/lähetekirje.eml",
+        tila: API.LadattuTiedostoTila.VALMIS,
+        tuotu: "2023-12-31T00:00",
+        uuid: "00000030-0be9-455d-a434-0fab721acaa2",
+      },
+      muistutusoikeusPaattyyPaiva: "2024-01-31",
+      muokkaaja: "A000112",
+      nahtavillaoloPDFt: {
+        SUOMI: {
+          nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath:
+            "/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          nahtavillaoloPDFPath: "/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        },
+      },
+      tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+    },
+    {
+      aineistoMuokkaus: null,
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "TYHJÄ.txt",
+          tiedosto: "/nahtavillaolo/2/TYHJÄ.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "aineisto123",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2162882965.3109821760",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "aineisto3.txt",
+          tiedosto: "/nahtavillaolo/2/aineisto3.txt",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000001-0be9-455d-a434-0fab721acaa21.20uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2185347489.309440961",
+          jarjestys: 2,
+          kategoriaId: "osa_a",
+          nimi: "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          tiedosto: "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000002-0be9-455d-a434-0fab721acaa21.21uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2221505037.1294104490",
+          jarjestys: 3,
+          kategoriaId: "osa_a",
+          nimi: "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          tiedosto: "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000003-0be9-455d-a434-0fab721acaa21.22uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+          jarjestys: 4,
+          kategoriaId: "osa_a",
+          nimi: "1400-72J-6709-1_Johtokartta_1.pdf",
+          tiedosto: "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000004-0be9-455d-a434-0fab721acaa21.23uusi",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2277114557.2905560869",
+          jarjestys: 5,
+          kategoriaId: "osa_a",
+          nimi: "Yksityistie_lunastukset.pdf",
+          tiedosto: "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2023-12-31T00:00:01+02:00",
+          uuid: "00000005-0be9-455d-a434-0fab721acaa21.24uusi",
+        },
+      ],
+      aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+      asianhallintaEventId: "00000035-0be9-455d-a434-0fab721acaa2",
+      hankkeenKuvaus: {
+        SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+      },
+      hyvaksyja: "A000112",
+      hyvaksymisPaiva: "2024-01-01T00:00:01+02:00",
+      id: 2,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            lahetetty: "2024-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            lahetetty: "2024-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            lahetetty: "2024-01-01T00:00",
+            messageId: "messageId_test",
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2024-01-01T00:00",
+            messageId: "messageId_test",
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kielitiedot: {
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
+      kuulutusPaiva: "2024-06-01",
+      kuulutusVaihePaattyyPaiva: "2024-07-01",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+      lahetekirje: {
+        nimi: "lähetekirje.eml",
+        tiedosto: "/nahtavillaolo/2/lähetekirje.eml",
+        tila: API.LadattuTiedostoTila.VALMIS,
+        tuotu: "2024-01-01T00:00",
+        uuid: "00000036-0be9-455d-a434-0fab721acaa2",
+      },
+      muistutusoikeusPaattyyPaiva: "2024-01-31",
+      muokkaaja: "A000111",
+      nahtavillaoloPDFt: {
+        SUOMI: {
+          nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath:
+            "/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          nahtavillaoloPDFPath: "/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        },
+      },
+      tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-12-31T00:00:01+02:00",
+        selosteKuulutukselle: {
+          SUOMI: "Kuulutetaan uudelleen kuulutusteksti ...",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ...",
+        },
+        tila: API.UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+      velho: {
+        asiatunnusVayla: "HASSU/123/2023",
+        geoJSON: null,
+        kunnat: [91, 92],
+        linkitetytProjektit: null,
+        linkki: "https://linkki-hankesivulle.fi",
+        maakunnat: [1],
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        tyyppi: API.ProjektiTyyppi.TIE,
+        varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+        vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+        vaylamuoto: ["tie"],
+      },
+      yhteystiedot: [
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Testi1",
+          kunta: 536,
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamaki1@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Etunimi",
+          puhelinnumero: "0293121213",
+          sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+          sukunimi: "Sukunimi",
+        },
+        {
+          etunimi: "Joku",
+          puhelinnumero: "02998765",
+          sahkoposti: "Joku.Jokunen@vayla.fi",
+          sukunimi: "Jokunen",
+        },
+      ],
+    },
+  ],
+  oid: "1.2.246.578.5.1.2978288874.2711575506",
+  paivitetty: "2020-01-01T00:00:00+02:00",
+  salt: "salt123",
+  suunnitteluSopimus: {
+    kunta: 536,
+    logo: {
+      SUOMI: "/suunnittelusopimus/logo.png",
+    },
+    yhteysHenkilo: "LX581241",
+  },
+  synkronoinnit: {
+    "00000001-5860-4054-b0de-bddf24ce6eb4": {
+      asianhallintaEventId: "00000001-5860-4054-b0de-bddf24ce6eb4",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "UUDELLEENKUULUTUS",
+      vaylaAsianhallinta: true,
+    },
+    "00000001-8557-4a58-8a93-64ade8cd137b": {
+      asianhallintaEventId: "00000001-8557-4a58-8a93-64ade8cd137b",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
+      asianhallintaEventId: "00000002-9f2d-4f4c-bebc-fcb7e44be544",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "00000003-e436-4256-a2d2-74ab6778d07f": {
+      asianhallintaEventId: "00000003-e436-4256-a2d2-74ab6778d07f",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "00000004-8557-4a58-8a93-64ade8cd137b": {
+      asianhallintaEventId: "00000004-8557-4a58-8a93-64ade8cd137b",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "00000006-e436-4256-a2d2-74ab6778d07f": {
+      asianhallintaEventId: "00000006-e436-4256-a2d2-74ab6778d07f",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "0000002f-0be9-455d-a434-0fab721acaa2": {
+      asianhallintaEventId: "0000002f-0be9-455d-a434-0fab721acaa2",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+      vaylaAsianhallinta: true,
+    },
+    "00000035-0be9-455d-a434-0fab721acaa2": {
+      asianhallintaEventId: "00000035-0be9-455d-a434-0fab721acaa2",
+      asiatunnus: "HASSU/123/2023",
+      dokumentit: [
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+        },
+        {
+          s3Path:
+            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+        },
+        {
+          s3Path: "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/lähetekirje.eml",
+        },
+      ],
+      ilmoituksenVastaanottajat: ["Mikkeli", "Juva", "Savonlinna", "Etelä-Savon ELY-keskus"],
+      toimenpideTyyppi: "UUDELLEENKUULUTUS",
+      vaylaAsianhallinta: true,
+    },
+  },
+  tyyppi: API.ProjektiTyyppi.TIE,
+  vahainenMenettely: false,
+  velho: {
+    asiatunnusVayla: "HASSU/123/2023",
+    geoJSON: null,
+    kunnat: [91, 92],
+    linkitetytProjektit: null,
+    linkki: "https://linkki-hankesivulle.fi",
+    maakunnat: [1],
+    nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+    suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    tyyppi: API.ProjektiTyyppi.TIE,
+    varahenkilonEmail: "mikko.haapamaki02@cgi.com",
+    vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
+    vaylamuoto: ["tie"],
+  },
+  versio: 1,
+  vuorovaikutusKierros: {
+    aineistot: [
+      {
+        dokumenttiOid: "1.2.246.578.5.100.3116435513.3227218205",
+        jarjestys: 12,
+        kategoriaId: "ESITTELYAINEISTO",
+        nimi: "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+        tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2022-10-01T00:00:01+03:00",
+        uuid: "ea2",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+        jarjestys: 11,
+        kategoriaId: "SUUNNITELMALUONNOS",
+        nimi: "new 1400-72J-6709-1_Johtokartta_1.pdf",
+        tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2022-10-01T00:00:01+03:00",
+        uuid: "sl1",
+      },
+      {
+        dokumenttiOid: "1.2.246.578.5.100.2931087368.2890442310",
+        kategoriaId: "SUUNNITELMALUONNOS",
+        nimi: "Radan risteämärekisteriote_1203.pdf",
+        tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
+        tila: API.AineistoTila.VALMIS,
+        tuotu: "2022-10-01T00:00:01+03:00",
+        uuid: "aineisto234",
+      },
+    ],
+    arvioSeuraavanVaiheenAlkamisesta: {
+      SUOMI: "huomenna",
+    },
+    esitettavatYhteystiedot: {
+      yhteysHenkilot: ["A000112"],
+      yhteysTiedot: [
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+    hankkeenKuvaus: {
+      SUOMI: "Hankkeen kuvaus",
+    },
+    ilmoituksenVastaanottajat: {
+      kunnat: [
+        {
+          id: 491,
+          sahkoposti: "mikkeli@mikke.li",
+        },
+        {
+          id: 178,
+          sahkoposti: "juva@ju.va",
+        },
+        {
+          id: 740,
+          sahkoposti: "savonlinna@savonlin.na",
+        },
+      ],
+      viranomaiset: [
+        {
+          nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+          sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    kysymyksetJaPalautteetViimeistaan: "2023-01-01",
+    palautteidenVastaanottajat: ["A000111"],
+    suunnittelunEteneminenJaKesto: {
+      SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    },
+    tila: API.VuorovaikutusKierrosTila.JULKINEN,
+    videot: null,
+    vuorovaikutusJulkaisuPaiva: "2022-03-03",
+    vuorovaikutusNumero: 2,
+    vuorovaikutusTilaisuudet: [
+      {
+        alkamisAika: "15:00",
+        kaytettavaPalvelu: API.KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+        nimi: {
+          SUOMI: "Lorem ipsum 2",
+        },
+        paattymisAika: "16:00",
+        paivamaara: "2023-02-04",
+        tyyppi: API.VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+      },
+      {
+        alkamisAika: "10:00",
+        lisatiedot: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+        },
+        nimi: {
+          SUOMI: "Lorem ipsum two 2",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+        },
+        paattymisAika: "11:00",
+        paikka: {
+          SUOMI: "Kunnantalo",
+        },
+        paivamaara: "2023-02-05",
+        postinumero: "00100",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+        },
+        tyyppi: API.VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+      },
+      {
+        alkamisAika: "10:00",
+        esitettavatYhteystiedot: {
+          yhteysHenkilot: ["A000112"],
+          yhteysTiedot: [
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+        },
+        paattymisAika: "11:00",
+        paivamaara: "2023-02-06",
+        tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+      },
+      {
+        alkamisAika: "12:00",
+        esitettavatYhteystiedot: {
+          yhteysHenkilot: [],
+          yhteysTiedot: [
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+        nimi: {
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+        },
+        paattymisAika: "13:00",
+        paivamaara: "2023-02-30",
+        tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+      },
+    ],
+  },
+  vuorovaikutusKierrosJulkaisut: [
+    {
+      aineistot: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.3116435513.3227218205",
+          jarjestys: 12,
+          kategoriaId: "ESITTELYAINEISTO",
+          nimi: "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2022-10-01T00:00:01+03:00",
+          uuid: "ea2",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+          jarjestys: 11,
+          kategoriaId: "SUUNNITELMALUONNOS",
+          nimi: "new 1400-72J-6709-1_Johtokartta_1.pdf",
+          tiedosto: "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2022-10-01T00:00:01+03:00",
+          uuid: "sl1",
+        },
+      ],
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
+      },
+      asianhallintaEventId: "00000001-8557-4a58-8a93-64ade8cd137b",
+      esitettavatYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Marko",
+            organisaatio: "Kajaani",
+            puhelinnumero: "0293121213",
+            sahkoposti: "markku.koi@koi.com",
+            sukunimi: "Koi",
+          },
+        ],
+      },
+      hankkeenKuvaus: {
+        SUOMI: "Hankkeen kuvaus",
+      },
+      id: 1,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
+      palautteidenVastaanottajat: ["A000111"],
+      suunnittelunEteneminenJaKesto: {
+        SUOMI: "Uusi suunnittelun eteneminen ja kesto, nro 1",
+      },
+      tila: API.VuorovaikutusKierrosTila.JULKINEN,
+      videot: null,
+      vuorovaikutusJulkaisuPaiva: "2022-02-03",
+      vuorovaikutusPDFt: {
+        SUOMI: {
+          kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+        },
+      },
+      vuorovaikutusTilaisuudet: [
+        {
+          alkamisAika: "15:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+          },
+          kaytettavaPalvelu: API.KaytettavaPalvelu.TEAMS,
+          linkki: "https://linkki_tilaisuuteen",
+          nimi: {
+            SUOMI: "Lorem ipsum 1",
+          },
+          paattymisAika: "16:00",
+          paivamaara: "2022-01-01",
+          peruttu: true,
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          yhteystiedot: [],
+        },
+        {
+          alkamisAika: "10:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+          },
+          lisatiedot: {
+            SUOMI: "Ensimmäinen ovi vasemmalla",
+          },
+          nimi: {
+            SUOMI: "Lorem ipsum two 1",
+          },
+          osoite: {
+            SUOMI: "Katu 123",
+          },
+          paattymisAika: "11:00",
+          paikka: {
+            SUOMI: "Kunnantalo",
+          },
+          paivamaara: "2022-01-01",
+          postinumero: "00100",
+          postitoimipaikka: {
+            SUOMI: "Helsinki",
+          },
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          yhteystiedot: [],
+        },
+        {
+          alkamisAika: "10:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241", "A000112"],
+            yhteysTiedot: [
+              {
+                etunimi: "Etunimi",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+              },
+              {
+                etunimi: "Joku",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+              },
+            ],
+          },
+          nimi: {
+            SUOMI: "Soittoaikatilaisuuden nimi tässä",
+          },
+          paattymisAika: "11:00",
+          paivamaara: "2022-01-01",
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          yhteystiedot: [
+            {
+              etunimi: "A-tunnus1",
+              organisaatio: "CGI Suomi Oy",
+              puhelinnumero: "123",
+              sahkoposti: "mikko.haapamki@cgi.com",
+              sukunimi: "Hassu",
+            },
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+        {
+          alkamisAika: "12:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+            yhteysTiedot: [
+              {
+                etunimi: "Etunimi",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+              },
+              {
+                etunimi: "Joku",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+              },
+            ],
+          },
+          nimi: {
+            SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+          },
+          paattymisAika: "13:00",
+          paivamaara: "2022-01-01",
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          yhteystiedot: [
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+      ],
+      yhteystiedot: [
+        {
+          etunimi: "Testi1",
+          kunta: 536,
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamaki1@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+    {
+      aineistot: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.3116435513.3227218205",
+          jarjestys: 12,
+          kategoriaId: "ESITTELYAINEISTO",
+          nimi: "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2022-10-01T00:00:01+03:00",
+          uuid: "ea2",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2247090736.500595657",
+          jarjestys: 11,
+          kategoriaId: "SUUNNITELMALUONNOS",
+          nimi: "new 1400-72J-6709-1_Johtokartta_1.pdf",
+          tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2022-10-01T00:00:01+03:00",
+          uuid: "sl1",
+        },
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2931087368.2890442310",
+          kategoriaId: "SUUNNITELMALUONNOS",
+          nimi: "Radan risteämärekisteriote_1203.pdf",
+          tiedosto: "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
+          tila: API.AineistoTila.VALMIS,
+          tuotu: "2022-10-01T00:00:01+03:00",
+          uuid: "aineisto234",
+        },
+      ],
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "huomenna",
+      },
+      asianhallintaEventId: "00000004-8557-4a58-8a93-64ade8cd137b",
+      esitettavatYhteystiedot: {
+        yhteysHenkilot: ["LX581241", "A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Marko",
+            organisaatio: "Kajaani",
+            puhelinnumero: "0293121213",
+            sahkoposti: "markku.koi@koi.com",
+            sukunimi: "Koi",
+          },
+        ],
+      },
+      hankkeenKuvaus: {
+        SUOMI: "Hankkeen kuvaus",
+      },
+      id: 2,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 491,
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: 178,
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: 740,
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            nimi: API.IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
+      palautteidenVastaanottajat: ["A000111"],
+      suunnittelunEteneminenJaKesto: {
+        SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      },
+      tila: API.VuorovaikutusKierrosTila.JULKINEN,
+      videot: null,
+      vuorovaikutusJulkaisuPaiva: "2022-03-03",
+      vuorovaikutusPDFt: {
+        SUOMI: {
+          kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
+        },
+      },
+      vuorovaikutusTilaisuudet: [
+        {
+          alkamisAika: "15:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+          },
+          kaytettavaPalvelu: API.KaytettavaPalvelu.TEAMS,
+          linkki: "https://linkki_tilaisuuteen",
+          nimi: {
+            SUOMI: "Lorem ipsum 2",
+          },
+          paattymisAika: "16:00",
+          paivamaara: "2023-02-04",
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          yhteystiedot: [],
+        },
+        {
+          alkamisAika: "10:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+          },
+          lisatiedot: {
+            SUOMI: "Ensimmäinen ovi vasemmalla",
+          },
+          nimi: {
+            SUOMI: "Lorem ipsum two 2",
+          },
+          osoite: {
+            SUOMI: "Katu 123",
+          },
+          paattymisAika: "11:00",
+          paikka: {
+            SUOMI: "Kunnantalo",
+          },
+          paivamaara: "2023-02-05",
+          postinumero: "00100",
+          postitoimipaikka: {
+            SUOMI: "Helsinki",
+          },
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          yhteystiedot: [],
+        },
+        {
+          alkamisAika: "10:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241", "A000112"],
+            yhteysTiedot: [
+              {
+                etunimi: "Etunimi",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+              },
+              {
+                etunimi: "Joku",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+              },
+            ],
+          },
+          nimi: {
+            SUOMI: "Soittoaikatilaisuuden nimi tässä",
+          },
+          paattymisAika: "11:00",
+          paivamaara: "2023-02-06",
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          yhteystiedot: [
+            {
+              etunimi: "A-tunnus1",
+              organisaatio: "CGI Suomi Oy",
+              puhelinnumero: "123",
+              sahkoposti: "mikko.haapamki@cgi.com",
+              sukunimi: "Hassu",
+            },
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+        {
+          alkamisAika: "12:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: ["LX581241"],
+            yhteysTiedot: [
+              {
+                etunimi: "Etunimi",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+              },
+              {
+                etunimi: "Joku",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+              },
+            ],
+          },
+          nimi: {
+            SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+          },
+          paattymisAika: "13:00",
+          paivamaara: "2023-02-30",
+          tyyppi: API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          yhteystiedot: [
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+      ],
+      yhteystiedot: [
+        {
+          etunimi: "Testi1",
+          kunta: 536,
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamaki1@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "A-tunnus1",
+          organisaatio: "CGI Suomi Oy",
+          puhelinnumero: "123",
+          sahkoposti: "mikko.haapamki@cgi.com",
+          sukunimi: "Hassu",
+        },
+        {
+          etunimi: "Marko",
+          organisaatio: "Kajaani",
+          puhelinnumero: "0293121213",
+          sahkoposti: "markku.koi@koi.com",
+          sukunimi: "Koi",
+        },
+      ],
+    },
+  ],
+};
