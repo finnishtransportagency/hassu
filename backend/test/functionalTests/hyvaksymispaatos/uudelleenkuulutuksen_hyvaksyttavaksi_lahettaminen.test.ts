@@ -113,4 +113,28 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen lähettää hyväksyt
       "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
     ]);
   });
+
+  it("lähetetään s.postia", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.tallennaJaSiirraTilaa(projektiInput, {
+      oid: projektiAlkutilassa.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+
+    expect(emailClientStub.sendEmailStub.args).to.eql([
+      [
+        {
+          subject: "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus odottaa hyväksyntää HASSU/123/2023",
+          text:
+            "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu hyväksymispäätöskuulutus, joka odottaa hyväksyntääsi.\n" +
+            "\n" +
+            "Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/kuulutus\n" +
+            "\n" +
+            "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+          to: ["mikko.haapamki@cgi.com", "mikko.haapamaki02@cgi.com"],
+        },
+      ],
+    ]);
+  });
 });
