@@ -90,9 +90,9 @@ function getExpires() {
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
-const handlerFactory = (event: SQSEvent) => async () => {
+export const handlerFactory = (event: SQSEvent, mmlClient?: MmlClient) => async () => {
   try {
-    const client = await getClient();
+    const client = mmlClient ? mmlClient : await getClient();
     for (const record of event.Records) {
       const hakuEvent: OmistajaHakuEvent = JSON.parse(record.body);
       setLogContextOid(hakuEvent.oid);
