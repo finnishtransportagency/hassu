@@ -117,6 +117,8 @@ describe("Kun hyväksymispäätöksen uudelleenkuulutuksen avaa", () => {
     const uudelleenKuulutus = { tila: API.UudelleenkuulutusTila.PERUUTETTU };
     expect(saveProjektiArgs?.hyvaksymisPaatosVaihe).to.eql({
       ...projektiAlkutilassa.hyvaksymisPaatosVaihe,
+      // TODO: testaa, että ilmoituksen vastaanottajien lahetetty-aikaleimat tyhjätään
+      // TODO: korjaa toiminto niin, että ilmoituksen vastaanottajien lahetetty-aikaleimat tyhjätään, kun avataan uudelleenkuulutus
       id: 3,
       uudelleenKuulutus,
       aineistoNahtavilla,
