@@ -39,6 +39,7 @@ const config = {
 
   ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
+  isPermanentEnvironment: (): boolean => BaseConfig.isPermanentEnvironment(),
 
   eventSqsUrl: process.env.EVENT_SQS_URL ?? "",
   eventSqsArn: process.env.EVENT_SQS_ARN ?? "",

@@ -17,6 +17,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { getSQS } from "../aws/clients/getSQS";
 import { uuid } from "hassu-common/util/uuid";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
+import { config } from "../config";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -82,7 +83,11 @@ function suomifiLahetys(omistaja: DBOmistaja): boolean {
 
 function getExpires() {
   // omistajien tiedot säilyvät seitsemän vuotta auditointilokia varten
-  return Math.round(Date.now() / 1000) + 60 * 60 * 24 * 365 * 7;
+  let days = 2557;
+  if (!config.isPermanentEnvironment()) {
+    days = 90;
+  }
+  return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {

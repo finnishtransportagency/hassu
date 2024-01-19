@@ -30,6 +30,7 @@ import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 import { EmailEventType } from "../../backend/src/email/model/emailEvent";
 import assert from "assert";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
@@ -256,6 +257,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(streamHandler);
     streamHandler.addToRolePolicy(
@@ -341,6 +343,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(backendLambda);
     if (isYllapitoBackend) {
@@ -459,6 +462,10 @@ export class HassuBackendStack extends Stack {
     return asianhallintaLambda;
   }
 
+  private getLogRetention() {
+    return Config.isDeveloperEnvironment() ? RetentionDays.THREE_MONTHS : RetentionDays.SEVEN_YEARS;
+  }
+
   private createKiinteistoLambda(kiinteistoSQS: Queue, vpc: IVpc) {
     const kiinteistoLambda = new NodejsFunction(this, "kiinteisto-lambda", {
       functionName: "hassu-kiinteisto-" + Config.env,
@@ -469,7 +476,7 @@ export class HassuBackendStack extends Stack {
       memorySize: 1792,
       timeout: Duration.minutes(10),
       bundling: {
-        sourceMap: true,
+        sourceMap: false,
         minify: true,
         metafile: false,
         externalModules,
@@ -485,6 +492,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     kiinteistoLambda.node.addDependency(kiinteistoSQS);
     this.addPermissionsForMonitoring(kiinteistoLambda);
@@ -558,6 +566,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
@@ -595,6 +604,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(personSearchLambda);
     this.grantInternalBucket(personSearchLambda); // Käyttäjälistan cachetusta varten
@@ -630,6 +640,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -681,6 +692,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
 

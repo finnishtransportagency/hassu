@@ -1,7 +1,7 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
-const CopyFilePlugin = require("copy-file-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
@@ -85,17 +85,14 @@ function setupLocalDevelopmentMode(config, env) {
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       // Important: return the modified config
       config.plugins.push(
-        new CopyFilePlugin([
-          {
-            // For some reason index.html is not copied without a reference to node_modules. This file is not even copied to the destination...
-            from: "node_modules/.bin/npm",
-            to: config.output.path + "/static/graphql-playground/",
-          },
-          {
-            from: "backend/developer/playground.html",
-            to: config.output.path + "/static/graphql-playground/index.html",
-          },
-        ])
+        new CopyPlugin({
+          patterns: [
+            {
+              from: "backend/developer/playground.html",
+              to: config.output.path + "/../static/graphql-playground/index.html",
+            },
+          ],
+        })
       );
       return config;
     },
