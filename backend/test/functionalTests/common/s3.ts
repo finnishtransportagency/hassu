@@ -1,6 +1,6 @@
 import mocha from "mocha";
 import { mockClient } from "aws-sdk-client-mock";
-import { PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
 import fs from "fs";
 import { Readable } from "stream";
 
@@ -35,6 +35,10 @@ export class S3Mock {
           console.error("Error in S3Mock", e);
         }
       });
+      this.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
     });
 
     mocha.afterEach(() => {
