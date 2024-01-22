@@ -25,7 +25,7 @@ export type OmistajaHakuEvent = {
   kiinteistotunnukset: string[];
 };
 
-type DBOmistaja = {
+export type DBOmistaja = {
   id: string;
   oid: string;
   kiinteistotunnus: string;
@@ -196,6 +196,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         throw new Error("Omistajaa " + omistaja.id + " ei löydy");
       }
       dbOmistaja.paivitetty = now;
+      dbOmistaja.etunimet = omistaja.etunimet;
+      dbOmistaja.sukunimi = omistaja.sukunimi;
+      dbOmistaja.nimi = omistaja.nimi;
       auditLog.info("Päivitetään omistajan tiedot", { omistajaId: dbOmistaja.id });
     } else {
       dbOmistaja = {
@@ -218,7 +221,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   }
 }
 
-export async function poistaKiinteistonOmistajat(input: PoistaKiinteistonOmistajatMutationVariables) {
+export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajatMutationVariables) {
   requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   const omistajat = projekti?.omistajat ?? [];

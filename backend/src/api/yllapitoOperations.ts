@@ -57,7 +57,7 @@ import { testHandler } from "../testing/testHandler";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 import {
   haeKiinteistonOmistajat,
-  poistaKiinteistonOmistajat,
+  poistaKiinteistonOmistaja,
   tallennaKiinteistonOmistajat,
   tallennaKiinteistotunnukset,
 } from "../mml/kiinteistoHandler";
@@ -133,7 +133,7 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
     case apiConfig.haeKiinteistonOmistajat.name:
       return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
     case apiConfig.poistaKiinteistonOmistajat.name:
-      return await poistaKiinteistonOmistajat(event.arguments as PoistaKiinteistonOmistajatMutationVariables);
+      return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajatMutationVariables);
     default:
       return null;
   }
