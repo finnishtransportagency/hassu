@@ -9,7 +9,7 @@ import { BatchGetCommand, BatchWriteCommand, GetCommand, PutCommand } from "@aws
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
-  PoistaKiinteistonOmistajatMutationVariables,
+  PoistaKiinteistonOmistajaMutationVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   TallennaKiinteistotunnuksetMutationVariables,
 } from "hassu-common/graphql/apiModel";
@@ -221,7 +221,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   }
 }
 
-export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajatMutationVariables) {
+export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajaMutationVariables) {
   requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   const omistajat = projekti?.omistajat ?? [];

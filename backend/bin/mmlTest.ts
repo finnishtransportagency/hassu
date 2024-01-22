@@ -1,7 +1,5 @@
 import { SSM } from "@aws-sdk/client-ssm";
-import { setLogContextOid } from "../src/logger";
 import { getMmlClient } from "../src/mml/mmlClient";
-import { identifyMockUser } from "../src/user/userService";
 const euWestSSMClient = new SSM({ region: "eu-west-1" });
 euWestSSMClient
   .getParameter({
@@ -26,8 +24,6 @@ euWestSSMClient
       .then(apiKey => {
         if (apiKey.Parameter?.Value && endpoint) {
           const client = getMmlClient({ endpoint, apiKey: apiKey.Parameter.Value });
-          identifyMockUser({ etunimi: "MmlTest", sukunimi: "MmlTest", uid: "mmltest", __typename: "NykyinenKayttaja" });
-          setLogContextOid("testoid");
           return client.haeLainhuutotiedot(process.argv[2].split(","));
         }
       });

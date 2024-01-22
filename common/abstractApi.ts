@@ -309,10 +309,10 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.tallennaKiinteistonOmistajat,
     isYllapitoOperation: true,
   },
-  poistaKiinteistonOmistajat: {
-    name: "poistaKiinteistonOmistajat",
+  poistaKiinteistonOmistaja: {
+    name: "poistaKiinteistonOmistaja",
     operationType: OperationType.Mutation,
-    graphql: mutations.poistaKiinteistonOmistajat,
+    graphql: mutations.poistaKiinteistonOmistaja,
     isYllapitoOperation: true,
   },
 };
@@ -574,10 +574,10 @@ export abstract class AbstractApi {
     });
   }
 
-  async poistaKiinteistonOmistajat(oid: string, omistajat: string[]): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.poistaKiinteistonOmistajat, {
+  async poistaKiinteistonOmistaja(oid: string, omistaja: string): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.poistaKiinteistonOmistaja, {
       oid,
-      omistajat,
+      omistaja,
     });
   }
 
