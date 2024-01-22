@@ -27,7 +27,7 @@ import {
   TallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
-  PoistaKiinteistonOmistajatMutationVariables,
+  PoistaKiinteistonOmistajaMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -132,8 +132,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
       return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
-    case apiConfig.poistaKiinteistonOmistajat.name:
-      return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajatMutationVariables);
+    case apiConfig.poistaKiinteistonOmistaja.name:
+      return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
     default:
       return null;
   }
