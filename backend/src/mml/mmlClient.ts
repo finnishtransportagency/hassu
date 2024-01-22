@@ -55,26 +55,28 @@ export function getMmlClient(options: MmlOptions): MmlClient {
           for (const yksikko of responseJson["kylh:Lainhuutotiedot"]["kylh:Rekisteriyksikko"]) {
             const omistajat: Omistaja[] = [];
             const kiinteistotunnus = yksikko["trpt:rekisteriyksikonPerustiedot"][0]["y:kiinteistotunnus"][0];
-            for (const asia of yksikko["trlh:lainhuudot"][0]["trlh:Lainhuutoasia"]) {
-              // Ratkaistu tai Loppuunsaatettu
-              if (asia["y:asianTila"][0] === "02" || asia["y:asianTila"][0] === "03") {
-                for (const kohde of asia["trlh:osuudetAsianKohteesta"][0]["trlh:OsuusAsianKohteesta"]) {
-                  for (const hlo of kohde["y:osuudenHenkilot"][0]["y:Henkilo"]) {
-                    const tiedot = hlo["y:henkilonTiedot"][0];
-                    const osoite = hlo["muti:Osoite"] ? hlo["muti:Osoite"][0] : undefined;
-                    omistajat.push({
-                      henkilotunnus: tiedot["y:henkilotunnus"] ? tiedot["y:henkilotunnus"][0] : undefined,
-                      etunimet: tiedot["y:etunimet"] ? tiedot["y:etunimet"][0] : undefined,
-                      sukunimi: tiedot["y:sukunimi"] ? tiedot["y:sukunimi"][0] : undefined,
-                      ytunnus: tiedot["y:ytunnus"] ? tiedot["y:ytunnus"][0] : undefined,
-                      nimi: tiedot["y:nimi"] ? tiedot["y:nimi"][0] : undefined,
-                      yhteystiedot: {
-                        jakeluosoite: osoite ? osoite["muti:jakeluosoite"][0] : undefined,
-                        paikkakunta: osoite ? osoite["muti:paikkakunta"][0] : undefined,
-                        postinumero: osoite ? osoite["muti:postinumero"][0] : undefined,
-                        maakoodi: osoite ? osoite["muti:maakoodi"][0] : undefined,
-                      },
-                    });
+            if (yksikko["trlh:lainhuudot"][0]["trlh:Lainhuutoasia"]) {
+              for (const asia of yksikko["trlh:lainhuudot"][0]["trlh:Lainhuutoasia"]) {
+                // Ratkaistu tai Loppuunsaatettu
+                if (asia["y:asianTila"][0] === "02" || asia["y:asianTila"][0] === "03") {
+                  for (const kohde of asia["trlh:osuudetAsianKohteesta"][0]["trlh:OsuusAsianKohteesta"]) {
+                    for (const hlo of kohde["y:osuudenHenkilot"][0]["y:Henkilo"]) {
+                      const tiedot = hlo["y:henkilonTiedot"][0];
+                      const osoite = hlo["muti:Osoite"] ? hlo["muti:Osoite"][0] : undefined;
+                      omistajat.push({
+                        henkilotunnus: tiedot["y:henkilotunnus"] ? tiedot["y:henkilotunnus"][0] : undefined,
+                        etunimet: tiedot["y:etunimet"] ? tiedot["y:etunimet"][0] : undefined,
+                        sukunimi: tiedot["y:sukunimi"] ? tiedot["y:sukunimi"][0] : undefined,
+                        ytunnus: tiedot["y:ytunnus"] ? tiedot["y:ytunnus"][0] : undefined,
+                        nimi: tiedot["y:nimi"] ? tiedot["y:nimi"][0] : undefined,
+                        yhteystiedot: {
+                          jakeluosoite: osoite ? osoite["muti:jakeluosoite"][0] : undefined,
+                          paikkakunta: osoite ? osoite["muti:paikkakunta"][0] : undefined,
+                          postinumero: osoite ? osoite["muti:postinumero"][0] : undefined,
+                          maakoodi: osoite ? osoite["muti:maakoodi"][0] : undefined,
+                        },
+                      });
+                    }
                   }
                 }
               }
