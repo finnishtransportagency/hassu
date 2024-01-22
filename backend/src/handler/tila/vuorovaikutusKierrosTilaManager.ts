@@ -36,6 +36,8 @@ import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -288,6 +290,8 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       vuorovaikutusKierrosJulkaisu: julkaisu,
       kieli: projekti.kielitiedot.ensisijainenKieli,
       luonnos: false,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     emailOptions.attachments = attachments;
 
@@ -372,6 +376,8 @@ async function createVuorovaikutusKierrosPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 
   const fullFilePathInProjekti = fileService.createFileToProjekti({
