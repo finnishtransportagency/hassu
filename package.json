@@ -137,7 +137,7 @@
     "@typescript-eslint/typescript-estree": "^5.10.2",
     "autoprefixer": "^10.4.16",
     "aws-amplify": "^5.3.11",
-    "aws-sdk-client-mock": "^2.2.0",
+    "aws-sdk-client-mock": "^3.0.1",
     "aws-xray-sdk-core": "^3.5.3",
     "axios-logger": "^2.7.0",
     "babel-jest": "^27.5.1",

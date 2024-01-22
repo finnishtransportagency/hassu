@@ -2,8 +2,8 @@ import { SQSRecord } from "aws-lambda";
 import { OmistajaHakuEvent, handleEvent, setClient } from "../../src/mml/kiinteistoHandler";
 import { MmlClient } from "../../src/mml/mmlClient";
 import { BatchWriteCommand, DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { mockClient } from "aws-sdk-client-mock";
 import { assert, expect } from "chai";
+import { mockClient } from "aws-sdk-client-mock";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: (_kiinteistotunnukset: string[]) => {
@@ -57,14 +57,8 @@ const mockMmlClient: MmlClient = {
 };
 
 describe("kiinteistoHandler", () => {
-  const dbMock = mockClient(DynamoDBDocumentClient);
-
-  afterEach(() => {
-    dbMock.reset();
-  });
-
   after(() => {
-    dbMock.restore();
+    setClient(undefined);
   });
 
   before(() => {
@@ -74,6 +68,7 @@ describe("kiinteistoHandler", () => {
   it("tallenna kiinteistön omistajat", async () => {
     const event: OmistajaHakuEvent = { oid: "1", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
+    const dbMock = mockClient(DynamoDBDocumentClient);
     await handleEvent({ Records: [record] });
     dbMock.on(BatchWriteCommand).resolves({});
     expect(dbMock.commandCalls(BatchWriteCommand).length).to.be.equal(1);
@@ -85,5 +80,6 @@ describe("kiinteistoHandler", () => {
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(3);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
+    dbMock.reset();
   });
 });

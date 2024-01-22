@@ -163,7 +163,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
   }
 };
 
-export function setClient(client: MmlClient) {
+export function setClient(client: MmlClient | undefined) {
   mmlClient = client;
 }
 
