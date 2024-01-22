@@ -1,5 +1,5 @@
 import { SQSRecord } from "aws-lambda";
-import { OmistajaHakuEvent, handlerFactory } from "../../src/mml/kiinteistoHandler";
+import { OmistajaHakuEvent, handleEvent, setClient } from "../../src/mml/kiinteistoHandler";
 import { MmlClient } from "../../src/mml/mmlClient";
 import { BatchWriteCommand, DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
@@ -67,19 +67,23 @@ describe("kiinteistoHandler", () => {
     dbMock.restore();
   });
 
+  before(() => {
+    setClient(mockMmlClient);
+  });
+
   it("tallenna kiinteistön omistajat", async () => {
     const event: OmistajaHakuEvent = { oid: "1", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
-    await handlerFactory({ Records: [record] }, mockMmlClient)();
+    await handleEvent({ Records: [record] });
     dbMock.on(BatchWriteCommand).resolves({});
     expect(dbMock.commandCalls(BatchWriteCommand).length).to.be.equal(1);
     const writeCommand = dbMock.commandCalls(BatchWriteCommand)[0];
     assert(writeCommand.args[0].input.RequestItems);
-    expect(writeCommand.args[0].input.RequestItems[process.env.TABLE_OMISTAJA!].length).to.be.equal(4);
+    expect(writeCommand.args[0].input.RequestItems[process.env.TABLE_OMISTAJA!].length).to.be.equal(5);
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
     const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(3);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(1);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
   });
 });

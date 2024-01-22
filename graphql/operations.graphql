@@ -52,5 +52,5 @@ type Mutation {
 
   tallennaKiinteistotunnukset(oid: String!, kiinteistotunnukset: [String!]!): String
   tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): String
-  poistaKiinteistonOmistajat(oid: String!, omistajat: [String!]!): String
+  poistaKiinteistonOmistajat(oid: String!, omistaja: String!): String
 }

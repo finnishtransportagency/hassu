@@ -1,4 +1,4 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
 import { MmlClient, getMmlClient } from "./mmlClient";
@@ -90,9 +90,9 @@ function getExpires() {
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
-export const handlerFactory = (event: SQSEvent, mmlClient?: MmlClient) => async () => {
+const handlerFactory = (event: SQSEvent) => async () => {
   try {
-    const client = mmlClient ? mmlClient : await getClient();
+    const client = await getClient();
     for (const record of event.Records) {
       const hakuEvent: OmistajaHakuEvent = JSON.parse(record.body);
       setLogContextOid(hakuEvent.oid);
@@ -123,6 +123,14 @@ export const handlerFactory = (event: SQSEvent, mmlClient?: MmlClient) => async 
             expires,
           });
         });
+        if (k.omistajat.length === 0) {
+          dbOmistajat.push({
+            id: uuid.v4(),
+            kiinteistotunnus: k.kiinteistotunnus,
+            oid: hakuEvent.oid,
+            lisatty,
+          });
+        }
       });
       const omistajatChunks = chunkArray(dbOmistajat, 25);
       for (const chunk of omistajatChunks) {
@@ -155,7 +163,11 @@ export const handlerFactory = (event: SQSEvent, mmlClient?: MmlClient) => async 
   }
 };
 
-export const handleEvent: SQSHandler = async (event: SQSEvent) => {
+export function setClient(client: MmlClient) {
+  mmlClient = client;
+}
+
+export const handleEvent = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", handlerFactory(event));
 };
@@ -211,17 +223,15 @@ export async function poistaKiinteistonOmistajat(input: PoistaKiinteistonOmistaj
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   const omistajat = projekti?.omistajat ?? [];
   const muutOmistajat = projekti?.muutOmistajat ?? [];
-  for (const id of input.omistajat) {
-    let idx = omistajat.indexOf(id);
+  let idx = omistajat.indexOf(input.omistaja);
+  if (idx !== -1) {
+    omistajat.splice(idx, 1);
+    auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: input.omistaja });
+  } else {
+    idx = muutOmistajat.indexOf(input.omistaja);
     if (idx !== -1) {
-      omistajat.splice(idx, 1);
-      auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: id });
-    } else {
-      idx = muutOmistajat.indexOf(id);
-      if (idx !== -1) {
-        muutOmistajat.splice(idx, 1);
-        auditLog.info("Poistetaan muu omistaja", { omistajaId: id });
-      }
+      muutOmistajat.splice(idx, 1);
+      auditLog.info("Poistetaan muu omistaja", { omistajaId: input.omistaja });
     }
   }
   auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });
