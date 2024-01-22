@@ -9,6 +9,19 @@ import { LausuntoPyynnotFormValues } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
+import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
+import { API } from "@services/api/commonApi";
+
+async function lataaTiedostoJosSallittu(api: API, file: File, allowedUploadFileTypes: string[]) {
+  console.log(allowedUploadFileTypes);
+  console.log(file);
+  if (allowedUploadFileTypes.find((i) => i === file.type)) {
+    const a = await lataaTiedosto(api, file);
+    console.log(file);
+    return a;
+  }
+  return "hello";
+}
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue } = useFormContext<LausuntoPyynnotFormValues>();
@@ -24,6 +37,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       hiddenInputRef.current.click();
     }
   };
+
   const handleUploadedFiles = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) =>
       withLoadingSpinner(
@@ -31,8 +45,10 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           const files: FileList | null = event.target.files;
           if (files?.length) {
             const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedosto(api, files[key]))
+              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedostoJosSallittu(api, files[key], allowedUploadFileTypes))
             );
+
+            uploadedFiles.forEach((u) => console.log(u));
             const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
               nimi: files[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
@@ -63,7 +79,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       <input
         type="file"
         multiple
-        accept="*/*"
+        accept={allowedUploadFileTypes.join(", ")}
         style={{ display: "none" }}
         id={`lisa-aineistot-${index}-input`}
         onChange={handleUploadedFiles}

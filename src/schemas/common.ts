@@ -13,8 +13,26 @@ export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).null
 
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({
-    tiedosto: Yup.string().required(),
-    nimi: Yup.string().required(),
+    tiedosto: Yup.string()
+      .required()
+      .test({
+        message: "vain_kuva_tai_pdf",
+        test: (file, context) => {
+          const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file.toLowerCase());
+          if (!isValid) context?.createError();
+          return isValid;
+        },
+      }),
+    nimi: Yup.string()
+      .required()
+      .test({
+        message: "vain_kuva_tai_pdf",
+        test: (file, context) => {
+          const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file.toLowerCase());
+          if (!isValid) context?.createError();
+          return isValid;
+        },
+      }),
     jarjestys: Yup.number().integer().notRequired(),
     tila: Yup.string().required(),
   });
