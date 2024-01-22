@@ -76,6 +76,11 @@ describe("kiinteistoHandler", () => {
     setClient(mockMmlClient);
   });
 
+  beforeEach(() => {
+    setLogContextOid("1");
+    identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
+  });
+
   it("tallenna kiinteistön omistajat", async () => {
     const event: OmistajaHakuEvent = { oid: "1", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
@@ -94,8 +99,6 @@ describe("kiinteistoHandler", () => {
   });
   it("poista kiinteistön omistaja", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    setLogContextOid("1");
-    identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
     dbMock.on(GetCommand).resolves({ Item: { id: "1", omistajat: ["1"], muutOmistajat: ["2"] } });
     await poistaKiinteistonOmistaja({ oid: "1", omistaja: "1" });
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
@@ -116,8 +119,6 @@ describe("kiinteistoHandler", () => {
   });
   it("päivitä kiinteistön omistajat", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    setLogContextOid("1");
-    identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: { id: "1" } });
     dbMock.on(GetCommand, { TableName: config.omistajaTableName, Key: { id: "11" } }).resolves({ Item: { id: "11", etunimet: "Teppo" } });
     await tallennaKiinteistonOmistajat({
@@ -156,8 +157,6 @@ describe("kiinteistoHandler", () => {
   });
   it("hae kiinteistön omistajat", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    setLogContextOid("1");
-    identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
     dbMock
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { id: "1", omistajat: ["1", "2", "3"], muutOmistajat: ["4"] } });
