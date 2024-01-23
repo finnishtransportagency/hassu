@@ -17,7 +17,7 @@ import { identifyMockUser } from "../../src/user/userService";
 import { config } from "../../src/config";
 
 const mockMmlClient: MmlClient = {
-  haeLainhuutotiedot: (_kiinteistotunnukset: string[]) => {
+  haeLainhuutotiedot: () => {
     return new Promise((resolve) => {
       resolve([
         {
@@ -27,10 +27,61 @@ const mockMmlClient: MmlClient = {
               henkilotunnus: "111111-111A",
               etunimet: "Matti",
               sukunimi: "Testaaja",
-              yhteystiedot: { jakeluosoite: "Katuosoite 1 A 100", postinumero: "00100", paikkakunta: "Helsinki" },
             },
             {
               henkilotunnus: "111111-113B",
+              etunimet: "Teppo",
+              sukunimi: "Testaaja",
+            },
+          ],
+        },
+        {
+          kiinteistotunnus: "2",
+          omistajat: [
+            {
+              henkilotunnus: "222222-222A",
+              etunimet: "Lotta",
+              sukunimi: "Testaaja",
+            },
+          ],
+        },
+        {
+          kiinteistotunnus: "3",
+          omistajat: [
+            {
+              etunimet: "Jatta",
+              sukunimi: "Tuntematon",
+            },
+          ],
+        },
+        {
+          kiinteistotunnus: "4",
+          omistajat: [
+            {
+              nimi: "Yritys Oy Ab",
+              ytunnus: "123-456",
+            },
+          ],
+        },
+        {
+          kiinteistotunnus: "5",
+          omistajat: [],
+        },
+      ]);
+    });
+  },
+  haeYhteystiedot: () => {
+    return new Promise((resolve) => {
+      resolve([
+        {
+          kiinteistotunnus: "1",
+          omistajat: [
+            {
+              etunimet: "Matti",
+              sukunimi: "Testaaja",
+              yhteystiedot: { jakeluosoite: "Katuosoite 1 A 100", postinumero: "00100", paikkakunta: "Helsinki", maakoodi: "FI" },
+            },
+            {
               etunimet: "Teppo",
               sukunimi: "Testaaja",
               yhteystiedot: { jakeluosoite: "Katuosoite 2 B 32", postinumero: "01600", paikkakunta: "Vantaa" },
@@ -41,7 +92,6 @@ const mockMmlClient: MmlClient = {
           kiinteistotunnus: "2",
           omistajat: [
             {
-              henkilotunnus: "222222-222A",
               etunimet: "Lotta",
               sukunimi: "Testaaja",
               yhteystiedot: { jakeluosoite: "Katuosoite 3 A 123", postinumero: "00180", paikkakunta: "Helsinki" },
@@ -60,6 +110,15 @@ const mockMmlClient: MmlClient = {
         },
         {
           kiinteistotunnus: "4",
+          omistajat: [
+            {
+              nimi: "Yritys Oy Ab",
+              yhteystiedot: { jakeluosoite: "Yritysosoite 1", postinumero: "00001", paikkakunta: "Helsinki" },
+            },
+          ],
+        },
+        {
+          kiinteistotunnus: "5",
           omistajat: [],
         },
       ]);
@@ -82,7 +141,7 @@ describe("kiinteistoHandler", () => {
   });
 
   it("tallenna kiinteistön omistajat", async () => {
-    const event: OmistajaHakuEvent = { oid: "1", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4"] };
+    const event: OmistajaHakuEvent = { oid: "1.2.3", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4", "5"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
     const dbMock = mockClient(DynamoDBDocumentClient);
     await handleEvent({ Records: [record] });
@@ -90,12 +149,17 @@ describe("kiinteistoHandler", () => {
     expect(dbMock.commandCalls(BatchWriteCommand).length).to.be.equal(1);
     const writeCommand = dbMock.commandCalls(BatchWriteCommand)[0];
     assert(writeCommand.args[0].input.RequestItems);
-    expect(writeCommand.args[0].input.RequestItems[config.omistajaTableName].length).to.be.equal(5);
+    expect(writeCommand.args[0].input.RequestItems[config.omistajaTableName].length).to.be.equal(6);
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
     const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(3);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(4);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
+    const snapshot: DBOmistaja[] = [];
+    writeCommand.args[0].input.RequestItems[config.omistajaTableName].forEach((c, i) => {
+      snapshot.push({ ...c.PutRequest?.Item, id: `${i}`, lisatty: "", expires: 0 } as DBOmistaja);
+    });
+    expect(snapshot).toMatchSnapshot();
   });
   it("poista kiinteistön omistaja", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
@@ -119,7 +183,7 @@ describe("kiinteistoHandler", () => {
   });
   it("päivitä kiinteistön omistajat", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: { id: "1" } });
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: { id: "1", omistajat: ["11"] } });
     dbMock.on(GetCommand, { TableName: config.omistajaTableName, Key: { id: "11" } }).resolves({ Item: { id: "11", etunimet: "Teppo" } });
     await tallennaKiinteistonOmistajat({
       oid: "1",
@@ -154,6 +218,12 @@ describe("kiinteistoHandler", () => {
     expect(o2.yhteystiedot?.jakeluosoite).to.be.equal("Osoite 1");
     expect(o2.yhteystiedot?.postinumero).to.be.equal("01000");
     expect(o2.yhteystiedot?.paikkakunta).to.be.equal("Vantaa");
+    expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
+    const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
+    assert(updateCommand.args[0].input.ExpressionAttributeValues);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(1);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"][0]).to.be.equal("11");
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(1);
   });
   it("hae kiinteistön omistajat", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);

@@ -24,7 +24,12 @@ euWestSSMClient
       .then(apiKey => {
         if (apiKey.Parameter?.Value && endpoint) {
           const client = getMmlClient({ endpoint, apiKey: apiKey.Parameter.Value });
-          return client.haeLainhuutotiedot(process.argv[2].split(","));
+          const debug = process.argv.includes("--debug");
+          if (process.argv.includes("-y")) {
+            return client.haeYhteystiedot(process.argv[process.argv.length - 1].split(","), debug);
+          } else {
+            return client.haeLainhuutotiedot(process.argv[process.argv.length - 1].split(","), debug);
+          }
         }
       });
   })
