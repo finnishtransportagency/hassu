@@ -116,6 +116,10 @@ class Parameters {
     return this.getParamOrVariable("outputs/AsianhallintaSQSUrl", "ASIANHALLINTA_SQS_URL");
   }
 
+  async getKiinteistoSQSUrl() {
+    return this.getParameter("outputs/KiinteistoSQSUrl");
+  }
+
   async getSuomifiCognitoDomain() {
     return this.getParamOrVariable("outputs/SuomifiCognitoDomain", "SUOMI_FI_COGNITO_DOMAIN");
   }

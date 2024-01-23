@@ -30,6 +30,7 @@ import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 import { EmailEventType } from "../../backend/src/email/model/emailEvent";
 import assert from "assert";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
@@ -42,6 +43,7 @@ export type HassuBackendStackProps = {
   lyhytOsoiteTable: Table;
   feedbackTable: Table;
   projektiArchiveTable: Table;
+  omistajaTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -111,11 +113,14 @@ export class HassuBackendStack extends Stack {
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
     const asianhallintaLambda = await this.createAsianhallintaLambda(asianhallintaSQS, vpc);
+    const kiinteistoSQS = this.createKiinteistoQueue();
+    this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       eventSQS,
       asianhallintaSQS,
+      kiinteistoSQS,
       pdfGeneratorLambda,
       true
     );
@@ -130,6 +135,7 @@ export class HassuBackendStack extends Stack {
       personSearchUpdaterLambda,
       eventSQS,
       asianhallintaSQS,
+      kiinteistoSQS,
       pdfGeneratorLambda,
       false
     );
@@ -251,6 +257,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(streamHandler);
     streamHandler.addToRolePolicy(
@@ -284,6 +291,7 @@ export class HassuBackendStack extends Stack {
     personSearchUpdaterLambda: NodejsFunction,
     eventSQS: Queue,
     asianhallintaSQS: Queue,
+    kiinteistoSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean
   ) {
@@ -335,6 +343,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(backendLambda);
     if (isYllapitoBackend) {
@@ -369,6 +378,7 @@ export class HassuBackendStack extends Stack {
 
       eventSQS.grantSendMessages(backendLambda);
       asianhallintaSQS.grantSendMessages(backendLambda);
+      kiinteistoSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
       this.grantInternalBucket(backendLambda);
       this.props.publicBucket.grantReadWrite(backendLambda);
@@ -452,6 +462,59 @@ export class HassuBackendStack extends Stack {
     return asianhallintaLambda;
   }
 
+  private getLogRetention() {
+    return Config.isDeveloperEnvironment() ? RetentionDays.THREE_MONTHS : RetentionDays.SEVEN_YEARS;
+  }
+
+  private createKiinteistoLambda(kiinteistoSQS: Queue, vpc: IVpc) {
+    const kiinteistoLambda = new NodejsFunction(this, "kiinteisto-lambda", {
+      functionName: "hassu-kiinteisto-" + Config.env,
+      runtime: lambdaRuntime,
+      vpc,
+      entry: `${__dirname}/../../backend/src/mml/kiinteistoHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 1792,
+      timeout: Duration.minutes(10),
+      bundling: {
+        sourceMap: false,
+        minify: true,
+        metafile: false,
+        externalModules,
+      },
+      environment: {
+        ENVIRONMENT: Config.env,
+        INFRA_ENVIRONMENT: Config.infraEnvironment,
+        TZ: "Europe/Helsinki",
+        PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
+        TABLE_OMISTAJA: this.props.omistajaTable.tableName,
+        TABLE_PROJEKTI: this.props.projektiTable.tableName,
+      },
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    kiinteistoLambda.node.addDependency(kiinteistoSQS);
+    this.addPermissionsForMonitoring(kiinteistoLambda);
+    kiinteistoLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+    kiinteistoSQS.grantConsumeMessages(kiinteistoLambda);
+    kiinteistoLambda.addEventSource(new SqsEventSource(kiinteistoSQS, { maxConcurrency: 3 }));
+    this.props.omistajaTable.grantFullAccess(kiinteistoLambda);
+    const updateSynkronointiPolicy = new PolicyStatement({
+      effect: Effect.ALLOW,
+      resources: [this.props.projektiTable.tableArn],
+      actions: ["dynamodb:UpdateItem"],
+    });
+    updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", { "dynamodb:Attributes": ["muutOmistajat", "omistajat"] });
+    kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
+  }
+
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
     func.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
     this.props.internalBucket.grantReadWrite(func, pattern);
@@ -503,6 +566,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
@@ -540,6 +604,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(personSearchLambda);
     this.grantInternalBucket(personSearchLambda); // Käyttäjälistan cachetusta varten
@@ -575,6 +640,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -626,6 +692,7 @@ export class HassuBackendStack extends Stack {
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
+      logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -661,6 +728,8 @@ export class HassuBackendStack extends Stack {
       projektiTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
+      this.props.omistajaTable.grantFullAccess(backendFn);
+      backendFn.addEnvironment("TABLE_OMISTAJA", this.props.omistajaTable.tableName);
     } else {
       projektiTable.grantReadData(backendFn);
     }
@@ -711,6 +780,21 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
+  }
+
+  private createKiinteistoQueue() {
+    const queue = new Queue(this, "KiinteistoQueue", {
+      queueName: "kiinteisto-queue-" + Config.env,
+      visibilityTimeout: Duration.minutes(12),
+      encryption: QueueEncryption.KMS_MANAGED,
+      retentionPeriod: Duration.hours(2),
+    });
+    new ssm.StringParameter(this, "KiinteistoSQSUrl", {
+      description: "Generated KiinteistoSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/KiinteistoSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
   }
 
   private createIndexerQueue() {

@@ -7,11 +7,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let body = req.body;
   const urlObject = new URL(process.env["APPSYNC_URL"] || "");
   const isYllapito = req.query.yllapito == "true";
+  const isPlayground = req.headers['referer']?.indexOf("graphql-playground");
 
   let headers = {
     host: urlObject.host,
   } as unknown as HeaderBag;
-  if (isYllapito) {
+  if (isYllapito || isPlayground) {
     headers["x-hassudev-uid"] = getCookieOrDefault(req.cookies, "x-hassudev-uid", process.env["x-hassudev-uid"]) as string;
     headers["x-hassudev-roles"] = getCookieOrDefault(req.cookies, "x-hassudev-roles", process.env["x-hassudev-roles"]) as string;
   }

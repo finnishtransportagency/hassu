@@ -1157,3 +1157,28 @@ type AsianhallinnanTila {
   """
   asianTila: AsianTila
 }
+
+type MmlYhteystieto {
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+}
+
+type Omistaja  {
+  id: String!
+  oid: String!
+  kiinteistotunnus: String!
+  lisatty: String!
+  paivitetty: String
+  etunimet: String
+  sukunimi: String
+  nimi: String
+  yhteystiedot: MmlYhteystieto
+}
+
+type KiinteistonOmistajat {
+  hakutulosMaara: Int!
+  sivu: Int!
+  sivunKoko: Int!
+  omistajat: [Omistaja]!
+}

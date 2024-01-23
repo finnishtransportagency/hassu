@@ -7,6 +7,7 @@ const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
   lyhytOsoiteTableName: process.env.TABLE_LYHYTOSOITE,
   feedbackTableName: process.env.TABLE_FEEDBACK,
+  omistajaTableName: process.env.TABLE_OMISTAJA!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
@@ -39,6 +40,7 @@ const config = {
 
   ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
+  isPermanentEnvironment: (): boolean => BaseConfig.isPermanentEnvironment(),
 
   eventSqsUrl: process.env.EVENT_SQS_URL ?? "",
   eventSqsArn: process.env.EVENT_SQS_ARN ?? "",
