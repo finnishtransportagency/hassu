@@ -21,6 +21,8 @@ export class Kutsu21 {
     vuorovaikutusKierrosJulkaisu,
     kieli,
     suunnitteluSopimus,
+    asianhallintaPaalla,
+    linkkiAsianhallintaan,
   }: YleisotilaisuusKutsuPdfOptions) {
     if (!(velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
@@ -47,6 +49,8 @@ export class Kutsu21 {
       vuorovaikutusKierrosJulkaisu,
       hankkeenKuvaus: vuorovaikutusKierrosJulkaisu.hankkeenKuvaus,
       suunnitteluSopimus: suunnitteluSopimusJulkaisu ?? undefined,
+      asianhallintaPaalla,
+      linkkiAsianhallintaan,
     });
   }
 

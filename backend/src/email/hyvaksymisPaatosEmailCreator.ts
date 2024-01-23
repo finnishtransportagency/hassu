@@ -9,6 +9,8 @@ import {
 import { EmailOptions } from "./model/emailOptions";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { KuulutusEmailCreator } from "./kuulutusEmailCreator";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
 
 export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
   static async newInstance(
@@ -23,7 +25,14 @@ export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     assertIsDefined(julkaisu.kuulutusPaiva);
     this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
-      createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti, Kieli.SUOMI, julkaisu, paatosTyyppi)
+      createHyvaksymisPaatosVaiheKutsuAdapterProps(
+        projekti,
+        Kieli.SUOMI,
+        julkaisu,
+        paatosTyyppi,
+        await isProjektiAsianhallintaIntegrationEnabled(projekti),
+        await getLinkkiAsianhallintaan(projekti)
+      )
     );
     return this;
   }
