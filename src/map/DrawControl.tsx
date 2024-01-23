@@ -4,6 +4,7 @@ import { Interaction, Select, Snap } from "ol/interaction";
 import Draw, { createBox } from "ol/interaction/Draw";
 import Modify from "ol/interaction/Modify";
 import VectorSource from "ol/source/Vector";
+import { Vector as VectorLayer } from "ol/layer";
 
 type ButtonProps = {
   label: string | HTMLElement;
@@ -168,9 +169,7 @@ class DrawControl extends Control {
   }
 
   private removeAllFeatures() {
-    this.source.getFeatures().forEach((feature) => {
-      this.source.removeFeature(feature);
-    });
+    this.source.clear();
   }
 
   private removeSelectedFeature() {
@@ -231,15 +230,15 @@ export type DrawToolInteractions = {
   [InteractionType.SELECT]: Select;
 };
 
-type CreateDrawToolInteractions = (source: VectorSource<Geometry>) => DrawToolInteractions;
+type CreateDrawToolInteractions = (layer: VectorLayer<VectorSource<Geometry>>, source: VectorSource<Geometry>) => DrawToolInteractions;
 
 function initInteraction<T extends Interaction>(interaction: T, active: boolean): T {
   interaction.setActive(active);
   return interaction;
 }
 
-export const createDrawToolInteractions: CreateDrawToolInteractions = (source) => {
-  const select = initInteraction(new Select(), true);
+export const createDrawToolInteractions: CreateDrawToolInteractions = (layer, source) => {
+  const select = initInteraction(new Select({ layers: [layer] }), true);
 
   return {
     DRAW: {

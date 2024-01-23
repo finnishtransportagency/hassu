@@ -33,12 +33,15 @@ class GeoJsonFileInputControl extends Control {
 
     element.className = "ol-geo-json ol-unselectable ol-control";
 
-    const form = document.createElement("form");
     this.input = document.createElement("input");
-    form.appendChild(this.input);
     this.input.type = "file";
     this.input.accept = ".geojson,application/geo+json";
     this.input.addEventListener("change", this.uploadGeoJSONFile.bind(this), false);
+
+    const form = document.createElement("form");
+    form.setAttribute("style", "display:none;");
+    form.appendChild(this.input);
+    element.appendChild(form);
 
     const button = document.createElement("button");
     const label = options.label ?? "F";
@@ -64,6 +67,7 @@ class GeoJsonFileInputControl extends Control {
     if (!file) {
       return;
     } else if (file instanceof Blob && file.type === GEOJSON_MIME) {
+      console.log(file);
       this.readFile(file);
     } else {
       this.showErrorMessage("Tiedosto ei ole oikeaa tyyppiä. Varmista, että kyseessä on GeoJSON-tiedosto.");
