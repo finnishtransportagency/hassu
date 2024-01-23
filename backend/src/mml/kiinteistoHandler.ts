@@ -207,6 +207,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   }
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const uudetOmistajat = [];
+  const expires = getExpires();
   for (const omistaja of input.omistajat) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
@@ -229,6 +230,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         etunimet: omistaja.etunimet,
         sukunimi: omistaja.sukunimi,
         nimi: omistaja.nimi,
+        expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
       uudetOmistajat.push(dbOmistaja.id);
