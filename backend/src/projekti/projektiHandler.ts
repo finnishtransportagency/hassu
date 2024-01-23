@@ -50,7 +50,6 @@ import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
-import { ladattuTiedostoTilaEiPoistettu } from "hassu-common/util/tiedostoTilaUtil";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
