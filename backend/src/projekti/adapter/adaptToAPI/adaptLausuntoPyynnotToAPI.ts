@@ -1,9 +1,8 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/model";
+import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/model";
 import { assertIsDefined } from "../../../util/assertions";
-import { PathTuple, ProjektiPaths } from "../../../files/ProjektiPath";
-import { adaptLadattuTiedostoToAPI } from ".";
-import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
+import { ProjektiPaths } from "../../../files/ProjektiPath";
+import { adaptLadatutTiedostotToApi } from ".";
 import { lausuntoPyyntoDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
 
@@ -46,13 +45,4 @@ export function adaptLausuntoPyynnonTaydennyksetToAPI(
     };
     return taydennys;
   });
-}
-
-function adaptLadatutTiedostotToApi(
-  tiedostot: LadattuTiedosto[] | undefined,
-  projektiPath: PathTuple
-): Array<API.LadattuTiedosto> | undefined {
-  return tiedostot
-    ?.map((tiedosto) => adaptLadattuTiedostoToAPI(projektiPath, tiedosto, false) as API.LadattuTiedosto)
-    .sort(jarjestaTiedostot);
 }
