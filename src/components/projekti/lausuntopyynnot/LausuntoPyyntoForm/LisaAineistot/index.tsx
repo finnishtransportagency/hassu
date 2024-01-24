@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import LisaAineistotTable from "./Table";
-import { useCallback, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { lataaTiedosto } from "src/util/fileUtil";
 import { LadattuTiedostoInput, LadattuTiedostoTila, api } from "@services/api";
 import { LausuntoPyynnotFormValues } from "../../types";
@@ -10,21 +10,12 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
-import { API } from "@services/api/commonApi";
-
-async function lataaTiedostoJosSallittu(api: API, file: File, allowedUploadFileTypes: string[]) {
-  console.log(allowedUploadFileTypes);
-  console.log(file);
-  if (allowedUploadFileTypes.find((i) => i === file.type)) {
-    const a = await lataaTiedosto(api, file);
-    console.log(file);
-    return a;
-  }
-  return "hello";
-}
+import { getLadatutTiedostotSchema } from "../../../../../schemas/common";
+import { ValidationError } from "yup";
+import { log } from "../../../../../../backend/src/logger";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
-  const { watch, setValue } = useFormContext<LausuntoPyynnotFormValues>();
+  const { watch, setValue, setError } = useFormContext<LausuntoPyynnotFormValues>();
 
   const lausuntoPyynto = watch(`lausuntoPyynnot.${index}`);
   const lisaAineistot = watch(`lausuntoPyynnot.${index}.lisaAineistot`);
@@ -45,7 +36,20 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           const files: FileList | null = event.target.files;
           if (files?.length) {
             const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedostoJosSallittu(api, files[key], allowedUploadFileTypes))
+              Array.from(Array(files.length).keys()).map(async (key: number) => {
+                console.log("index " + index);
+                console.log("key " + key);
+                console.log(files[key].name);
+
+                if (allowedUploadFileTypes.find((i) => i === files[key].type)) {
+                  const a = await lataaTiedosto(api, files[key]);
+                  console.log(files[key]);
+                  return a;
+                }
+                console.log("setting errro to:" + key);
+                setError(`lausuntoPyynnot.${index}.lisaAineistot.${key}`, { message: "EROEROEOROE" });
+                return "HUONO";
+              })
             );
 
             uploadedFiles.forEach((u) => console.log(u));
@@ -55,7 +59,27 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
-            setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
+
+            console.log("uploadedFiles");
+            console.log(uploadedFiles);
+
+            console.log("lisaAineistot");
+            console.log(lisaAineistot);
+
+            console.log("tiedostoInputs");
+            console.log(tiedostoInputs);
+            try {
+              getLadatutTiedostotSchema().validateSync(tiedostoInputs);
+            } catch (e) {
+              if (e instanceof ValidationError) {
+                log.info("fggf puutteelliset", { e });
+                return; // This is the final status
+              } else {
+                throw e;
+              }
+            }
+            //getLadatutTiedostotSchema().validateSync(tiedostoInputs);
+            //    setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
       ),
@@ -70,6 +94,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
         palvelun kansalaispuolelle. Liitettyjen lisäaineistojen sisältö näkyy automaattisesti linkin takana, kun aineistot on tuotu tälle
         sivulle ja muutokset on tallennettu. Esikatselu-toiminnolla voit nähdä tallentamattomat lisäaineistomuutokset.
       </p>
+
       {!!lausuntoPyynto?.lisaAineistot?.length && (
         <LisaAineistotTable
           joTallennetutLisaAineistot={projekti.lausuntoPyynnot?.[index]?.lisaAineistot ?? []}
@@ -89,6 +114,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           }
         }}
       />
+
       <label htmlFor={`lisa-aineistot-${index}-input`}>
         <Button className="mt-4" type="button" id={`tuo_lisa-aineistoja_${index}_button`} onClick={onButtonClick}>
           Hae tiedostot

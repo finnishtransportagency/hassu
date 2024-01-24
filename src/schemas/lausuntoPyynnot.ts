@@ -2,8 +2,6 @@ import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
 import { getLadatutTiedostotSchema } from "./common";
 
-const maxNoteLength = 2000;
-
 export const lausuntopyynnotSchema = Yup.object().shape({
   oid: Yup.string().required(),
   versio: Yup.number().required(),
@@ -11,7 +9,13 @@ export const lausuntopyynnotSchema = Yup.object().shape({
     Yup.object({
       uuid: Yup.string().required(),
       poistumisPaiva: paivamaara({ preventPast: false, preventFuture: false }),
-      muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
+      muistiinpano: Yup.string().test({
+        message: "vain_kuva_tai_pdf",
+        test: (a, context) => {
+          console.log("HELLO a" + a + context);
+          return false;
+        },
+      }),
       lisaAineistot: getLadatutTiedostotSchema(),
       poistetutLisaAineisto: getLadatutTiedostotSchema(),
     })
