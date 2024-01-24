@@ -7,7 +7,7 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { lausuntoPyyntoDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
 
-export function adaptLausuntoPyynnot(
+export function adaptLausuntoPyynnotToAPI(
   dbProjekti: DBProjekti,
   lausuntoPyynnot?: Array<LausuntoPyynto> | null
 ): Array<API.LausuntoPyynto> | undefined {
@@ -28,7 +28,7 @@ export function adaptLausuntoPyynnot(
     });
 }
 
-export function adaptLausuntoPyynnonTaydennykset(
+export function adaptLausuntoPyynnonTaydennyksetToAPI(
   dbProjekti: DBProjekti,
   lausuntoPyynnonTaydennykset?: Array<LausuntoPyynnonTaydennys> | null
 ): Array<API.LausuntoPyynnonTaydennys> | undefined {

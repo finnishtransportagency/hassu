@@ -1,9 +1,9 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { KayttajaTyyppi } from "hassu-common/graphql/apiModel";
-import { DBVaylaUser, StandardiYhteystiedot, SuunnitteluSopimus } from "../../../database/model";
+import { DBVaylaUser, StandardiYhteystiedot, SuunnitteluSopimus } from "../../../../database/model";
 import { adaptYhteystiedotByAddingTypename } from "./lisaaTypename";
 
-export function adaptStandardiYhteystiedotByAddingProjektiPaallikko(
+export function adaptStandardiYhteystiedotToAPIByAddingProjektiPaallikko(
   kayttoOikeudet: DBVaylaUser[],
   yhteystiedot: StandardiYhteystiedot | undefined,
   suunnitteluSopimus?: SuunnitteluSopimus | null
