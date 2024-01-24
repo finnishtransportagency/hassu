@@ -31,7 +31,7 @@ export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, 
     } else {
       linkki = "";
     }
-    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
+    return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu, kunta: tiedosto.kunta };
   }
 
   protected async adaptTiedostoPathToLadattavaTiedosto(oid: string, tiedostoPath: string): Promise<LadattavaTiedosto> {
