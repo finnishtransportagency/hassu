@@ -47,6 +47,7 @@ export class ProjektiPaths extends PathTuple {
   static PATH_NAHTAVILLAOLO = "nahtavillaolo";
   static PATH_LAUSUNTOPYYNTO = "lausuntopyynto";
   static PATH_LAUSUNTOPYYNNON_TAYDENNYS = "lausuntopyynnon_taydennys";
+  static PATH_HYVAKSYMISESITYS = "hyvaksymisesitys";
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   static PATH_JATKOPAATOS1 = "jatkopaatos1";
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
@@ -93,6 +94,10 @@ export class ProjektiPaths extends PathTuple {
 
   lausuntoPyynnonTaydennys(lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys | undefined | null): PathTuple {
     return new LausuntoPyynnonTaydennysPaths(this, lausuntoPyynnonTaydennys);
+  }
+
+  hyvaksymisEsitys(): PathTuple {
+    return new HyvaksymisEsitysPaths(this);
   }
 
   euLogot(): PathTuple {
@@ -321,6 +326,16 @@ class LausuntoPyynnonTaydennysPaths extends PathTuple {
 
   get publicPath(): string {
     return ProjektiPaths.PATH_LAUSUNTOPYYNNON_TAYDENNYS;
+  }
+}
+
+class HyvaksymisEsitysPaths extends PathTuple {
+  get yllapitoPath(): string {
+    return ProjektiPaths.PATH_HYVAKSYMISESITYS;
+  }
+
+  get publicPath(): string {
+    return ProjektiPaths.PATH_HYVAKSYMISESITYS;
   }
 }
 
