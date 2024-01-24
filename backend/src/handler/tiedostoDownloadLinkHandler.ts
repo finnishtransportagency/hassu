@@ -11,9 +11,10 @@ import { log } from "../logger";
 import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "../util/lausuntoPyyntoUtil";
 import { NotFoundError } from "hassu-common/error";
 import { nyt, parseDate } from "../util/dateUtil";
-import { tiedostoDownloadLinkService } from "../tiedostot/tiedostoDownloadLinkService";
 import { adaptProjektiHenkilo } from "../projekti/adapter/common/adaptProjektiHenkiloJulkinen";
 import { assertIsDefined } from "../util/assertions";
+import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
+import { lausuntoPyynnonTaydennysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonTiedostot({
@@ -33,7 +34,7 @@ class TiedostoDownloadLinkHandler {
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      tiedostoDownloadLinkService.validateLausuntoPyyntoHash(oid, projekti.salt, params.hash, lausuntoPyynto);
+      lausuntoPyyntoDownloadLinkService.validateHash(oid, projekti.salt, params.hash, lausuntoPyynto);
 
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
@@ -46,7 +47,7 @@ class TiedostoDownloadLinkHandler {
           projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
         });
       }
-      return tiedostoDownloadLinkService.listaaLausuntoPyyntoTiedostot(projekti, params);
+      return lausuntoPyyntoDownloadLinkService.listaaTiedostot(projekti, params);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }
@@ -69,7 +70,7 @@ class TiedostoDownloadLinkHandler {
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      tiedostoDownloadLinkService.validateLausuntoPyynnonTaydennysHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
+      lausuntoPyynnonTaydennysDownloadLinkService.validateHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
@@ -81,7 +82,7 @@ class TiedostoDownloadLinkHandler {
           projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
         });
       }
-      return tiedostoDownloadLinkService.listaaLausuntoPyynnonTaydennyksenTiedostot(projekti, params);
+      return lausuntoPyynnonTaydennysDownloadLinkService.listaaTiedostot(projekti, params);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }
@@ -97,7 +98,7 @@ class TiedostoDownloadLinkHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      return tiedostoDownloadLinkService.esikatseleLausuntoPyynnonTiedostot(projekti, lausuntoPyynto);
+      return lausuntoPyyntoDownloadLinkService.esikatseleTiedostot(projekti, lausuntoPyynto);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }
@@ -113,7 +114,7 @@ class TiedostoDownloadLinkHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
-      return tiedostoDownloadLinkService.esikatseleLausuntoPyynnonTaydennyksenTiedostot(projekti, lausuntoPyynnonTaydennys);
+      return lausuntoPyynnonTaydennysDownloadLinkService.esikatseleTiedostot(projekti, lausuntoPyynnonTaydennys);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }
