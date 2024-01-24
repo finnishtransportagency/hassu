@@ -20,6 +20,7 @@ import {
 } from ".";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { HyvaksymisEsitys } from "./hyvaksymisEsitys";
 
 export type DBVaylaUser = {
   email: string;
@@ -155,6 +156,7 @@ export type DBProjekti = {
   velho?: Velho | null;
   vuorovaikutusKierros?: VuorovaikutusKierros | null;
   vuorovaikutusKierrosJulkaisut?: VuorovaikutusKierrosJulkaisu[] | null;
+  hyvaksymisEsitys?: HyvaksymisEsitys | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   lausuntoPyynnot?: LausuntoPyynto[] | null;
