@@ -6,6 +6,7 @@ Client-koodi generoitu seuraavalla komennolla:
 
 - Lisää export type [index.ts](./index.ts) tiedostoon
 - Lisää attribuutit [Asiakas.ts](./definitions/Asiakas.ts) tiedostoon
+- Lisää attribuutit [Yhteyshenkilo.ts](./definitions/Yhteyshenkilo.ts) tiedostoon
 
 ### WSDL tiedoston päivitys
 

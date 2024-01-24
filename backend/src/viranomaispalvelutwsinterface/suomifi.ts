@@ -3,19 +3,24 @@ import { ViranomaispalvelutWsInterfaceClient, createClientAsync } from "./client
 import { HaeTilaTietoResponse } from "./definitions/HaeTilaTietoResponse";
 import { LisaaKohteitaResponse } from "./definitions/LisaaKohteitaResponse";
 import { Viranomainen } from "./definitions/Viranomainen";
-import { Tiedosto as SuomifiTiedosto } from "./definitions/Tiedosto";
 import dayjs from "dayjs";
-import { uuid } from "../util/uuid";
+import { uuid } from "hassu-common/util/uuid";
 import { LahetaViestiResponse } from "./definitions/LahetaViestiResponse";
 import { Readable } from "stream";
 import { HaeAsiakkaitaResponse } from "./definitions/HaeAsiakkaitaResponse";
 
 export type Viesti = {
-  hetu: string;
+  hetu?: string;
+  ytunnus?: string;
   otsikko: string;
   sisalto: string;
   emailOtsikko?: string;
   emailSisalto?: string;
+  nimi: string;
+  lahiosoite: string;
+  postinumero: string;
+  postitoimipaikka: string;
+  maa: string;
 };
 
 export type Tiedosto = {
@@ -25,7 +30,7 @@ export type Tiedosto = {
 };
 
 export type PdfViesti = Viesti & {
-  tiedostot: Tiedosto[];
+  tiedosto: Tiedosto;
 };
 
 export type Options = {
@@ -34,6 +39,12 @@ export type Options = {
   publicCertificate?: string;
   viranomaisTunnus?: string;
   palveluTunnus?: string;
+};
+
+export type SuomiFiConfig = {
+  endpoint?: string;
+  palvelutunnus?: string;
+  viranomaistunnus?: string;
 };
 
 export type SuomiFiClient = {
@@ -83,14 +94,33 @@ async function haeTilaTieto(client: ViranomaispalvelutWsInterfaceClient, options
   return response[0];
 }
 
-async function lisaaKohteita(client: ViranomaispalvelutWsInterfaceClient, options: Options, viesti: Viesti): Promise<LisaaKohteitaResponse> {
+async function lisaaKohteita(
+  client: ViranomaispalvelutWsInterfaceClient,
+  options: Options,
+  viesti: Viesti
+): Promise<LisaaKohteitaResponse> {
+  const tunnus = viesti.hetu || viesti.ytunnus;
+  if (!tunnus) {
+    throw new Error("Hetu tai y-tunnus pakollinen");
+  }
   const response = await client.LisaaKohteitaAsync({
     Kysely: {
       KohdeMaara: "1",
       Kohteet: {
         Kohde: [
           {
-            Asiakas: [{ attributes: { AsiakasTunnus: viesti.hetu, TunnusTyyppi: "SSN" } }],
+            Asiakas: [
+              {
+                attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: viesti.hetu ? "SSN" : "CRN" },
+                Osoite: {
+                  Lahiosoite: viesti.lahiosoite,
+                  Postinumero: viesti.postinumero,
+                  Postitoimipaikka: viesti.postitoimipaikka,
+                  Maa: viesti.maa,
+                  Nimi: viesti.nimi,
+                },
+              },
+            ],
             ViranomaisTunniste: `VLS-${uuid.v4()}`,
             Nimeke: viesti.otsikko,
             LahettajaNimi: "Väylävirasto",
@@ -123,15 +153,14 @@ async function toBase64(stream: Readable | Buffer): Promise<string> {
   });
 }
 
-async function lahetaViesti(client: ViranomaispalvelutWsInterfaceClient, options: Options, viesti: PdfViesti): Promise<LahetaViestiResponse> {
-  const tiedostot: SuomifiTiedosto[] = [];
-  for (const tiedosto of viesti.tiedostot) {
-    tiedostot.push({
-      TiedostoNimi: tiedosto.nimi,
-      TiedostoSisalto: await toBase64(tiedosto.sisalto),
-      TiedostonKuvaus: tiedosto.kuvaus,
-      TiedostoMuoto: "application/pdf",
-    });
+async function lahetaViesti(
+  client: ViranomaispalvelutWsInterfaceClient,
+  options: Options,
+  viesti: PdfViesti
+): Promise<LahetaViestiResponse> {
+  const tunnus = viesti.hetu || viesti.ytunnus;
+  if (!tunnus) {
+    throw new Error("Hetu tai y-tunnus pakollinen");
   }
   const response = await client.LahetaViestiAsync({
     Kysely: {
@@ -139,7 +168,18 @@ async function lahetaViesti(client: ViranomaispalvelutWsInterfaceClient, options
       Kohteet: {
         Kohde: [
           {
-            Asiakas: [{ attributes: { AsiakasTunnus: viesti.hetu, TunnusTyyppi: "SSN" } }],
+            Asiakas: [
+              {
+                attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: viesti.hetu ? "SSN" : "CRN" },
+                Osoite: {
+                  Lahiosoite: viesti.lahiosoite,
+                  Postinumero: viesti.postinumero,
+                  Postitoimipaikka: viesti.postitoimipaikka,
+                  Maa: viesti.maa,
+                  Nimi: viesti.nimi,
+                },
+              },
+            ],
             ViranomaisTunniste: `VLS-${uuid.v4()}`,
             Nimeke: viesti.otsikko,
             LahetysPvm: dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ"),
@@ -150,7 +190,14 @@ async function lahetaViesti(client: ViranomaispalvelutWsInterfaceClient, options
             VaadiLukukuittaus: "0",
             VahvistusVaatimus: "0",
             Tiedostot: {
-              Tiedosto: tiedostot,
+              Tiedosto: [
+                {
+                  TiedostoNimi: viesti.tiedosto.nimi,
+                  TiedostoSisalto: await toBase64(viesti.tiedosto.sisalto),
+                  TiedostonKuvaus: viesti.tiedosto.kuvaus,
+                  TiedostoMuoto: "application/pdf",
+                },
+              ],
             },
           },
         ],

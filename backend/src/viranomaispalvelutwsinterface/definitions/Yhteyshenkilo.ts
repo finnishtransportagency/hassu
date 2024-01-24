@@ -1,3 +1,8 @@
+export type YhteyshenkiloAttributes = {
+    Nimi: string;
+    Sahkoposti: string;
+    Matkapuhelin: string;
+};
 
 /**
  * Yhteyshenkilo
@@ -5,4 +10,5 @@
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Yhteyshenkilo {
+    attributes: YhteyshenkiloAttributes;
 }

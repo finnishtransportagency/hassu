@@ -1,10 +1,11 @@
-import { getSuomiFiClient } from "../src/viranomaispalvelutwsinterface/suomifi";
+import { SSM } from "@aws-sdk/client-ssm";
+import { SuomiFiConfig, getSuomiFiClient } from "../src/viranomaispalvelutwsinterface/suomifi";
 import express, { Request } from "express";
 import fs from "fs";
 import QueryString from "qs";
 
 const app = express();
-const port = 8080;
+const port = 8081;
 const endpoint = `http://localhost:${port}`;
 
 function logRequest(req: Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>) {
@@ -133,45 +134,98 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-let cert = undefined;
-let key = undefined;
-if (process.argv.length > 4) {
-  cert = fs.readFileSync(process.argv[3]).toString();
-  key = fs.readFileSync(process.argv[4]).toString();
-}
-
-getSuomiFiClient({
-  endpoint: `${endpoint}/${process.argv[2] ?? "tila"}`,
-  privateKey: key,
-  publicCertificate: cert,
-  viranomaisTunnus: "Viranomaistunnus VLS",
-  palveluTunnus: "Palvelutunnus VLS",
-})
-  .then((client) => {
-    if (process.argv.length === 2 || process.argv[2] === "tila") {
-      return client.rajapinnanTila();
-    } else if (process.argv[2] === "kohde") {
-      return client.lahetaInfoViesti({ hetu: "010120-3319", otsikko: "Viestin otsikko", sisalto: "Viestin sisältö" });
-    } else if (process.argv[2] === "viesti") {
-      return client.lahetaViesti({
-        hetu: "010120-3319",
-        otsikko: "Viestin otsikko",
-        sisalto: "Viestin sisältö",
-        tiedostot: [{ kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) }],
+const euWestSSMClient = new SSM({ region: "eu-west-1" });
+euWestSSMClient
+  .getParameter({
+    Name: "/dev/Certificate",
+    WithDecryption: true,
+  })
+  .catch((e) => {
+    throw new Error("Certificate not found");
+  })
+  .then((output) => {
+    return output.Parameter?.Value;
+  })
+  .then((cert) => {
+    return euWestSSMClient
+      .getParameter({
+        Name: "/dev/PrivateKey",
+        WithDecryption: true,
+      })
+      .catch((e) => {
+        throw new Error("PrivateKey not found");
+      })
+      .then((output) => {
+        return output.Parameter?.Value;
+      })
+      .then((key) => {
+        return euWestSSMClient
+          .getParameter({
+            Name: "/dev/SuomiFiConfig",
+            WithDecryption: true,
+          })
+          .catch((e) => {
+            throw new Error("SuomiFiConfig not found");
+          })
+          .then((output) => {
+            return output.Parameter?.Value;
+          })
+          .then((config) => {
+            if (config && key && cert) {
+              const cfg: SuomiFiConfig = {};
+              config.split("\n").forEach((e) => {
+                const v = e.split("=");
+                cfg[v[0] as keyof SuomiFiConfig] = v[1].trim();
+              });
+              return getSuomiFiClient({
+                endpoint: `${cfg.endpoint ? cfg.endpoint : endpoint}/${process.argv[2] ?? "tila"}`,
+                privateKey: process.argv.includes("--sign") ? key : undefined,
+                publicCertificate: process.argv.includes("--sign") ? cert : undefined,
+                viranomaisTunnus: cfg.viranomaistunnus ?? "Viranomaistunnus VLS",
+                palveluTunnus: cfg.palvelutunnus ?? "Palvelutunnus VLS",
+              }).then((client) => {
+                if (process.argv.length === 2 || process.argv[2] === "tila") {
+                  return client.rajapinnanTila();
+                } else if (process.argv[2] === "kohde") {
+                  return client.lahetaInfoViesti({
+                    hetu: "010120-3319",
+                    otsikko: "Viestin otsikko",
+                    sisalto: "Viestin sisältö",
+                    lahiosoite: "Lahiosoite 1",
+                    nimi: "Matti Teppo",
+                    postinumero: "00100",
+                    postitoimipaikka: "Helsinki",
+                    maa: "FI",
+                  });
+                } else if (process.argv[2] === "viesti") {
+                  return client.lahetaViesti({
+                    hetu: "010120-3319",
+                    lahiosoite: "Lahiosoite 1",
+                    nimi: "Matti Teppo",
+                    postinumero: "00100",
+                    postitoimipaikka: "Helsinki",
+                    maa: "FI",
+                    otsikko: "Viestin otsikko",
+                    sisalto: "Viestin sisältö",
+                    tiedosto: { kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) },
+                  });
+                } else if (process.argv[2] === "hae") {
+                  return client.haeAsiakas("010120-3319");
+                } else if (process.argv[2] === "fault") {
+                  return client.rajapinnanTila();
+                } else {
+                  return new Promise((_resolve, reject) => reject("Väärä toiminto!"));
+                }
+              });
+            }
+          });
       });
-    } else if (process.argv[2] === "hae") {
-      return client.haeAsiakas("010120-3319");
-    } else if (process.argv[2] === "fault") {
-      return client.rajapinnanTila();;
-    } else {
-      return new Promise((resolve, reject) => reject("Väärä toiminto!"));
-    }
   })
   .then((response) => {
     console.log("Response", response);
     process.exit(0);
   })
   .catch((e) => {
-    console.log("Error", e);
+    console.error("Error", e);
     process.exit(1);
   });
