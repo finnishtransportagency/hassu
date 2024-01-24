@@ -1,3 +1,5 @@
+export * from "./common";
+export * from "./julkinen";
 export * from "./adaptAloitusKuulutusToAPI";
 export * from "./adaptHyvaksymisPaatosVaiheToAPI";
 export * from "./adaptKasittelynTilaToAPI";
@@ -5,5 +7,4 @@ export * from "./adaptNahtavillaoloVaiheToAPI";
 export * from "./adaptLausuntoPyynnotToAPI";
 export * from "./adaptSuunitteluSopimusToAPI";
 export * from "./adaptVuorovaikutusKierrosToAPI";
-export * from "./common";
-export * from "./julkinen";
+export * from "./adaptHyvaksymisEsitysToAPI";
