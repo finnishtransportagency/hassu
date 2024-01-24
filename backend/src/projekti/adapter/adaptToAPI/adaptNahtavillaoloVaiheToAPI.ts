@@ -1,24 +1,26 @@
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import {
-  adaptAineistot,
-  adaptIlmoituksenVastaanottajat,
-  adaptKielitiedotByAddingTypename,
-  adaptLokalisoituTeksti,
-  adaptMandatoryStandardiYhteystiedotByAddingTypename,
-  adaptMandatoryYhteystiedotByAddingTypename,
-  adaptStandardiYhteystiedotByAddingTypename,
-  adaptVelho,
-} from "../common";
 import { fileService } from "../../../files/fileService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
+import {
+  adaptUudelleenKuulutusToAPI,
+  adaptKuulutusSaamePDFtToAPI,
+  adaptAineistoMuokkausToAPI,
+  adaptLokalisoituTekstiToAPI,
+  adaptAineistotToAPI,
+  adaptIlmoituksenVastaanottajatToAPI,
+  adaptVelhoToAPI,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
+  adaptKielitiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
+} from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../../util/assertions";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
-export function adaptNahtavillaoloVaihe(
+export function adaptNahtavillaoloVaiheToAPI(
   dbProjekti: DBProjekti,
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined,
   nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | null | undefined
@@ -38,14 +40,14 @@ export function adaptNahtavillaoloVaihe(
     return {
       __typename: "NahtavillaoloVaihe",
       ...rest,
-      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus ?? undefined),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
+      hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus ?? undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
-      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+      uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
     };
   } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, API.KuulutusJulkaisuTila.MIGROITU)) {
     return { __typename: "NahtavillaoloVaihe", muokkausTila: API.MuokkausTila.MIGROITU };
@@ -53,7 +55,7 @@ export function adaptNahtavillaoloVaihe(
   return undefined;
 }
 
-export function adaptNahtavillaoloVaiheJulkaisu(
+export function adaptNahtavillaoloVaiheJulkaisuToAPI(
   dbProjekti: DBProjekti,
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
@@ -85,7 +87,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       return {
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
-        velho: adaptVelho(velho),
+        velho: adaptVelhoToAPI(velho),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
         kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       };
@@ -110,17 +112,17 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
+      aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
-      velho: adaptVelho(velho),
-      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      velho: adaptVelhoToAPI(velho),
+      uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
     };
 

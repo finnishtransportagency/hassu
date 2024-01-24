@@ -1,7 +1,7 @@
 import { DBProjekti } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
-import { adaptLokalisoituTekstiEiPakollinen } from "./common";
+import { adaptLogoFilesToSave } from "./common";
 
 export function adaptSuunnitteluSopimusToSave(
   projekti: DBProjekti,
@@ -12,7 +12,7 @@ export function adaptSuunnitteluSopimusToSave(
     const { logo, ...rest } = suunnitteluSopimusInput;
     return {
       ...rest,
-      logo: adaptLokalisoituTekstiEiPakollinen(projekti.suunnitteluSopimus?.logo, logo, projektiAdaptationResult),
+      logo: adaptLogoFilesToSave(projekti.suunnitteluSopimus?.logo, logo, projektiAdaptationResult),
     };
   }
   return suunnitteluSopimusInput;

@@ -7,7 +7,7 @@ import {
 } from "../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { tiedostoDownloadLinkHandler } from "../../src/handler/tiedostoDownloadLinkHandler";
-import { adaptLausuntoPyynnonTaydennykset, adaptLausuntoPyynnot } from "../../src/projekti/adapter/adaptToAPI";
+import { adaptLausuntoPyynnonTaydennyksetToAPI, adaptLausuntoPyynnotToAPI } from "../../src/projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../../src/util/assertions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import sinon from "sinon";
@@ -46,7 +46,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("returns correct lausuntoPyynto and nahtavillaolo files for user, when they provide correct hash and uuid, and the link has not expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnotToAPI(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     const files = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
       oid: "1",
@@ -83,7 +83,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("returns different files with the same hash and uuid if latest HYVAKSYTTY nahtavillaoloVaiheJulkaisu changes", async () => {
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
     // Hash is generated when nahtavillaolo1 is pubclished but nahtavillaolo2 is not.
-    const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnotToAPI(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     // Let's imagine nahtavillaolo2 is being published now.
     const updatedProjekti = { ...projekti };
@@ -136,7 +136,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     async () => {
       //Set date day before poistumisPaiva
       MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
-      const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
+      const hash = adaptLausuntoPyynnotToAPI(projekti, [lausuntoPyynto1])?.[0]?.hash;
       assertIsDefined(hash);
       //Set date day after poistumisPaiva
       MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).add(1, "day").format());
@@ -189,7 +189,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnotToAPI(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).add(1, "day").format());
@@ -217,7 +217,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("does not return lausuntoPyynto nor nahtavillaolo files for user, when they provide wrong hash", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynto1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnot(projekti, [lausuntoPyynto1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnotToAPI(projekti, [lausuntoPyynto1])?.[0]?.hash;
     assertIsDefined(hash);
     await expect(
       tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot({
@@ -230,7 +230,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("returns correct lausuntoPyynnonTaydennys files for user, when they provide correct hash and uuid, and the link has not expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnonTaydennykset(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnonTaydennyksetToAPI(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
     assertIsDefined(hash);
     const files = await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({
       oid: "1",
@@ -267,7 +267,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("returns dummy object when they provide correct hash and uuid, but the link has expired", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnonTaydennykset(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnonTaydennyksetToAPI(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
     assertIsDefined(hash);
     //Set date day after poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).add(1, "day").format());
@@ -295,7 +295,7 @@ describe("tiedostoDownloadLinkHandler", () => {
   it("not not return lausuntoPyynnonTaydennys files for user, when they provide wrong hash", async () => {
     //Set date day before poistumisPaiva
     MockDate.set(parseDate(lausuntoPyynnonTaydennys1.poistumisPaiva).subtract(1, "day").format());
-    const hash = adaptLausuntoPyynnonTaydennykset(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
+    const hash = adaptLausuntoPyynnonTaydennyksetToAPI(projekti, [lausuntoPyynnonTaydennys1])?.[0]?.hash;
     assertIsDefined(hash);
     await expect(
       tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot({

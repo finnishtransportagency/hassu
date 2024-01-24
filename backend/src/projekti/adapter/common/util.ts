@@ -1,7 +1,8 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { isDateTimeInThePast } from "../../../util/dateUtil";
+import { isDateTimeInThePast, nyt } from "../../../util/dateUtil";
 import { findJulkaisuWithTila, GenericDbKuulutusJulkaisu } from "../../projektiUtil";
 import { SaameKieli, SuomiRuotsiKieli } from "../../../database/model";
+import dayjs from "dayjs";
 
 /**
  *
@@ -34,4 +35,8 @@ export function forEverySaameDo(func: (kieli: SaameKieli) => void): void {
   for (const saame in SaameKieli) {
     func(saame as SaameKieli);
   }
+}
+
+export function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
+  return !julkaisuPaiva || julkaisuPaiva.isBefore(nyt());
 }

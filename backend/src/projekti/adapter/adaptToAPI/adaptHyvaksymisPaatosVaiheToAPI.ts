@@ -8,23 +8,25 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import {
-  adaptAineistot,
-  adaptIlmoituksenVastaanottajat,
-  adaptKielitiedotByAddingTypename,
-  adaptMandatoryStandardiYhteystiedotByAddingTypename,
-  adaptMandatoryYhteystiedotByAddingTypename,
-  adaptStandardiYhteystiedotByAddingTypename,
-  adaptVelho,
-} from "../common";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
+import {
+  adaptUudelleenKuulutusToAPI,
+  adaptKuulutusSaamePDFtToAPI,
+  adaptAineistoMuokkausToAPI,
+  adaptAineistotToAPI,
+  adaptIlmoituksenVastaanottajatToAPI,
+  adaptStandardiYhteystiedotByAddingTypename,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptVelhoToAPI,
+  adaptKielitiedotByAddingTypename,
+} from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
-export function adaptHyvaksymisPaatosVaihe(
+export function adaptHyvaksymisPaatosVaiheToAPI(
   kayttoOikeudet: DBVaylaUser[],
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
@@ -48,20 +50,20 @@ export function adaptHyvaksymisPaatosVaihe(
   return {
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
-    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
+    aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
+    hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm ?? undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero ?? undefined,
     muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
-    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+    uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
   };
 }
 
-export function adaptHyvaksymisPaatosVaiheJulkaisu(
+export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   projekti: DBProjekti,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
@@ -100,7 +102,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       tila,
-      velho: adaptVelho(velho),
+      velho: adaptVelhoToAPI(velho),
     };
   }
 
@@ -128,18 +130,18 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
-    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
-    aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-    hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
+    aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
+    hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
     yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
     kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    velho: adaptVelho(velho),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
+    velho: adaptVelhoToAPI(velho),
     tila,
-    uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+    uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
   };
   return apiJulkaisu;

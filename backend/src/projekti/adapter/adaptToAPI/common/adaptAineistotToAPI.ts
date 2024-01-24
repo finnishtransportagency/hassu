@@ -1,12 +1,12 @@
 import { Dayjs } from "dayjs";
-import { Aineisto } from "../../../database/model";
+import { Aineisto } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import { fileService } from "../../../files/fileService";
-import { PathTuple } from "../../../files/ProjektiPath";
-import { nyt } from "../../../util/dateUtil";
+import { fileService } from "../../../../files/fileService";
+import { PathTuple } from "../../../../files/ProjektiPath";
+import { nyt } from "../../../../util/dateUtil";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 
-export function adaptAineistot(
+export function adaptAineistotToAPI(
   aineistot: Aineisto[] | undefined | null,
   paths: PathTuple,
   julkaisuPaiva?: Dayjs

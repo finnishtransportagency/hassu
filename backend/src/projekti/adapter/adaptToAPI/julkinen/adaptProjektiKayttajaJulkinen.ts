@@ -1,7 +1,7 @@
-import { DBVaylaUser } from "../../../database/model";
+import { DBVaylaUser } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
-export function adaptProjektiHenkilo(kayttoOikeus: DBVaylaUser): API.ProjektiKayttajaJulkinen {
+export function adaptProjektiKayttajaJulkinen(kayttoOikeus: DBVaylaUser): API.ProjektiKayttajaJulkinen {
   return {
     __typename: "ProjektiKayttajaJulkinen",
     etunimi: kayttoOikeus.etunimi,

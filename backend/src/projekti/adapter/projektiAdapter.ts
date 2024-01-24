@@ -5,26 +5,27 @@ import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
 import pickBy from "lodash/pickBy";
 import { lisaAineistoService } from "../../tiedostot/lisaAineistoService";
-import { adaptKielitiedotByAddingTypename, adaptVelho } from "./common";
 import {
-  adaptAloitusKuulutus,
-  adaptAloitusKuulutusJulkaisu,
-  adaptHyvaksymisPaatosVaihe,
-  adaptHyvaksymisPaatosVaiheJulkaisu,
-  adaptKasittelynTila,
-  adaptLausuntoPyynnonTaydennykset,
-  adaptLausuntoPyynnot,
-  adaptLogot,
-  adaptNahtavillaoloVaihe,
-  adaptNahtavillaoloVaiheJulkaisu,
-  adaptSuunnitteluSopimus,
-  adaptVuorovaikutusKierros,
-  adaptVuorovaikutusKierrosJulkaisut,
+  adaptAloitusKuulutusToAPI,
+  adaptAloitusKuulutusJulkaisuToAPI,
+  adaptHyvaksymisPaatosVaiheToAPI,
+  adaptHyvaksymisPaatosVaiheJulkaisuToAPI,
+  adaptKasittelynTilaToAPI,
+  adaptKielitiedotByAddingTypename,
+  adaptLausuntoPyynnonTaydennyksetToAPI,
+  adaptLausuntoPyynnotToAPI,
+  adaptLogotToAPI,
+  adaptNahtavillaoloVaiheToAPI,
+  adaptNahtavillaoloVaiheJulkaisuToAPI,
+  adaptSuunnitteluSopimusToAPI,
+  adaptVelhoToAPI,
+  adaptVuorovaikutusKierrosToAPI,
+  adaptVuorovaikutusKierrosJulkaisutToAPI,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
   adaptHyvaksymisPaatosVaiheToSave,
-  adaptLokalisoituTekstiEiPakollinen,
+  adaptLogoFilesToSave,
   adaptNahtavillaoloVaiheToSave,
   adaptSuunnitteluSopimusToSave,
   adaptVuorovaikutusKierrosToSave,
@@ -80,64 +81,69 @@ export class ProjektiAdapter {
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi ?? dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(
+      aloitusKuulutus: adaptAloitusKuulutusToAPI(
         projektiPath.aloituskuulutus(aloitusKuulutus ?? undefined),
         kayttoOikeudet,
         aloitusKuulutus,
         aloitusKuulutusJulkaisut
       ),
-      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti, aloitusKuulutusJulkaisut),
-      suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
-      euRahoitusLogot: adaptLogot(dbProjekti.oid, euRahoitusLogot),
-      velho: adaptVelho(velho),
+      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisuToAPI(dbProjekti, aloitusKuulutusJulkaisut),
+      suunnitteluSopimus: adaptSuunnitteluSopimusToAPI(dbProjekti.oid, suunnitteluSopimus),
+      euRahoitusLogot: adaptLogotToAPI(dbProjekti.oid, euRahoitusLogot),
+      velho: adaptVelhoToAPI(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
-      vuorovaikutusKierros: adaptVuorovaikutusKierros(kayttoOikeudet, dbProjekti.oid, vuorovaikutusKierros, vuorovaikutusKierrosJulkaisut),
-      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti, vuorovaikutusKierrosJulkaisut),
-      nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
-      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
-      lausuntoPyynnot: adaptLausuntoPyynnot(dbProjekti, lausuntoPyynnot),
-      lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennykset(dbProjekti, lausuntoPyynnonTaydennykset),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+      vuorovaikutusKierros: adaptVuorovaikutusKierrosToAPI(
+        kayttoOikeudet,
+        dbProjekti.oid,
+        vuorovaikutusKierros,
+        vuorovaikutusKierrosJulkaisut
+      ),
+      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisutToAPI(dbProjekti, vuorovaikutusKierrosJulkaisut),
+      nahtavillaoloVaihe: adaptNahtavillaoloVaiheToAPI(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
+      nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
+      lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
+      lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
+      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
         hyvaksymisPaatosVaiheJulkaisut
       ),
-      hyvaksymisPaatosVaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+      hyvaksymisPaatosVaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
         dbProjekti,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
       ),
-      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(
+      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
         jatkoPaatos1VaiheJulkaisut
       ),
-      jatkoPaatos1VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+      jatkoPaatos1VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
         dbProjekti,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         jatkoPaatos1VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
       ),
-      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(
+      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
         jatkoPaatos2VaiheJulkaisut
       ),
-      jatkoPaatos2VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+      jatkoPaatos2VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
         dbProjekti,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         jatkoPaatos2VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
       ),
       virhetiedot,
-      kasittelynTila: adaptKasittelynTila(kasittelynTila),
+      kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
       muistutusMaara: annetutMuistutukset?.length,
       asianhallinta: await adaptAsianhallinta(dbProjekti),
       ...fieldsToCopyAsIs,
@@ -218,7 +224,7 @@ export class ProjektiAdapter {
       jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
       kielitiedot,
       euRahoitus,
-      euRahoitusLogot: adaptLokalisoituTekstiEiPakollinen(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
+      euRahoitusLogot: adaptLogoFilesToSave(projekti.euRahoitusLogot, euRahoitusLogot, projektiAdaptationResult),
       vahainenMenettely,
       salt: projekti.salt ?? lisaAineistoService.generateSalt(),
       kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),

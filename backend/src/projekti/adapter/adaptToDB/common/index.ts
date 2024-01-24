@@ -1,6 +1,6 @@
 export * from "./adaptTiedostotToSave";
 export * from "./removeTypeName";
-export * from "./adaptLokalisoituTekstiEiPakollinen";
+export * from "./adaptLogoFilesToSave";
 export * from "./adaptIlmoituksenVastaanottajatToSave";
 export * from "./adaptYhteystiedotToSave";
 export * from "./adaptAineistotToSave";

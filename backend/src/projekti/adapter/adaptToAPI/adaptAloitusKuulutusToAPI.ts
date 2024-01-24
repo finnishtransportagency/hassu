@@ -2,22 +2,25 @@ import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } fro
 import * as API from "hassu-common/graphql/apiModel";
 import { KuulutusJulkaisuTila, MuokkausTila } from "hassu-common/graphql/apiModel";
 import {
-  adaptIlmoituksenVastaanottajat,
-  adaptKielitiedotByAddingTypename,
-  adaptLokalisoituTeksti as adaptHankkeenKuvaus,
-  adaptMandatoryStandardiYhteystiedotByAddingTypename,
-  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptSuunnitteluSopimusJulkaisuToAPI,
+  FileLocation,
+  adaptKuulutusSaamePDFtToAPI,
+  adaptUudelleenKuulutusToAPI,
+  adaptLokalisoituTekstiToAPI,
+  adaptIlmoituksenVastaanottajatToAPI,
   adaptStandardiYhteystiedotByAddingTypename,
-  adaptVelho,
-} from "../common";
-import { adaptSuunnitteluSopimusJulkaisu, FileLocation, adaptKuulutusSaamePDFt, adaptUudelleenKuulutus } from ".";
+  adaptKielitiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
+  adaptVelhoToAPI,
+} from ".";
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
-export function adaptAloitusKuulutus(
+export function adaptAloitusKuulutusToAPI(
   projektiPath: AloituskuulutusPaths,
   kayttoOikeudet: DBVaylaUser[],
   kuulutus?: AloitusKuulutus | null,
@@ -31,11 +34,11 @@ export function adaptAloitusKuulutus(
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(kuulutus.ilmoituksenVastaanottajat),
+      hankkeenKuvaus: adaptLokalisoituTekstiToAPI(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
-      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(projektiPath, aloituskuulutusSaamePDFt, false),
-      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFtToAPI(projektiPath, aloituskuulutusSaamePDFt, false),
+      uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
   } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
@@ -44,7 +47,7 @@ export function adaptAloitusKuulutus(
   return kuulutus as undefined;
 }
 
-export function adaptAloitusKuulutusJulkaisu(
+export function adaptAloitusKuulutusJulkaisuToAPI(
   projekti: DBProjekti,
   aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[] | null | undefined
 ): API.AloitusKuulutusJulkaisu | undefined {
@@ -78,7 +81,7 @@ export function adaptAloitusKuulutusJulkaisu(
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
-      velho: adaptVelho(velho),
+      velho: adaptVelhoToAPI(velho),
     };
   } else if (!julkaisu.hankkeenKuvaus) {
     throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
@@ -87,16 +90,20 @@ export function adaptAloitusKuulutusJulkaisu(
       ...fieldsToCopyAsIs,
       __typename: "AloitusKuulutusJulkaisu",
       tila,
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(julkaisu.ilmoituksenVastaanottajat),
+      hankkeenKuvaus: adaptLokalisoituTekstiToAPI(julkaisu.hankkeenKuvaus),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
-      velho: adaptVelho(velho),
-      suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
+      velho: adaptVelhoToAPI(velho),
+      suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuToAPI(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
-      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
-      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFtToAPI(
+        new ProjektiPaths(oid).aloituskuulutus(julkaisu),
+        aloituskuulutusSaamePDFt,
+        false
+      ),
+      uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
     };
     return apiJulkaisu;
