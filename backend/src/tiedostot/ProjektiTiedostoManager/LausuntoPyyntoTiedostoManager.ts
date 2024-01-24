@@ -19,8 +19,8 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     nahtavillaoloVaiheJulkaisut: NahtavillaoloVaiheJulkaisu[] | undefined | null
   ) {
     super(oid, vaihe);
-    this.nahtavillaoloVaihe = nahtavillaoloVaihe || undefined;
-    this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut || undefined;
+    this.nahtavillaoloVaihe = nahtavillaoloVaihe ?? undefined;
+    this.nahtavillaoloVaiheJulkaisut = nahtavillaoloVaiheJulkaisut ?? undefined;
   }
 
   getLadatutTiedostot(vaihe: LausuntoPyynto[]): LadattuTiedostoPathsPair[] {
@@ -66,11 +66,14 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
 
   async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoUuid: string): Promise<LausuntoPyynto | undefined> {
     const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
-    if (!lausuntoPyynto) return;
+    if (!lausuntoPyynto) {
+      return;
+    }
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu({
       nahtavillaoloVaihe: this.nahtavillaoloVaihe,
       nahtavillaoloVaiheJulkaisut: this.nahtavillaoloVaiheJulkaisut,
     });
+
     const nahtavillaoloAineistoPaths = nahtavillaolo
       ? new NahtavillaoloVaiheTiedostoManager(this.oid, this.nahtavillaoloVaihe, this.nahtavillaoloVaiheJulkaisut).getAineistot(
           nahtavillaolo
@@ -79,16 +82,14 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     const filesToZip: ZipSourceFile[] = [];
     const yllapitoPath = this.projektiPaths.yllapitoFullPath;
 
-    for (const aineistot of nahtavillaoloAineistoPaths) {
-      if (aineistot.aineisto) {
-        for (const aineisto of aineistot.aineisto) {
-          if (aineisto.tila === AineistoTila.VALMIS) {
-            const folder = getZipFolder(aineisto.kategoriaId);
-            filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
-          }
-        }
-      }
-    }
+    nahtavillaoloAineistoPaths
+      .flatMap((aineistot) => aineistot.aineisto ?? [])
+      .filter((aineisto) => aineisto.tila === AineistoTila.VALMIS)
+      .forEach((aineisto) => {
+        const zipFolder = getZipFolder(aineisto.kategoriaId);
+        filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder });
+      });
+
     const ladattuTiedostoPathsPairs = this.getLadatutTiedostot([lausuntoPyynto]).filter(
       (pathsPair) => pathsPair.uuid === lausuntoPyynto.uuid
     );

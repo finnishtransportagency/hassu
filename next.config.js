@@ -1,7 +1,7 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
-const CopyFilePlugin = require("copy-file-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
@@ -85,17 +85,14 @@ function setupLocalDevelopmentMode(config, env) {
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       // Important: return the modified config
       config.plugins.push(
-        new CopyFilePlugin([
-          {
-            // For some reason index.html is not copied without a reference to node_modules. This file is not even copied to the destination...
-            from: "node_modules/.bin/npm",
-            to: config.output.path + "/static/graphql-playground/",
-          },
-          {
-            from: "backend/developer/playground.html",
-            to: config.output.path + "/static/graphql-playground/index.html",
-          },
-        ])
+        new CopyPlugin({
+          patterns: [
+            {
+              from: "backend/developer/playground.html",
+              to: config.output.path + "/../static/graphql-playground/index.html",
+            },
+          ],
+        })
       );
       return config;
     },
@@ -119,6 +116,8 @@ module.exports = (phase) => {
 
     SUOMI_FI_COGNITO_DOMAIN: process.env.SUOMI_FI_COGNITO_DOMAIN,
     SUOMI_FI_USERPOOL_CLIENT_ID: process.env.SUOMI_FI_USERPOOL_CLIENT_ID,
+    KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_LOGOUT_PATH: process.env.KEYCLOAK_LOGOUT_PATH,
   };
 
   if (BaseConfig.env !== "prod") {

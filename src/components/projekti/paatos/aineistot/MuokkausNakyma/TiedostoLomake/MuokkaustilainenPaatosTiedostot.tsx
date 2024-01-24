@@ -15,9 +15,7 @@ type Props = {
 export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props) {
   const { watch, control } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
-  const poistetutHyvaksymisPaatos = watch("poistetutHyvaksymisPaatos");
   const { replace: replaceHyvaksymisPaatos } = useFieldArray({ control, name: "hyvaksymisPaatos" });
-  const { replace: replacePoistetutHyvaksymisPaatos } = useFieldArray({ control, name: "poistetutHyvaksymisPaatos" });
 
   const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
@@ -34,13 +32,11 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props)
         onClose={() => setPaatosDialogOpen(false)}
         onSubmit={(velhoAineistot) => {
           const newAineisto = velhoAineistot.map(adaptVelhoAineistoToAineistoInput);
-          const { poistetut, lisatyt } = combineOldAndNewAineisto({
+          const newHyvaksymisPaatos = combineOldAndNewAineisto({
             oldAineisto: hyvaksymisPaatos,
-            oldPoistetut: poistetutHyvaksymisPaatos,
             newAineisto,
           });
-          replacePoistetutHyvaksymisPaatos(poistetut);
-          replaceHyvaksymisPaatos(lisatyt);
+          replaceHyvaksymisPaatos(newHyvaksymisPaatos);
         }}
       />
     </>

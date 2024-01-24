@@ -113,7 +113,9 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
-          "tuotu": "2022-01-02T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-01-02T00:00",
+          "uuid": "00000001-473f-49e2-a1d1-51228ae6f158"
         },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
@@ -198,7 +200,7 @@
         "sukunimi": "Hassu"
       },
       {
-        "email": "mikko.haapamaki@cgi.com",
+        "email": "mikko.haapamaki1@cgi.com",
         "etunimi": "Testi1",
         "kayttajatunnus": "LX581241",
         "muokattavissa": true,

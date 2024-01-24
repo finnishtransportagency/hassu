@@ -1,7 +1,7 @@
 import { Typography, TypographyProps } from "@mui/material";
 import { ElementType } from "react";
 
-type HeadingType = "h1" | "h2" | "h3" | "h4" | "h5";
+type HeadingType = "h1" | "h2" | "h3" | "h4" | "h5" | "lead";
 
 type HeadingProps = Omit<TypographyProps, "variant"> & { variant?: HeadingType };
 

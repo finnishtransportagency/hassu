@@ -42,6 +42,8 @@ describe("Vuorovaikutus", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let p = await api.lataaProjekti(oid);
     const vuorovaikutusKierros = p.vuorovaikutusKierros;
+    delete vuorovaikutusKierros?.suunnitelmaluonnokset;
+    delete vuorovaikutusKierros?.esittelyaineistot;
     assertIsDefined(vuorovaikutusKierros);
 
     // Lataa kutsutiedosto palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan

@@ -3,6 +3,7 @@ import {
   DBVaylaUser,
   IlmoituksenVastaanottajat,
   KuntaVastaanottaja,
+  LausuntoPyynto,
   Linkki,
   LocalizedMap,
   VuorovaikutusKierros,
@@ -13,18 +14,44 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
-import { Kieli } from "hassu-common/graphql/apiModel";
+import { Kieli, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { nyt } from "../util/dateUtil";
+import { uuid } from "hassu-common/util/uuid";
 
 function isValueArrayOfStrings(value: unknown) {
   return isArray(value) && value.length > 0 && typeof value[0] == "string";
 }
 
 /**
- * Konvertoi merkkijonomuotoiset kunnat ja maakunnat numeroiksi
+ * Konvertoi vanhanmuotoisen projektidatan uudenmuotoiseksi
  * @param projekti
  */
 export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
-  const p: DBProjekti = cloneDeepWith(projekti, (value, key) => {
+  const projektiAsAny: any = projekti as any;
+  const lausuntoPyynnot = projekti.lausuntoPyynnot ?? [];
+  const nahtavillaoloVaiheJulkaisut = projektiAsAny["nahtavillaoloVaiheJulkaisut"];
+  nahtavillaoloVaiheJulkaisut?.map((julkaisu: any) => {
+    const lisaAineisto = julkaisu["lisaAineisto"];
+    if (lisaAineisto && !lausuntoPyynnot?.some((pyynto) => pyynto.legacy === julkaisu.id)) {
+      const legacyLausuntoPyynto: LausuntoPyynto = {
+        uuid: uuid.v4(),
+        poistumisPaiva: nyt().add(180, "day").format("YYYY-MM-DD"),
+        lisaAineistot: [...lisaAineisto].map((aineisto) => {
+          const { dokumenttiOid: _d, tiedosto, jarjestys, tila: _t, ...rest } = aineisto;
+          return {
+            ...rest,
+            tiedosto: tiedosto ?? "",
+            jarjestys: jarjestys ?? 0,
+            tila: LadattuTiedostoTila.VALMIS,
+          };
+        }),
+        legacy: julkaisu.id,
+        aineistopaketti: julkaisu["aineistopaketti"],
+      };
+      lausuntoPyynnot.push(legacyLausuntoPyynto);
+    }
+  });
+  const p: DBProjekti = cloneDeepWith(projektiAsAny, (value, key) => {
     if (value === "SAAME") {
       return "POHJOISSAAME";
     }
@@ -101,7 +128,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
           // Remove possible key "SAAME" by not including it
           const videoLokalisoituna: LocalizedMap<Linkki> = video as LocalizedMap<Linkki>;
           const newVideo: LocalizedMap<Linkki> = {
-            [Kieli.SUOMI]: videoLokalisoituna?.[Kieli.SUOMI] || undefined,
+            [Kieli.SUOMI]: videoLokalisoituna?.[Kieli.SUOMI] ?? undefined,
           };
           if (videoLokalisoituna && Object.keys(videoLokalisoituna).includes("RUOTSI")) {
             newVideo[Kieli.RUOTSI] = videoLokalisoituna[Kieli.RUOTSI];
@@ -253,6 +280,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       julkaisu.yhteystiedot = [];
     }
   });
+
   p.nahtavillaoloVaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -291,7 +319,13 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
 
   updateVuorovaikutusAineistot(p);
 
-  return p;
+  p.lausuntoPyynnot = lausuntoPyynnot;
+
+  if (p.lausuntoPyynnot && !p.lausuntoPyynnot.length) {
+    delete p.lausuntoPyynnot;
+  }
+
+  return addUuidToAineistoAndLadattuTiedosto(p);
 }
 
 function updateVuorovaikutusAineistot(p: DBProjekti) {
@@ -335,4 +369,44 @@ function combineEsittelyAineistotAndSuunnitelmaluonnokset(
       kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
     })) ?? [];
   return [...esittelyaineistoKategorisoitu, ...suunnitelmaluonnoksetKategorisoitu];
+}
+
+function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
+  return cloneDeepWith(p as any, (value, key) => {
+    if (
+      key &&
+      typeof key == "string" &&
+      ["aineistot", "aineistoNahtavilla", "muuAineisto", "muistutukset", "lisaAineistot", "hyvaksymisPaatos"].includes(key) &&
+      Array.isArray(value)
+    ) {
+      if (!value.every((item) => !!item.uuid)) {
+        return value.map((item) => ({ ...item, uuid: uuid.v4() }));
+      } else {
+        return value;
+      }
+    } else if (
+      key &&
+      typeof key == "string" &&
+      ["lahetekirje", "kuulutusPDF", "kuulutusIlmoitusPDF"].includes(key) &&
+      typeof value == "object"
+    ) {
+      if (!value.uuid) {
+        return { ...value, uuid: uuid.v4() };
+      } else {
+        return value;
+      }
+    } else if (key == "vuorovaikutusSaamePDFt" && typeof value == "object" && value.POHJOISSAAME) {
+      if (!value.POHJOISSAAME.uuid) {
+        return {
+          ...value,
+          POHJOISSAAME: {
+            ...value.POHJOISSAAME,
+            uuid: uuid.v4(),
+          },
+        };
+      } else {
+        return value;
+      }
+    }
+  });
 }

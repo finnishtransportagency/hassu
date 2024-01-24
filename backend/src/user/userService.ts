@@ -38,8 +38,8 @@ export type IdentifyUserFunc = (event: AppSyncResolverEvent<unknown>) => Promise
 const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<unknown>): Promise<NykyinenKayttaja | undefined> => {
   const headers = event.request?.headers;
 
-  if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
-    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] || "", config.cognitoURL);
+  if (headers?.["x-iam-accesstoken"] && config.cognitoURL) {
+    const jwt = await validateJwtToken(headers["x-iam-accesstoken"], headers["x-iam-data"] ?? "", config.cognitoURL);
     if (jwt) {
       const roolit = parseRoles(jwt["custom:rooli"]);
       const user: NykyinenKayttaja = {
@@ -88,10 +88,6 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   if (response.status === 200) {
     const body = await response.text();
     const user = JSON.parse(body) as SuomiFiCognitoKayttaja;
-    // address is json string
-    if (typeof user.address === "string") {
-      user.address = JSON.parse(user.address as unknown as string);
-    }
     setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {
@@ -130,9 +126,9 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         email: cognitoKayttaja.email,
         etunimi: cognitoKayttaja.given_name,
         sukunimi: cognitoKayttaja.family_name,
-        osoite: cognitoKayttaja.address?.street_address,
-        postinumero: cognitoKayttaja.address?.postal_code,
-        postitoimipaikka: cognitoKayttaja.address?.locality,
+        osoite: cognitoKayttaja["custom:lahiosoite"] ?? cognitoKayttaja["custom:ulkomainenlahiosoite"],
+        postinumero: cognitoKayttaja["custom:postinumero"],
+        postitoimipaikka: cognitoKayttaja["custom:postitoimipaikka"] ?? cognitoKayttaja["custom:ulkomainenkunta"],
       };
     } else {
       return {
@@ -207,7 +203,7 @@ function isHassuAdmin(kayttaja: KayttajaPermissions) {
 
 // Role: kayttaja
 function isHassuKayttaja(kayttaja: KayttajaPermissions) {
-  return kayttaja.roolit?.includes("hassu_kayttaja") || isHassuAdmin(kayttaja);
+  return kayttaja.roolit?.includes("hassu_kayttaja") ?? isHassuAdmin(kayttaja);
 }
 
 export function requirePermissionLuku(): NykyinenKayttaja {

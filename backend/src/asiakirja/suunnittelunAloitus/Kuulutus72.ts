@@ -112,9 +112,9 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
   asianumero_traficom(): string {
     if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
-      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "";
+      return this.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "";
     } else {
-      return this.kasittelynTila?.toinenJatkopaatos?.asianumero || "";
+      return this.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "";
     }
   }
 

@@ -45,7 +45,7 @@ export function adaptLadattuTiedostoToAPI(
   julkinen: boolean
 ): API.LadattuTiedosto | undefined {
   if (ladattuTiedosto && ladattuTiedosto.nimi) {
-    const { tiedosto, nimi, tuotu, tila, jarjestys } = ladattuTiedosto;
+    const { tiedosto, nimi, tuotu, tila, jarjestys, uuid } = ladattuTiedosto;
     let fullPath: string = tiedosto;
     if (julkinen) {
       fullPath = fileService.getPublicPathForProjektiFile(projektiPath, tiedosto);
@@ -55,7 +55,7 @@ export function adaptLadattuTiedostoToAPI(
     if (!fullPath.startsWith("/")) {
       fullPath = "/" + fullPath;
     }
-    return { __typename: "LadattuTiedosto", tiedosto: fullPath, nimi, tuotu, tila, jarjestys };
+    return { __typename: "LadattuTiedosto", tiedosto: fullPath, nimi, tuotu, tila, jarjestys, uuid };
   }
 }
 

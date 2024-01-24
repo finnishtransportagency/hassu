@@ -14,10 +14,7 @@ import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getAineistot(vaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): AineistoPathsPair[] {
     const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
-    return [
-      { aineisto: vaihe.aineistoNahtavilla, paths },
-      { aineisto: vaihe.lisaAineisto, paths },
-    ];
+    return [{ aineisto: vaihe.aineistoNahtavilla, paths }];
   }
 
   getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedostoPathsPair[] {
@@ -73,7 +70,7 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
           modifiedJulkaisut.add(julkaisu);
         }
 
-        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.lisaAineisto)) {
+        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla)) {
           modifiedJulkaisut.add(julkaisu);
         }
 

@@ -114,7 +114,7 @@ export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(
   }
   // Jos aineistoMuokkaus on päällä ja yksikään julkaisu ei odota hyväksyntää, tila on aineistomuokkaus
   if (kuulutus.aineistoMuokkaus) {
-    const kuulutusPaiva = julkaisut && julkaisut.length ? julkaisut[julkaisut.length - 1].kuulutusPaiva : null;
+    const kuulutusPaiva = julkaisut?.length ? julkaisut[julkaisut.length - 1].kuulutusPaiva : null;
     if (kuulutusPaiva && parseDate(kuulutusPaiva)?.isBefore(nyt())) {
       return API.MuokkausTila.LUKU;
     } else {
@@ -126,7 +126,7 @@ export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(
     return API.MuokkausTila.MUOKKAUS;
   }
   // Jos viimeisin julkaisu on migroitu, on tila migroitu
-  if (julkaisut && julkaisut.length && julkaisut[julkaisut.length - 1].tila === API.KuulutusJulkaisuTila.MIGROITU) {
+  if (julkaisut?.length && julkaisut[julkaisut.length - 1].tila === API.KuulutusJulkaisuTila.MIGROITU) {
     return API.MuokkausTila.MIGROITU;
   }
   // Jos löytyy hyväksytty kuulutus, ollaan lukutilassa. Muuten muokkaustilassa.
@@ -143,7 +143,7 @@ export function getAsiatunnus(velho: Velho | VelhoJulkinen | null | undefined): 
   return (
     (velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
       ? velho.asiatunnusVayla
-      : velho.asiatunnusELY) || undefined
+      : velho.asiatunnusELY) ?? undefined
   );
 }
 

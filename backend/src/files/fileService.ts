@@ -83,7 +83,12 @@ export class FileMetadata {
   }
 }
 
-export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string; asiakirjaTyyppi?: AsiakirjaTyyppi };
+export type PersistFileProperties = {
+  targetFilePathInProjekti: string;
+  uploadedFileSource: string;
+  oid: string;
+  asiakirjaTyyppi?: AsiakirjaTyyppi;
+};
 
 export type DeleteFileProperties = { filePathInProjekti: string; oid: string; reason: string };
 
@@ -199,7 +204,7 @@ export class FileService {
       if (param.kieli) {
         metadata[S3_METADATA_KIELI] = param.kieli;
       }
-      await this.putFile(param.bucketName || config.yllapitoBucketName, param, filePath, metadata);
+      await this.putFile(param.bucketName ?? config.yllapitoBucketName, param, filePath, metadata);
 
       return filePathInProjekti;
     } catch (e) {
@@ -245,7 +250,7 @@ export class FileService {
           Body: param.contents,
           Bucket: bucket,
           Key: key,
-          ContentType: param.contentType || "application/octet-stream",
+          ContentType: param.contentType ?? "application/octet-stream",
           ContentDisposition: contentDisposition,
           Metadata: metadata,
         })
@@ -277,6 +282,8 @@ export class FileService {
     if (!config.uploadBucketName) {
       throw new Error("config.uploadBucketName määrittelemättä");
     }
+    // Sometimes path starts with / and sometimes not(?!)
+    uploadedFileSource = uploadedFileSource.replace(/^\//, "");
     try {
       const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
       if (!headObject) {
@@ -670,7 +677,7 @@ export class FileService {
         return {
           filename: getFilenamePartFromKey(key),
           contentDisposition: "attachment",
-          contentType: contentType || "application/octet-stream",
+          contentType: contentType ?? "application/octet-stream",
           content: output.Body,
         };
       } else {

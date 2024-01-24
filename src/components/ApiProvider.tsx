@@ -6,11 +6,9 @@ import { ErrorResponse } from "apollo-link-error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { GraphQLError } from "graphql";
-import { NoHassuAccessError, NoVaylaAuthenticationError } from "hassu-common/error";
+import { NoHassuAccessError, NoVaylaAuthenticationError, SimultaneousUpdateError } from "hassu-common/error";
 import Cookies from "js-cookie";
-import { storeKansalaisUserAuthentication } from "@services/userService";
 import { generateErrorMessage } from "../util/errorMessageUtil";
-import { SimultaneousUpdateError } from "hassu-common/error";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
 
@@ -38,10 +36,6 @@ function ApiProvider({ children, updateIsUnauthorizedCallback, simultaneousUpdat
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
-  const data = storeKansalaisUserAuthentication(router.asPath);
-  if (data?.state) {
-    router.push(data.state);
-  }
   const value: API = useMemo(() => {
     const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
       showErrorMessage(generateErrorMessage({ errorResponse, isYllapito, t }));

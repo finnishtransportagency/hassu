@@ -1,21 +1,8 @@
-import {
-  LataaProjektiQueryVariables,
-  ListaaVelhoProjektitQueryVariables,
-  TallennaProjektiInput,
-  TilaSiirtymaInput,
-} from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { log, setLogContextOid } from "../logger";
 import { identifyUser } from "../user";
 import { ClientError, IllegalAccessError, IllegalAineistoStateError, NotFoundError, SystemError } from "hassu-common/error";
-
-export type AppSyncEventArguments =
-  | unknown
-  | LataaProjektiQueryVariables
-  | ListaaVelhoProjektitQueryVariables
-  | TallennaProjektiInput
-  | TilaSiirtymaInput;
 
 export type LambdaResult = {
   data: unknown;
@@ -23,8 +10,8 @@ export type LambdaResult = {
 };
 
 export async function commonHandleEvent(
-  event: AppSyncResolverEvent<AppSyncEventArguments>,
-  executeOperation: (event: AppSyncResolverEvent<AppSyncEventArguments>) => Promise<unknown>
+  event: AppSyncResolverEvent<unknown>,
+  executeOperation: (event: AppSyncResolverEvent<unknown>) => Promise<unknown>
 ): Promise<LambdaResult> {
   setupLambdaMonitoring();
   if (log.isLevelEnabled("debug")) {
@@ -38,7 +25,7 @@ export async function commonHandleEvent(
       await identifyUser(event);
       const data = await executeOperation(event);
       const corId = getCorrelationId();
-      const lambdaResult: LambdaResult = { data, correlationId: corId || "" };
+      const lambdaResult: LambdaResult = { data, correlationId: corId ?? "" };
       return lambdaResult;
     } catch (e: unknown) {
       if (e instanceof Error) {

@@ -3,7 +3,7 @@ import { openSearchConfig } from "./openSearchConfig";
 import { sendSignedRequest } from "../aws/awsRequest";
 import { log } from "../logger";
 
-const domain = openSearchConfig.searchDomain || "search-domain-missing";
+const domain = openSearchConfig.searchDomain ?? "search-domain-missing";
 const type = "_doc";
 
 export async function sendRequest(request: HttpRequest): Promise<unknown> {

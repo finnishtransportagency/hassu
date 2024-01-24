@@ -28,7 +28,7 @@ function DownloadButtonLink(
       ref={ref}
       href={!disabled ? href : undefined}
       className={classNames(buttonClass, className, disabled && "disabled")}
-      style={{ display: "inline", marginBottom: "1em", marginRight: "1em", ...style }}
+      style={{ display: "inline-block", marginBottom: "1em", marginRight: "1em", ...style }}
       type="button"
       {...props}
     >

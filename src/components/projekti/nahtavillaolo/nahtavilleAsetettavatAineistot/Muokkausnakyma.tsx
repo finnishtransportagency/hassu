@@ -5,7 +5,6 @@ import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "./NahtavillaolonAineistoLomake";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
@@ -19,9 +18,7 @@ interface AineistoNahtavilla {
 
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
-  lisaAineisto: AineistoInput[];
   poistetutAineistoNahtavilla: AineistoInput[];
-  poistetutLisaAineisto: AineistoInput[];
 };
 
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -37,11 +34,6 @@ interface MuokkausnakymaLomakeProps {
 
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
-    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = handleAineistoArrayForDefaultValues(
-      projekti.nahtavillaoloVaihe?.lisaAineisto,
-      true
-    );
-
     const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
       projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
       false
@@ -52,8 +44,6 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
       versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
       poistetutAineistoNahtavilla,
-      poistetutLisaAineisto,
-      lisaAineisto,
     };
   }, [projekti]);
 
@@ -83,7 +73,6 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
     <FormProvider {...useFormReturn}>
       <form>
         <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} />
-        <LausuntopyyntoonLiitettavaLisaaineisto />
         <AineistoSivunPainikkeet
           siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
           muokkausTila={projekti.nahtavillaoloVaihe?.muokkausTila}

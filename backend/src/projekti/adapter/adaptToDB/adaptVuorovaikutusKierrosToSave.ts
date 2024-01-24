@@ -220,18 +220,17 @@ export function adaptStandardiYhteystiedotInputToYhteystiedotToSave(
   const henkiloYhteystiedot = dbProjekti.kayttoOikeudet
     .filter(({ kayttajatunnus }) => kuulutusYhteystiedot?.yhteysHenkilot?.some((yh) => yh === kayttajatunnus))
     .map((oikeus) => vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus));
-  const yhteystiedot = kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto) => yhteystietoInputToDBYhteystieto(yhteystieto)) || [];
+  const yhteystiedot = kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto) => yhteystietoInputToDBYhteystieto(yhteystieto)) ?? [];
   return [...henkiloYhteystiedot, ...yhteystiedot];
 }
 
-function adaptVuorovaikutusSaamePDFt(
-  dbPDFt: VuorovaikutusKutsuSaamePDFt | null | undefined,
-  inputPDFt: VuorovaikutusKutsuSaamePDFtInput | null | undefined
-): VuorovaikutusKutsuSaamePDFt | null | undefined {
+type SaamePdfDb = VuorovaikutusKutsuSaamePDFt | null | undefined;
+
+function adaptVuorovaikutusSaamePDFt(dbPDFt: SaamePdfDb, inputPDFt: VuorovaikutusKutsuSaamePDFtInput | null | undefined): SaamePdfDb {
   if (!inputPDFt) {
     return dbPDFt;
   }
-  let result: VuorovaikutusKutsuSaamePDFt | null | undefined = dbPDFt;
+  let result: SaamePdfDb = dbPDFt;
   if (!result) {
     result = {};
   }

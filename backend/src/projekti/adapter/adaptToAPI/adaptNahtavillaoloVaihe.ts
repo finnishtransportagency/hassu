@@ -11,7 +11,6 @@ import {
   adaptVelho,
 } from "../common";
 import { fileService } from "../../../files/fileService";
-import { lisaAineistoService } from "../../../tiedostot/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
@@ -27,7 +26,6 @@ export function adaptNahtavillaoloVaihe(
   if (nahtavillaoloVaihe) {
     const {
       aineistoNahtavilla,
-      lisaAineisto,
       kuulutusYhteystiedot,
       uudelleenKuulutus,
       aineistoMuokkaus,
@@ -42,13 +40,9 @@ export function adaptNahtavillaoloVaihe(
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths), // dbProjekti.salt on määritelty
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus || undefined),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus ?? undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
@@ -64,15 +58,14 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ??
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (julkaisu) {
     const {
       aineistoNahtavilla,
-      lisaAineisto,
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
       yhteystiedot,
@@ -123,8 +116,6 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelho(velho),

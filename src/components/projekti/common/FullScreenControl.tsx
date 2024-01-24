@@ -15,8 +15,8 @@ const FullScreenEventType = {
 };
 
 type CustomFullScreenOptions = FullScreenOptions & {
-  activeTipLabel?: string | undefined;
-  inactiveTipLabel?: string | undefined;
+  activeTipLabel?: string;
+  inactiveTipLabel?: string;
 };
 
 class FullScreenControl extends Control {
@@ -35,30 +35,27 @@ class FullScreenControl extends Control {
   private inactiveTipLabel_: string;
 
   constructor(options: CustomFullScreenOptions) {
-    options = options ? options : {};
+    options = options || {};
     super({
       element: document.createElement("div"),
       target: options.target,
     });
 
-    this.on;
-    this.once;
-    this.un;
-    this.keys_ = options.keys !== undefined ? options.keys : false;
+    this.keys_ = options.keys ?? false;
     this.source_ = options.source;
     this.isInFullscreen_ = false;
     this.boundHandleMapTargetChange_ = this.handleMapTargetChange_.bind(this);
-    this.cssClassName_ = options.className !== undefined ? options.className : "ol-full-screen";
+    this.cssClassName_ = options.className ?? "ol-full-screen";
     this.documentListeners_ = [];
     this.activeClassName_ = options.activeClassName !== undefined ? options.activeClassName.split(" ") : [this.cssClassName_ + "-true"];
     this.inactiveClassName_ =
       options.inactiveClassName !== undefined ? options.inactiveClassName.split(" ") : [this.cssClassName_ + "-false"];
 
-    const label = options.label !== undefined ? options.label : "\u2922";
+    const label = options.label ?? "\u2922";
 
     this.labelNode_ = typeof label === "string" ? document.createTextNode(label) : label;
 
-    const labelActive = options.labelActive !== undefined ? options.labelActive : "\u00d7";
+    const labelActive = options.labelActive ?? "\u00d7";
 
     this.labelActiveNode_ = typeof labelActive === "string" ? document.createTextNode(labelActive) : labelActive;
 

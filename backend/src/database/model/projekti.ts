@@ -178,10 +178,13 @@ export type DBProjekti = {
   synkronoinnit?: Record<string, AsianhallintaSynkronointi>;
   annetutMuistutukset?: string[];
   asianhallinta?: Asianhallinta;
+  omistajat?: string[];
+  muutOmistajat?: string[];
 };
 
 export type Asianhallinta = {
   inaktiivinen?: boolean;
+  asiaId?: number;
 };
 
 export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;

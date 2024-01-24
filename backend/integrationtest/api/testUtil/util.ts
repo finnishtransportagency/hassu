@@ -1,6 +1,15 @@
 import { cleanupGeneratedIds } from "../../../commonTestUtil/cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, AsianTila, IlmoitettavaViranomainen, KirjaamoOsoite, Status, VelhoAineisto } from "hassu-common/graphql/apiModel";
+import {
+  Aineisto,
+  AineistoInput,
+  AineistoTila,
+  AsianTila,
+  IlmoitettavaViranomainen,
+  KirjaamoOsoite,
+  Status,
+  VelhoAineisto,
+} from "hassu-common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -48,6 +57,7 @@ import { ProjektiScheduleManager } from "../../../src/sqsEvents/projektiSchedule
 import { asianhallintaService } from "../../../src/asianhallinta/asianhallintaService";
 import { SqsEvent } from "../../../src/sqsEvents/sqsEvent";
 import { mockOpenSearch } from "../../../commonTestUtil/mockOpenSearch";
+import { uuid } from "hassu-common/util/uuid";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -73,13 +83,29 @@ export function expectToMatchSnapshot(description: string, obj: unknown): void {
   expect({ description, mockedtime: dateTimeToString(nyt()), obj }).toMatchSnapshot();
 }
 
-export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[] {
+export function adaptAineistoToInput(aineistot: VelhoAineisto[], oidPaate?: string): AineistoInput[] {
   return aineistot
-    .map((aineisto, index) => {
+    .map<AineistoInput>((aineisto, index) => {
       const { oid: dokumenttiOid, tiedosto: nimi } = aineisto;
-      return { jarjestys: index + 1, nimi, dokumenttiOid };
+      const input: AineistoInput = {
+        jarjestys: index + 1,
+        nimi,
+        dokumenttiOid,
+        tila: AineistoTila.ODOTTAA_TUONTIA,
+        // uuid on mockattu testeissä, mutta antaa saman arvon kaikille tässä mappauksessa, joten lisätään juttuja perään
+        uuid: uuid.v4() + dokumenttiOid.substring(0, 3) + index + (oidPaate ?? ""),
+      };
+      return input;
     })
     .slice(0, 5); // Optimization: don't copy all files
+}
+
+export function adaptAPIAineistoToInput(aineistot: Aineisto[]): AineistoInput[] {
+  return aineistot.map<AineistoInput>((aineisto, index) => {
+    const { dokumenttiOid, tiedosto, uuid, tila, nimi } = aineisto;
+    const input: AineistoInput = { jarjestys: index + 1, nimi: nimi ?? tiedosto, dokumenttiOid, tila, uuid };
+    return input;
+  });
 }
 
 export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
@@ -206,6 +232,8 @@ export class CloudFrontStub {
 export class ParametersStub {
   private stub!: sinon.SinonStub;
   asianhallintaEnabled = false;
+  ashaOsoite = "https://www.fake-asha-testiasianhallinta.com";
+  uspaOsoite = "https://www.fake-uspa-testiasianhallinta.com";
 
   constructor() {
     mocha.before(() => {
@@ -213,6 +241,8 @@ export class ParametersStub {
     });
     mocha.beforeEach(() => {
       this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(() => String(this.asianhallintaEnabled));
+      this.stub.withArgs("AshaBaseUrl").callsFake(() => String(this.ashaOsoite));
+      this.stub.withArgs("UspaBaseUrl").callsFake(() => String(this.uspaOsoite));
     });
   }
 }
@@ -333,13 +363,16 @@ export function mockPersonSearchUpdaterClient(): void {
 }
 
 let checkAsianhallintaStateLambdaStub: sinon.SinonStub;
+let getAsiaIdLambdaStub: sinon.SinonStub;
 
 export function mockAsianhallintaService(): void {
   mocha.before(() => {
     checkAsianhallintaStateLambdaStub = sinon.stub(asianhallintaService, "checkAsianhallintaState");
+    getAsiaIdLambdaStub = sinon.stub(asianhallintaService, "getAsiaId");
   });
   mocha.beforeEach(() => {
     checkAsianhallintaStateLambdaStub.callsFake(() => AsianTila.VALMIS_VIENTIIN);
+    getAsiaIdLambdaStub.callsFake(() => 11212);
   });
 }
 
@@ -412,4 +445,11 @@ export async function addLogoFilesToProjekti(oid: string): Promise<void> {
     contentType: "image/png",
     contents: fs.readFileSync(PATH_EU_LOGO),
   });
+}
+
+export function removeTiedosto<T extends Record<string, any>>(obj: T | null | undefined): Omit<T, "tiedosto"> | null | undefined {
+  if (!obj) return obj;
+  const copy = Object.assign({}, obj);
+  delete copy.tiedosto;
+  return copy;
 }

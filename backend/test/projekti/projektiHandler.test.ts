@@ -13,6 +13,7 @@ import { Kayttaja, KayttajaTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";
+import { parameters } from "../../src/aws/parameters";
 
 describe("projektiHandler", () => {
   let fixture: ProjektiFixture;
@@ -21,12 +22,17 @@ describe("projektiHandler", () => {
   const userFixture = new UserFixture(userService);
   let loadProjektiByOid: sinon.SinonStub;
   let getKayttajasStub: sinon.SinonStub;
+  let isAsianhallintaIntegrationEnabledStub: sinon.SinonStub;
+  let isUspaIntegrationEnabledStub: sinon.SinonStub;
   let a1User: Kayttaja;
   let a2User: Kayttaja;
   let x1User: Kayttaja;
+
   beforeEach(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+    isAsianhallintaIntegrationEnabledStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled");
+    isUspaIntegrationEnabledStub = sinon.stub(parameters, "isUspaIntegrationEnabled");
 
     const personSearchFixture = new PersonSearchFixture();
     a1User = personSearchFixture.createKayttaja("A1");
@@ -77,6 +83,8 @@ describe("projektiHandler", () => {
   it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnanEdustaja is Projektipäällikkö", async () => {
     mockLoadVelhoProjektiByOid();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
+    isAsianhallintaIntegrationEnabledStub.returns(Promise.resolve(false));
+    isUspaIntegrationEnabledStub.returns(Promise.resolve(false));
     const projariKunnanEdustajana: DBProjekti = fixture.dbProjekti1();
     const projari = projariKunnanEdustajana.kayttoOikeudet.find((user) => user.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
     assertIsDefined(projari);

@@ -80,4 +80,4 @@ export class PersonSearchUpdater {
   }
 }
 
-export const personSearchUpdater = new PersonSearchUpdater(config.personSearchAccountTypes || []);
+export const personSearchUpdater = new PersonSearchUpdater(config.personSearchAccountTypes ?? []);

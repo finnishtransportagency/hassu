@@ -1,36 +1,19 @@
-import IconButton from "@components/button/IconButton";
 import ExtLink from "@components/ExtLink";
-import HassuAccordion from "@components/HassuAccordion";
-import Section from "@components/layout/Section2";
-import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import { experimental_sx as sx, Stack, styled } from "@mui/material";
 import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import React, { useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
-import useSnackbars from "src/hooks/useSnackbars";
-import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
-import { UusiSpan } from "@components/projekti/UusiSpan";
-import dayjs from "dayjs";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
-  const { showErrorMessage, showInfoMessage } = useSnackbars();
 
   const julkaisu = useMemo(() => projekti?.nahtavillaoloVaiheJulkaisu, [projekti]);
-
-  const linkHref = useMemo(() => {
-    const parametrit = projekti?.nahtavillaoloVaiheJulkaisu?.lisaAineistoParametrit;
-    if (typeof window === "undefined") {
-      return undefined;
-    }
-    return `${window?.location?.protocol}//${window.location.host}/suunnitelma/${projekti?.oid}/lausuntopyyntoaineistot?hash=${parametrit?.hash}&id=${parametrit?.nahtavillaoloVaiheId}&poistumisPaiva=${parametrit?.poistumisPaiva}`;
-  }, [projekti]);
 
   if (!projekti || !julkaisu) {
     return null;
@@ -69,67 +52,9 @@ export default function Lukunakyma() {
           <AineistoNahtavillaAccordion kategoriat={aineistoKategoriat.listKategoriat()} julkaisu={julkaisu} paakategoria />
         )}
       </AineistoMuokkausSection>
-      {!epaaktiivinen && (
-        <Section gap={4}>
-          <h4 className="vayla-smallest-title">Lausuntopyyntöön liitetty lisäaineisto</h4>
-          {projekti?.nahtavillaoloVaiheJulkaisu?.lisaAineistoParametrit?.poistumisPaiva && (
-            <p>
-              Jaa allaoleva linkki lausuntopyyntöön. Aineistot ovat nähtävillä linkin takaa
-              {" " + formatDate(projekti.nahtavillaoloVaiheJulkaisu?.lisaAineistoParametrit.poistumisPaiva) + " "}
-              saakka, jonka jälkeen aineistot poistuvat näkyvistä.
-            </p>
-          )}
-          <p>
-            <ExtLink className="file_download" sx={{ mr: 3 }} href={linkHref}>
-              {linkHref}
-            </ExtLink>
-            <IconButton
-              icon="copy"
-              className="text-primary-dark"
-              type="button"
-              onClick={() => {
-                if (!!linkHref) {
-                  navigator.clipboard.writeText(linkHref);
-                  showInfoMessage("Kopioitu");
-                } else {
-                  showErrorMessage("Ongelma kopioinnissa");
-                }
-              }}
-            />
-          </p>
-          <HassuAccordion
-            items={[
-              {
-                id: "lisa_aineisto_accordion_lukutila",
-                title: <span>{`Lisäaineisto (${julkaisu.lisaAineisto?.length || 0})`}</span>,
-                content: (
-                  <Stack direction="column" rowGap={2}>
-                    {julkaisu.lisaAineisto?.map((aineisto) => (
-                      <AineistoRow key={aineisto.dokumenttiOid}>
-                        <HassuAineistoNimiExtLink
-                          tiedostoPolku={aineisto.tiedosto}
-                          aineistoNimi={aineisto.nimi}
-                          aineistoTila={aineisto.tila}
-                          sx={{ mr: 3 }}
-                        />
-                        {!!aineisto.tuotu && <span>({formatDateTime(aineisto.tuotu)})</span>}
-                        {!!aineisto.tuotu &&
-                          !!julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva &&
-                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva) && <UusiSpan />}
-                      </AineistoRow>
-                    ))}
-                  </Stack>
-                ),
-              },
-            ]}
-          />
-        </Section>
-      )}
       {!epaaktiivinen && voiHyvaksya && (
         <HyvaksyJaPalautaPainikkeet julkaisu={julkaisu} projekti={projekti} tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} />
       )}
     </>
   );
 }
-
-const AineistoRow = styled("span")(sx({ display: "flex", gap: 3 }));

@@ -24,6 +24,10 @@ import {
   TallennaProjektiMutationVariables,
   EsikatseleLausuntoPyynnonTiedostotQueryVariables,
   EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
+  TallennaKiinteistotunnuksetMutationVariables,
+  HaeKiinteistonOmistajatQueryVariables,
+  TallennaKiinteistonOmistajatMutationVariables,
+  PoistaKiinteistonOmistajaMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -49,11 +53,16 @@ import { listKirjaamoOsoitteet } from "../kirjaamoOsoitteet/kirjaamoOsoitteetHan
 import { palauteHandler } from "../palaute/palauteHandler";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
-import { AppSyncEventArguments } from "./common";
 import { testHandler } from "../testing/testHandler";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
+import {
+  haeKiinteistonOmistajat,
+  poistaKiinteistonOmistaja,
+  tallennaKiinteistonOmistajat,
+  tallennaKiinteistotunnukset,
+} from "../mml/kiinteistoHandler";
 
-export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
+export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
     const error = new Error("Yritettiin kutsua julkista operaatiota ylläpidon apista");
     log.error(error);
@@ -117,6 +126,14 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
+    case apiConfig.tallennaKiinteistotunnukset.name:
+      return await tallennaKiinteistotunnukset(event.arguments as TallennaKiinteistotunnuksetMutationVariables);
+    case apiConfig.tallennaKiinteistonOmistajat.name:
+      return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
+    case apiConfig.haeKiinteistonOmistajat.name:
+      return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
+    case apiConfig.poistaKiinteistonOmistaja.name:
+      return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
     default:
       return null;
   }

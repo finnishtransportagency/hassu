@@ -16,7 +16,6 @@ import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 export type NahtavillaoloVaihe = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
-  lisaAineisto?: Array<Aineisto> | null;
   aineistopaketti?: string | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
@@ -33,7 +32,6 @@ export type NahtavillaoloVaihe = {
 export type NahtavillaoloVaiheJulkaisu = {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
-  lisaAineisto?: Array<Aineisto> | null;
   aineistopaketti?: string | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;

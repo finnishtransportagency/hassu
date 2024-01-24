@@ -196,9 +196,12 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tila": "ODOTTAA_TUONTIA",
+        "tuotu": undefined,
+        "uuid": "aineisto123",
       },
     ],
     "hankkeenKuvaus": Object {
@@ -261,13 +264,6 @@ Object {
         },
       ],
     },
-    "lisaAineisto": undefined,
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 1,
-      "poistumisPaiva": "***unittest***",
-    },
     "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
@@ -287,11 +283,23 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -300,6 +308,8 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -308,6 +318,8 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -316,6 +328,8 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -324,13 +338,8 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "Yksityistie_lunastukset.pdf",
           "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tila": "ODOTTAA_TUONTIA",
+          "tuotu": undefined,
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "hankkeenKuvaus": Object {
@@ -393,21 +402,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
@@ -419,71 +413,7 @@ Object {
 
 exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 7`] = `Array []`;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 8`] = `Array []`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 9`] = `
-Object {
-  "description": "lisaAineisto",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "aineistot": Array [
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 1,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "aineisto3.txt",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 2,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 3,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 4,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 5,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "Yksityistie_lunastukset.pdf",
-      },
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": undefined,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "TYHJÄ.txt",
-      },
-    ],
-    "lisaAineistot": Array [
-      Object {
-        "__typename": "LadattavaTiedosto",
-        "jarjestys": 1,
-        "kategoriaId": undefined,
-        "linkki": "***unittest***",
-        "nimi": "Yksityistie_lunastukset.pdf",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 10`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 8`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -494,6 +424,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -501,6 +442,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -511,6 +453,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -521,6 +464,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -531,6 +475,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -541,15 +486,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -613,23 +550,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": undefined,
@@ -641,6 +561,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -648,6 +579,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -658,6 +590,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -668,6 +601,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -678,6 +612,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -688,15 +623,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -774,24 +701,9 @@ Object {
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+        "tila": "VALMIS",
         "tuotu": "2024-01-01T00:00",
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
+        "uuid": "00000030-473f-49e2-a1d1-51228ae6f158",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
@@ -858,7 +770,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 11`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 9`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -867,12 +779,25 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+        "uuid": "aineisto123",
+      },
+      Object {
+        "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
         "nimi": "aineisto3.txt",
         "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/aineisto3.txt",
+        "tila": "VALMIS",
         "tuotu": "***unittest***",
+        "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
       },
       Object {
         "__typename": "Aineisto",
@@ -881,7 +806,9 @@ Object {
         "kategoriaId": "osa_a",
         "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
         "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+        "tila": "VALMIS",
         "tuotu": "***unittest***",
+        "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
       },
       Object {
         "__typename": "Aineisto",
@@ -890,7 +817,9 @@ Object {
         "kategoriaId": "osa_a",
         "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
         "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tila": "VALMIS",
         "tuotu": "***unittest***",
+        "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
       },
       Object {
         "__typename": "Aineisto",
@@ -899,7 +828,9 @@ Object {
         "kategoriaId": "osa_a",
         "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
         "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72J-6709-1_Johtokartta_1.pdf",
+        "tila": "VALMIS",
         "tuotu": "***unittest***",
+        "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
       },
       Object {
         "__typename": "Aineisto",
@@ -908,16 +839,9 @@ Object {
         "kategoriaId": "osa_a",
         "nimi": "Yksityistie_lunastukset.pdf",
         "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/Yksityistie_lunastukset.pdf",
+        "tila": "VALMIS",
         "tuotu": "***unittest***",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-        "jarjestys": undefined,
-        "kategoriaId": "osa_a",
-        "nimi": "TYHJÄ.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-        "tuotu": "***unittest***",
+        "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
       },
     ],
     "hankkeenKuvaus": Object {
@@ -1002,7 +926,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 12`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 10`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
   "mockedtime": "2024-01-01T00:00",
@@ -1026,9 +950,9 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 13`] = `Array []`;
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 11`] = `Array []`;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 14`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 12`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1133,7 +1057,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 15`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 13`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1249,7 +1173,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 16`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 14`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -1367,10 +1291,10 @@ Muistutus 1
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 15`] = `
 Array [
   Object {
-    "subject": "Muistutus - 00000001-473f-49e2-a1d1-51228ae6f158",
+    "subject": "Muistutus - 00000031-473f-49e2-a1d1-51228ae6f158",
     "text": "
 Muistutus vastaanotettu
 2024-01-01T00:00
@@ -1398,7 +1322,7 @@ Muistutus 1
     "to": "kirjaamo@vayla.vayla",
   },
   Object {
-    "subject": "Muistutus - 00000002-473f-49e2-a1d1-51228ae6f158",
+    "subject": "Muistutus - 00000032-473f-49e2-a1d1-51228ae6f158",
     "text": "
 Muistutus vastaanotettu
 2024-01-01T00:00
@@ -1428,7 +1352,7 @@ Muistutus 2
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 16`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1438,12 +1362,25 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/aineisto3.txt",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1452,7 +1389,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1461,7 +1400,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1470,7 +1411,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1479,16 +1422,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": undefined,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "hankkeenKuvaus": Object {
@@ -1574,7 +1510,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1585,6 +1521,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -1592,6 +1539,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1602,6 +1550,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1612,6 +1561,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1622,6 +1572,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1632,15 +1583,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -1704,23 +1647,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
@@ -1736,7 +1662,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -1747,6 +1673,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -1754,6 +1691,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1764,6 +1702,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1774,6 +1713,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1784,6 +1724,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1794,15 +1735,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -1870,23 +1803,6 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
@@ -1965,7 +1881,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -1976,6 +1892,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -1983,6 +1910,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -1993,6 +1921,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2003,6 +1932,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2013,6 +1943,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2023,15 +1954,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -2109,24 +2032,9 @@ Object {
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
+        "tila": "VALMIS",
         "tuotu": "2024-01-01T00:00",
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
+        "uuid": "00000033-473f-49e2-a1d1-51228ae6f158",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
@@ -2205,7 +2113,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -2216,6 +2124,17 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
@@ -2223,6 +2142,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2233,6 +2153,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2243,6 +2164,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2253,6 +2175,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2263,15 +2186,7 @@ Object {
           "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
@@ -2335,23 +2250,6 @@ Object {
           },
         ],
       },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": undefined,
@@ -2361,7 +2259,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -2371,12 +2269,25 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+          "uuid": "aineisto123",
+        },
+        Object {
+          "__typename": "Aineisto",
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/aineisto3.txt",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000002-473f-49e2-a1d1-51228ae6f1581.20uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2385,7 +2296,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000003-473f-49e2-a1d1-51228ae6f1581.21uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2394,7 +2307,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000004-473f-49e2-a1d1-51228ae6f1581.22uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2403,7 +2318,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
+          "uuid": "00000005-473f-49e2-a1d1-51228ae6f1581.23uusi",
         },
         Object {
           "__typename": "Aineisto",
@@ -2412,16 +2329,9 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
           "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": undefined,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-          "tuotu": "***unittest***",
+          "uuid": "00000006-473f-49e2-a1d1-51228ae6f1581.24uusi",
         },
       ],
       "hankkeenKuvaus": Object {
@@ -2516,7 +2426,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -2550,9 +2460,9 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `Array []`;
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `Array []`;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2720,7 +2630,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2836,7 +2746,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 28`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Nähtävilläolokuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -2930,7 +2840,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 29`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [

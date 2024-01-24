@@ -58,7 +58,7 @@ class DateMoverTool {
   // max vuorovaikutustilaisuus.paivamaara -1 päivä
   getMaxDateFromVuorovaikutukset(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
-    for (const julkaisu of projekti?.vuorovaikutusKierrosJulkaisut || []) {
+    for (const julkaisu of projekti?.vuorovaikutusKierrosJulkaisut ?? []) {
       julkaisu.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
         maxDate.addDate(tilaisuus.paivamaara);
       });
@@ -68,7 +68,7 @@ class DateMoverTool {
 
   getMaxDateFromNahtavillaolo(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
-    for (const julkaisu of projekti.nahtavillaoloVaiheJulkaisut || []) {
+    for (const julkaisu of projekti.nahtavillaoloVaiheJulkaisut ?? []) {
       maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
     }
     return maxDate;
@@ -76,7 +76,7 @@ class DateMoverTool {
 
   getMaxDateFromHyvaksymisPaatos(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
-    for (const julkaisu of projekti?.hyvaksymisPaatosVaiheJulkaisut || []) {
+    for (const julkaisu of projekti?.hyvaksymisPaatosVaiheJulkaisut ?? []) {
       maxDate.addDate(julkaisu.kuulutusPaiva);
       maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
     }
@@ -85,7 +85,7 @@ class DateMoverTool {
 
   getMaxDateFromJatkopaatos1(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
-    for (const julkaisu of projekti?.jatkoPaatos1VaiheJulkaisut || []) {
+    for (const julkaisu of projekti?.jatkoPaatos1VaiheJulkaisut ?? []) {
       maxDate.addDate(julkaisu.kuulutusPaiva);
       maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
     }
@@ -94,7 +94,7 @@ class DateMoverTool {
 
   getMaxDateFromJatkopaatos2(projekti: DBProjekti) {
     const maxDate = new DateDeltaCalculator();
-    for (const julkaisu of projekti?.jatkoPaatos2VaiheJulkaisut || []) {
+    for (const julkaisu of projekti?.jatkoPaatos2VaiheJulkaisut ?? []) {
       maxDate.addDate(julkaisu.kuulutusPaiva);
       maxDate.addDate(julkaisu.kuulutusVaihePaattyyPaiva);
     }

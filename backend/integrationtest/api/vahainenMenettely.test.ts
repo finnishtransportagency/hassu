@@ -19,7 +19,6 @@ import {
   testLisaaMuistutusIncrement,
   testNahtavillaolo,
   testNahtavillaoloApproval,
-  testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import { testHyvaksymismenettelyssa } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
@@ -86,8 +85,6 @@ describe("Api", () => {
     projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
     await testNahtavillaoloApproval(
       projekti.oid,
       projektiPaallikko,

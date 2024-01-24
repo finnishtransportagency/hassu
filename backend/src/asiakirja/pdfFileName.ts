@@ -131,7 +131,7 @@ export function createPDFFileName(
     throw new Error(`pdfTypeä ei löydy: ` + asiakirjaTyyppi + " " + asiakirjanMuoto + " " + projektiTyyppi);
   }
   const language = kieli;
-  const kaannos: string = translate("tiedostonimi." + pdfType, language) || "";
+  const kaannos: string = translate("tiedostonimi." + pdfType, language) ?? "";
   if (kaannos) {
     return kaannos;
   } else {

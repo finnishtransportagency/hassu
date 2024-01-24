@@ -1,5 +1,7 @@
 import { deburr } from "lodash";
-import { Aineisto, AineistoInput } from "./graphql/apiModel";
+import { Aineisto } from "./graphql/apiModel";
+
+type GenericAineisto = Pick<Aineisto, "kategoriaId">;
 
 type AineistoKategoriaProps = {
   id: string;
@@ -102,7 +104,7 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
   return kategoriaIds;
 };
 
-export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: Aineisto[], kategoria: AineistoKategoria): number {
+export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: GenericAineisto[], kategoria: AineistoKategoria): number {
   const kategorianAineistojenMaara = aineistoNahtavilla.filter((aineisto) => aineisto.kategoriaId === kategoria.id).length;
   if (!(kategoria instanceof AineistoKategoria) || !kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
     return kategorianAineistojenMaara;
@@ -113,10 +115,12 @@ export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: Aineis
   }
 }
 
-export function getNestedAineistoMaaraForCategory(aineistot: (Aineisto | AineistoInput)[], kategoria: AineistoKategoria): number {
+export function getNestedAineistoMaaraForCategory(aineistot: GenericAineisto[] | null | undefined, kategoria: AineistoKategoria): number {
   let nestedAineistoMaaraSum = 0;
-  const ids = getNestedCategoryIds([kategoria]);
-  nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
+  if (aineistot) {
+    const ids = getNestedCategoryIds([kategoria]);
+    nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
+  }
   return nestedAineistoMaaraSum;
 }
 

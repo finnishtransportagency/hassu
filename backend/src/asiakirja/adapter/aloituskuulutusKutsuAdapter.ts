@@ -24,6 +24,8 @@ export async function createAloituskuulutusKutsuAdapterProps(
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   kieli: KaannettavaKieli,
+  asianhallintaPaalla: boolean,
+  linkkiAsianhallintaan: string | undefined,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
   euRahoitusLogot?: LocalizedMap<string> | null,
   vahainenMenettely?: boolean | null
@@ -44,11 +46,13 @@ export async function createAloituskuulutusKutsuAdapterProps(
     kuulutusVaihePaattyyPaiva,
     velho: aloitusKuulutusJulkaisu.velho,
     yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
-    suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
+    suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus ?? undefined,
     kayttoOikeudet,
-    uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
-    euRahoitusLogot: euRahoitusLogot || undefined,
+    uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus ?? undefined,
+    euRahoitusLogot: euRahoitusLogot ?? undefined,
     vahainenMenettely,
+    asianhallintaPaalla,
+    linkkiAsianhallintaan,
   };
 }
 
@@ -93,7 +97,7 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
       suunnitteluSopimus = {
         ...kunnanEdustaja,
         kunta: this.suunnitteluSopimus.kunta,
-        puhelinnumero: kunnanEdustaja.puhelinnumero || "",
+        puhelinnumero: kunnanEdustaja.puhelinnumero ?? "",
       };
     }
     if (yhteystiedot) {

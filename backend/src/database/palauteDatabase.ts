@@ -8,7 +8,7 @@ import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { sortBy } from "lodash";
 import { migrateFromOldSchema } from "./palauteSchemaUpdate";
 
-const feedbackTableName: string = config.feedbackTableName || "missing";
+const feedbackTableName: string = config.feedbackTableName ?? "missing";
 
 class FeedbackDatabase {
   async insertFeedback(palaute: Palaute): Promise<string | undefined> {

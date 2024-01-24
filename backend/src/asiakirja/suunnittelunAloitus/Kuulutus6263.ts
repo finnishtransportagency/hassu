@@ -103,7 +103,7 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
+    return this.kasittelynTila?.hyvaksymispaatos?.asianumero ?? "";
   }
 
   kuulutuspaiva(): string {

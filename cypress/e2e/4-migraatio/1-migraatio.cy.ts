@@ -189,7 +189,6 @@ describe("Migraatio", () => {
     lisaaNahtavillaoloAineistot({
       oid,
       aineistoNahtavilla: { toimeksianto: "Toimeksianto1" },
-      lisaAineisto: { toimeksianto: "Toimeksianto1" },
     });
     const today = formatDate(dayjs());
     const selectorToTextMap = {

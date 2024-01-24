@@ -4,7 +4,7 @@ import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/Pr
 import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
 import LausuntopyynnotPageLayout from "@components/projekti/lausuntopyynnot/LausuntoPyynnotPageLayout";
 import Section from "@components/layout/Section2";
-import { LausuntoPyynto } from "@services/api";
+import { LausuntoPyynto, ProjektiTyyppi } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { FormProvider, UseFormProps, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -116,36 +116,50 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
         </Section>
 
         <Section noDivider>
-          <h2 className="vayla-subtitle">Lausuntopyynnon mallipohjat</h2>
+          <h2 className="vayla-subtitle">Lausuntopyynnön mallipohjat</h2>
           <p>
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
             sisältö. Vie valmislausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
           <div>
-            <DownloadButtonLink
-              id={"mallipohja-kunnalle-32T"}
-              href={
-                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/36e9a27e-46ea-42c0-812f-6de80d723274/32T_YSTS_Kunnan_l%c3%a4hetekirje_n%c3%a4ht%c3%a4ville_asettamisen_ilmoittamisesta_ja_lausuntopyynt%c3%b6.docx?a=true"
-              }
-            >
-              Mallipohja kunnalle 32T
-            </DownloadButtonLink>
-            <DownloadButtonLink
-              id={"mallipohja-elylle-41R"}
-              href={
-                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
-              }
-            >
-              Mallipohja ELY:le 41R
-            </DownloadButtonLink>
-            <DownloadButtonLink
-              id={"mallipohja-muille-lausunnonantajille-42T"}
-              href={
-                "https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0b4643d2-824e-41ed-9c6d-744f9e97d100/42T_YSTS_lausuntopyynto_muut_osapuolet.docx?a=true"
-              }
-            >
-              Mallipohja muille lausunnonantajille 42T
-            </DownloadButtonLink>
+            {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
+              <>
+                <DownloadButtonLink
+                  id="mallipohja-32T"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/36e9a27e-46ea-42c0-812f-6de80d723274/32T_YSTS_Kunnan_l%c3%a4hetekirje_n%c3%a4ht%c3%a4ville_asettamisen_ilmoittamisesta_ja_lausuntopyynt%c3%b6.docx?a=true"
+                >
+                  Mallipohja kunnalle 32T
+                </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-42T"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0b4643d2-824e-41ed-9c6d-744f9e97d100/42T_YSTS_lausuntopyynto_muut_osapuolet.docx?a=true"
+                >
+                  Mallipohja muille lausunnonantajille 42T
+                </DownloadButtonLink>
+              </>
+            )}
+            {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
+              <>
+                <DownloadButtonLink
+                  id="mallipohja-32R"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/02f97aa5-ad38-42de-a934-1b87c0b69792/32R%20Lausuntopyynt%c3%b6%20kunnalle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja kunnalle 32R
+                </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-41R"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja ELY:le 41R
+                </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-42R"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af305e18-5ccc-46ca-aff4-1c648d022ee4/42R%20Lausuntopyynt%c3%b6%20sidosryhmille%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja muille lausunnonantajille 42R
+                </DownloadButtonLink>
+              </>
+            )}
           </div>
         </Section>
         <LausuntoPyynnotPainikkeet projekti={projekti} />

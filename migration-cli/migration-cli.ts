@@ -48,6 +48,14 @@ const schema = {
     prop: "hyvaksymispaatosPaivamaara",
     type: Date,
   },
+  ["1. Jatkopäätös asianumero"]: {
+    prop: "jatkopaatosAsianumero",
+    type: String,
+  },
+  ["1. Jatkopäätös päivämäärä"]: {
+    prop: "jatkopaatosPaivamaara",
+    type: Date,
+  },
 };
 yargs
   .scriptName("npm run migration")
@@ -87,6 +95,8 @@ type Row = {
   tila: TargetStatuses;
   hyvaksymispaatosAsianumero?: string;
   hyvaksymispaatosPaivamaara?: Date;
+  jatkopaatosAsianumero?: string;
+  jatkopaatosPaivamaara?: Date;
 };
 
 export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Status>> {
@@ -125,6 +135,8 @@ export async function importProjektis(fileName: string, sheetNum: number, overwr
           targetStatus,
           hyvaksymispaatosAsianumero: row.hyvaksymispaatosAsianumero,
           hyvaksymispaatosPaivamaara: row.hyvaksymispaatosPaivamaara,
+          jatkopaatosAsianumero: row.jatkopaatosAsianumero,
+          jatkopaatosPaivamaara: row.jatkopaatosPaivamaara,
         });
         result[oid] = targetStatus;
       } catch (e) {

@@ -19,6 +19,8 @@ import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { AineistoMuokkausError, IllegalArgumentError } from "hassu-common/error";
 import { forEverySaameDo } from "../../projekti/adapter/common";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 
 export abstract class KuulutusTilaManager<
   T extends Omit<GenericKuulutus, "tila" | "kuulutusVaihePaattyyPaiva">,
@@ -153,7 +155,7 @@ export abstract class KuulutusTilaManager<
     const uudelleenKuulutus = julkinenUudelleenKuulutus
       ? {
           tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
-          alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+          alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva ?? undefined,
         }
       : {
           tila: UudelleenkuulutusTila.PERUUTETTU,
@@ -168,7 +170,7 @@ export abstract class KuulutusTilaManager<
 
   private getUpdatedVaiheTiedotForAineistoMuokkaus(projekti: DBProjekti, kuulutusLuonnos: T, viimeisinJulkaisu: Y, julkaisut: Y[]) {
     const aineistoMuokkaus = {
-      alkuperainenHyvaksymisPaiva: viimeisinJulkaisu.hyvaksymisPaiva || undefined,
+      alkuperainenHyvaksymisPaiva: viimeisinJulkaisu.hyvaksymisPaiva ?? undefined,
     };
 
     const uusiId = julkaisut.length + 1;
@@ -289,7 +291,17 @@ export abstract class KuulutusTilaManager<
     return julkaisuWaitingForApproval;
   }
 
+  private async updateAsiaIdToProjekti(projekti: DBProjekti): Promise<void> {
+    if (!projekti.asianhallinta?.asiaId && (await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+      const asiaId = await asianhallintaService.getAsiaId(projekti.oid);
+      if (asiaId) {
+        await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, asianhallinta: { ...projekti.asianhallinta, asiaId } });
+      }
+    }
+  }
+
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    await this.updateAsiaIdToProjekti(projekti);
     const approvedJulkaisu = await this.updateJulkaisuToBeApproved(await this.reloadProjekti(projekti), hyvaksyja);
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
     await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);

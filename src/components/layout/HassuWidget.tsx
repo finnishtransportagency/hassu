@@ -5,7 +5,7 @@ import SectionContent from "@components/layout/SectionContent";
 import styles from "@styles/kansalaisenProjekti/ProjektiJulkinenSideNavigation.module.css";
 import Image from "next/image";
 
-const WidgetOtsikko = styled("h3")(() => ({
+const WidgetOtsikko = styled("h4")(() => ({
   fontWeight: "bold",
   fontSize: 20,
 }));

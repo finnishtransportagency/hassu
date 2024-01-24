@@ -19,7 +19,7 @@ export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API
 
 function adaptHallintoOikeus(hallintoOikeus: OikeudenPaatos | undefined): API.OikeudenPaatos | undefined {
   if (!hallintoOikeus) {
-    return hallintoOikeus as undefined;
+    return hallintoOikeus;
   }
   return {
     __typename: "OikeudenPaatos",
@@ -42,5 +42,5 @@ function adaptHyvaksymispaatos(hyvaksymispaatos: Hyvaksymispaatos | undefined): 
       __typename: "Hyvaksymispaatos",
     };
   }
-  return hyvaksymispaatos as undefined;
+  return hyvaksymispaatos;
 }

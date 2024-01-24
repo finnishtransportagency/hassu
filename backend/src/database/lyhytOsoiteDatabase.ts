@@ -7,7 +7,7 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { DeleteCommand, GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 export class LyhytOsoiteDatabase {
-  lyhytOsoiteTableName: string = config.lyhytOsoiteTableName || "missing";
+  lyhytOsoiteTableName: string = config.lyhytOsoiteTableName ?? "missing";
 
   async generateAndSetLyhytOsoite(oid: string): Promise<string | undefined> {
     const existingOsoite = await this.getLyhytOsoite(oid);

@@ -1,4 +1,6 @@
 {
+  "kirjaudu-palveluun": "Kirjaudu palveluun",
+  "kirjaudu-ulos": "Poistu palvelusta",
   "projektin_lataamisessa_virhe": "Projektin lataamisessa tapahtui virhe",
   "ladataan": "Ladataan...",
   "sivua-ei-loydy": "Sivua ei löydy",
@@ -180,5 +182,6 @@
   "puh": "puh.",
   "takaisin_sivun_alkuun": "Takaisin sivun alkuun",
   "vayla_tietosuoja_url": "https://www.vayla.fi/tietosuoja",
-  "valitse": "Valitse"
+  "valitse": "Valitse",
+  "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}"
 }

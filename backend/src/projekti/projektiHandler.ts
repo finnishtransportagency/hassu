@@ -26,7 +26,7 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import { ProjektiAdaptationResult, ProjektiEvent, ProjektiEventType } from "./adapter/projektiAdaptationResult";
-import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
+import { validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import {
   adaptStandardiYhteystiedotInputToYhteystiedotToSave,
@@ -45,7 +45,11 @@ import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
 import { tilaHandler } from "../handler/tila/tilaHandler";
-import { persistLadattuTiedosto } from "../files/persistFiles";
+import { deleteFile, persistLadattuTiedosto } from "../files/persistFiles";
+import { asianhallintaService } from "../asianhallinta/asianhallintaService";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
+import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -144,7 +148,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
       ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
       vuorovaikutusTilaisuudet,
     };
-    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut || [];
+    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut ?? [];
     const affectedJulkaisu = vuorovaikutusKierrosJulkaisut.find((kierros) => kierros.id == input.vuorovaikutusNumero);
     if (!affectedJulkaisu) {
       throw new IllegalArgumentError("Ei löydy julkaisua annetulla id:llä!");
@@ -335,10 +339,13 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const projektiAvaimetJoissaIlmoitetuksenVastaanottajat = getUpdatedIlmoituksenVastaanottajat(projektiFromDB, projektiFromVelho.velho);
 
-    const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet"> = {
+    const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projektiFromDB)) ? await haeAsiaId(oid) : undefined;
+
+    const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet" | "asianhallinta"> = {
       oid,
       velho: projektiFromVelho.velho,
       kayttoOikeudet: kayttoOikeudetNew,
+      asianhallinta: { ...(projektiFromDB.asianhallinta ?? {}), asiaId },
       ...projektiAvaimetJoissaIlmoitetuksenVastaanottajat,
     };
 
@@ -347,6 +354,15 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
   } catch (e) {
     log.error(e);
     throw e;
+  }
+}
+
+async function haeAsiaId(oid: string) {
+  try {
+    return await asianhallintaService.getAsiaId(oid);
+  } catch (e) {
+    log.info(e, "asiaId:tä ei voitu hakea");
+    return undefined;
   }
 }
 
@@ -368,7 +384,7 @@ function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velh
         if (!oldVuorovaikutusKierros || vuorovaikutusNumero === undefined) {
           throw new Error("Vuorovaikutuskierrokselta puuttuu vuorovaikutusnumero");
         }
-        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset || [];
+        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset ?? [];
         dataToSave[vaiheKey] = {
           ...oldVuorovaikutusKierros,
           vuorovaikutusNumero,
@@ -380,7 +396,7 @@ function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velh
         if (!oldVaiheData || id === undefined) {
           throw new Error(`'${vaiheKey}' vaiheelta puuttuu id-tieto`);
         }
-        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset || [];
+        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset ?? [];
         dataToSave[vaiheKey] = {
           ...oldVaiheData,
           id,
@@ -399,9 +415,9 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
   const kunnat: IlmoituksenVastaanottajat["kunnat"] = defaultKunnat?.map((defaultKunta) => {
     const vanhaKuntatieto = vanhatKuntatiedot?.find((kunta) => kunta.id === defaultKunta.id);
     return {
-      ...(vanhaKuntatieto || {}),
+      ...(vanhaKuntatieto ?? {}),
       id: defaultKunta.id,
-      sahkoposti: vanhaKuntatieto?.sahkoposti || defaultKunta.sahkoposti,
+      sahkoposti: vanhaKuntatieto?.sahkoposti ?? defaultKunta.sahkoposti,
     };
   });
   return kunnat;
@@ -427,26 +443,40 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
 
 async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K extends keyof T>(
   oid: string,
-  container: T | undefined | null,
+  container: T | undefined,
   path: PathTuple,
   keys: K[],
   asiakirjaTyypit: API.AsiakirjaTyyppi[]
-): Promise<void> {
+): Promise<T | undefined> {
   if (!container) {
-    return;
+    return container;
   }
+  const palautus: any = Object.assign({}, container);
   for (let i = 0; i < keys.length; i++) {
-    const ladattuTiedosto = container[keys[i]];
-    if (ladattuTiedosto) {
-      await persistLadattuTiedosto({
-        oid,
-        ladattuTiedosto,
-        targetFilePathInProjekti: path.yllapitoPath,
-        poistetaan: !ladattuTiedosto.nimi,
-        asiakirjaTyyppi: asiakirjaTyypit[i],
-      });
+    const key = keys[i];
+    const ladattuTiedosto = container[key];
+    switch (ladattuTiedosto?.tila) {
+      case API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA:
+        palautus[key] = await persistLadattuTiedosto({
+          oid,
+          ladattuTiedosto,
+          targetFilePathInProjekti: path.yllapitoPath,
+          asiakirjaTyyppi: asiakirjaTyypit[i],
+        });
+        break;
+      case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
+        await deleteFile({
+          oid,
+          tiedosto: ladattuTiedosto,
+        });
+        palautus[key] = null;
+        break;
+      default:
+        palautus[key] = ladattuTiedosto;
+        break;
     }
   }
+  return palautus as T;
 }
 
 async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
@@ -454,7 +484,11 @@ async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
     const aloitusKuulutus = dbProjekti.aloitusKuulutus;
     const saamePDFt = aloitusKuulutus?.aloituskuulutusSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(
+      assertIsDefined(
+        dbProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt,
+        "dbProjekti.aloitusKuulutus.aloituskuulutusSaamePDFt on määritelty varmasti"
+      );
+      dbProjekti.aloitusKuulutus.aloituskuulutusSaamePDFt[kieli] = await persistFiles(
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).aloituskuulutus(aloitusKuulutus),
@@ -470,13 +504,29 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
     const vuorovaikutusKierros = dbProjekti.vuorovaikutusKierros;
     const kutsuPDFLadattuTiedosto = vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
     if (kutsuPDFLadattuTiedosto) {
-      await persistLadattuTiedosto({
-        oid: dbProjekti.oid,
-        ladattuTiedosto: kutsuPDFLadattuTiedosto,
-        targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
-        poistetaan: !kutsuPDFLadattuTiedosto.nimi,
-        asiakirjaTyyppi: API.AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
-      });
+      assertIsDefined(
+        dbProjekti?.vuorovaikutusKierros?.vuorovaikutusSaamePDFt,
+        "dbProjekti.vuorovaikutusKierros.vuorovaikutusSaamePDFt on varmasti määritelty"
+      );
+      switch (kutsuPDFLadattuTiedosto.tila) {
+        case API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA:
+          dbProjekti.vuorovaikutusKierros.vuorovaikutusSaamePDFt[kieli] = await persistLadattuTiedosto({
+            oid: dbProjekti.oid,
+            ladattuTiedosto: kutsuPDFLadattuTiedosto,
+            targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
+            asiakirjaTyyppi: API.AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+          });
+          break;
+        case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
+          await deleteFile({
+            oid: dbProjekti.oid,
+            tiedosto: kutsuPDFLadattuTiedosto,
+          });
+          dbProjekti.vuorovaikutusKierros.vuorovaikutusSaamePDFt[kieli] = null;
+          break;
+        default:
+          break;
+      }
     }
   });
 }
@@ -486,7 +536,11 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
     const nahtavillaoloVaihe = dbProjekti.nahtavillaoloVaihe;
     const saamePDFt = nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(
+      assertIsDefined(
+        dbProjekti?.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt,
+        "dbProjekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt on määritelty varmasti"
+      );
+      dbProjekti.nahtavillaoloVaihe.nahtavillaoloSaamePDFt[kieli] = await persistFiles(
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
@@ -502,12 +556,19 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
     const hyvaksymisPaatosVaihe = dbProjekti.hyvaksymisPaatosVaihe;
     const saamePDFt = hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(
+      assertIsDefined(
+        dbProjekti?.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt,
+        "dbProjekti.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt on määritelty varmasti"
+      );
+      dbProjekti.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt[kieli] = await persistFiles(
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
+        [
+          API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        ]
       );
     }
   });
@@ -518,7 +579,11 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
     const jatkoPaatos1Vaihe = dbProjekti.jatkoPaatos1Vaihe;
     const saamePDFt = jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(
+      assertIsDefined(
+        dbProjekti?.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt,
+        "dbProjekti.jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt on määritelty varmasti"
+      );
+      dbProjekti.jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt[kieli] = await persistFiles(
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
@@ -534,12 +599,19 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
     const jatkoPaatos2Vaihe = dbProjekti.jatkoPaatos2Vaihe;
     const saamePDFt = jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(
+      assertIsDefined(
+        dbProjekti?.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt,
+        "dbProjekti.jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt on määritelty varmasti"
+      );
+      dbProjekti.jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt[kieli] = await persistFiles(
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
+        [
+          API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
+          API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        ]
       );
     }
   });

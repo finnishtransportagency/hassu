@@ -1,4 +1,12 @@
-import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  NykyinenKayttaja,
+  PDF,
+  TilasiirtymaTyyppi,
+  Vaihe,
+  VuorovaikutusKierrosTila,
+} from "hassu-common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -28,6 +36,8 @@ import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -99,7 +109,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     throw new Error("checkUudelleenkuulutusPriviledges ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
-  async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja, tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
+  async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja, _tilasiirtymaTyyppi: TilasiirtymaTyyppi): Promise<void> {
     throw new Error("sendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
@@ -171,7 +181,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
     );
 
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
 
     await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
@@ -264,7 +274,6 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
     assert(
@@ -281,18 +290,20 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       vuorovaikutusKierrosJulkaisu: julkaisu,
       kieli: projekti.kielitiedot.ensisijainenKieli,
       luonnos: false,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
     emailOptions.attachments = attachments;
 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
-
-    const sendResult = await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+    const emailOptionsWithRecipients = { ...emailOptions, to: recipients, cc };
+    const sendResult = await emailClient.sendEmail(emailOptionsWithRecipients);
 
     julkaisu.lahetekirje = await saveEmailAsFile(
       projekti.oid,
       new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu),
-      emailOptions,
+      emailOptionsWithRecipients,
       AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
     );
 
@@ -365,6 +376,8 @@ async function createVuorovaikutusKierrosPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 
   const fullFilePathInProjekti = fileService.createFileToProjekti({

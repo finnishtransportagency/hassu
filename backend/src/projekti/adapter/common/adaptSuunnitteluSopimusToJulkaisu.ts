@@ -15,10 +15,10 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
     return {
       kunta: suunnitteluSopimus.kunta,
       logo: adaptLogot(oid, suunnitteluSopimus.logo),
-      etunimi: yhteysHenkilo?.etunimi || "",
-      sukunimi: yhteysHenkilo?.sukunimi || "",
-      email: yhteysHenkilo?.email || "",
-      puhelinnumero: yhteysHenkilo?.puhelinnumero || "",
+      etunimi: yhteysHenkilo?.etunimi ?? "",
+      sukunimi: yhteysHenkilo?.sukunimi ?? "",
+      email: yhteysHenkilo?.email ?? "",
+      puhelinnumero: yhteysHenkilo?.puhelinnumero ?? "",
     };
   }
   return suunnitteluSopimus;

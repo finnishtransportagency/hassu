@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { adaptAineistotToSave, pickAineistoFromInputByDocumenttiOid } from "../../../../src/projekti/adapter/adaptToDB";
+import { adaptAineistotToSave } from "../../../../src/projekti/adapter/adaptToDB";
 import * as API from "hassu-common/graphql/apiModel";
 import { AineistoTila } from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../../../../src/projekti/adapter/projektiAdaptationResult";
@@ -8,40 +8,38 @@ import { Aineisto } from "../../../../src/database/model";
 
 import { expect } from "chai";
 
-function createValmisInput(nimi?: string, id?: string): API.AineistoInput {
-  return { dokumenttiOid: id || "1", tila: AineistoTila.VALMIS, nimi: "foo" + (nimi || "") };
+function poistoInput(id: number, uuid?: string, nimi?: string): API.AineistoInput {
+  return { dokumenttiOid: `${id}`, tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || ""), uuid: uuid ?? "uuid" };
 }
 
-function createTuontiInput(nimi?: string, id?: string): API.AineistoInput {
-  return { dokumenttiOid: id || "1", tila: AineistoTila.ODOTTAA_TUONTIA, nimi: "foo" + (nimi || "") };
+function poisto(id: number, uuid?: string, nimi?: string): Aineisto {
+  return {
+    dokumenttiOid: `${id}`,
+    tila: AineistoTila.ODOTTAA_POISTOA,
+    nimi: "foo" + (nimi || ""),
+    tiedosto: "jotain.txt",
+    tuotu: "2022-01-01T01:01",
+    uuid: uuid ?? "uuid",
+  };
 }
 
-function createPoistoInput(nimi?: string, id?: string): API.AineistoInput {
-  return { dokumenttiOid: id || "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || "") };
+function valmis(id: number, uuid?: string, nimi?: string): Aineisto {
+  return {
+    dokumenttiOid: `${id}`,
+    tila: AineistoTila.VALMIS,
+    nimi: "foo" + (nimi || ""),
+    tiedosto: "jotain.txt",
+    tuotu: "2022-01-01T01:01",
+    uuid: uuid ?? "uuid",
+  };
 }
 
-function poistoInput(id: number, nimi?: string): API.AineistoInput {
-  return { dokumenttiOid: `${id}`, tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || "") };
+function tuonti(id: number, uuid?: string, nimi?: string): Aineisto {
+  return { dokumenttiOid: `${id}`, tila: AineistoTila.ODOTTAA_TUONTIA, nimi: nimi ?? "foo", uuid: uuid ?? "uuid" };
 }
 
-function poisto(id: number, nimi?: string): Aineisto {
-  return { dokumenttiOid: `${id}`, tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || "") };
-}
-
-function valmis(id: number, nimi?: string): Aineisto {
-  return { dokumenttiOid: `${id}`, tila: AineistoTila.VALMIS, nimi: "foo" + (nimi || "") };
-}
-
-function valmisUusi(id: number): Aineisto {
-  return valmis(id, "_uusi");
-}
-
-function tuonti(id: number, nimi?: string): Aineisto {
-  return { dokumenttiOid: `${id}`, tila: AineistoTila.ODOTTAA_TUONTIA, nimi: "foo" + (nimi || "") };
-}
-
-function tuontiUusi(id: number): Aineisto {
-  return tuonti(id, "_uusi");
+function tuontiUusi(id: number, uuid?: string, nimi?: string): Aineisto {
+  return tuonti(id, uuid, nimi);
 }
 
 function doTest(dbAineisto: Aineisto[], inputAineisto: API.AineistoInput[], resultAineisto: Aineisto[]) {
@@ -50,87 +48,52 @@ function doTest(dbAineisto: Aineisto[], inputAineisto: API.AineistoInput[], resu
   expect(result).to.eql(resultAineisto);
 }
 
-describe("adaptToDB common", () => {
-  it("pick aineisto pending deletion first", () => {
-    // Aina pitää tulla lopputuloksen "poisto", koska se on se jonka pitää vaikuttaa
-    expect(pickAineistoFromInputByDocumenttiOid([createPoistoInput(), createValmisInput(), createTuontiInput()], "1")?.tila).to.eq(
-      AineistoTila.ODOTTAA_POISTOA
-    );
-    expect(pickAineistoFromInputByDocumenttiOid([createValmisInput(), createTuontiInput(), createPoistoInput()], "1")?.tila).to.eq(
-      AineistoTila.ODOTTAA_POISTOA
-    );
-  });
-
-  it("poistetaan aineistot onnistuneesti", () => {
+describe("adaptAineistotToSave", () => {
+  it("huomaa, jos jokin on jo poistettu", () => {
     doTest([], [poistoInput(1)], []);
-    doTest([poisto(1)], [], [poisto(1)]);
-    doTest([poisto(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([tuonti(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1), tuonti(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1), poisto(1), tuonti(1)], [poistoInput(1)], [poisto(1)]);
   });
 
-  it("poistetaan aineistot onnistuneesti", () => {
-    doTest([], [poistoInput(1)], []);
-    doTest([poisto(1)], [], [poisto(1)]);
+  it("huomaa, jos jokin on jo merkitty poistetuksi", () => {
     doTest([poisto(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([tuonti(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1), tuonti(1)], [poistoInput(1)], [poisto(1)]);
-    doTest([valmis(1), poisto(1), tuonti(1)], [poistoInput(1)], [poisto(1)]);
   });
 
-  it("tuodaan ja päivitetään aineistot onnistuneesti", () => {
+  it("poistaa tuodun", () => {
+    doTest([valmis(1)], [poistoInput(1)], [poisto(1)]);
+  });
+
+  it("poistaa tuomista odottavan aineistoista", () => {
+    doTest([tuonti(1)], [poistoInput(1)], []);
+  });
+
+  it("poistaa tuomista odottavan aineistoista, poistamatta poistoa odottavaa aineistoa", () => {
+    doTest([valmis(1, "uuid1"), tuonti(1, "uuid2")], [poistoInput(1, "uuid1"), poistoInput(1, "uuid2")], [poisto(1, "uuid1")]);
+  });
+
+  it("ei hämäännyt, jos inputissa yritetään tuoda jotain, joka on taustalla tuotu jo", () => {
     doTest([valmis(1)], [tuonti(1)], [valmis(1)]);
-    doTest([valmis(1)], [valmisUusi(1)], [poisto(1), tuontiUusi(1)]);
-    doTest([valmis(1)], [], [valmis(1)]);
   });
 
-  it("tuodaan ja päivitetään aineistot onnistuneesti 2", () => {
-    doTest([valmis(1), valmis(2), valmis(3)], [valmisUusi(2)], [valmis(1), poisto(2), tuontiUusi(2), valmis(3)]);
-    doTest([valmis(1), valmis(2), valmis(3)], [valmisUusi(2), valmis(4)], [valmis(1), poisto(2), tuontiUusi(2), valmis(3), tuonti(4)]);
+  it("päivittää onnistuneesti tiedoston", () => {
+    doTest([valmis(1)], [poisto(1), tuontiUusi(1, "foo2")], [poisto(1), tuontiUusi(1, "foo2")]);
   });
 
-  it("päivitetyn uudelleen tuonti ei sekoita systeemiä", () => {
+  it("päivittää onnistuneesti tiedoston muuttamatta tiedostoja, joita ei haluta muuttaa", () => {
     doTest(
-      [
-        valmis(1),
-        poisto(2), //odottaa poistoa
-        tuontiUusi(2), //odottaa tuontia
-        valmis(3),
-        tuonti(4),
-      ],
-      [valmisUusi(2), valmis(4)],
-      [valmis(1), poisto(2), tuontiUusi(2), valmis(3), tuonti(4)]
+      [valmis(1), valmis(2, "uuid2"), valmis(3, "uuid3")],
+      [valmis(1), poisto(2, "uuid2"), tuontiUusi(2, "uuid2b"), valmis(3, "uuid3")],
+      [valmis(1), poisto(2, "uuid2"), tuontiUusi(2, "uuid2b"), valmis(3, "uuid3")]
     );
   });
 
-  it.skip("päivitetyn poisto onnistuu", () => {
-    doTest(
-      [
-        valmis(1),
-        poisto(2), //odottaa poistoa
-        tuontiUusi(2), //odottaa tuontia
-        valmis(3),
-        tuonti(4),
-      ],
-      [poistoInput(2, "_uusi"), valmis(4)],
-      [poisto(2), valmis(1), valmis(3), tuonti(4)]
-    );
+  it("ei hämäänny, jos aineistot eivät muutu mitenkään", () => {
+    doTest([valmis(1)], [valmis(1)], [valmis(1)]);
   });
 
-  it.skip("päivitetyn poisto onnistuu", () => {
+  it("päivittää tiedoston ja samaan aikaan tuo uuden", () => {
     doTest(
-      [
-        valmis(1),
-        poisto(2), //odottaa poistoa
-        tuontiUusi(2), //odottaa tuontia
-        valmis(3),
-        tuonti(4),
-      ],
-      [poisto(2), valmis(4)],
-      [poisto(2), tuontiUusi(2), valmis(1), valmis(3), tuonti(4)]
+      [valmis(1), valmis(2, "uuid3"), valmis(3, "uuid3")],
+      [valmis(1), poisto(2, "uuid2"), tuontiUusi(2, "uuid2b"), valmis(3, "uuid3"), tuontiUusi(4, "uuid4")],
+      [valmis(1), poisto(2, "uuid2"), tuontiUusi(2, "uuid2b"), valmis(3, "uuid3"), tuontiUusi(4, "uuid4")]
     );
   });
 });

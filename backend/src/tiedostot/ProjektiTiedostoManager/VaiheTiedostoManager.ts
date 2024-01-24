@@ -26,20 +26,21 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   ): AsianhallintaSynkronointi | undefined;
 
   async createZipOfAineisto(zipFileS3Key: string): Promise<T | undefined> {
-    if (!this.vaihe) return;
+    if (!this.vaihe) {
+      return undefined;
+    }
     const aineistotPaths = this.getAineistot(this.vaihe);
     const filesToZip: ZipSourceFile[] = [];
     const yllapitoPath = this.projektiPaths.yllapitoFullPath;
-    for (const aineistot of aineistotPaths) {
-      if (aineistot.aineisto) {
-        for (const aineisto of aineistot.aineisto) {
-          if (aineisto.tila === AineistoTila.VALMIS) {
-            const folder = getZipFolder(aineisto.kategoriaId);
-            filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder: aineisto.kategoriaId ? folder : undefined });
-          }
-        }
-      }
-    }
+
+    aineistotPaths
+      .flatMap((aineistot) => aineistot.aineisto ?? [])
+      .filter((aineisto) => aineisto.tila === AineistoTila.VALMIS)
+      .forEach((aineisto) => {
+        const zipFolder = getZipFolder(aineisto.kategoriaId);
+        filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder });
+      });
+
     await generateAndStreamZipfileToS3(config.yllapitoBucketName, filesToZip, zipFileS3Key);
   }
 
@@ -97,7 +98,7 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   protected async deleteAineistot(...aineistoArrays: (Array<Aineisto> | null | undefined)[]): Promise<boolean> {
     let modified = false;
     // Yhdistä kaikki aineistot yhdeksi taulukoksi
-    const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur || []), [] as Aineisto[]);
+    const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur ?? []), [] as Aineisto[]);
 
     for (const aineisto of aineistot) {
       await fileService.deleteAineisto(
@@ -115,11 +116,11 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
 
   protected getIlmoituksenVastaanottajat(vastaanottajat: IlmoituksenVastaanottajat | undefined | null) {
     const ilmoituksenVastaanottajat: string[] = [];
-    for (const kunta of vastaanottajat?.kunnat || []) {
+    for (const kunta of vastaanottajat?.kunnat ?? []) {
       ilmoituksenVastaanottajat.push(kuntametadata.nameForKuntaId(kunta.id, Kieli.SUOMI));
     }
-    for (const viranomainen of vastaanottajat?.viranomaiset || []) {
-      const viranomainenKaannos = translate("viranomainen." + viranomainen.nimi as string, Kieli.SUOMI);
+    for (const viranomainen of vastaanottajat?.viranomaiset ?? []) {
+      const viranomainenKaannos = translate("viranomainen." + viranomainen.nimi, Kieli.SUOMI);
       if (viranomainenKaannos) {
         ilmoituksenVastaanottajat.push(viranomainenKaannos);
       }

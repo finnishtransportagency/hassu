@@ -115,7 +115,7 @@ Object {
     },
     Object {
       "__typename": "ProjektiKayttaja",
-      "email": "mikko.haapamaki@cgi.com",
+      "email": "mikko.haapamaki1@cgi.com",
       "etunimi": "Testi1",
       "kayttajatunnus": "LX581241",
       "muokattavissa": true,

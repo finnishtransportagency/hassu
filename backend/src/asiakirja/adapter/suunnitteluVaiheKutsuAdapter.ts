@@ -33,7 +33,7 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get yhteystiedotVuorovaikutus(): LokalisoituYhteystieto[] {
-    return this.yhteystiedot(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot || []);
+    return this.yhteystiedot(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot ?? []);
   }
 
   get kutsujat(): string | undefined {

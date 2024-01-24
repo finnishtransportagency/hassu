@@ -9,7 +9,7 @@ import { UudelleenkuulutaModal } from "./UudelleenkuulutaButton";
 
 export type ToiminnotButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<TilaSiirtymaInput, "oid">;
 
-const ToiminnotButton: VoidFunctionComponent<ToiminnotButtonProps> = (props) => {
+const ToiminnotButton: VoidFunctionComponent<ToiminnotButtonProps> = ({ oid, reloadProjekti }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUudelleenkuulutaModalOpen, setIsUudelleenkuulutaModalOpen] = useState(false);
   const [isSiirraModalOpen, setIsSiirraModalOpen] = useState(false);
@@ -31,7 +31,9 @@ const ToiminnotButton: VoidFunctionComponent<ToiminnotButtonProps> = (props) => 
           setIsUudelleenkuulutaModalOpen(false);
           setIsMenuOpen(false);
         }}
-        buttonProps={{ ...props, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO }}
+        oid={oid}
+        reloadProjekti={reloadProjekti}
+        tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
       />
       <SiirraModal
         open={isSiirraModalOpen}
@@ -39,7 +41,8 @@ const ToiminnotButton: VoidFunctionComponent<ToiminnotButtonProps> = (props) => 
           setIsSiirraModalOpen(false);
           setIsMenuOpen(false);
         }}
-        buttonProps={props}
+        oid={oid}
+        reloadProjekti={reloadProjekti}
       />
     </div>
   );

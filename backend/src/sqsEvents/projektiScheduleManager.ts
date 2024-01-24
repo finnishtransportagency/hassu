@@ -68,7 +68,7 @@ export class ProjektiScheduleManager {
     return (
       this.projekti.vuorovaikutusKierrosJulkaisut?.map(
         (julkaisu) => new VuorovaikutusKierrosJulkaisuScheduleManager(this.projekti.oid, julkaisu)
-      ) || []
+      ) ?? []
     );
   }
 
@@ -118,8 +118,8 @@ export abstract class VaiheScheduleManager<T, J> {
   constructor(oid: string, vaihe: T | undefined | null, julkaisut: J[] | undefined | null) {
     this.oid = oid;
     this.projektiPaths = new ProjektiPaths(oid);
-    this.vaihe = vaihe || undefined;
-    this.julkaisut = julkaisut || undefined;
+    this.vaihe = vaihe ?? undefined;
+    this.julkaisut = julkaisut ?? undefined;
   }
 
   abstract getSchedule(): PublishOrExpireEvent[];
@@ -139,7 +139,7 @@ export class AloitusKuulutusScheduleManager extends VaiheScheduleManager<Aloitus
           });
         }
         return schedule;
-      }, []) || []
+      }, []) ?? []
     );
   }
 
@@ -198,7 +198,7 @@ export class VuorovaikutusKierrosScheduleManager extends VaiheScheduleManager<Vu
             });
           });
         return schedule;
-      }, [] as PublishOrExpireEvent[]) || ([] as PublishOrExpireEvent[])
+      }, [] as PublishOrExpireEvent[]) ?? ([] as PublishOrExpireEvent[])
     );
   }
 
@@ -319,7 +319,7 @@ function getPublishExpireScheduleForVaiheJulkaisut(
         }
       }
       return events;
-    }, [] as PublishOrExpireEvent[]) || []
+    }, [] as PublishOrExpireEvent[]) ?? []
   );
 }
 

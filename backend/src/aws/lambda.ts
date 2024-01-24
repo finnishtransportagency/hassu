@@ -8,14 +8,14 @@ export async function invokeLambda(functionName: string, synchronousCall: boolea
     if (synchronousCall) {
       const output = await lambda.invoke({
         FunctionName: functionName,
-        Payload: new TextEncoder().encode(payload || "{}"),
+        Payload: new TextEncoder().encode(payload ?? "{}"),
       });
       const outputPayload = output.Payload;
       return new TextDecoder("utf-8").decode(outputPayload);
     } else {
       await lambda.invoke({
         FunctionName: functionName,
-        Payload: new TextEncoder().encode(payload || "{}"),
+        Payload: new TextEncoder().encode(payload ?? "{}"),
         InvocationType: "Event",
       });
     }

@@ -206,7 +206,6 @@ input VuorovaikutusTilaisuusPaivitysInput {
 
 input NahtavillaoloVaiheInput {
   aineistoNahtavilla: [AineistoInput!]
-  lisaAineisto: [AineistoInput!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   muistutusoikeusPaattyyPaiva: String
@@ -267,11 +266,12 @@ input AineistoInput {
   """
   kategoriaId: String
   nimi: String!
+  uuid: String!
   """
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: AineistoTila
+  tila: AineistoTila!
 }
 
 input LadattuTiedostoInput {
@@ -283,11 +283,12 @@ input LadattuTiedostoInput {
   Kayttajalle esitettava tiedostonimi
   """
   nimi: String!
+  uuid: String!
   """
   Numero jarjestamista varten
   """
   jarjestys: Int
-  tila: LadattuTiedostoTila
+  tila: LadattuTiedostoTila!
 }
 
 input ProjektiKayttajaInput {
@@ -468,4 +469,19 @@ input TestiKomentoInput {
   MIGRAATIO: migroitavan projektin tavoitetila
   """
   migraatioTargetStatus: String
+}
+
+input MmlYhteystietoInput {
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+}
+
+input OmistajaInput {
+  id: String
+  kiinteistotunnus: String!
+  etunimet: String
+  sukunimi: String
+  nimi: String
+  yhteystiedot: MmlYhteystietoInput
 }

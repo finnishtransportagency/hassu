@@ -1,56 +1,16 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
 import {
-  AloitusKuulutusJulkaisu,
-  DBVaylaUser,
   IlmoituksenVastaanottajat,
-  LocalizedMap,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { LaskuriTyyppi } from "hassu-common/graphql/apiModel";
-import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
-import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
-import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { formatDate } from "../asiakirjaUtil";
-
-export async function createKuulutusKutsuAdapterProps(
-  oid: string,
-  lyhytOsoite: string | undefined | null,
-  kayttoOikeudet: DBVaylaUser[],
-  kieli: KaannettavaKieli,
-  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
-  euRahoitusLogot?: LocalizedMap<string> | null,
-  vahainenMenettely?: boolean | null
-): Promise<KuulutusKutsuAdapterProps> {
-  assertIsDefined(aloitusKuulutusJulkaisu);
-  assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
-  const kuulutusVaihePaattyyPaiva = await calculateEndDate({
-    alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-    tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
-  });
-  return {
-    oid,
-    lyhytOsoite,
-    hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
-    kieli,
-    kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
-    kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-    kuulutusVaihePaattyyPaiva,
-    velho: aloitusKuulutusJulkaisu.velho,
-    yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
-    suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
-    kayttoOikeudet,
-    uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
-    euRahoitusLogot: euRahoitusLogot || undefined,
-    vahainenMenettely,
-  };
-}
 
 export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusPaiva: string;

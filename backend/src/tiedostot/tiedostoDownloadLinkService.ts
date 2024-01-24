@@ -6,11 +6,20 @@ import {
   LadattavatTiedostot,
   ListaaLausuntoPyynnonTaydennyksenTiedostotInput,
   ListaaLausuntoPyyntoTiedostotInput,
+  ListaaLisaAineistoInput,
 } from "hassu-common/graphql/apiModel";
 import { aineistoEiOdotaPoistoaTaiPoistettu, ladattuTiedostoEiOdotaPoistoaTaiPoistettu } from "hassu-common/util/tiedostoTilaUtil";
 import crypto from "crypto";
 import { IllegalAccessError } from "hassu-common/error";
-import { Aineisto, DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../database/model";
+import {
+  Aineisto,
+  DBProjekti,
+  LadattuTiedosto,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 import { log } from "../logger";
 import {
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
@@ -42,7 +51,7 @@ class TiedostoDownloadLinkService {
 
   private async adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
     const { jarjestys } = tiedosto;
-    const nimi: string = tiedosto.nimi || "";
+    const nimi: string = tiedosto.nimi ?? "";
     let linkki;
     if (tiedosto.tuotu) {
       linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
@@ -61,17 +70,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           nahtavillaolo?.aineistoNahtavilla
             ?.filter(aineistoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const lisaAineistot =
       (
         await Promise.all(
           uusiLausuntoPyynto?.lisaAineistot
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -97,17 +106,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
       (
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
     return {
       __typename: "LadattavatTiedostot",
@@ -129,15 +138,15 @@ class TiedostoDownloadLinkService {
     const aineistot =
       (
         await Promise.all(
-          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const lisaAineistot =
       (
         await Promise.all(
-          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
@@ -158,17 +167,17 @@ class TiedostoDownloadLinkService {
         await Promise.all(
           lausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) || []
+            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
       (
         await Promise.all(
           lausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) || []
+            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) ?? []
         )
-      ).sort(jarjestaTiedostot) || [];
+      ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
@@ -180,6 +189,27 @@ class TiedostoDownloadLinkService {
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
       aineistopaketti,
     };
+  }
+
+  async listaaLisaAineistoLegacy(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LadattavatTiedostot> {
+    const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
+    const aineistot =
+      (
+        await Promise.all(
+          nahtavillaolo?.aineistoNahtavilla?.map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
+        )
+      ).sort(jarjestaTiedostot) ?? [];
+    const lausuntoPyynto = projekti.lausuntoPyynnot?.find((lp) => lp.legacy === params.nahtavillaoloVaiheId);
+    const lisaAineistot =
+      (
+        await Promise.all(
+          lausuntoPyynto?.lisaAineistot?.map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
+        )
+      ).sort(jarjestaTiedostot) ?? [];
+    const aineistopaketti = nahtavillaolo?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
+      : null;
+    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
   }
 
   generateHashForLausuntoPyynto(oid: string, uuid: string, salt: string): string {
@@ -239,3 +269,18 @@ class TiedostoDownloadLinkService {
 }
 
 export const tiedostoDownloadLinkService = new TiedostoDownloadLinkService();
+
+function findNahtavillaoloVaiheById(
+  projekti: DBProjekti,
+  nahtavillaoloVaiheId: number
+): NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined {
+  let lista: (NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | undefined)[] = [];
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    lista = lista.concat(projekti.nahtavillaoloVaiheJulkaisut);
+  }
+  if (projekti.nahtavillaoloVaihe) {
+    lista = lista.concat(projekti.nahtavillaoloVaihe);
+  }
+  lista = lista.filter((nahtavillaolo) => nahtavillaolo?.id == nahtavillaoloVaiheId);
+  return lista.pop();
+}

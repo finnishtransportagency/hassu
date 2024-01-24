@@ -27,6 +27,7 @@ async function main() {
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
+    TABLE_OMISTAJA: Config.omistajaTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,
@@ -53,7 +54,10 @@ async function main() {
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
       SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
-      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
+      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiUserPoolClientId,
+      KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
+      KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
+      SUOMI_FI_USERPOOL_CLIENT_SECRET: variables.SuomifiUserPoolClientSecret,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

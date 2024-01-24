@@ -38,6 +38,7 @@ import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCus
 import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAsianhallinnanTila";
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
+import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -146,8 +147,11 @@ export class ProjektiAdapter {
       applyProjektiStatus(apiProjekti);
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
-      if (apiProjekti.asianhallinta && checkAsianhallintaState) {
-        apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinnanTila(apiProjekti);
+      if (apiProjekti.asianhallinta) {
+        apiProjekti.asianhallinta.linkkiAsianhallintaan = await getLinkkiAsianhallintaan(dbProjekti);
+        if (checkAsianhallintaState) {
+          apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinnanTila(apiProjekti);
+        }
       }
     }
 

@@ -71,7 +71,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
+    return this.kasittelynTila?.hyvaksymispaatos?.asianumero ?? "";
   }
 
   kuulutuspaiva(): string {
@@ -134,7 +134,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
     } else {
-      const kaannos = translate("vaylavirasto", this.kieli) || "";
+      const kaannos = translate("vaylavirasto", this.kieli) ?? "";
       if (!kaannos) {
         throw new Error("Puuttuu käännös sanalta vaylavirasto");
       }

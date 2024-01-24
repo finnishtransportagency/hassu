@@ -1,13 +1,14 @@
 import { describe, it } from "mocha";
-import { AineistoTila, Kieli, Vaihe, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
-import { Aineisto, DBProjekti, VuorovaikutusKierros } from "../../src/database/model";
+import { AineistoTila, Kieli, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
+import { Aineisto, DBProjekti } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
-
+import MockDate from "mockdate";
 import { expect } from "chai";
-import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
-import { assertIsDefined } from "../../src/util/assertions";
-import { cloneDeep } from "lodash";
 import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
+import { uuid } from "hassu-common/util/uuid";
+import sinon from "sinon";
+import { nyt } from "../../src/util/dateUtil";
+import cloneDeepWith from "lodash/cloneDeepWith";
 
 describe("migrateFromOldSchema", () => {
   it("should migate suunnitteluvaihe from before multi language support to the new form", async () => {
@@ -498,60 +499,6 @@ describe("migrateFromOldSchema", () => {
     expect(migratoitu).to.eql(newForm);
   });
 
-  it("should migate vuorovaikutusKierrosJulkaisu from not including esitettavatYhteystiedot and yhteystiedot to inluding esitettavatYhteystiedot and yhteystiedot", async () => {
-    const oldForm = {
-      versio: 1,
-      kielitiedot: {
-        ensisijainenKieli: "SUOMI",
-        toissijainenKieli: "RUOTSI",
-        projektinNimiToisellaKielellä: "Projekts namn på svenska",
-      },
-
-      vuorovaikutusKierros: {
-        vuorovaikutusNumero: 0,
-        arvioSeuraavanVaiheenAlkamisesta: { SUOMI: "arvio", RUOTSI: "arvio" },
-        suunnittelunEteneminenJaKesto: { SUOMI: "kesto", RUOTSI: "kesto" },
-        vuorovaikutusJulkaisuPaiva: "2023-01-01",
-        videot: [
-          {
-            SUOMI: { nimi: "", url: "http://www.1.fi" },
-            RUOTSI: { nimi: "", url: "http://www.1.fi/sv" },
-          },
-
-          {
-            SUOMI: { nimi: "", url: "http://www.2.fi" },
-            RUOTSI: { nimi: "", url: "http://www.2.fi/sv" },
-          },
-        ],
-
-        suunnittelumateriaali: [
-          {
-            SUOMI: { nimi: "suunnittelumateriaali", url: "http://www.suunnittelumateriaali.fi" },
-            RUOTSI: { nimi: "planering material", url: "http://www.suunnittelumateriaali.fi/sv" },
-          },
-        ],
-
-        vuorovaikutusTilaisuudet: [
-          {
-            tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-            nimi: { SUOMI: "Tilaisuuden nimi", RUOTSI: "Tilaisuuden nimi" },
-            paivamaara: "2023-02-01",
-            alkamisAika: "13:00",
-            lisatiedot: { SUOMI: "Saapumisohjeet", RUOTSI: "Saapumisohjeet" },
-            paatyymisAika: "14:00",
-            paikka: { SUOMI: "Tilaisuuden paikka", RUOTSI: "Tilaisuuden paikka" },
-            osoite: { SUOMI: "Osoite 123", RUOTSI: "Osoite 123" },
-            postinumero: "12345",
-            postitoimipaikka: { SUOMI: "Postitoimipaikka", RUOTSI: "Postitoimipaikka" },
-          },
-        ],
-      },
-    };
-
-    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
-
-    expect(migratoitu).to.eql(oldForm);
-  });
   it("should not mess up suunnittelumateriaali, if it's already in the correct format", async () => {
     const oldForm = {
       versio: 1,
@@ -1207,8 +1154,10 @@ describe("migrateFromOldSchema", () => {
   });
 
   it("should migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot", async () => {
-    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
-    const suunnitelmaluonnokset: Aineisto[] = [
+    const esittelyaineistot: Omit<Aineisto, "uuid">[] = [
+      { dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS },
+    ];
+    const suunnitelmaluonnokset: Omit<Aineisto, "uuid">[] = [
       { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
     ];
     const oldProjekti: Partial<DBProjekti> = {
@@ -1220,20 +1169,39 @@ describe("migrateFromOldSchema", () => {
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 1,
         aineistot: [
-          ...esittelyaineistot.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO })),
-          ...suunnitelmaluonnokset.map((aineisto) => ({ ...aineisto, kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS })),
+          ...esittelyaineistot.map((aineisto) => ({
+            ...aineisto,
+            kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+            uuid: "***migrationtest***",
+          })),
+          ...suunnitelmaluonnokset.map((aineisto) => ({
+            ...aineisto,
+            kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
+            uuid: "***migrationtest***",
+          })),
         ],
       },
     };
 
-    const migratoitu = migrateFromOldSchema(oldProjekti as DBProjekti);
+    const migratoitu = replaceTiedostoAineistoUuid(migrateFromOldSchema(oldProjekti as DBProjekti), "***migrationtest***");
 
     expect(migratoitu).to.eql(newProjekti);
   });
 
+  function replaceTiedostoAineistoUuid(projekti: Partial<DBProjekti>, replacement: string) {
+    return cloneDeepWith(projekti, (value, key) => {
+      console.log("key", value);
+      if (key == "uuid") {
+        return replacement;
+      }
+    });
+  }
+
   it("should not migrate suunnitelmaluonnokset and esittelyaineistot to combined field aineistot if there is already aineistot field present", async () => {
-    const esittelyaineistot: Aineisto[] = [{ dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS }];
-    const suunnitelmaluonnokset: Aineisto[] = [
+    const esittelyaineistot: Omit<Aineisto, "uuid">[] = [
+      { dokumenttiOid: "esittely.aineisto.oid", nimi: "Esittelyä", tila: AineistoTila.VALMIS },
+    ];
+    const suunnitelmaluonnokset: Omit<Aineisto, "uuid">[] = [
       { dokumenttiOid: "suunnitelma.luonnos.oid", nimi: "Suunnittelua", tila: AineistoTila.VALMIS },
     ];
     const aineistot: Aineisto[] = [
@@ -1242,6 +1210,7 @@ describe("migrateFromOldSchema", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
+        uuid: "jotain",
       },
     ];
     const oldProjekti: Partial<DBProjekti> = {
@@ -1259,5 +1228,173 @@ describe("migrateFromOldSchema", () => {
     const migratoitu = migrateFromOldSchema(oldProjekti as DBProjekti);
 
     expect(migratoitu).to.eql(newProjekti);
+  });
+
+  it("should migrate nahtavillaoloVaiheJulkaisu's lisaAineistot to lausuntoPyynto", async () => {
+    MockDate.set("2023-12-12");
+    const oldForm = {
+      oid: "1.2.246.578.5.1.2978288874.2711575506",
+      asianhallinta: {
+        inaktiivinen: true,
+      },
+      kasittelynTila: {},
+      kayttoOikeudet: [],
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+      },
+      nahtavillaoloVaihe: {
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.2489125316.2057886293",
+            jarjestys: 0,
+            kategoriaId: "osa_a",
+            nimi: "Asiakirjaluettelo_osat_A-C.pdf",
+            tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
+            tila: "VALMIS",
+            tuotu: "2023-12-12T10:34:22+02:00",
+          },
+        ],
+        lisaAineisto: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.3042249690.1969582740",
+            jarjestys: 0,
+            nimi: "aineisto4.txt",
+            tiedosto: "/nahtavillaolo/1/aineisto4.txt",
+            tila: "VALMIS",
+            tuotu: "2023-12-12T10:34:36+02:00",
+          },
+        ],
+        aineistopaketti: "aineistot.zip",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          tila: "HYVAKSYTTY",
+          id: 1,
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.2489125316.2057886293",
+              jarjestys: 0,
+              kategoriaId: "osa_a",
+              nimi: "Asiakirjaluettelo_osat_A-C.pdf",
+              tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
+              tila: "VALMIS",
+              tuotu: "2023-12-12T10:34:22+02:00",
+            },
+          ],
+          lisaAineisto: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.3042249690.1969582740",
+              jarjestys: 0,
+              nimi: "aineisto4.txt",
+              tiedosto: "/nahtavillaolo/1/aineisto4.txt",
+              tila: "VALMIS",
+              tuotu: "2023-12-12T10:34:36+02:00",
+            },
+          ],
+          aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+        },
+      ],
+      salt: "6bf729355075cf0ef460f2d46991e694",
+      tyyppi: "TIE",
+      vahainenMenettely: false,
+      velho: {},
+      versio: 7,
+    };
+
+    const newForm = {
+      oid: "1.2.246.578.5.1.2978288874.2711575506",
+      asianhallinta: {
+        inaktiivinen: true,
+      },
+      kasittelynTila: {},
+      kayttoOikeudet: [],
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+      },
+      nahtavillaoloVaihe: {
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.2489125316.2057886293",
+            jarjestys: 0,
+            kategoriaId: "osa_a",
+            nimi: "Asiakirjaluettelo_osat_A-C.pdf",
+            tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
+            tila: "VALMIS",
+            tuotu: "2023-12-12T10:34:22+02:00",
+            uuid: "***migrationtest***",
+          },
+        ],
+        lisaAineisto: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.3042249690.1969582740",
+            jarjestys: 0,
+            nimi: "aineisto4.txt",
+            tiedosto: "/nahtavillaolo/1/aineisto4.txt",
+            tila: "VALMIS",
+            tuotu: "2023-12-12T10:34:36+02:00",
+          },
+        ],
+        aineistopaketti: "aineistot.zip",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          tila: "HYVAKSYTTY",
+          id: 1,
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.2489125316.2057886293",
+              jarjestys: 0,
+              kategoriaId: "osa_a",
+              nimi: "Asiakirjaluettelo_osat_A-C.pdf",
+              tiedosto: "/nahtavillaolo/1/Asiakirjaluettelo_osat_A-C.pdf",
+              tila: "VALMIS",
+              tuotu: "2023-12-12T10:34:22+02:00",
+              uuid: "***migrationtest***",
+            },
+          ],
+          lisaAineisto: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.3042249690.1969582740",
+              jarjestys: 0,
+              nimi: "aineisto4.txt",
+              tiedosto: "/nahtavillaolo/1/aineisto4.txt",
+              tila: "VALMIS",
+              tuotu: "2023-12-12T10:34:36+02:00",
+            },
+          ],
+          aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+          kuulutusYhteystiedot: {
+            yhteysHenkilot: [],
+            yhteysTiedot: undefined,
+          },
+        },
+      ],
+      lausuntoPyynnot: [
+        {
+          uuid: "***migrationtest***",
+          poistumisPaiva: nyt().add(180, "day").format("YYYY-MM-DD"),
+          lisaAineistot: [
+            {
+              jarjestys: 0,
+              nimi: "aineisto4.txt",
+              tiedosto: "/nahtavillaolo/1/aineisto4.txt",
+              tila: "VALMIS",
+              tuotu: "2023-12-12T10:34:36+02:00",
+              uuid: "***migrationtest***",
+            },
+          ],
+          legacy: 1,
+          aineistopaketti: "/nahtavillaolo/1/aineisto.zip",
+        },
+      ],
+      salt: "6bf729355075cf0ef460f2d46991e694",
+      tyyppi: "TIE",
+      vahainenMenettely: false,
+      velho: {},
+      versio: 7,
+    };
+    const migratoitu = replaceTiedostoAineistoUuid(migrateFromOldSchema(oldForm as any as DBProjekti), "***migrationtest***");
+    expect(migratoitu).to.eql(newForm);
+    MockDate.reset();
   });
 });

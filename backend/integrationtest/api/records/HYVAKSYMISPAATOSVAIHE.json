@@ -116,12 +116,14 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
-          "tuotu": "2022-01-02T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-01-02T00:00",
+          "uuid": "00000003-9f2d-4f4c-bebc-fcb7e44be544"
         },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
-          "email": "mikko.haapamaki@cgi.com",
+          "email": "mikko.haapamaki1@cgi.com",
           "etunimi": "Testi1",
           "kunta": 536,
           "logo": {
@@ -158,7 +160,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -237,12 +239,14 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
-          "tuotu": "2022-10-01T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00",
+          "uuid": "00000002-5860-4054-b0de-bddf24ce6eb4"
         },
         "muokkaaja": "A000111",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
-          "email": "mikko.haapamaki@cgi.com",
+          "email": "mikko.haapamaki1@cgi.com",
           "etunimi": "Testi1",
           "kunta": 536,
           "logo": {
@@ -289,7 +293,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -307,6 +311,7 @@
       "2023-12-31T22:00:01.000Z"
     ],
     "asianhallinta": {
+      "asiaId": 11212,
       "inaktiivinen": false
     },
     "euRahoitus": true,
@@ -347,7 +352,7 @@
         "sukunimi": "Hassu"
       },
       {
-        "email": "mikko.haapamaki@cgi.com",
+        "email": "mikko.haapamaki1@cgi.com",
         "etunimi": "Testi1",
         "kayttajatunnus": "LX581241",
         "muokattavissa": true,
@@ -366,11 +371,13 @@
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "aineisto123"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -379,7 +386,8 @@
           "nimi": "aineisto3.txt",
           "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "00000001-0be9-455d-a434-0fab721acaa21.20uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -388,7 +396,8 @@
           "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "00000002-0be9-455d-a434-0fab721acaa21.21uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -397,7 +406,8 @@
           "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "00000003-0be9-455d-a434-0fab721acaa21.22uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -406,7 +416,8 @@
           "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "00000004-0be9-455d-a434-0fab721acaa21.23uusi"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -415,11 +426,12 @@
           "nimi": "Yksityistie_lunastukset.pdf",
           "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
+          "tuotu": "2023-12-31T00:00:01+02:00",
+          "uuid": "00000005-0be9-455d-a434-0fab721acaa21.24uusi"
         }
       ],
       "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-      "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
+      "asianhallintaEventId": "0000002f-0be9-455d-a434-0fab721acaa2",
       "hankkeenKuvaus": {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
       },
@@ -484,18 +496,10 @@
       "lahetekirje": {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
-        "tuotu": "2023-12-31T00:00"
+        "tila": "VALMIS",
+        "tuotu": "2023-12-31T00:00",
+        "uuid": "00000030-0be9-455d-a434-0fab721acaa2"
       },
-      "lisaAineisto": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-          "jarjestys": 1,
-          "nimi": "Yksityistie_lunastukset.pdf",
-          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2023-12-31T00:00:01+02:00"
-        }
-      ],
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": {
@@ -533,11 +537,13 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "aineisto123"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -546,7 +552,8 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/1/aineisto3.txt",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000001-0be9-455d-a434-0fab721acaa21.20uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -555,7 +562,8 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000002-0be9-455d-a434-0fab721acaa21.21uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -564,7 +572,8 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000003-0be9-455d-a434-0fab721acaa21.22uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -573,7 +582,8 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000004-0be9-455d-a434-0fab721acaa21.23uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -582,11 +592,12 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000005-0be9-455d-a434-0fab721acaa21.24uusi"
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-        "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "0000002f-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -651,18 +662,10 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
-          "tuotu": "2023-12-31T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2023-12-31T00:00",
+          "uuid": "00000030-0be9-455d-a434-0fab721acaa2"
         },
-        "lisaAineisto": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-            "jarjestys": 1,
-            "nimi": "Yksityistie_lunastukset.pdf",
-            "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
-          }
-        ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000112",
         "nahtavillaoloPDFt": {
@@ -721,11 +724,13 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "aineisto123"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
@@ -734,7 +739,8 @@
             "nimi": "aineisto3.txt",
             "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000001-0be9-455d-a434-0fab721acaa21.20uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
@@ -743,7 +749,8 @@
             "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000002-0be9-455d-a434-0fab721acaa21.21uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
@@ -752,7 +759,8 @@
             "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000003-0be9-455d-a434-0fab721acaa21.22uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -761,7 +769,8 @@
             "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000004-0be9-455d-a434-0fab721acaa21.23uusi"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
@@ -770,11 +779,12 @@
             "nimi": "Yksityistie_lunastukset.pdf",
             "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
+            "tuotu": "2023-12-31T00:00:01+02:00",
+            "uuid": "00000005-0be9-455d-a434-0fab721acaa21.24uusi"
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-        "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -839,18 +849,10 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
-          "tuotu": "2024-01-01T00:00"
+          "tila": "VALMIS",
+          "tuotu": "2024-01-01T00:00",
+          "uuid": "00000036-0be9-455d-a434-0fab721acaa2"
         },
-        "lisaAineisto": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
-            "jarjestys": 1,
-            "nimi": "Yksityistie_lunastukset.pdf",
-            "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2023-12-31T00:00:01+02:00"
-          }
-        ],
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
         "nahtavillaoloPDFt": {
@@ -905,7 +907,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -934,32 +936,6 @@
       "yhteysHenkilo": "LX581241"
     },
     "synkronoinnit": {
-      "00000001-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
-        "asiatunnus": "HASSU/123/2023",
-        "dokumentit": [
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/lähetekirje.eml"
-          }
-        ],
-        "ilmoituksenVastaanottajat": [
-          "Mikkeli",
-          "Juva",
-          "Savonlinna",
-          "Etelä-Savon ELY-keskus"
-        ],
-        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
-        "vaylaAsianhallinta": true
-      },
       "00000001-5860-4054-b0de-bddf24ce6eb4": {
         "asianhallintaEventId": "00000001-5860-4054-b0de-bddf24ce6eb4",
         "asiatunnus": "HASSU/123/2023",
@@ -1026,8 +1002,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000003-8557-4a58-8a93-64ade8cd137b": {
-        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
+      "00000004-8557-4a58-8a93-64ade8cd137b": {
+        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -1046,8 +1022,34 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000005-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000005-0be9-455d-a434-0fab721acaa2",
+      "0000002f-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "0000002f-0be9-455d-a434-0fab721acaa2",
+        "asiatunnus": "HASSU/123/2023",
+        "dokumentit": [
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/lähetekirje.eml"
+          }
+        ],
+        "ilmoituksenVastaanottajat": [
+          "Mikkeli",
+          "Juva",
+          "Savonlinna",
+          "Etelä-Savon ELY-keskus"
+        ],
+        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
+        "vaylaAsianhallinta": true
+      },
+      "00000035-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -1106,7 +1108,8 @@
           "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "ea2"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -1115,7 +1118,8 @@
           "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "sl1"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
@@ -1123,7 +1127,8 @@
           "nimi": "Radan risteämärekisteriote_1203.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
           "tila": "VALMIS",
-          "tuotu": "2022-10-01T00:00:01+03:00"
+          "tuotu": "2022-10-01T00:00:01+03:00",
+          "uuid": "aineisto234"
         }
       ],
       "arvioSeuraavanVaiheenAlkamisesta": {
@@ -1279,7 +1284,8 @@
             "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "ea2"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -1288,7 +1294,8 @@
             "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "sl1"
           }
         ],
         "arvioSeuraavanVaiheenAlkamisesta": {
@@ -1497,7 +1504,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {
@@ -1525,7 +1532,8 @@
             "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "ea2"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
@@ -1534,7 +1542,8 @@
             "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "sl1"
           },
           {
             "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
@@ -1542,13 +1551,14 @@
             "nimi": "Radan risteämärekisteriote_1203.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-10-01T00:00:01+03:00"
+            "tuotu": "2022-10-01T00:00:01+03:00",
+            "uuid": "aineisto234"
           }
         ],
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "huomenna"
         },
-        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
+        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "esitettavatYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",
@@ -1750,7 +1760,7 @@
             "kunta": 536,
             "organisaatio": "CGI Suomi Oy",
             "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sahkoposti": "mikko.haapamaki1@cgi.com",
             "sukunimi": "Hassu"
           },
           {

@@ -40,7 +40,7 @@ function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
 }
 
-type JulkaisuWithId = { id: number } & unknown;
+type JulkaisuWithId = { id: number };
 
 type JulkaisutFieldName = keyof Pick<
   DBProjekti,
@@ -200,7 +200,7 @@ export class ProjektiDatabase {
 
     let nextVersion: number;
     if (bypassLocking) {
-      nextVersion = dbProjekti.versio || 0; // Value 0 should not be meaningful when locking is bypassed
+      nextVersion = dbProjekti.versio ?? 0; // Value 0 should not be meaningful when locking is bypassed
     } else {
       nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
     }
@@ -504,6 +504,25 @@ export class ProjektiDatabase {
       })
     );
   }
+
+  async setKiinteistonOmistajat(oid: string, omistajat: string[], muutOmistajat: string[]) {
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #omistajat = :omistajat, #muutOmistajat = :muutOmistajat",
+      ExpressionAttributeNames: {
+        ["#omistajat"]: "omistajat",
+        ["#muutOmistajat"]: "muutOmistajat",
+      },
+      ExpressionAttributeValues: {
+        ":omistajat": omistajat,
+        ":muutOmistajat": muutOmistajat,
+      },
+    });
+    return await getDynamoDBDocumentClient().send(params);
+  }
 }
 
-export const projektiDatabase = new ProjektiDatabase(config.projektiTableName || "missing", config.feedbackTableName || "missing");
+export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");

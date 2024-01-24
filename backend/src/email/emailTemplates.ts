@@ -84,6 +84,9 @@ ${"suffix"}`;
 const ppHyvaksyttySuffix = `Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 ${projektiPaallikkoSuffix}`;
+const ppHyvaksyttyLinkkiAsianhallintaanSuffix = `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan{{linkkiAsianhallintaan}}.
+
+${projektiPaallikkoSuffix}`;
 
 const uudelleenkuulutusOtsikkoPrefix = `Korjaus/uudelleenkuulutus: `;
 const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
@@ -149,8 +152,6 @@ export function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUse
 
 export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
-  projekti.oid;
-  projekti.velho;
   return {
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
     subject: perustamisOtsikko({ asiatunnus }),
@@ -261,7 +262,9 @@ export function createKuulutusHyvaksyttyPpEmail(adapter: KuulutusKutsuAdapter<Ku
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(kuulutusOtsikko({ kuulutuksenTila: "hyväksytty" })),
-    text: adapter.substituteText(kuulutusHyvaksyttyTeksti({ suffix: ppHyvaksyttySuffix })),
+    text: adapter.substituteText(
+      kuulutusHyvaksyttyTeksti({ suffix: adapter.asianhallintaPaalla ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix })
+    ),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }

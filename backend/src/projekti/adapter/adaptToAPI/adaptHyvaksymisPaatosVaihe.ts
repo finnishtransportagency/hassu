@@ -53,8 +53,8 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-    hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
-    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
+    hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm ?? undefined,
+    hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero ?? undefined,
     muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
@@ -68,9 +68,9 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
   getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
 ): API.HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ??
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.PERUUTETTU) ??
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (!julkaisu) {
@@ -170,7 +170,9 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
       ),
       hyvaksymisKuulutusPDFPath: getYllapitoPathForFile(pdfs.hyvaksymisKuulutusPDFPath),
-      hyvaksymisIlmoitusMuistuttajillePDFPath: pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath ? getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath) : undefined,
+      hyvaksymisIlmoitusMuistuttajillePDFPath: pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath
+        ? getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath)
+        : undefined,
       hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
       ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath),
     };
