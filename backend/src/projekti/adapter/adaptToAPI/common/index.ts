@@ -11,3 +11,5 @@ export * from "./adaptIlmoituksenVastaanottajatToAPI";
 export * from "./adaptLokalisoituLinkkiToAPI";
 export * from "./adaptStandardiYhteystiedotToAPIByAddingProjektiPaallikko";
 export * from "./adaptVelhoToAPI";
+export * from "./adaptLaskutustiedotToAPI";
+export * from "./adaptSahkopostiVastaanottajatToAPI";
