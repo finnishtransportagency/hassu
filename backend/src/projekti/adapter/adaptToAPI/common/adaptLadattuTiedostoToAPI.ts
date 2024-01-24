@@ -25,9 +25,9 @@ export function adaptLadattuTiedostoToAPI(
 }
 
 export function adaptLadatutTiedostotToApi(
-  tiedostot: LadattuTiedosto[] | undefined,
+  tiedostot: LadattuTiedosto[] | undefined | null,
   projektiPath: PathTuple
-): Array<API.LadattuTiedosto> | undefined {
+): Array<API.LadattuTiedosto> | undefined | null {
   return tiedostot
     ?.map((tiedosto) => adaptLadattuTiedostoToAPI(projektiPath, tiedosto, false) as API.LadattuTiedosto)
     .sort(jarjestaTiedostot);
