@@ -162,6 +162,7 @@ type Projekti implements IProjekti {
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
+  hyvaksymisEsitys: HyvaksymisEsitys
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -373,6 +374,39 @@ type LausuntoPyynnonTaydennys {
   muuAineisto: [LadattuTiedosto!]
   hash: String!
   poistetaan: Boolean
+}
+
+type HyvaksymisEsitys {
+  poistumisPaiva: String!
+  kiireellinen: Boolean
+  lisatiedot: String
+  laskutustiedot: Laskutustiedot
+  hyvaksymisEsitys: [LadattuTiedosto!]
+  suunnitelma: [Aineisto!]
+  muistutukset: [LadattuTiedosto!]
+  lausunnot: [LadattuTiedosto!]
+  kuulutuksetJaKutsu: [LadattuTiedosto!]
+  muuAineistoVelhosta: [Aineisto!]
+  muuAineistoKoneelta: [LadattuTiedosto!]
+  maanomistajaluettelo: [LadattuTiedosto!]
+  vastaanottajat: [SahkopostiVastaanottaja!]
+  tila: HyvaksymisTila
+  hyvaksyja: String
+  hyvaksymisPaiva: String
+  palautusSyy: String
+  aineistopaketti: String
+}
+
+type Laskutustiedot {
+  OVTtunnus: String
+  verkkolaskuOperaattorinValittajaTunnus: String
+  viite: String
+}
+
+enum HyvaksymisTila {
+  ODOTTAA_HYVAKSYNTAA
+  HYVAKSYTTY
+  MUOKKAUS
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -776,6 +810,7 @@ type LadattuTiedosto {
   """
   jarjestys: Int
   tila: LadattuTiedostoTila!
+  kunta: Int
 }
 
 type AloitusKuulutusPDF {
@@ -1065,6 +1100,10 @@ type LadattavatTiedostot {
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
+  hyvaksymisEsitys: [LadattavaTiedosto!]
+  suunnitelma: [LadattavaTiedosto!]
+  lausunnot: [LadattavaTiedosto!]
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }
@@ -1087,6 +1126,7 @@ type LadattavaTiedosto {
   Numero jarjestamista varten
   """
   jarjestys: Int
+  kunta: Int
 }
 
 type LisaAineistoParametrit {
@@ -1164,7 +1204,7 @@ type MmlYhteystieto {
   paikkakunta: String
 }
 
-type Omistaja  {
+type Omistaja {
   id: String!
   oid: String!
   kiinteistotunnus: String!
