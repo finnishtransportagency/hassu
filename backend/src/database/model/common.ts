@@ -143,4 +143,11 @@ export type LadattuTiedosto = {
   //Numero jarjestamista varten
   jarjestys?: number;
   tila: LadattuTiedostoTila;
+  kunta?: number;
+};
+
+export type Laskutustiedot = {
+  OVTtunnus?: string | null;
+  verkkolaskuOperaattorinValittajaTunnus?: string | null;
+  viite?: string | null;
 };
