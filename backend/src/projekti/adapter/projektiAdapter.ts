@@ -40,6 +40,7 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { adaptHyvaksymisEsitysToSave } from "./adaptToDB/adaptHyvaksymisEsitysToSave";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -185,6 +186,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe,
       lausuntoPyynnot,
       lausuntoPyynnonTaydennykset,
+      hyvaksymisEsitys,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -215,6 +217,7 @@ export class ProjektiAdapter {
         lausuntoPyynnonTaydennykset,
         projektiAdaptationResult
       ),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToSave(projekti.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
         projekti.hyvaksymisPaatosVaihe,
         hyvaksymisPaatosVaihe,
