@@ -37,7 +37,6 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
                   return await lataaTiedosto(api, files[key]);
                 }
                 const currentEndIndex = lisaAineistot.length;
-                console.log(currentEndIndex + key);
                 setError(`lausuntoPyynnot.${index}.lisaAineistot.${currentEndIndex + key}`, {
                   message: "Tiedoston oltava tyyppiä JPG, PNG, PDF tai MS Word",
                 });
