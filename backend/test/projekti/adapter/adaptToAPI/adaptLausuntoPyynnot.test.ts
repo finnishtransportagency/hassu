@@ -1,5 +1,5 @@
 import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../../src/database/model";
-import { adaptLausuntoPyynnonTaydennykset, adaptLausuntoPyynnot } from "../../../../src/projekti/adapter/adaptToAPI";
+import { adaptLausuntoPyynnonTaydennyksetToAPI, adaptLausuntoPyynnotToAPI } from "../../../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 
@@ -17,10 +17,10 @@ describe("adaptLausuntoPyynnot:", () => {
       muistiinpano: "Ei vielä lähetetty kellekään",
       poistetaan: false,
     };
-    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
+    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnotToAPI(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
     const firstHash = adaptedLausuntoPyynto.hash;
     lausuntoPyynto.poistumisPaiva = "2022-02-02";
-    const adaptedLausuntoPyyntoAfterPoistumisPaivaUpdate: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [
+    const adaptedLausuntoPyyntoAfterPoistumisPaivaUpdate: API.LausuntoPyynto = adaptLausuntoPyynnotToAPI(dbProjekti, [
       lausuntoPyynto,
     ])?.pop() as API.LausuntoPyynto;
     const secondHash = adaptedLausuntoPyyntoAfterPoistumisPaivaUpdate.hash;
@@ -58,7 +58,7 @@ describe("adaptLausuntoPyynnot:", () => {
       muistiinpano: "Ei vielä lähetetty kellekään",
       poistetaan: false,
     };
-    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
+    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnotToAPI(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
     expect(adaptedLausuntoPyynto.lisaAineistot).to.eql([
       {
         __typename: "LadattuTiedosto",
@@ -95,12 +95,12 @@ describe("adaptLausuntoPyynnot:", () => {
       poistetaan: false,
       kunta: 1,
     };
-    const adaptedLausuntoPyynto: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennykset(dbProjekti, [
+    const adaptedLausuntoPyynto: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, [
       lausuntoPyynnonTaydennys,
     ])?.pop() as API.LausuntoPyynnonTaydennys;
     const firstHash = adaptedLausuntoPyynto.hash;
     lausuntoPyynnonTaydennys.poistumisPaiva = "2022-02-02";
-    const adaptedLausuntoPyynnonTaydennysAfterPoistumisPaivaUpdate: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennykset(
+    const adaptedLausuntoPyynnonTaydennysAfterPoistumisPaivaUpdate: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennyksetToAPI(
       dbProjekti,
       [lausuntoPyynnonTaydennys]
     )?.pop() as API.LausuntoPyynnonTaydennys;
@@ -158,7 +158,7 @@ describe("adaptLausuntoPyynnot:", () => {
       poistetaan: false,
       kunta: 1,
     };
-    const adaptedLausuntoPyynnonTaydennys: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennykset(dbProjekti, [
+    const adaptedLausuntoPyynnonTaydennys: API.LausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, [
       lausuntoPyynnonTaydennys,
     ])?.pop() as API.LausuntoPyynnonTaydennys;
     expect(adaptedLausuntoPyynnonTaydennys.muuAineisto).to.eql([
@@ -230,7 +230,7 @@ describe("adaptLausuntoPyynnot:", () => {
         },
       ],
     };
-    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
+    const adaptedLausuntoPyynto: API.LausuntoPyynto = adaptLausuntoPyynnotToAPI(dbProjekti, [lausuntoPyynto])?.pop() as API.LausuntoPyynto;
     expect(adaptedLausuntoPyynto.lisaAineistot).to.eql([
       {
         __typename: "LadattuTiedosto",
@@ -282,7 +282,7 @@ describe("adaptLausuntoPyynnot:", () => {
         },
       ],
     };
-    const adaptedLausuntoPyynnot: API.LausuntoPyynto[] = adaptLausuntoPyynnot(dbProjekti, [lausuntoPyynto]) as API.LausuntoPyynto[];
+    const adaptedLausuntoPyynnot: API.LausuntoPyynto[] = adaptLausuntoPyynnotToAPI(dbProjekti, [lausuntoPyynto]) as API.LausuntoPyynto[];
     expect(adaptedLausuntoPyynnot).to.eql([]);
   });
 });

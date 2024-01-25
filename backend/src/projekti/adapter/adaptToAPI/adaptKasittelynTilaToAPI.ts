@@ -1,7 +1,7 @@
 import { Hyvaksymispaatos, KasittelynTila, OikeudenPaatos } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
-export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
+export function adaptKasittelynTilaToAPI(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
   if (kasittelynTila) {
     const { hyvaksymispaatos, ensimmainenJatkopaatos, toinenJatkopaatos, hallintoOikeus, korkeinHallintoOikeus, ...rest } = kasittelynTila;
     return {

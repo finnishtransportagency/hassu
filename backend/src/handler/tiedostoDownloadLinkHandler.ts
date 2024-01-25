@@ -11,7 +11,7 @@ import { log } from "../logger";
 import { findLausuntoPyynnonTaydennysByUuid, findLausuntoPyyntoByUuid } from "../util/lausuntoPyyntoUtil";
 import { NotFoundError } from "hassu-common/error";
 import { nyt, parseDate } from "../util/dateUtil";
-import { adaptProjektiHenkilo } from "../projekti/adapter/common/adaptProjektiHenkiloJulkinen";
+import { adaptProjektiKayttajaJulkinen } from "../projekti/adapter/adaptToAPI/julkinen/adaptProjektiKayttajaJulkinen";
 import { assertIsDefined } from "../util/assertions";
 import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
@@ -44,7 +44,7 @@ class TiedostoDownloadLinkHandler {
           __typename: "LadattavatTiedostot",
           poistumisPaiva: lausuntoPyynto.poistumisPaiva,
           linkkiVanhentunut: true,
-          projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
+          projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
         });
       }
       return lausuntoPyyntoDownloadLinkService.listaaTiedostot(projekti, params);
@@ -79,7 +79,7 @@ class TiedostoDownloadLinkHandler {
           __typename: "LadattavatTiedostot",
           poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
           linkkiVanhentunut: true,
-          projektipaallikonYhteystiedot: adaptProjektiHenkilo(projari),
+          projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
         });
       }
       return lausuntoPyynnonTaydennysDownloadLinkService.listaaTiedostot(projekti, params);

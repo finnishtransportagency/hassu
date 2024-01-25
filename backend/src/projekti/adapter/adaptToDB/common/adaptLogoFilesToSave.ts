@@ -2,11 +2,11 @@ import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../../projektiAdaptationResult";
 import { LocalizedMap } from "../../../../database/model";
 
-export function adaptLokalisoituTekstiEiPakollinen(
+export function adaptLogoFilesToSave(
   alkuperaisetArvot?: LocalizedMap<string>,
   lokalisoituTekstiEiPakollinen?: API.LokalisoituTekstiInputEiPakollinen | null,
   projektiAdaptationResult?: ProjektiAdaptationResult
-): API.LokalisoituTekstiInput | null | undefined {
+): LocalizedMap<string> | null | undefined {
   if (lokalisoituTekstiEiPakollinen) {
     const { SUOMI, RUOTSI, ...rest } = lokalisoituTekstiEiPakollinen;
     if (lokalisoituTekstiEiPakollinen?.SUOMI || lokalisoituTekstiEiPakollinen?.RUOTSI) {

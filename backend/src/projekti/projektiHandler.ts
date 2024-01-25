@@ -3,7 +3,6 @@ import { requireAdmin, requirePermissionLuku, requirePermissionLuonti, requirePe
 import { velho as velhoClient } from "../velho/velhoClient";
 import * as API from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
-import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
 import { KayttoOikeudetManager } from "./kayttoOikeudetManager";
 import mergeWith from "lodash/mergeWith";
@@ -50,6 +49,7 @@ import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
+import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -291,7 +291,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
     if (!projektiFromDB.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy hassusta projekti.velho-tietoa.`);
     }
-    return adaptVelho(findUpdatedFields(projektiFromDB.velho, projekti.velho));
+    return adaptVelhoToAPI(findUpdatedFields(projektiFromDB.velho, projekti.velho));
   } catch (e) {
     log.error(e);
     throw e;
@@ -350,7 +350,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
     };
 
     await projektiDatabase.saveProjektiWithoutLocking(dbProjekti);
-    return adaptVelho(updatedFields);
+    return adaptVelhoToAPI(updatedFields);
   } catch (e) {
     log.error(e);
     throw e;

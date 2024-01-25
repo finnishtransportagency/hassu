@@ -11,29 +11,28 @@ import {
   Yhteystieto,
 } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import {
-  adaptAineistot,
-  adaptIlmoituksenVastaanottajat,
-  adaptLokalisoidutLinkit,
-  adaptLokalisoituLinkki,
-  adaptLokalisoituTeksti,
-  adaptMandatoryStandardiYhteystiedotByAddingTypename,
-  adaptMandatoryYhteystiedotByAddingTypename,
-  adaptStandardiYhteystiedotByAddingTypename,
-  forEverySaameDo,
-} from "../common";
+import { forEverySaameDo } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths, VuorovaikutusPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
-import { adaptLadattuTiedostoToAPI } from ".";
+import {
+  adaptAineistotToAPI,
+  adaptIlmoituksenVastaanottajatToAPI,
+  adaptLadattuTiedostoToAPI,
+  adaptLokalisoidutLinkitToAPI,
+  adaptLokalisoituTekstiToAPI,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
+  adaptStandardiYhteystiedotByAddingTypename,
+} from ".";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 import { assertIsDefined } from "../../../util/assertions";
 import { jaotteleVuorovaikutusAineistot } from "hassu-common/vuorovaikutusAineistoKategoria";
 
-export function adaptVuorovaikutusKierros(
+export function adaptVuorovaikutusKierrosToAPI(
   kayttoOikeudet: DBVaylaUser[],
   oid: string,
   vuorovaikutusKierros: VuorovaikutusKierros | null | undefined,
@@ -73,19 +72,19 @@ export function adaptVuorovaikutusKierros(
       palattuNahtavillaolosta,
       selosteVuorovaikutuskierrokselle,
       vuorovaikutusJulkaisuPaiva,
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot),
-      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(kayttoOikeudet, vuorovaikutusTilaisuudet),
-      suunnittelumateriaali: adaptLokalisoidutLinkit(suunnittelumateriaali),
-      videot: (videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined,
-      esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
-      suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
+      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudetToAPI(kayttoOikeudet, vuorovaikutusTilaisuudet),
+      suunnittelumateriaali: adaptLokalisoidutLinkitToAPI(suunnittelumateriaali),
+      videot: adaptLokalisoidutLinkitToAPI(videot),
+      esittelyaineistot: adaptAineistotToAPI(esittelyaineistot, paths),
+      suunnitelmaluonnokset: adaptAineistotToAPI(suunnitelmaluonnokset, paths),
       tila,
-      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
-      suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToAPI(arvioSeuraavanVaiheenAlkamisesta),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToAPI(suunnittelunEteneminenJaKesto),
+      hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus),
       palautteidenVastaanottajat,
-      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false),
+      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFtToAPI(paths, vuorovaikutusSaamePDFt, false),
       isOkToMakeNewVuorovaikutusKierros: isOkToMakeNewVuorovaikutusKierros({
         nahtavillaoloVaiheJulkaisut: true,
         vuorovaikutusKierros,
@@ -96,17 +95,20 @@ export function adaptVuorovaikutusKierros(
   return vuorovaikutusKierros as undefined;
 }
 
-export function adaptVuorovaikutusKierrosJulkaisut(
+export function adaptVuorovaikutusKierrosJulkaisutToAPI(
   projekti: DBProjekti,
   julkaisut: VuorovaikutusKierrosJulkaisu[] | null | undefined
 ): API.VuorovaikutusKierrosJulkaisu[] | undefined {
   if (!julkaisut) {
     return undefined;
   }
-  return julkaisut?.map((julkaisu) => adaptVuorovaikutusKierrosJulkaisu(julkaisu, projekti));
+  return julkaisut?.map((julkaisu) => adaptVuorovaikutusKierrosJulkaisuToAPI(julkaisu, projekti));
 }
 
-function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkaisu, projekti: DBProjekti): API.VuorovaikutusKierrosJulkaisu {
+function adaptVuorovaikutusKierrosJulkaisuToAPI(
+  julkaisu: VuorovaikutusKierrosJulkaisu,
+  projekti: DBProjekti
+): API.VuorovaikutusKierrosJulkaisu {
   const {
     ilmoituksenVastaanottajat,
     yhteystiedot,
@@ -156,25 +158,25 @@ function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkais
     vuorovaikutusJulkaisuPaiva,
     __typename: "VuorovaikutusKierrosJulkaisu",
     tila,
-    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
     yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
     esitettavatYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, esitettavatYhteystiedot),
-    vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuusJulkaisut(vuorovaikutusTilaisuudet),
-    suunnittelumateriaali: adaptLokalisoidutLinkit(suunnittelumateriaali),
-    videot: videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video): video is API.LokalisoituLinkki => !!video),
-    esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
-    suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
-    hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
-    arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
-    suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
+    vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuusJulkaisutToAPI(vuorovaikutusTilaisuudet),
+    suunnittelumateriaali: adaptLokalisoidutLinkitToAPI(suunnittelumateriaali),
+    videot: adaptLokalisoidutLinkitToAPI(videot),
+    esittelyaineistot: adaptAineistotToAPI(esittelyaineistot, paths),
+    suunnitelmaluonnokset: adaptAineistotToAPI(suunnitelmaluonnokset, paths),
+    hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus),
+    arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToAPI(arvioSeuraavanVaiheenAlkamisesta),
+    suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToAPI(suunnittelunEteneminenJaKesto),
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
     vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(projekti.oid, julkaisu),
-    vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false),
+    vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFtToAPI(paths, vuorovaikutusSaamePDFt, false),
   };
   return apiJulkaisu;
 }
 
-function adaptVuorovaikutusTilaisuudet(
+function adaptVuorovaikutusTilaisuudetToAPI(
   kayttoOikeudet: DBVaylaUser[],
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus> | null | undefined
 ): API.VuorovaikutusTilaisuus[] | undefined {
@@ -202,11 +204,11 @@ function adaptVuorovaikutusTilaisuudet(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
-      tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);
-      tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
-      tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
-      tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+      tilaisuus.nimi = adaptLokalisoituTekstiToAPI(nimi);
+      tilaisuus.lisatiedot = adaptLokalisoituTekstiToAPI(lisatiedot);
+      tilaisuus.osoite = adaptLokalisoituTekstiToAPI(osoite);
+      tilaisuus.paikka = adaptLokalisoituTekstiToAPI(paikka);
+      tilaisuus.postitoimipaikka = adaptLokalisoituTekstiToAPI(postitoimipaikka);
       tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
       tilaisuus.peruttu = vuorovaikutusTilaisuus.peruttu;
       return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuus;
@@ -215,7 +217,7 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudet as undefined;
 }
 
-function adaptVuorovaikutusTilaisuusJulkaisut(
+function adaptVuorovaikutusTilaisuusJulkaisutToAPI(
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusJulkaisu> | null | undefined
 ): API.VuorovaikutusTilaisuusJulkaisu[] | undefined {
   if (vuorovaikutusTilaisuudet) {
@@ -244,11 +246,11 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
         assertIsDefined(yhteystiedot);
         tilaisuus.yhteystiedot = adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot);
       }
-      tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);
-      tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
-      tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
-      tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+      tilaisuus.nimi = adaptLokalisoituTekstiToAPI(nimi);
+      tilaisuus.lisatiedot = adaptLokalisoituTekstiToAPI(lisatiedot);
+      tilaisuus.osoite = adaptLokalisoituTekstiToAPI(osoite);
+      tilaisuus.paikka = adaptLokalisoituTekstiToAPI(paikka);
+      tilaisuus.postitoimipaikka = adaptLokalisoituTekstiToAPI(postitoimipaikka);
       tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
       tilaisuus.peruttu = vuorovaikutusTilaisuus.peruttu;
       return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuusJulkaisu;
@@ -276,7 +278,7 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-export function adaptVuorovaikutusSaamePDFt(
+export function adaptVuorovaikutusSaamePDFtToAPI(
   projektiPath: VuorovaikutusPaths,
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt | null | undefined,
   julkinen: boolean

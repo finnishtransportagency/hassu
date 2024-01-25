@@ -1,7 +1,7 @@
-import { IlmoituksenVastaanottajat } from "../../../database/model";
+import { IlmoituksenVastaanottajat } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
-export function adaptIlmoituksenVastaanottajat(
+export function adaptIlmoituksenVastaanottajatToAPI(
   vastaanottajat: IlmoituksenVastaanottajat | null | undefined
 ): API.IlmoituksenVastaanottajat | undefined {
   if (!vastaanottajat) {
