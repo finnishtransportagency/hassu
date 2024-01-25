@@ -28,6 +28,7 @@ import {
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   PoistaKiinteistonOmistajaMutationVariables,
+  EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -125,6 +126,10 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
     case apiConfig.esikatseleLausuntoPyynnonTaydennysTiedostot.name:
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
+      );
+    case apiConfig.esikatseleHyvaksymisEsityksenTiedostot.name:
+      return await tiedostoDownloadLinkHandler.esikatseleHyvaksymisEsityksenTiedostot(
+        event.arguments as EsikatseleHyvaksymisEsityksenTiedostotQueryVariables
       );
     case apiConfig.tallennaKiinteistotunnukset.name:
       return await tallennaKiinteistotunnukset(event.arguments as TallennaKiinteistotunnuksetMutationVariables);
