@@ -51,8 +51,8 @@ type Mutation {
 
   suoritaTestiKomento(testiKomento: TestiKomentoInput!): String
 
-  tuoKarttarajaus(oid: String!, geoJSON: String!): String
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
-  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): String
+  tallennaKiinteistotunnukset(oid: String!, kiinteistotunnukset: [String!]!): String
+  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): [Omistaja]
   poistaKiinteistonOmistaja(oid: String!, omistaja: String!): String
 }
