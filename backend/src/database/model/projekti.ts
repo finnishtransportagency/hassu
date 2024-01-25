@@ -181,6 +181,8 @@ export type DBProjekti = {
   omistajat?: string[];
   muutOmistajat?: string[];
   karttarajaus?: string;
+  muistuttajat?: string[];
+  muutMuistuttajat?: string[];
 };
 
 export type Asianhallinta = {

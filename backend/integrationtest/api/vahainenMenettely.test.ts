@@ -100,7 +100,7 @@ describe("Api", () => {
       oid,
       "Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
     );
-    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 0);
     await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     emailClientStub.verifyEmailsSent();
 

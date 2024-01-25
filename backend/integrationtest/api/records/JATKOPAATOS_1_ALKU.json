@@ -299,10 +299,6 @@
         ]
       }
     ],
-    "annetutMuistutukset": [
-      "2023-12-31T22:00:01.000Z",
-      "2023-12-31T22:00:01.000Z"
-    ],
     "asianhallinta": {
       "inaktiivinen": false
     },
@@ -738,6 +734,10 @@
       "ensisijainenKieli": "SUOMI"
     },
     "lyhytOsoite": "3c1d",
+    "muistuttajat": [
+      "00000034-0be9-455d-a434-0fab721acaa2",
+      "00000036-0be9-455d-a434-0fab721acaa2"
+    ],
     "nahtavillaoloVaihe": {
       "aineistoMuokkaus": null,
       "aineistoNahtavilla": [
@@ -1146,7 +1146,7 @@
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -1213,7 +1213,7 @@
           "tiedosto": "/deleted/nahtavillaolo/2/lähetekirje.eml",
           "tila": "VALMIS",
           "tuotu": null,
-          "uuid": "00000036-0be9-455d-a434-0fab721acaa2"
+          "uuid": "00000038-0be9-455d-a434-0fab721acaa2"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
@@ -1471,8 +1471,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000035-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
+      "00000037-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {

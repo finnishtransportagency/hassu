@@ -68,6 +68,7 @@ import {
   HaeKiinteistonOmistajatQueryVariables,
   OmistajaInput,
   TuoKarttarajausMutationVariables,
+  HaeMuistuttajatQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -322,6 +323,12 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.poistaKiinteistonOmistaja,
     isYllapitoOperation: true,
   },
+  haeMuistuttajat: {
+    name: "haeMuistuttajat",
+    operationType: OperationType.Query,
+    graphql: queries.haeMuistuttajat,
+    isYllapitoOperation: true,
+  }
 };
 
 export abstract class AbstractApi {
@@ -597,12 +604,21 @@ export abstract class AbstractApi {
     });
   }
 
-  async haeKiinteistonOmistajat(oid: string, sivu: number, sivuKoko?: number): Promise<string> {
+  async haeKiinteistonOmistajat(oid: string, sivu: number, muutOmistajat: boolean, sivuKoko?: number): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
       sivu,
       sivuKoko,
+      muutOmistajat,
     } as HaeKiinteistonOmistajatQueryVariables);
+  }
+
+  async haeMuistuttajat(oid: string, sivu: number, sivuKoko?: number): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.haeMuistuttajat, {
+      oid,
+      sivu,
+      sivuKoko,
+    } as HaeMuistuttajatQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

@@ -44,6 +44,7 @@ export type HassuBackendStackProps = {
   feedbackTable: Table;
   projektiArchiveTable: Table;
   omistajaTable: Table;
+  muistuttajaTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -403,7 +404,7 @@ export class HassuBackendStack extends Stack {
         actions: ["dynamodb:UpdateItem"],
       });
       allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", {
-        "dynamodb:Attributes": ["oid", "uusiaPalautteita", "annetutMuistutukset"],
+        "dynamodb:Attributes": ["oid", "uusiaPalautteita", "muistuttajat"],
       });
       backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 
@@ -730,9 +731,12 @@ export class HassuBackendStack extends Stack {
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
       this.props.omistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_OMISTAJA", this.props.omistajaTable.tableName);
+      this.props.muistuttajaTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
+      this.props.muistuttajaTable.grantWriteData(backendFn);
     }
+    backendFn.addEnvironment("TABLE_MUISTUTTAJA", this.props.muistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;

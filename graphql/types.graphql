@@ -1183,3 +1183,20 @@ type KiinteistonOmistajat {
   sivunKoko: Int!
   omistajat: [Omistaja]!
 }
+
+type Muistuttaja  {
+  id: String!
+  lisatty: String!
+  etunimi: String
+  sukunimi: String
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+}
+
+type Muistuttajat {
+  hakutulosMaara: Int!
+  sivu: Int!
+  sivunKoko: Int!
+  muistuttajat: [Muistuttaja]!
+}

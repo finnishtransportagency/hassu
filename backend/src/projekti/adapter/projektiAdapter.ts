@@ -71,6 +71,7 @@ export class ProjektiAdapter {
       salt: _salt,
       kasittelynTila,
       annetutMuistutukset,
+      muistuttajat,
       asianhallinta: _asianhallinta,
       karttarajaus,
       ...fieldsToCopyAsIs
@@ -146,7 +147,7 @@ export class ProjektiAdapter {
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
-      muistutusMaara: annetutMuistutukset?.length,
+      muistutusMaara: (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0),
       asianhallinta: await adaptAsianhallinta(dbProjekti),
       karttarajaus: karttarajaus ? fileService.getYllapitoPathForProjektiFile(projektiPath, karttarajaus) : null,
       ...fieldsToCopyAsIs,

@@ -28,6 +28,7 @@ async function main() {
     TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
     TABLE_OMISTAJA: Config.omistajaTableName,
+    TABLE_MUISTUTTAJA: Config.muistuttajaTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,

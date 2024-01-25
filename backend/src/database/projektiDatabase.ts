@@ -330,6 +330,20 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async appendMuistuttajatList(oid: string, id: string): Promise<void> {
+    log.info("appendMuistuttajatList", { oid, id });
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #am = list_append(if_not_exists(#am, :tyhjalista), :id)",
+      ExpressionAttributeNames: { "#am": "muistuttajat" },
+      ExpressionAttributeValues: { ":id": [id], ":tyhjalista": [] },
+    });
+    await getDynamoDBDocumentClient().send(params);
+  }
+
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 

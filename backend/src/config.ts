@@ -8,6 +8,7 @@ const config = {
   lyhytOsoiteTableName: process.env.TABLE_LYHYTOSOITE,
   feedbackTableName: process.env.TABLE_FEEDBACK,
   omistajaTableName: process.env.TABLE_OMISTAJA!,
+  muistuttajaTableName: process.env.TABLE_MUISTUTTAJA!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
