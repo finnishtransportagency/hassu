@@ -68,8 +68,7 @@ const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2,
 export const IMAGE_CIRCLE_RADIUS = 10;
 export const STROKE_WIDTH = 8;
 
-const featType = "PalstanSijaintitiedot";
-const paikkatietoBaseUrl = "/hassu/paikkatieto/kiinteisto-avoin/simple-features/v3";
+const FEAT_TYPE = "PalstanSijaintitiedot";
 
 export const createElement = (children: JSX.Element) => {
   const element = document.createElement("span");
@@ -117,27 +116,8 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
     const loadGeometries: (geom: Polygon) => Promise<void> = async (geom) => {
       const geomUid = getUid(geom);
 
-      const bounds = geom.getExtent();
-
-      const [minX, minY] = coordViewToData([bounds[0], bounds[1]]);
-      const [maxX, maxY] = coordViewToData([bounds[2], bounds[3]]);
-
-      const chunkLength = 1400;
-
-      const xRanges = splitRange(minX, maxX, chunkLength);
-      const yRanges = splitRange(minY, maxY, chunkLength);
-
-      const allExtents = xRanges
-        .reduce<Extent[]>((extent1, xRange) => {
-          extent1.push(
-            ...yRanges.reduce<Extent[]>((extents2, yRange) => {
-              extents2.push([xRange[0], yRange[0], xRange[1], yRange[1]]);
-              return extents2;
-            }, [])
-          );
-          return extent1;
-        }, [])
-        .filter((extent) => geom.intersectsExtent(extent));
+      const chunkSquareSideLength = 1400;
+      const allExtents = getGeomExtentInSmallerChunks(geom, chunkSquareSideLength);
 
       const featuresToRemove = geoJsonSource.getFeatures().filter((feat) => feat.getProperties().selectedGeometryUid === geomUid);
 
@@ -164,7 +144,7 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
         return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
       });
       uniqueIntersecting.forEach((f) => {
-        f.setProperties({ featureType: featType, selectedGeometryUid: geomUid });
+        f.setProperties({ featureType: FEAT_TYPE, selectedGeometryUid: geomUid });
       });
       featuresToRemove.forEach((feat) => {
         geoJsonSource.removeFeature(feat);
@@ -341,18 +321,53 @@ const format = new GeoJSON({
   dataProjection: "EPSG:3067",
 });
 
+const PAIKKATIETO_BASEURL = "/hassu/paikkatieto/kiinteisto-avoin/simple-features/v3";
+
 const fetchPalstanSijaintitiedot: (extent: Extent) => Promise<Feature<Geometry>[]> = async ([minX, minY, maxX, maxY]) => {
-  const params = {
-    limit: "10000",
+  let params: URLSearchParams | null = new URLSearchParams({
+    limit: "1000",
     bbox: [minX, minY, maxX, maxY].join(","),
     "filter-lang": "cql2-text",
     crs: mapOpts.dataCrs,
     "bbox-crs": mapOpts.dataCrs,
-  };
+  });
 
-  const response = await axios.get(`${paikkatietoBaseUrl}/collections/${featType}/items`, { params });
-  return format.readFeatures(response.data);
+  const features: Feature<Geometry>[] = [];
+
+  do {
+    const response = await axios.get(`${PAIKKATIETO_BASEURL}/collections/${FEAT_TYPE}/items`, {
+      params,
+    });
+    features.push(...format.readFeatures(response.data));
+    const href: string = response.data.links.find((link: any) => link.rel === "next")?.href;
+    params = href ? new URLSearchParams(new URL(href).search) : null;
+  } while (params);
+
+  return features;
 };
+
+function getGeomExtentInSmallerChunks(geom: Polygon, chunkSquareSideLength: number) {
+  const bounds = geom.getExtent();
+
+  const [minX, minY] = coordViewToData([bounds[0], bounds[1]]);
+  const [maxX, maxY] = coordViewToData([bounds[2], bounds[3]]);
+
+  const xRanges = splitRange(minX, maxX, chunkSquareSideLength);
+  const yRanges = splitRange(minY, maxY, chunkSquareSideLength);
+
+  const allExtents = xRanges
+    .reduce<Extent[]>((extents1, xRange) => {
+      extents1.push(
+        ...yRanges.reduce<Extent[]>((extents2, yRange) => {
+          extents2.push([xRange[0], yRange[0], xRange[1], yRange[1]]);
+          return extents2;
+        }, [])
+      );
+      return extents1;
+    }, [])
+    .filter((extent) => geom.intersectsExtent(extent));
+  return allExtents;
+}
 
 function coordViewToData(coord: number[]) {
   if (mapOpts.viewProj == mapOpts.dataProj) {
