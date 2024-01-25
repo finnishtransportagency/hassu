@@ -30,26 +30,34 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       withLoadingSpinner(
         (async () => {
           const files: FileList | null = event.target.files;
+
           if (files?.length) {
-            const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map(async (key: number) => {
-                if (allowedUploadFileTypes.find((i) => i === files[key].type)) {
-                  return await lataaTiedosto(api, files[key]);
-                }
-                const currentEndIndex = lisaAineistot.length;
-                setError(`lausuntoPyynnot.${index}.lisaAineistot.${currentEndIndex + key}`, {
-                  message: "Tiedoston oltava tyyppiä JPG, PNG, PDF tai MS Word",
-                });
-                return "";
-              })
-            );
+            const nonAllowedTypeFiles: any[] = [];
+            const uploadedFilesPromises: Promise<string>[] = [];
+
+            Array.from(Array(files.length).keys()).forEach((key: number) => {
+              if (allowedUploadFileTypes.find((type) => type === files[key].type)) {
+                uploadedFilesPromises.push(lataaTiedosto(api, files[key]));
+              } else {
+                nonAllowedTypeFiles.push(files[key]);
+              }
+            });
+
+            const uploadedFiles: string[] = await Promise.all(uploadedFilesPromises);
+
             const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
               nimi: files[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
+
             setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
+
+            if (nonAllowedTypeFiles.length) {
+              console.log(nonAllowedTypeFiles);
+              alert("Väärä tiedostotyyppi: " + nonAllowedTypeFiles + " Sallitut tyypit JPG, PNG, PDF tai MS Word.");
+            }
           }
         })()
       ),
