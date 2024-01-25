@@ -41,12 +41,10 @@ export type DBOmistaja = {
   nimi?: string | null;
   henkilotunnus?: string;
   ytunnus?: string;
-  yhteystiedot?: {
-    jakeluosoite?: string | null;
-    postinumero?: string | null;
-    paikkakunta?: string | null;
-    maakoodi?: string | null;
-  };
+  jakeluosoite?: string | null;
+  postinumero?: string | null;
+  paikkakunta?: string | null;
+  maakoodi?: string | null;
   expires?: number;
 };
 
@@ -81,9 +79,9 @@ function getTableName() {
 function suomifiLahetys(omistaja: DBOmistaja): boolean {
   return (
     (!!omistaja.henkilotunnus || !!omistaja.ytunnus) &&
-    !!omistaja.yhteystiedot?.jakeluosoite &&
-    !!omistaja.yhteystiedot.paikkakunta &&
-    !!omistaja.yhteystiedot.postinumero
+    !!omistaja.jakeluosoite &&
+    !!omistaja.paikkakunta &&
+    !!omistaja.postinumero
   );
 }
 
@@ -125,12 +123,10 @@ const handlerFactory = (event: SQSEvent) => async () => {
             etunimet: o.etunimet,
             sukunimi: o.sukunimi,
             nimi: o.nimi,
-            yhteystiedot: {
-              jakeluosoite: o.yhteystiedot?.jakeluosoite,
-              postinumero: o.yhteystiedot?.postinumero,
-              paikkakunta: o.yhteystiedot?.paikkakunta,
-              maakoodi: o.yhteystiedot?.maakoodi,
-            },
+            jakeluosoite: o.yhteystiedot?.jakeluosoite,
+            postinumero: o.yhteystiedot?.postinumero,
+            paikkakunta: o.yhteystiedot?.paikkakunta,
+            maakoodi: o.yhteystiedot?.maakoodi,
             expires,
           });
         });
@@ -269,11 +265,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
       uudetOmistajat.push(dbOmistaja.id);
     }
-    dbOmistaja.yhteystiedot = {
-      jakeluosoite: omistaja.yhteystiedot?.jakeluosoite,
-      postinumero: omistaja.yhteystiedot?.postinumero,
-      paikkakunta: omistaja.yhteystiedot?.paikkakunta,
-    };
+    dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
+    dbOmistaja.postinumero = omistaja.postinumero;
+    dbOmistaja.paikkakunta = omistaja.paikkakunta;
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getTableName(), Item: dbOmistaja }));
   }
   if (uudetOmistajat.length > 0) {
@@ -340,12 +334,9 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
         etunimet: o.etunimet,
         sukunimi: o.sukunimi,
         nimi: o.nimi,
-        yhteystiedot: {
-          __typename: "MmlYhteystieto",
-          jakeluosoite: o.yhteystiedot?.jakeluosoite,
-          postinumero: o.yhteystiedot?.postinumero,
-          paikkakunta: o.yhteystiedot?.paikkakunta,
-        },
+        jakeluosoite: o.jakeluosoite,
+        postinumero: o.postinumero,
+        paikkakunta: o.paikkakunta,
       })),
     };
   } else {

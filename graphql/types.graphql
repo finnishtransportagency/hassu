@@ -1159,12 +1159,6 @@ type AsianhallinnanTila {
   asianTila: AsianTila
 }
 
-type MmlYhteystieto {
-  jakeluosoite: String
-  postinumero: String
-  paikkakunta: String
-}
-
 type Omistaja  {
   id: String!
   oid: String!
@@ -1174,7 +1168,9 @@ type Omistaja  {
   etunimet: String
   sukunimi: String
   nimi: String
-  yhteystiedot: MmlYhteystieto
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
 }
 
 type KiinteistonOmistajat {

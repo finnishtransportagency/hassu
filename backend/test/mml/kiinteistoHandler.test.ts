@@ -193,13 +193,17 @@ describe("kiinteistoHandler", () => {
           kiinteistotunnus: "1",
           etunimet: "Teppo2",
           sukunimi: "Tepon sukunimi",
-          yhteystiedot: { jakeluosoite: "Osoite 2", postinumero: "00100", paikkakunta: "Helsinki" },
+          jakeluosoite: "Osoite 2", 
+          postinumero: "00100", 
+          paikkakunta: "Helsinki",
         },
         {
           kiinteistotunnus: "2",
           etunimet: "Matti",
           sukunimi: "Ruohonen",
-          yhteystiedot: { jakeluosoite: "Osoite 1", postinumero: "01000", paikkakunta: "Vantaa" },
+          jakeluosoite: "Osoite 1",
+          postinumero: "01000",
+          paikkakunta: "Vantaa",
         },
       ],
     });
@@ -208,16 +212,16 @@ describe("kiinteistoHandler", () => {
     const o1 = putCommand.args[0].input.Item as DBOmistaja;
     expect(o1.etunimet).to.be.equal("Teppo2");
     expect(o1.sukunimi).to.be.equal("Tepon sukunimi");
-    expect(o1.yhteystiedot?.jakeluosoite).to.be.equal("Osoite 2");
-    expect(o1.yhteystiedot?.postinumero).to.be.equal("00100");
-    expect(o1.yhteystiedot?.paikkakunta).to.be.equal("Helsinki");
+    expect(o1.jakeluosoite).to.be.equal("Osoite 2");
+    expect(o1.postinumero).to.be.equal("00100");
+    expect(o1.paikkakunta).to.be.equal("Helsinki");
     const putCommand2 = dbMock.commandCalls(PutCommand)[1];
     const o2 = putCommand2.args[0].input.Item as DBOmistaja;
     expect(o2.etunimet).to.be.equal("Matti");
     expect(o2.sukunimi).to.be.equal("Ruohonen");
-    expect(o2.yhteystiedot?.jakeluosoite).to.be.equal("Osoite 1");
-    expect(o2.yhteystiedot?.postinumero).to.be.equal("01000");
-    expect(o2.yhteystiedot?.paikkakunta).to.be.equal("Vantaa");
+    expect(o2.jakeluosoite).to.be.equal("Osoite 1");
+    expect(o2.postinumero).to.be.equal("01000");
+    expect(o2.paikkakunta).to.be.equal("Vantaa");
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
     const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
@@ -233,7 +237,7 @@ describe("kiinteistoHandler", () => {
     dbMock.on(BatchGetCommand).resolves({
       Responses: {
         [config.omistajaTableName]: [
-          { id: "1", etunimet: "Matti", yhteystiedot: { jakeluosoite: "Osoite 1", postinumero: "00100", paikkakunta: "Helsinki" } },
+          { id: "1", etunimet: "Matti", jakeluosoite: "Osoite 1", postinumero: "00100", paikkakunta: "Helsinki" },
           { id: "2", etunimet: "Teppo" },
         ],
       },
@@ -252,9 +256,9 @@ describe("kiinteistoHandler", () => {
     expect(omistajat.sivunKoko).to.be.equal(2);
     expect(omistajat.omistajat[0]?.id).to.be.equal("1");
     expect(omistajat.omistajat[0]?.etunimet).to.be.equal("Matti");
-    expect(omistajat.omistajat[0]?.yhteystiedot?.jakeluosoite).to.be.equal("Osoite 1");
-    expect(omistajat.omistajat[0]?.yhteystiedot?.postinumero).to.be.equal("00100");
-    expect(omistajat.omistajat[0]?.yhteystiedot?.paikkakunta).to.be.equal("Helsinki");
+    expect(omistajat.omistajat[0]?.jakeluosoite).to.be.equal("Osoite 1");
+    expect(omistajat.omistajat[0]?.postinumero).to.be.equal("00100");
+    expect(omistajat.omistajat[0]?.paikkakunta).to.be.equal("Helsinki");
     expect(omistajat.omistajat[1]?.id).to.be.equal("2");
     expect(omistajat.omistajat[1]?.etunimet).to.be.equal("Teppo");
     await haeKiinteistonOmistajat({ oid: "1", muutOmistajat: false, sivu: 2, sivuKoko: 2 });
