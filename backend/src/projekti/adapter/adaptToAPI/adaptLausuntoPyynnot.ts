@@ -2,9 +2,10 @@ import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti, LadattuTiedosto, LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/model";
 import { assertIsDefined } from "../../../util/assertions";
 import { PathTuple, ProjektiPaths } from "../../../files/ProjektiPath";
-import { tiedostoDownloadLinkService } from "../../../tiedostot/tiedostoDownloadLinkService";
 import { adaptLadattuTiedostoToAPI } from ".";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
+import { lausuntoPyyntoDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
+import { lausuntoPyynnonTaydennysDownloadLinkService } from "../../../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
 
 export function adaptLausuntoPyynnot(
   dbProjekti: DBProjekti,
@@ -21,7 +22,7 @@ export function adaptLausuntoPyynnot(
         __typename: "LausuntoPyynto",
         ...rest,
         lisaAineistot: adaptLadatutTiedostotToApi(lisaAineistot, paths),
-        hash: tiedostoDownloadLinkService.generateHashForLausuntoPyynto(oid, lausuntoPyynto.uuid, dbProjekti.salt),
+        hash: lausuntoPyyntoDownloadLinkService.generateHash(oid, lausuntoPyynto.uuid, dbProjekti.salt),
       };
       return apiLausuntoPyynto;
     });
@@ -41,7 +42,7 @@ export function adaptLausuntoPyynnonTaydennykset(
       ...rest,
       muuAineisto: adaptLadatutTiedostotToApi(muuAineisto, paths),
       muistutukset: adaptLadatutTiedostotToApi(muistutukset, paths),
-      hash: tiedostoDownloadLinkService.generateHashForLausuntoPyynnonTaydennys(oid, lausuntoPyynnonTaydennys.uuid, dbProjekti.salt),
+      hash: lausuntoPyynnonTaydennysDownloadLinkService.generateHash(oid, lausuntoPyynnonTaydennys.uuid, dbProjekti.salt),
     };
     return taydennys;
   });
