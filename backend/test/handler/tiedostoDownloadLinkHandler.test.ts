@@ -72,6 +72,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
           tuotu: "2021-06-01T01:03",
+          kunta: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -122,6 +123,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
           tuotu: "2021-06-01T01:03",
+          kunta: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -177,6 +179,7 @@ describe("tiedostoDownloadLinkHandler", () => {
             jarjestys: 2,
             linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
             tuotu: "2021-06-01T01:03",
+            kunta: undefined,
           },
         ],
         poistumisPaiva: nyt().add(10, "day").format("YYYY-MM-DD"),
@@ -247,6 +250,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
           tuotu: "2021-06-01T01:01",
+          kunta: undefined,
         },
       ],
       muutAineistot: [
@@ -256,6 +260,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
           tuotu: "2021-06-01T01:03",
+          kunta: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -318,6 +323,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           tiedosto: "/lausuntopyynto/joku-uuid/aineisto_1.txt",
           uuid: "A1",
+          kunta: undefined,
         },
         {
           nimi: `aineisto_uusi.txt`,
@@ -325,6 +331,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 3,
           tiedosto: "joku-hassu-polku/124223535235.txt",
           uuid: "UUSI",
+          kunta: undefined,
         },
       ],
     };
@@ -351,6 +358,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynto/joku-uuid/aineisto_1.txt",
           tuotu: "2021-06-01T01:03",
+          kunta: undefined,
         },
         {
           __typename: "LadattavaTiedosto",
@@ -358,6 +366,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 3,
           linkki: "",
           tuotu: undefined,
+          kunta: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -376,6 +385,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
           jarjestys: 2,
           uuid: "T2",
+          kunta: undefined,
         },
         {
           tiedosto: `/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt`,
@@ -383,6 +393,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           tila: API.LadattuTiedostoTila.VALMIS,
           jarjestys: 1,
           uuid: "T1",
+          kunta: undefined,
         },
       ],
       muuAineisto: [
@@ -392,6 +403,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 1,
           tiedosto: "joku-hassu-polku/235345345t.txt",
           uuid: "A4",
+          kunta: undefined,
         },
         {
           nimi: `aineisto_3.txt`,
@@ -399,6 +411,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           tiedosto: `/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt`,
           uuid: "A3",
+          kunta: undefined,
         },
       ],
     };
@@ -416,6 +429,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 1,
           linkki: "",
           tuotu: undefined,
+          kunta: undefined,
         },
         {
           __typename: "LadattavaTiedosto",
@@ -423,6 +437,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineisto_3.txt",
           tuotu: "2021-06-01T01:03",
+          kunta: undefined,
         },
       ],
       muistutukset: [
@@ -432,6 +447,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 1,
           linkki: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/tiedosto_1.txt",
           tuotu: "2021-06-01T01:01",
+          kunta: undefined,
         },
         {
           __typename: "LadattavaTiedosto",
@@ -439,6 +455,7 @@ describe("tiedostoDownloadLinkHandler", () => {
           jarjestys: 2,
           linkki: "",
           tuotu: undefined,
+          kunta: undefined,
         },
       ],
       poistumisPaiva: "2022-01-01",
@@ -519,6 +536,7 @@ const lausuntoPyynto1: LausuntoPyynto = {
       jarjestys: 2,
       tuotu: "2021-06-01T01:03",
       uuid: "A1",
+      kunta: undefined,
     },
   ],
   aineistopaketti: "/lausuntopyynto/joku-uuid/aineistot.zip",
@@ -536,6 +554,7 @@ const lausuntoPyynto2: LausuntoPyynto = {
       jarjestys: 2,
       tuotu: "2021-06-01T01:03",
       uuid: "A2",
+      kunta: undefined,
     },
   ],
   aineistopaketti: "/lausuntopyynto/joku-toinen-uuid/aineistot.zip",
@@ -552,6 +571,7 @@ const lausuntoPyynnonTaydennys1: LausuntoPyynnonTaydennys = {
       jarjestys: 1,
       tuotu: "2021-06-01T01:01",
       uuid: "T1",
+      kunta: undefined,
     },
   ],
   muuAineisto: [
@@ -562,6 +582,7 @@ const lausuntoPyynnonTaydennys1: LausuntoPyynnonTaydennys = {
       jarjestys: 2,
       tuotu: "2021-06-01T01:03",
       uuid: "A3",
+      kunta: undefined,
     },
   ],
   kunta: 1,
@@ -579,6 +600,7 @@ const lausuntoPyynnonTaydennys2: LausuntoPyynnonTaydennys = {
       jarjestys: 1,
       tuotu: "2021-06-01T01:01",
       uuid: "T2",
+      kunta: undefined,
     },
   ],
   muuAineisto: [
@@ -589,6 +611,7 @@ const lausuntoPyynnonTaydennys2: LausuntoPyynnonTaydennys = {
       jarjestys: 2,
       tuotu: "2021-06-01T01:03",
       uuid: "A4",
+      kunta: undefined,
     },
   ],
   kunta: 2,

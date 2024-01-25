@@ -46,6 +46,7 @@ describe("LisaAineistoHandler", () => {
           nimi: "aineisto4.txt",
           linkki: "latauslinkki1.2.246.578.5.1.2978288874.2711575506-/nahtavillaolo/1/aineisto4.txt",
           tuotu: "2023-12-12T10:34:36+02:00",
+          kunta: undefined,
         },
       ],
       aineistopaketti: "latauslinkki1.2.246.578.5.1.2978288874.2711575506-/nahtavillaolo/1/aineisto.zip",
