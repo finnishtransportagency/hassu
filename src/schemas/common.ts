@@ -14,19 +14,7 @@ export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).null
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({
     tiedosto: Yup.string().required(),
-    nimi: Yup.string()
-      .required()
-      .test({
-        message: "Tiedoston oltava tyyppiä JPG, PNG, PDF tai MS Word",
-        test: (name, context) => {
-          const isValid = !name || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(name.toLowerCase());
-          if (!isValid) {
-            context?.createError();
-            return false;
-          }
-          return true;
-        },
-      }),
+    nimi: Yup.string().required(),
     jarjestys: Yup.number().integer().notRequired(),
     tila: Yup.string().required(),
   });

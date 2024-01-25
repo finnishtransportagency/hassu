@@ -10,8 +10,6 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
-import { getLadatutTiedostotSchema } from "../../../../../schemas/common";
-import { ValidationError } from "yup";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue, setError } = useFormContext<LausuntoPyynnotFormValues>();
@@ -27,7 +25,6 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       hiddenInputRef.current.click();
     }
   };
-
   const handleUploadedFiles = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) =>
       withLoadingSpinner(
@@ -36,52 +33,23 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           if (files?.length) {
             const uploadedFiles: string[] = await Promise.all(
               Array.from(Array(files.length).keys()).map(async (key: number) => {
-                console.log("index " + index);
-                console.log("key " + key);
-                console.log(files[key].name);
-
                 if (allowedUploadFileTypes.find((i) => i === files[key].type)) {
-                  const a = await lataaTiedosto(api, files[key]);
-                  console.log(files[key]);
-                  return a;
+                  return await lataaTiedosto(api, files[key]);
                 }
-                console.log("setting errro to:" + key);
-
-                return "HUONO";
+                const currentEndIndex = lisaAineistot.length;
+                console.log(currentEndIndex + key);
+                setError(`lausuntoPyynnot.${index}.lisaAineistot.${currentEndIndex + key}`, {
+                  message: "Tiedoston oltava tyyppiä JPG, PNG, PDF tai MS Word",
+                });
+                return "";
               })
             );
-
-            uploadedFiles.forEach((u) => console.log(u));
             const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
               nimi: files[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
-
-            console.log("uploadedFiles");
-            console.log(uploadedFiles);
-
-            console.log("lisaAineistot");
-            console.log(lisaAineistot);
-
-            console.log("tiedostoInputs");
-            console.log(tiedostoInputs);
-            try {
-              getLadatutTiedostotSchema().validateSync((lisaAineistot ?? []).concat(tiedostoInputs));
-            } catch (e) {
-              if (e instanceof ValidationError) {
-                console.log("fggf puutteelliset", { e });
-                if (e.path) {
-                  const aineistoIndex = Number(e.path.replace(/\D/g, ""));
-                  console.log("aineistoIndex " + aineistoIndex);
-                  setError(`lausuntoPyynnot.${index}.lisaAineistot.${aineistoIndex}`, { message: e.message });
-                }
-              } else {
-                throw e;
-              }
-            }
-
             setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
@@ -97,7 +65,6 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
         palvelun kansalaispuolelle. Liitettyjen lisäaineistojen sisältö näkyy automaattisesti linkin takana, kun aineistot on tuotu tälle
         sivulle ja muutokset on tallennettu. Esikatselu-toiminnolla voit nähdä tallentamattomat lisäaineistomuutokset.
       </p>
-
       {!!lausuntoPyynto?.lisaAineistot?.length && (
         <LisaAineistotTable
           joTallennetutLisaAineistot={projekti.lausuntoPyynnot?.[index]?.lisaAineistot ?? []}
@@ -117,7 +84,6 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           }
         }}
       />
-
       <label htmlFor={`lisa-aineistot-${index}-input`}>
         <Button className="mt-4" type="button" id={`tuo_lisa-aineistoja_${index}_button`} onClick={onButtonClick}>
           Hae tiedostot

@@ -39,10 +39,8 @@ export default function AineistoTable({
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
           const aineistoIndex = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
-          console.log(formState);
           const errorMessage = (formState.errors.lausuntoPyynnot?.[lausuntoPyyntoIndex].lisaAineistot?.[aineistoIndex] as any | undefined)
             ?.message;
-          console.log("HELLHEHELOHL " + errorMessage);
           return (
             <>
               <HassuLadattuTiedostoNimiExtLink

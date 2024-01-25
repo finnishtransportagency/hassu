@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
 import { getLadatutTiedostotSchema } from "./common";
 
-const maxNoteLength = 4;
+const maxNoteLength = 2000;
 
 export const lausuntopyynnotSchema = Yup.object().shape({
   oid: Yup.string().required(),
