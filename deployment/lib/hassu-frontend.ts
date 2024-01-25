@@ -455,7 +455,10 @@ export class HassuFrontendStack extends Stack {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
         customHeaders: { "x-api-key": apiKey },
       }),
-      cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+      cachePolicy: new CachePolicy(this, "MML-cache-policy-" + env, {
+        queryStringBehavior: { behavior: "whitelist", queryStrings: ["limit", "bbox", "filter-lang", "crs", "bbox-crs", "next"] },
+        cachePolicyName: "MMLCachePolicy-" + env,
+      }),
       originRequestPolicy,
       allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
