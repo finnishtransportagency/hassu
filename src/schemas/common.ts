@@ -13,27 +13,15 @@ export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).null
 
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({
-    tiedosto: Yup.string()
-      .required()
-      .test({
-        message: "vain_kuva_tai_pdf",
-        test: (file, context) => {
-          console.log("HELLO file" + file);
-          const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file.toLowerCase());
-          if (!isValid) context?.createError();
-          return true;
-        },
-      }),
+    tiedosto: Yup.string().required(),
     nimi: Yup.string()
       .required()
       .test({
-        message: "vain_kuva_tai_pdf",
+        message: "Tiedoston oltava tyyppiä JPG, PNG, PDF tai MS Word",
         test: (name, context) => {
-          console.log("HELLO name" + name);
-          console.log("HELLO name" + context.path);
-
           const isValid = !name || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(name.toLowerCase());
           if (!isValid) {
+            context?.createError();
             return false;
           }
           return true;

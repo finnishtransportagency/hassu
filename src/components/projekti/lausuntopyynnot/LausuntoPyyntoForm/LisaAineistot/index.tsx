@@ -12,7 +12,6 @@ import { uuid } from "common/util/uuid";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { getLadatutTiedostotSchema } from "../../../../../schemas/common";
 import { ValidationError } from "yup";
-import { log } from "../../../../../../backend/src/logger";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue, setError } = useFormContext<LausuntoPyynnotFormValues>();
@@ -47,7 +46,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
                   return a;
                 }
                 console.log("setting errro to:" + key);
-                setError(`lausuntoPyynnot.${index}.lisaAineistot.${key}`, { message: "EROEROEOROE" });
+
                 return "HUONO";
               })
             );
@@ -69,17 +68,21 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
             console.log("tiedostoInputs");
             console.log(tiedostoInputs);
             try {
-              getLadatutTiedostotSchema().validateSync(tiedostoInputs);
+              getLadatutTiedostotSchema().validateSync((lisaAineistot ?? []).concat(tiedostoInputs));
             } catch (e) {
               if (e instanceof ValidationError) {
-                log.info("fggf puutteelliset", { e });
-                return; // This is the final status
+                console.log("fggf puutteelliset", { e });
+                if (e.path) {
+                  const aineistoIndex = Number(e.path.replace(/\D/g, ""));
+                  console.log("aineistoIndex " + aineistoIndex);
+                  setError(`lausuntoPyynnot.${index}.lisaAineistot.${aineistoIndex}`, { message: e.message });
+                }
               } else {
                 throw e;
               }
             }
-            //getLadatutTiedostotSchema().validateSync(tiedostoInputs);
-            //    setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
+
+            setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
       ),
