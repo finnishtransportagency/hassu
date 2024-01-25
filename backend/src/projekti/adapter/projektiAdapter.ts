@@ -148,7 +148,7 @@ export class ProjektiAdapter {
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
       muistutusMaara: annetutMuistutukset?.length,
       asianhallinta: await adaptAsianhallinta(dbProjekti),
-      karttarajaus: karttarajaus ? fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(dbProjekti.oid), karttarajaus) : null,
+      karttarajaus: karttarajaus ? fileService.getYllapitoPathForProjektiFile(projektiPath, karttarajaus) : null,
       ...fieldsToCopyAsIs,
     });
 

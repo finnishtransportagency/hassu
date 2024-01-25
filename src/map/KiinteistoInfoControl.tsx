@@ -30,6 +30,12 @@ class InfoControl extends Control {
     this.geoJsonSource.on("addfeature", () => {
       this.updateInfoText();
     });
+    this.geoJsonSource.on("removefeature", () => {
+      this.updateInfoText();
+    });
+    this.geoJsonSource.on("clear", () => {
+      this.updateInfoText();
+    });
   }
 
   private updateInfoText() {
@@ -40,6 +46,7 @@ class InfoControl extends Control {
       }
       return set;
     }, new Set());
+
     this.span.innerText = `Kiinteistöjä valittu ${kiinteistotunnukset.size} kpl`;
   }
 }

@@ -5,7 +5,7 @@ import * as ReactDOMServer from "react-dom/server";
 import Map from "ol/Map";
 import View from "ol/View";
 import Projection from "ol/proj/Projection";
-import { get as getProjection } from "ol/proj";
+import { get as getProjection, transform } from "ol/proj";
 import XYZ from "ol/source/XYZ";
 import proj4 from "proj4";
 import { register } from "ol/proj/proj4";
@@ -22,7 +22,6 @@ import useTranslation from "next-translate/useTranslation";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
 import { Translate } from "next-translate";
 import Geometry from "ol/geom/Geometry";
-import WKT from "ol/format/WKT";
 import DrawControl, { createDrawToolInteractions, DrawToolInteractions } from "src/map/DrawControl";
 import GeoJSON from "ol/format/GeoJSON";
 import { defaults as defaultInteractions } from "ol/interaction";
@@ -45,14 +44,19 @@ import featuresStyle from "./featuresStyle.json";
 import debounce from "lodash/debounce";
 import { getUid } from "ol/util";
 import InfoControl from "src/map/KiinteistoInfoControl";
+import intersect from "@turf/intersect";
+import { polygon } from "@turf/turf";
+
+import { Polygon } from "ol/geom";
+import Feature from "ol/Feature";
+import uniqBy from "lodash/uniqBy";
+import { VectorSourceEvent } from "ol/source/Vector";
 
 const mapOpts = {
   dataProj: "EPSG:3067",
   viewProj: "EPSG:3067",
   dataCrs: "http://www.opengis.net/def/crs/EPSG/0/3067",
 };
-
-const wkt = new WKT();
 
 proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
@@ -63,6 +67,9 @@ const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2,
 
 export const IMAGE_CIRCLE_RADIUS = 10;
 export const STROKE_WIDTH = 8;
+
+const featType = "PalstanSijaintitiedot";
+const paikkatietoBaseUrl = "/hassu/paikkatieto/kiinteisto-avoin/simple-features/v3";
 
 export const createElement = (children: JSX.Element) => {
   const element = document.createElement("span");
@@ -107,54 +114,76 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
       }),
     });
 
-    const loadGeometries: (geom: Geometry) => Promise<void> = async (geom) => {
+    const loadGeometries: (geom: Polygon) => Promise<void> = async (geom) => {
       const geomUid = getUid(geom);
-      const tgeom = geomViewToData(geom.clone()),
-        s_geom_wkt = wkt.writeGeometry(tgeom),
-        s_filter = `S_INTERSECTS(geometry,${s_geom_wkt})`;
 
-      const params = {
-        limit: "1000",
-        "filter-lang": "cql2-text",
-        filter: s_filter,
-        crs: mapOpts.dataCrs,
-        "bbox-crs": mapOpts.dataCrs,
-        "filter-crs": mapOpts.dataCrs,
-      };
+      const bounds = geom.getExtent();
 
-      const baseUrl = "https://avoin-paikkatieto.maanmittauslaitos.fi/kiinteisto-avoin/simple-features/v3";
-      const featType = "PalstanSijaintitiedot";
-      const response = await axios.get(`${baseUrl}/collections/${featType}/items`, { params });
+      const [minX, minY] = coordViewToData([bounds[0], bounds[1]]);
+      const [maxX, maxY] = coordViewToData([bounds[2], bounds[3]]);
 
-      const feats = format.readFeatures(response.data);
+      const chunkLength = 1400;
 
-      geoJsonSource
-        .getFeatures()
-        .filter((feat) => feat.getProperties().selectedGeometryUid === geomUid)
-        .forEach((feat) => {
-          geoJsonSource.removeFeature(feat);
-        });
+      const xRanges = splitRange(minX, maxX, chunkLength);
+      const yRanges = splitRange(minY, maxY, chunkLength);
 
-      feats.forEach((f) => {
-        f.setProperties({ featureType: featType, selectedGeometryUid: getUid(geom) });
+      const allExtents = xRanges
+        .reduce<Extent[]>((extent1, xRange) => {
+          extent1.push(
+            ...yRanges.reduce<Extent[]>((extents2, yRange) => {
+              extents2.push([xRange[0], yRange[0], xRange[1], yRange[1]]);
+              return extents2;
+            }, [])
+          );
+          return extent1;
+        }, [])
+        .filter((extent) => geom.intersectsExtent(extent));
+
+      const featuresToRemove = geoJsonSource.getFeatures().filter((feat) => feat.getProperties().selectedGeometryUid === geomUid);
+
+      const featuresFromApi: Feature<Geometry>[] = [];
+
+      await Promise.all(
+        allExtents.map(async (extent) => {
+          const feats = await fetchPalstanSijaintitiedot(extent);
+          featuresFromApi.push(...feats);
+        })
+      );
+
+      const uniqueGeometries = uniqBy(featuresFromApi, (feat) => {
+        const geometry = feat.getGeometry();
+        const coordinates = geometry instanceof Polygon ? geometry.getCoordinates() : geometry?.getExtent();
+        return JSON.stringify(coordinates);
       });
 
-      geoJsonSource.addFeatures(feats);
+      const uniqueIntersecting = uniqueGeometries.filter((f) => {
+        const g = f.getGeometry();
+        if (!(g instanceof Polygon)) {
+          return false;
+        }
+        return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
+      });
+      uniqueIntersecting.forEach((f) => {
+        f.setProperties({ featureType: featType, selectedGeometryUid: geomUid });
+      });
+      featuresToRemove.forEach((feat) => {
+        geoJsonSource.removeFeature(feat);
+      });
+      geoJsonSource.addFeatures(uniqueIntersecting);
     };
 
     vectorSource.on("addfeature", (event) => {
-      event.feature?.getGeometry();
-      const debouncedLoadGeometries = debounce(() => {
+      function handleAddFeature(event: VectorSourceEvent<Geometry>) {
         const geometry = event.feature?.getGeometry();
-        if (geometry) {
+        if (geometry instanceof Polygon) {
           loadGeometries(geometry);
         }
+      }
+      const debouncedLoadGeometries = debounce(() => {
+        handleAddFeature(event);
       }, 500);
       event.feature?.getGeometry()?.on("change", debouncedLoadGeometries);
-      const geometry = event.feature?.getGeometry();
-      if (geometry) {
-        loadGeometries(geometry);
-      }
+      handleAddFeature(event);
     });
 
     vectorSource.on("removefeature", (event) => {
@@ -312,11 +341,37 @@ const format = new GeoJSON({
   dataProjection: "EPSG:3067",
 });
 
-function geomViewToData(geom: any) {
+const fetchPalstanSijaintitiedot: (extent: Extent) => Promise<Feature<Geometry>[]> = async ([minX, minY, maxX, maxY]) => {
+  const params = {
+    limit: "10000",
+    bbox: [minX, minY, maxX, maxY].join(","),
+    "filter-lang": "cql2-text",
+    crs: mapOpts.dataCrs,
+    "bbox-crs": mapOpts.dataCrs,
+  };
+
+  const response = await axios.get(`${paikkatietoBaseUrl}/collections/${featType}/items`, { params });
+  return format.readFeatures(response.data);
+};
+
+function coordViewToData(coord: number[]) {
   if (mapOpts.viewProj == mapOpts.dataProj) {
-    return geom;
+    return coord;
   }
-  return geom.transform(mapOpts.viewProj, mapOpts.dataProj);
+  return transform(coord, mapOpts.viewProj, mapOpts.dataProj);
+}
+
+function splitRange(rangeStart: number, rangeEnd: number, intervalSize: number) {
+  const rangeDifference = rangeEnd - rangeStart;
+  const numIntervals = rangeDifference / intervalSize;
+  const intervals = [];
+
+  for (let i = 0; i < numIntervals; i++) {
+    const start = rangeStart + i * intervalSize;
+    const end = start + intervalSize < rangeEnd ? start + intervalSize : rangeEnd;
+    intervals.push([start, end]);
+  }
+  return intervals;
 }
 
 export function createGeoJsonVectorLayer(geoJsonSource: VectorSource<Geometry>) {

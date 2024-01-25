@@ -1,9 +1,13 @@
 import { ShowMessage } from "@components/HassuSnackbarProvider";
+import { lineStringToPolygon } from "@turf/turf";
 import Control, { Options } from "ol/control/Control";
+import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
+import { LineString, Polygon } from "ol/geom";
 import Geometry from "ol/geom/Geometry";
 import VectorSource from "ol/source/Vector";
 import { zoomToExtent } from "./zoomToExtent";
+import { lineString } from "@turf/turf";
 
 type GeoJsonFileInputControlProps = Options & {
   source: VectorSource<Geometry>;
@@ -98,14 +102,30 @@ class GeoJsonFileInputControl extends Control {
       const str = typeof result === "string" ? result : this.decodeBuffer(result);
       const obj = JSON.parse(str);
       this.source.clear();
-      this.source.addFeatures(this.geoJSON.readFeatures(obj));
+      const features = this.geoJSON.readFeatures(obj);
+      const suodatetut = features.reduce<Feature<Geometry>[]>((feats, feat) => {
+        const geom = feat.getGeometry();
+        if (geom instanceof Polygon) {
+          feats.push(feat);
+        } else if (geom instanceof LineString) {
+          const pol = lineStringToPolygon(lineString(geom.getCoordinates()));
+          if (pol.geometry.type === "Polygon") {
+            feat.setGeometry(new Polygon(pol.geometry.coordinates));
+            feats.push(feat);
+          }
+        }
+        return feats;
+      }, []);
+
+      this.source.addFeatures(suodatetut);
       // Clear input value so onchange will trigger for the same file
-      this.input.value = "";
       zoomToExtent(map, this.source.getExtent());
       this.showSuccessMessage("Karttarajaus luettu tiedostosta");
-    } catch {
+    } catch (e) {
+      console.log(e);
       this.showErrorMessage("Tiedoston lukeminen epäonnistui");
     }
+    this.input.value = "";
   }
 
   private decodeBuffer(result: ArrayBuffer) {

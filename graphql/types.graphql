@@ -183,8 +183,8 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
-  asianhallinta: Asianhallinta!
   karttarajaus: String
+  asianhallinta: Asianhallinta!
 }
 
 type Asianhallinta {

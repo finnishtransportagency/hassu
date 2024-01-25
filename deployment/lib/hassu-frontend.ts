@@ -14,7 +14,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy
+  ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -33,7 +33,7 @@ import {
   readDatabaseStackOutputs,
   readParametersForEnv,
   readPipelineStackOutputs,
-  Region
+  Region,
 } from "./setupEnvironment";
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { createResourceGroup, getOpenSearchDomain } from "./common";
@@ -141,8 +141,8 @@ export class HassuFrontendStack extends Stack {
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
-    const apiBehavior = HassuFrontendStack.createApiBehavior(apiEndpoint, mmlApiKey);
-    
+    const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
+
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,
@@ -153,11 +153,13 @@ export class HassuFrontendStack extends Stack {
       frontendRequestFunction
     );
 
-    let domain: {
-      hostedZone?: IHostedZone;
-      certificate: ICertificate;
-      domainNames: string[];
-    } | undefined;
+    let domain:
+      | {
+          hostedZone?: IHostedZone;
+          certificate: ICertificate;
+          domainNames: string[];
+        }
+      | undefined;
     if (config.cloudfrontCertificateArn) {
       domain = {
         certificate: acm.Certificate.fromCertificateArn(this, "certificate", config.cloudfrontCertificateArn),
@@ -408,7 +410,7 @@ export class HassuFrontendStack extends Stack {
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
       "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
       "/keycloak/*": dmzProxyBehavior,
-      "/hassu/karttakuva/*": apiBehavior,
+      "/hassu/*": apiBehavior,
     };
     if (Config.env == "dev") {
       props["/report/*"] = await this.createPrivateBucketBehavior(
@@ -440,15 +442,21 @@ export class HassuFrontendStack extends Stack {
     return dmzBehavior;
   }
 
-  private static createApiBehavior(apiEndpoint: string, apiKey: string) {
+  private createApiBehavior(apiEndpoint: string, apiKey: string, env: string) {
+    const originRequestPolicy = new OriginRequestPolicy(this, "MML" + env, {
+      cookieBehavior: cloudfront.OriginRequestCookieBehavior.none(),
+      headerBehavior: cloudfront.OriginRequestHeaderBehavior.allowList("origin"),
+      queryStringBehavior: cloudfront.OriginRequestQueryStringBehavior.all(),
+      originRequestPolicyName: "MMLPolicy-" + env,
+    });
     const apiBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(apiEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
-        customHeaders: { 'x-api-key': apiKey }
+        customHeaders: { "x-api-key": apiKey },
       }),
       cachePolicy: CachePolicy.CACHING_OPTIMIZED,
-      originRequestPolicy: OriginRequestPolicy.CORS_CUSTOM_ORIGIN,
+      originRequestPolicy,
       allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     };

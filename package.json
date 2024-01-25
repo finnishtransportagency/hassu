@@ -38,6 +38,7 @@
     "@mui/x-date-pickers": "^5.0.20",
     "@tanstack/react-table": "^8.10.7",
     "@tanstack/react-virtual": "^3.0.0-beta.54",
+    "@turf/turf": "6.5.0",
     "@types/content-disposition": "^0.5.7",
     "@types/js-cookie": "^3.0.5",
     "@types/mime-types": "^2.1.3",
