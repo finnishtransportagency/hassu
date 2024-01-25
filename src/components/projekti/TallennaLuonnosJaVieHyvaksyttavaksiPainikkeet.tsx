@@ -30,6 +30,7 @@ const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, Tilasiir
   JATKOPAATOS_1: Status.JATKOPAATOS_1,
   JATKOPAATOS_2: Status.JATKOPAATOS_2,
   NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
+  HYVAKSYMISESITYS: Status.NAHTAVILLAOLO,
 };
 
 export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
