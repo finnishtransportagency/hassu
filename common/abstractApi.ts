@@ -67,6 +67,10 @@ import {
   TallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   OmistajaInput,
+  ListaaHyvaksymisEsityksenTiedostotInput,
+  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
+  HyvaksymisEsitysInput,
+  EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -268,6 +272,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaLausuntoPyynnonTaydennyksenTiedostot,
   },
+  listaaHyvaksymisEsityksenTiedostot: {
+    name: "listaaHyvaksymisEsityksenTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaHyvaksymisEsityksenTiedostot,
+  },
   esikatseleLausuntoPyynnonTiedostot: {
     name: "esikatseleLausuntoPyynnonTiedostot",
     operationType: OperationType.Query,
@@ -278,6 +287,12 @@ export const apiConfig: ApiConfig = {
     name: "esikatseleLausuntoPyynnonTaydennysTiedostot",
     operationType: OperationType.Query,
     graphql: queries.esikatseleLausuntoPyynnonTaydennysTiedostot,
+    isYllapitoOperation: true,
+  },
+  esikatseleHyvaksymisEsityksenTiedostot: {
+    name: "esikatseleHyvaksymisEsityksenTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.esikatseleHyvaksymisEsityksenTiedostot,
     isYllapitoOperation: true,
   },
   annaPalautettaPalvelusta: {
@@ -537,6 +552,16 @@ export abstract class AbstractApi {
     } as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables);
   }
 
+  async listaaHyvaksymisEsityksenTiedostot(
+    oid: string,
+    listaaHyvaksymisEsityksenTiedostot: ListaaHyvaksymisEsityksenTiedostotInput
+  ): Promise<LadattavatTiedostot> {
+    return await this.callAPI(apiConfig.listaaHyvaksymisEsityksenTiedostot, {
+      oid,
+      listaaHyvaksymisEsityksenTiedostot,
+    } as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
+  }
+
   async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyynto: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {
     return await this.callYllapitoAPI(apiConfig.esikatseleLausuntoPyynnonTiedostot, {
       oid,
@@ -552,6 +577,13 @@ export abstract class AbstractApi {
       oid,
       lausuntoPyynnonTaydennys,
     } as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables);
+  }
+
+  async esikatseleHyvaksymisEsityksenTiedostot(oid: string, hyvaksymisEsitys: HyvaksymisEsitysInput): Promise<LadattavatTiedostot> {
+    return await this.callYllapitoAPI(apiConfig.esikatseleHyvaksymisEsityksenTiedostot, {
+      oid,
+      hyvaksymisEsitys,
+    } as EsikatseleHyvaksymisEsityksenTiedostotQueryVariables);
   }
 
   async suoritaTestiKomento(testiKomento: TestiKomentoInput): Promise<string> {
