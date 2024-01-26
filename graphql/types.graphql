@@ -1188,6 +1188,10 @@ type Muistuttaja  {
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
+  nimi: String
+  tiedotusosoite: String
+  tiedotustapa: String
+  paivitetty: String
 }
 
 type Muistuttajat {

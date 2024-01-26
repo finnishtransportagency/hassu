@@ -69,6 +69,10 @@ import {
   OmistajaInput,
   TuoKarttarajausMutationVariables,
   HaeMuistuttajatQueryVariables,
+  Muistuttaja,
+  Omistaja,
+  KiinteistonOmistajat,
+  Muistuttajat,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -327,6 +331,18 @@ export const apiConfig: ApiConfig = {
     name: "haeMuistuttajat",
     operationType: OperationType.Query,
     graphql: queries.haeMuistuttajat,
+    isYllapitoOperation: true,
+  },
+  tallennaMuistuttajat: {
+    name: "tallennaMuistuttajat",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaMuistuttajat,
+    isYllapitoOperation: true,
+  },
+  poistaMuistuttaja: {
+    name: "poistaMuistuttaja",
+    operationType: OperationType.Mutation,
+    graphql: mutations.poistaMuistuttaja,
     isYllapitoOperation: true,
   }
 };
@@ -590,7 +606,7 @@ export abstract class AbstractApi {
     } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 
-  async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<string> {
+  async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<Omistaja[]> {
     return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, {
       oid,
       omistajat,
@@ -604,7 +620,7 @@ export abstract class AbstractApi {
     });
   }
 
-  async haeKiinteistonOmistajat(oid: string, sivu: number, muutOmistajat: boolean, sivuKoko?: number): Promise<string> {
+  async haeKiinteistonOmistajat(oid: string, sivu: number, muutOmistajat: boolean, sivuKoko?: number): Promise<KiinteistonOmistajat> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
       sivu,
@@ -613,12 +629,27 @@ export abstract class AbstractApi {
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 
-  async haeMuistuttajat(oid: string, sivu: number, sivuKoko?: number): Promise<string> {
+  async haeMuistuttajat(oid: string, sivu: number, muutMuistuttajat: boolean, sivuKoko?: number): Promise<Muistuttajat> {
     return await this.callYllapitoAPI(apiConfig.haeMuistuttajat, {
       oid,
       sivu,
+      muutMuistuttajat,
       sivuKoko,
     } as HaeMuistuttajatQueryVariables);
+  }
+
+  async tallennaMuistuttajat(oid: string, omistajat: OmistajaInput[]): Promise<Muistuttaja[]> {
+    return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, {
+      oid,
+      omistajat,
+    });
+  }
+
+  async poistaMuistuttaja(oid: string, muistuttaja: string): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.poistaMuistuttaja, {
+      oid,
+      muistuttaja,
+    });
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

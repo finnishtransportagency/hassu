@@ -8,12 +8,14 @@ import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { emailClient } from "../../src/email/email";
-import { muistutusHandler } from "../../src/muistutus/muistutusHandler";
+import { DBMuistuttaja, muistutusHandler } from "../../src/muistutus/muistutusHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { S3Mock } from "../aws/awsMock";
 
-import { expect } from "chai";
+import { assert, expect } from "chai";
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 describe("apiHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -28,7 +30,6 @@ describe("apiHandler", () => {
     let fixture: ProjektiFixture;
     let personSearchFixture: PersonSearchFixture;
     let loadProjektiByOidStub: sinon.SinonStub;
-    let appendMuistutusTimestampList: sinon.SinonStub;
     let sendEmailStub: sinon.SinonStub;
     let sendTurvapostiEmailStub: sinon.SinonStub;
     let getKayttajasStub: sinon.SinonStub;
@@ -37,7 +38,6 @@ describe("apiHandler", () => {
     beforeEach(() => {
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-      appendMuistutusTimestampList = sinon.stub(projektiDatabase, "appendMuistutusTimestampList");
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
       sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
@@ -53,7 +53,6 @@ describe("apiHandler", () => {
         ])
       );
       sendEmailStub.resolves();
-      appendMuistutusTimestampList.resolves();
       loadProjektiByOidStub.resolves(fixture.dbProjekti3);
       kirjaamoOsoitteetStub.resolves([
         { nimi: "ETELA_POHJANMAAN_ELY", sahkoposti: "kirjaamo.etela-pohjanmaa@ely-keskus.fi" },
@@ -77,6 +76,7 @@ describe("apiHandler", () => {
 
     describe("lisaaMuistutus", () => {
       it("should send email only to kirjaamo", async () => {
+        const dbMockClient = mockClient(DynamoDBDocumentClient);
         const muistutusInput: MuistutusInput = {
           etunimi: "Mika",
           sukunimi: "Muistuttaja",
@@ -93,9 +93,25 @@ describe("apiHandler", () => {
         sinon.assert.calledOnce(sendTurvapostiEmailStub);
         const calls = sendTurvapostiEmailStub.getCalls();
         expect(calls[0].args[0].to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
+        expect(dbMockClient.commandCalls(UpdateCommand).length).to.equal(1);
+        expect(dbMockClient.commandCalls(PutCommand).length).to.equal(1);
+        const m = dbMockClient.commandCalls(PutCommand)[0].args[0].input.Item as DBMuistuttaja
+        expect(m.etunimi).to.equal("Mika");
+        expect(m.sukunimi).to.equal("Muistuttaja");
+        expect(m.sahkoposti).to.equal(undefined);
+        expect(m.lahiosoite).to.equal("Muistojentie 1 a");
+        expect(m.postinumero).to.equal("00100");
+        expect(m.postitoimipaikka).to.equal("Helsinki");
+        expect(m.puhelinnumero).to.equal("040123123");
+        const updateCommand = dbMockClient.commandCalls(UpdateCommand)[0];
+        assert(updateCommand.args[0].input.ExpressionAttributeValues);
+        expect(updateCommand.args[0].input.ExpressionAttributeValues[":id"][0]).to.equal(m.id);
+        assert(updateCommand.args[0].input.ExpressionAttributeNames);
+        expect(updateCommand.args[0].input.ExpressionAttributeNames["#m"]).to.equal("muistuttajat");
       });
 
       it("should send emails to kirjaamo and muistuttaja successfully", async () => {
+        mockClient(DynamoDBDocumentClient);
         const muistutusInput: MuistutusInput = {
           etunimi: "Mika",
           sukunimi: "Muistuttaja",

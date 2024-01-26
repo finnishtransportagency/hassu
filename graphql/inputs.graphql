@@ -481,3 +481,10 @@ input OmistajaInput {
   postinumero: String
   paikkakunta: String
 }
+
+input MuistuttajaInput  {
+  id: String
+  nimi: String
+  tiedotusosoite: String
+  tiedotustapa: String
+}

@@ -1,4 +1,4 @@
-import { HaeMuistuttajatQueryVariables, LisaaMuistutusMutationVariables, Muistuttajat, Status } from "hassu-common/graphql/apiModel";
+import { HaeMuistuttajatQueryVariables, LisaaMuistutusMutationVariables, Muistuttaja, Muistuttajat, PoistaMuistuttajaMutationVariables, Status, TallennaMuistuttajatMutationVariables } from "hassu-common/graphql/apiModel";
 import { NotFoundError } from "hassu-common/error";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
@@ -9,10 +9,10 @@ import { auditLog, log } from "../logger";
 import { isValidEmail } from "../email/emailUtil";
 import { getSuomiFiCognitoKayttaja, requireVaylaUser } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchGetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchGetCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
 import { config } from "../config";
-import { nyt } from "../util/dateUtil";
+import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 
 function getTableName() {
   if (process.env.TABLE_MUISTUTTAJA) {
@@ -42,6 +42,10 @@ export type DBMuistuttaja = {
   postitoimipaikka?: string | null;
   sahkoposti?: string | null;
   puhelinnumero?: string | null;
+  nimi?: string | null;
+  tiedotusosoite?: string | null;
+  tiedotustapa?: string | null;
+  paivitetty?: string | null;
 };
 
 class MuistutusHandler {
@@ -84,13 +88,13 @@ class MuistutusHandler {
       henkilotunnus: loggedInUser ? loggedInUser["custom:hetu"] : undefined,
       lahiosoite: muistutus.katuosoite,
       postinumero: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[0],
-      postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[1],
+      postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ").slice(1).join(" "),
       sahkoposti: muistutus.sahkoposti,
       puhelinnumero: muistutus.puhelinnumero,
     };
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getTableName(), Item: muistuttaja }));
-    await projektiDatabase.appendMuistuttajatList(oid, muistuttaja.id);
+    await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id]);
 
     if (muistutus.sahkoposti && isValidEmail(muistutus.sahkoposti)) {
       await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
@@ -105,7 +109,7 @@ class MuistutusHandler {
     requireVaylaUser();
     const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
     const sivuKoko = variables.sivuKoko ?? 10;
-    const muistuttajat = projekti?.muistuttajat ?? [];
+    const muistuttajat = variables.muutMuistuttajat ? projekti?.muutMuistuttajat ?? []: projekti?.muistuttajat ?? [];
     const start = (variables.sivu - 1) * sivuKoko;
     const end = start + sivuKoko > muistuttajat.length ? undefined : start + sivuKoko;
     const ids = muistuttajat.slice(start, end);
@@ -137,6 +141,9 @@ class MuistutusHandler {
           jakeluosoite: m.lahiosoite,
           postinumero: m.postinumero,
           paikkakunta: m.postitoimipaikka,
+          nimi: m.nimi,
+          tiedotusosoite: m.tiedotusosoite,
+          tiedotustapa: m.tiedotustapa,
         })),
       };
     } else {
@@ -147,6 +154,72 @@ class MuistutusHandler {
         sivu: variables.sivu,
         muistuttajat: [],
       };
+    }
+  }
+
+  async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
+    requireVaylaUser();
+    const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
+    if (!projekti) {
+      throw new Error("Projektia ei löydy");
+    }
+    const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+    const expires = getExpires();
+    let dbmuistuttaja: DBMuistuttaja | undefined;
+    const muistuttajat: DBMuistuttaja[] = [];
+    const uudetMuistuttajat: string[] = [];
+    for (const muistuttaja of input.muistuttajat) {
+      if (muistuttaja.id) {
+        const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getTableName(), Key: { id: muistuttaja.id } }));
+        dbmuistuttaja = response.Item as DBMuistuttaja;
+        if (!dbmuistuttaja) {
+          throw new Error("Muistuttajaa " + muistuttaja.id + " ei löydy");
+        }
+        dbmuistuttaja.paivitetty = now;
+        dbmuistuttaja.nimi = muistuttaja.nimi,
+        dbmuistuttaja.tiedotusosoite= muistuttaja.tiedotusosoite,
+        dbmuistuttaja.tiedotustapa = muistuttaja.tiedotustapa,
+        auditLog.info("Päivitetään muistuttajan tiedot", { muistuttajaId: dbmuistuttaja.id });
+      } else {
+        dbmuistuttaja = {
+          id: uuid.v4(),
+          lisatty: now,
+          expires,
+          nimi: muistuttaja.nimi,
+          tiedotusosoite: muistuttaja.tiedotusosoite,
+          tiedotustapa: muistuttaja.tiedotustapa,
+        };
+        auditLog.info("Lisätään muistuttajan tiedot", { muistuttajaId: dbmuistuttaja.id });
+        uudetMuistuttajat.push(dbmuistuttaja.id);
+      }
+      await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getTableName(), Item: dbmuistuttaja }));
+      muistuttajat.push(dbmuistuttaja);
+    }
+    if (uudetMuistuttajat.length > 0) {
+      projektiDatabase.appendMuistuttajatList(input.oid, uudetMuistuttajat, true);
+    }
+    return muistuttajat.map((m) => {
+      return {
+        __typename: "Muistuttaja",
+        id: m.id,
+        lisatty: m.lisatty,
+        paivitetty: m.paivitetty,
+        nimi: m.nimi,
+        tiedotusosoite: m.tiedotusosoite,
+        tiedotustapa: m.tiedotustapa,
+      };
+    });
+  }
+  async poistaMuistuttaja(input: PoistaMuistuttajaMutationVariables) {
+    requireVaylaUser();
+    const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
+    const muutMuistuttajat = projekti?.muutMuistuttajat ?? [];
+    const idx = muutMuistuttajat.indexOf(input.muistuttaja);
+    if (idx !== -1) {
+      muutMuistuttajat.splice(idx, 1);
+      auditLog.info("Poistetaan muu muistuttaja", { omistajaId: input.muistuttaja });
+      auditLog.info("Päivitetään muut muistuttajat projektille", { muutMuistuttajat });
+      projektiDatabase.setMuutMuistuttajat(input.oid, muutMuistuttajat);
     }
   }
 }

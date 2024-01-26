@@ -23,8 +23,8 @@ aws acm import-certificate --certificate "fileb://$WORKDIR/cert.pem" --private-k
 CERTIFICATE_ARN=$(grep CertificateArn $WORKDIR/output.json | cut -d '"' -f 4)
 aws ssm put-parameter --overwrite --region us-east-1 --name "/$ENV/CloudfrontCertificateArn" --value "$CERTIFICATE_ARN" --type String
 aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/CloudfrontCertificateArn" --value "$CERTIFICATE_ARN" --type String
-CERTIFICATE=$(cat $WORKDIR/cert.pem)
-PRIVATEKEY=$(cat $WORKDIR/privatekey.pem)
+CERTIFICATE=$(sed -n /BEGIN CERTIFICATE/,/END CERTIFICATE/p $WORKDIR/cert.pem)
+PRIVATEKEY=$(sed -n /BEGIN PRIVATE KEY/,/END PRIVATE KEY/p $WORKDIR/privatekey.pem)
 if [ "$ENV" == "dev" ] || [ "$ENV" == "prod" ]; then
   aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/Certificate" --value "$CERTIFICATE" --type SecureString
   aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/PrivateKey" --value "$PRIVATEKEY" --type SecureString
