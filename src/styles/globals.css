@@ -23,7 +23,14 @@
     -webkit-box-shadow: 0 0 0px 1000px white inset;
   }
   body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-internal-autofill-selected {
+    :is(
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      input[type="date"],
+      textarea,
+      select
+    ):-internal-autofill-selected {
     -webkit-box-shadow: 0 0 0px 1000px white inset !important;
     box-shadow: 0 0 0px 1000px white inset !important;
   }
@@ -42,12 +49,16 @@
     @apply border-red;
   }
   body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(
+      .error
+    ).hassu-input {
     @apply border-primary;
     @apply ring-1;
   }
   body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(
+      .error
+    ).hassu-input {
     @apply ring-1 ring-primary;
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
@@ -355,7 +366,18 @@
   }
   .btn:disabled,
   .btn.disabled {
-    @apply opacity-50 cursor-default;
+    @apply cursor-default;
+  }
+  .btn:disabled,
+  .btn.disabled > div {
+    color: #242222;
+    border-color: #999999;
+  }
+  .btn-primary:disabled,
+  .btn-primary.disabled > div {
+    background-color: #e5e5e5;
+    color: #242222;
+    border-color: #e5e5e5;
   }
   .btn:not(:disabled):not(.disabled):not(:active):hover {
     @apply shadow-lg;

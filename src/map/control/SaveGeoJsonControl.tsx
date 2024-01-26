@@ -5,6 +5,7 @@ type ButtonProps = {
   label?: string | HTMLElement;
   tipLabel?: string;
   className?: string;
+  button?: HTMLButtonElement;
   handleClick: (event: Event) => void;
 };
 
@@ -23,10 +24,12 @@ class SaveGeoJsonControl extends Control {
 
     element.className = "ol-save-as-geo-json ol-unselectable ol-control";
     options.buttons.forEach((buttonProps, index) => {
-      const button = document.createElement("button");
-      const label = buttonProps.label ?? `S${index + 1}`;
-      button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
-      button.title = buttonProps.tipLabel ?? `Save${index + 1}`;
+      const button = buttonProps.button ?? document.createElement("button");
+      if (!buttonProps.button) {
+        const label = buttonProps.label ?? `S${index + 1}`;
+        button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
+        button.title = buttonProps.tipLabel ?? `Save${index + 1}`;
+      }
       button.addEventListener(
         "click",
         (event) => {

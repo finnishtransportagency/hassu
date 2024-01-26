@@ -9,6 +9,7 @@ export type ReadFeaturesFromGeoJsonFileInputControlOptions = Options & {
   source: VectorSource<Geometry>;
   label?: string | HTMLElement;
   tipLabel?: string;
+  button: HTMLButtonElement;
   onGeoJsonUpload: (features: Feature<Geometry>[]) => void;
   onInvalidFileType: (file: File) => void;
   onReaderFailure: (e: unknown, file: File) => void;
@@ -47,10 +48,12 @@ class ReadFeaturesFromGeoJsonFileInputControl extends Control {
     form.appendChild(this.input);
     element.appendChild(form);
 
-    const button = document.createElement("button");
-    const label = options.label ?? "F";
-    button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
-    button.title = options.tipLabel ?? "Upload GeoJSON file";
+    const button = options.button ?? document.createElement("button");
+    if (!options.button) {
+      const label = options.label ?? "F";
+      button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
+      button.title = options.tipLabel ?? "Upload GeoJSON file";
+    }
     button.addEventListener("click", this.openDialog.bind(this), false);
     element.appendChild(button);
 

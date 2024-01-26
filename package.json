@@ -114,6 +114,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
+    "@svgr/webpack": "8.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.5.0",

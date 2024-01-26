@@ -21,10 +21,10 @@ class ZoomToSourceExtent extends Control {
 
     this.source = options.source;
 
-    const className = options.className !== undefined ? options.className : "ol-zoom-extent";
+    const className = options.className ?? "ol-zoom-extent";
 
-    const label = options.label !== undefined ? options.label : "E";
-    const tipLabel = options.tipLabel !== undefined ? options.tipLabel : "Fit to extent";
+    const label = options.label ?? "E";
+    const tipLabel = options.tipLabel ?? "Fit to extent";
     const button = document.createElement("button");
     button.setAttribute("type", "button");
     button.title = tipLabel;

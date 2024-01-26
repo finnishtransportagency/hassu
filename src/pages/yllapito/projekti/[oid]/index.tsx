@@ -267,66 +267,64 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
   }, [projekti, router, statusBeforeSave]);
 
   return (
-    <>
-      <FormProvider {...useFormReturn}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            <input type="hidden" {...register("oid")} />
-            <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
-              {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
-              {!isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
-                <Notification type={NotificationType.INFO_GRAY}>
-                  Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
-                </Notification>
-              )}
-              <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
-                <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
-                <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-                <li>
-                  Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
-                  vaiheisiin.
-                </li>
-                <li>
-                  Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                  aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
-                  kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
-                </li>
-              </OhjelistaNotification>
-            </ContentSpacer>
-
-            <ProjektinPerusosio projekti={projekti} />
-            <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
-            <ProjektiKuulutuskielet projekti={projekti} />
-            <LinkitetytProjektit projekti={projekti} />
-            <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
-            <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
-            {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
-              <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
+    <FormProvider {...useFormReturn}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+          <input type="hidden" {...register("oid")} />
+          <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
+            {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
+            {!isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
+              </Notification>
             )}
-            <Section gap={4}>
-              <h4 className="vayla-small-title">Muistiinpanot</h4>
-              <p>
-                Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
-                Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet.
-              </p>
-              <Textarea
-                label="Muistiinpano"
-                disabled={disableFormEdit}
-                {...register("muistiinpano")}
-                error={errors.muistiinpano}
-                maxLength={maxNoteLength}
-              />
-            </Section>
-            <Section noDivider>
-              <HassuStack alignItems="flex-end">
-                <Button id="save" primary={true} disabled={disableFormEdit}>
-                  {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
-                </Button>
-              </HassuStack>
-            </Section>
-          </fieldset>
-        </form>
-      </FormProvider>
-    </>
+            <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+              <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+              <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+              <li>
+                Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                vaiheisiin.
+              </li>
+              <li>
+                Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa kunnan
+                edustajaa on mahdollista vaihtaa prosessin aikana.
+              </li>
+            </OhjelistaNotification>
+          </ContentSpacer>
+
+          <ProjektinPerusosio projekti={projekti} />
+          <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
+          <ProjektiKuulutuskielet projekti={projekti} />
+          <LinkitetytProjektit projekti={projekti} />
+          <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
+          <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
+          {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
+            <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
+          )}
+          <Section gap={4}>
+            <h4 className="vayla-small-title">Muistiinpanot</h4>
+            <p>
+              Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
+              Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet.
+            </p>
+            <Textarea
+              label="Muistiinpano"
+              disabled={disableFormEdit}
+              {...register("muistiinpano")}
+              error={errors.muistiinpano}
+              maxLength={maxNoteLength}
+            />
+          </Section>
+          <Section noDivider>
+            <HassuStack alignItems="flex-end">
+              <Button id="save" primary disabled={disableFormEdit}>
+                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
+              </Button>
+            </HassuStack>
+          </Section>
+        </fieldset>
+      </form>
+    </FormProvider>
   );
 }
