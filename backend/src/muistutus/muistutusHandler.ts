@@ -82,7 +82,7 @@ class MuistutusHandler {
     const muistuttaja: DBMuistuttaja = {
       id: uuid.v4(),
       expires: getExpires(),
-      lisatty: nyt().toISOString(),
+      lisatty: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
       etunimi: muistutus.etunimi,
       sukunimi: muistutus.sukunimi,
       henkilotunnus: loggedInUser ? loggedInUser["custom:hetu"] : undefined,
