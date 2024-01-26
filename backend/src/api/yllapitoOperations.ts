@@ -24,11 +24,11 @@ import {
   TallennaProjektiMutationVariables,
   EsikatseleLausuntoPyynnonTiedostotQueryVariables,
   EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
-  TallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   PoistaKiinteistonOmistajaMutationVariables,
-  TuoKarttarajausQueryVariables,
+  TuoKarttarajausMutationVariables,
+  TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -61,8 +61,8 @@ import {
   poistaKiinteistonOmistaja,
   tallennaKiinteistonOmistajat,
   tallennaKiinteistotunnukset,
+  tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
-import { tuoKarttarajaus } from "../handler/karttarajausHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -128,8 +128,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
-    case apiConfig.tallennaKiinteistotunnukset.name:
-      return await tallennaKiinteistotunnukset(event.arguments as TallennaKiinteistotunnuksetMutationVariables);
+    case apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset.name:
+      return await tallennaKiinteistotunnukset(event.arguments as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
     case apiConfig.tallennaKiinteistonOmistajat.name:
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
@@ -137,7 +137,7 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
     case apiConfig.poistaKiinteistonOmistaja.name:
       return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
     case apiConfig.tuoKarttarajaus.name:
-      return await tuoKarttarajaus(event.arguments as TuoKarttarajausQueryVariables);
+      return await tuoKarttarajaus(event.arguments as TuoKarttarajausMutationVariables);
     default:
       return null;
   }

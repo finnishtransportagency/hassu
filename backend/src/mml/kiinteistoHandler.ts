@@ -11,13 +11,17 @@ import {
   KiinteistonOmistajat,
   PoistaKiinteistonOmistajaMutationVariables,
   TallennaKiinteistonOmistajatMutationVariables,
-  TallennaKiinteistotunnuksetMutationVariables,
+  TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
+  TuoKarttarajausMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { getSQS } from "../aws/clients/getSQS";
 import { uuid } from "hassu-common/util/uuid";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
+import { fileService } from "../files/fileService";
+import { ProjektiPaths } from "../files/ProjektiPath";
+import { getCloudFront } from "../aws/clients/getCloudFront";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -191,8 +195,34 @@ export const handleEvent = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", handlerFactory(event));
 };
 
-export async function tallennaKiinteistotunnukset(input: TallennaKiinteistotunnuksetMutationVariables) {
+export const tuoKarttarajaus = async ({ oid, geoJSON }: TuoKarttarajausMutationVariables) => {
   requireVaylaUser();
+  log.info("Tuodaan karttarajaus projektille", { oid });
+  const fileLocation = "karttarajaus/karttarajaus.geojson";
+  const karttarajaus = await fileService.createFileToProjekti({
+    oid,
+    fileName: fileLocation,
+    path: new ProjektiPaths(oid),
+    contents: Buffer.from(geoJSON, "utf-8"),
+    contentType: "application/geo+json",
+  });
+  await getCloudFront().createInvalidation({
+    DistributionId: config.cloudFrontDistributionId,
+    InvalidationBatch: {
+      CallerReference: "tuoKarttarajaus" + new Date().getTime(),
+      Paths: {
+        Quantity: 1,
+        Items: ["/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), fileLocation)],
+      },
+    },
+  });
+  await projektiDatabase.saveProjektiWithoutLocking({ oid, karttarajaus });
+  log.info("Karttarajaus tuotu projektille", { oid });
+};
+
+export async function tallennaKiinteistotunnukset(input: TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables) {
+  requireVaylaUser();
+  await tuoKarttarajaus(input);
   const uid = getVaylaUser()?.uid as string;
   const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset: input.kiinteistotunnukset, uid };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });

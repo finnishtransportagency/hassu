@@ -5,7 +5,7 @@ import * as ReactDOMServer from "react-dom/server";
 import Map from "ol/Map";
 import View from "ol/View";
 import Projection from "ol/proj/Projection";
-import { get as getProjection, transform } from "ol/proj";
+import { get as getProjection } from "ol/proj";
 import XYZ from "ol/source/XYZ";
 import proj4 from "proj4";
 import { register } from "ol/proj/proj4";
@@ -25,14 +25,16 @@ import Geometry from "ol/geom/Geometry";
 import DrawControl, { createDrawToolInteractions, DrawToolInteractions } from "src/map/control/DrawControl";
 import GeoJSON from "ol/format/GeoJSON";
 import { defaults as defaultInteractions } from "ol/interaction";
-import GeoJsonFileInputControl from "src/map/control/GeoJsonFileInputControl";
+import ReadFeaturesFromGeoJsonFileInputControl, {
+  ReadFeaturesFromGeoJsonFileInputControlOptions,
+} from "src/map/control/ReadFeaturesFromGeoJsonFileInputControl";
 import useSnackbars from "src/hooks/useSnackbars";
 import { ShowMessage } from "@components/HassuSnackbarProvider";
 import { zoomToExtent } from "src/map/util/zoomToExtent";
 import ZoomToSourceExtent from "src/map/control/ZoomToSourceExtent";
-import TallennaControl from "src/map/control/TallennaControl";
+import SaveGeoJsonControl from "src/map/control/SaveGeoJsonControl";
+import { setLoadingStateForControls } from "src/map/control/loadingStateForControls";
 import useApi from "src/hooks/useApi";
-import { API } from "@services/api/commonApi";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import axios from "axios";
 import VectorTileLayer from "ol/layer/VectorTile";
@@ -46,7 +48,6 @@ import { getUid } from "ol/util";
 import InfoControl from "src/map/control/KiinteistoInfoControl";
 import intersect from "@turf/intersect";
 import { polygon } from "@turf/turf";
-
 import { Polygon } from "ol/geom";
 import Feature from "ol/Feature";
 import uniqBy from "lodash/uniqBy";
@@ -54,19 +55,35 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { getArea } from "ol/sphere";
 import { UnsupportedGeometryTypeError } from "src/map/exception/UnsupportedGeometryTypeError";
 import { GeometryExceedsAreaLimitError } from "src/map/exception/GeometryExceedsAreaLimitError";
+import { splitExtentInSmallerChunks } from "../../../map/util/splitExtentInSmallerChunks";
+import { getKiinteistotunnuksetFromSource } from "src/map/util/getKiinteistotunnuksetFromSource";
 
-const mapOpts = {
-  dataProj: "EPSG:3067",
-  viewProj: "EPSG:3067",
-  dataCrs: "http://www.opengis.net/def/crs/EPSG/0/3067",
-};
+const EPSG_3067 = "EPSG:3067";
+const DATA_PROJ = EPSG_3067;
+const VIEW_PROJ = EPSG_3067;
+const DATA_CRS = "http://www.opengis.net/def/crs/EPSG/0/3067";
 
-proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
+proj4.defs(EPSG_3067, "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);
-const projection = getProjection("EPSG:3067") as Projection;
+const projection = getProjection(EPSG_3067) as Projection;
 const projectionExtent: Extent = [-548576, 6291456, 1548576, 8388608];
 projection.setExtent(projectionExtent);
 const resolutions = [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
+
+const tileGrid = new TileGrid({
+  extent: projectionExtent,
+  resolutions,
+  tileSize: [256, 256],
+});
+
+const view = new View({
+  projection,
+  center: getCenter([61000, 6605000, 733000, 7777000]),
+  resolutions,
+  resolution: 128,
+  extent: [61000, 6605000, 733000, 7777000],
+  constrainResolution: true,
+});
 
 export const IMAGE_CIRCLE_RADIUS = 10;
 export const STROKE_WIDTH = 8;
@@ -90,45 +107,40 @@ type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivE
   geoJSON: string | null | undefined;
 };
 
-export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: StyledMapProps) => {
+export const StyledMap = styled(({ children, projekti, geoJSON, ...props }: StyledMapProps) => {
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
-  const { withLoadingSpinner } = useLoadingSpinner();
+  const { isLoading, withLoadingSpinner } = useLoadingSpinner();
 
   const { t } = useTranslation("kartta");
   const mapElement = useRef<HTMLDivElement | null>(null);
 
-  const vectorSource: VectorSource<Geometry> = useMemo(() => new VectorSource(), []);
+  const vectorSource = useMemo(() => new VectorSource(), []);
 
   const map = useMemo(() => {
-    const extent = vectorSource.isEmpty() ? undefined : vectorSource.getExtent();
-
-    const tileGrid = new TileGrid({
-      extent: projectionExtent,
-      resolutions,
-      tileSize: [256, 256],
-    });
-
     const selectionLayer = createVectorLayer(vectorSource);
 
     const geoJsonSource = new VectorSource({
-      format: new GeoJSON({
-        dataProjection: projection,
-      }),
+      format,
     });
 
     const loadGeometries: (geom: Polygon) => Promise<void> = async (geom) => {
       const geomUid = getUid(geom);
 
       const chunkSquareSideLength = 1400;
-      const allExtents = getGeomExtentInSmallerChunks(geom, chunkSquareSideLength);
+      const interceptingExtentChunks = splitExtentInSmallerChunks({
+        extent: geom.getExtent(),
+        chunkSquareSideLength,
+        dataProj: DATA_PROJ,
+        viewProj: VIEW_PROJ,
+      }).filter((extent) => geom.intersectsExtent(extent));
 
       const featuresToRemove = geoJsonSource.getFeatures().filter((feat) => feat.getProperties().selectedGeometryUid === geomUid);
 
       const featuresFromApi: Feature<Geometry>[] = [];
 
       await Promise.all(
-        allExtents.map(async (extent) => {
+        interceptingExtentChunks.map(async (extent) => {
           const feats = await fetchPalstanSijaintitiedot(extent);
           featuresFromApi.push(...feats);
         })
@@ -147,6 +159,7 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
         }
         return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
       });
+
       uniqueIntersecting.forEach((f) => {
         f.setProperties({ featureType: FEAT_TYPE, selectedGeometryUid: geomUid });
       });
@@ -171,8 +184,7 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
               } else if (e instanceof GeometryExceedsAreaLimitError) {
                 showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
               } else {
-                // Tätä ei pitäisi tapahtua
-                showErrorMessage("Geometrian lisäys epäonnistui.");
+                showErrorMessage("Kiinteistötietojen hakeminen epäonnistui.");
               }
             }
           })()
@@ -192,7 +204,7 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
         });
     });
 
-    const layers = [createTileLayer(tileGrid), createVectorTileLayer(tileGrid), createGeoJsonVectorLayer(geoJsonSource), selectionLayer];
+    const layers = [createTileLayer(), createVectorTileLayer(), createGeoJsonVectorLayer(geoJsonSource), selectionLayer];
     const drawToolInteractions = createDrawToolInteractions(selectionLayer, vectorSource);
     const interactions = [
       drawToolInteractions.MODIFY,
@@ -200,28 +212,60 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
       drawToolInteractions.SELECT,
       drawToolInteractions.SNAP,
     ];
+
     return new Map({
-      controls: defaultControls({
+      controls: getControls({
         t,
+        view,
         selectionSource: vectorSource,
         geoJsonSource: geoJsonSource,
         interactions: drawToolInteractions,
         showErrorMessage,
         showSuccessMessage,
-        api,
-        oid: projekti.oid,
+        handleSave: () =>
+          withLoadingSpinner(
+            (async () => {
+              try {
+                const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
+                await api.tuoKarttarajaus(projekti.oid, geoJSON);
+                showSuccessMessage("Karttarajaus tallennettu");
+              } catch {
+                showErrorMessage("Karttarajauksen muuttaminen tiedostoksi epäonnistui");
+              }
+            })()
+          ),
+        handleSaveAndSearch: () =>
+          withLoadingSpinner(
+            (async () => {
+              try {
+                const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
+                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(
+                  projekti.oid,
+                  geoJSON,
+                  Array.from(getKiinteistotunnuksetFromSource(geoJsonSource))
+                );
+                showSuccessMessage("Karttarajaus tallennettu");
+              } catch {
+                showErrorMessage("Karttarajauksen muuttaminen tiedostoksi epäonnistui");
+              }
+            })()
+          ),
       }),
       layers,
-      view: defaultView(extent),
+      view,
       interactions: defaultInteractions().extend(interactions),
     });
   }, [api, projekti.oid, showErrorMessage, showSuccessMessage, t, vectorSource, withLoadingSpinner]);
 
   useEffect(() => {
+    setLoadingStateForControls(map, isLoading);
+  }, [isLoading, map]);
+
+  useEffect(() => {
     const extent = vectorSource?.getExtent();
     if (mapElement.current && map) {
       map.setTarget(mapElement.current);
-      zoomToExtent(map, extent);
+      zoomToExtent(view, extent);
     }
     return () => {
       map.setTarget();
@@ -234,17 +278,17 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
     vectorSource.clear();
     if (geoJSON) {
       try {
-        vectorSource.addFeatures(new GeoJSON().readFeatures(geoJSON));
-        zoomToExtent(map, vectorSource?.getExtent());
+        vectorSource.addFeatures(format.readFeatures(geoJSON));
+        zoomToExtent(view, vectorSource?.getExtent());
       } catch {
         showErrorMessage("Karttarajauksen lisääminen epäonnistui");
       }
     }
-  }, [geoJSON, map, showErrorMessage, vectorSource]);
+  }, [geoJSON, showErrorMessage, vectorSource]);
 
   useEffect(() => {
-    zoomToExtent(map, vectorSource?.getExtent());
-  }, [isFullScreen, map, vectorSource]);
+    zoomToExtent(view, vectorSource?.getExtent());
+  }, [isFullScreen, vectorSource]);
 
   return (
     <div {...props} ref={mapElement}>
@@ -333,8 +377,8 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
 });
 
 const format = new GeoJSON({
-  featureProjection: "EPSG:3067",
-  dataProjection: "EPSG:3067",
+  featureProjection: projection,
+  dataProjection: projection,
 });
 
 const PAIKKATIETO_BASEURL = "/hassu/paikkatieto/kiinteisto-avoin/simple-features/v3";
@@ -344,8 +388,8 @@ const fetchPalstanSijaintitiedot: (extent: Extent) => Promise<Feature<Geometry>[
     limit: "1000",
     bbox: [minX, minY, maxX, maxY].join(","),
     "filter-lang": "cql2-text",
-    crs: mapOpts.dataCrs,
-    "bbox-crs": mapOpts.dataCrs,
+    crs: DATA_CRS,
+    "bbox-crs": DATA_CRS,
   });
 
   const features: Feature<Geometry>[] = [];
@@ -361,49 +405,6 @@ const fetchPalstanSijaintitiedot: (extent: Extent) => Promise<Feature<Geometry>[
 
   return features;
 };
-
-function getGeomExtentInSmallerChunks(geom: Polygon, chunkSquareSideLength: number) {
-  const bounds = geom.getExtent();
-
-  const [minX, minY] = coordViewToData([bounds[0], bounds[1]]);
-  const [maxX, maxY] = coordViewToData([bounds[2], bounds[3]]);
-
-  const xRanges = splitRange(minX, maxX, chunkSquareSideLength);
-  const yRanges = splitRange(minY, maxY, chunkSquareSideLength);
-
-  const allExtents = xRanges
-    .reduce<Extent[]>((extents1, xRange) => {
-      extents1.push(
-        ...yRanges.reduce<Extent[]>((extents2, yRange) => {
-          extents2.push([xRange[0], yRange[0], xRange[1], yRange[1]]);
-          return extents2;
-        }, [])
-      );
-      return extents1;
-    }, [])
-    .filter((extent) => geom.intersectsExtent(extent));
-  return allExtents;
-}
-
-function coordViewToData(coord: number[]) {
-  if (mapOpts.viewProj == mapOpts.dataProj) {
-    return coord;
-  }
-  return transform(coord, mapOpts.viewProj, mapOpts.dataProj);
-}
-
-function splitRange(rangeStart: number, rangeEnd: number, intervalSize: number) {
-  const rangeDifference = rangeEnd - rangeStart;
-  const numIntervals = rangeDifference / intervalSize;
-  const intervals = [];
-
-  for (let i = 0; i < numIntervals; i++) {
-    const start = rangeStart + i * intervalSize;
-    const end = start + intervalSize < rangeEnd ? start + intervalSize : rangeEnd;
-    intervals.push([start, end]);
-  }
-  return intervals;
-}
 
 export function createGeoJsonVectorLayer(geoJsonSource: VectorSource<Geometry>) {
   const layer = new VectorLayer2({
@@ -435,7 +436,7 @@ export function createGeoJsonVectorLayer(geoJsonSource: VectorSource<Geometry>) 
   return layer;
 }
 
-export function createTileLayer(tileGrid: TileGrid): BaseLayer {
+export function createTileLayer(): BaseLayer {
   return new TileLayer({
     source: new XYZ({
       projection,
@@ -445,13 +446,15 @@ export function createTileLayer(tileGrid: TileGrid): BaseLayer {
   });
 }
 
-export function createVectorTileLayer(tileGrid: TileGrid): BaseLayer {
+const mvt = new MVT();
+
+export function createVectorTileLayer(): BaseLayer {
   const layer = new VectorTileLayer({
     declutter: true,
     source: new VectorTileSource({
-      projection: projection,
+      projection,
       tileGrid,
-      format: new MVT(),
+      format: mvt,
       minZoom: 9,
       maxZoom: 15,
       url: "/hassu/karttakuva/kiinteisto-avoin/tiles/wmts/1.0.0/kiinteistojaotus/default/v3/ETRS-TM35FIN/{z}/{y}/{x}.pbf",
@@ -487,11 +490,12 @@ export function createVectorLayer(source: VectorSource<Geometry>): VectorLayer<V
   });
 }
 
+const MAXIMUM_AREA = 9999999;
 const validateSelection = (geom: Geometry | undefined): geom is Polygon => {
   if (!(geom instanceof Polygon)) {
     throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon");
   }
-  if (getArea(geom, { projection }) > 9999999.999999999) {
+  if (getArea(geom, { projection }) > MAXIMUM_AREA) {
     throw new GeometryExceedsAreaLimitError("Rajaus on liian suuri. Tee pienempi rajaus.");
   }
   return true;
@@ -515,20 +519,66 @@ type DefaultControlProps = {
   interactions: DrawToolInteractions;
   showErrorMessage: ShowMessage;
   showSuccessMessage: ShowMessage;
-  api: API;
-  oid: string;
+  handleSave: (event: Event) => {};
+  handleSaveAndSearch: (event: Event) => {};
+  view: View;
 };
 
-export function defaultControls({
+export function getControls({
   t,
   geoJsonSource,
   selectionSource: source,
   interactions,
   showErrorMessage,
   showSuccessMessage,
-  api,
-  oid,
+  handleSave,
+  handleSaveAndSearch,
+  view,
 }: DefaultControlProps) {
+  const readGeoJsonOptions: ReadFeaturesFromGeoJsonFileInputControlOptions = {
+    source,
+    onGeoJsonUpload: (features) => {
+      const errors: Error[] = [];
+      const suodatetut = features.filter((feat) => {
+        try {
+          validateSelection(feat.getGeometry());
+          return true;
+        } catch (e) {
+          if (e instanceof Error) {
+            errors.push(e);
+          }
+        }
+        return false;
+      });
+
+      source.addFeatures(suodatetut);
+      zoomToExtent(view, source.getExtent());
+      const unsupportedGeometryError = errors.some((error) => error instanceof UnsupportedGeometryTypeError);
+      const areaLimitError = errors.some((error) => error instanceof GeometryExceedsAreaLimitError);
+      if (!errors.length) {
+        showSuccessMessage("Karttarajaus luettu tiedostosta");
+      } else {
+        showErrorMessage(
+          `${suodatetut.length ? "Osa karttarajauksen geometrioista" : "Karttarajauksen geometriat"} suodatettiin pois.` +
+            (unsupportedGeometryError
+              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-tyyppisiä geometrioita."
+              : "") +
+            (areaLimitError ? " Karttarajaus on liian suuri. Tee karttarajauksesta pienempi." : "")
+        );
+      }
+    },
+    onInvalidFileType: () => {
+      showErrorMessage("Tiedosto ei ole oikeaa tyyppiä. Varmista, että kyseessä on GeoJSON-tiedosto.");
+    },
+    onReaderFailure: () => {
+      showErrorMessage("Tiedoston lukeminen epäonnistui");
+    },
+    onReadFeaturesFailure: (e) => {
+      console.log(e);
+      showErrorMessage("Tiedoston lukeminen epäonnistui");
+    },
+  };
+
   return olDefaultControls({
     rotate: false,
     zoomOptions: {
@@ -546,15 +596,18 @@ export function defaultControls({
     new DrawControl({
       interactions,
       source,
-      drawStringLine: { label: createIconSpan("slash"), tipLabel: t("lahenna") },
-      drawPolygon: { label: createIconSpan("draw-polygon"), tipLabel: t("lahenna") },
-      drawBox: { label: createIconSpan("square"), tipLabel: t("lahenna") },
-      undo: { label: createIconSpan("undo"), tipLabel: t("lahenna") },
-      removeFeature: { label: createIconSpan("minus"), tipLabel: t("lahenna") },
-      clear: { label: createIconSpan("trash"), tipLabel: t("lahenna") },
+      drawPolygon: { label: createIconSpan("draw-polygon"), tipLabel: "Piirrä monikulmio" },
+      drawBox: { label: createIconSpan("square"), tipLabel: "Piirrä suorakulmio" },
+      undo: { label: createIconSpan("undo"), tipLabel: "Kumoa" },
+      removeFeature: { label: createIconSpan("trash"), tipLabel: "Poista valittu rajaus" },
     }),
-    new GeoJsonFileInputControl({ source, showErrorMessage, showSuccessMessage, validateSelection }),
-    new TallennaControl({ source, showErrorMessage, showSuccessMessage, api, oid }),
+    new ReadFeaturesFromGeoJsonFileInputControl(readGeoJsonOptions),
+    new SaveGeoJsonControl({
+      buttons: [
+        { handleClick: handleSave, label: "T" },
+        { handleClick: handleSaveAndSearch, label: "T&H" },
+      ],
+    }),
     new InfoControl({ geoJsonSource }),
   ]);
 }

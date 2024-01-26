@@ -1,6 +1,7 @@
 import Control, { Options } from "ol/control/Control";
 import Geometry from "ol/geom/Geometry";
 import VectorSource from "ol/source/Vector";
+import { getKiinteistotunnuksetFromSource } from "../util/getKiinteistotunnuksetFromSource";
 
 type TallennaControlOptions = Options & {
   geoJsonSource: VectorSource<Geometry>;
@@ -39,14 +40,7 @@ class InfoControl extends Control {
   }
 
   private updateInfoText() {
-    const kiinteistotunnukset = this.geoJsonSource.getFeatures().reduce<Set<string>>((set, feat) => {
-      const kiinteistotunnus = feat.getProperties().kiinteistotunnuksenEsitysmuoto;
-      if (kiinteistotunnus) {
-        set.add(kiinteistotunnus);
-      }
-      return set;
-    }, new Set());
-
+    const kiinteistotunnukset = getKiinteistotunnuksetFromSource(this.geoJsonSource);
     this.span.innerText = `Kiinteistöjä valittu ${kiinteistotunnukset.size} kpl`;
   }
 }

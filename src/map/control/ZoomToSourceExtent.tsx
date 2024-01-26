@@ -50,7 +50,7 @@ class ZoomToSourceExtent extends Control {
     if (!map) {
       return;
     }
-    zoomToExtent(map, this.source.getExtent());
+    zoomToExtent(map.getView(), this.source.getExtent());
   }
 }
 

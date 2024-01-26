@@ -13,23 +13,19 @@ type ButtonProps = {
 };
 
 enum ButtonType {
-  DRAW_STRING_LINE = "drawStringLine",
   DRAW_BOX = "drawBox",
   DRAW_POLYGON = "drawPolygon",
   UNDO = "undo",
   REMOVE_FEATURE = "removeFeature",
-  CLEAR = "clear",
 }
 
 type DrawingButtonProps = Record<ButtonType, ButtonProps>;
 
 const defaultDrawingButtonProps: DrawingButtonProps = {
-  drawStringLine: { className: "ol-draw-line-string", label: "L", tipLabel: "Draw line string" },
   drawPolygon: { className: "ol-draw-polygon", label: "P", tipLabel: "Draw polygon" },
   drawBox: { className: "ol-draw-box", label: "B", tipLabel: "Draw box" },
   undo: { className: "ol-draw-undo", label: "U", tipLabel: "Undo" },
   removeFeature: { className: "ol-remove-feature", label: "R", tipLabel: "Remove selected feature" },
-  clear: { className: "ol-draw-clear", label: "C", tipLabel: "Clear all geometries" },
 };
 
 type DrawControlProps = Options & {
@@ -39,7 +35,6 @@ type DrawControlProps = Options & {
 } & Partial<Record<ButtonType, Partial<ButtonProps>>>;
 
 enum DrawType {
-  LINE_STRING = "LineString",
   POLYGON = "Polygon",
   BOX = "Box",
 }
@@ -102,19 +97,6 @@ class DrawControl extends Control {
       disabled: true,
     });
 
-    const removeFeatureButton = createButton({
-      options,
-      type: ButtonType.REMOVE_FEATURE,
-      clickListener: this.removeSelectedFeature.bind(this),
-      disabled: true,
-    });
-
-    const lineButton = createButton({
-      options,
-      type: ButtonType.DRAW_STRING_LINE,
-      clickListener: this.toggleDrawOfType.bind(this, DrawType.LINE_STRING),
-    });
-
     const polygonButton = createButton({
       options,
       type: ButtonType.DRAW_POLYGON,
@@ -127,7 +109,12 @@ class DrawControl extends Control {
       clickListener: this.toggleDrawOfType.bind(this, DrawType.BOX),
     });
 
-    const clearButton = createButton({ options, type: ButtonType.CLEAR, clickListener: this.removeAllFeatures.bind(this) });
+    const removeFeatureButton = createButton({
+      options,
+      type: ButtonType.REMOVE_FEATURE,
+      clickListener: this.removeSelectedFeature.bind(this),
+      disabled: true,
+    });
 
     this.drawType = null;
 
@@ -135,7 +122,7 @@ class DrawControl extends Control {
     this.modify = options.interactions.MODIFY;
     this.drawTools = options.interactions.DRAW;
     this.select = options.interactions.SELECT;
-    this.drawToolButtons = { Box: boxButton, LineString: lineButton, Polygon: polygonButton };
+    this.drawToolButtons = { Box: boxButton, Polygon: polygonButton };
 
     Object.values(this.drawTools).forEach((draw) => {
       draw.on("drawstart", () => {
@@ -159,18 +146,6 @@ class DrawControl extends Control {
     this.select.getFeatures().on("change:length", () => {
       removeFeatureButton.disabled = !this.select.getFeatures().getLength();
     });
-
-    this.source.on("addfeature", () => {
-      clearButton.disabled = !this.source.getFeatures().length;
-    });
-
-    this.source.on("removefeature", () => {
-      clearButton.disabled = !this.source.getFeatures().length;
-    });
-  }
-
-  private removeAllFeatures() {
-    this.source.clear();
   }
 
   private removeSelectedFeature() {

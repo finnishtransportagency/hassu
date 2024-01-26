@@ -15,7 +15,6 @@ type Query {
 
   esikatseleAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, kieli: Kieli, muutokset: TallennaProjektiInput!): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
-  tuoKarttarajaus(oid: String!, geoJSON: String!): String
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
   listKirjaamoOsoitteet: [KirjaamoOsoite!]
@@ -51,7 +50,8 @@ type Mutation {
 
   suoritaTestiKomento(testiKomento: TestiKomentoInput!): String
 
-  tallennaKiinteistotunnukset(oid: String!, kiinteistotunnukset: [String!]!): String
+  tuoKarttarajaus(oid: String!, geoJSON: String!): String
+  tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
   tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): String
   poistaKiinteistonOmistaja(oid: String!, omistaja: String!): String
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogProps, styled } from "@mui/material";
-import { StyledMap2 } from "@components/projekti/common/StyledMap2";
+import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import axios from "axios";
@@ -45,9 +45,9 @@ const KarttaDialogi = styled(({ children, projekti, ...props }: DialogProps & { 
 
   return (
     <Dialog fullScreen {...props}>
-      <StyledMap2 projekti={projekti} geoJSON={geoJSON}>
+      <StyledMap projekti={projekti} geoJSON={geoJSON}>
         {children}
-      </StyledMap2>
+      </StyledMap>
     </Dialog>
   );
 })({});
