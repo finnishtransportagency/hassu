@@ -299,8 +299,11 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
 export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajaMutationVariables) {
   requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-  const omistajat = projekti?.omistajat ?? [];
-  const muutOmistajat = projekti?.muutOmistajat ?? [];
+  if (!projekti) {
+    throw new Error("Projektia ei löydy");
+  }
+  const omistajat = projekti.omistajat ?? [];
+  const muutOmistajat = projekti.muutOmistajat ?? [];
   let idx = omistajat.indexOf(input.omistaja);
   if (idx !== -1) {
     omistajat.splice(idx, 1);
@@ -310,6 +313,8 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
     if (idx !== -1) {
       muutOmistajat.splice(idx, 1);
       auditLog.info("Poistetaan muu omistaja", { omistajaId: input.omistaja });
+    } else {
+      throw new Error("Kiinteistön omistajaa " + input.omistaja + " ei löydy");
     }
   }
   auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });

@@ -136,6 +136,7 @@ class MuistutusHandler {
           __typename: "Muistuttaja",
           id: m.id,
           lisatty: m.lisatty,
+          paivitetty: m.paivitetty,
           etunimet: m.etunimi,
           sukunimi: m.sukunimi,
           jakeluosoite: m.lahiosoite,
@@ -213,13 +214,18 @@ class MuistutusHandler {
   async poistaMuistuttaja(input: PoistaMuistuttajaMutationVariables) {
     requireVaylaUser();
     const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-    const muutMuistuttajat = projekti?.muutMuistuttajat ?? [];
+    if (!projekti) {
+      throw new Error("Projektia ei löydy");
+    }
+    const muutMuistuttajat = projekti.muutMuistuttajat ?? [];
     const idx = muutMuistuttajat.indexOf(input.muistuttaja);
     if (idx !== -1) {
       muutMuistuttajat.splice(idx, 1);
       auditLog.info("Poistetaan muu muistuttaja", { omistajaId: input.muistuttaja });
       auditLog.info("Päivitetään muut muistuttajat projektille", { muutMuistuttajat });
       projektiDatabase.setMuutMuistuttajat(input.oid, muutMuistuttajat);
+    } else {
+      throw new Error("Muistuttajaa " + input.muistuttaja + " ei löydy");
     }
   }
 }
