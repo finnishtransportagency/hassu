@@ -31,7 +31,7 @@ export default function Layout({ children }: Props): ReactElement {
       {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
       <Header />
       <Breadcrumbs />
-      <Container id="main-container" sx={{ marginBottom: "110px", position: "relative" }}>
+      <Container sx={{ marginBottom: "110px" }}>
         <main>{children}</main>
       </Container>
       <Footer />

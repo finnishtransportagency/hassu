@@ -87,7 +87,7 @@ function RouteButton({
   topLevel?: boolean;
 }) {
   const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
-  const isSelected = route.activeRoutes ? route.activeRoutes.includes(router.pathname) : router.pathname.startsWith(route.pathname!);
+  const isSelected = route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!);
   return (
     <li>
       <HassuLink
@@ -119,7 +119,7 @@ function ProjektiVaiheDropdownButton({
   toggleDropdown: () => void;
 }) {
   const isSelected = projektinVaiheetNavigaatiossa.some((route) =>
-    route.activeRoutes ? route.activeRoutes.includes(router.pathname) : router.pathname.startsWith(route.pathname)
+    route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!)
   );
   return (
     <li>

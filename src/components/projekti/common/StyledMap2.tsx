@@ -22,15 +22,15 @@ import useTranslation from "next-translate/useTranslation";
 import { useIsFullScreen } from "src/hooks/useIsFullScreen";
 import { Translate } from "next-translate";
 import Geometry from "ol/geom/Geometry";
-import DrawControl, { createDrawToolInteractions, DrawToolInteractions } from "src/map/DrawControl";
+import DrawControl, { createDrawToolInteractions, DrawToolInteractions } from "src/map/control/DrawControl";
 import GeoJSON from "ol/format/GeoJSON";
 import { defaults as defaultInteractions } from "ol/interaction";
-import GeoJsonFileInputControl from "src/map/GeoJsonFileInputControl";
+import GeoJsonFileInputControl from "src/map/control/GeoJsonFileInputControl";
 import useSnackbars from "src/hooks/useSnackbars";
 import { ShowMessage } from "@components/HassuSnackbarProvider";
-import { zoomToExtent } from "src/map/zoomToExtent";
-import ZoomToSourceExtent from "src/map/ZoomToSourceExtent";
-import TallennaControl from "src/map/TallennaControl";
+import { zoomToExtent } from "src/map/util/zoomToExtent";
+import ZoomToSourceExtent from "src/map/control/ZoomToSourceExtent";
+import TallennaControl from "src/map/control/TallennaControl";
 import useApi from "src/hooks/useApi";
 import { API } from "@services/api/commonApi";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
@@ -40,17 +40,20 @@ import VectorTileSource from "ol/source/VectorTile";
 import MVT from "ol/format/MVT";
 import { stylefunction } from "ol-mapbox-style";
 import VectorLayer2 from "ol/layer/Vector";
-import featuresStyle from "./featuresStyle.json";
+import featuresStyle from "src/map/style/featuresStyle.json";
 import debounce from "lodash/debounce";
 import { getUid } from "ol/util";
-import InfoControl from "src/map/KiinteistoInfoControl";
+import InfoControl from "src/map/control/KiinteistoInfoControl";
 import intersect from "@turf/intersect";
 import { polygon } from "@turf/turf";
 
 import { Polygon } from "ol/geom";
 import Feature from "ol/Feature";
 import uniqBy from "lodash/uniqBy";
-import { VectorSourceEvent } from "ol/source/Vector";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { getArea } from "ol/sphere";
+import { UnsupportedGeometryTypeError } from "src/map/exception/UnsupportedGeometryTypeError";
+import { GeometryExceedsAreaLimitError } from "src/map/exception/GeometryExceedsAreaLimitError";
 
 const mapOpts = {
   dataProj: "EPSG:3067",
@@ -90,6 +93,7 @@ type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivE
 export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: StyledMapProps) => {
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const { withLoadingSpinner } = useLoadingSpinner();
 
   const { t } = useTranslation("kartta");
   const mapElement = useRef<HTMLDivElement | null>(null);
@@ -153,17 +157,29 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
     };
 
     vectorSource.on("addfeature", (event) => {
-      function handleAddFeature(event: VectorSourceEvent<Geometry>) {
-        const geometry = event.feature?.getGeometry();
-        if (geometry instanceof Polygon) {
-          loadGeometries(geometry);
-        }
-      }
-      const debouncedLoadGeometries = debounce(() => {
-        handleAddFeature(event);
-      }, 500);
+      const handleAddFeature = () =>
+        withLoadingSpinner(
+          (async () => {
+            const geometry = event.feature?.getGeometry();
+            try {
+              if (validateSelection(geometry)) {
+                await loadGeometries(geometry);
+              }
+            } catch (e) {
+              if (e instanceof UnsupportedGeometryTypeError) {
+                showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon");
+              } else if (e instanceof GeometryExceedsAreaLimitError) {
+                showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
+              } else {
+                // Tätä ei pitäisi tapahtua
+                showErrorMessage("Geometrian lisäys epäonnistui.");
+              }
+            }
+          })()
+        );
+      const debouncedLoadGeometries = debounce(handleAddFeature, 500);
       event.feature?.getGeometry()?.on("change", debouncedLoadGeometries);
-      handleAddFeature(event);
+      handleAddFeature();
     });
 
     vectorSource.on("removefeature", (event) => {
@@ -199,7 +215,7 @@ export const StyledMap2 = styled(({ children, projekti, geoJSON, ...props }: Sty
       view: defaultView(extent),
       interactions: defaultInteractions().extend(interactions),
     });
-  }, [api, projekti.oid, showErrorMessage, showSuccessMessage, t, vectorSource]);
+  }, [api, projekti.oid, showErrorMessage, showSuccessMessage, t, vectorSource, withLoadingSpinner]);
 
   useEffect(() => {
     const extent = vectorSource?.getExtent();
@@ -471,6 +487,16 @@ export function createVectorLayer(source: VectorSource<Geometry>): VectorLayer<V
   });
 }
 
+const validateSelection = (geom: Geometry | undefined): geom is Polygon => {
+  if (!(geom instanceof Polygon)) {
+    throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon");
+  }
+  if (getArea(geom, { projection }) > 9999999.999999999) {
+    throw new GeometryExceedsAreaLimitError("Rajaus on liian suuri. Tee pienempi rajaus.");
+  }
+  return true;
+};
+
 export function defaultView(extent: Extent | undefined) {
   return new View({
     projection,
@@ -527,7 +553,7 @@ export function defaultControls({
       removeFeature: { label: createIconSpan("minus"), tipLabel: t("lahenna") },
       clear: { label: createIconSpan("trash"), tipLabel: t("lahenna") },
     }),
-    new GeoJsonFileInputControl({ source, showErrorMessage, showSuccessMessage }),
+    new GeoJsonFileInputControl({ source, showErrorMessage, showSuccessMessage, validateSelection }),
     new TallennaControl({ source, showErrorMessage, showSuccessMessage, api, oid }),
     new InfoControl({ geoJsonSource }),
   ]);

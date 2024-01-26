@@ -7,10 +7,10 @@ type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => 
 export interface Route {
   title: string;
   requiredStatus: Status;
-  pathname: string;
+  pathname?: string;
   visible?: VisibilityHandler | boolean;
   id: string;
-  activeRoutes?: string[];
+  requireExactMatch?: boolean;
   isSubPath?: boolean;
 }
 
@@ -26,7 +26,7 @@ export const PROJEKTIN_TIEDOT_ROUTE: Route = {
   id: "projektin_tiedot",
   requiredStatus: Status.EI_JULKAISTU,
   pathname: `/yllapito/projekti/[oid]`,
-  activeRoutes: [`/yllapito/projekti/[oid]`, `/yllapito/projekti/[oid]/kiinteistonomistajat`],
+  requireExactMatch: true,
 };
 
 export const KASITTELYN_TILA_ROUTE: Route = {

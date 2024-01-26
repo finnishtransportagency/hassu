@@ -1,13 +1,11 @@
 import { ShowMessage } from "@components/HassuSnackbarProvider";
-import { lineStringToPolygon } from "@turf/turf";
 import Control, { Options } from "ol/control/Control";
-import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
-import { LineString, Polygon } from "ol/geom";
 import Geometry from "ol/geom/Geometry";
 import VectorSource from "ol/source/Vector";
-import { zoomToExtent } from "./zoomToExtent";
-import { lineString } from "@turf/turf";
+import { GeometryExceedsAreaLimitError } from "../exception/GeometryExceedsAreaLimitError";
+import { UnsupportedGeometryTypeError } from "../exception/UnsupportedGeometryTypeError";
+import { zoomToExtent } from "../util/zoomToExtent";
 
 type GeoJsonFileInputControlProps = Options & {
   source: VectorSource<Geometry>;
@@ -15,6 +13,7 @@ type GeoJsonFileInputControlProps = Options & {
   showSuccessMessage: ShowMessage;
   label?: string | HTMLElement;
   tipLabel?: string;
+  validateSelection: (geom: Geometry | undefined) => {};
 };
 
 const GEOJSON_MIME = "application/geo+json";
@@ -26,6 +25,7 @@ class GeoJsonFileInputControl extends Control {
   private showErrorMessage: ShowMessage;
   private showSuccessMessage: ShowMessage;
   private readonly geoJSON = new GeoJSON();
+  private validateSelection: (geom: Geometry | undefined) => {};
 
   constructor(options: GeoJsonFileInputControlProps) {
     const element = document.createElement("div");
@@ -60,6 +60,7 @@ class GeoJsonFileInputControl extends Control {
     this.source = options.source;
     this.showErrorMessage = options.showErrorMessage;
     this.showSuccessMessage = options.showSuccessMessage;
+    this.validateSelection = options.validateSelection;
   }
 
   private uploadGeoJSONFile(event: Event) {
@@ -71,7 +72,6 @@ class GeoJsonFileInputControl extends Control {
     if (!file) {
       return;
     } else if (file instanceof Blob && file.type === GEOJSON_MIME) {
-      console.log(file);
       this.readFile(file);
     } else {
       this.showErrorMessage("Tiedosto ei ole oikeaa tyyppiä. Varmista, että kyseessä on GeoJSON-tiedosto.");
@@ -103,28 +103,40 @@ class GeoJsonFileInputControl extends Control {
       const obj = JSON.parse(str);
       this.source.clear();
       const features = this.geoJSON.readFeatures(obj);
-      const suodatetut = features.reduce<Feature<Geometry>[]>((feats, feat) => {
-        const geom = feat.getGeometry();
-        if (geom instanceof Polygon) {
-          feats.push(feat);
-        } else if (geom instanceof LineString) {
-          const pol = lineStringToPolygon(lineString(geom.getCoordinates()));
-          if (pol.geometry.type === "Polygon") {
-            feat.setGeometry(new Polygon(pol.geometry.coordinates));
-            feats.push(feat);
+
+      const errors: Error[] = [];
+      const suodatetut = features.filter((feat) => {
+        try {
+          this.validateSelection(feat.getGeometry());
+          return true;
+        } catch (e) {
+          if (e instanceof Error) {
+            errors.push(e);
           }
         }
-        return feats;
-      }, []);
+        return false;
+      });
 
       this.source.addFeatures(suodatetut);
-      // Clear input value so onchange will trigger for the same file
       zoomToExtent(map, this.source.getExtent());
-      this.showSuccessMessage("Karttarajaus luettu tiedostosta");
+      const unsupportedGeometryError = errors.some((error) => error instanceof UnsupportedGeometryTypeError);
+      const areaLimitError = errors.some((error) => error instanceof GeometryExceedsAreaLimitError);
+      if (!errors.length) {
+        this.showSuccessMessage("Karttarajaus luettu tiedostosta");
+      } else {
+        this.showErrorMessage(
+          `${suodatetut.length ? "Osa karttarajauksen geometrioista" : "Karttarajauksen geometriat"} suodatettiin pois.` +
+            (unsupportedGeometryError
+              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-tyyppisiä geometrioita."
+              : "") +
+            (areaLimitError ? " Karttarajaus on liian suuri. Tee karttarajauksesta pienempi." : "")
+        );
+      }
     } catch (e) {
       console.log(e);
       this.showErrorMessage("Tiedoston lukeminen epäonnistui");
     }
+    // Clear input value so onchange will trigger for the same file
     this.input.value = "";
   }
 

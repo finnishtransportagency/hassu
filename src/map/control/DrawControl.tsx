@@ -35,6 +35,7 @@ const defaultDrawingButtonProps: DrawingButtonProps = {
 type DrawControlProps = Options & {
   interactions: DrawToolInteractions;
   source: VectorSource<Geometry>;
+  validateSelection?: (geom: Geometry) => boolean;
 } & Partial<Record<ButtonType, Partial<ButtonProps>>>;
 
 enum DrawType {

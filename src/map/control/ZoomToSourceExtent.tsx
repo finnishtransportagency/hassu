@@ -4,7 +4,7 @@ import { CLASS_CONTROL, CLASS_UNSELECTABLE } from "ol/css";
 import EventType from "ol/events/EventType";
 import Geometry from "ol/geom/Geometry";
 import VectorSource from "ol/source/Vector";
-import { zoomToExtent } from "./zoomToExtent";
+import { zoomToExtent } from "../util/zoomToExtent";
 
 type HassuZoomToExtentProps = Omit<Options, "extent"> & {
   source: VectorSource<Geometry>;

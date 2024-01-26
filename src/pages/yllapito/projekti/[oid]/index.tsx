@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
+import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
@@ -21,6 +22,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
@@ -30,9 +32,9 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot/AsianhallintaIntegraatioYhteys";
+import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
-import ProjektiTiedotPageLayout from "@components/projekti/ProjektiTiedotPageLayout";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -61,20 +63,41 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
+  const [ohjeetOpen, ohjeetSetOpen] = useState(false);
+  const ohjeetOnClose = useCallback(() => {
+    ohjeetSetOpen(false);
+    localStorage.setItem("perustietojenOhjeet", "false");
+  }, []);
+  const ohjeetOnOpen = useCallback(() => {
+    ohjeetSetOpen(true);
+    localStorage.setItem("perustietojenOhjeet", "true");
+  }, []);
+
+  // useeffectissa vasta ohjeetOpen "alustus" koska muuten ongelmia nextjs ssr takia tms, eli ReferenceError: localStorage is not defined
+  useEffect(() => {
+    const savedValue = localStorage.getItem("perustietojenOhjeet");
+    ohjeetSetOpen(savedValue ? savedValue.toLowerCase() !== "false" : true);
+  }, []);
+
   if (!projekti) {
     return <></>;
   }
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
   return (
-    <ProjektiTiedotPageLayout>
+    <ProjektiPageLayout
+      title={"Projektin tiedot"}
+      showInfo={!epaaktiivinen && !ohjeetOpen}
+      onOpenInfo={ohjeetOnOpen}
+      contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
+    >
       {projekti &&
         (epaaktiivinen ? (
           <ProjektinTiedotLukutila projekti={projekti} />
         ) : (
-          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+          <ProjektiSivuLomake ohjeetOpen={ohjeetOpen} ohjeetOnClose={ohjeetOnClose} {...{ projekti, projektiLoadError, reloadProjekti }} />
         ))}
-    </ProjektiTiedotPageLayout>
+    </ProjektiPageLayout>
   );
 }
 
@@ -82,9 +105,11 @@ interface ProjektiSivuLomakeProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  ohjeetOpen: boolean;
+  ohjeetOnClose: () => void;
 }
 
-function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
+function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjeetOpen, ohjeetOnClose }: ProjektiSivuLomakeProps) {
   const { data: nykyinenKayttaja } = useCurrentUser();
   const router = useRouter();
 
@@ -254,6 +279,19 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
                 </Notification>
               )}
+              <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+                <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+                <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                <li>
+                  Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                  vaiheisiin.
+                </li>
+                <li>
+                  Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                  aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                  kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                </li>
+              </OhjelistaNotification>
             </ContentSpacer>
 
             <ProjektinPerusosio projekti={projekti} />

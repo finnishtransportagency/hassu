@@ -1,40 +1,53 @@
-import { H2, H3 } from "@components/Headings";
-import Button from "@components/button/Button";
-import Section from "@components/layout/Section2";
-import ProjektinTiedotPageLayout from "@components/projekti/ProjektiTiedotPageLayout";
-import React, { useCallback, useState } from "react";
-import { KarttaKiinteistonomistajistaDialog } from "@components/projekti/common/KarttaKiinteistonomistajistaDialog";
-import { useProjekti } from "src/hooks/useProjekti";
+import React, { useEffect, useState } from "react";
+import { Dialog, DialogProps, styled } from "@mui/material";
+import { StyledMap2 } from "@components/projekti/common/StyledMap2";
+import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
+import axios from "axios";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export default function Kiinteistonomistajat() {
-  const { data: _projekti } = useProjekti();
-  const [_isDialogOpen, setIsDialogOpen] = useState(false);
-  const avaaKarttaDialogi = useCallback(() => {
-    setIsDialogOpen(true);
-  }, []);
-  const suljeKarttaDialogi = useCallback(() => {
-    setIsDialogOpen(false);
-  }, []);
   return (
-    <ProjektinTiedotPageLayout>
-      <Section>
-        <H2>Kiinteistönomistajien tiedot</H2>
-        <p>
-          Kuulutukset ja kutsu vuorovaikutukseen voidaan toimittaa kiinteistönomistajille järjestelmän kautta kun kiinteistönomistajat ovat
-          tunnistettu kiinteistötunnusten avulla.
-        </p>
-        <H3>Suunnitelman karttarajaus</H3>
-        <p>
-          Tuo suunnitelman karttarajaus GeoJson-tiedostona järjestelmään. Tämän piirtää suunnitelman kartalle ja etsii kiinteistönomistajat
-          tälle rajaukselle.
-        </p>
-        <Button primary onClick={avaaKarttaDialogi}>
-          Luo karttarajaus
-        </Button>
-        {typeof window !== "undefined" && (
-          <KarttaKiinteistonomistajistaDialog open={true} onClose={suljeKarttaDialogi} geoJSON={undefined} />
-        )}
-      </Section>
-    </ProjektinTiedotPageLayout>
+    <ProjektiConsumer>
+      {(projekti) => <>({typeof window !== "undefined" && <KarttaDialogi projekti={projekti} open />})</>}
+    </ProjektiConsumer>
   );
 }
+
+const KarttaDialogi = styled(({ children, projekti, ...props }: DialogProps & { projekti: ProjektiLisatiedolla }) => {
+  const { showErrorMessage } = useSnackbars();
+  const [geoJSON, setGeoJSON] = useState<string | null | undefined>(null);
+
+  useEffect(() => {
+    const updateGeoJson = async () => {
+      try {
+        if (!projekti.karttarajaus) {
+          setGeoJSON(undefined);
+          return;
+        }
+        const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/karttarajaus/karttarajaus.geojson`, {
+          responseType: "blob",
+        });
+
+        if (!(response.data instanceof Blob)) {
+          showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+          return;
+        }
+        const text = await response.data.text();
+        setGeoJSON(text);
+      } catch (e) {
+        console.log(e);
+        showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+      }
+    };
+    updateGeoJson();
+  }, [projekti.karttarajaus, projekti.oid, showErrorMessage]);
+
+  return (
+    <Dialog fullScreen {...props}>
+      <StyledMap2 projekti={projekti} geoJSON={geoJSON}>
+        {children}
+      </StyledMap2>
+    </Dialog>
+  );
+})({});
