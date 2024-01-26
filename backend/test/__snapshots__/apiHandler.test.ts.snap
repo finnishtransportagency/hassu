@@ -8,6 +8,7 @@ Object {
     "aktivoitavissa": false,
     "inaktiivinen": true,
   },
+  "karttarajaus": null,
   "kayttoOikeudet": Array [
     Object {
       "__typename": "ProjektiKayttaja",
@@ -146,6 +147,7 @@ Array [
       "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
+    "karttarajaus": null,
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -256,6 +258,7 @@ Array [
       "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
+    "karttarajaus": null,
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -365,6 +368,7 @@ Array [
       "linkkiAsianhallintaan": undefined,
     },
     "julkinenStatus": "EI_JULKAISTU",
+    "karttarajaus": null,
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -619,6 +623,7 @@ Array [
     },
     "euRahoitus": false,
     "julkinenStatus": "EI_JULKAISTU",
+    "karttarajaus": null,
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -925,6 +930,7 @@ Object {
   },
   "euRahoitus": false,
   "julkinenStatus": "ALOITUSKUULUTUS",
+  "karttarajaus": null,
   "kayttoOikeudet": Array [
     Object {
       "__typename": "ProjektiKayttaja",
