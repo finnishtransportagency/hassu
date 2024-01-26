@@ -19,7 +19,6 @@ export type ReadFeaturesFromGeoJsonFileInputControlOptions = Options & {
 const GEOJSON_MIME = "application/geo+json";
 
 class ReadFeaturesFromGeoJsonFileInputControl extends Control {
-  private source: VectorSource<Geometry>;
   private input: HTMLInputElement;
   private reader: FileReader;
   private readonly geoJSON = new GeoJSON();
@@ -61,7 +60,6 @@ class ReadFeaturesFromGeoJsonFileInputControl extends Control {
     this.reader.onload = this.onReaderLoad.bind(this);
     addIsLoadingPropertyChangeListenerForButtonDisabling(this, button);
 
-    this.source = options.source;
     this.onGeoJsonUpload = options.onGeoJsonUpload;
     this.onInvalidFileType = options.onInvalidFileType;
     this.onReaderFailure = options.onReaderFailure;
@@ -99,7 +97,6 @@ class ReadFeaturesFromGeoJsonFileInputControl extends Control {
       }
       const str = typeof result === "string" ? result : this.decodeBuffer(result);
       const obj = JSON.parse(str);
-      this.source.clear();
       const features = this.geoJSON.readFeatures(obj);
 
       this.onGeoJsonUpload(features);

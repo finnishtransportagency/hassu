@@ -1,27 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Dialog, DialogProps, styled } from "@mui/material";
+import React, { useCallback, useRef, useState } from "react";
+import { Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
-import axios from "axios";
-import useSnackbars from "src/hooks/useSnackbars";
 import Button from "@components/button/Button";
+import HassuDialog from "@components/HassuDialog";
 
 export default function Kiinteistonomistajat() {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const close = useCallback(() => {
-    setOpen(false);
+    setIsOpen(false);
   }, []);
   const open = useCallback(() => {
-    setOpen(true);
+    setIsOpen(true);
   }, []);
   return (
     <ProjektiConsumer>
       {(projekti) => (
         <>
           <Button onClick={open}>Avaa dialogi</Button>
-          {typeof window !== "undefined" && <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} />}
+          <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} />
         </>
       )}
     </ProjektiConsumer>
@@ -29,45 +28,68 @@ export default function Kiinteistonomistajat() {
 }
 
 const KarttaDialogi = styled(
-  ({ children, projekti, ...props }: DialogProps & Required<Pick<DialogProps, "onClose">> & { projekti: ProjektiLisatiedolla }) => {
-    const { showErrorMessage } = useSnackbars();
-    const [geoJSON, setGeoJSON] = useState<string | null | undefined>(null);
+  ({
+    children,
+    projekti,
+    onClose,
+    ...props
+  }: DialogProps & Required<Pick<DialogProps, "onClose">> & { projekti: ProjektiLisatiedolla }) => {
+    const isMapEditedByUserRef = useRef(false);
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+    const closeConfirmation = useCallback(() => {
+      setIsConfirmationOpen(false);
+    }, []);
 
-    useEffect(() => {
-      const updateGeoJson = async () => {
-        try {
-          if (!projekti.karttarajaus) {
-            setGeoJSON(undefined);
-            return;
-          }
-          const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/karttarajaus/karttarajaus.geojson`, {
-            responseType: "blob",
-          });
+    const closeMainDialog = useCallback(() => {
+      onClose({}, "backdropClick");
+    }, [onClose]);
 
-          if (!(response.data instanceof Blob)) {
-            showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
-            return;
-          }
-          const text = await response.data.text();
-          setGeoJSON(text);
-        } catch (e) {
-          console.log(e);
-          showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
-        }
-      };
-      updateGeoJson();
-    }, [projekti.karttarajaus, projekti.oid, showErrorMessage]);
+    const closeAll = useCallback(() => {
+      closeConfirmation();
+      closeMainDialog();
+    }, [closeConfirmation, closeMainDialog]);
 
-    const closeDialog = useCallback(() => {
-      props.onClose({}, "backdropClick");
-    }, [props]);
+    const handleMainDialogOnClose = useCallback(() => {
+      if (isMapEditedByUserRef.current) {
+        setIsConfirmationOpen(true);
+      } else {
+        closeAll();
+      }
+    }, [closeAll]);
+
+    const triggerMapEditedByUser = useCallback(() => {
+      isMapEditedByUserRef.current = true;
+    }, []);
+    const clearMapEditedByUser = useCallback(() => {
+      isMapEditedByUserRef.current = false;
+    }, []);
 
     return (
-      <Dialog fullScreen {...props}>
-        <StyledMap projekti={projekti} closeDialog={closeDialog} geoJSON={geoJSON}>
-          {children}
-        </StyledMap>
-      </Dialog>
+      <>
+        <Dialog fullScreen onClose={handleMainDialogOnClose} {...props}>
+          <StyledMap
+            triggerMapEditedByUser={triggerMapEditedByUser}
+            clearMapEditedByUser={clearMapEditedByUser}
+            projekti={projekti}
+            closeDialog={handleMainDialogOnClose}
+          >
+            {children}
+          </StyledMap>
+        </Dialog>
+        <HassuDialog maxWidth="sm" open={isConfirmationOpen} title="Poistu karttatyökalusta" onClose={closeConfirmation}>
+          <DialogContent>
+            <p>Rajausta ei ole tallennettu. Listaa kiinteistöistä ei haeta.</p>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" primary onClick={closeAll}>
+              Poistu
+            </Button>
+            <Button type="button" onClick={closeConfirmation}>
+              Peruuta
+            </Button>
+          </DialogActions>
+        </HassuDialog>
+      </>
     );
   }
 )({});

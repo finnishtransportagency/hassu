@@ -1,5 +1,5 @@
 import { styled } from "@mui/system";
-import { DetailedHTMLProps, HTMLAttributes, useRef, useEffect, useMemo } from "react";
+import { DetailedHTMLProps, HTMLAttributes, useRef, useEffect, useMemo, useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
 
 import Map from "ol/Map";
@@ -62,7 +62,6 @@ import KumoaIcon from "src/svg/kumoa-ikoni.svg";
 import MonikulmioIcon from "src/svg/monikulmio-tyokalu-ikoni.svg";
 import SuorakulmioIcon from "src/svg/suorakulmio-tyokalu-ikoni.svg";
 import { VectorSourceEvent } from "ol/source/Vector";
-import { API } from "@services/api/commonApi";
 import Button from "@components/button/Button";
 import Collection from "ol/Collection";
 
@@ -98,7 +97,6 @@ export const STROKE_WIDTH = 8;
 
 const FEAT_TYPE = "PalstanSijaintitiedot";
 
-// createElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementCreationOptions): HTMLElementTagNameMap[K];
 export const createElement = <K extends keyof HTMLElementTagNameMap>(
   children: JSX.Element,
   parentElementType: K
@@ -115,107 +113,176 @@ export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabe
 
 type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
   projekti: ProjektiLisatiedolla;
-  geoJSON: string | null | undefined;
   closeDialog: () => void;
+  triggerMapEditedByUser: () => void;
+  clearMapEditedByUser: () => void;
 };
 
-export const StyledMap = styled(({ children, projekti, geoJSON, closeDialog, ...props }: StyledMapProps) => {
-  const api = useApi();
-  const { showErrorMessage, showSuccessMessage } = useSnackbars();
-  const { isLoading, withLoadingSpinner } = useLoadingSpinner();
+export const StyledMap = styled(
+  ({ children, projekti, closeDialog, triggerMapEditedByUser, clearMapEditedByUser, ...props }: StyledMapProps) => {
+    const api = useApi();
+    const { showErrorMessage, showSuccessMessage } = useSnackbars();
+    const { isLoading, withLoadingSpinner } = useLoadingSpinner();
 
-  const { t } = useTranslation("kartta");
-  const mapElement = useRef<HTMLDivElement | null>(null);
+    const [geoJSON, setGeoJSON] = useState<string | null | undefined>(null);
 
-  const vectorSource = useMemo(() => new VectorSource(), []);
+    useEffect(() => {
+      const updateGeoJson = async () => {
+        try {
+          if (!projekti.karttarajaus) {
+            setGeoJSON(undefined);
+            return;
+          }
+          const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/karttarajaus/karttarajaus.geojson`, {
+            responseType: "blob",
+          });
 
-  const map = useMemo(() => {
-    const selectionLayer = createVectorLayer(vectorSource);
+          if (!(response.data instanceof Blob)) {
+            showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+            return;
+          }
+          const text = await response.data.text();
+          setGeoJSON(text);
+        } catch (e) {
+          console.log(e);
+          showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+        }
+      };
+      updateGeoJson();
+    }, [projekti.karttarajaus, projekti.oid, showErrorMessage]);
 
-    const geoJsonSource = new VectorSource({
-      format,
-    });
+    const { t } = useTranslation("kartta");
+    const mapElement = useRef<HTMLDivElement | null>(null);
 
-    vectorSource.on("addfeature", getAddFeatureHandler(withLoadingSpinner, geoJsonSource, showErrorMessage));
+    const vectorSource = useMemo(() => new VectorSource(), []);
 
-    vectorSource.on("removefeature", getRemoveFeatureHandler(geoJsonSource));
+    const map = useMemo(() => {
+      const selectionLayer = createVectorLayer(vectorSource);
 
-    const layers = [createTileLayer(), createVectorTileLayer(), createGeoJsonVectorLayer(geoJsonSource), selectionLayer];
-    const drawToolInteractions = createDrawToolInteractions(selectionLayer, vectorSource);
-    const interactions = [
-      drawToolInteractions.MODIFY,
-      ...Object.values(drawToolInteractions.DRAW),
-      drawToolInteractions.SELECT,
-      drawToolInteractions.SNAP,
-    ];
+      const geoJsonSource = new VectorSource({
+        format,
+      });
 
-    return new Map({
-      controls: getControls({
-        t,
-        view,
-        selectionSource: vectorSource,
-        geoJsonSource: geoJsonSource,
-        interactions: drawToolInteractions,
-        showErrorMessage,
-        showSuccessMessage,
-        handleSave: getHandleSave(withLoadingSpinner, vectorSource, api, projekti, showSuccessMessage, showErrorMessage),
-        handleSaveAndSearch: getHandleSaveAndSearch(
-          withLoadingSpinner,
-          vectorSource,
-          api,
-          projekti,
-          geoJsonSource,
+      vectorSource.on("addfeature", getAddFeatureHandler(withLoadingSpinner, geoJsonSource, showErrorMessage));
+
+      vectorSource.on("removefeature", getRemoveFeatureHandler(geoJsonSource));
+
+      const layers = [createTileLayer(), createVectorTileLayer(), createGeoJsonVectorLayer(geoJsonSource), selectionLayer];
+      const drawToolInteractions = createDrawToolInteractions(selectionLayer, vectorSource);
+      const modify = drawToolInteractions.MODIFY;
+      modify.on("modifystart", () => {
+        triggerMapEditedByUser();
+      });
+      const drawInteractions = Object.values(drawToolInteractions.DRAW);
+      drawInteractions.forEach((int) =>
+        int.on("drawend", () => {
+          triggerMapEditedByUser();
+        })
+      );
+      const interactions = [modify, ...drawInteractions, drawToolInteractions.SELECT, drawToolInteractions.SNAP];
+
+      return new Map({
+        controls: getControls({
+          t,
+          view,
+          selectionSource: vectorSource,
+          geoJsonSource: geoJsonSource,
+          interactions: drawToolInteractions,
+          showErrorMessage,
           showSuccessMessage,
-          showErrorMessage
-        ),
-        handleExit: closeDialog,
-      }),
+          handleSave: () => {
+            withLoadingSpinner(
+              (async () => {
+                try {
+                  const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
+                  await api.tuoKarttarajaus(projekti.oid, geoJSON);
+                  clearMapEditedByUser();
+                  showSuccessMessage("Karttarajaus tallennettu");
+                } catch (e) {
+                  console.log(e);
+                  showErrorMessage("Karttarajauksen tallentaminen epäonnistui");
+                }
+              })()
+            );
+          },
+          handleSaveAndSearch: () => {
+            withLoadingSpinner(
+              (async () => {
+                try {
+                  const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
+                  await api.tuoKarttarajausJaTallennaKiinteistotunnukset(
+                    projekti.oid,
+                    geoJSON,
+                    Array.from(getKiinteistotunnuksetFromSource(geoJsonSource))
+                  );
+                  clearMapEditedByUser();
+                  showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
+                } catch {
+                  showErrorMessage("Karttajarajauksen tallentaminen ja hakeminen epäonnistui");
+                }
+              })()
+            );
+          },
+          handleExit: closeDialog,
+        }),
 
-      layers,
-      view,
-      interactions: defaultInteractions().extend(interactions),
-    });
-  }, [api, closeDialog, projekti, showErrorMessage, showSuccessMessage, t, vectorSource, withLoadingSpinner]);
+        layers,
+        view,
+        interactions: defaultInteractions().extend(interactions),
+      });
+    }, [
+      api,
+      clearMapEditedByUser,
+      closeDialog,
+      projekti,
+      showErrorMessage,
+      showSuccessMessage,
+      t,
+      triggerMapEditedByUser,
+      vectorSource,
+      withLoadingSpinner,
+    ]);
 
-  useEffect(() => {
-    setLoadingStateForControls(map, isLoading);
-  }, [isLoading, map]);
+    useEffect(() => {
+      setLoadingStateForControls(map, isLoading);
+    }, [isLoading, map]);
 
-  useEffect(() => {
-    const extent = vectorSource?.getExtent();
-    if (mapElement.current && map) {
-      map.setTarget(mapElement.current);
-      zoomToExtent(view, extent);
-    }
-    return () => {
-      map.setTarget();
-    };
-  }, [map, mapElement, vectorSource]);
-
-  const isFullScreen = useIsFullScreen(mapElement.current);
-
-  useEffect(() => {
-    vectorSource.clear();
-    if (geoJSON) {
-      try {
-        vectorSource.addFeatures(format.readFeatures(geoJSON));
-        zoomToExtent(view, vectorSource?.getExtent());
-      } catch {
-        showErrorMessage("Karttarajauksen lisääminen epäonnistui");
+    useEffect(() => {
+      const extent = vectorSource?.getExtent();
+      if (mapElement.current && map) {
+        map.setTarget(mapElement.current);
+        zoomToExtent(view, extent);
       }
-    }
-  }, [geoJSON, showErrorMessage, vectorSource]);
+      return () => {
+        map.setTarget();
+      };
+    }, [map, mapElement, vectorSource]);
 
-  useEffect(() => {
-    zoomToExtent(view, vectorSource?.getExtent());
-  }, [isFullScreen, vectorSource]);
+    const isFullScreen = useIsFullScreen(mapElement.current);
 
-  return (
-    <div {...props} ref={mapElement}>
-      {children}
-    </div>
-  );
-})({
+    useEffect(() => {
+      vectorSource.clear();
+      if (geoJSON) {
+        try {
+          vectorSource.addFeatures(format.readFeatures(geoJSON));
+          zoomToExtent(view, vectorSource?.getExtent());
+        } catch {
+          showErrorMessage("Karttarajauksen lisääminen epäonnistui");
+        }
+      }
+    }, [geoJSON, showErrorMessage, vectorSource]);
+
+    useEffect(() => {
+      zoomToExtent(view, vectorSource?.getExtent());
+    }, [isFullScreen, vectorSource]);
+
+    return (
+      <div {...props} ref={mapElement}>
+        {children}
+      </div>
+    );
+  }
+)({
   height: "100%",
   zIndex: 0,
   position: "relative",
@@ -341,55 +408,6 @@ const fetchPalstanSijaintitiedot: (extent: Extent) => Promise<Feature<Geometry>[
 
   return features;
 };
-
-function getHandleSaveAndSearch(
-  withLoadingSpinner: <T>(promise: Promise<T>) => Promise<T>,
-  vectorSource: VectorSource<Geometry>,
-  api: API,
-  projekti: ProjektiLisatiedolla,
-  geoJsonSource: VectorSource<Geometry>,
-  showSuccessMessage: ShowMessage,
-  showErrorMessage: ShowMessage
-): (event: Event) => {} {
-  return () =>
-    withLoadingSpinner(
-      (async () => {
-        try {
-          const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
-          await api.tuoKarttarajausJaTallennaKiinteistotunnukset(
-            projekti.oid,
-            geoJSON,
-            Array.from(getKiinteistotunnuksetFromSource(geoJsonSource))
-          );
-          showSuccessMessage("Karttarajaus tallennettu");
-        } catch {
-          showErrorMessage("Karttarajauksen muuttaminen tiedostoksi epäonnistui");
-        }
-      })()
-    );
-}
-
-function getHandleSave(
-  withLoadingSpinner: <T>(promise: Promise<T>) => Promise<T>,
-  vectorSource: VectorSource<Geometry>,
-  api: API,
-  projekti: ProjektiLisatiedolla,
-  showSuccessMessage: ShowMessage,
-  showErrorMessage: ShowMessage
-): (event: Event) => {} {
-  return () =>
-    withLoadingSpinner(
-      (async () => {
-        try {
-          const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
-          await api.tuoKarttarajaus(projekti.oid, geoJSON);
-          showSuccessMessage("Karttarajaus tallennettu");
-        } catch {
-          showErrorMessage("Karttarajauksen muuttaminen tiedostoksi epäonnistui");
-        }
-      })()
-    );
-}
 
 function getRemoveFeatureHandler(geoJsonSource: VectorSource<Geometry>): (event: VectorSourceEvent<Geometry>) => unknown {
   return (event) => {
@@ -627,6 +645,7 @@ export function getControls({
         return false;
       });
 
+      source.clear();
       source.addFeatures(suodatetut);
       zoomToExtent(view, source.getExtent());
       const unsupportedGeometryError = errors.some((error) => error instanceof UnsupportedGeometryTypeError);
