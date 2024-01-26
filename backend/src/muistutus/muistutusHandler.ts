@@ -221,7 +221,7 @@ class MuistutusHandler {
     const idx = muutMuistuttajat.indexOf(input.muistuttaja);
     if (idx !== -1) {
       muutMuistuttajat.splice(idx, 1);
-      auditLog.info("Poistetaan muu muistuttaja", { omistajaId: input.muistuttaja });
+      auditLog.info("Poistetaan muu muistuttaja", { muistuttajaId: input.muistuttaja });
       auditLog.info("Päivitetään muut muistuttajat projektille", { muutMuistuttajat });
       projektiDatabase.setMuutMuistuttajat(input.oid, muutMuistuttajat);
     } else {
