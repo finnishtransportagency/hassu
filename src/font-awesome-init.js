@@ -41,10 +41,6 @@ import {
   faPlus,
   faMapMarkerAlt,
   faExpandAlt,
-  faSlash,
-  faDrawPolygon,
-  faSquare,
-  faUndo,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -87,11 +83,7 @@ library.add(
   faMinus,
   faPlus,
   faMapMarkerAlt,
-  faExpandAlt,
-  faSlash,
-  faDrawPolygon,
-  faSquare,
-  faUndo
+  faExpandAlt
 );
 
 import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
