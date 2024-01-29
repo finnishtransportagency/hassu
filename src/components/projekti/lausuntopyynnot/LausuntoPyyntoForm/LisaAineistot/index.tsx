@@ -61,7 +61,6 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
             setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
 
             if (nonAllowedTypeFiles.length) {
-              console.log(nonAllowedTypeFiles);
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
               showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");
             }
