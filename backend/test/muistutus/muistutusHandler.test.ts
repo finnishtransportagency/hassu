@@ -18,6 +18,7 @@ import { mockClient } from "aws-sdk-client-mock";
 import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../src/config";
 import { identifyMockUser } from "../../src/user/userService";
+import { fail } from "assert";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -242,7 +243,7 @@ describe("muistutusHandler", () => {
         const dbMock = mockClient(DynamoDBDocumentClient);
         dbMock
           .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+          .resolves({ Item: { id: "1", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock
           .on(GetCommand, { TableName: config.muistuttajaTableName, Key: { id: "1" } })
           .resolves({ Item: { id: "1", nimi: "Matti Teppo" } });
@@ -279,6 +280,29 @@ describe("muistutusHandler", () => {
         expect(muistuttajat[1].nimi).to.equal("Teppo Testaaja");
         expect(muistuttajat[1].tiedotusosoite).to.equal("test@test.fi");
         expect(muistuttajat[1].tiedotustapa).to.equal(undefined);
+      });
+      it("should not save muistuttajat", async () => {
+        const dbMock = mockClient(DynamoDBDocumentClient);
+        dbMock.reset();
+        dbMock
+          .on(GetCommand, { TableName: config.projektiTableName })
+          .resolves({ Item: { id: "1", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+        dbMock
+          .on(GetCommand, { TableName: config.muistuttajaTableName, Key: { id: "1" } })
+          .resolves({ Item: { id: "11", nimi: "Teppo Testaaja" } });
+        try {
+          await muistutusHandler.tallennaMuistuttajat({
+            oid: "1.2.3",
+            muistuttajat: [
+              { id: "1", nimi: "Matti Teppo", tiedotusosoite: "matti@teppo.fi", tiedotustapa: "email" },
+              { nimi: "Teppo Testaaja", tiedotusosoite: "test@test.fi" },
+            ],
+          });
+          fail("Muistuttajan tallennus ei saisi onnistua");
+        } catch(e) {
+          assert(e instanceof Error)
+          expect(e.message).to.be.equal("Muistuttajaa 1 ei löydy");
+        }
       });
     });
     describe("poistaMuistuttaja", () => {

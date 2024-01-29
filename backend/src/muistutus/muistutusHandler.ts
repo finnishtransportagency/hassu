@@ -177,7 +177,7 @@ class MuistutusHandler {
       if (muistuttaja.id) {
         const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getTableName(), Key: { id: muistuttaja.id } }));
         dbmuistuttaja = response.Item as DBMuistuttaja;
-        if (!dbmuistuttaja) {
+        if (!dbmuistuttaja || !projekti.muutMuistuttajat?.includes(muistuttaja.id)) {
           throw new Error("Muistuttajaa " + muistuttaja.id + " ei löydy");
         }
         dbmuistuttaja.paivitetty = now;
