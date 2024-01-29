@@ -231,11 +231,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
 }
 
 export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
-  const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-  if (!projekti) {
-    throw new Error("Projektia ei löydy");
-  }
-  requirePermissionMuokkaa(projekti);
+  const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const uudetOmistajat = [];
   const expires = getExpires();
@@ -297,11 +293,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
 }
 
 export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajaMutationVariables) {
-  const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-  if (!projekti) {
-    throw new Error("Projektia ei löydy");
-  }
-  requirePermissionMuokkaa(projekti);
+  const projekti = await getProjektiAndCheckPermissions(input.oid);
   const omistajat = projekti.omistajat ?? [];
   const muutOmistajat = projekti.muutOmistajat ?? [];
   let idx = omistajat.indexOf(input.omistaja);
@@ -322,11 +314,7 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
 }
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
-  const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
-  if (!projekti) {
-    throw new Error("Projektia ei löydy");
-  }
-  requirePermissionMuokkaa(projekti);
+  const projekti = await getProjektiAndCheckPermissions(variables.oid);
   const sivuKoko = variables.sivuKoko ?? 10;
   const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
   const start = (variables.sivu - 1) * sivuKoko;

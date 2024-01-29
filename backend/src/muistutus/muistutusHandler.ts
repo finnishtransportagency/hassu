@@ -13,6 +13,7 @@ import { BatchGetCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
 import { config } from "../config";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
+import { DBProjekti } from "../database/model";
 
 function getTableName() {
   if (process.env.TABLE_MUISTUTTAJA) {
@@ -47,6 +48,16 @@ export type DBMuistuttaja = {
   tiedotustapa?: string | null;
   paivitetty?: string | null;
 };
+
+async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!projekti) {
+    log.error("Projektia ei löydy");
+    throw new NotFoundError("Projektia ei löydy");
+  }
+  requirePermissionMuokkaa(projekti);
+  return projekti;
+}
 
 class MuistutusHandler {
   async kasitteleMuistutus({ oid, muistutus: muistutusInput }: LisaaMuistutusMutationVariables) {
@@ -106,12 +117,7 @@ class MuistutusHandler {
   }
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
-    const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
-    if (!projekti) {
-      log.error("Projektia ei löydy");
-      throw new NotFoundError("Projektia ei löydy");
-    }
-    requirePermissionMuokkaa(projekti);
+    const projekti = await getProjektiAndCheckPermissions(variables.oid);
     const sivuKoko = variables.sivuKoko ?? 10;
     const muistuttajat = variables.muutMuistuttajat ? projekti?.muutMuistuttajat ?? []: projekti?.muistuttajat ?? [];
     const start = (variables.sivu - 1) * sivuKoko;
@@ -163,11 +169,7 @@ class MuistutusHandler {
   }
 
   async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
-    const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-    if (!projekti) {
-      throw new Error("Projektia ei löydy");
-    }
-    requirePermissionMuokkaa(projekti);
+    const projekti = await getProjektiAndCheckPermissions(input.oid);
     const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     const expires = getExpires();
     let dbmuistuttaja: DBMuistuttaja | undefined;
@@ -216,11 +218,7 @@ class MuistutusHandler {
     });
   }
   async poistaMuistuttaja(input: PoistaMuistuttajaMutationVariables) {
-    const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-    if (!projekti) {
-      throw new Error("Projektia ei löydy");
-    }
-    requirePermissionMuokkaa(projekti);
+    const projekti = await getProjektiAndCheckPermissions(input.oid);
     const muutMuistuttajat = projekti.muutMuistuttajat ?? [];
     const idx = muutMuistuttajat.indexOf(input.muistuttaja);
     if (idx !== -1) {
