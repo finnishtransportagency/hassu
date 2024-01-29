@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
@@ -34,7 +34,6 @@ const KarttaDialogi = styled(
     onClose,
     ...props
   }: DialogProps & Required<Pick<DialogProps, "onClose">> & { projekti: ProjektiLisatiedolla }) => {
-    const isMapEditedByUserRef = useRef(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
     const closeConfirmation = useCallback(() => {
       setIsConfirmationOpen(false);
@@ -49,30 +48,21 @@ const KarttaDialogi = styled(
       closeMainDialog();
     }, [closeConfirmation, closeMainDialog]);
 
-    const handleMainDialogOnClose = useCallback(() => {
-      if (isMapEditedByUserRef.current) {
-        setIsConfirmationOpen(true);
-      } else {
-        closeAll();
-      }
-    }, [closeAll]);
-
-    const triggerMapEditedByUser = useCallback(() => {
-      isMapEditedByUserRef.current = true;
-    }, []);
-    const clearMapEditedByUser = useCallback(() => {
-      isMapEditedByUserRef.current = false;
-    }, []);
+    const handleMainDialogOnClose = useCallback(
+      (isMapEdited: boolean) => {
+        if (isMapEdited) {
+          setIsConfirmationOpen(true);
+        } else {
+          closeAll();
+        }
+      },
+      [closeAll]
+    );
 
     return (
       <>
         <Dialog fullScreen onClose={handleMainDialogOnClose} {...props}>
-          <StyledMap
-            triggerMapEditedByUser={triggerMapEditedByUser}
-            clearMapEditedByUser={clearMapEditedByUser}
-            projekti={projekti}
-            closeDialog={handleMainDialogOnClose}
-          >
+          <StyledMap projekti={projekti} closeDialog={handleMainDialogOnClose}>
             {children}
           </StyledMap>
         </Dialog>
