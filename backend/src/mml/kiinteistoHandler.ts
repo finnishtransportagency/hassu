@@ -3,7 +3,7 @@ import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
 import { MmlClient, MmlKiinteisto, Omistaja as MmlOmistaja, getMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
-import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa, requireVaylaUser } from "../user/userService";
+import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { BatchGetCommand, BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
@@ -231,11 +231,11 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
 }
 
 export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
-  requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   if (!projekti) {
     throw new Error("Projektia ei löydy");
   }
+  requirePermissionMuokkaa(projekti);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const uudetOmistajat = [];
   const expires = getExpires();
@@ -297,11 +297,11 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
 }
 
 export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajaMutationVariables) {
-  requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
   if (!projekti) {
     throw new Error("Projektia ei löydy");
   }
+  requirePermissionMuokkaa(projekti);
   const omistajat = projekti.omistajat ?? [];
   const muutOmistajat = projekti.muutOmistajat ?? [];
   let idx = omistajat.indexOf(input.omistaja);
@@ -322,8 +322,11 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
 }
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
-  requireVaylaUser();
   const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
+  if (!projekti) {
+    throw new Error("Projektia ei löydy");
+  }
+  requirePermissionMuokkaa(projekti);
   const sivuKoko = variables.sivuKoko ?? 10;
   const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
   const start = (variables.sivu - 1) * sivuKoko;

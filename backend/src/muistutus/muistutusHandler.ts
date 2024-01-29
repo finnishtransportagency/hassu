@@ -7,7 +7,7 @@ import { muistutusEmailService } from "./muistutusEmailService";
 import { adaptMuistutusInput } from "./muistutusAdapter";
 import { auditLog, log } from "../logger";
 import { isValidEmail } from "../email/emailUtil";
-import { getSuomiFiCognitoKayttaja, requireVaylaUser } from "../user/userService";
+import { getSuomiFiCognitoKayttaja, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { BatchGetCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
@@ -106,8 +106,12 @@ class MuistutusHandler {
   }
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
-    requireVaylaUser();
     const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
+    if (!projekti) {
+      log.error("Projektia ei löydy");
+      throw new NotFoundError("Projektia ei löydy");
+    }
+    requirePermissionMuokkaa(projekti);
     const sivuKoko = variables.sivuKoko ?? 10;
     const muistuttajat = variables.muutMuistuttajat ? projekti?.muutMuistuttajat ?? []: projekti?.muistuttajat ?? [];
     const start = (variables.sivu - 1) * sivuKoko;
@@ -137,7 +141,7 @@ class MuistutusHandler {
           id: m.id,
           lisatty: m.lisatty,
           paivitetty: m.paivitetty,
-          etunimet: m.etunimi,
+          etunimi: m.etunimi,
           sukunimi: m.sukunimi,
           jakeluosoite: m.lahiosoite,
           postinumero: m.postinumero,
@@ -159,11 +163,11 @@ class MuistutusHandler {
   }
 
   async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
-    requireVaylaUser();
     const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
     if (!projekti) {
       throw new Error("Projektia ei löydy");
     }
+    requirePermissionMuokkaa(projekti);
     const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     const expires = getExpires();
     let dbmuistuttaja: DBMuistuttaja | undefined;
@@ -212,11 +216,11 @@ class MuistutusHandler {
     });
   }
   async poistaMuistuttaja(input: PoistaMuistuttajaMutationVariables) {
-    requireVaylaUser();
     const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
     if (!projekti) {
       throw new Error("Projektia ei löydy");
     }
+    requirePermissionMuokkaa(projekti);
     const muutMuistuttajat = projekti.muutMuistuttajat ?? [];
     const idx = muutMuistuttajat.indexOf(input.muistuttaja);
     if (idx !== -1) {

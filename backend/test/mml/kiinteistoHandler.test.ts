@@ -163,7 +163,7 @@ describe("kiinteistoHandler", () => {
   });
   it("poista kiinteistön omistaja", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock.on(GetCommand).resolves({ Item: { id: "1", omistajat: ["1"], muutOmistajat: ["2"] } });
+    dbMock.on(GetCommand).resolves({ Item: { id: "1", omistajat: ["1"], muutOmistajat: ["2"], kayttoOikeudet: [{ kayttajatunnus: "testuid"}] } });
     await poistaKiinteistonOmistaja({ oid: "1", omistaja: "1" });
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
     const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
@@ -172,7 +172,7 @@ describe("kiinteistoHandler", () => {
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(1);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"][0]).to.be.equal("2");
     dbMock.reset();
-    dbMock.on(GetCommand).resolves({ Item: { id: "1", omistajat: ["11"], muutOmistajat: ["22"] } });
+    dbMock.on(GetCommand).resolves({ Item: { id: "1", omistajat: ["11"], muutOmistajat: ["22"], kayttoOikeudet: [{ kayttajatunnus: "testuid"}] } });
     await poistaKiinteistonOmistaja({ oid: "1", omistaja: "22" });
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
     const updateCommand2 = dbMock.commandCalls(UpdateCommand)[0];
@@ -183,7 +183,7 @@ describe("kiinteistoHandler", () => {
   });
   it("päivitä kiinteistön omistajat", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: { id: "1", omistajat: ["11"] } });
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: { id: "1", omistajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid"}] } });
     dbMock.on(GetCommand, { TableName: config.omistajaTableName, Key: { id: "11" } }).resolves({ Item: { id: "11", etunimet: "Teppo" } });
     await tallennaKiinteistonOmistajat({
       oid: "1",
@@ -233,7 +233,7 @@ describe("kiinteistoHandler", () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
     dbMock
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", omistajat: ["1", "2", "3"], muutOmistajat: ["4"] } });
+      .resolves({ Item: { id: "1", omistajat: ["1", "2", "3"], muutOmistajat: ["4"], kayttoOikeudet: [{ kayttajatunnus: "testuid"}] } });
     dbMock.on(BatchGetCommand).resolves({
       Responses: {
         [config.omistajaTableName]: [
