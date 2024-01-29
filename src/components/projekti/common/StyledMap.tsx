@@ -140,6 +140,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
         }
         const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/karttarajaus/karttarajaus.geojson`, {
           responseType: "blob",
+          headers: { "Cache-Control": "no-cache", Pragma: "no-cache", Expires: "0" },
         });
 
         if (!(response.data instanceof Blob)) {

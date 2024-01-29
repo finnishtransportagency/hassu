@@ -60,7 +60,7 @@ import {
   haeKiinteistonOmistajat,
   poistaKiinteistonOmistaja,
   tallennaKiinteistonOmistajat,
-  tallennaKiinteistotunnukset,
+  tuoKarttarajausJaTallennaKiinteistotunnukset,
   tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
 
@@ -129,7 +129,9 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
     case apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset.name:
-      return await tallennaKiinteistotunnukset(event.arguments as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
+      return await tuoKarttarajausJaTallennaKiinteistotunnukset(
+        event.arguments as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables
+      );
     case apiConfig.tallennaKiinteistonOmistajat.name:
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
