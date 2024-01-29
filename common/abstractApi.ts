@@ -64,9 +64,10 @@ import {
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
-  TallennaKiinteistotunnuksetMutationVariables,
+  TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   OmistajaInput,
+  TuoKarttarajausMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -164,6 +165,12 @@ export const apiConfig: ApiConfig = {
     name: "valmisteleTiedostonLataus",
     operationType: OperationType.Query,
     graphql: queries.valmisteleTiedostonLataus,
+  },
+  tuoKarttarajaus: {
+    name: "tuoKarttarajaus",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tuoKarttarajaus,
+    isYllapitoOperation: true,
   },
   laskePaattymisPaiva: {
     name: "laskePaattymisPaiva",
@@ -291,10 +298,10 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.suoritaTestiKomento,
     isYllapitoOperation: true,
   },
-  tallennaKiinteistotunnukset: {
-    name: "tallennaKiinteistotunnukset",
+  tuoKarttarajausJaTallennaKiinteistotunnukset: {
+    name: "tuoKarttarajausJaTallennaKiinteistotunnukset",
     operationType: OperationType.Mutation,
-    graphql: mutations.tallennaKiinteistotunnukset,
+    graphql: mutations.tuoKarttarajausJaTallennaKiinteistotunnukset,
     isYllapitoOperation: true,
   },
   haeKiinteistonOmistajat: {
@@ -385,6 +392,14 @@ export abstract class AbstractApi {
       contentType,
     };
     return await this.callAPI(apiConfig.valmisteleTiedostonLataus, variables);
+  }
+
+  async tuoKarttarajaus(oid: string, geoJSON: string): Promise<string> {
+    const variables: TuoKarttarajausMutationVariables = {
+      oid,
+      geoJSON,
+    };
+    return await this.callYllapitoAPI(apiConfig.tuoKarttarajaus, variables);
   }
 
   async annaPalvelustaPalautetta(palveluPalauteInput: PalveluPalauteInput): Promise<string> {
@@ -560,11 +575,12 @@ export abstract class AbstractApi {
     } as SuoritaTestiKomentoMutationVariables);
   }
 
-  async tallennaKiinteistotunnukset(oid: string, kiinteistotunnukset: string[]): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistotunnukset, {
+  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[]): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset, {
       oid,
+      geoJSON,
       kiinteistotunnukset,
-    } as TallennaKiinteistotunnuksetMutationVariables);
+    } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 
   async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<string> {

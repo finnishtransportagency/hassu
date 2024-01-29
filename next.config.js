@@ -66,8 +66,8 @@ function setupLocalDevelopmentMode(config, env) {
           destination: "/api/graphql?yllapito=true",
         },
         {
-          source: "/hassu/karttakuva/:path*",
-          destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/hassu/karttakuva/:path*",
+          source: "/hassu/:path*",
+          destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/hassu/:path*",
         },
       ];
     },
@@ -94,6 +94,10 @@ function setupLocalDevelopmentMode(config, env) {
           ],
         })
       );
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
+      });
       return config;
     },
   };

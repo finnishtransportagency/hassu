@@ -24,10 +24,11 @@ import {
   TallennaProjektiMutationVariables,
   EsikatseleLausuntoPyynnonTiedostotQueryVariables,
   EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
-  TallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   PoistaKiinteistonOmistajaMutationVariables,
+  TuoKarttarajausMutationVariables,
+  TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -59,7 +60,8 @@ import {
   haeKiinteistonOmistajat,
   poistaKiinteistonOmistaja,
   tallennaKiinteistonOmistajat,
-  tallennaKiinteistotunnukset,
+  tuoKarttarajausJaTallennaKiinteistotunnukset,
+  tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
@@ -126,14 +128,18 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tiedostoDownloadLinkHandler.esikatseleLausuntoPyynnonTaydennysTiedostot(
         event.arguments as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables
       );
-    case apiConfig.tallennaKiinteistotunnukset.name:
-      return await tallennaKiinteistotunnukset(event.arguments as TallennaKiinteistotunnuksetMutationVariables);
+    case apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset.name:
+      return await tuoKarttarajausJaTallennaKiinteistotunnukset(
+        event.arguments as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables
+      );
     case apiConfig.tallennaKiinteistonOmistajat.name:
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
       return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
     case apiConfig.poistaKiinteistonOmistaja.name:
       return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
+    case apiConfig.tuoKarttarajaus.name:
+      return await tuoKarttarajaus(event.arguments as TuoKarttarajausMutationVariables);
     default:
       return null;
   }

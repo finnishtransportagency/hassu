@@ -99,6 +99,10 @@ export class ProjektiPaths extends PathTuple {
     return new EULogotPaths(this);
   }
 
+  karttarajaus(): PathTuple {
+    return new KarttarajausPaths(this);
+  }
+
   suunnittelusopimus(): PathTuple {
     return new SuunnittelusopimusPaths(this);
   }
@@ -153,6 +157,16 @@ class EULogotPaths extends SimpleRootPath {
 
   get rootPath(): string {
     return "euLogot";
+  }
+}
+
+class KarttarajausPaths extends SimpleRootPath {
+  constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  get rootPath(): string {
+    return "karttarajaus";
   }
 }
 

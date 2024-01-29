@@ -5,14 +5,12 @@ import { Check, InfoOutlined, WarningAmberOutlined } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 
-type ShowSuccessMessage = (message: string) => void;
-type ShowErrorMessage = (message: string) => void;
-type ShowInfoMessage = (message: string) => void;
+export type ShowMessage = (message: string) => void;
 
 type SnackbarContextValue = {
-  showSuccessMessage: ShowSuccessMessage;
-  showErrorMessage: ShowErrorMessage;
-  showInfoMessage: ShowInfoMessage;
+  showSuccessMessage: ShowMessage;
+  showErrorMessage: ShowMessage;
+  showInfoMessage: ShowMessage;
   mobileBottomOffset: number | undefined;
   setMobileBottomOffset: React.Dispatch<React.SetStateAction<number | undefined>>;
 };

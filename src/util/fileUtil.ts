@@ -12,7 +12,7 @@ export function splitFilePath(path?: string) {
 }
 
 export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
-  const contentType = (tiedosto as Blob).type || "application/octet-stream";
+  const contentType = (tiedosto as Blob).type ?? "application/octet-stream";
   const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
   const url = response.latausLinkki;
   const fields = JSON.parse(response.latausKentat);

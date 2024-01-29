@@ -3,7 +3,7 @@ import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
 import { MmlClient, MmlKiinteisto, Omistaja, getMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
-import { getVaylaUser, identifyMockUser, requireVaylaUser } from "../user/userService";
+import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa, requireVaylaUser } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { BatchGetCommand, BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
@@ -11,13 +11,18 @@ import {
   KiinteistonOmistajat,
   PoistaKiinteistonOmistajaMutationVariables,
   TallennaKiinteistonOmistajatMutationVariables,
-  TallennaKiinteistotunnuksetMutationVariables,
+  TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
+  TuoKarttarajausMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { getSQS } from "../aws/clients/getSQS";
 import { uuid } from "hassu-common/util/uuid";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
+import { fileService } from "../files/fileService";
+import { ProjektiPaths } from "../files/ProjektiPath";
+import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
+import { DBProjekti } from "../database/model";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -191,8 +196,37 @@ export const handleEvent = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", handlerFactory(event));
 };
 
-export async function tallennaKiinteistotunnukset(input: TallennaKiinteistotunnuksetMutationVariables) {
-  requireVaylaUser();
+export const tuoKarttarajaus = async ({ oid, geoJSON }: TuoKarttarajausMutationVariables) => {
+  await getProjektiAndCheckPermissions(oid);
+  await tallennaKarttarajaus(oid, geoJSON);
+};
+
+async function tallennaKarttarajaus(oid: string, geoJSON: string) {
+  log.info("Tuodaan karttarajaus projektille", { oid });
+  const fileLocation = "karttarajaus/karttarajaus.geojson";
+  const karttarajaus = await fileService.createFileToProjekti({
+    oid,
+    fileName: fileLocation,
+    path: new ProjektiPaths(oid),
+    contents: Buffer.from(geoJSON, "utf-8"),
+    contentType: "application/geo+json",
+  });
+  await projektiDatabase.saveProjektiWithoutLocking({ oid, karttarajaus });
+  log.info("Karttarajaus tuotu projektille", { oid });
+}
+
+async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!projekti) {
+    throw new IllegalArgumentError("Projektia ei löydy");
+  }
+  requirePermissionMuokkaa(projekti);
+  return projekti;
+}
+
+export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables) {
+  getProjektiAndCheckPermissions(input.oid);
+  await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
   const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset: input.kiinteistotunnukset, uid };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });
