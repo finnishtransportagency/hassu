@@ -639,7 +639,7 @@ export function getControls({
 }: DefaultControlProps) {
   const readGeoJsonOptions: ReadFeaturesFromGeoJsonFileInputControlOptions = {
     source,
-    button: createElement(<Button title="Tuo kartta tiedosto">Tuo kartta tiedosto</Button>, "div").firstElementChild as HTMLButtonElement,
+    button: createElement(<Button title="Tuo karttatiedosto">Tuo karttatiedosto</Button>, "div").firstElementChild as HTMLButtonElement,
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
       const suodatetut = features.filter((feat) => {
