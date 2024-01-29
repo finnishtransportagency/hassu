@@ -30,6 +30,7 @@ type Query {
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
   haeKiinteistonOmistajat(oid: String!, sivu: Int!, muutOmistajat: Boolean!, sivuKoko: Int): KiinteistonOmistajat
+  haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
 }
 
 type Mutation {
@@ -52,6 +53,8 @@ type Mutation {
 
   tuoKarttarajaus(oid: String!, geoJSON: String!): String
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
-  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): String
+  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): [Omistaja!]!
   poistaKiinteistonOmistaja(oid: String!, omistaja: String!): String
+  tallennaMuistuttajat(oid: String!, muistuttajat: [MuistuttajaInput!]!): [Muistuttaja!]!
+  poistaMuistuttaja(oid: String!, muistuttaja: String!): String
 }

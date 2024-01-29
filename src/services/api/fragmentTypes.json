@@ -549,13 +549,19 @@
       },
       {
         "kind": "OBJECT",
-        "name": "MmlYhteystieto",
+        "name": "Muistuttaja",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "MmlYhteystietoInput",
+        "name": "MuistuttajaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Muistuttajat",
         "possibleTypes": null,
         "__typename": "__Type"
       },

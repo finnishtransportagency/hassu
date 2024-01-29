@@ -14518,7 +14518,7 @@ Object {
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
         "tila": "VALMIS",
         "tuotu": "2024-01-01T00:00",
-        "uuid": "00000036-0be9-455d-a434-0fab721acaa2",
+        "uuid": "00000038-0be9-455d-a434-0fab721acaa2",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
@@ -15691,7 +15691,7 @@ Muistutus 1
     "to": "kirjaamo@vayla.vayla",
   },
   Object {
-    "subject": "Muistutus - 00000034-0be9-455d-a434-0fab721acaa2",
+    "subject": "Muistutus - 00000035-0be9-455d-a434-0fab721acaa2",
     "text": "
 Muistutus vastaanotettu
 2024-01-01T00:00

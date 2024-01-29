@@ -1,14 +1,15 @@
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
-import { MmlClient, MmlKiinteisto, Omistaja, getMmlClient } from "./mmlClient";
+import { MmlClient, MmlKiinteisto, Omistaja as MmlOmistaja, getMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
-import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa, requireVaylaUser } from "../user/userService";
+import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { BatchGetCommand, BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
+  Omistaja,
   PoistaKiinteistonOmistajaMutationVariables,
   TallennaKiinteistonOmistajatMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
@@ -41,12 +42,10 @@ export type DBOmistaja = {
   nimi?: string | null;
   henkilotunnus?: string;
   ytunnus?: string;
-  yhteystiedot?: {
-    jakeluosoite?: string | null;
-    postinumero?: string | null;
-    paikkakunta?: string | null;
-    maakoodi?: string | null;
-  };
+  jakeluosoite?: string | null;
+  postinumero?: string | null;
+  paikkakunta?: string | null;
+  maakoodi?: string | null;
   expires?: number;
 };
 
@@ -81,9 +80,9 @@ function getTableName() {
 function suomifiLahetys(omistaja: DBOmistaja): boolean {
   return (
     (!!omistaja.henkilotunnus || !!omistaja.ytunnus) &&
-    !!omistaja.yhteystiedot?.jakeluosoite &&
-    !!omistaja.yhteystiedot.paikkakunta &&
-    !!omistaja.yhteystiedot.postinumero
+    !!omistaja.jakeluosoite &&
+    !!omistaja.paikkakunta &&
+    !!omistaja.postinumero
   );
 }
 
@@ -96,7 +95,7 @@ function getExpires() {
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
-function mapKey(k: MmlKiinteisto, o?: Omistaja) {
+function mapKey(k: MmlKiinteisto, o?: MmlOmistaja) {
   return `${k.kiinteistotunnus}_${o?.etunimet}_${o?.sukunimi}_${o?.nimi}`;
 }
 
@@ -125,12 +124,10 @@ const handlerFactory = (event: SQSEvent) => async () => {
             etunimet: o.etunimet,
             sukunimi: o.sukunimi,
             nimi: o.nimi,
-            yhteystiedot: {
-              jakeluosoite: o.yhteystiedot?.jakeluosoite,
-              postinumero: o.yhteystiedot?.postinumero,
-              paikkakunta: o.yhteystiedot?.paikkakunta,
-              maakoodi: o.yhteystiedot?.maakoodi,
-            },
+            jakeluosoite: o.yhteystiedot?.jakeluosoite,
+            postinumero: o.yhteystiedot?.postinumero,
+            paikkakunta: o.yhteystiedot?.paikkakunta,
+            maakoodi: o.yhteystiedot?.maakoodi,
             expires,
           });
         });
@@ -233,15 +230,12 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   auditLog.info("Omistajien haku event lisätty", { event });
 }
 
-export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables) {
-  requireVaylaUser();
-  const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-  if (!projekti) {
-    throw new Error("Projektia ei löydy");
-  }
+export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
+  const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const uudetOmistajat = [];
   const expires = getExpires();
+  const omistajat: DBOmistaja[] = [];
   for (const omistaja of input.omistajat) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
@@ -269,25 +263,39 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
       uudetOmistajat.push(dbOmistaja.id);
     }
-    dbOmistaja.yhteystiedot = {
-      jakeluosoite: omistaja.yhteystiedot?.jakeluosoite,
-      postinumero: omistaja.yhteystiedot?.postinumero,
-      paikkakunta: omistaja.yhteystiedot?.paikkakunta,
-    };
+    dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
+    dbOmistaja.postinumero = omistaja.postinumero;
+    dbOmistaja.paikkakunta = omistaja.paikkakunta;
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getTableName(), Item: dbOmistaja }));
+    omistajat.push(dbOmistaja);
   }
   if (uudetOmistajat.length > 0) {
     const omistajat = projekti.omistajat ?? [];
     const muutOmistajat = projekti.muutOmistajat ?? [];
     await projektiDatabase.setKiinteistonOmistajat(projekti.oid, omistajat, [...muutOmistajat, ...uudetOmistajat]);
   }
+  return omistajat.map((o) => {
+    return {
+      __typename: "Omistaja",
+      id: o.id,
+      oid: o.oid,
+      kiinteistotunnus: o.kiinteistotunnus,
+      lisatty: o.lisatty,
+      paivitetty: o.paivitetty,
+      etunimet: o.etunimet,
+      sukunimi: o.sukunimi,
+      nimi: o.nimi,
+      jakeluosoite: o.jakeluosoite,
+      paikkakunta: o.paikkakunta,
+      postinumero: o.postinumero,
+    }
+  });
 }
 
 export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistajaMutationVariables) {
-  requireVaylaUser();
-  const projekti = await projektiDatabase.loadProjektiByOid(input.oid);
-  const omistajat = projekti?.omistajat ?? [];
-  const muutOmistajat = projekti?.muutOmistajat ?? [];
+  const projekti = await getProjektiAndCheckPermissions(input.oid);
+  const omistajat = projekti.omistajat ?? [];
+  const muutOmistajat = projekti.muutOmistajat ?? [];
   let idx = omistajat.indexOf(input.omistaja);
   if (idx !== -1) {
     omistajat.splice(idx, 1);
@@ -297,6 +305,8 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
     if (idx !== -1) {
       muutOmistajat.splice(idx, 1);
       auditLog.info("Poistetaan muu omistaja", { omistajaId: input.omistaja });
+    } else {
+      throw new Error("Kiinteistön omistajaa " + input.omistaja + " ei löydy");
     }
   }
   auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });
@@ -304,8 +314,7 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
 }
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
-  requireVaylaUser();
-  const projekti = await projektiDatabase.loadProjektiByOid(variables.oid);
+  const projekti = await getProjektiAndCheckPermissions(variables.oid);
   const sivuKoko = variables.sivuKoko ?? 10;
   const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
   const start = (variables.sivu - 1) * sivuKoko;
@@ -340,12 +349,9 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
         etunimet: o.etunimet,
         sukunimi: o.sukunimi,
         nimi: o.nimi,
-        yhteystiedot: {
-          __typename: "MmlYhteystieto",
-          jakeluosoite: o.yhteystiedot?.jakeluosoite,
-          postinumero: o.yhteystiedot?.postinumero,
-          paikkakunta: o.yhteystiedot?.paikkakunta,
-        },
+        jakeluosoite: o.jakeluosoite,
+        postinumero: o.postinumero,
+        paikkakunta: o.paikkakunta,
       })),
     };
   } else {

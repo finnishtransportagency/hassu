@@ -35,7 +35,7 @@ export type MmlOptions = {
   apiKey: string;
 };
 
-const TIMEOUT = 20000;
+const TIMEOUT = 120000;
 const MAX = 100;
 
 export function getMmlClient(options: MmlOptions): MmlClient {

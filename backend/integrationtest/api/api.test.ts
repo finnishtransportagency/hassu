@@ -328,7 +328,7 @@ describe("Api", () => {
       }
     );
     emailClientStub.verifyEmailsSent(); //Ei pitäisi olla lähtenyt ylimääräisiä emaileja.
-    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 0);
     await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     await expect(
       testUudelleenkuulutus(

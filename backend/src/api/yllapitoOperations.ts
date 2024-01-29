@@ -29,6 +29,9 @@ import {
   PoistaKiinteistonOmistajaMutationVariables,
   TuoKarttarajausMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
+  HaeMuistuttajatQueryVariables,
+  TallennaMuistuttajatMutationVariables,
+  PoistaMuistuttajaMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -140,6 +143,12 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
     case apiConfig.tuoKarttarajaus.name:
       return await tuoKarttarajaus(event.arguments as TuoKarttarajausMutationVariables);
+    case apiConfig.haeMuistuttajat.name:
+      return await muistutusHandler.haeMuistuttajat(event.arguments as HaeMuistuttajatQueryVariables);
+    case apiConfig.tallennaMuistuttajat.name:
+      return await muistutusHandler.tallennaMuistuttajat(event.arguments as TallennaMuistuttajatMutationVariables);
+    case apiConfig.poistaMuistuttaja.name:
+      return await muistutusHandler.poistaMuistuttaja(event.arguments as PoistaMuistuttajaMutationVariables);
     default:
       return null;
   }

@@ -23,6 +23,7 @@ export class HassuDatabaseStack extends Stack {
   public projektiArchiveTable!: ddb.Table;
   public feedbackTable!: ddb.Table;
   public omistajaTable!: ddb.Table;
+  public muistuttajaTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -49,6 +50,7 @@ export class HassuDatabaseStack extends Stack {
     this.projektiArchiveTable = this.createProjektiArchiveTable();
     this.feedbackTable = this.createFeedbackTable();
     this.omistajaTable = this.createOmistajaTable();
+    this.muistuttajaTable = this.createMuistuttajaTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -135,6 +137,25 @@ export class HassuDatabaseStack extends Stack {
     const table = new ddb.Table(this, "OmistajaTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.omistajaTableName,
+      partitionKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createMuistuttajaTable() {
+    const table = new ddb.Table(this, "MuistuttajaTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.muistuttajaTableName,
       partitionKey: {
         name: "id",
         type: ddb.AttributeType.STRING,

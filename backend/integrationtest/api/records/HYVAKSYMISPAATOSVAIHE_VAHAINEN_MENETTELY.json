@@ -159,10 +159,6 @@
         ]
       }
     ],
-    "annetutMuistutukset": [
-      "2023-12-31T22:00:01.000Z",
-      "2023-12-31T22:00:01.000Z"
-    ],
     "asianhallinta": {
       "inaktiivinen": false
     },
@@ -218,6 +214,10 @@
       "ensisijainenKieli": "SUOMI"
     },
     "lyhytOsoite": "3c1d",
+    "muistuttajat": [
+      "00000032-473f-49e2-a1d1-51228ae6f158",
+      "00000034-473f-49e2-a1d1-51228ae6f158"
+    ],
     "nahtavillaoloVaihe": {
       "aineistoNahtavilla": [
         {
@@ -650,7 +650,7 @@
           "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00",
-          "uuid": "00000033-473f-49e2-a1d1-51228ae6f158"
+          "uuid": "00000035-473f-49e2-a1d1-51228ae6f158"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",

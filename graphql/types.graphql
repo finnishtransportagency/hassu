@@ -1159,12 +1159,6 @@ type AsianhallinnanTila {
   asianTila: AsianTila
 }
 
-type MmlYhteystieto {
-  jakeluosoite: String
-  postinumero: String
-  paikkakunta: String
-}
-
 type Omistaja  {
   id: String!
   oid: String!
@@ -1174,7 +1168,9 @@ type Omistaja  {
   etunimet: String
   sukunimi: String
   nimi: String
-  yhteystiedot: MmlYhteystieto
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
 }
 
 type KiinteistonOmistajat {
@@ -1182,4 +1178,25 @@ type KiinteistonOmistajat {
   sivu: Int!
   sivunKoko: Int!
   omistajat: [Omistaja]!
+}
+
+type Muistuttaja  {
+  id: String!
+  lisatty: String!
+  etunimi: String
+  sukunimi: String
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+  nimi: String
+  tiedotusosoite: String
+  tiedotustapa: String
+  paivitetty: String
+}
+
+type Muistuttajat {
+  hakutulosMaara: Int!
+  sivu: Int!
+  sivunKoko: Int!
+  muistuttajat: [Muistuttaja]!
 }

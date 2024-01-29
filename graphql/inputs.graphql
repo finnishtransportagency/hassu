@@ -471,17 +471,20 @@ input TestiKomentoInput {
   migraatioTargetStatus: String
 }
 
-input MmlYhteystietoInput {
-  jakeluosoite: String
-  postinumero: String
-  paikkakunta: String
-}
-
 input OmistajaInput {
   id: String
   kiinteistotunnus: String!
   etunimet: String
   sukunimi: String
   nimi: String
-  yhteystiedot: MmlYhteystietoInput
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+}
+
+input MuistuttajaInput  {
+  id: String
+  nimi: String
+  tiedotusosoite: String
+  tiedotustapa: String
 }

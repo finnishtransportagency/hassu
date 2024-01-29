@@ -314,18 +314,16 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
-  async appendMuistutusTimestampList(oid: string): Promise<void> {
-    log.info("appendMuistutusTimestampList", { oid });
-    const timestamp = nyt().toISOString();
-
+  async appendMuistuttajatList(oid: string, ids: string[], muutMuistuttajat = false): Promise<void> {
+    log.info("appendMuistuttajatList", { oid, ids, muutMuistuttajat });
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
-      UpdateExpression: "SET #am = list_append(if_not_exists(#am, :tyhjalista), :timestamp)",
-      ExpressionAttributeNames: { "#am": "annetutMuistutukset" },
-      ExpressionAttributeValues: { ":timestamp": [timestamp], ":tyhjalista": [] },
+      UpdateExpression: "SET #m = list_append(if_not_exists(#m, :tyhjalista), :id)",
+      ExpressionAttributeNames: { "#m": muutMuistuttajat ? "muutMuistuttajat": "muistuttajat" },
+      ExpressionAttributeValues: { ":id": ids, ":tyhjalista": [] },
     });
     await getDynamoDBDocumentClient().send(params);
   }
@@ -519,6 +517,23 @@ export class ProjektiDatabase {
       ExpressionAttributeValues: {
         ":omistajat": omistajat,
         ":muutOmistajat": muutOmistajat,
+      },
+    });
+    return await getDynamoDBDocumentClient().send(params);
+  }
+
+  async setMuutMuistuttajat(oid: string,  muutMuistuttajat: string[]) {
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #muutMuistuttajat = :muutMuistuttajat",
+      ExpressionAttributeNames: {
+        ["#muutMuistuttajat"]: "muutMuistuttajat",
+      },
+      ExpressionAttributeValues: {
+        ":muutMuistuttajat": muutMuistuttajat,
       },
     });
     return await getDynamoDBDocumentClient().send(params);

@@ -96,6 +96,7 @@ export class Config extends BaseConfig {
   public static readonly feedbackTableName = `Palaute-${Config.env}`;
   public static readonly projektiArchiveTableName = `Projekti-arkisto-${Config.env}`;
   public static readonly omistajaTableName = `Omistaja-${Config.env}`;
+  public static readonly muistuttajaTableName = `Muistuttaja-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
