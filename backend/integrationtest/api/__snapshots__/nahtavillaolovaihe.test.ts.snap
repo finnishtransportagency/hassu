@@ -111,6 +111,11 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "/1/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
+    },
     "/1/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
       "ContentType": "message/rfc822",
@@ -194,6 +199,12 @@ Object {
       "checksum": "ABC123",
       "expirationDate": "2040-01-01T23:59:59+02:00",
       "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/lähetekirje.eml": FileMetadata {

@@ -19,8 +19,8 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType } from "./projektiScheduleManager";
 
 class ProjektiSchedulerService {
-  async synchronizeProjektiFiles(oid: string) {
-    await eventSqsClient.synchronizeAineisto(oid);
+  async synchronizeProjektiFiles(oid: string, approvalType?: PublishOrExpireEventType) {
+    await eventSqsClient.synchronizeAineisto(oid, approvalType);
   }
 
   public async updateProjektiSynchronizationSchedule(oid: string) {
@@ -81,7 +81,7 @@ class ProjektiSchedulerService {
     const scheduleParams = createScheduleParams(oid, event.date, eventType, event.type);
     if (!schedules[scheduleParams.scheduleName]) {
       log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-      await this.triggerEventAtSpecificTime(scheduleParams, event.date, event.reason, eventType);
+      await this.triggerEventAtSpecificTime(scheduleParams, event.date, event.reason, event.type, eventType);
     } else {
       delete schedules[scheduleParams.scheduleName];
     }
@@ -98,9 +98,9 @@ class ProjektiSchedulerService {
     );
   }
 
-  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, type: SqsEventType): Promise<void> {
+  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, approvalType: PublishOrExpireEventType,  type: SqsEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: SqsEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date) };
+    const event: SqsEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date), approvalType };
     const params: CreateScheduleCommandInput = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,

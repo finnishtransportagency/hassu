@@ -336,11 +336,18 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
-  return {
+  const email = {
     subject: muistuttajanOtsikko(muistutus),
     text: muistutusTeksti({ asiatunnus, ...muistutus }),
     to: muistutus.sahkoposti ?? undefined,
   };
+  if (muistutus.liite) {
+    const idx = muistutus.liite.lastIndexOf("/");
+    email.text = email.text.concat(`
+
+    Muistutukseen on lisätty liite: ${muistutus.liite.substring(idx + 1)}`)
+  }
+  return email;
 }
 
 export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }: PalveluPalauteInput): EmailOptions {

@@ -16,11 +16,6 @@ export type Viesti = {
   sisalto: string;
   emailOtsikko?: string;
   emailSisalto?: string;
-  nimi: string;
-  lahiosoite: string;
-  postinumero: string;
-  postitoimipaikka: string;
-  maa: string;
 };
 
 export type Tiedosto = {
@@ -30,34 +25,50 @@ export type Tiedosto = {
 };
 
 export type PdfViesti = Viesti & {
+  nimi: string;
+  lahiosoite: string;
+  postinumero: string;
+  postitoimipaikka: string;
+  maa: string;
+  vaylavirasto: boolean;
   tiedosto: Tiedosto;
 };
 
 export type Options = {
   endpoint: string;
+  apiKey: string;
   privateKey?: string;
   publicCertificate?: string;
-  viranomaisTunnus?: string;
-  palveluTunnus?: string;
+  viranomaisTunnus: string;
+  palveluTunnus: string;
+  laskutusTunniste?: string;
+  laskutusTunnisteEly?: string;
 };
 
 export type SuomiFiConfig = {
-  endpoint?: string;
-  palvelutunnus?: string;
-  viranomaistunnus?: string;
+  endpoint: string;
+  apikey: string;
+  palvelutunnus: string;
+  viranomaistunnus: string;
+  laskutustunniste?: string;
+  laskutustunnisteely?: string;
 };
 
 export type SuomiFiClient = {
   rajapinnanTila: () => Promise<HaeTilaTietoResponse>;
   lahetaInfoViesti: (viesti: Viesti) => Promise<LisaaKohteitaResponse>;
   lahetaViesti: (viesti: PdfViesti) => Promise<LahetaViestiResponse>;
-  haeAsiakas: (hetu: string) => Promise<HaeAsiakkaitaResponse>;
+  haeAsiakas: (tunnus: string, tunnusTyyppi: "SSN" | "CRN") => Promise<HaeAsiakkaitaResponse>;
+  getSoapClient: () => ViranomaispalvelutWsInterfaceClient;
 };
 
 export async function getSuomiFiClient(options: Options): Promise<SuomiFiClient> {
   const client = await createClientAsync(__dirname + "/ViranomaispalvelutWSInterface.wsdl", undefined, options.endpoint);
   if (options.privateKey && options.publicCertificate) {
     client.setSecurity(new WSSecurityCert(options.privateKey, options.publicCertificate, undefined));
+  }
+  if (options.apiKey) {
+    client.addHttpHeader("x-api-key", options.apiKey);
   }
   return {
     rajapinnanTila: () => {
@@ -66,11 +77,14 @@ export async function getSuomiFiClient(options: Options): Promise<SuomiFiClient>
     lahetaInfoViesti: (viesti) => {
       return lisaaKohteita(client, options, viesti);
     },
-    haeAsiakas: (hetu) => {
-      return haeAsiakkaita(client, options, hetu);
+    haeAsiakas: (tunnus, tunnusTyyppi) => {
+      return haeAsiakkaita(client, options, tunnus, tunnusTyyppi);
     },
     lahetaViesti: (viesti) => {
       return lahetaViesti(client, options, viesti);
+    },
+    getSoapClient: () => {
+      return client;
     },
   };
 }
@@ -83,6 +97,13 @@ function getViranomainen(options: Options): Viranomainen {
     SanomaVersio: "1.0",
     SanomaVarmenneNimi: process.env.ENVIRONMENT === "prod" ? "vayliensuunnittelu.fi" : "hassudev.testivaylapilvi.fi",
     SanomaTunniste: uuid.v4(),
+    Osoite: {
+      Nimi: "Väylävirasto",
+      Lahiosoite: "PL 33",
+      Postinumero: "00521",
+      Postitoimipaikka: "Helsinki",
+      Maa: "FI",
+    },
   };
 }
 
@@ -112,13 +133,6 @@ async function lisaaKohteita(
             Asiakas: [
               {
                 attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: viesti.hetu ? "SSN" : "CRN" },
-                Osoite: {
-                  Lahiosoite: viesti.lahiosoite,
-                  Postinumero: viesti.postinumero,
-                  Postitoimipaikka: viesti.postitoimipaikka,
-                  Maa: viesti.maa,
-                  Nimi: viesti.nimi,
-                },
               },
             ],
             ViranomaisTunniste: `VLS-${uuid.v4()}`,
@@ -182,6 +196,7 @@ async function lahetaViesti(
             ],
             ViranomaisTunniste: `VLS-${uuid.v4()}`,
             Nimeke: viesti.otsikko,
+            LahettajaNimi: "Väylävirasto",
             LahetysPvm: dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ"),
             KuvausTeksti: viesti.sisalto,
             EmailLisatietoOtsikko: viesti.emailOtsikko,
@@ -203,7 +218,7 @@ async function lahetaViesti(
         ],
       },
       Tulostustoimittaja: "Posti",
-      Laskutus: { Salasana: "xxx", Tunniste: "yyyy" },
+      Laskutus: { Tunniste: viesti.vaylavirasto ? options.laskutusTunniste : options.laskutusTunnisteEly },
       Varitulostus: "false",
     },
     Viranomainen: getViranomainen(options),
@@ -211,11 +226,16 @@ async function lahetaViesti(
   return response[0];
 }
 
-async function haeAsiakkaita(client: ViranomaispalvelutWsInterfaceClient, options: Options, hetu: string): Promise<HaeAsiakkaitaResponse> {
+async function haeAsiakkaita(
+  client: ViranomaispalvelutWsInterfaceClient,
+  options: Options,
+  tunnus: string,
+  tunnusTyyppi: "SSN" | "CRN"
+): Promise<HaeAsiakkaitaResponse> {
   const response = await client.HaeAsiakkaitaAsync({
     Kysely: {
       KyselyLaji: "Asiakkaat",
-      Asiakkaat: { Asiakas: [{ attributes: { AsiakasTunnus: hetu, TunnusTyyppi: "SSN" } }] },
+      Asiakkaat: { Asiakas: [{ attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: tunnusTyyppi } }] },
     },
     Viranomainen: getViranomainen(options),
   });

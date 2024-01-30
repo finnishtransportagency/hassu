@@ -116,12 +116,15 @@ export class HassuBackendStack extends Stack {
     const asianhallintaLambda = await this.createAsianhallintaLambda(asianhallintaSQS, vpc);
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
+    const suomiFiSQS = this.createSuomiFiQueue();
+    this.createSuomiFiLambda(suomiFiSQS, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       eventSQS,
       asianhallintaSQS,
       kiinteistoSQS,
+      suomiFiSQS,
       pdfGeneratorLambda,
       true
     );
@@ -137,6 +140,7 @@ export class HassuBackendStack extends Stack {
       eventSQS,
       asianhallintaSQS,
       kiinteistoSQS,
+      suomiFiSQS,
       pdfGeneratorLambda,
       false
     );
@@ -146,7 +150,7 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     this.createAndProvideSchedulerExecutionRole(eventSQS, aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
@@ -293,6 +297,7 @@ export class HassuBackendStack extends Stack {
     eventSQS: Queue,
     asianhallintaSQS: Queue,
     kiinteistoSQS: Queue,
+    suomifiSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean
   ) {
@@ -418,6 +423,7 @@ export class HassuBackendStack extends Stack {
     }
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
+    suomifiSQS.grantSendMessages(backendLambda);
     return backendLambda;
   }
 
@@ -514,6 +520,66 @@ export class HassuBackendStack extends Stack {
     });
     updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", { "dynamodb:Attributes": ["muutOmistajat", "omistajat"] });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
+  }
+
+  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc) {
+    const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
+      functionName: "hassu-suomifi-" + Config.env,
+      runtime: lambdaRuntime,
+      vpc,
+      entry: `${__dirname}/../../backend/src/suomifi/suomifiHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 1024,
+      timeout: Duration.minutes(1),
+      bundling: {
+        sourceMap: false,
+        minify: true,
+        metafile: false,
+        externalModules,
+        commandHooks: {
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/suomifi/viranomaispalvelutwsinterface/Viranomaispalvelut* ${outputDir}`,
+            ];
+          },
+          afterBundling(): string[] {
+            return [];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
+      },
+      environment: {
+        ENVIRONMENT: Config.env,
+        INFRA_ENVIRONMENT: Config.infraEnvironment,
+        TZ: "Europe/Helsinki",
+        PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
+        TABLE_OMISTAJA: this.props.omistajaTable.tableName,
+        TABLE_MUISTUTTAJA: this.props.muistuttajaTable.tableName,
+        TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+      },
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    suomiFiLambda.node.addDependency(suomiFiSQS);
+    this.addPermissionsForMonitoring(suomiFiLambda);
+    suomiFiLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+    suomiFiSQS.grantConsumeMessages(suomiFiLambda);
+    suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
+    this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.projektiTable.grantReadData(suomiFiLambda);
+    this.grantYllapitoBucketRead(suomiFiLambda);
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
@@ -615,7 +681,8 @@ export class HassuBackendStack extends Stack {
   private async createSqsEventHandlerLambda(
     commonEnvironmentVariables: Record<string, string>,
     eventSQS: Queue,
-    aineistoSQS: Queue
+    aineistoSQS: Queue,
+    suomifiSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
@@ -670,6 +737,7 @@ export class HassuBackendStack extends Stack {
     importer.addEventSource(eventSource);
     importer.addEventSource(new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency }));
     eventSQS.grantSendMessages(importer);
+    suomifiSQS.grantSendMessages(importer);
     return importer;
   }
 
@@ -796,6 +864,21 @@ export class HassuBackendStack extends Stack {
     new ssm.StringParameter(this, "KiinteistoSQSUrl", {
       description: "Generated KiinteistoSQSUrl",
       parameterName: "/" + Config.env + "/outputs/KiinteistoSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
+  }
+
+  private createSuomiFiQueue() {
+    const queue = new Queue(this, "SuomiFiQueue", {
+      queueName: "suomifi-queue-" + Config.env,
+      visibilityTimeout: Duration.minutes(30),
+      encryption: QueueEncryption.KMS_MANAGED,
+      retentionPeriod: Duration.days(1),
+    });
+    new ssm.StringParameter(this, "SuomiFiSQSUrl", {
+      description: "Generated SuomiFiSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/SuomiFiSQSUrl",
       stringValue: queue.queueUrl,
     });
     return queue;

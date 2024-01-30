@@ -4,6 +4,7 @@ import { PassThrough, Readable } from "stream";
 import { Upload } from "@aws-sdk/lib-storage";
 import archiver from "archiver";
 import { getS3Client } from "../aws/client";
+import { config } from "../config";
 
 function getFileName(s3Key: string, zipFolder?: string) {
   const fileName = s3Key.split("/").pop()!;
@@ -23,7 +24,7 @@ async function getReadableStreamFromS3(bucket: string, s3Key: string) {
 
 function getWritableStreamFromS3(bucket: string, zipFileS3Key: string) {
   const passthrough = new PassThrough();
-  const s3 = new S3Client({ endpoint: "https://s3.eu-west-1.amazonaws.com", region: "eu-west-1" }); // for some unknown reason the upload needs s3client with endpoint, otherwise an error occurs "No valid endpoint provider available"
+  const s3 = config.isInTest ? s3Client : new S3Client({ endpoint: "https://s3.eu-west-1.amazonaws.com", region: "eu-west-1" }); // for some unknown reason the upload needs s3client with endpoint, otherwise an error occurs "No valid endpoint provider available"
   const upload = new Upload({
     client: s3,
     params: {

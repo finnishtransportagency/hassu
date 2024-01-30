@@ -6,7 +6,7 @@
  */
 export interface TilaKoodi {
     /** xsd:int */
-    TilaKoodi?: string;
+    TilaKoodi?: number;
     /** xsd:string */
     TilaKoodiKuvaus?: string;
     /** xsd:string */

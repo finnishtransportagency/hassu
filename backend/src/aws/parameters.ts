@@ -4,6 +4,7 @@ import { config } from "../config";
 import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { log } from "../logger";
+import { SuomiFiConfig } from "../suomifi/viranomaispalvelutwsinterface/suomifi";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -130,6 +131,44 @@ class Parameters {
 
   async getIndexerSQSUrl() {
     return this.getParamOrVariable("outputs/IndexerSQSUrl");
+  }
+
+  async getSuomiFiConfig() {
+    const param = await this.getRequiredAccountParameter("SuomiFiConfig");
+    const cfg: Partial<SuomiFiConfig> = {};
+    param.split("\n").forEach((e) => {
+      const v = e.split("=");
+      cfg[v[0] as keyof SuomiFiConfig] = v[1].trim();
+    });
+    return cfg as SuomiFiConfig;
+  }
+
+  async getSuomiFiCertificate() {
+    return this.getParameterForEnv("SuomiFiCertificate")
+  }
+
+  async getSuomiFiPrivateKey() {
+    return this.getParameterForEnv("SuomiFiPrivateKey")
+  }
+
+  async getSuomiFiSQSUrl() {
+    return this.getParameter("outputs/SuomiFiSQSUrl");
+  }
+
+  async getMmlApiKey() {
+    return this.getRequiredAccountParameter("MmlApiKey");
+  }
+
+  async getKtjBaseUrl() {
+    return this.getRequiredAccountParameter("KtjBaseUrl");
+  }
+
+  private async getRequiredAccountParameter(paramName: string): Promise<string> {
+    const value = await this.getParameterForEnv(paramName);
+    if (!value) {
+      throw new Error(paramName + " ei löytynyt SSM:stä");
+    }
+    return value;
   }
 
   private getParamOrVariable(ssmPath: string, envVariableName?: string) {

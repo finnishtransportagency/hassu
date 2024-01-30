@@ -19,6 +19,8 @@ import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, PutCommand, Update
 import { config } from "../../src/config";
 import { identifyMockUser } from "../../src/user/userService";
 import { fail } from "assert";
+import { parameters } from "../../src/aws/parameters";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -44,6 +46,7 @@ describe("muistutusHandler", () => {
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
       sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
+      sinon.stub(parameters, "getSuomiFiSQSUrl");
 
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
@@ -80,6 +83,7 @@ describe("muistutusHandler", () => {
     describe("lisaaMuistutus", () => {
       it("should send email only to kirjaamo", async () => {
         const dbMockClient = mockClient(DynamoDBDocumentClient);
+        const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
           etunimi: "Mika",
           sukunimi: "Muistuttaja",
@@ -93,6 +97,7 @@ describe("muistutusHandler", () => {
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
+        expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
         sinon.assert.calledOnce(sendTurvapostiEmailStub);
         const calls = sendTurvapostiEmailStub.getCalls();
         expect(calls[0].args[0].to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
@@ -115,6 +120,7 @@ describe("muistutusHandler", () => {
 
       it("should send emails to kirjaamo and muistuttaja successfully", async () => {
         mockClient(DynamoDBDocumentClient);
+        const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
           etunimi: "Mika",
           sukunimi: "Muistuttaja",
@@ -128,19 +134,10 @@ describe("muistutusHandler", () => {
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
-        // Muistuttajalle sähköposti normaalia reittiä
-        sinon.assert.callCount(sendEmailStub, 1);
-        let calls = sendEmailStub.getCalls();
-        expect(calls).to.have.length(1);
-        expect(
-          calls.map((call) => {
-            return call.args[0].to;
-          })
-        ).to.have.members(["mika.muistuttaja@mikamuistutta.ja"]);
-
+        expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
         // Kirjaamoon sähköposti turvapostin kautta
         sinon.assert.callCount(sendTurvapostiEmailStub, 1);
-        calls = sendTurvapostiEmailStub.getCalls();
+        const calls = sendTurvapostiEmailStub.getCalls();
         expect(calls).to.have.length(1);
         expect(
           calls.map((call) => {

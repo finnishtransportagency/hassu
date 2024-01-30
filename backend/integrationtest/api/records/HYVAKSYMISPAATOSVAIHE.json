@@ -363,8 +363,8 @@
     },
     "lyhytOsoite": "3c1d",
     "muistuttajat": [
-      "00000034-0be9-455d-a434-0fab721acaa2",
-      "00000036-0be9-455d-a434-0fab721acaa2"
+      "00000033-0be9-455d-a434-0fab721acaa2",
+      "00000034-0be9-455d-a434-0fab721acaa2"
     ],
     "nahtavillaoloVaihe": {
       "aineistoMuokkaus": null,
@@ -784,7 +784,7 @@
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -851,7 +851,7 @@
           "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00",
-          "uuid": "00000038-0be9-455d-a434-0fab721acaa2"
+          "uuid": "00000036-0be9-455d-a434-0fab721acaa2"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
@@ -1048,8 +1048,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000037-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
+      "00000035-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -1863,6 +1863,10 @@
       "fileType": "AINEISTO",
       "publishDate": "2024-05-31T21:00:00.000Z"
     },
+    "nahtavillaolo/aineisto.zip": {
+      "ContentType": "application/octet-stream",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
     "nahtavillaolo/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -1980,6 +1984,9 @@
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
     },
+    "nahtavillaolo/1/aineisto.zip": {
+      "ContentType": "application/octet-stream"
+    },
     "nahtavillaolo/1/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -2032,6 +2039,9 @@
       "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
+    },
+    "nahtavillaolo/2/aineisto.zip": {
+      "ContentType": "application/octet-stream"
     },
     "nahtavillaolo/2/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
