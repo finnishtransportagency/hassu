@@ -78,12 +78,7 @@ function getTableName() {
 }
 
 function suomifiLahetys(omistaja: DBOmistaja): boolean {
-  return (
-    (!!omistaja.henkilotunnus || !!omistaja.ytunnus) &&
-    !!omistaja.jakeluosoite &&
-    !!omistaja.paikkakunta &&
-    !!omistaja.postinumero
-  );
+  return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
 function getExpires() {
@@ -201,14 +196,13 @@ export const tuoKarttarajaus = async ({ oid, geoJSON }: TuoKarttarajausMutationV
 async function tallennaKarttarajaus(oid: string, geoJSON: string) {
   log.info("Tuodaan karttarajaus projektille", { oid });
   const fileLocation = "karttarajaus/karttarajaus.geojson";
-  const karttarajaus = await fileService.createFileToProjekti({
+  await fileService.createFileToProjekti({
     oid,
     fileName: fileLocation,
     path: new ProjektiPaths(oid),
     contents: Buffer.from(geoJSON, "utf-8"),
     contentType: "application/geo+json",
   });
-  await projektiDatabase.saveProjektiWithoutLocking({ oid, karttarajaus });
   log.info("Karttarajaus tuotu projektille", { oid });
 }
 
@@ -288,7 +282,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       jakeluosoite: o.jakeluosoite,
       paikkakunta: o.paikkakunta,
       postinumero: o.postinumero,
-    }
+    };
   });
 }
 
