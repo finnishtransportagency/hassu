@@ -16,7 +16,7 @@ export default function Kiinteistonomistajat() {
     setIsOpen(true);
   }, []);
   return (
-    <ProjektiConsumer>
+    <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
       {(projekti) => (
         <>
           <Button onClick={open}>Avaa dialogi</Button>

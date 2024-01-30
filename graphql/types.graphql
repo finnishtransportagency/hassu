@@ -183,7 +183,6 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
-  karttarajaus: String
   asianhallinta: Asianhallinta!
 }
 
@@ -1159,7 +1158,7 @@ type AsianhallinnanTila {
   asianTila: AsianTila
 }
 
-type Omistaja  {
+type Omistaja {
   id: String!
   oid: String!
   kiinteistotunnus: String!
@@ -1180,7 +1179,7 @@ type KiinteistonOmistajat {
   omistajat: [Omistaja]!
 }
 
-type Muistuttaja  {
+type Muistuttaja {
   id: String!
   lisatty: String!
   etunimi: String

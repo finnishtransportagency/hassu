@@ -129,15 +129,11 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { isLoading, withLoadingSpinner } = useLoadingSpinner();
 
-  const [geoJSON, setGeoJSON] = useState<string | null | undefined>(null);
+  const [geoJSON, setGeoJSON] = useState<string | null>(null);
 
   useEffect(() => {
     const updateGeoJson = async () => {
       try {
-        if (!projekti.karttarajaus) {
-          setGeoJSON(undefined);
-          return;
-        }
         const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/karttarajaus/karttarajaus.geojson`, {
           responseType: "blob",
           headers: { "Cache-Control": "no-cache", Pragma: "no-cache", Expires: "0" },
@@ -150,12 +146,16 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
         const text = await response.data.text();
         setGeoJSON(text);
       } catch (e) {
-        console.log(e);
-        showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+        if (axios.isAxiosError(e) && e.response?.status === 404) {
+          // Ei tehdä mitään. Karttarajaustiedostoa ei toistaiseksi ole
+        } else {
+          console.log(e);
+          showErrorMessage("Karttarajaamisen lataaminen epäonnistui");
+        }
       }
     };
     updateGeoJson();
-  }, [projekti.karttarajaus, projekti.oid, showErrorMessage]);
+  }, [projekti.oid, showErrorMessage]);
 
   const { t } = useTranslation("kartta");
   const mapElement = useRef<HTMLDivElement | null>(null);

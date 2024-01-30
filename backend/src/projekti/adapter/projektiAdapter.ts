@@ -40,7 +40,6 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
-import { fileService } from "../../files/fileService";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -74,7 +73,6 @@ export class ProjektiAdapter {
       muistuttajat,
       muutMuistuttajat,
       asianhallinta: _asianhallinta,
-      karttarajaus,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -150,7 +148,6 @@ export class ProjektiAdapter {
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
       muistutusMaara: (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
       asianhallinta: await adaptAsianhallinta(dbProjekti),
-      karttarajaus: karttarajaus ? fileService.getYllapitoPathForProjektiFile(projektiPath, karttarajaus) : null,
       ...fieldsToCopyAsIs,
     });
 
