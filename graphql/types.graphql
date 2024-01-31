@@ -1177,7 +1177,7 @@ type KiinteistonOmistajat {
   hakutulosMaara: Int!
   sivu: Int!
   sivunKoko: Int!
-  omistajat: [Omistaja]!
+  omistajat: [Omistaja!]!
 }
 
 type Muistuttaja {

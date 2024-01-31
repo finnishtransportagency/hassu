@@ -38,7 +38,7 @@ export default function ProjektiPageLayout({
         <div style={{ minWidth: "345px" }}>
           <ProjektiSideNavigation />
         </div>
-        <div className="grow">
+        <div className="grow min-w-0">
           <Stack
             sx={{ marginBottom: { xs: 3, sm: 0 } }}
             alignItems="flex-start"
