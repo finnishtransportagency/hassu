@@ -57,13 +57,12 @@ import { UnsupportedGeometryTypeError } from "src/map/exception/UnsupportedGeome
 import { GeometryExceedsAreaLimitError } from "src/map/exception/GeometryExceedsAreaLimitError";
 import { splitExtentInSmallerChunks } from "../../../map/util/splitExtentInSmallerChunks";
 import { getKiinteistotunnuksetFromSource } from "src/map/util/getKiinteistotunnuksetFromSource";
-import SvgIcon from "@mui/material/SvgIcon";
-import KumoaIcon from "src/svg/kumoa-ikoni.svg";
-import MonikulmioIcon from "src/svg/monikulmio-tyokalu-ikoni.svg";
-import SuorakulmioIcon from "src/svg/suorakulmio-tyokalu-ikoni.svg";
 import { VectorSourceEvent } from "ol/source/Vector";
 import Button from "@components/button/Button";
 import Collection from "ol/Collection";
+import { MonikulmioIkoni } from "src/svg/MonikulmioIkoni";
+import { SuorakulmioIkoni } from "src/svg/SuorakulmioIkoni";
+import { KumoaIkoni } from "src/svg/KumoaIkoni";
 
 const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
@@ -689,14 +688,14 @@ export function getControls({
       interactions,
       source,
       drawPolygon: {
-        label: createElement(<SvgIcon component={MonikulmioIcon}></SvgIcon>, "span"),
+        label: createElement(<MonikulmioIkoni />, "span"),
         tipLabel: "Piirrä monikulmio",
       },
       drawBox: {
-        label: createElement(<SvgIcon component={SuorakulmioIcon}></SvgIcon>, "span"),
+        label: createElement(<SuorakulmioIkoni />, "span"),
         tipLabel: "Piirrä suorakulmio",
       },
-      undo: { label: createElement(<SvgIcon fontSize="small" component={KumoaIcon}></SvgIcon>, "span"), tipLabel: "Kumoa" },
+      undo: { label: createElement(<KumoaIkoni fontSize="small" />, "span"), tipLabel: "Kumoa" },
       removeFeature: { label: createIconSpan("trash"), tipLabel: "Poista valittu rajaus" },
     }),
     new InfoControl({ geoJsonSource }),
