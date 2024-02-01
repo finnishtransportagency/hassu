@@ -226,7 +226,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   for (const omistaja of sailytettavatOmistajat) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
-      const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getOmistajaTableName(), Key: { id: omistaja.id } }));
+      const response = await getDynamoDBDocumentClient().send(
+        new GetCommand({ TableName: getOmistajaTableName(), Key: { id: omistaja.id } })
+      );
       dbOmistaja = response.Item as DBOmistaja;
       if (!dbOmistaja) {
         throw new Error("Omistajaa " + omistaja.id + " ei löydy");
@@ -321,8 +323,8 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   const projekti = await getProjektiAndCheckPermissions(variables.oid);
   const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
   const start = variables.start;
-  const end = variables.end ?? omistajat.length;
-  const ids = omistajat.slice(start, end);
+  const end = variables.end;
+  const ids = omistajat.slice(start, end ?? undefined);
   if (omistajat.length > 0 && ids.length > 0) {
     log.info("Haetaan kiinteistönomistajia", { tunnukset: ids });
     const command = new BatchGetCommand({
@@ -336,26 +338,35 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
     });
     const response = await getDynamoDBDocumentClient().send(command);
     const dbOmistajat = response.Responses ? (response.Responses[getOmistajaTableName()] as DBOmistaja[]) : [];
-    dbOmistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
-    return {
-      __typename: "KiinteistonOmistajat",
-      hakutulosMaara: omistajat.length,
-      start,
-      end,
-      omistajat: dbOmistajat.map((o) => ({
+    const omistajatLista = dbOmistajat.map<Omistaja>((o) => {
+      let omistaja: Omistaja = {
         __typename: "Omistaja",
         id: o.id,
         oid: o.oid,
         kiinteistotunnus: o.kiinteistotunnus,
         lisatty: o.lisatty,
-        paivitetty: o.paivitetty,
-        etunimet: o.etunimet,
-        sukunimi: o.sukunimi,
-        nimi: o.nimi,
-        jakeluosoite: o.jakeluosoite,
-        postinumero: o.postinumero,
-        paikkakunta: o.paikkakunta,
-      })),
+      };
+      if (!variables.onlyKiinteistotunnus) {
+        auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id });
+        omistaja = {
+          ...omistaja,
+          paivitetty: o.paivitetty,
+          etunimet: o.etunimet,
+          sukunimi: o.sukunimi,
+          nimi: o.nimi,
+          jakeluosoite: o.jakeluosoite,
+          postinumero: o.postinumero,
+          paikkakunta: o.paikkakunta,
+        };
+      }
+      return omistaja;
+    });
+    return {
+      __typename: "KiinteistonOmistajat",
+      hakutulosMaara: omistajat.length,
+      start,
+      end,
+      omistajat: omistajatLista,
     };
   } else {
     return {

@@ -78,14 +78,52 @@ const TableAccordionDetails = styled(
     const [hakutulosMaara, setHakutulosMaara] = useState<number>(0);
     // Sivutus alkaa yhdestä
     const [initialSearchDone, setInitialSearchDone] = useState(false);
-    const [tiedotVisible, setTiedotVisible] = useState(false);
-
-    const toggleTiedotVisible = useCallback(() => {
-      setTiedotVisible((old) => !old);
-    }, []);
+    const [onlyKiinteistotunnus, setOnlyKiinteistotunnus] = useState(true);
 
     const { withLoadingSpinner } = useLoadingSpinner();
     const api = useApi();
+
+    const searchOmistajat = useCallback(
+      (appendToOmistajat: boolean, onlyKiinteistotunnus: boolean, start: number, end?: number, callback?: () => Promise<void>) => {
+        withLoadingSpinner(
+          (async () => {
+            try {
+              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, onlyKiinteistotunnus, start, end);
+              setHakutulosMaara(response.hakutulosMaara);
+              setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
+              await callback?.();
+            } catch {}
+          })()
+        );
+      },
+      [api, muutOmistajat, oid, omistajat, withLoadingSpinner]
+    );
+
+    const getNextPage = useCallback(() => {
+      searchOmistajat(true, onlyKiinteistotunnus, omistajat.length, omistajat.length + PAGE_SIZE);
+    }, [omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
+
+    const toggleShowHideAll = useCallback(() => {
+      if (omistajat.length < hakutulosMaara) {
+        searchOmistajat(false, onlyKiinteistotunnus, omistajat.length, hakutulosMaara);
+      } else {
+        searchOmistajat(false, onlyKiinteistotunnus, 0, PAGE_SIZE);
+      }
+    }, [hakutulosMaara, omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
+
+    useEffect(() => {
+      if (expanded && !initialSearchDone) {
+        searchOmistajat(false, onlyKiinteistotunnus, 0, PAGE_SIZE, async () => {
+          setInitialSearchDone(true);
+        });
+      }
+    }, [expanded, initialSearchDone, searchOmistajat, onlyKiinteistotunnus]);
+
+    const toggleTiedotVisible = useCallback(() => {
+      searchOmistajat(false, !onlyKiinteistotunnus, 0, omistajat.length, async () => {
+        setOnlyKiinteistotunnus(!onlyKiinteistotunnus);
+      });
+    }, [omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
 
     const columns: ColumnDef<Omistaja>[] = useMemo(() => {
       const cols: ColumnDef<Omistaja>[] = [
@@ -137,7 +175,7 @@ const TableAccordionDetails = styled(
         {
           header: () => (
             <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" onClick={toggleTiedotVisible}>
-              {tiedotVisible ? "Piilota tiedot" : "Näytä tiedot"}
+              {onlyKiinteistotunnus ? "Näytä tiedot" : "Piilota tiedot"}
             </GradientBorderButton>
           ),
           id: "actions",
@@ -174,50 +212,16 @@ const TableAccordionDetails = styled(
         },
       ];
       return cols;
-    }, [api, oid, tiedotVisible, toggleTiedotVisible, withLoadingSpinner]);
+    }, [api, oid, onlyKiinteistotunnus, toggleTiedotVisible, withLoadingSpinner]);
 
     const table = useReactTable({
       columns,
       getCoreRowModel: getCoreRowModel(),
       data: omistajat,
       enableSorting: false,
-      defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+      defaultColumn: { cell: (cell) => cell.getValue() ?? (onlyKiinteistotunnus ? "*****" : "-") },
       state: { pagination: undefined },
     });
-
-    const searchOmistajat = useCallback(
-      (appendToOmistajat: boolean, start: number, end?: number) => {
-        withLoadingSpinner(
-          (async () => {
-            try {
-              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, start, end);
-              setHakutulosMaara(response.hakutulosMaara);
-              setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
-              setInitialSearchDone(true);
-            } catch {}
-          })()
-        );
-      },
-      [api, muutOmistajat, oid, omistajat, withLoadingSpinner]
-    );
-
-    const getNextPage = useCallback(() => {
-      searchOmistajat(true, omistajat.length, omistajat.length + PAGE_SIZE);
-    }, [omistajat.length, searchOmistajat]);
-
-    const toggleShowHideAll = useCallback(() => {
-      if (omistajat.length < hakutulosMaara) {
-        searchOmistajat(false, omistajat.length, hakutulosMaara);
-      } else {
-        searchOmistajat(false, 0, PAGE_SIZE);
-      }
-    }, [hakutulosMaara, omistajat.length, searchOmistajat]);
-
-    useEffect(() => {
-      if (expanded && !initialSearchDone) {
-        searchOmistajat(false, 0, PAGE_SIZE);
-      }
-    }, [expanded, initialSearchDone, searchOmistajat]);
 
     return (
       <AccordionDetails {...props}>

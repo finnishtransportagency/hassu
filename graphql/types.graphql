@@ -1176,7 +1176,7 @@ type Omistaja {
 type KiinteistonOmistajat {
   hakutulosMaara: Int!
   start: Int!
-  end: Int!
+  end: Int
   omistajat: [Omistaja!]!
 }
 
