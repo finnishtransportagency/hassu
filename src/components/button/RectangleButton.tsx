@@ -6,5 +6,7 @@ export const RectangleButton = styled("button")({
     color: "#FFFFFF",
     fontWeight: 700,
     padding: "4px 12px",
+    overflowWrap: "anywhere",
+    hyphens: "auto",
   },
 });

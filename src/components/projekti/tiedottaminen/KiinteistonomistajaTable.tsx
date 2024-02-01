@@ -77,9 +77,12 @@ const TableAccordionDetails = styled(
     const [omistajat, setOmistajat] = useState<Omistaja[]>([]);
     const [hakutulosMaara, setHakutulosMaara] = useState<number>(0);
     // Sivutus alkaa yhdestä
-    const [nykyinenSivu, setNykyinenSivu] = useState<number>(1);
-    const [viimeinenSivu, setViimeinenSivu] = useState(1);
     const [initialSearchDone, setInitialSearchDone] = useState(false);
+    const [tiedotVisible, setTiedotVisible] = useState(false);
+
+    const toggleTiedotVisible = useCallback(() => {
+      setTiedotVisible((old) => !old);
+    }, []);
 
     const { withLoadingSpinner } = useLoadingSpinner();
     const api = useApi();
@@ -133,8 +136,8 @@ const TableAccordionDetails = styled(
         },
         {
           header: () => (
-            <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" disabled>
-              Näytä tiedot
+            <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" onClick={toggleTiedotVisible}>
+              {tiedotVisible ? "Piilota tiedot" : "Näytä tiedot"}
             </GradientBorderButton>
           ),
           id: "actions",
@@ -171,7 +174,7 @@ const TableAccordionDetails = styled(
         },
       ];
       return cols;
-    }, []);
+    }, [api, oid, tiedotVisible, toggleTiedotVisible, withLoadingSpinner]);
 
     const table = useReactTable({
       columns,
@@ -183,13 +186,11 @@ const TableAccordionDetails = styled(
     });
 
     const searchOmistajat = useCallback(
-      (sivu: number, sivuKoko: number, appendToOmistajat: boolean) => {
+      (appendToOmistajat: boolean, start: number, end?: number) => {
         withLoadingSpinner(
           (async () => {
             try {
-              const response = await api.haeKiinteistonOmistajat(oid, sivu, muutOmistajat, sivuKoko);
-              setNykyinenSivu(response.sivu);
-              setViimeinenSivu(Math.ceil(response.hakutulosMaara / response.sivunKoko));
+              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, start, end);
               setHakutulosMaara(response.hakutulosMaara);
               setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
               setInitialSearchDone(true);
@@ -201,22 +202,22 @@ const TableAccordionDetails = styled(
     );
 
     const getNextPage = useCallback(() => {
-      searchOmistajat(nykyinenSivu + 1, PAGE_SIZE, true);
-    }, [searchOmistajat, nykyinenSivu]);
+      searchOmistajat(true, omistajat.length, omistajat.length + PAGE_SIZE);
+    }, [omistajat.length, searchOmistajat]);
 
     const toggleShowHideAll = useCallback(() => {
-      if (nykyinenSivu === null || nykyinenSivu < viimeinenSivu) {
-        searchOmistajat(1, hakutulosMaara ?? PAGE_SIZE, false);
+      if (omistajat.length < hakutulosMaara) {
+        searchOmistajat(false, omistajat.length, hakutulosMaara);
       } else {
-        searchOmistajat(1, PAGE_SIZE, false);
+        searchOmistajat(false, 0, PAGE_SIZE);
       }
-    }, [hakutulosMaara, nykyinenSivu, searchOmistajat, viimeinenSivu]);
+    }, [hakutulosMaara, omistajat.length, searchOmistajat]);
 
     useEffect(() => {
       if (expanded && !initialSearchDone) {
-        searchOmistajat(1, PAGE_SIZE, false);
+        searchOmistajat(false, 0, PAGE_SIZE);
       }
-    }, [expanded, initialSearchDone, searchOmistajat, nykyinenSivu]);
+    }, [expanded, initialSearchDone, searchOmistajat]);
 
     return (
       <AccordionDetails {...props}>
@@ -272,6 +273,7 @@ const Grid = styled("div")({
   gridTemplateColumns: "repeat(3, 1fr)",
   justifyItems: "center",
   alignItems: "start",
+  gap: "1rem",
 });
 
 const HaeField = styled(TextField)({ label: { fontWeight: 700, fontSize: "1.25rem" } });

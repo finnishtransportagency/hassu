@@ -344,7 +344,7 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.poistaMuistuttaja,
     isYllapitoOperation: true,
-  }
+  },
 };
 
 export abstract class AbstractApi {
@@ -620,12 +620,17 @@ export abstract class AbstractApi {
     });
   }
 
-  async haeKiinteistonOmistajat(oid: string, sivu: number, muutOmistajat: boolean, sivuKoko?: number): Promise<KiinteistonOmistajat> {
+  async haeKiinteistonOmistajat(
+    oid: string,
+    muutOmistajat: boolean,
+    start: number,
+    end?: number | null | undefined
+  ): Promise<KiinteistonOmistajat> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
-      sivu,
-      sivuKoko,
       muutOmistajat,
+      start,
+      end,
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 

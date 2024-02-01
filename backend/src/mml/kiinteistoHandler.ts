@@ -221,7 +221,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   const uudetOmistajat = [];
   const expires = getExpires();
   const omistajat: DBOmistaja[] = [];
-  for (const omistaja of input.omistajat) {
+  const sailytettavatOmistajat = input.omistajat.filter((omistaja) => !input.poistettavatOmistajat.includes(omistaja.id));
+  await poistaKiinteistonOmistajat(input.oid, input.poistettavatOmistajat);
+  for (const omistaja of sailytettavatOmistajat) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
       const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getOmistajaTableName(), Key: { id: omistaja.id } }));
@@ -230,9 +232,6 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         throw new Error("Omistajaa " + omistaja.id + " ei löydy");
       }
       dbOmistaja.paivitetty = now;
-      dbOmistaja.etunimet = omistaja.etunimet;
-      dbOmistaja.sukunimi = omistaja.sukunimi;
-      dbOmistaja.nimi = omistaja.nimi;
       auditLog.info("Päivitetään omistajan tiedot", { omistajaId: dbOmistaja.id });
     } else {
       dbOmistaja = {
@@ -240,9 +239,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         kiinteistotunnus: omistaja.kiinteistotunnus,
         oid: input.oid,
         lisatty: now,
-        etunimet: omistaja.etunimet,
-        sukunimi: omistaja.sukunimi,
-        nimi: omistaja.nimi,
+        etunimet: dbOmistaja?.etunimet,
+        sukunimi: dbOmistaja?.sukunimi,
+        nimi: dbOmistaja?.nimi,
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
@@ -281,29 +280,48 @@ export async function poistaKiinteistonOmistaja(input: PoistaKiinteistonOmistaja
   const projekti = await getProjektiAndCheckPermissions(input.oid);
   const omistajat = projekti.omistajat ?? [];
   const muutOmistajat = projekti.muutOmistajat ?? [];
-  let idx = omistajat.indexOf(input.omistaja);
-  if (idx !== -1) {
-    omistajat.splice(idx, 1);
+  const omistajatIdx = omistajat.indexOf(input.omistaja);
+  const muutOmistajatIdx = muutOmistajat.indexOf(input.omistaja);
+  if (omistajatIdx !== -1) {
+    omistajat.splice(omistajatIdx, 1);
     auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: input.omistaja });
+  } else if (muutOmistajatIdx !== -1) {
+    muutOmistajat.splice(muutOmistajatIdx, 1);
+    auditLog.info("Poistetaan muu omistaja", { omistajaId: input.omistaja });
   } else {
-    idx = muutOmistajat.indexOf(input.omistaja);
-    if (idx !== -1) {
-      muutOmistajat.splice(idx, 1);
-      auditLog.info("Poistetaan muu omistaja", { omistajaId: input.omistaja });
-    } else {
-      throw new Error("Kiinteistön omistajaa " + input.omistaja + " ei löydy");
-    }
+    throw new Error("Kiinteistön omistajaa " + input.omistaja + " ei löydy");
   }
   auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });
   projektiDatabase.setKiinteistonOmistajat(input.oid, omistajat, muutOmistajat);
 }
 
+export async function poistaKiinteistonOmistajat(oid: string, poistettavatOmistajat: string[]) {
+  const projekti = await getProjektiAndCheckPermissions(oid);
+  const omistajat = (projekti.omistajat ?? []).filter((omistaja) => {
+    if (poistettavatOmistajat.includes(omistaja)) {
+      auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: omistaja });
+      return false;
+    } else {
+      return true;
+    }
+  });
+  const muutOmistajat = (projekti.muutOmistajat ?? []).filter((omistaja) => {
+    if (poistettavatOmistajat.includes(omistaja)) {
+      auditLog.info("Poistetaan muu omistaja", { omistajaId: omistaja });
+      return false;
+    } else {
+      return true;
+    }
+  });
+  auditLog.info("Päivitetään omistajat projektille", { omistajat, muutOmistajat });
+  projektiDatabase.setKiinteistonOmistajat(oid, omistajat, muutOmistajat);
+}
+
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
   const projekti = await getProjektiAndCheckPermissions(variables.oid);
-  const sivuKoko = variables.sivuKoko ?? 10;
   const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
-  const start = (variables.sivu - 1) * sivuKoko;
-  const end = start + sivuKoko > omistajat.length ? undefined : start + sivuKoko;
+  const start = variables.start;
+  const end = variables.end ?? omistajat.length;
   const ids = omistajat.slice(start, end);
   if (omistajat.length > 0 && ids.length > 0) {
     log.info("Haetaan kiinteistönomistajia", { tunnukset: ids });
@@ -322,8 +340,8 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
     return {
       __typename: "KiinteistonOmistajat",
       hakutulosMaara: omistajat.length,
-      sivunKoko: sivuKoko,
-      sivu: variables.sivu,
+      start,
+      end,
       omistajat: dbOmistajat.map((o) => ({
         __typename: "Omistaja",
         id: o.id,
@@ -343,8 +361,8 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
     return {
       __typename: "KiinteistonOmistajat",
       hakutulosMaara: omistajat.length,
-      sivunKoko: sivuKoko,
-      sivu: variables.sivu,
+      start,
+      end,
       omistajat: [],
     };
   }

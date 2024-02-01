@@ -29,7 +29,7 @@ type Query {
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
-  haeKiinteistonOmistajat(oid: String!, sivu: Int!, muutOmistajat: Boolean!, sivuKoko: Int): KiinteistonOmistajat
+  haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, start: Int!, end: Int): KiinteistonOmistajat
   haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
 }
 
@@ -53,7 +53,7 @@ type Mutation {
 
   tuoKarttarajaus(oid: String!, geoJSON: String!): String
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
-  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!): [Omistaja!]!
+  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!, poistettavatOmistajat: [String!]!): [Omistaja!]!
   poistaKiinteistonOmistaja(oid: String!, omistaja: String!): String
   tallennaMuistuttajat(oid: String!, muistuttajat: [MuistuttajaInput!]!): [Muistuttaja!]!
   poistaMuistuttaja(oid: String!, muistuttaja: String!): String

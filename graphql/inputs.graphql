@@ -472,17 +472,14 @@ input TestiKomentoInput {
 }
 
 input OmistajaInput {
-  id: String
+  id: String!
   kiinteistotunnus: String!
-  etunimet: String
-  sukunimi: String
-  nimi: String
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
 }
 
-input MuistuttajaInput  {
+input MuistuttajaInput {
   id: String
   nimi: String
   tiedotusosoite: String
