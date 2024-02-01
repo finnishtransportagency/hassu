@@ -1,5 +1,8 @@
 import Button from "@components/button/Button";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { GradientBorderButton } from "@components/button/GradientButton";
 import IconButton from "@components/button/IconButton";
+import { RectangleButton } from "@components/button/RectangleButton";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import HassuTable from "@components/table/HassuTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +16,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type Props = { title: string; instructionText: string | JSX.Element; muutOmistajat?: boolean; oid: string };
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 25;
 
 export default function KiinteistonomistajaTable({ instructionText, title, muutOmistajat, oid }: Props) {
   const [expanded, setExpanded] = React.useState(false);
@@ -72,8 +75,12 @@ const TableAccordionDetails = styled(
       expanded: boolean;
     }) => {
     const [omistajat, setOmistajat] = useState<Omistaja[]>([]);
-    const [sivu, setSivu] = useState(0);
+    const [hakutulosMaara, setHakutulosMaara] = useState<number>(0);
+    // Sivutus alkaa yhdestä
+    const [nykyinenSivu, setNykyinenSivu] = useState<number>(1);
+    const [viimeinenSivu, setViimeinenSivu] = useState(1);
     const [initialSearchDone, setInitialSearchDone] = useState(false);
+
     const { withLoadingSpinner } = useLoadingSpinner();
     const api = useApi();
 
@@ -84,30 +91,82 @@ const TableAccordionDetails = styled(
           accessorKey: "kiinteistotunnus",
           id: "kiinteistotunnus",
           meta: {
-            widthFractions: 3,
+            widthFractions: 2,
+            minWidth: 140,
           },
         },
         {
           header: "Omistajan nimi",
-          accessorFn: () => "omistajanimi",
+          accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
           id: "omistajan_nimi",
           meta: {
-            widthFractions: 3,
+            widthFractions: 5,
+            minWidth: 140,
           },
         },
         {
           header: "Postiosoite",
-          accessorFn: () => "postiosoite",
+          accessorKey: "jakeluosoite",
           id: "postiosoite",
           meta: {
             widthFractions: 3,
+            minWidth: 120,
           },
         },
         {
-          header: "",
+          header: "Postinumero",
+          accessorKey: "postinumero",
+          id: "postinumero",
+          meta: {
+            widthFractions: 1,
+            minWidth: 120,
+          },
+        },
+        {
+          header: "Postitoimipaikka",
+          accessorKey: "paikkakunta",
+          id: "postitoimipaikka",
+          meta: {
+            widthFractions: 2,
+            minWidth: 140,
+          },
+        },
+        {
+          header: () => (
+            <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" disabled>
+              Näytä tiedot
+            </GradientBorderButton>
+          ),
           id: "actions",
-          cell: () => {
-            return <IconButton type="button" disabled icon="trash" />;
+          meta: {
+            widthFractions: 2,
+            minWidth: 120,
+          },
+          accessorKey: "id",
+          cell: ({ getValue }) => {
+            const value = getValue() as string;
+
+            return (
+              <IconButton
+                sx={{ display: "block", margin: "auto" }}
+                type="button"
+                disabled={typeof value !== "string"}
+                onClick={() => {
+                  withLoadingSpinner(
+                    (async () => {
+                      try {
+                        await api.poistaKiinteistonOmistaja(oid, value);
+                        setOmistajat((omistajat) => omistajat.filter((omistaja) => omistaja.id !== value));
+                        setHakutulosMaara((maara) => maara - 1);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    })()
+                  );
+                }}
+                icon="trash"
+              />
+            );
           },
         },
       ];
@@ -117,35 +176,47 @@ const TableAccordionDetails = styled(
     const table = useReactTable({
       columns,
       getCoreRowModel: getCoreRowModel(),
-      data: [],
+      data: omistajat,
       enableSorting: false,
       defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
       state: { pagination: undefined },
     });
 
-    const haeOmistajia = useCallback(() => {
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const { omistajat: lisattavatOmistajat } = await api.haeKiinteistonOmistajat(oid, sivu, muutOmistajat, PAGE_SIZE);
-            setSivu(sivu + 1);
-            console.log("lissäää ", lisattavatOmistajat);
-            setOmistajat([...omistajat, ...lisattavatOmistajat]);
-          } catch {}
-        })()
-      );
-    }, [api, muutOmistajat, oid, omistajat, setOmistajat, setSivu, sivu, withLoadingSpinner]);
+    const searchOmistajat = useCallback(
+      (sivu: number, sivuKoko: number, appendToOmistajat: boolean) => {
+        withLoadingSpinner(
+          (async () => {
+            try {
+              const response = await api.haeKiinteistonOmistajat(oid, sivu, muutOmistajat, sivuKoko);
+              setNykyinenSivu(response.sivu);
+              setViimeinenSivu(Math.ceil(response.hakutulosMaara / response.sivunKoko));
+              setHakutulosMaara(response.hakutulosMaara);
+              setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
+              setInitialSearchDone(true);
+            } catch {}
+          })()
+        );
+      },
+      [api, muutOmistajat, oid, omistajat, withLoadingSpinner]
+    );
+
+    const getNextPage = useCallback(() => {
+      searchOmistajat(nykyinenSivu + 1, PAGE_SIZE, true);
+    }, [searchOmistajat, nykyinenSivu]);
+
+    const toggleShowHideAll = useCallback(() => {
+      if (nykyinenSivu === null || nykyinenSivu < viimeinenSivu) {
+        searchOmistajat(1, hakutulosMaara ?? PAGE_SIZE, false);
+      } else {
+        searchOmistajat(1, PAGE_SIZE, false);
+      }
+    }, [hakutulosMaara, nykyinenSivu, searchOmistajat, viimeinenSivu]);
 
     useEffect(() => {
       if (expanded && !initialSearchDone) {
-        try {
-          haeOmistajia();
-          setInitialSearchDone(true);
-        } catch {
-          console.log("prk");
-        }
+        searchOmistajat(1, PAGE_SIZE, false);
       }
-    }, [haeOmistajia, expanded, initialSearchDone, setInitialSearchDone]);
+    }, [expanded, initialSearchDone, searchOmistajat, nykyinenSivu]);
 
     return (
       <AccordionDetails {...props}>
@@ -157,7 +228,35 @@ const TableAccordionDetails = styled(
               Hae
             </Button>
           </Stack>
-          <HassuTable table={table} />
+          {initialSearchDone && (
+            <p>
+              Haulla {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
+            </p>
+          )}
+          {initialSearchDone && !!hakutulosMaara && (
+            <>
+              <HassuTable table={table} />
+              <Grid>
+                <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
+                  {hakutulosMaara > omistajat.length && (
+                    <RectangleButton type="button" onClick={getNextPage}>
+                      Näytä enemmän kiinteistönomistajia
+                    </RectangleButton>
+                  )}
+                  <ButtonFlatWithIcon
+                    type="button"
+                    icon={hakutulosMaara <= omistajat.length ? "chevron-up" : "chevron-down"}
+                    onClick={toggleShowHideAll}
+                  >
+                    {hakutulosMaara <= omistajat.length ? "Piilota kaikki" : "Näytä kaikki"}
+                  </ButtonFlatWithIcon>
+                </Stack>
+                <Button className="ml-auto" disabled>
+                  Vie Exceliin
+                </Button>
+              </Grid>
+            </>
+          )}
         </ContentSpacer>
       </AccordionDetails>
     );
@@ -166,6 +265,13 @@ const TableAccordionDetails = styled(
   border: "1px solid #999999",
   borderTopWidth: "0px",
   padding: "1rem 1rem",
+});
+
+const Grid = styled("div")({
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  justifyItems: "center",
+  alignItems: "start",
 });
 
 const HaeField = styled(TextField)({ label: { fontWeight: 700, fontSize: "1.25rem" } });
