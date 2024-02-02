@@ -117,7 +117,7 @@ function MuokkausnakymaForm({
             <p>{getSectionInfoText(paatosTyyppi)}</p>
             <AineistotSaavutettavuusOhje />
             <TiedostoLomake vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
-            <AineistoLomake dialogInfoText={getDialogInfoText(paatosTyyppi)} vaihe={undefined} />
+            <AineistoLomake dialogInfoText={getDialogInfoText(paatosTyyppi)} vaihe={julkaisematonPaatos} />
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
