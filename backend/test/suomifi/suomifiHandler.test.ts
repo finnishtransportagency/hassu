@@ -301,7 +301,10 @@ describe("suomifiHandler", () => {
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
-    await handleEvent(msg as SQSEvent);
+    const response = await handleEvent(msg as SQSEvent);
+    const batchItemFailures = JSON.parse(response.body).batchItemFailures;
+    expect(response.statusCode).to.equal(200);
+    expect(batchItemFailures.length).be.equal(0);
     expect(request.pdfViesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
     const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
