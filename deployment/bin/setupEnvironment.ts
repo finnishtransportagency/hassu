@@ -27,7 +27,11 @@ async function main() {
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
+
+    // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
     TABLE_OMISTAJA: Config.omistajaTableName,
+
+    TABLE_KIINTEISTONOMISTAJA: Config.kiinteistoOmistajaTableName,
     TABLE_MUISTUTTAJA: Config.muistuttajaTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,

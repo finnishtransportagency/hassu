@@ -624,6 +624,7 @@ export abstract class AbstractApi {
     oid: string,
     muutOmistajat: boolean,
     onlyKiinteistotunnus: boolean,
+    query: string | null | undefined,
     start: number,
     end?: number | null | undefined
   ): Promise<KiinteistonOmistajat> {
@@ -631,6 +632,7 @@ export abstract class AbstractApi {
       oid,
       muutOmistajat,
       onlyKiinteistotunnus,
+      query,
       start,
       end,
     } as HaeKiinteistonOmistajatQueryVariables);

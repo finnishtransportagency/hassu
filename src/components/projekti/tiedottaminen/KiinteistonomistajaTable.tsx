@@ -11,6 +11,7 @@ import { Stack, styled } from "@mui/system";
 import { Omistaja } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
@@ -79,16 +80,24 @@ const TableAccordionDetails = styled(
     // Sivutus alkaa yhdestä
     const [initialSearchDone, setInitialSearchDone] = useState(false);
     const [onlyKiinteistotunnus, setOnlyKiinteistotunnus] = useState(true);
+    const [query, setQuery] = useState<string | undefined>(undefined);
 
     const { withLoadingSpinner } = useLoadingSpinner();
     const api = useApi();
 
     const searchOmistajat = useCallback(
-      (appendToOmistajat: boolean, onlyKiinteistotunnus: boolean, start: number, end?: number, callback?: () => Promise<void>) => {
+      (
+        appendToOmistajat: boolean,
+        onlyKiinteistotunnus: boolean,
+        query: string | undefined,
+        start: number,
+        end?: number,
+        callback?: () => Promise<void>
+      ) => {
         withLoadingSpinner(
           (async () => {
             try {
-              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, onlyKiinteistotunnus, start, end);
+              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, onlyKiinteistotunnus, query, start, end);
               setHakutulosMaara(response.hakutulosMaara);
               setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
               await callback?.();
@@ -100,30 +109,30 @@ const TableAccordionDetails = styled(
     );
 
     const getNextPage = useCallback(() => {
-      searchOmistajat(true, onlyKiinteistotunnus, omistajat.length, omistajat.length + PAGE_SIZE);
-    }, [omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
+      searchOmistajat(true, onlyKiinteistotunnus, query, omistajat.length, omistajat.length + PAGE_SIZE);
+    }, [searchOmistajat, onlyKiinteistotunnus, query, omistajat.length]);
 
     const toggleShowHideAll = useCallback(() => {
       if (omistajat.length < hakutulosMaara) {
-        searchOmistajat(false, onlyKiinteistotunnus, omistajat.length, hakutulosMaara);
+        searchOmistajat(false, onlyKiinteistotunnus, query, omistajat.length, hakutulosMaara);
       } else {
-        searchOmistajat(false, onlyKiinteistotunnus, 0, PAGE_SIZE);
+        searchOmistajat(false, onlyKiinteistotunnus, query, 0, PAGE_SIZE);
       }
-    }, [hakutulosMaara, omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
+    }, [omistajat.length, hakutulosMaara, searchOmistajat, onlyKiinteistotunnus, query]);
 
     useEffect(() => {
       if (expanded && !initialSearchDone) {
-        searchOmistajat(false, onlyKiinteistotunnus, 0, PAGE_SIZE, async () => {
+        searchOmistajat(false, onlyKiinteistotunnus, query, 0, PAGE_SIZE, async () => {
           setInitialSearchDone(true);
         });
       }
-    }, [expanded, initialSearchDone, searchOmistajat, onlyKiinteistotunnus]);
+    }, [expanded, initialSearchDone, searchOmistajat, onlyKiinteistotunnus, query]);
 
     const toggleTiedotVisible = useCallback(() => {
-      searchOmistajat(false, !onlyKiinteistotunnus, 0, omistajat.length, async () => {
+      searchOmistajat(false, !onlyKiinteistotunnus, query, 0, omistajat.length, async () => {
         setOnlyKiinteistotunnus(!onlyKiinteistotunnus);
       });
-    }, [omistajat.length, searchOmistajat, onlyKiinteistotunnus]);
+    }, [searchOmistajat, onlyKiinteistotunnus, query, omistajat.length]);
 
     const columns: ColumnDef<Omistaja>[] = useMemo(() => {
       const cols: ColumnDef<Omistaja>[] = [
@@ -214,6 +223,16 @@ const TableAccordionDetails = styled(
       return cols;
     }, [api, oid, onlyKiinteistotunnus, toggleTiedotVisible, withLoadingSpinner]);
 
+    type SearchForm = {
+      query: string;
+    };
+
+    const { handleSubmit, control } = useForm<SearchForm>({
+      mode: "onChange",
+      reValidateMode: "onChange",
+      defaultValues: { query: "" },
+    });
+
     const table = useReactTable({
       columns,
       getCoreRowModel: getCoreRowModel(),
@@ -223,13 +242,36 @@ const TableAccordionDetails = styled(
       state: { pagination: undefined },
     });
 
+    const onSubmit: SubmitHandler<SearchForm> = useCallback(
+      (data) => {
+        const q = !!data.query ? data.query : undefined;
+        setQuery(q);
+        searchOmistajat(false, onlyKiinteistotunnus, q, 0, PAGE_SIZE);
+      },
+      [onlyKiinteistotunnus, searchOmistajat]
+    );
+
     return (
       <AccordionDetails {...props}>
         <ContentSpacer gap={7}>
           <p>{instructionText}</p>
-          <Stack direction="row" justifyContent="space-between" alignItems="end">
-            <HaeField sx={{ flexGrow: 1 }} disabled label="Hae kiinteistönomistajia" />
-            <Button primary disabled endIcon="search">
+          <Stack component="form" direction="row" justifyContent="space-between" alignItems="end">
+            <Controller
+              control={control}
+              name="query"
+              render={({ field: { name, onBlur, onChange, ref, value } }) => (
+                <HaeField
+                  sx={{ flexGrow: 1 }}
+                  name={name}
+                  onBlur={onBlur}
+                  onChange={onChange}
+                  inputRef={ref}
+                  value={value}
+                  label="Hae kiinteistönomistajia"
+                />
+              )}
+            />
+            <Button primary type="button" endIcon="search" onClick={handleSubmit(onSubmit)}>
               Hae
             </Button>
           </Stack>

@@ -5,7 +5,7 @@ import { MmlClient, MmlKiinteisto, Omistaja as MmlOmistaja, getMmlClient } from 
 import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchGetCommand, BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, BatchWriteCommand, GetCommand, PutCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
@@ -49,6 +49,7 @@ export type DBOmistaja = {
   maakoodi?: string | null;
   expires?: number;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
+  suomifiLahetys: boolean;
 };
 
 let mmlClient: MmlClient | undefined = undefined;
@@ -68,7 +69,7 @@ function* chunkArray<T>(arr: T[], stride = 1) {
   }
 }
 
-function suomifiLahetys(omistaja: DBOmistaja): boolean {
+function suomifiLahetys(omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">): boolean {
   return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
@@ -102,7 +103,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
       const expires = getExpires();
       yhteystiedot.forEach((k) => {
         k.omistajat.forEach((o) => {
-          yhteystiedotMap.set(mapKey(k, o), {
+          const initialOmistaja: Omit<DBOmistaja, "suomifiLahetys"> = {
             id: uuid.v4(),
             kiinteistotunnus: k.kiinteistotunnus,
             oid: hakuEvent.oid,
@@ -115,16 +116,23 @@ const handlerFactory = (event: SQSEvent) => async () => {
             paikkakunta: o.yhteystiedot?.paikkakunta,
             maakoodi: o.yhteystiedot?.maakoodi,
             expires,
-          });
+          };
+          const omistaja: DBOmistaja = {
+            ...initialOmistaja,
+            suomifiLahetys: suomifiLahetys(initialOmistaja),
+          };
+          yhteystiedotMap.set(mapKey(k, o), omistaja);
         });
         if (k.omistajat.length === 0) {
-          yhteystiedotMap.set(mapKey(k), {
+          const omistaja: DBOmistaja = {
             id: uuid.v4(),
             kiinteistotunnus: k.kiinteistotunnus,
             oid: hakuEvent.oid,
             lisatty,
             expires,
-          });
+            suomifiLahetys: false,
+          };
+          yhteystiedotMap.set(mapKey(k), omistaja);
         }
       });
       kiinteistot.forEach((k) => {
@@ -156,8 +164,8 @@ const handlerFactory = (event: SQSEvent) => async () => {
         );
       }
       dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
-      const omistajat = dbOmistajat.filter(suomifiLahetys).map((o) => o.id);
-      const muutOmistajat = dbOmistajat.filter((o) => !suomifiLahetys(o)).map((o) => o.id);
+      const omistajat = dbOmistajat.filter((omistaja) => omistaja.suomifiLahetys).map((o) => o.id);
+      const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
       auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
       await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
     }
@@ -227,7 +235,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
       const response = await getDynamoDBDocumentClient().send(
-        new GetCommand({ TableName: getOmistajaTableName(), Key: { id: omistaja.id } })
+        new GetCommand({ TableName: getOmistajaTableName(), Key: { oid: input.oid, id: omistaja.id } })
       );
       dbOmistaja = response.Item as DBOmistaja;
       if (!dbOmistaja) {
@@ -244,6 +252,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         etunimet: dbOmistaja?.etunimet,
         sukunimi: dbOmistaja?.sukunimi,
         nimi: dbOmistaja?.nimi,
+        suomifiLahetys: !dbOmistaja || suomifiLahetys(dbOmistaja),
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
@@ -320,61 +329,64 @@ export async function poistaKiinteistonOmistajat(oid: string, poistettavatOmista
 }
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
-  const projekti = await getProjektiAndCheckPermissions(variables.oid);
-  const omistajat = variables.muutOmistajat ? projekti?.muutOmistajat ?? [] : projekti?.omistajat ?? [];
+  await getProjektiAndCheckPermissions(variables.oid);
   const start = variables.start;
   const end = variables.end;
-  const ids = omistajat.slice(start, end ?? undefined);
-  if (omistajat.length > 0 && ids.length > 0) {
-    log.info("Haetaan kiinteistönomistajia", { tunnukset: ids });
-    const command = new BatchGetCommand({
-      RequestItems: {
-        [getOmistajaTableName()]: {
-          Keys: ids.map((key) => ({
-            id: key,
-          })),
-        },
-      },
-    });
-    const response = await getDynamoDBDocumentClient().send(command);
-    const dbOmistajat = response.Responses ? (response.Responses[getOmistajaTableName()] as DBOmistaja[]) : [];
-    const omistajatLista = dbOmistajat.map<Omistaja>((o) => {
-      let omistaja: Omistaja = {
-        __typename: "Omistaja",
-        id: o.id,
-        oid: o.oid,
-        kiinteistotunnus: o.kiinteistotunnus,
-        lisatty: o.lisatty,
+
+  // const titleObject = omistajat.reduce<Record<string, string>>(function (acc, value, index) {
+  //   const titleKey = ":id" + (index + 1);
+  //   titleObject[titleKey] = value;
+  //   return acc;
+  // }, {});
+  const queryCommand = new QueryCommand({
+    TableName: getOmistajaTableName(),
+    KeyConditionExpression: "oid = :oid",
+    FilterExpression: "suomifiLahetys = :suomifiLahetys",
+    // key
+    // FilterExpression: "id IN (" + Object.keys(titleObject).join(", ") + ") AND kiinteistotunnus = :kiinteistotunnus",
+    ExpressionAttributeValues: { ":oid": variables.oid, ":suomifiLahetys": !variables.muutOmistajat },
+    // RequestItems: {
+    //   [getTableName()]: {
+    //     Keys: ids.map((key) => ({
+    //       id: key,
+    //     })),
+    //   },
+    // },
+  });
+
+  const response = await getDynamoDBDocumentClient().send(queryCommand);
+  const dbOmistajat = (response.Items ?? []) as DBOmistaja[];
+  const hakutulosMaara = dbOmistajat.length;
+
+  const omistajat = dbOmistajat.slice(start, end ?? undefined).map<Omistaja>((o) => {
+    let omistaja: Omistaja = {
+      __typename: "Omistaja",
+      id: o.id,
+      oid: o.oid,
+      kiinteistotunnus: o.kiinteistotunnus,
+      lisatty: o.lisatty,
+    };
+    if (!variables.onlyKiinteistotunnus) {
+      auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id });
+      omistaja = {
+        ...omistaja,
+        paivitetty: o.paivitetty,
+        etunimet: o.etunimet,
+        sukunimi: o.sukunimi,
+        nimi: o.nimi,
+        jakeluosoite: o.jakeluosoite,
+        postinumero: o.postinumero,
+        paikkakunta: o.paikkakunta,
       };
-      if (!variables.onlyKiinteistotunnus) {
-        auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id });
-        omistaja = {
-          ...omistaja,
-          paivitetty: o.paivitetty,
-          etunimet: o.etunimet,
-          sukunimi: o.sukunimi,
-          nimi: o.nimi,
-          jakeluosoite: o.jakeluosoite,
-          postinumero: o.postinumero,
-          paikkakunta: o.paikkakunta,
-        };
-      }
-      return omistaja;
-    });
-    return {
-      __typename: "KiinteistonOmistajat",
-      hakutulosMaara: omistajat.length,
-      start,
-      end,
-      omistajat: omistajatLista,
-    };
-  } else {
-    return {
-      __typename: "KiinteistonOmistajat",
-      hakutulosMaara: omistajat.length,
-      start,
-      end,
-      omistajat: [],
-    };
-  }
+    }
+    return omistaja;
+  });
+
+  return {
+    __typename: "KiinteistonOmistajat",
+    hakutulosMaara,
+    start,
+    end,
+    omistajat,
+  };
 }

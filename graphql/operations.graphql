@@ -33,6 +33,7 @@ type Query {
     oid: String!
     muutOmistajat: Boolean!
     onlyKiinteistotunnus: Boolean!
+    query: String
     start: Int!
     end: Int
   ): KiinteistonOmistajat
