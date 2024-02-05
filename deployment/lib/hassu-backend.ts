@@ -575,7 +575,7 @@ export class HassuBackendStack extends Stack {
       })
     );
     suomiFiSQS.grantConsumeMessages(suomiFiLambda);
-    suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
+    suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 10, reportBatchItemFailures: true }));
     this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);

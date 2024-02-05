@@ -264,7 +264,10 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(request.pdfViesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
-    expect(mock.commandCalls(UpdateCommand)[0].args[0].input).toMatchSnapshot();
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     parameterStub.restore();
     fileStub.restore();
   });
@@ -301,7 +304,12 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(request.pdfViesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
-    expect(mock.commandCalls(UpdateCommand)[0].args[0].input).toMatchSnapshot();
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
     parameterStub.restore();
     fileStub.restore();
   });
@@ -334,16 +342,18 @@ describe("suomifiHandler", () => {
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
-    const msg = { Records: [{ body: JSON.stringify(body) }] };
-    try {
-      await handleEvent(msg as SQSEvent);
-      fail("Pitäisi heittää poikkeus");
-    } catch(e) {
-      assert(e instanceof Error);
-      expect(e.message).to.equal("Suomi.fi pdf-viestin lähetys epäonnistui");
-    }
+    const msg = { Records: [{ body: JSON.stringify(body), messageId: "123456" }] };
+    const response = await handleEvent(msg as SQSEvent);
+    const batchItemFailures = JSON.parse(response.body).batchItemFailures;
+    expect(batchItemFailures.length).be.equal(1);
+    expect(batchItemFailures[0].ItemIdentifier).be.equal("123456");
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
-    expect(mock.commandCalls(UpdateCommand)[0].args[0].input).toMatchSnapshot();
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("VIRHE");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
     parameterStub.restore();
     fileStub.restore();
   });

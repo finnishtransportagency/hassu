@@ -23,7 +23,6 @@ import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
 
-
 export type SuomiFiSanoma = {
   muistuttajaId?: string;
   omistajaId?: string;
@@ -246,7 +245,9 @@ async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjek
       await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
       auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
     } else {
-      log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta"));
+      log.error(
+        "Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta")
+      );
     }
   }
 }
@@ -331,8 +332,10 @@ async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventTy
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
-  try {
-    for (const record of event.Records) {
+  const batchItemFailures = [];
+  log.info("SQS sanomien määrä " + event.Records.length);
+  for (const record of event.Records) {
+    try {
       const msg = JSON.parse(record.body) as SuomiFiSanoma;
       log.info("Suomi.fi sanoma", { sanoma: msg });
       if (msg.omistajaId && msg.tyyppi) {
@@ -342,17 +345,21 @@ const handlerFactory = (event: SQSEvent) => async () => {
       } else {
         log.error("Suomi.fi sanoma virheellinen", { sanoma: msg });
       }
+    } catch (e) {
+      log.error("Suomi.fi viestin käsittely epäonnistui: " + e);
+      batchItemFailures.push({ ItemIdentifier: record.messageId });
     }
-  } catch (e) {
-    log.error("Suomi.fi viestin käsittely epäonnistui: " + e);
-    // käsitellään viesti uudelleen
-    throw e;
   }
+  return batchItemFailures;
 };
 
 export const handleEvent = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  return wrapXRayAsync("handler", handlerFactory(event));
+  const batchItemFailures = await wrapXRayAsync("handler", handlerFactory(event));
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ batchItemFailures }),
+  };
 };
 
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {

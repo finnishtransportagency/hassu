@@ -32,29 +32,6 @@ Object {
 }
 `;
 
-exports[`suomifiHandler muistuttajan pdf viesti suomi.fi 2`] = `
-Object {
-  "ExpressionAttributeNames": Object {
-    "#l": "lahetykset",
-  },
-  "ExpressionAttributeValues": Object {
-    ":status": Array [
-      Object {
-        "lahetysaika": "2024-02-05T15:57:50+02:00",
-        "tila": "OK",
-        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
-      },
-    ],
-    ":tyhjalista": Array [],
-  },
-  "Key": Object {
-    "id": "123",
-  },
-  "TableName": "Muistuttaja-localstack",
-  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
-}
-`;
-
 exports[`suomifiHandler muistuttajan sähköposti annettu 1`] = `
 Array [
   Object {
@@ -206,51 +183,5 @@ Object {
   },
   "vaylavirasto": false,
   "ytunnus": undefined,
-}
-`;
-
-exports[`suomifiHandler omistajan pdf viesti suomi.fi 2`] = `
-Object {
-  "ExpressionAttributeNames": Object {
-    "#l": "lahetykset",
-  },
-  "ExpressionAttributeValues": Object {
-    ":status": Array [
-      Object {
-        "lahetysaika": "2024-02-05T15:57:50+02:00",
-        "tila": "OK",
-        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
-      },
-    ],
-    ":tyhjalista": Array [],
-  },
-  "Key": Object {
-    "id": "123",
-  },
-  "TableName": "Omistaja-pete",
-  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
-}
-`;
-
-exports[`suomifiHandler omistajan pdf viesti suomi.fi epäonnistui 1`] = `
-Object {
-  "ExpressionAttributeNames": Object {
-    "#l": "lahetykset",
-  },
-  "ExpressionAttributeValues": Object {
-    ":status": Array [
-      Object {
-        "lahetysaika": "2024-02-05T15:57:50+02:00",
-        "tila": "VIRHE",
-        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
-      },
-    ],
-    ":tyhjalista": Array [],
-  },
-  "Key": Object {
-    "id": "123",
-  },
-  "TableName": "Omistaja-pete",
-  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
 }
 `;
