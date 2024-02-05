@@ -93,6 +93,11 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  returnKuulutusWithoutSaamePDFs(kuulutus: AloitusKuulutus): AloitusKuulutus {
+    const { aloituskuulutusSaamePDFt: _leaveOut, ...rest } = kuulutus;
+    return rest;
+  }
+
   constructor() {
     super(Vaihe.ALOITUSKUULUTUS);
   }

@@ -27,6 +27,11 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu
 > {
+  returnKuulutusWithoutSaamePDFs(kuulutus: HyvaksymisPaatosVaihe): HyvaksymisPaatosVaihe {
+    const { hyvaksymisPaatosVaiheSaamePDFt: _leaveOut, ...rest } = kuulutus;
+    return rest;
+  }
+
   async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
