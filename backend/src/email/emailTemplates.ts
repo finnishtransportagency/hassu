@@ -1,8 +1,15 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import {
+  Kayttaja,
+  KayttajaTyyppi,
+  Kieli,
+  PalveluPalauteInput,
+  SuunnittelustaVastaavaViranomainen,
+  TilasiirtymaTyyppi,
+} from "hassu-common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus, Velho } from "../database/model";
-import { linkSuunnitteluVaiheYllapito } from "hassu-common/links";
+import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import {
   findHyvaksymisPaatosVaiheWaitingForApproval,
   findJatkoPaatos1VaiheWaitingForApproval,
@@ -136,7 +143,6 @@ Muistutus
 ${"muistutus"}
 `;
 const muistutusOtsikko = template`Muistutus - ${"id"}`;
-const muistuttajanOtsikko = template`Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta`;
 const palveluPalauteTeksti = template`Kansalaiskäyttäjä on antanut palvelusta palautetta.
 
 Arvosana: ${"arvosana"}
@@ -336,17 +342,33 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
+  const text = `Muistutus on vastaanotettu
+
+Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
+
+Suunnitelman asiatunnus: ${asiatunnus}
+
+${
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
+} käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}
+
+Muistutus:
+${muistutus.muistutus ?? ""}
+
+${
+  muistutus.liite
+    ? `Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+${muistutus.liite}`
+    : ""
+}
+`;
   const email = {
-    subject: muistuttajanOtsikko(muistutus),
-    text: muistutusTeksti({ asiatunnus, ...muistutus }),
+    subject: "Muistutus on vastaanotettu",
+    text,
     to: muistutus.sahkoposti ?? undefined,
   };
-  if (muistutus.liite) {
-    const idx = muistutus.liite.lastIndexOf("/");
-    email.text = email.text.concat(`
-
-    Muistutukseen on lisätty liite: ${muistutus.liite.substring(idx + 1)}`)
-  }
   return email;
 }
 

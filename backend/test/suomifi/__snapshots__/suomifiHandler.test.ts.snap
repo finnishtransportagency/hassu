@@ -1,0 +1,256 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`suomifiHandler muistuttajan pdf viesti suomi.fi 1`] = `
+Object {
+  "hetu": "ABC",
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "sisalto": Object {
+      "data": Array [
+        116,
+        105,
+        101,
+        100,
+        111,
+        115,
+        116,
+        111,
+      ],
+      "type": "Buffer",
+    },
+  },
+  "vaylavirasto": false,
+  "ytunnus": undefined,
+}
+`;
+
+exports[`suomifiHandler muistuttajan pdf viesti suomi.fi 2`] = `
+Object {
+  "ExpressionAttributeNames": Object {
+    "#l": "lahetykset",
+  },
+  "ExpressionAttributeValues": Object {
+    ":status": Array [
+      Object {
+        "lahetysaika": "2024-02-05T15:57:50+02:00",
+        "tila": "OK",
+        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
+      },
+    ],
+    ":tyhjalista": Array [],
+  },
+  "Key": Object {
+    "id": "123",
+  },
+  "TableName": "Muistuttaja-localstack",
+  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
+}
+`;
+
+exports[`suomifiHandler muistuttajan sähköposti annettu 1`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu",
+    "text": "Muistutus on vastaanotettu
+
+Suunnitelman nimi: Projektin nimi
+
+Suunnitelman asiatunnus: ely123
+
+ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+test.txt
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
+exports[`suomifiHandler muistuttajan sähköposti annettu 2`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu",
+    "text": "Muistutus on vastaanotettu
+
+Suunnitelman nimi: Projektin nimi2
+
+Suunnitelman asiatunnus: vayla123
+
+Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+test.txt
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
+exports[`suomifiHandler muistuttajan sähköposti annettu 3`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu",
+    "text": "Muistutus on vastaanotettu
+
+Suunnitelman nimi: Projektin nimi3
+
+Suunnitelman asiatunnus: vayla123
+
+Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
+exports[`suomifiHandler muistuttajan viesti suomi.fi 1`] = `
+Object {
+  "hetu": "ABC",
+  "otsikko": "Muistutus on vastaanotettu",
+  "sisalto": "Muistutus on vastaanotettu
+
+Suunnitelman nimi: Projektin nimi
+
+Suunnitelman asiatunnus: ely123
+
+ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+test.txt
+",
+}
+`;
+
+exports[`suomifiHandler muistuttajan viesti suomi.fi paperiposti 1`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu",
+    "text": "Muistutus on vastaanotettu
+
+Suunnitelman nimi: Projektin nimi
+
+Suunnitelman asiatunnus: ely123
+
+ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+test.txt
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi 1`] = `
+Object {
+  "hetu": "ABC",
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "sisalto": Object {
+      "data": Array [
+        116,
+        105,
+        101,
+        100,
+        111,
+        115,
+        116,
+        111,
+      ],
+      "type": "Buffer",
+    },
+  },
+  "vaylavirasto": false,
+  "ytunnus": undefined,
+}
+`;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi 2`] = `
+Object {
+  "ExpressionAttributeNames": Object {
+    "#l": "lahetykset",
+  },
+  "ExpressionAttributeValues": Object {
+    ":status": Array [
+      Object {
+        "lahetysaika": "2024-02-05T15:57:50+02:00",
+        "tila": "OK",
+        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
+      },
+    ],
+    ":tyhjalista": Array [],
+  },
+  "Key": Object {
+    "id": "123",
+  },
+  "TableName": "Omistaja-pete",
+  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
+}
+`;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi epäonnistui 1`] = `
+Object {
+  "ExpressionAttributeNames": Object {
+    "#l": "lahetykset",
+  },
+  "ExpressionAttributeValues": Object {
+    ":status": Array [
+      Object {
+        "lahetysaika": "2024-02-05T15:57:50+02:00",
+        "tila": "VIRHE",
+        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
+      },
+    ],
+    ":tyhjalista": Array [],
+  },
+  "Key": Object {
+    "id": "123",
+  },
+  "TableName": "Omistaja-pete",
+  "UpdateExpression": "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
+}
+`;

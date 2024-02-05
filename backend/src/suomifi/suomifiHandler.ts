@@ -21,6 +21,8 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { translate } from "../util/localization";
 import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
+import { config } from "../config";
+
 
 export type SuomiFiSanoma = {
   muistuttajaId?: string;
@@ -38,7 +40,19 @@ type Kohde = {
   ytunnus?: string;
 };
 
+let mockSuomiFiClient: SuomiFiClient | undefined;
+
+export function setMockSuomiFiClient(client: SuomiFiClient) {
+  mockSuomiFiClient = client;
+}
+
 async function getClient(): Promise<SuomiFiClient> {
+  if (config.isInTest) {
+    if (!mockSuomiFiClient) {
+      throw new Error("Suomi.fi clientia ei ole asetettu");
+    }
+    return mockSuomiFiClient;
+  }
   // luodaan client aina uudestaan kun muuten viestin allekirjoituksen verifiointi epäonnistuu
   const now = Date.now();
   const cfg = await parameters.getSuomiFiConfig();
@@ -232,7 +246,7 @@ async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjek
       await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
       auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
     } else {
-      log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ?? "ei sähköpostiosoitetta"));
+      log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta"));
     }
   }
 }
