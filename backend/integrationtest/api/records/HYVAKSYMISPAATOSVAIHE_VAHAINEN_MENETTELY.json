@@ -215,8 +215,8 @@
     },
     "lyhytOsoite": "3c1d",
     "muistuttajat": [
-      "00000032-473f-49e2-a1d1-51228ae6f158",
-      "00000034-473f-49e2-a1d1-51228ae6f158"
+      "00000031-473f-49e2-a1d1-51228ae6f158",
+      "00000032-473f-49e2-a1d1-51228ae6f158"
     ],
     "nahtavillaoloVaihe": {
       "aineistoNahtavilla": [
@@ -650,7 +650,7 @@
           "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00",
-          "uuid": "00000035-473f-49e2-a1d1-51228ae6f158"
+          "uuid": "00000033-473f-49e2-a1d1-51228ae6f158"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
@@ -826,6 +826,10 @@
       "fileType": "AINEISTO",
       "publishDate": "2024-05-31T21:00:00.000Z"
     },
+    "nahtavillaolo/aineisto.zip": {
+      "ContentType": "application/octet-stream",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
     "nahtavillaolo/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -909,6 +913,9 @@
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
     },
+    "nahtavillaolo/1/aineisto.zip": {
+      "ContentType": "application/octet-stream"
+    },
     "nahtavillaolo/1/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -961,6 +968,9 @@
       "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
+    },
+    "nahtavillaolo/2/aineisto.zip": {
+      "ContentType": "application/octet-stream"
     },
     "nahtavillaolo/2/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",

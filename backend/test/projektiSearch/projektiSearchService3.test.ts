@@ -5,8 +5,9 @@ import { projektiSearchService } from "../../src/projektiSearch/projektiSearchSe
 import { parameters } from "../../src/aws/parameters";
 import * as projektiSearchAdapter from "../../src/projektiSearch/projektiSearchAdapter";
 import { expect } from "chai";
-import mocha from "mocha";
-import { mockOpenSearch } from "../../commonTestUtil/mockOpenSearch";
+import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
+import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
+import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 const projekti: DBProjekti = {
   oid: "1.2.246.578.5.1.2978288874.2711575506",
   asianhallinta: {
@@ -105,8 +106,7 @@ const projekti: DBProjekti = {
 };
 
 describe("ProjektiSearchService", () => {
-  mockOpenSearch();
-
+  
   beforeEach(() => {
     sinon.reset();
     sinon.restore();
@@ -120,6 +120,12 @@ describe("ProjektiSearchService", () => {
   it("should put projekti into public index if it has no aloituskuulutusjulkaisu", async () => {
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(openSearchClientYllapito, "putDocument");
+    sinon.stub(openSearchClientJulkinen[API.Kieli.SUOMI], "deleteDocument");
+    sinon.stub(openSearchClientJulkinen[API.Kieli.RUOTSI], "deleteDocument");
+    sinon.stub(openSearchClientIlmoitustauluSyote, "putDocument");
+    sinon.stub(openSearchClientIlmoitustauluSyote, "deleteDocument");
+    sinon.stub(openSearchClientIlmoitustauluSyote, "query").resolves({ status: 200 });
     const adaptToJulkinenIndexStub = sinon.stub(projektiSearchAdapter, "adaptProjektiToJulkinenIndex");
     await projektiSearchService.indexProjekti(projekti);
     expect(adaptToJulkinenIndexStub.notCalled);

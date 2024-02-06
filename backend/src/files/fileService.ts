@@ -213,7 +213,7 @@ export class FileService {
     }
   }
 
-  async getProjektiFile(oid: string, path: string): Promise<string | Buffer> {
+  async getProjektiFile(oid: string, path: string): Promise<Buffer> {
     const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
     let obj;
     const s3Client = getS3Client();

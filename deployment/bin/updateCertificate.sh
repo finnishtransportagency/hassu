@@ -26,8 +26,8 @@ aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/CloudfrontCer
 CERTIFICATE=$(sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' $WORKDIR/cert.pem)
 PRIVATEKEY=$(sed -n '/BEGIN PRIVATE KEY/,/END PRIVATE KEY/p' $WORKDIR/privatekey.pem)
 if [ "$ENV" == "dev" ] || [ "$ENV" == "prod" ]; then
-  aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/Certificate" --value "$CERTIFICATE" --type SecureString
-  aws ssm put-parameter --overwrite --region eu-west-1 --name "/$ENV/PrivateKey" --value "$PRIVATEKEY" --type SecureString
+  aws ssm put-parameter --overwrite --region eu-west-1 --name "/SuomiFiCertificate" --value "$CERTIFICATE" --type SecureString
+  aws ssm put-parameter --overwrite --region eu-west-1 --name "/SuomiFiPrivateKey" --value "$PRIVATEKEY" --type SecureString
 fi
 CN=$(openssl x509 -noout -subject -in $WORKDIR/cert.pem | awk -F= '{gsub(/^[ \t]+/,"",$6); print $6}')
 echo "Certificate $CN updated"

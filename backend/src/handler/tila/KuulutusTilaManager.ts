@@ -1,6 +1,6 @@
 import { Aineisto, DBProjekti, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin, requirePermissionMuokkaa } from "../../user";
-import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import {
   findJulkaisutWithTila,
   findJulkaisuWithTila,
@@ -21,6 +21,7 @@ import { AineistoMuokkausError, IllegalArgumentError } from "hassu-common/error"
 import { forEverySaameDo } from "../../projekti/adapter/common";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 
 export abstract class KuulutusTilaManager<
   T extends Omit<GenericKuulutus, "tila" | "kuulutusVaihePaattyyPaiva">,
@@ -300,11 +301,27 @@ export abstract class KuulutusTilaManager<
     }
   }
 
+  private getApprovalType() {
+    if (this.vaihe === Vaihe.ALOITUSKUULUTUS) {
+      return PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS;
+    } else if (this.vaihe === Vaihe.SUUNNITTELU) {
+      return PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS;
+    } else if (this.vaihe === Vaihe.NAHTAVILLAOLO) {
+      return PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO;
+    } else if (this.vaihe === Vaihe.HYVAKSYMISPAATOS) {
+      return PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE;
+    } else if (this.vaihe === Vaihe.JATKOPAATOS) {
+      return PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE;
+    } else {
+      return PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE;
+    }
+  }
+
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     await this.updateAsiaIdToProjekti(projekti);
     const approvedJulkaisu = await this.updateJulkaisuToBeApproved(await this.reloadProjekti(projekti), hyvaksyja);
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
-    await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);
+    await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva, this.getApprovalType());
     await this.sendApprovalMailsAndAttachments(projekti.oid);
     await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }

@@ -19,6 +19,7 @@ import { VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
   protected vaihe: Vaihe;
@@ -170,11 +171,11 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await this.uudelleenkuuluta(projekti);
   }
 
-  async updateProjektiSchedule(oid: string, synchronizationDate?: string | null): Promise<void> {
+  async updateProjektiSchedule(oid: string, synchronizationDate?: string | null, approvalType?: PublishOrExpireEventType): Promise<void> {
     const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
     if (!date || date.isBefore(nyt())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await projektiSchedulerService.synchronizeProjektiFiles(oid);
+      await projektiSchedulerService.synchronizeProjektiFiles(oid, approvalType);
     }
     await projektiSchedulerService.updateProjektiSynchronizationSchedule(oid);
   }

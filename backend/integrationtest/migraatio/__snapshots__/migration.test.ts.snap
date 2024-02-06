@@ -2177,7 +2177,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-PAK\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\",\\"date\\":\\"2022-01-02T00:00\\"}",
+      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-PAK\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\",\\"date\\":\\"2022-01-02T00:00\\",\\"approvalType\\":\\"PUBLISH_ALOITUSKUULUTUS\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1",

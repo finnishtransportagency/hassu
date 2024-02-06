@@ -1,25 +1,14 @@
 import { SSM } from "@aws-sdk/client-ssm";
-import { SuomiFiConfig, getSuomiFiClient } from "../src/viranomaispalvelutwsinterface/suomifi";
-import express, { Request } from "express";
+import { SuomiFiClient, SuomiFiConfig, getSuomiFiClient } from "../src/suomifi/viranomaispalvelutwsinterface/suomifi";
+import express from "express";
 import fs from "fs";
-import QueryString from "qs";
+import { LisaaKohteitaResponse, HaeAsiakkaitaResponse } from "../src/suomifi/viranomaispalvelutwsinterface";
 
 const app = express();
 const port = 8081;
-const endpoint = `http://localhost:${port}`;
-
-function logRequest(req: Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>) {
-  console.log("Headers:", req.headers);
-  const chunks: string[] = [];
-  req.on("data", (chunk) => chunks.push(chunk));
-  req.on("end", () => {
-    const payload = chunks.join("");
-    console.log("Request: %o", payload);
-  });
-}
+const localEndpoint = `http://localhost:${port}`;
 
 app.post("/tila", (req, res) => {
-  logRequest(req);
   res.send(
     `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
@@ -38,7 +27,6 @@ app.post("/tila", (req, res) => {
   );
 });
 app.post("/kohde", (req, res) => {
-  logRequest(req);
   res.send(`
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
@@ -68,7 +56,6 @@ app.post("/kohde", (req, res) => {
 });
 
 app.post("/viesti", (req, res) => {
-  logRequest(req);
   res.send(`
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
@@ -87,7 +74,6 @@ app.post("/viesti", (req, res) => {
 });
 
 app.post("/hae", (req, res) => {
-  logRequest(req);
   res.send(`
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
@@ -117,7 +103,6 @@ app.post("/hae", (req, res) => {
     </soapenv:Envelope>`);
 });
 app.post("/fault", (req, res) => {
-  logRequest(req);
   res.status(500).send(`
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
       <soapenv:Header xmlns:asi="http://www.suomi.fi/asiointitili"/>
@@ -134,14 +119,23 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+function isHaeAsiakkaitaResponse(response: any): response is HaeAsiakkaitaResponse {
+  return "HaeAsiakkaitaResult" in response;
+}
+
+function isLisaaKohteitaResponse(response: any): response is LisaaKohteitaResponse {
+  return "LisaaKohteitaResult" in response;
+}
+
+let soapClient: SuomiFiClient | undefined;
 const euWestSSMClient = new SSM({ region: "eu-west-1" });
 euWestSSMClient
   .getParameter({
-    Name: "/dev/Certificate",
+    Name: "SuomiFiCertificate",
     WithDecryption: true,
   })
   .catch((e) => {
-    throw new Error("Certificate not found");
+    throw new Error("SuomiFiCertificate not found");
   })
   .then((output) => {
     return output.Parameter?.Value;
@@ -149,11 +143,11 @@ euWestSSMClient
   .then((cert) => {
     return euWestSSMClient
       .getParameter({
-        Name: "/dev/PrivateKey",
+        Name: "SuomiFiPrivateKey",
         WithDecryption: true,
       })
       .catch((e) => {
-        throw new Error("PrivateKey not found");
+        throw new Error("SuomiFiPrivateKey not found");
       })
       .then((output) => {
         return output.Parameter?.Value;
@@ -161,7 +155,7 @@ euWestSSMClient
       .then((key) => {
         return euWestSSMClient
           .getParameter({
-            Name: "/dev/SuomiFiConfig",
+            Name: "SuomiFiConfig",
             WithDecryption: true,
           })
           .catch((e) => {
@@ -172,45 +166,56 @@ euWestSSMClient
           })
           .then((config) => {
             if (config && key && cert) {
-              const cfg: SuomiFiConfig = {};
+              const partialCfg: Partial<SuomiFiConfig> = {
+                laskutustunniste: "xxx",
+                laskutustunnisteely: "yyy",
+              };
               config.split("\n").forEach((e) => {
                 const v = e.split("=");
-                cfg[v[0] as keyof SuomiFiConfig] = v[1].trim();
+                partialCfg[v[0] as keyof SuomiFiConfig] = v[1].trim();
               });
+              const cfg = partialCfg as SuomiFiConfig;
+              const sign = process.argv.includes("--sign");
+              let endpoint: string | undefined;
+              if (process.argv.includes("--dryRun")) {
+                endpoint = `${localEndpoint}/${process.argv[2] ?? "tila"}`;
+              } else {
+                endpoint = sign ? cfg.endpoint : cfg.endpoint + "NonSigned";
+              }
               return getSuomiFiClient({
-                endpoint: `${cfg.endpoint ? cfg.endpoint : endpoint}/${process.argv[2] ?? "tila"}`,
-                privateKey: process.argv.includes("--sign") ? key : undefined,
-                publicCertificate: process.argv.includes("--sign") ? cert : undefined,
-                viranomaisTunnus: cfg.viranomaistunnus ?? "Viranomaistunnus VLS",
-                palveluTunnus: cfg.palvelutunnus ?? "Palvelutunnus VLS",
+                endpoint,
+                apiKey: cfg.apikey,
+                privateKey: sign ? key : undefined,
+                publicCertificate: sign ? cert : undefined,
+                viranomaisTunnus: cfg.viranomaistunnus,
+                palveluTunnus: cfg.palvelutunnus,
+                laskutusTunniste: cfg.laskutustunniste,
+                laskutusTunnisteEly: cfg.laskutustunnisteely,
               }).then((client) => {
+                soapClient = client;
                 if (process.argv.length === 2 || process.argv[2] === "tila") {
                   return client.rajapinnanTila();
                 } else if (process.argv[2] === "kohde") {
                   return client.lahetaInfoViesti({
-                    hetu: "010120-3319",
-                    otsikko: "Viestin otsikko",
-                    sisalto: "Viestin sisältö",
-                    lahiosoite: "Lahiosoite 1",
-                    nimi: "Matti Teppo",
-                    postinumero: "00100",
-                    postitoimipaikka: "Helsinki",
-                    maa: "FI",
+                    hetu: "010280-952L",
+                    otsikko: "VLS viestin otsikko",
+                    sisalto: "VLS viestin sisältö",
                   });
                 } else if (process.argv[2] === "viesti") {
                   return client.lahetaViesti({
-                    hetu: "010120-3319",
-                    lahiosoite: "Lahiosoite 1",
-                    nimi: "Matti Teppo",
-                    postinumero: "00100",
-                    postitoimipaikka: "Helsinki",
+                    hetu: "010280-952L",
+                    lahiosoite: "Henrikintie 14 B",
+                    nimi: "Tessa Testilä",
+                    postinumero: "00370",
+                    postitoimipaikka: "HELSINKI",
                     maa: "FI",
-                    otsikko: "Viestin otsikko",
-                    sisalto: "Viestin sisältö",
+                    otsikko: "VLS PDF viestin otsikko",
+                    sisalto: "VLS PDF viestin sisältö",
                     tiedosto: { kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) },
+                    vaylavirasto: true,
                   });
                 } else if (process.argv[2] === "hae") {
-                  return client.haeAsiakas("010120-3319");
+                  return client.haeAsiakas("010280-952L", "SSN");
                 } else if (process.argv[2] === "fault") {
                   return client.rajapinnanTila();
                 } else {
@@ -222,7 +227,19 @@ euWestSSMClient
       });
   })
   .then((response) => {
-    console.log("Response", response);
+    if (process.argv.includes("--debug")) {
+      console.log("XML Request: " + soapClient?.getSoapClient().lastRequest);
+      console.log("XML Response: " + soapClient?.getSoapClient().lastResponse);
+    }
+    if (isHaeAsiakkaitaResponse(response)) {
+      console.log(response.HaeAsiakkaitaResult?.TilaKoodi);
+      response.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.forEach((a) => console.log(a));
+    } else if (isLisaaKohteitaResponse(response)) {
+      console.log(response.LisaaKohteitaResult?.TilaKoodi);
+      response.LisaaKohteitaResult?.Kohteet?.Kohde?.forEach((a) => console.log(a));
+    } else {
+      console.log("Response", response);
+    }
     process.exit(0);
   })
   .catch((e) => {

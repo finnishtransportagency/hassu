@@ -21,6 +21,8 @@ import { AineistoMuokkausError } from "hassu-common/error";
 import { LausuntoPyynnonTaydennys } from "../database/model";
 import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/ProjektiTiedostoManager/LausuntoPyynnonTaydennysTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
+import { PublishOrExpireEventType } from "./projektiScheduleManager";
+import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -405,6 +407,12 @@ export const handlerFactory = (event: SQSEvent) => async () => {
 
       if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
         await projektiSearchService.indexProjekti(projekti);
+        if (
+          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ||
+          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE
+        ) {
+          await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+        }
       }
       if (!successfulSynchronization) {
         // Yritä uudelleen minuutin päästä

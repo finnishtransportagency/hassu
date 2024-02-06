@@ -76,6 +76,8 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";
 import { cleanupHyvaksymisPaatosVaiheTimestamps, cleanupNahtavillaoloTimestamps } from "../../commonTestUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { mockClient } from "aws-sdk-client-mock";
+import { SQSClient, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -86,6 +88,8 @@ describe("Api", () => {
   before(async () => {
     mockSaveProjektiToVelho();
     parametersStub.asianhallintaEnabled = true;
+    const sqsMock = mockClient(SQSClient);
+    sqsMock.on(SendMessageBatchCommand).resolves({});
   });
 
   after(() => {

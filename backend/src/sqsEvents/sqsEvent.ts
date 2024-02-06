@@ -1,3 +1,5 @@
+import { PublishOrExpireEventType } from "./projektiScheduleManager";
+
 export enum SqsEventType {
   IMPORT = "IMPORT", // deprecated, kept until next production deployment
   SYNCHRONIZE = "SYNCHRONIZE",
@@ -23,4 +25,5 @@ export type SqsEvent = {
   retriesLeft?: number;
   reason?: string;
   date?: string;
+  approvalType?: PublishOrExpireEventType;
 };

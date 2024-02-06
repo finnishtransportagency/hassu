@@ -1036,6 +1036,11 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "nahtavillaolo/1/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
+    },
     "nahtavillaolo/1/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -1154,6 +1159,12 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2024-01-01T00:00:00+02:00",
     },
+    "nahtavillaolo/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
+      "publishDate": "2024-01-01T00:00:00+02:00",
+    },
     "nahtavillaolo/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -1262,32 +1273,6 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
       "kirjaamo.etela-savo@ely-keskus.fi",
     ],
   },
-  Object {
-    "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
-    "text": "
-Muistutus vastaanotettu
-2024-01-01T00:00
-
-Nimi
-Etunimi Sukunimi
-
-Postiosoite
-Katuosoite 123 03132 Postitoimipaikka
-
-Sähköposti
-etunimi.sukunimi@org.fi
-
-Puhelinnumero
-1234567890
-
-Suunnitelman asiatunnus
-HASSU/123/2023
-
-Muistutus
-Muistutus 1
-",
-    "to": "etunimi.sukunimi@org.fi",
-  },
 ]
 `;
 
@@ -1322,7 +1307,7 @@ Muistutus 1
     "to": "kirjaamo@vayla.vayla",
   },
   Object {
-    "subject": "Muistutus - 00000033-473f-49e2-a1d1-51228ae6f158",
+    "subject": "Muistutus - 00000032-473f-49e2-a1d1-51228ae6f158",
     "text": "
 Muistutus vastaanotettu
 2024-01-01T00:00
@@ -2034,7 +2019,7 @@ Object {
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
         "tila": "VALMIS",
         "tuotu": "2024-01-01T00:00",
-        "uuid": "00000035-473f-49e2-a1d1-51228ae6f158",
+        "uuid": "00000033-473f-49e2-a1d1-51228ae6f158",
       },
       "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
@@ -2546,6 +2531,11 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "nahtavillaolo/1/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
+    },
     "nahtavillaolo/1/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
@@ -2608,6 +2598,11 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/2/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
     },
     "nahtavillaolo/2/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
@@ -2725,6 +2720,12 @@ Object {
       "checksum": "ABC123",
       "expirationDate": "2024-07-01T23:59:59+03:00",
       "fileType": "AINEISTO",
+      "publishDate": "2024-06-01T00:00:00+03:00",
+    },
+    "nahtavillaolo/aineisto.zip": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "application/octet-stream",
+      "checksum": "ABC123",
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/aineisto3.txt": FileMetadata {

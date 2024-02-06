@@ -753,8 +753,8 @@
     },
     "lyhytOsoite": "3c1d",
     "muistuttajat": [
-      "00000034-0be9-455d-a434-0fab721acaa2",
-      "00000036-0be9-455d-a434-0fab721acaa2"
+      "00000033-0be9-455d-a434-0fab721acaa2",
+      "00000034-0be9-455d-a434-0fab721acaa2"
     ],
     "nahtavillaoloVaihe": {
       "aineistoMuokkaus": null,
@@ -1174,7 +1174,7 @@
           }
         ],
         "aineistopaketti": "/nahtavillaolo/1/aineisto.zip",
-        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -1241,7 +1241,7 @@
           "tiedosto": "/deleted/nahtavillaolo/2/lähetekirje.eml",
           "tila": "VALMIS",
           "tuotu": null,
-          "uuid": "00000038-0be9-455d-a434-0fab721acaa2"
+          "uuid": "00000036-0be9-455d-a434-0fab721acaa2"
         },
         "muistutusoikeusPaattyyPaiva": "2024-01-31",
         "muokkaaja": "A000111",
@@ -1499,8 +1499,8 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000037-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000037-0be9-455d-a434-0fab721acaa2",
+      "00000035-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000035-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -2239,6 +2239,11 @@
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
       "publishDate": "2025-01-01T22:00:00.000Z"
     },
+    "nahtavillaolo/aineisto.zip": {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto.zip",
+      "ContentType": "application/octet-stream",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
     "suunnittelusopimus/logo.png": {
       "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
@@ -2258,6 +2263,14 @@
       "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE"
+    },
+    "nahtavillaolo/1/aineisto.zip": {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto.zip",
+      "ContentType": "application/octet-stream"
+    },
+    "nahtavillaolo/2/aineisto.zip": {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto.zip",
+      "ContentType": "application/octet-stream"
     },
     "suunnittelusopimus/logo.png": {
       "ContentDisposition": "inline; filename*=UTF-8''logo.png",

@@ -1,3 +1,4 @@
+import { AsiakasAttributes } from "./Asiakas";
 
 /**
  * Asiakas
@@ -6,9 +7,10 @@
  */
 export interface Asiakas1 {
     /** xsd:int */
-    Tila?: string;
+    Tila?: number;
     /** xsd:dateTime */
     TilaPvm?: string;
     /** xsd:int */
     TiliPassivoitu?: string;
+    attributes: AsiakasAttributes;
 }

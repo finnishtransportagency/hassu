@@ -3,6 +3,7 @@ import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
 import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
+import { PublishOrExpireEventType } from "./projektiScheduleManager";
 
 class EventSqsClient {
   async zipNahtavillaoloAineisto(oid: string) {
@@ -33,8 +34,8 @@ class EventSqsClient {
     await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_AND_FILES_CHANGED, oid });
   }
 
-  async synchronizeAineisto(oid: string) {
-    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid });
+  async synchronizeAineisto(oid: string, approvalType?: PublishOrExpireEventType) {
+    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid, approvalType });
   }
 
   async addEventToSqsQueue(params: SqsEvent, retry?: boolean) {

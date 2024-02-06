@@ -24,6 +24,7 @@ import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import { DBProjekti } from "../database/model";
+import { getOmistajaTableName } from "../util/environment";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -47,19 +48,16 @@ export type DBOmistaja = {
   paikkakunta?: string | null;
   maakoodi?: string | null;
   expires?: number;
+  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
 };
 
 let mmlClient: MmlClient | undefined = undefined;
 
 async function getClient() {
   if (mmlClient === undefined) {
-    const endpoint = await parameters.getParameter("KtjBaseUrl");
-    const apiKey = await parameters.getParameter("MmlApiKey");
-    if (endpoint && apiKey) {
-      mmlClient = getMmlClient({ endpoint, apiKey });
-    } else {
-      throw new Error("Parametria KtjBaseUrl tai MmlApiKey ei löydy");
-    }
+    const endpoint = await parameters.getKtjBaseUrl();
+    const apiKey = await parameters.getMmlApiKey();
+    mmlClient = getMmlClient({ endpoint, apiKey });
   }
   return mmlClient;
 }
@@ -68,13 +66,6 @@ function* chunkArray<T>(arr: T[], stride = 1) {
   for (let i = 0; i < arr.length; i += stride) {
     yield arr.slice(i, Math.min(i + stride, arr.length));
   }
-}
-
-function getTableName() {
-  if (process.env.TABLE_OMISTAJA) {
-    return process.env.TABLE_OMISTAJA;
-  }
-  throw new Error("Ympäristömuuttujaa TABLE_OMISTAJA ei löydy");
 }
 
 function suomifiLahetys(omistaja: DBOmistaja): boolean {
@@ -159,7 +150,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         await getDynamoDBDocumentClient().send(
           new BatchWriteCommand({
             RequestItems: {
-              [getTableName()]: putRequests,
+              [getOmistajaTableName()]: putRequests,
             },
           })
         );
@@ -233,7 +224,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   for (const omistaja of input.omistajat) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
-      const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getTableName(), Key: { id: omistaja.id } }));
+      const response = await getDynamoDBDocumentClient().send(new GetCommand({ TableName: getOmistajaTableName(), Key: { id: omistaja.id } }));
       dbOmistaja = response.Item as DBOmistaja;
       if (!dbOmistaja) {
         throw new Error("Omistajaa " + omistaja.id + " ei löydy");
@@ -260,7 +251,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
-    await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getTableName(), Item: dbOmistaja }));
+    await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getOmistajaTableName(), Item: dbOmistaja }));
     omistajat.push(dbOmistaja);
   }
   if (uudetOmistajat.length > 0) {
@@ -318,7 +309,7 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
     log.info("Haetaan kiinteistönomistajia", { tunnukset: ids });
     const command = new BatchGetCommand({
       RequestItems: {
-        [getTableName()]: {
+        [getOmistajaTableName()]: {
           Keys: ids.map((key) => ({
             id: key,
           })),
@@ -326,7 +317,7 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
       },
     });
     const response = await getDynamoDBDocumentClient().send(command);
-    const dbOmistajat = response.Responses ? (response.Responses[getTableName()] as DBOmistaja[]) : [];
+    const dbOmistajat = response.Responses ? (response.Responses[getOmistajaTableName()] as DBOmistaja[]) : [];
     dbOmistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
     return {
       __typename: "KiinteistonOmistajat",
