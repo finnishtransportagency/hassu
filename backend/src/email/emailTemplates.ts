@@ -342,6 +342,7 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
+  const idx = muistutus.liite?.lastIndexOf("/") ?? -1;
   const text = `Muistutus on vastaanotettu
 
 Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
@@ -360,7 +361,7 @@ ${muistutus.muistutus ?? ""}
 ${
   muistutus.liite
     ? `Muistutuksen mukana toimitettu seuraavannimiset liitteet:
-${muistutus.liite}`
+${muistutus.liite.substring(idx + 1)}`
     : ""
 }
 `;

@@ -117,7 +117,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    this.createSuomiFiLambda(suomiFiSQS, vpc);
+    this.createSuomiFiLambda(suomiFiSQS, vpc, config);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -522,7 +522,7 @@ export class HassuBackendStack extends Stack {
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 
-  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc) {
+  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config) {
     const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
       functionName: "hassu-suomifi-" + Config.env,
       runtime: lambdaRuntime,
@@ -530,7 +530,7 @@ export class HassuBackendStack extends Stack {
       entry: `${__dirname}/../../backend/src/suomifi/suomifiHandler.ts`,
       handler: "handleEvent",
       memorySize: 1024,
-      timeout: Duration.minutes(1),
+      timeout: Duration.minutes(10),
       bundling: {
         sourceMap: false,
         minify: true,
@@ -558,6 +558,7 @@ export class HassuBackendStack extends Stack {
         TABLE_OMISTAJA: this.props.omistajaTable.tableName,
         TABLE_MUISTUTTAJA: this.props.muistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
       },
       tracing: Tracing.ACTIVE,
@@ -575,7 +576,7 @@ export class HassuBackendStack extends Stack {
       })
     );
     suomiFiSQS.grantConsumeMessages(suomiFiLambda);
-    suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 10, reportBatchItemFailures: true }));
+    suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
@@ -874,7 +875,7 @@ export class HassuBackendStack extends Stack {
       queueName: "suomifi-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(30),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.days(1),
+      retentionPeriod: Duration.hours(1),
     });
     new ssm.StringParameter(this, "SuomiFiSQSUrl", {
       description: "Generated SuomiFiSQSUrl",

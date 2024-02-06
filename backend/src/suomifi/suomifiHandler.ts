@@ -332,7 +332,6 @@ async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventTy
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
-  const batchItemFailures = [];
   log.info("SQS sanomien määrä " + event.Records.length);
   for (const record of event.Records) {
     try {
@@ -347,19 +346,14 @@ const handlerFactory = (event: SQSEvent) => async () => {
       }
     } catch (e) {
       log.error("Suomi.fi viestin käsittely epäonnistui: " + e);
-      batchItemFailures.push({ ItemIdentifier: record.messageId });
+      throw e;
     }
   }
-  return batchItemFailures;
 };
 
 export const handleEvent = async (event: SQSEvent) => {
   setupLambdaMonitoring();
-  const batchItemFailures = await wrapXRayAsync("handler", handlerFactory(event));
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ batchItemFailures }),
-  };
+  await wrapXRayAsync("handler", handlerFactory(event));
 };
 
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {

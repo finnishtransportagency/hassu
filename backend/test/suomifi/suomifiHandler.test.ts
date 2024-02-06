@@ -301,10 +301,7 @@ describe("suomifiHandler", () => {
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
-    const response = await handleEvent(msg as SQSEvent);
-    const batchItemFailures = JSON.parse(response.body).batchItemFailures;
-    expect(response.statusCode).to.equal(200);
-    expect(batchItemFailures.length).be.equal(0);
+    await handleEvent(msg as SQSEvent);
     expect(request.pdfViesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
     const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
@@ -346,10 +343,13 @@ describe("suomifiHandler", () => {
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body), messageId: "123456" }] };
-    const response = await handleEvent(msg as SQSEvent);
-    const batchItemFailures = JSON.parse(response.body).batchItemFailures;
-    expect(batchItemFailures.length).be.equal(1);
-    expect(batchItemFailures[0].ItemIdentifier).be.equal("123456");
+    try {
+      await handleEvent(msg as SQSEvent);
+      fail("Pitäisi heittää poikkeus");
+    } catch (e) {
+      assert(e instanceof Error);
+      expect(e.message).to.equal("Suomi.fi pdf-viestin lähetys epäonnistui");
+    }
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
     const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
     assert(input.ExpressionAttributeValues);
