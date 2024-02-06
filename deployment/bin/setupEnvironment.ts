@@ -32,6 +32,8 @@ async function main() {
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,
+    YLLAPITO_BUCKET_NAME: Config.yllapitoBucketName,
+    PDF_GENERATOR_LAMBDA_ARN: backendStackOutputs.PdfGeneratorLambda,
     ...environmentVariables,
   });
 

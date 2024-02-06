@@ -129,6 +129,7 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         osoite: cognitoKayttaja["custom:lahiosoite"] ?? cognitoKayttaja["custom:ulkomainenlahiosoite"],
         postinumero: cognitoKayttaja["custom:postinumero"],
         postitoimipaikka: cognitoKayttaja["custom:postitoimipaikka"] ?? cognitoKayttaja["custom:ulkomainenkunta"],
+        maakoodi: cognitoKayttaja["custom:maakoodi"],
       };
     } else {
       return {

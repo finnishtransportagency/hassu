@@ -56,6 +56,7 @@ export type DBMuistuttaja = {
   oid: string;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
   liite?: string | null;
+  maakoodi?: string | null;
 };
 
 async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
@@ -109,6 +110,7 @@ class MuistutusHandler {
       lahiosoite: muistutus.katuosoite,
       postinumero: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[0],
       postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ").slice(1).join(" "),
+      maakoodi: muistutus.maakoodi,
       sahkoposti: muistutus.sahkoposti,
       puhelinnumero: muistutus.puhelinnumero,
       vastaanotettu: muistutus.vastaanotettu,

@@ -79,3 +79,5 @@ cypress/downloads/downloads.html
 /cdk.context.json
 .vscode/settings.json
 static/graphql-playground/index.html
+testpdf.pdf
+backend/test/asiakirja/lambda/*.pdf

@@ -21,7 +21,7 @@ export abstract class AbstractPdf {
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
-  private logo?: string | Buffer;
+  protected logo?: string | Buffer;
 
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
@@ -238,10 +238,10 @@ export abstract class AbstractPdf {
     }
   }
 
-  private appendHeader() {
+  protected appendHeader(x = 400) {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, 19, 32, { height: 75 });
-    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), 400, 64);
+    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), x, 64);
     this.doc.moveDown(3);
   }
 
@@ -254,12 +254,16 @@ export abstract class AbstractPdf {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
+  protected getIndention() {
+    return INDENTATION_BODY;
+  }
+
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     this.logo = await this.loadLogo();
     this.doc.addStructure(
       this.doc.struct("Document", {}, () => {
         this.appendHeader();
-        this.doc.text("", INDENTATION_BODY);
+        this.doc.text("", this.getIndention());
       })
     );
 

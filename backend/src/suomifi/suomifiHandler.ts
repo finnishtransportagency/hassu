@@ -12,16 +12,20 @@ import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, Muistutus } from "../database/model";
+import { AsiakirjaTyyppi, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { DBProjekti, Muistutus, SuunnitteluSopimus } from "../database/model";
 import { getSQS } from "../aws/clients/getSQS";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
 import { fileService } from "../files/fileService";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
-import { translate } from "../util/localization";
 import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
+import { createPDFFileName } from "../asiakirja/pdfFileName";
+import { EnhancedPDF, NahtavillaoloKuulutusAsiakirjaTyyppi, determineAsiakirjaMuoto } from "../asiakirja/asiakirjaTypes";
+import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
+import { invokeLambda } from "../aws/lambda";
+import PdfMerger from "pdf-merger-js";
 
 export type SuomiFiSanoma = {
   muistuttajaId?: string;
@@ -35,6 +39,7 @@ type Kohde = {
   lahiosoite: string;
   postinumero: string;
   postitoimipaikka: string;
+  maakoodi: string;
   hetu?: string;
   ytunnus?: string;
 };
@@ -148,8 +153,49 @@ async function paivitaLahetysStatus(id: string, omistaja: boolean, success: bool
   }
 }
 
-async function generatePdf(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
-  // TODO: kutsu pdf lambdaa, testausta varten haetaan pdf s3 bucketista
+type GeneratedPdf = {
+  file: Buffer;
+  tiedostoNimi: string;
+};
+
+function createGenerateEvent(
+  tyyppi: PublishOrExpireEventType,
+  asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
+  projektiFromDB: DBProjekti,
+  kohde: Kohde
+): GeneratePDFEvent | undefined {
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
+    return {
+      createNahtavillaoloKuulutusPdf: {
+        asiakirjaTyyppi,
+        asianhallintaPaalla: false,
+        kayttoOikeudet: [],
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        nahtavillaoloVaihe: projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1],
+        oid: projektiFromDB.oid,
+        velho: projektiFromDB.velho!,
+        vahainenMenettely: projektiFromDB.vahainenMenettely,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus as SuunnitteluSopimus | undefined,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka.toUpperCase(),
+        },
+      },
+    };
+  }
+}
+
+export async function generatePdf(
+  projektiFromDB: DBProjekti,
+  tyyppi: PublishOrExpireEventType,
+  kohde: Kohde
+): Promise<GeneratedPdf | undefined> {
   let path: PathTuple | undefined;
   if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
     path = new ProjektiPaths(projektiFromDB.oid).nahtavillaoloVaihe(projektiFromDB.nahtavillaoloVaihe);
@@ -158,20 +204,40 @@ async function generatePdf(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEv
     return;
   }
   try {
-    const tiedostoNimi = translate("tiedostonimi.T415", Kieli.SUOMI) as string;
+    const asiakirjaTyyppi = AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+    const files: { file: Buffer; tiedostoNimi: string }[] = [];
+    const result = await invokeLambda(
+      config.pdfGeneratorLambdaArn,
+      true,
+      JSON.stringify(createGenerateEvent(tyyppi, asiakirjaTyyppi, projektiFromDB, kohde))
+    );
+    const response = JSON.parse(result!) as EnhancedPDF;
+    files.push({ file: Buffer.from(response.sisalto, "base64"), tiedostoNimi: response.nimi });
+    const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
+    const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
+    if (projektiFromDB.kielitiedot?.toissijainenKieli === Kieli.RUOTSI || projektiFromDB.kielitiedot?.ensisijainenKieli === Kieli.RUOTSI) {
+      const tiedostoNimiSV = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.RUOTSI) + ".pdf";
+      const file = await fileService.getProjektiFile(projektiFromDB.oid, "/" + path.yllapitoPath + "/" + tiedostoNimiSV);
+      files.push({ file, tiedostoNimi: tiedostoNimiSV });
+    }
+    const merger = new PdfMerger();
+    for (const file of files) {
+      await merger.add(file.file);
+    }
+    merger.setMetadata({ creator: "VLS", producer: "Valtion liikenneväylien suunnittelu", title: tiedostoNimi });
     return {
-      file: await fileService.getProjektiFile(projektiFromDB.oid, "/" + path.yllapitoPath + "/" + tiedostoNimi + ".pdf"),
+      file: await merger.saveAsBuffer(),
       tiedostoNimi,
-      tyyppi,
     };
   } catch (e) {
-    log.error("PDF generointi epäonnistui", e);
+    console.error(e);
+    throw new Error("PDF generointi epäonnistui");
   }
 }
 
 async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaja: boolean, tyyppi: PublishOrExpireEventType) {
   try {
-    const pdf = await generatePdf(projektiFromDB, tyyppi);
+    const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
     if (!pdf) {
       return;
     }
@@ -182,7 +248,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
       lahiosoite: kohde.lahiosoite,
       postinumero: kohde.postinumero,
       postitoimipaikka: kohde.postitoimipaikka,
-      maa: "FI",
+      maa: kohde.maakoodi,
       hetu: kohde.hetu,
       ytunnus: kohde.ytunnus,
       tiedosto: {
@@ -293,6 +359,7 @@ async function handleMuistuttaja(muistuttajaId: string, tyyppi?: PublishOrExpire
           postinumero: muistuttaja.postinumero!,
           postitoimipaikka: muistuttaja.postitoimipaikka!,
           hetu: muistuttaja.henkilotunnus!,
+          maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
         },
         false,
         tyyppi
@@ -321,6 +388,7 @@ async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventTy
         postitoimipaikka: omistaja.paikkakunta!,
         hetu: omistaja.henkilotunnus,
         ytunnus: omistaja.ytunnus,
+        maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
       },
       true,
       tyyppi
@@ -363,10 +431,12 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
       const msg: SuomiFiSanoma = { omistajaId: id, tyyppi };
       viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
     });
-    projektiFromDB.muistuttajat?.forEach((id) => {
-      const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
-      viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
-    });
+    if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+      projektiFromDB.muistuttajat?.forEach((id) => {
+        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
+        viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
+      });
+    }
     if (viestit.length > 0) {
       const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestit });
       response.Failed?.forEach((v) => {

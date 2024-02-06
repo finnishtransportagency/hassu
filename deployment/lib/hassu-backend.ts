@@ -56,6 +56,7 @@ export type BackendStackOutputs = {
   AppSyncAPIKey?: string;
   AppSyncAPIURL: string;
   EventSqsUrl: string;
+  PdfGeneratorLambda: string;
 };
 
 export const backendStackName = "hassu-backend-" + Config.env;
@@ -117,7 +118,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    this.createSuomiFiLambda(suomiFiSQS, vpc, config);
+    this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -522,7 +523,7 @@ export class HassuBackendStack extends Stack {
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 
-  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config) {
+  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config, pdfGeneratorLambda: NodejsFunction) {
     const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
       functionName: "hassu-suomifi-" + Config.env,
       runtime: lambdaRuntime,
@@ -560,6 +561,7 @@ export class HassuBackendStack extends Stack {
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+        PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -581,6 +583,7 @@ export class HassuBackendStack extends Stack {
     this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
+    pdfGeneratorLambda.grantInvoke(suomiFiLambda);
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
@@ -630,6 +633,8 @@ export class HassuBackendStack extends Stack {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         NODE_OPTIONS: "--enable-source-maps",
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+        ENVIRONMENT: Config.env,
+        INFRA_ENVIRONMENT: Config.infraEnvironment,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -640,6 +645,9 @@ export class HassuBackendStack extends Stack {
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
     this.grantInternalBucket(pdfGeneratorLambda); // Vapaapäivien cachetusta varten
     this.grantYllapitoBucketRead(pdfGeneratorLambda); // Logon lukemista varten pdf:iin
+    new CfnOutput(this, "PdfGeneratorLambda", {
+      value: pdfGeneratorLambda.functionArn,
+    });
     return pdfGeneratorLambda;
   }
 
@@ -875,7 +883,7 @@ export class HassuBackendStack extends Stack {
       queueName: "suomifi-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(30),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.hours(1),
+      retentionPeriod: Duration.minutes(35),
     });
     new ssm.StringParameter(this, "SuomiFiSQSUrl", {
       description: "Generated SuomiFiSQSUrl",

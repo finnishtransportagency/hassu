@@ -27,6 +27,13 @@ export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
 >;
 
+export type Osoite = {
+  nimi: string;
+  katuosoite: string;
+  postinumero: string;
+  postitoimipaikka: string;
+};
+
 export type CreateNahtavillaoloKuulutusPdfOptions = {
   oid: string;
   lyhytOsoite: string | undefined | null;
@@ -41,6 +48,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  osoite?: Osoite
 };
 
 export type CreatePalautteetPdfOptions = {

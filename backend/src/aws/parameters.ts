@@ -31,7 +31,7 @@ class Parameters {
     } else {
       name = paramName;
     }
-    if (config.isInTest) {
+    if (config.isInTest || process.env.USE_SSM) {
       const credentials = defaultProvider({ profile: "hassudev" });
       const ssm = new SSM({ region: "eu-west-1", credentials });
       try {
