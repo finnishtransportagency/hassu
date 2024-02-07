@@ -317,5 +317,9 @@ export async function poistaKiinteistonOmistajat(oid: string, poistettavatOmista
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
   await getProjektiAndCheckPermissions(variables.oid);
-  return omistajaSearchService.searchOmistajat(variables);
+  // Onko OK, että logitetaan käyttäjähaku query?
+  log.info("Haetaan kiinteistönomistajatiedot", variables);
+  const kiinteistonOmistajatResponse = await omistajaSearchService.searchOmistajat(variables);
+  kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
+  return kiinteistonOmistajatResponse;
 }
