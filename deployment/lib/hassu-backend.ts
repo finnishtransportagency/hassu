@@ -156,6 +156,9 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
     const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
+    const omistajaSearchIndexer = this.createOmistajaSearchIndexer(commonEnvironmentVariables);
+    this.attachDatabaseToLambda(omistajaSearchIndexer, true);
+
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     this.createAndProvideSchedulerExecutionRole(eventSQS, aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
@@ -166,6 +169,8 @@ export class HassuBackendStack extends Stack {
       julkinenBackendLambda,
       searchDomain
     );
+
+    searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", omistajaSearchIndexer);
 
     const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda, true);
@@ -289,6 +294,64 @@ export class HassuBackendStack extends Stack {
     );
 
     const indexerQueue = this.createIndexerQueue();
+    streamHandler.node.addDependency(indexerQueue);
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
+    streamHandler.addEventSource(new SqsEventSource(indexerQueue, { batchSize: 1, maxConcurrency: 10 }));
+    return streamHandler;
+  }
+
+  private createOmistajaSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
+    const resourcePrefix = "arn:aws:lambda:eu-west-1:" + this.account + ":function:";
+    const functionName = "hassu-omistaja-dynamodb-stream-handler-" + Config.env;
+    const streamHandler = new NodejsFunction(this, "OmistajaDynamoDBStreamHandler", {
+      functionName,
+      runtime: lambdaRuntime,
+      entry: `${__dirname}/../../backend/src/projektiSearch/omistajaSearch/omistajaDynamoDBStreamHandler.ts`,
+      handler: "handleDynamoDBEvents",
+      memorySize: 256,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        externalModules,
+      },
+      environment: {
+        HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
+        ...commonEnvironmentVariables,
+      },
+      timeout: Duration.seconds(120),
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    this.addPermissionsForMonitoring(streamHandler);
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [resourcePrefix + functionName],
+      })
+    );
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
+        resources: ["*"],
+      })
+    );
+
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.props.kiinteistonomistajaTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+
+    const indexerQueue = this.createOmistajaIndexerQueue();
     streamHandler.node.addDependency(indexerQueue);
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
@@ -549,7 +612,9 @@ export class HassuBackendStack extends Stack {
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/suomifi/viranomaispalvelutwsinterface/Viranomaispalvelut* ${outputDir}`,
+              `${path.normalize(
+                "./node_modules/.bin/copyfiles"
+              )} -f -u 1 ${inputDir}/backend/src/suomifi/viranomaispalvelutwsinterface/Viranomaispalvelut* ${outputDir}`,
             ];
           },
           afterBundling(): string[] {
@@ -913,6 +978,20 @@ export class HassuBackendStack extends Stack {
     new ssm.StringParameter(this, "IndexerSQSUrl", {
       description: "Generated IndexerSQSUrl",
       parameterName: "/" + Config.env + "/outputs/IndexerSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
+  }
+
+  private createOmistajaIndexerQueue() {
+    const queue = new Queue(this, "OmistajaIndexer", {
+      queueName: "omistaja-indexer-" + Config.env,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    new ssm.StringParameter(this, "OmistajaIndexerSQSUrl", {
+      description: "Generated OmistajaIndexerSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/OmistajaIndexerSQSUrl",
       stringValue: queue.queueUrl,
     });
     return queue;

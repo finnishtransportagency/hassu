@@ -61,6 +61,30 @@ export default class OpenSearchClient {
     return this.delete("");
   }
 
+  async createIndex(settings: any, mappings: any): Promise<unknown> {
+    const body = JSON.stringify({ settings, mappings });
+    return this.put("", body);
+  }
+
+  async indexExists(): Promise<boolean> {
+    const request = new HttpRequest({
+      headers: {
+        host: domain,
+      },
+      query: { pretty: "true" },
+      hostname: domain,
+      method: "HEAD",
+      path: this.index,
+    });
+    try {
+      const response = await sendSignedRequest(request, "es");
+      return response.statusCode === 200;
+    } catch (e) {
+      log.info("No index found", e);
+    }
+    return false;
+  }
+
   async query(query: SearchOpts): Promise<any> {
     const body = JSON.stringify(query);
     log.info("query " + this.index, { query });

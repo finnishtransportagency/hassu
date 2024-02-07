@@ -625,16 +625,16 @@ export abstract class AbstractApi {
     muutOmistajat: boolean,
     onlyKiinteistotunnus: boolean,
     query: string | null | undefined,
-    start: number,
-    end?: number | null | undefined
+    sivu: number | null | undefined,
+    sivuKoko: number | null | undefined
   ): Promise<KiinteistonOmistajat> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
       muutOmistajat,
       onlyKiinteistotunnus,
       query,
-      start,
-      end,
+      sivu,
+      sivuKoko,
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 

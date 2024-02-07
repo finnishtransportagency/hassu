@@ -79,8 +79,9 @@ const TableAccordionDetails = styled(
     const [hakutulosMaara, setHakutulosMaara] = useState<number>(0);
     // Sivutus alkaa yhdestä
     const [initialSearchDone, setInitialSearchDone] = useState(false);
-    const [onlyKiinteistotunnus, setOnlyKiinteistotunnus] = useState(true);
+    const onlyKiinteistotunnus = false;
     const [query, setQuery] = useState<string | undefined>(undefined);
+    const [sivu, setSivu] = useState(0);
 
     const { withLoadingSpinner } = useLoadingSpinner();
     const api = useApi();
@@ -90,16 +91,17 @@ const TableAccordionDetails = styled(
         appendToOmistajat: boolean,
         onlyKiinteistotunnus: boolean,
         query: string | undefined,
-        start: number,
-        end?: number,
+        sivu: number,
+        sivunKoko: number | undefined,
         callback?: () => Promise<void>
       ) => {
         withLoadingSpinner(
           (async () => {
             try {
-              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, onlyKiinteistotunnus, query, start, end);
+              const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, onlyKiinteistotunnus, query, sivu, sivunKoko);
               setHakutulosMaara(response.hakutulosMaara);
               setOmistajat(appendToOmistajat ? [...omistajat, ...response.omistajat] : response.omistajat);
+              setSivu(sivu);
               await callback?.();
             } catch {}
           })()
@@ -109,12 +111,12 @@ const TableAccordionDetails = styled(
     );
 
     const getNextPage = useCallback(() => {
-      searchOmistajat(true, onlyKiinteistotunnus, query, omistajat.length, omistajat.length + PAGE_SIZE);
-    }, [searchOmistajat, onlyKiinteistotunnus, query, omistajat.length]);
+      searchOmistajat(true, onlyKiinteistotunnus, query, sivu + 1, PAGE_SIZE);
+    }, [searchOmistajat, onlyKiinteistotunnus, query, sivu]);
 
     const toggleShowHideAll = useCallback(() => {
       if (omistajat.length < hakutulosMaara) {
-        searchOmistajat(false, onlyKiinteistotunnus, query, omistajat.length, hakutulosMaara);
+        searchOmistajat(false, onlyKiinteistotunnus, query, 0, hakutulosMaara);
       } else {
         searchOmistajat(false, onlyKiinteistotunnus, query, 0, PAGE_SIZE);
       }
@@ -128,11 +130,11 @@ const TableAccordionDetails = styled(
       }
     }, [expanded, initialSearchDone, searchOmistajat, onlyKiinteistotunnus, query]);
 
-    const toggleTiedotVisible = useCallback(() => {
-      searchOmistajat(false, !onlyKiinteistotunnus, query, 0, omistajat.length, async () => {
-        setOnlyKiinteistotunnus(!onlyKiinteistotunnus);
-      });
-    }, [searchOmistajat, onlyKiinteistotunnus, query, omistajat.length]);
+    // const toggleTiedotVisible = useCallback(() => {
+    //   searchOmistajat(false, !onlyKiinteistotunnus, query, omistajat.length, async () => {
+    //     setOnlyKiinteistotunnus(!onlyKiinteistotunnus);
+    //   });
+    // }, [searchOmistajat, onlyKiinteistotunnus, query, omistajat.length]);
 
     const columns: ColumnDef<Omistaja>[] = useMemo(() => {
       const cols: ColumnDef<Omistaja>[] = [
@@ -183,7 +185,7 @@ const TableAccordionDetails = styled(
         },
         {
           header: () => (
-            <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" onClick={toggleTiedotVisible}>
+            <GradientBorderButton sx={{ display: "block", margin: "auto" }} type="button" disabled>
               {onlyKiinteistotunnus ? "Näytä tiedot" : "Piilota tiedot"}
             </GradientBorderButton>
           ),
@@ -221,7 +223,7 @@ const TableAccordionDetails = styled(
         },
       ];
       return cols;
-    }, [api, oid, onlyKiinteistotunnus, toggleTiedotVisible, withLoadingSpinner]);
+    }, [api, oid, onlyKiinteistotunnus, withLoadingSpinner]);
 
     type SearchForm = {
       query: string;
@@ -255,7 +257,16 @@ const TableAccordionDetails = styled(
       <AccordionDetails {...props}>
         <ContentSpacer gap={7}>
           <p>{instructionText}</p>
-          <Stack component="form" direction="row" justifyContent="space-between" alignItems="end">
+          <Stack
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="end"
+          >
             <Controller
               control={control}
               name="query"

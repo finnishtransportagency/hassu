@@ -322,7 +322,7 @@ export class ProjektiDatabase {
         oid,
       },
       UpdateExpression: "SET #m = list_append(if_not_exists(#m, :tyhjalista), :id)",
-      ExpressionAttributeNames: { "#m": muutMuistuttajat ? "muutMuistuttajat": "muistuttajat" },
+      ExpressionAttributeNames: { "#m": muutMuistuttajat ? "muutMuistuttajat" : "muistuttajat" },
       ExpressionAttributeValues: { ":id": ids, ":tyhjalista": [] },
     });
     await getDynamoDBDocumentClient().send(params);
@@ -522,7 +522,7 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
-  async setMuutMuistuttajat(oid: string,  muutMuistuttajat: string[]) {
+  async setMuutMuistuttajat(oid: string, muutMuistuttajat: string[]) {
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {

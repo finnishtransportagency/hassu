@@ -170,6 +170,7 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
     });

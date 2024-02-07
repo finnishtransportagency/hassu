@@ -5,7 +5,7 @@ import { MmlClient, MmlKiinteisto, Omistaja as MmlOmistaja, getMmlClient } from 
 import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { QueryCommand, BatchWriteCommand, GetCommand, PutCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
@@ -25,31 +25,13 @@ import { ProjektiPaths } from "../files/ProjektiPath";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import { DBProjekti } from "../database/model";
 import { getOmistajaTableName } from "../util/environment";
+import { DBOmistaja } from "../database/omistajaDatabase";
+import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 
 export type OmistajaHakuEvent = {
   oid: string;
   uid: string;
   kiinteistotunnukset: string[];
-};
-
-export type DBOmistaja = {
-  id: string;
-  oid: string;
-  kiinteistotunnus: string;
-  lisatty: string;
-  paivitetty?: string | null;
-  etunimet?: string | null;
-  sukunimi?: string | null;
-  nimi?: string | null;
-  henkilotunnus?: string;
-  ytunnus?: string;
-  jakeluosoite?: string | null;
-  postinumero?: string | null;
-  paikkakunta?: string | null;
-  maakoodi?: string | null;
-  expires?: number;
-  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
-  suomifiLahetys: boolean;
 };
 
 let mmlClient: MmlClient | undefined = undefined;
@@ -218,6 +200,11 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   getProjektiAndCheckPermissions(input.oid);
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
+
+  if (!(await omistajaSearchService.indexExists())) {
+    await omistajaSearchService.createIndex();
+  }
+
   const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset: input.kiinteistotunnukset, uid };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });
   auditLog.info("Omistajien haku event lisätty", { event });
@@ -330,63 +317,5 @@ export async function poistaKiinteistonOmistajat(oid: string, poistettavatOmista
 
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
   await getProjektiAndCheckPermissions(variables.oid);
-  const start = variables.start;
-  const end = variables.end;
-
-  // const titleObject = omistajat.reduce<Record<string, string>>(function (acc, value, index) {
-  //   const titleKey = ":id" + (index + 1);
-  //   titleObject[titleKey] = value;
-  //   return acc;
-  // }, {});
-  const queryCommand = new QueryCommand({
-    TableName: getOmistajaTableName(),
-    KeyConditionExpression: "oid = :oid",
-    FilterExpression: "suomifiLahetys = :suomifiLahetys",
-    // key
-    // FilterExpression: "id IN (" + Object.keys(titleObject).join(", ") + ") AND kiinteistotunnus = :kiinteistotunnus",
-    ExpressionAttributeValues: { ":oid": variables.oid, ":suomifiLahetys": !variables.muutOmistajat },
-    // RequestItems: {
-    //   [getTableName()]: {
-    //     Keys: ids.map((key) => ({
-    //       id: key,
-    //     })),
-    //   },
-    // },
-  });
-
-  const response = await getDynamoDBDocumentClient().send(queryCommand);
-  const dbOmistajat = (response.Items ?? []) as DBOmistaja[];
-  const hakutulosMaara = dbOmistajat.length;
-
-  const omistajat = dbOmistajat.slice(start, end ?? undefined).map<Omistaja>((o) => {
-    let omistaja: Omistaja = {
-      __typename: "Omistaja",
-      id: o.id,
-      oid: o.oid,
-      kiinteistotunnus: o.kiinteistotunnus,
-      lisatty: o.lisatty,
-    };
-    if (!variables.onlyKiinteistotunnus) {
-      auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id });
-      omistaja = {
-        ...omistaja,
-        paivitetty: o.paivitetty,
-        etunimet: o.etunimet,
-        sukunimi: o.sukunimi,
-        nimi: o.nimi,
-        jakeluosoite: o.jakeluosoite,
-        postinumero: o.postinumero,
-        paikkakunta: o.paikkakunta,
-      };
-    }
-    return omistaja;
-  });
-
-  return {
-    __typename: "KiinteistonOmistajat",
-    hakutulosMaara,
-    start,
-    end,
-    omistajat,
-  };
+  return omistajaSearchService.searchOmistajat(variables);
 }

@@ -34,8 +34,8 @@ type Query {
     muutOmistajat: Boolean!
     onlyKiinteistotunnus: Boolean!
     query: String
-    start: Int!
-    end: Int
+    sivuKoko: Int
+    sivu: Int
   ): KiinteistonOmistajat
   haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
 }
