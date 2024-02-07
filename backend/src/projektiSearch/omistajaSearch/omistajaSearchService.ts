@@ -54,13 +54,10 @@ class OmistajaSearchService {
   }
 
   async searchOmistajat(params: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
-    const pageSize = params.sivuKoko ?? 25;
-    const pageNumber = params.sivu ?? 0;
-
     const searchResult = await omistajaOpenSearchClient.query({
       query: this.buildQuery(params),
-      size: pageSize,
-      from: pageSize * pageNumber,
+      size: params.size ?? undefined,
+      from: params.from ?? undefined,
       sort: [{ "kiinteistotunnus.keyword": { order: "asc" } }],
     });
 

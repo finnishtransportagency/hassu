@@ -2,7 +2,7 @@ import Section from "@components/layout/Section2";
 import { AineistoInput, VuorovaikutusKierros, AineistoTila } from "@services/api";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import ButtonFlat from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Key, useState } from "react";
 import { SuunnittelunPerustiedotFormValues } from ".";
@@ -51,7 +51,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
         <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan.</p>
-        <ButtonFlat
+        <ButtonFlatWithIcon
           type="button"
           onClick={() => {
             if (areAineistoKategoriesExpanded) {
@@ -70,7 +70,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
           }
         >
           {areAineistoKategoriesExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
-        </ButtonFlat>
+        </ButtonFlatWithIcon>
         <HassuAccordion
           expandedState={[expandedEsittelyAineisto, setExpandedEsittelyAineisto]}
           items={[

@@ -29,15 +29,8 @@ type Query {
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
-  haeKiinteistonOmistajat(
-    oid: String!
-    muutOmistajat: Boolean!
-    onlyKiinteistotunnus: Boolean!
-    query: String
-    sivuKoko: Int
-    sivu: Int
-  ): KiinteistonOmistajat
-  haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
+  haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat
+  haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, from: Int, size: Int): Muistuttajat
 }
 
 type Mutation {

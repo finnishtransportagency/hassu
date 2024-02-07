@@ -11,7 +11,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
 import DownloadLink from "@components/DownloadLink";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
-import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
