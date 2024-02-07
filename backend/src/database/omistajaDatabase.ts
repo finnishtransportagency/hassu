@@ -34,14 +34,14 @@ export type OmistajaScanResult = {
 };
 
 class OmistajaDatabase {
-  private omistajaTableName: string;
-  constructor(omistajaTableName: string) {
-    this.omistajaTableName = omistajaTableName;
+  private tableName: string;
+  constructor(tableName: string) {
+    this.tableName = tableName;
   }
 
   async createOmistaja(omistaja: DBOmistaja): Promise<PutCommandOutput> {
     const params = new PutCommand({
-      TableName: this.omistajaTableName,
+      TableName: this.tableName,
       Item: omistaja,
     });
     return getDynamoDBDocumentClient().send(params);
@@ -50,7 +50,7 @@ class OmistajaDatabase {
   async scanOmistajat(startKey?: OmistajaKey): Promise<OmistajaScanResult> {
     try {
       const params = new ScanCommand({
-        TableName: this.omistajaTableName,
+        TableName: this.tableName,
         Limit: 10,
         ExclusiveStartKey: startKey,
       });

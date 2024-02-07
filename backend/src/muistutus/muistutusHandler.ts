@@ -142,6 +142,7 @@ class MuistutusHandler {
           [getMuistuttajaTableName()]: {
             Keys: ids.map((key) => ({
               id: key,
+              oid: variables.oid,
             })),
           },
         },
@@ -190,7 +191,7 @@ class MuistutusHandler {
     for (const muistuttaja of input.muistuttajat) {
       if (muistuttaja.id) {
         const response = await getDynamoDBDocumentClient().send(
-          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id } })
+          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id, oid: input.oid } })
         );
         dbmuistuttaja = response.Item as DBMuistuttaja;
         if (!dbmuistuttaja || !projekti.muutMuistuttajat?.includes(muistuttaja.id)) {

@@ -24,7 +24,7 @@ import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import { DBProjekti } from "../database/model";
-import { getOmistajaTableName } from "../util/environment";
+import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 
@@ -140,7 +140,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         await getDynamoDBDocumentClient().send(
           new BatchWriteCommand({
             RequestItems: {
-              [getOmistajaTableName()]: putRequests,
+              [getKiinteistonomistajaTableName()]: putRequests,
             },
           })
         );
@@ -222,7 +222,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
       const response = await getDynamoDBDocumentClient().send(
-        new GetCommand({ TableName: getOmistajaTableName(), Key: { oid: input.oid, id: omistaja.id } })
+        new GetCommand({ TableName: getKiinteistonomistajaTableName(), Key: { oid: input.oid, id: omistaja.id } })
       );
       dbOmistaja = response.Item as DBOmistaja;
       if (!dbOmistaja) {
@@ -248,7 +248,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
-    await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getOmistajaTableName(), Item: dbOmistaja }));
+    await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
     omistajat.push(dbOmistaja);
   }
   if (uudetOmistajat.length > 0) {

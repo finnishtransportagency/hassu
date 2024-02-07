@@ -49,6 +49,7 @@ export type HassuBackendStackProps = {
 
   kiinteistonomistajaTable: Table;
   muistuttajaTable: Table;
+  muistuttajaTable2: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -632,6 +633,7 @@ export class HassuBackendStack extends Stack {
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
         TABLE_OMISTAJA: this.props.omistajaTable.tableName,
         TABLE_MUISTUTTAJA: this.props.muistuttajaTable.tableName,
+        TABLE_MUISTUTTAJA2: this.props.muistuttajaTable2.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
@@ -655,6 +657,7 @@ export class HassuBackendStack extends Stack {
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.muistuttajaTable2.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
@@ -884,11 +887,14 @@ export class HassuBackendStack extends Stack {
       backendFn.addEnvironment("TABLE_OMISTAJA", this.props.omistajaTable.tableName);
       this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
+      this.props.muistuttajaTable2.grantFullAccess(backendFn);
       this.props.muistuttajaTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
       this.props.muistuttajaTable.grantWriteData(backendFn);
+      this.props.muistuttajaTable2.grantWriteData(backendFn);
     }
+    backendFn.addEnvironment("TABLE_MUISTUTTAJA2", this.props.muistuttajaTable2.tableName);
     backendFn.addEnvironment("TABLE_MUISTUTTAJA", this.props.muistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 

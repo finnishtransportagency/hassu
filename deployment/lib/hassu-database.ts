@@ -28,6 +28,7 @@ export class HassuDatabaseStack extends Stack {
 
   public kiinteistonOmistajaTable!: ddb.Table;
   public muistuttajaTable!: ddb.Table;
+  public muistuttajaTable2!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -56,6 +57,7 @@ export class HassuDatabaseStack extends Stack {
     this.omistajaTable = this.createOmistajaTable();
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.muistuttajaTable = this.createMuistuttajaTable();
+    this.muistuttajaTable2 = this.createMuistuttaja2Table();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -190,6 +192,30 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createMuistuttaja2Table() {
+    const table = new ddb.Table(this, "MuistuttajaTable2", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.muistuttaja2TableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
     });

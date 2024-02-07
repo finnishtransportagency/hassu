@@ -10,9 +10,11 @@ const config = {
 
   // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   omistajaTableName: process.env.TABLE_OMISTAJA!,
+  // TODO: Vanha MuistuttajaTable, poista kun ei viittauksia
+  muistuttajaTableName: process.env.TABLE_MUISTUTTAJA!,
 
   kiinteistonomistajaTableName: process.env.TABLE_KIINTEISTONOMISTAJA!,
-  muistuttajaTableName: process.env.TABLE_MUISTUTTAJA!,
+  muistuttaja2TableName: process.env.TABLE_MUISTUTTAJA2!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,

@@ -1,13 +1,13 @@
 export function getMuistuttajaTableName() {
-  if (process.env.TABLE_MUISTUTTAJA) {
-    return process.env.TABLE_MUISTUTTAJA;
+  if (process.env.TABLE_MUISTUTTAJA2) {
+    return process.env.TABLE_MUISTUTTAJA2;
   }
-  throw new Error("Ympäristömuuttujaa TABLE_MUISTUTTAJA ei löydy");
+  throw new Error("Ympäristömuuttujaa TABLE_MUISTUTTAJA2 ei löydy");
 }
 
-export function getOmistajaTableName() {
-  if (process.env.TABLE_OMISTAJA) {
-    return process.env.TABLE_OMISTAJA;
+export function getKiinteistonomistajaTableName() {
+  if (process.env.TABLE_KIINTEISTONOMISTAJA) {
+    return process.env.TABLE_KIINTEISTONOMISTAJA;
   }
-  throw new Error("Ympäristömuuttujaa TABLE_OMISTAJA ei löydy");
+  throw new Error("Ympäristömuuttujaa TABLE_KIINTEISTONOMISTAJA ei löydy");
 }

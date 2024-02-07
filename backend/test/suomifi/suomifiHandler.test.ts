@@ -24,7 +24,7 @@ import {
   NahtavillaoloPDF,
   NahtavillaoloVaiheJulkaisu,
 } from "../../src/database/model";
-import { DBOmistaja } from "../../src/mml/kiinteistoHandler";
+import { DBOmistaja } from "../../src/database/omistajaDatabase";
 import { fail } from "assert";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { EnhancedPDF } from "../../src/asiakirja/asiakirjaTypes";
@@ -88,7 +88,9 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
+    mockClient(LambdaClient)
+      .on(InvokeCommand)
+      .resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
   beforeEach(() => {
@@ -359,6 +361,7 @@ describe("suomifiHandler", () => {
       postinumero: "00100",
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
+      suomifiLahetys: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -541,6 +544,7 @@ describe("suomifiHandler", () => {
       postinumero: "00100",
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
+      suomifiLahetys: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300, 200);
