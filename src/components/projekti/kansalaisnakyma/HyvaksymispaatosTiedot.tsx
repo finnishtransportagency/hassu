@@ -6,7 +6,7 @@ import KeyValueTable, { KeyValueData } from "../../KeyValueTable";
 import Section from "../../layout/Section2";
 import Notification, { NotificationType } from "../../notification/Notification";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
-import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli, KuulutusJulkaisuTila } from "@services/api";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -64,6 +64,20 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
       : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
       ? projekti.jatkoPaatos1Vaihe?.kuulutusTekstit
       : projekti.jatkoPaatos2Vaihe?.kuulutusTekstit;
+
+  if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
+    return (
+      <Section noDivider>
+        <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
+        {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
+          <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+            Plána hálddahuslaš gieđahallan lea álgán ovdal Stáhta johtalusfávlliid plánen bálvalusa atnuiváldima, nuba diehtu bálvalusas ii
+            leat oažžumis. Jus dus leat jearaldagat plánema muttuin, sáhtát leat oktavuođas plána prošeaktaoaivámužžii.
+          </p>
+        )}
+      </Section>
+    );
+  }
 
   return (
     <Section noDivider>
