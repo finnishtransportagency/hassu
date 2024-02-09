@@ -1,10 +1,9 @@
 import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe } from "@services/api";
 import React, { ComponentProps, useCallback, useMemo } from "react";
 import { FieldArrayWithId, useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "hassu-common/util/dateUtils";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { experimental_sx as sx, MUIStyledCommonProps, styled } from "@mui/system";
@@ -18,8 +17,7 @@ interface FormValues {
 
 type FormAineisto = FieldArrayWithId<FormValues, "hyvaksymisPaatos", "id"> & Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
-export default function AineistoTable() {
-  const { data: projekti } = useProjekti();
+export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe | null | undefined }) {
   const { control, formState, register, setValue } = useFormContext<FormValues>();
   const { fields, move, remove } = useFieldArray({ name: "hyvaksymisPaatos", control });
   const { append: appendToPoistetut } = useFieldArray({ name: "poistetutHyvaksymisPaatos", control });
@@ -27,12 +25,12 @@ export default function AineistoTable() {
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = projekti?.hyvaksymisPaatosVaihe?.hyvaksymisPaatos || [];
+        const aineistoData = vaihe?.hyvaksymisPaatos || [];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),
-    [fields, projekti]
+    [fields, vaihe?.hyvaksymisPaatos]
   );
 
   const columns = useMemo<ColumnDef<FormAineisto>[]>(

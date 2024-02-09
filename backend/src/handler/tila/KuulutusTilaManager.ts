@@ -9,7 +9,6 @@ import {
   sortByKuulutusPaivaDesc,
 } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
-import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
@@ -151,7 +150,8 @@ export abstract class KuulutusTilaManager<
   }
 
   private getUpdatedVaiheTiedotForUudelleenkuulutus(projekti: DBProjekti, kuulutusLuonnos: T, hyvaksyttyJulkaisu: Y, julkaisut: Y[]) {
-    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+    const julkinenUudelleenKuulutus =
+      !!hyvaksyttyJulkaisu.kuulutusPaiva && isDateTimeInThePast(hyvaksyttyJulkaisu.kuulutusPaiva, "start-of-day");
     const uudelleenKuulutus = julkinenUudelleenKuulutus
       ? {
           tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,

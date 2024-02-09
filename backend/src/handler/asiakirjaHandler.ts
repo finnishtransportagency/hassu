@@ -12,6 +12,8 @@ import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaType
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { findAloitusKuulutusWaitingForApproval } from "../projekti/projektiUtil";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -32,6 +34,8 @@ async function handleAloitusKuulutus(
       kayttoOikeudet: projekti.kayttoOikeudet,
       euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: projekti.vahainenMenettely,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -49,6 +53,8 @@ async function handleAloitusKuulutus(
       kayttoOikeudet: projekti.kayttoOikeudet,
       euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: projekti.vahainenMenettely,
+      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
     });
   }
 }
@@ -82,6 +88,8 @@ async function handleYleisotilaisuusKutsu(
     kieli,
     luonnos: true,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 }
 
@@ -110,6 +118,8 @@ async function handleNahtavillaoloKuulutus(
     asiakirjaTyyppi,
     euRahoitusLogot: projekti.euRahoitusLogot,
     vahainenMenettely: projekti.vahainenMenettely,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 }
 
@@ -144,6 +154,8 @@ async function handleHyvaksymisPaatosKuulutus(
     luonnos: true,
     asiakirjaTyyppi,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
   });
 }
 

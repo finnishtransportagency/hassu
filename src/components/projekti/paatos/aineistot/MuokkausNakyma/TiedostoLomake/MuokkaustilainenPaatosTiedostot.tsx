@@ -7,12 +7,14 @@ import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import { getPaatosInfoText } from "../textsForDifferentPaatos";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "..";
 import { adaptVelhoAineistoToAineistoInput, combineOldAndNewAineisto } from "@components/projekti/common/Aineistot/util";
+import { HyvaksymisPaatosVaihe } from "@services/api";
 
 type Props = {
   paatosTyyppi: PaatosTyyppi;
+  vaihe: HyvaksymisPaatosVaihe | null | undefined;
 };
 
-export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props) {
+export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi, vaihe }: Props) {
   const { watch, control } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
   const poistetutHyvaksymisPaatos = watch("poistetutHyvaksymisPaatos");
@@ -24,7 +26,7 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props)
   return (
     <>
       <p>{getPaatosInfoText(paatosTyyppi)}</p>
-      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
+      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot vaihe={vaihe} />}
       <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
         Tuo päätös
       </Button>
