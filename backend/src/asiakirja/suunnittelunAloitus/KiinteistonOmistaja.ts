@@ -45,22 +45,25 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
     if (!nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva) {
       throw new Error("nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva ei ole määritelty");
     }
-    const kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter({
-      oid: params.oid,
-      lyhytOsoite: params.lyhytOsoite,
-      kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva,
-      hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
-      kielitiedot: params.kielitiedot,
-      velho,
-      kieli: params.kieli,
-      kayttoOikeudet: params.kayttoOikeudet,
-      kirjaamoOsoitteet: params.kirjaamoOsoitteet,
-      euRahoitusLogot: params.euRahoitusLogot,
-      asianhallintaPaalla: params.asianhallintaPaalla,
-      linkkiAsianhallintaan: params.linkkiAsianhallintaan,
-      yhteystiedot: params.yhteystiedot,
-    }, "lakiviite_ilmoitus_rata2");
+    const kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter(
+      {
+        oid: params.oid,
+        lyhytOsoite: params.lyhytOsoite,
+        kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva,
+        hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
+        kielitiedot: params.kielitiedot,
+        velho,
+        kieli: params.kieli,
+        kayttoOikeudet: params.kayttoOikeudet,
+        kirjaamoOsoitteet: params.kirjaamoOsoitteet,
+        euRahoitusLogot: params.euRahoitusLogot,
+        asianhallintaPaalla: params.asianhallintaPaalla,
+        linkkiAsianhallintaan: params.linkkiAsianhallintaan,
+        yhteystiedot: params.yhteystiedot,
+      },
+      "lakiviite_ilmoitus_rata2"
+    );
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
       kutsuAdapter.asiakirjanMuoto,
@@ -105,7 +108,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), 350, 110);
       assertIsDefined(this.logo, "PDF:stä puuttuu logo");
       this.doc.image(this.logo, this.toPdfPoints(21), this.toPdfPoints(100), { height: 75 });
-      
+
       this.doc.moveDown(16);
     } else {
       super.appendHeader(350);
