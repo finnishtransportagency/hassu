@@ -230,7 +230,6 @@ export async function generatePdf(
       tiedostoNimi,
     };
   } catch (e) {
-    console.error(e);
     throw new Error("PDF generointi epäonnistui");
   }
 }
