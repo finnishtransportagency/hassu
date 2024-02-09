@@ -19,33 +19,35 @@ export function linkSuunnitelma(projekti: LinkableProjekti, kieli: Kieli): strin
   return "https://" + process.env.FRONTEND_DOMAIN_NAME + langPrefix + path;
 }
 
-export function linkAloituskuulutus(projekti: LinkableProjekti, kieli: Kieli): string {
+export type JulkinenLinkFunction = (projekti: LinkableProjekti, kieli: Kieli) => string;
+
+export const linkAloituskuulutus: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/aloituskuulutus";
-}
+};
 
-export function linkSuunnitteluVaihe(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkSuunnitteluVaihe: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/suunnittelu";
-}
+};
 
-export function linkNahtavillaOlo(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkNahtavillaOlo: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/nahtavillaolo";
-}
+};
 
-export function linkHyvaksymismenettelyssa(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkHyvaksymismenettelyssa: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/hyvaksymismenettelyssa";
-}
+};
 
-export function linkHyvaksymisPaatos(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkHyvaksymisPaatos: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/hyvaksymispaatos";
-}
+};
 
-export function linkJatkoPaatos1(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkJatkoPaatos1: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/jatkopaatos1";
-}
+};
 
-export function linkJatkoPaatos2(projekti: LinkableProjekti, kieli: Kieli): string {
+export const linkJatkoPaatos2: JulkinenLinkFunction = (projekti, kieli) => {
   return linkSuunnitelma(projekti, kieli) + "/jatkopaatos2";
-}
+};
 
 export function linkSuunnitelmaYllapito(oid: string): string {
   return "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/yllapito/projekti/" + oid;
