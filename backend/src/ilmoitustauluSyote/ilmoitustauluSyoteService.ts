@@ -1,31 +1,88 @@
 import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClientIlmoitustauluSyote";
-import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
+import { GenericKuulutusJulkaisuJulkinen, ilmoitusKuulutusAdapter, JulkaisuVaiheIndexPart } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
 import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
+import {
+  JulkinenLinkFunction,
+  linkAloituskuulutus,
+  linkHyvaksymisPaatos,
+  linkJatkoPaatos1,
+  linkJatkoPaatos2,
+  linkNahtavillaOlo,
+} from "hassu-common/links";
 
 class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
     const oid = projekti.oid;
     try {
       const kielet = ilmoitusKuulutusAdapter.getProjektiKielet(projekti);
-      await this.indexAloitusKuulutusJulkaisut(projekti, kielet, oid);
+      await this.indexKuulutusJulkaisut(
+        kielet,
+        oid,
+        projekti.lyhytOsoite ?? undefined,
+        projekti.aloitusKuulutusJulkaisu,
+        linkAloituskuulutus,
+        "aloitusKuulutus",
+        "ui-otsikot.kuulutus_suunnitelman_alkamisesta"
+      );
       await this.indexVuorovaikutusKierrokset(projekti, kielet, oid);
-      await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
-      await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
+      await this.indexKuulutusJulkaisut(
+        kielet,
+        oid,
+        projekti.lyhytOsoite ?? undefined,
+        projekti.nahtavillaoloVaihe,
+        linkNahtavillaOlo,
+        "nahtavillaoloVaihe",
+        "ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta"
+      );
+      await this.indexKuulutusJulkaisut(
+        kielet,
+        oid,
+        projekti.lyhytOsoite ?? undefined,
+        projekti.hyvaksymisPaatosVaihe,
+        linkHyvaksymisPaatos,
+        "hyvaksymisPaatos",
+        "ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksesta"
+      );
+      await this.indexKuulutusJulkaisut(
+        kielet,
+        oid,
+        projekti.lyhytOsoite ?? undefined,
+        projekti.jatkoPaatos1Vaihe,
+        linkJatkoPaatos1,
+        "jatkopaatos1",
+        "ui-otsikot.kuulutus_jatkopaatoksesta"
+      );
+      await this.indexKuulutusJulkaisut(
+        kielet,
+        oid,
+        projekti.lyhytOsoite ?? undefined,
+        projekti.jatkoPaatos2Vaihe,
+        linkJatkoPaatos2,
+        "jatkopaatos2",
+        "ui-otsikot.kuulutus_jatkopaatoksesta"
+      );
     } catch (e) {
       log.error("IlmoitustauluSyoteService.index failed.", { projekti });
       log.error(e);
     }
   }
 
-  private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
-    if (aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
+  private async indexKuulutusJulkaisut(
+    kielet: Kieli[],
+    oid: string,
+    lyhytOsoite: string | undefined,
+    julkaisu: GenericKuulutusJulkaisuJulkinen | null | undefined,
+    julkaisuLink: JulkinenLinkFunction,
+    julkaisuVaihe: JulkaisuVaiheIndexPart,
+    uiOtsikkoPath: string
+  ) {
+    if (julkaisu?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
-          ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
-          ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, projekti.lyhytOsoite, aloitusKuulutusJulkaisu, kieli)
+          ilmoitusKuulutusAdapter.createKeyForJulkaisu(oid, julkaisuVaihe, julkaisu.kuulutusPaiva, kieli),
+          ilmoitusKuulutusAdapter.adaptKuulutusJulkaisu(oid, julkaisuLink({ oid, lyhytOsoite }, kieli), julkaisu, kieli, uiOtsikkoPath)
         );
       }
     }
@@ -35,7 +92,12 @@ class IlmoitustauluSyoteService {
     if (projekti.vuorovaikutukset && projekti.vuorovaikutukset.tila === VuorovaikutusKierrosTila.JULKINEN) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
-          ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, projekti.vuorovaikutukset, kieli),
+          ilmoitusKuulutusAdapter.createKeyForJulkaisu(
+            oid,
+            "vuorovaikutuskierros",
+            projekti.vuorovaikutukset.vuorovaikutusJulkaisuPaiva,
+            kieli
+          ),
           ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(
             oid,
             projekti.lyhytOsoite,
@@ -44,30 +106,6 @@ class IlmoitustauluSyoteService {
             projekti.kielitiedot,
             projekti.velho
           )
-        );
-      }
-    }
-  }
-
-  private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-    if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
-      for (const kieli of kielet) {
-        await openSearchClientIlmoitustauluSyote.putDocument(
-          ilmoitusKuulutusAdapter.createKeyForNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli),
-          ilmoitusKuulutusAdapter.adaptNahtavillaoloVaihe(oid, projekti.lyhytOsoite, nahtavillaoloVaihe, kieli)
-        );
-      }
-    }
-  }
-
-  private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    const nahtavillaoloVaihe = projekti.hyvaksymisPaatosVaihe;
-    if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
-      for (const kieli of kielet) {
-        await openSearchClientIlmoitustauluSyote.putDocument(
-          ilmoitusKuulutusAdapter.createKeyForHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli),
-          ilmoitusKuulutusAdapter.adaptHyvaksymisPaatosVaihe(oid, projekti.lyhytOsoite, nahtavillaoloVaihe, kieli)
         );
       }
     }

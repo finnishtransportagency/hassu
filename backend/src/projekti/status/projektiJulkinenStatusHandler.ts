@@ -3,29 +3,38 @@ import { KuulutusJulkaisuTila, Status } from "hassu-common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 
-export function isKuulutusPaivaInThePast(kuulutusPaiva?: string | null): boolean {
-  return !!kuulutusPaiva && isDateTimeInThePast(kuulutusPaiva, "start-of-day");
-}
-
 export function isKuulutusVaihePaattyyPaivaInThePast(kuulutusVaihePaattyyPaiva: string | null | undefined): boolean {
   return !!kuulutusVaihePaattyyPaiva && isDateTimeInThePast(kuulutusVaihePaattyyPaiva, "end-of-day");
 }
 
-export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): void {
-  const aloituskuulutus = new (class extends StatusHandler<API.ProjektiJulkinen> {
-    handle(p: API.ProjektiJulkinen) {
-      const julkaisu = projekti.aloitusKuulutusJulkaisu;
-      if (julkaisu) {
-        if (julkaisu.tila == KuulutusJulkaisuTila.MIGROITU) {
-          // No status change, but continue searching for actual published content
-          super.handle(p);
-        } else if (isKuulutusPaivaInThePast(julkaisu.kuulutusPaiva)) {
-          projekti.status = API.Status.ALOITUSKUULUTUS;
-          super.handle(p); // Continue evaluating next rules
-        }
-      }
+type KuulutusJulkaisuAvain = keyof Pick<
+  API.ProjektiJulkinen,
+  "aloitusKuulutusJulkaisu" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+>;
+
+abstract class KuulutusStatusHandler extends StatusHandler<API.ProjektiJulkinen> {
+  protected vaiheAvain: KuulutusJulkaisuAvain;
+  protected status: API.Status;
+
+  constructor(status: API.Status, vaiheAvain: KuulutusJulkaisuAvain) {
+    super();
+    this.status = status;
+    this.vaiheAvain = vaiheAvain;
+  }
+
+  handle(p: API.ProjektiJulkinen) {
+    const kuulutus = p[this.vaiheAvain];
+    if (kuulutus?.tila == KuulutusJulkaisuTila.MIGROITU) {
+      super.handle(p); // Continue evaluating next rules
+    } else if (kuulutus?.kuulutusPaiva && isDateTimeInThePast(kuulutus.kuulutusPaiva, "start-of-day")) {
+      p.status = this.status;
+      super.handle(p);
     }
-  })();
+  }
+}
+
+export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): void {
+  const aloituskuulutus = new (class extends KuulutusStatusHandler {})(API.Status.ALOITUSKUULUTUS, "aloitusKuulutusJulkaisu");
 
   const suunnittelu = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
@@ -44,19 +53,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     }
   })();
 
-  const nahtavillaOlo = new (class extends StatusHandler<API.ProjektiJulkinen> {
-    handle(p: API.ProjektiJulkinen) {
-      if (projekti.nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
-        super.handle(p); // Continue evaluating next rules
-      } else {
-        const kuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
-        if (kuulutusPaiva && isDateTimeInThePast(kuulutusPaiva, "start-of-day")) {
-          projekti.status = API.Status.NAHTAVILLAOLO;
-          super.handle(p); // Continue evaluating next rules
-        }
-      }
-    }
-  })();
+  const nahtavillaOlo = new (class extends KuulutusStatusHandler {})(API.Status.NAHTAVILLAOLO, "nahtavillaoloVaihe");
 
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
@@ -70,17 +67,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     }
   })();
 
-  const hyvaksytty = new (class extends StatusHandler<API.ProjektiJulkinen> {
-    handle(p: API.ProjektiJulkinen) {
-      const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
-      if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
-        super.handle(p); // Continue evaluating next rules
-      } else if (hyvaksymisPaatosVaihe?.kuulutusPaiva && isDateTimeInThePast(hyvaksymisPaatosVaihe.kuulutusPaiva, "start-of-day")) {
-        projekti.status = API.Status.HYVAKSYTTY;
-        super.handle(p); // Continue evaluating next rules
-      }
-    }
-  })();
+  const hyvaksytty = new (class extends KuulutusStatusHandler {})(API.Status.HYVAKSYTTY, "hyvaksymisPaatosVaihe");
 
   type PaatosEndDateAndTila = HyvaksymisPaatosJulkaisuEndDateAndTila | null | undefined;
 
@@ -90,15 +77,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     }
   })(true, API.Status.EPAAKTIIVINEN_1);
 
-  const jatkoPaatos1 = new (class extends StatusHandler<API.ProjektiJulkinen> {
-    handle(p: API.ProjektiJulkinen) {
-      const jatkoPaatos1Vaihe = projekti.jatkoPaatos1Vaihe;
-      if (jatkoPaatos1Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos1Vaihe.kuulutusPaiva, "start-of-day")) {
-        projekti.status = API.Status.JATKOPAATOS_1;
-        super.handle(p); // Continue evaluating next rules
-      }
-    }
-  })();
+  const jatkoPaatos1 = new (class extends KuulutusStatusHandler {})(API.Status.JATKOPAATOS_1, "jatkoPaatos1Vaihe");
 
   const epaAktiivinen2 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
     getPaatosVaihe(p: API.ProjektiJulkinen): PaatosEndDateAndTila {
@@ -106,15 +85,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     }
   })(false, Status.EPAAKTIIVINEN_2);
 
-  const jatkoPaatos2 = new (class extends StatusHandler<API.ProjektiJulkinen> {
-    handle(p: API.ProjektiJulkinen) {
-      const jatkoPaatos2Vaihe = projekti.jatkoPaatos2Vaihe;
-      if (jatkoPaatos2Vaihe?.kuulutusPaiva && isDateTimeInThePast(jatkoPaatos2Vaihe.kuulutusPaiva, "start-of-day")) {
-        projekti.status = API.Status.JATKOPAATOS_2;
-        super.handle(p); // Continue evaluating next rules
-      }
-    }
-  })();
+  const jatkoPaatos2 = new (class extends KuulutusStatusHandler {})(API.Status.JATKOPAATOS_2, "jatkoPaatos2Vaihe");
 
   const epaAktiivinen3 = new (class extends AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<API.ProjektiJulkinen> {
     getPaatosVaihe(p: API.ProjektiJulkinen): PaatosEndDateAndTila {
