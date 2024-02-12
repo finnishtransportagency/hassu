@@ -59,6 +59,7 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
       __typename: "ProjektinTila",
       aineistotValmiit: aineistoManager.isReady(),
       omistajahakuKaynnissa: projektiFromDB.omistajahakuKaynnissa,
+      omistajahakuKiinteistotunnusMaara: projektiFromDB.omistajahakuKiinteistotunnusMaara,
     };
   } else {
     throw new NotFoundError("Projektia ei löydy: " + oid);

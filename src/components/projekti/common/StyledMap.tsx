@@ -218,11 +218,8 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
             (async () => {
               try {
                 const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
-                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(
-                  projekti.oid,
-                  geoJSON,
-                  Array.from(getKiinteistotunnuksetFromSource(geoJsonSource))
-                );
+                const kiinteistoTunnukset = Array.from(getKiinteistotunnuksetFromSource(geoJsonSource));
+                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset);
                 clearMapEditedByUser();
                 showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
                 closeDialog(isMapEditedByUserRef.current);
@@ -230,7 +227,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
                   if (!old) {
                     return null;
                   }
-                  return { ...old, omistajahakuKaynnissa: true };
+                  return { ...old, omistajahakuKaynnissa: true, omistajahakuKiinteistotunnusMaara: kiinteistoTunnukset.length };
                 });
               } catch {
                 showErrorMessage("Karttajarajauksen tallentaminen ja hakeminen epäonnistui");

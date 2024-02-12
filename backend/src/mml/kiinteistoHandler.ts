@@ -76,7 +76,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
       setLogContextOid(hakuEvent.oid);
       identifyMockUser({ etunimi: "", sukunimi: "", uid: hakuEvent.uid, __typename: "NykyinenKayttaja" });
       try {
-        await projektiDatabase.setOmistajahakuKaynnissa(hakuEvent.oid, true);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, true, hakuEvent.kiinteistotunnukset.length);
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
@@ -156,7 +156,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
         throw e;
       } finally {
-        await projektiDatabase.setOmistajahakuKaynnissa(hakuEvent.oid, false);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, false, null);
       }
     }
   } catch (e) {
@@ -209,7 +209,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   if (projekti.omistajahakuKaynnissa) {
     throw new Error("Omistajien haku on jo käynnissä");
   }
-  await projektiDatabase.setOmistajahakuKaynnissa(input.oid, true);
+  await projektiDatabase.setOmistajahakuTiedot(input.oid, true, input.kiinteistotunnukset.length);
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
 

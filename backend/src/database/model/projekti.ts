@@ -183,6 +183,7 @@ export type DBProjekti = {
   muistuttajat?: string[];
   muutMuistuttajat?: string[];
   omistajahakuKaynnissa?: boolean;
+  omistajahakuKiinteistotunnusMaara?: number;
 };
 
 export type Asianhallinta = {
