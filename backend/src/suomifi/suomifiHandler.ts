@@ -184,7 +184,7 @@ function createGenerateEvent(
           nimi: kohde.nimi,
           katuosoite: kohde.lahiosoite,
           postinumero: kohde.postinumero,
-          postitoimipaikka: kohde.postitoimipaikka.toUpperCase(),
+          postitoimipaikka: kohde.postitoimipaikka,
         },
       },
     };

@@ -40,13 +40,6 @@ class MuistutusEmailService {
         throw new Error("Liitetiedostoa ei saatu");
       }
       emailOptions.attachments = [liite];
-      emailOptions.text = (emailOptions.text ?? "").toString().concat(`
-
-      Muistutukseen on lisätty liite`);
-    } else {
-      emailOptions.text = (emailOptions.text ?? "").toString().concat(`
-
-      Muistutukseen ei ole lisätty liitettä`);
     }
 
     await emailClient.sendTurvapostiEmail(emailOptions);

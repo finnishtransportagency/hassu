@@ -95,13 +95,13 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   protected appendHeader() {
     if (this.osoite) {
       let x = this.toPdfPoints(21);
-      this.doc.text("Väylävirasto", x, this.toPdfPoints(20), { width: this.toPdfPoints(72), baseline: "top" });
+      this.doc.text("VÄYLÄVIRASTO", x, this.toPdfPoints(20), { width: this.toPdfPoints(72), baseline: "top" });
       this.doc.text("PL 33", undefined, undefined, { width: this.toPdfPoints(72) });
       this.doc.text("00521 HELSINKI", undefined, undefined, { width: this.toPdfPoints(72) });
 
-      this.doc.text(this.osoite?.nimi, x, this.toPdfPoints(55), { width: this.toPdfPoints(62), baseline: "top" });
-      this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: this.toPdfPoints(72) });
-      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka}`, undefined, undefined, { width: this.toPdfPoints(72) });
+      this.doc.text(this.osoite?.nimi.toUpperCase(), x, this.toPdfPoints(55), { width: this.toPdfPoints(62), baseline: "top" });
+      this.doc.text(this.osoite.katuosoite.toUpperCase(), undefined, undefined, { width: this.toPdfPoints(72) });
+      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka}`.toUpperCase(), undefined, undefined, { width: this.toPdfPoints(72) });
       x = this.isVaylaTilaaja() ? this.toPdfPoints(75) : this.toPdfPoints(70);
       const y = this.isVaylaTilaaja() ? this.toPdfPoints(53) : this.toPdfPoints(57);
       this.doc.image(this.iPostLogo(), x, y, { fit: this.isVaylaTilaaja() ? [50, 43.48] : [63, 22.09] });
