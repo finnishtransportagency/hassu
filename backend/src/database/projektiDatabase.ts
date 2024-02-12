@@ -522,6 +522,23 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
+  async setOmistajahakuKaynnissa(oid: string, value: boolean) {
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #omistajahakuKaynnissa = :omistajahakuKaynnissa",
+      ExpressionAttributeNames: {
+        ["#omistajahakuKaynnissa"]: "omistajahakuKaynnissa",
+      },
+      ExpressionAttributeValues: {
+        ":omistajahakuKaynnissa": value,
+      },
+    });
+    return await getDynamoDBDocumentClient().send(params);
+  }
+
   async setMuutMuistuttajat(oid: string, muutMuistuttajat: string[]) {
     const params = new UpdateCommand({
       TableName: this.projektiTableName,

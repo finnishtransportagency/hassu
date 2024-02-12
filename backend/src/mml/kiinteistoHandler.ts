@@ -75,81 +75,89 @@ const handlerFactory = (event: SQSEvent) => async () => {
       const hakuEvent: OmistajaHakuEvent = JSON.parse(record.body);
       setLogContextOid(hakuEvent.oid);
       identifyMockUser({ etunimi: "", sukunimi: "", uid: hakuEvent.uid, __typename: "NykyinenKayttaja" });
-      auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-      const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
-      const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
-      log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
-      log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
-      const yhteystiedotMap = new Map<string, DBOmistaja>();
-      const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-      const expires = getExpires();
-      yhteystiedot.forEach((k) => {
-        k.omistajat.forEach((o) => {
-          const initialOmistaja: Omit<DBOmistaja, "suomifiLahetys"> = {
-            id: uuid.v4(),
-            kiinteistotunnus: k.kiinteistotunnus,
-            oid: hakuEvent.oid,
-            lisatty,
-            etunimet: o.etunimet,
-            sukunimi: o.sukunimi,
-            nimi: o.nimi,
-            jakeluosoite: o.yhteystiedot?.jakeluosoite,
-            postinumero: o.yhteystiedot?.postinumero,
-            paikkakunta: o.yhteystiedot?.paikkakunta,
-            maakoodi: o.yhteystiedot?.maakoodi,
-            expires,
-          };
-          const omistaja: DBOmistaja = {
-            ...initialOmistaja,
-            suomifiLahetys: suomifiLahetys(initialOmistaja),
-          };
-          yhteystiedotMap.set(mapKey(k, o), omistaja);
-        });
-        if (k.omistajat.length === 0) {
-          const omistaja: DBOmistaja = {
-            id: uuid.v4(),
-            kiinteistotunnus: k.kiinteistotunnus,
-            oid: hakuEvent.oid,
-            lisatty,
-            expires,
-            suomifiLahetys: false,
-          };
-          yhteystiedotMap.set(mapKey(k), omistaja);
-        }
-      });
-      kiinteistot.forEach((k) => {
-        k.omistajat.forEach((o) => {
-          const key = mapKey(k, o);
-          const omistaja = yhteystiedotMap.get(key);
-          if (omistaja) {
-            yhteystiedotMap.set(key, { ...omistaja, henkilotunnus: o.henkilotunnus, ytunnus: o.ytunnus });
-          } else {
-            log.error(`Lainhuutotiedolle '${key}' ei löytynyt yhteystietoja`);
+      try {
+        await projektiDatabase.setOmistajahakuKaynnissa(hakuEvent.oid, true);
+        auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
+        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
+        log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
+        log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
+        const yhteystiedotMap = new Map<string, DBOmistaja>();
+        const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+        const expires = getExpires();
+        yhteystiedot.forEach((k) => {
+          k.omistajat.forEach((o) => {
+            const initialOmistaja: Omit<DBOmistaja, "suomifiLahetys"> = {
+              id: uuid.v4(),
+              kiinteistotunnus: k.kiinteistotunnus,
+              oid: hakuEvent.oid,
+              lisatty,
+              etunimet: o.etunimet,
+              sukunimi: o.sukunimi,
+              nimi: o.nimi,
+              jakeluosoite: o.yhteystiedot?.jakeluosoite,
+              postinumero: o.yhteystiedot?.postinumero,
+              paikkakunta: o.yhteystiedot?.paikkakunta,
+              maakoodi: o.yhteystiedot?.maakoodi,
+              expires,
+            };
+            const omistaja: DBOmistaja = {
+              ...initialOmistaja,
+              suomifiLahetys: suomifiLahetys(initialOmistaja),
+            };
+            yhteystiedotMap.set(mapKey(k, o), omistaja);
+          });
+          if (k.omistajat.length === 0) {
+            const omistaja: DBOmistaja = {
+              id: uuid.v4(),
+              kiinteistotunnus: k.kiinteistotunnus,
+              oid: hakuEvent.oid,
+              lisatty,
+              expires,
+              suomifiLahetys: false,
+            };
+            yhteystiedotMap.set(mapKey(k), omistaja);
           }
         });
-      });
-      const dbOmistajat = [...yhteystiedotMap.values()];
-      const omistajatChunks = chunkArray(dbOmistajat, 25);
-      for (const chunk of omistajatChunks) {
-        const putRequests = chunk.map((omistaja) => ({
-          PutRequest: {
-            Item: { ...omistaja },
-          },
-        }));
-        log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
-        await getDynamoDBDocumentClient().send(
-          new BatchWriteCommand({
-            RequestItems: {
-              [getKiinteistonomistajaTableName()]: putRequests,
+        kiinteistot.forEach((k) => {
+          k.omistajat.forEach((o) => {
+            const key = mapKey(k, o);
+            const omistaja = yhteystiedotMap.get(key);
+            if (omistaja) {
+              yhteystiedotMap.set(key, { ...omistaja, henkilotunnus: o.henkilotunnus, ytunnus: o.ytunnus });
+            } else {
+              log.error(`Lainhuutotiedolle '${key}' ei löytynyt yhteystietoja`);
+            }
+          });
+        });
+        const dbOmistajat = [...yhteystiedotMap.values()];
+        const omistajatChunks = chunkArray(dbOmistajat, 25);
+        for (const chunk of omistajatChunks) {
+          const putRequests = chunk.map((omistaja) => ({
+            PutRequest: {
+              Item: { ...omistaja },
             },
-          })
-        );
+          }));
+          log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
+          await getDynamoDBDocumentClient().send(
+            new BatchWriteCommand({
+              RequestItems: {
+                [getKiinteistonomistajaTableName()]: putRequests,
+              },
+            })
+          );
+        }
+        dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
+        const omistajat = dbOmistajat.filter((omistaja) => omistaja.suomifiLahetys).map((o) => o.id);
+        const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
+        auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
+        await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
+      } catch (e) {
+        log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
+        throw e;
+      } finally {
+        await projektiDatabase.setOmistajahakuKaynnissa(hakuEvent.oid, false);
       }
-      dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
-      const omistajat = dbOmistajat.filter((omistaja) => omistaja.suomifiLahetys).map((o) => o.id);
-      const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
-      auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
-      await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
     }
   } catch (e) {
     log.error("Kiinteistöjen haku epäonnistui: " + e);
@@ -197,7 +205,11 @@ async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> 
 }
 
 export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables) {
-  getProjektiAndCheckPermissions(input.oid);
+  const projekti = await getProjektiAndCheckPermissions(input.oid);
+  if (projekti.omistajahakuKaynnissa) {
+    throw new Error("Omistajien haku on jo käynnissä");
+  }
+  await projektiDatabase.setOmistajahakuKaynnissa(input.oid, true);
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
 

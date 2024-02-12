@@ -592,7 +592,9 @@ export class HassuBackendStack extends Stack {
       resources: [this.props.projektiTable.tableArn],
       actions: ["dynamodb:UpdateItem"],
     });
-    updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", { "dynamodb:Attributes": ["muutOmistajat", "omistajat"] });
+    updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", {
+      "dynamodb:Attributes": ["muutOmistajat", "omistajat", "omistajahakuKaynnissa"],
+    });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 

@@ -134,6 +134,7 @@ enum MuokkausTila {
 
 type ProjektinTila {
   aineistotValmiit: Boolean
+  omistajahakuKaynnissa: Boolean
 }
 
 type ProjektipaallikkoVirhe {
@@ -184,6 +185,7 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  omistajahakuKaynnissa: Boolean
 }
 
 type Asianhallinta {
