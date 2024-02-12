@@ -1,9 +1,9 @@
 import { SQSEvent } from "aws-lambda";
 import { setLogContextOid } from "../../src/logger";
-import { SuomiFiSanoma, handleEvent, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
+import { SuomiFiSanoma, handleEvent, lahetaSuomiFiViestit, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { parameters } from "../../src/aws/parameters";
 import * as sinon from "sinon";
 import { config } from "../../src/config";
@@ -21,6 +21,7 @@ import { DBOmistaja } from "../../src/mml/kiinteistoHandler";
 import { fail } from "assert";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { EnhancedPDF } from "../../src/asiakirja/asiakirjaTypes";
+import { SQS, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
 
 const lambdaResponse: EnhancedPDF = {
   __typename: "PDF",
@@ -430,5 +431,46 @@ describe("suomifiHandler", () => {
     expect(input.Key["id"]).to.equal("123");
     parameterStub.restore();
     fileStub.restore();
+  });
+  it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
+    const dbProjekti: Partial<DBProjekti> = {
+      oid: "1",
+      omistajat: ["1", "2", "3", "4", "5"],
+      muistuttajat: ["6", "7", "8"],
+    };
+    mockClient(DynamoDBDocumentClient)
+      .on(BatchGetCommand)
+      .resolves({
+        Responses: {
+          [config.omistajaTableName]: [
+            { id: "1", henkilotunnus: "ABC" },
+            { id: "2", henkilotunnus: "ABC" },
+            { id: "3", henkilotunnus: "DEF" },
+            { id: "4", ytunnus: "123" },
+            { id: "5", ytunnus: "123" },
+          ],
+          [config.muistuttajaTableName]: [
+            { id: "6", henkilotunnus: "ABC" },
+            { id: "7", henkilotunnus: "ABC" },
+            { id: "8", henkilotunnus: "CAB" },
+          ],
+        },
+      });
+    const mock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
+    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
+    expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
+    let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
+    assert(input.Entries);
+    let ids = input.Entries.map((e) => e.Id);
+    expect(ids.join(",")).to.equal("1,3,4,8");
+    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
+    input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
+    assert(input.Entries);
+    ids = input.Entries.map((e) => e.Id);
+    expect(ids.join(",")).to.equal("1,3,4");
+    sinon.restore();
   });
 });

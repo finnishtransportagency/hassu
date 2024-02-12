@@ -4,7 +4,7 @@ import { auditLog, log } from "../logger";
 import { PdfViesti, SuomiFiClient, Viesti, getSuomiFiClient } from "./viranomaispalvelutwsinterface/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchGetCommand, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName, getOmistajaTableName } from "../util/environment";
 import { DBOmistaja } from "../mml/kiinteistoHandler";
 import { DBMuistuttaja } from "../muistutus/muistutusHandler";
@@ -423,15 +423,76 @@ export const handleEvent = async (event: SQSEvent) => {
   await wrapXRayAsync("handler", handlerFactory(event));
 };
 
+const MAX = 100;
+
+async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
+  const ids = projektiFromDB.omistajat ? [...projektiFromDB.omistajat] : [];
+  if (ids.length === 0) {
+    return [];
+  }
+  do {
+    const batchIds = ids.splice(0, MAX);
+    const command = new BatchGetCommand({
+      RequestItems: {
+        [getOmistajaTableName()]: {
+          Keys: batchIds.map((key) => ({
+            id: key,
+          })),
+        },
+      },
+    });
+    const response = await getDynamoDBDocumentClient().send(command);
+    const dbOmistajat = response.Responses ? (response.Responses[getOmistajaTableName()] as DBOmistaja[]) : [];
+    for (const omistaja of dbOmistajat) {
+      if (omistaja.henkilotunnus && !uniqueIds.has(omistaja.henkilotunnus)) {
+        uniqueIds.set(omistaja.henkilotunnus, omistaja.id);
+      } else if (omistaja.ytunnus && !uniqueIds.has(omistaja.ytunnus)) {
+        uniqueIds.set(omistaja.ytunnus, omistaja.id);
+      }
+    }
+  } while (ids.length > 0);
+  return [...uniqueIds.values()];
+}
+
+async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
+  const ids = projektiFromDB.muistuttajat ? [...projektiFromDB.muistuttajat] : [];
+  if (ids.length === 0) {
+    return [];
+  }
+  const newIds : string[] = [];
+  do {
+    const batchIds = ids.splice(0, MAX);
+    const command = new BatchGetCommand({
+      RequestItems: {
+        [getMuistuttajaTableName()]: {
+          Keys: batchIds.map((key) => ({
+            id: key,
+          })),
+        },
+      },
+    });
+    const response = await getDynamoDBDocumentClient().send(command);
+    const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
+    for (const muistuttaja of dbMuistuttajat) {
+      if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
+        uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
+        newIds.push(muistuttaja.id);
+      }
+    }
+  } while (ids.length > 0);
+  return newIds;
+}
+
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
   if (await parameters.isSuomiFiIntegrationEnabled()) {
     const viestit: SendMessageBatchRequestEntry[] = [];
-    projektiFromDB.omistajat?.forEach((id) => {
+    const uniqueIds: Map<string, string> = new Map();
+    (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
       const msg: SuomiFiSanoma = { omistajaId: id, tyyppi };
       viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
     });
     if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
-      projektiFromDB.muistuttajat?.forEach((id) => {
+      (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
         const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
         viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
       });

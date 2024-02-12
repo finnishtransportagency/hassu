@@ -42,7 +42,7 @@ projektiDatabase
             linkkiAsianhallintaan: undefined,
             luonnos: false,
             lyhytOsoite: projekti.lyhytOsoite,
-            nahtavillaoloVaihe: projekti.nahtavillaoloVaiheJulkaisut[0],
+            nahtavillaoloVaihe: projekti.nahtavillaoloVaiheJulkaisut[projekti.nahtavillaoloVaiheJulkaisut.length - 1],
             oid: projekti.oid,
             velho: projekti.velho!,
             vahainenMenettely: projekti.vahainenMenettely,
