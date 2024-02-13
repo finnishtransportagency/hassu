@@ -52,6 +52,9 @@
     },
     "suomifiLahetys": {
       "type": "boolean"
+    },
+    "kaytossa": {
+      "type": "boolean"
     }
   }
 }

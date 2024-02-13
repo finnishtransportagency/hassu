@@ -285,7 +285,7 @@ const TableAccordionDetails = styled(
           </ContentSpacer>
           {initialSearchDone && (
             <p>
-              Haulla {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
+              Suodatuksella {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
             </p>
           )}
           {initialSearchDone && !!hakutulosMaara && !!omistajat.length && (

@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC } from "react";
-import { Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -149,7 +149,13 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           muutOmistajat
         />
       </Section>
-      <HassuDialog open={!!projektinTila?.omistajahakuKaynnissa} title="Haetaan kiinteistönomistajia" maxWidth="sm" hideCloseButton>
+      <HassuDialog
+        open={!!projektinTila?.omistajahakuKaynnissa}
+        title="Haetaan kiinteistönomistajia"
+        maxWidth="sm"
+        hideCloseButton
+        contentAsideTitle={<CircularProgress />}
+      >
         <DialogContent>
           <p>Tietojen hakuaika kiinteistöjen osalta vaihtelee kartan alueen laajuuden mukaan. Älä sulje selainta tai selainikkunaa.</p>
           <p>Haettavien kiinteistöjen määrä {projektinTila?.omistajahakuKiinteistotunnusMaara ?? 0} kpl.</p>

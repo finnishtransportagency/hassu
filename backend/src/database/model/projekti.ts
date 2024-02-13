@@ -180,6 +180,7 @@ export type DBProjekti = {
   asianhallinta?: Asianhallinta;
   omistajat?: string[];
   muutOmistajat?: string[];
+  omistajaHakuId?: string;
   muistuttajat?: string[];
   muutMuistuttajat?: string[];
   omistajahakuKaynnissa?: boolean;

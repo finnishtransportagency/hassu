@@ -83,6 +83,9 @@ class OmistajaSearchService {
             term: { oid: params.oid },
           },
           {
+            term: { kaytossa: true },
+          },
+          {
             term: { suomifiLahetys: !params.muutOmistajat },
           },
         ],

@@ -1,14 +1,15 @@
 import { Dialog, DialogProps, DialogTitle, Stack } from "@mui/material";
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import WindowCloseButton from "./button/WindowCloseButton";
 
 export type HassuDialogProps = {
   title?: string;
   hideCloseButton?: boolean;
+  contentAsideTitle?: ReactNode;
 } & DialogProps;
 
 const HassuDialog = (props: HassuDialogProps): ReactElement => {
-  const { children, title, hideCloseButton, PaperProps, ...dialogProps } = props;
+  const { children, title, hideCloseButton, PaperProps, contentAsideTitle, ...dialogProps } = props;
 
   const { sx: paperSx, ...paperProps } = PaperProps ?? {};
 
@@ -51,6 +52,7 @@ const HassuDialog = (props: HassuDialogProps): ReactElement => {
             <h4 style={{ margin: 0 }} className="vayla-dialog-title">
               {title}
             </h4>
+            {contentAsideTitle}
             {!hideCloseButton && <WindowCloseButton size="small" onClick={() => dialogProps.onClose?.({}, "escapeKeyDown")} />}
           </Stack>
         </DialogTitle>

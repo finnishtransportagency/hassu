@@ -1,7 +1,8 @@
 import { log } from "../logger";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { PutCommand, PutCommandOutput, ScanCommand, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, PutCommandOutput, ScanCommand, ScanCommandOutput, QueryCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
+import { TransactWriteItem, TransactWriteItemsCommand } from "@aws-sdk/client-dynamodb";
 
 export type OmistajaKey = {
   oid: string;
@@ -24,7 +25,8 @@ export type DBOmistaja = {
   paikkakunta?: string | null;
   maakoodi?: string | null;
   expires?: number;
-  suomifiLahetys: boolean;
+  kaytossa: boolean;
+  suomifiLahetys?: boolean;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
 };
 
@@ -32,6 +34,12 @@ export type OmistajaScanResult = {
   startKey: OmistajaKey | undefined;
   omistajat: DBOmistaja[];
 };
+
+function* chunkArray<T>(arr: T[], stride = 1) {
+  for (let i = 0; i < arr.length; i += stride) {
+    yield arr.slice(i, Math.min(i + stride, arr.length));
+  }
+}
 
 class OmistajaDatabase {
   private tableName: string;
@@ -62,6 +70,87 @@ class OmistajaDatabase {
     } catch (e) {
       log.error(e);
       throw e;
+    }
+  }
+
+  async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
+    const command = new QueryCommand({
+      TableName: this.tableName,
+      KeyConditionExpression: "#oid = :oid",
+      ExpressionAttributeValues: {
+        ":oid": oid,
+        ":kaytossa": true,
+      },
+      ExpressionAttributeNames: {
+        "#oid": "oid",
+        "#kaytossa": "kaytossa",
+      },
+      FilterExpression: "#kaytossa = :kaytossa",
+    });
+    const data = await getDynamoDBDocumentClient().send(command);
+    return (data.Items ?? []) as DBOmistaja[];
+  }
+
+  async vaihdaProjektinKaytossaolevatOmistajat(oid: string, lisattavatOmistajat: DBOmistaja[]): Promise<void> {
+    try {
+      const items = await this.haeProjektinKaytossaolevatOmistajat(oid);
+      if (items.length) {
+        log.info("Otetaan käytöstä " + items.length + " omistaja(a)");
+        const transactItems = items.map<TransactWriteItem>((item) => ({
+          Update: {
+            ExpressionAttributeNames: {
+              "#kaytossa": "kaytossa",
+            },
+            ExpressionAttributeValues: {
+              ":kaytossa": {
+                BOOL: false,
+              },
+            },
+            UpdateExpression: "set #kaytossa = :kaytossa",
+            TableName: this.tableName,
+            Key: {
+              id: {
+                S: item.id,
+              },
+              oid: {
+                S: item.oid,
+              },
+            },
+            ReturnValuesOnConditionCheckFailure: "ALL_OLD",
+          },
+        }));
+
+        const oldOmistajatChunks = chunkArray(transactItems, 25);
+
+        for (const chunk of oldOmistajatChunks) {
+          const params = new TransactWriteItemsCommand({
+            TransactItems: chunk,
+          });
+          log.info("Päivitetään " + chunk.length + " omistaja(a)");
+          await getDynamoDBDocumentClient().send(params);
+        }
+      }
+
+      const omistajatChunks = chunkArray(lisattavatOmistajat, 25);
+
+      for (const chunk of omistajatChunks) {
+        const putRequests = chunk.map((omistaja) => ({
+          PutRequest: {
+            Item: { ...omistaja },
+          },
+        }));
+        log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
+        await getDynamoDBDocumentClient().send(
+          new BatchWriteCommand({
+            RequestItems: {
+              [this.tableName]: putRequests,
+            },
+          })
+        );
+      }
+    } catch (error) {
+      log.error("Projektin kiinteistönomistajien korvaaminen epäonnistui");
+      throw error;
     }
   }
 }

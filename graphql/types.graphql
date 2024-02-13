@@ -187,8 +187,6 @@ type Projekti implements IProjekti {
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
   omistajahakuKaynnissa: Boolean
-  kiinteistotunnusMaara: Int
-  kiinteistonomistajaMaara: Int
 }
 
 type Asianhallinta {

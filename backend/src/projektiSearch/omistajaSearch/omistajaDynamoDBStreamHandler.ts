@@ -15,19 +15,23 @@ import { DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from ".
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
     const omistaja = unmarshall(record.dynamodb.NewImage as unknown as Record<string, AttributeValue>) as DBOmistaja;
-    log.info(`${record.eventName}`, { id: omistaja.id, oid: omistaja.oid });
+    log.info(`${record.eventName}`, { id: omistaja.id, oid: omistaja.oid, kaytossa: omistaja.kaytossa });
 
-    await omistajaSearchService.indexOmistaja(omistaja);
+    if (omistaja.kaytossa) {
+      await omistajaSearchService.indexOmistaja(omistaja);
+    } else {
+      await omistajaSearchService.removeOmistaja(omistaja.id);
+    }
   } else {
     log.error("No DynamoDB record to update");
   }
 }
 
 async function handleRemove(record: DynamoDBRecord) {
-  if (record.dynamodb?.Keys?.oid.S) {
-    const oid: string = record.dynamodb.Keys.oid.S;
-    log.info("REMOVE", { oid });
-    await omistajaSearchService.removeOmistaja(oid);
+  if (record.dynamodb?.Keys?.id.S) {
+    const id: string = record.dynamodb.Keys.id.S;
+    log.info("REMOVE", { id });
+    await omistajaSearchService.removeOmistaja(id);
   } else {
     log.error("No DynamoDB key to remove");
   }

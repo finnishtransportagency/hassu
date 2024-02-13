@@ -16,6 +16,7 @@ export type OmistajaDocument = Pick<
   | "lisatty"
   | "paivitetty"
   | "suomifiLahetys"
+  | "kaytossa"
 >;
 
 export function adaptOmistajaToIndex({
@@ -31,6 +32,7 @@ export function adaptOmistajaToIndex({
   lisatty,
   paivitetty,
   suomifiLahetys,
+  kaytossa,
 }: DBOmistaja): OmistajaDocument {
   return {
     etunimet,
@@ -45,6 +47,7 @@ export function adaptOmistajaToIndex({
     lisatty,
     paivitetty,
     suomifiLahetys,
+    kaytossa,
   };
 }
 

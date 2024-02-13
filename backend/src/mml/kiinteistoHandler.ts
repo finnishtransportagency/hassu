@@ -1,11 +1,11 @@
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
-import { MmlClient, MmlKiinteisto, Omistaja as MmlOmistaja, getMmlClient } from "./mmlClient";
+import { MmlClient, getMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchWriteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
@@ -25,7 +25,7 @@ import { ProjektiPaths } from "../files/ProjektiPath";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import { DBProjekti } from "../database/model";
 import { getKiinteistonomistajaTableName } from "../util/environment";
-import { DBOmistaja } from "../database/omistajaDatabase";
+import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 
 export type OmistajaHakuEvent = {
@@ -45,12 +45,6 @@ async function getClient() {
   return mmlClient;
 }
 
-function* chunkArray<T>(arr: T[], stride = 1) {
-  for (let i = 0; i < arr.length; i += stride) {
-    yield arr.slice(i, Math.min(i + stride, arr.length));
-  }
-}
-
 function suomifiLahetys(omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">): boolean {
   return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
@@ -64,8 +58,15 @@ function getExpires() {
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
-function mapKey(k: MmlKiinteisto, o?: MmlOmistaja) {
-  return `${k.kiinteistotunnus}_${o?.etunimet}_${o?.sukunimi}_${o?.nimi}`;
+type MapKeyInfo = {
+  kiinteistotunnus: string;
+  etunimet?: string | null;
+  sukunimi?: string | null;
+  nimi?: string | null;
+};
+
+function mapKey({ kiinteistotunnus, etunimet, sukunimi, nimi }: MapKeyInfo) {
+  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}`;
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
@@ -82,12 +83,18 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
-        const yhteystiedotMap = new Map<string, DBOmistaja>();
+
+        const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
+        const oldOmistajaMap = new Map<string, DBOmistaja>(
+          aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
+        );
+        const omistajaMap = new Map<string, DBOmistaja>();
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
+
         yhteystiedot.forEach((k) => {
           k.omistajat.forEach((o) => {
-            const initialOmistaja: Omit<DBOmistaja, "suomifiLahetys"> = {
+            const omistaja: DBOmistaja = {
               id: uuid.v4(),
               kiinteistotunnus: k.kiinteistotunnus,
               oid: hakuEvent.oid,
@@ -99,13 +106,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
               postinumero: o.yhteystiedot?.postinumero,
               paikkakunta: o.yhteystiedot?.paikkakunta,
               maakoodi: o.yhteystiedot?.maakoodi,
+              suomifiLahetys: false,
+              kaytossa: true,
               expires,
             };
-            const omistaja: DBOmistaja = {
-              ...initialOmistaja,
-              suomifiLahetys: suomifiLahetys(initialOmistaja),
-            };
-            yhteystiedotMap.set(mapKey(k, o), omistaja);
+            omistajaMap.set(mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o }), omistaja);
           });
           if (k.omistajat.length === 0) {
             const omistaja: DBOmistaja = {
@@ -115,38 +120,45 @@ const handlerFactory = (event: SQSEvent) => async () => {
               lisatty,
               expires,
               suomifiLahetys: false,
+              kaytossa: true,
             };
-            yhteystiedotMap.set(mapKey(k), omistaja);
+            omistajaMap.set(mapKey(k), omistaja);
           }
         });
         kiinteistot.forEach((k) => {
           k.omistajat.forEach((o) => {
-            const key = mapKey(k, o);
-            const omistaja = yhteystiedotMap.get(key);
+            const key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o });
+            const omistaja = omistajaMap.get(key);
             if (omistaja) {
-              yhteystiedotMap.set(key, { ...omistaja, henkilotunnus: o.henkilotunnus, ytunnus: o.ytunnus });
+              const taydennettyOmistaja: DBOmistaja = {
+                ...omistaja,
+                henkilotunnus: o.henkilotunnus,
+                ytunnus: o.ytunnus,
+              };
+              taydennettyOmistaja.suomifiLahetys = suomifiLahetys(taydennettyOmistaja);
+              omistajaMap.set(key, taydennettyOmistaja);
             } else {
               log.error(`Lainhuutotiedolle '${key}' ei löytynyt yhteystietoja`);
             }
           });
         });
-        const dbOmistajat = [...yhteystiedotMap.values()];
-        const omistajatChunks = chunkArray(dbOmistajat, 25);
-        for (const chunk of omistajatChunks) {
-          const putRequests = chunk.map((omistaja) => ({
-            PutRequest: {
-              Item: { ...omistaja },
-            },
-          }));
-          log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
-          await getDynamoDBDocumentClient().send(
-            new BatchWriteCommand({
-              RequestItems: {
-                [getKiinteistonomistajaTableName()]: putRequests,
-              },
-            })
-          );
-        }
+        const dbOmistajat = [...omistajaMap.values()];
+
+        // Päivitä omistajille aiemmin tallennetut osoitetiedot
+        dbOmistajat
+          .filter((omistaja) => !omistaja.suomifiLahetys)
+          .forEach((omistaja) => {
+            const key = mapKey(omistaja);
+            const oldOmistaja = oldOmistajaMap.get(key);
+            if (oldOmistaja && !oldOmistaja.suomifiLahetys && !omistaja.jakeluosoite && !omistaja.jakeluosoite && !omistaja.jakeluosoite) {
+              omistaja.jakeluosoite = oldOmistaja.jakeluosoite;
+              omistaja.paikkakunta = oldOmistaja.paikkakunta;
+              omistaja.postinumero = oldOmistaja.postinumero;
+            }
+          });
+
+        await omistajaDatabase.vaihdaProjektinKaytossaolevatOmistajat(hakuEvent.oid, dbOmistajat);
+
         dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
         const omistajat = dbOmistajat.filter((omistaja) => omistaja.suomifiLahetys).map((o) => o.id);
         const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
@@ -213,6 +225,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
 
+  // Kannattaako siirtää muualle?
   if (!(await omistajaSearchService.indexExists())) {
     await omistajaSearchService.createIndex();
   }
@@ -252,6 +265,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         sukunimi: dbOmistaja?.sukunimi,
         nimi: dbOmistaja?.nimi,
         suomifiLahetys: !dbOmistaja || suomifiLahetys(dbOmistaja),
+        kaytossa: !!dbOmistaja?.kaytossa,
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
