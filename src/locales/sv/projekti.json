@@ -270,7 +270,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kungörelse om framläggande av plan",
-      "otsikko2": "Kära mottagare",
+      "otsikko2": "(sv) Ilmoitus suunnitelman nähtäville asettamisesta",
       "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): {{nimi}}.",
       "rata_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt banlagen (110/2007): {{nimi}}.",
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
@@ -299,7 +299,8 @@
       "lakiviite_omistajille_tie": "lagen om trafiksystem och landsvägar 27 § 3 mom. ",
       "lakiviite_omistajille_rata": "banlagen 22 § 3 mom.",
       "lakiviite_vahainen_menettely_tie": "lagen om trafiksystem och landsvägar 27 och 28 §",
-      "lakiviite_vahainen_menettely_rata": "banlagen 22 och 23 §"
+      "lakiviite_vahainen_menettely_rata": "banlagen 22 och 23 §",
+      "maanomistaja": "(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne."
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",

@@ -270,7 +270,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
-      "otsikko2": "Hyvä vastaanottaja",
+      "otsikko2": "Ilmoitus suunnitelman nähtäville asettamisesta",
       "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{nimi}}.",
       "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: {{nimi}}.",
       "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -299,7 +299,8 @@
       "lakiviite_omistajille_tie": "LjMTL 27 § 3 mom",
       "lakiviite_omistajille_rata": "ratalaki 22 § 3 mom",
       "lakiviite_vahainen_menettely_tie": "LjMTL 27 § ja 28 §",
-      "lakiviite_vahainen_menettely_rata": "ratalaki 22 § ja 23 §"
+      "lakiviite_vahainen_menettely_rata": "ratalaki 22 § ja 23 §",
+      "maanomistaja": "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne."
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksestä ilmoittaminen",

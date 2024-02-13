@@ -1,5 +1,5 @@
-import { NahtavillaoloVaiheJulkaisu } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
+import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
@@ -21,6 +21,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   protected kieli: KaannettavaKieli;
   protected vahainenMenettely: boolean | undefined | null;
   private osoite?: Osoite;
+  private readonly velho: Velho;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
@@ -71,6 +72,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       params.kieli
     );
     super(params.kieli, kutsuAdapter);
+    this.velho = velho;
     const language = params.kieli;
     this.header = headers[language];
     this.kieli = params.kieli;
@@ -95,13 +97,13 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   protected appendHeader() {
     if (this.osoite) {
       let x = this.toPdfPoints(21);
-      this.doc.text("VÄYLÄVIRASTO", x, this.toPdfPoints(20), { width: this.toPdfPoints(72), baseline: "top" });
+      this.doc.text("Väylävirasto", x, this.toPdfPoints(20), { width: this.toPdfPoints(72), baseline: "top" });
       this.doc.text("PL 33", undefined, undefined, { width: this.toPdfPoints(72) });
       this.doc.text("00521 HELSINKI", undefined, undefined, { width: this.toPdfPoints(72) });
 
-      this.doc.text(this.osoite?.nimi.toUpperCase(), x, this.toPdfPoints(55), { width: this.toPdfPoints(62), baseline: "top" });
-      this.doc.text(this.osoite.katuosoite.toUpperCase(), undefined, undefined, { width: this.toPdfPoints(72) });
-      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka}`.toUpperCase(), undefined, undefined, { width: this.toPdfPoints(72) });
+      this.doc.text(this.osoite?.nimi, x, this.toPdfPoints(55), { width: this.toPdfPoints(62), baseline: "top" });
+      this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: this.toPdfPoints(72) });
+      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka.toUpperCase()}`, undefined, undefined, { width: this.toPdfPoints(72) });
       x = this.isVaylaTilaaja() ? this.toPdfPoints(75) : this.toPdfPoints(70);
       const y = this.isVaylaTilaaja() ? this.toPdfPoints(53) : this.toPdfPoints(57);
       this.doc.image(this.iPostLogo(), x, y, { fit: this.isVaylaTilaaja() ? [50, 43.48] : [63, 22.09] });
@@ -110,6 +112,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.doc.image(this.logo, this.toPdfPoints(21), this.toPdfPoints(100), { height: 75 });
 
       this.doc.moveDown(16);
+      this.osoite = undefined;
     } else {
       super.appendHeader(350);
     }
@@ -128,7 +131,6 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
 
   protected addDocumentElements(): PDFStructureElement[] {
     return [
-      this.paragraph(this.kutsuAdapter.nimi),
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
@@ -139,7 +141,20 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
         ? this.paragraphFromKey("kiinteistonomistaja_kappale7_vahainen_menettely")
         : this.paragraphFromKey("kiinteistonomistaja_kappale7"),
       this.paragraphFromKey("kiinteistonomistaja_kappale5"),
+      this.lahetettyOmistajilleParagraph(),
+      this.paragraphFromKey("maanomistaja"),
+      this.tietosuojaParagraph(),
+      this.lisatietojaAntavatParagraph(),
+      this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
     ].filter((elem): elem is PDFStructureElement => !!elem);
+  }
+
+  private lahetettyOmistajilleParagraph() {
+    if (this.velho.tyyppi === ProjektiTyyppi.YLEINEN) {
+      return this.paragraphFromKey("lahetetty_omistajille_yleis");
+    } else {
+      return this.paragraphFromKey("lahetetty_omistajille_tie_rata");
+    }
   }
 
   private get startOfPlanningPhrase() {
