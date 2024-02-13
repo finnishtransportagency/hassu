@@ -144,13 +144,13 @@ const handlerFactory = (event: SQSEvent) => async () => {
         });
         const dbOmistajat = [...omistajaMap.values()];
 
-        // Päivitä omistajille aiemmin tallennetut osoitetiedot
+        // Päivitä muille omistajille aiemmin tallennetut osoitetiedot
         dbOmistajat
           .filter((omistaja) => !omistaja.suomifiLahetys)
           .forEach((omistaja) => {
             const key = mapKey(omistaja);
             const oldOmistaja = oldOmistajaMap.get(key);
-            if (oldOmistaja && !oldOmistaja.suomifiLahetys && !omistaja.jakeluosoite && !omistaja.jakeluosoite && !omistaja.jakeluosoite) {
+            if (oldOmistaja && !oldOmistaja.suomifiLahetys && !omistaja.paikkakunta && !omistaja.postinumero && !omistaja.jakeluosoite) {
               omistaja.jakeluosoite = oldOmistaja.jakeluosoite;
               omistaja.paikkakunta = oldOmistaja.paikkakunta;
               omistaja.postinumero = oldOmistaja.postinumero;

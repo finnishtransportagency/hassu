@@ -88,7 +88,7 @@ class OmistajaDatabase {
       FilterExpression: "#kaytossa = :kaytossa",
     });
     const data = await getDynamoDBDocumentClient().send(command);
-    return (data.Items ?? []) as DBOmistaja[];
+    return (data?.Items ?? []) as DBOmistaja[];
   }
 
   async vaihdaProjektinKaytossaolevatOmistajat(oid: string, lisattavatOmistajat: DBOmistaja[]): Promise<void> {
