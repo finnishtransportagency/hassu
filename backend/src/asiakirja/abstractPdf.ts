@@ -238,10 +238,10 @@ export abstract class AbstractPdf {
     }
   }
 
-  protected appendHeader(x = 400) {
+  protected appendHeader(asiaTunnusX = 400, logoX = 19) {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
-    this.doc.image(this.logo, 19, 32, { height: 75 });
-    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), x, 64);
+    this.doc.image(this.logo, logoX, 32, { height: 75 });
+    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), asiaTunnusX, 64);
     this.doc.moveDown(3);
   }
 

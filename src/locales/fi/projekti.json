@@ -300,7 +300,13 @@
       "lakiviite_omistajille_rata": "ratalaki 22 § 3 mom",
       "lakiviite_vahainen_menettely_tie": "LjMTL 27 § ja 28 §",
       "lakiviite_vahainen_menettely_rata": "ratalaki 22 § ja 23 §",
-      "maanomistaja": "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne."
+      "maanomistaja": "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+      "projektipaallikko": "Projektipäällikkö",
+      "jakelu1": "Jakelu",
+      "jakelu2": "Erillisen jakelun mukaan",
+      "jakelu3": "Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä",
+      "tiedoksi1": "Tiedoksi",
+      "tiedoksi2": "{{tilaajaGenetiivi}} kirjaamo"
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksestä ilmoittaminen",

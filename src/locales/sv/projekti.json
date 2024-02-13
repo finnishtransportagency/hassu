@@ -300,7 +300,13 @@
       "lakiviite_omistajille_rata": "banlagen 22 § 3 mom.",
       "lakiviite_vahainen_menettely_tie": "lagen om trafiksystem och landsvägar 27 och 28 §",
       "lakiviite_vahainen_menettely_rata": "banlagen 22 och 23 §",
-      "maanomistaja": "(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne."
+      "maanomistaja": "(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+      "projektipaallikko": "(sv) Projektipäällikkö",
+      "jakelu1": "(sv) Jakelu",
+      "jakelu2": "(sv) Erillisen jakelun mukaan",
+      "jakelu3": "(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä",
+      "tiedoksi1": "(sv) Tiedoksi",
+      "tiedoksi2": "(sv) {{tilaajaGenetiivi}} kirjaamo"
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",

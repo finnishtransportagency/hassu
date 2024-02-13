@@ -114,7 +114,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.doc.moveDown(16);
       this.osoite = undefined;
     } else {
-      super.appendHeader(350);
+      super.appendHeader(350, this.toPdfPoints(21));
     }
   }
 
@@ -144,9 +144,29 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.lahetettyOmistajilleParagraph(),
       this.paragraphFromKey("maanomistaja"),
       this.tietosuojaParagraph(),
+      this.projektiPaallikko(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
+      this.jakeluTiedoksiText(),
     ].filter((elem): elem is PDFStructureElement => !!elem);
+  }
+
+  private projektiPaallikko(): PDFKit.PDFStructureElementChild {
+    return () => {
+      this.doc.text(this.kutsuAdapter.projektipaallikkoNimi);
+      this.doc.text(this.kutsuAdapter.text("projektipaallikko"));
+      this.doc.text(this.kutsuAdapter.projektipaallikkoOrganisaatio!).moveDown();
+    }
+  }
+
+  private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {
+    return () => {
+      this.doc.text(this.kutsuAdapter.text("jakelu1")).moveUp();
+      this.doc.text(this.kutsuAdapter.text("jakelu2"), { indent: 60 });
+      this.doc.text(this.kutsuAdapter.text("jakelu3"), { indent: 60 });
+      this.doc.text(this.kutsuAdapter.text("tiedoksi1")).moveUp();
+      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), { indent: 60 });
+    }
   }
 
   private lahetettyOmistajilleParagraph() {

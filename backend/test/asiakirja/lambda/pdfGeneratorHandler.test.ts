@@ -1,6 +1,8 @@
 import {
   AsiakirjaTyyppi,
+  ELY,
   IlmoitettavaViranomainen,
+  KayttajaTyyppi,
   Kieli,
   KirjaamoOsoite,
   ProjektiTyyppi,
@@ -68,7 +70,18 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
     createNahtavillaoloKuulutusPdf: {
       asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
       asianhallintaPaalla: false,
-      kayttoOikeudet: [],
+      kayttoOikeudet: [
+        {
+          etunimi: "Teppo",
+          sukunimi: "Projektipäällikkö",
+          email: "teppo@vayla.fi",
+          kayttajatunnus: "XXX",
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          organisaatio:
+            event.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY",
+          elyOrganisaatio: ELY.UUDENMAAN_ELY,
+        },
+      ],
       kieli: event.kieli,
       linkkiAsianhallintaan: undefined,
       luonnos: false,
