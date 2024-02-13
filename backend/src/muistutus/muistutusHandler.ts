@@ -122,6 +122,7 @@ class MuistutusHandler {
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
     await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id]);
     const msg: SuomiFiSanoma = {
+      oid,
       muistuttajaId: muistuttaja.id,
     };
     await getSQS().sendMessage({ QueueUrl: await parameters.getSuomiFiSQSUrl(), MessageBody: JSON.stringify(msg) });
@@ -149,7 +150,7 @@ class MuistutusHandler {
       });
       const response = await getDynamoDBDocumentClient().send(command);
       const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
-      dbMuistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id }));
+      dbMuistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id, projektiOid: variables.oid }));
       return {
         __typename: "Muistuttajat",
         hakutulosMaara: muistuttajat.length,

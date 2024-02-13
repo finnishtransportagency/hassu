@@ -26,7 +26,6 @@ import {
   EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables,
   HaeKiinteistonOmistajatQueryVariables,
   TallennaKiinteistonOmistajatMutationVariables,
-  PoistaKiinteistonOmistajaMutationVariables,
   TuoKarttarajausMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   HaeMuistuttajatQueryVariables,
@@ -61,7 +60,6 @@ import { testHandler } from "../testing/testHandler";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 import {
   haeKiinteistonOmistajat,
-  poistaKiinteistonOmistaja,
   tallennaKiinteistonOmistajat,
   tuoKarttarajausJaTallennaKiinteistotunnukset,
   tuoKarttarajaus,
@@ -139,8 +137,6 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
       return await haeKiinteistonOmistajat(event.arguments as HaeKiinteistonOmistajatQueryVariables);
-    case apiConfig.poistaKiinteistonOmistaja.name:
-      return await poistaKiinteistonOmistaja(event.arguments as PoistaKiinteistonOmistajaMutationVariables);
     case apiConfig.tuoKarttarajaus.name:
       return await tuoKarttarajaus(event.arguments as TuoKarttarajausMutationVariables);
     case apiConfig.haeMuistuttajat.name:

@@ -36,6 +36,7 @@ import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
 import { DBOmistaja } from "../database/omistajaDatabase";
 
 export type SuomiFiSanoma = {
+  oid: string;
   muistuttajaId?: string;
   omistajaId?: string;
   tyyppi?: PublishOrExpireEventType;
@@ -374,9 +375,9 @@ type DBKohde = {
   projekti: DBProjekti;
 };
 
-async function getKohde(id: string, omistaja: boolean): Promise<DBKohde | undefined> {
+async function getKohde(oid: string, id: string, omistaja: boolean): Promise<DBKohde | undefined> {
   const dbResponse = await getDynamoDBDocumentClient().send(
-    new GetCommand({ TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(), Key: { id } })
+    new GetCommand({ TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(), Key: { id, oid } })
   );
   const kohde = dbResponse.Item as DBMuistuttaja | DBOmistaja | undefined;
   if (!kohde) {
@@ -391,8 +392,8 @@ async function getKohde(id: string, omistaja: boolean): Promise<DBKohde | undefi
   return { kohde, projekti };
 }
 
-async function handleMuistuttaja(muistuttajaId: string, tyyppi?: PublishOrExpireEventType) {
-  const kohde = await getKohde(muistuttajaId, false);
+async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: PublishOrExpireEventType) {
+  const kohde = await getKohde(oid, muistuttajaId, false);
   if (!kohde) {
     return;
   }
@@ -422,8 +423,8 @@ async function handleMuistuttaja(muistuttajaId: string, tyyppi?: PublishOrExpire
   }
 }
 
-async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventType) {
-  const kohde = await getKohde(omistajaId, true);
+async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOrExpireEventType) {
+  const kohde = await getKohde(oid, omistajaId, true);
   if (!kohde) {
     return;
   }
@@ -457,9 +458,9 @@ const handlerFactory = (event: SQSEvent) => async () => {
       const msg = JSON.parse(record.body) as SuomiFiSanoma;
       log.info("Suomi.fi sanoma", { sanoma: msg });
       if (msg.omistajaId && msg.tyyppi) {
-        await handleOmistaja(msg.omistajaId, msg.tyyppi);
+        await handleOmistaja(msg.oid, msg.omistajaId, msg.tyyppi);
       } else if (msg.muistuttajaId) {
-        await handleMuistuttaja(msg.muistuttajaId, msg.tyyppi);
+        await handleMuistuttaja(msg.oid, msg.muistuttajaId, msg.tyyppi);
       } else {
         log.error("Suomi.fi sanoma virheellinen", { sanoma: msg });
       }

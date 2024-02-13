@@ -121,7 +121,7 @@ describe("suomifiHandler", () => {
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
-    const body: SuomiFiSanoma = { muistuttajaId: "123" };
+    const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(emailStub.callCount).to.equal(1);
@@ -132,7 +132,7 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: {
-          id: "1",
+          oid: "1",
           velho: {
             nimi: "Projektin nimi2",
             suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
@@ -151,7 +151,7 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: {
-          id: "1",
+          oid: "1",
           velho: {
             nimi: "Projektin nimi3",
             suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
@@ -184,8 +184,8 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.muistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
-    const body: SuomiFiSanoma = { muistuttajaId: "123" };
+      .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
+    const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(emailStub.callCount).to.equal(0);
@@ -211,8 +211,8 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.muistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
-    const body: SuomiFiSanoma = { muistuttajaId: "123" };
+      .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
+    const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(request.viesti).toMatchSnapshot();
@@ -238,11 +238,11 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.muistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
+      .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
     const emailStub = sinon
       .stub(emailClient, "sendEmail")
       .resolves({ accepted: [""], messageId: "", pending: [], rejected: [], response: "", envelope: { from: "", to: ["test@test.fi"] } });
-    const body: SuomiFiSanoma = { muistuttajaId: "123" };
+    const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(request.viesti).to.equal(undefined);
@@ -286,7 +286,7 @@ describe("suomifiHandler", () => {
         Item: dbProjekti,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
-    const body: SuomiFiSanoma = { muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     assert(request.pdfViesti);
@@ -362,6 +362,7 @@ describe("suomifiHandler", () => {
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
       suomifiLahetys: true,
+      kaytossa: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -373,14 +374,14 @@ describe("suomifiHandler", () => {
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.omistajaTableName })
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({ Item: omistaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
-    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     assert(request.pdfViesti);
@@ -545,6 +546,7 @@ describe("suomifiHandler", () => {
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
       suomifiLahetys: true,
+      kaytossa: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300, 200);
@@ -563,7 +565,7 @@ describe("suomifiHandler", () => {
         Item: dbProjekti,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
-    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body), messageId: "123456" }] };
     try {
       await handleEvent(msg as SQSEvent);

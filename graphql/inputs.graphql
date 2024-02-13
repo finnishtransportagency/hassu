@@ -472,8 +472,9 @@ input TestiKomentoInput {
 }
 
 input OmistajaInput {
-  id: String!
+  id: String
   kiinteistotunnus: String!
+  nimi: String
   jakeluosoite: String
   postinumero: String
   paikkakunta: String

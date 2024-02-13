@@ -53,8 +53,7 @@ type Mutation {
 
   tuoKarttarajaus(oid: String!, geoJSON: String!): String
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
-  tallennaKiinteistonOmistajat(oid: String!, omistajat: [OmistajaInput!]!, poistettavatOmistajat: [String!]!): [Omistaja!]!
-  poistaKiinteistonOmistaja(oid: String!, omistaja: String!): String
+  tallennaKiinteistonOmistajat(oid: String!, muutOmistajat: [OmistajaInput!]!, poistettavatOmistajat: [String!]!): [Omistaja!]!
   tallennaMuistuttajat(oid: String!, muistuttajat: [MuistuttajaInput!]!): [Muistuttaja!]!
   poistaMuistuttaja(oid: String!, muistuttaja: String!): String
 }

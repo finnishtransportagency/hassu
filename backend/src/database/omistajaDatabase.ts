@@ -1,7 +1,15 @@
 import { log } from "../logger";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { PutCommand, PutCommandOutput, ScanCommand, ScanCommandOutput, QueryCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  PutCommand,
+  PutCommandOutput,
+  ScanCommand,
+  ScanCommandOutput,
+  QueryCommand,
+  BatchWriteCommand,
+  UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { TransactWriteItem, TransactWriteItemsCommand } from "@aws-sdk/client-dynamodb";
 
 export type OmistajaKey = {
@@ -89,6 +97,24 @@ class OmistajaDatabase {
     });
     const data = await getDynamoDBDocumentClient().send(command);
     return (data?.Items ?? []) as DBOmistaja[];
+  }
+
+  async poistaOmistajaKaytosta(oid: string, id: string): Promise<void> {
+    const params = new UpdateCommand({
+      TableName: this.tableName,
+      Key: {
+        oid,
+        id,
+      },
+      UpdateExpression: "SET #kaytossa = :kaytossa",
+      ExpressionAttributeNames: {
+        "#kaytossa": "kaytossa",
+      },
+      ExpressionAttributeValues: {
+        ":kaytossa": false,
+      },
+    });
+    await getDynamoDBDocumentClient().send(params);
   }
 
   async vaihdaProjektinKaytossaolevatOmistajat(oid: string, lisattavatOmistajat: DBOmistaja[]): Promise<void> {
