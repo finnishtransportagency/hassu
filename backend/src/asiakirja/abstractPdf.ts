@@ -238,6 +238,11 @@ export abstract class AbstractPdf {
     }
   }
 
+  iPostLogo(): string {
+    const isVaylaTilaaja = this.isVaylaTilaaja();
+    return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
+  }
+
   protected appendHeader(asiaTunnusX = 400, logoX = 19) {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, logoX, 32, { height: 75 });

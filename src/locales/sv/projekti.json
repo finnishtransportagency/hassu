@@ -301,7 +301,7 @@
       "lakiviite_vahainen_menettely_tie": "lagen om trafiksystem och landsvägar 27 och 28 §",
       "lakiviite_vahainen_menettely_rata": "banlagen 22 och 23 §",
       "maanomistaja": "(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-      "projektipaallikko": "(sv) Projektipäällikkö",
+      "projektipaallikko": "Projektledare",
       "jakelu1": "(sv) Jakelu",
       "jakelu2": "(sv) Erillisen jakelun mukaan",
       "jakelu3": "(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä",
@@ -331,7 +331,16 @@
       "muistuttajille_kappale1": "{{viranomainenLyhyt}} meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
       "muistuttajille_kappale2": "{{viranomainenLyhyt}} skickar beslutet om godkännande för kännedom. ({{lakiviite_muistuttajille}}). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).",
       "lakiviite_muistuttajille_tie": "104 § i lagen om trafiksystem och landsvägar",
-      "lakiviite_muistuttajille_rata": "91 § i banlagen"
+      "lakiviite_muistuttajille_rata": "91 § i banlagen",
+      "otsikko": "(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,",
+      "lain2_tie": "lagen om trafiksystem och landsvägar (503/2005)",
+      "lain2_rata": "banlagen (110/2007)",
+      "kappale5": "Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden {{kuulutusNahtavillaAika}} på adressen {{linkki_paatos}} ({{paatoslaki}}).",
+      "paatoslaki_rata": "90 § i banlagen",
+      "paatoslaki_tie": "103 § i lagen om trafiksystem och landsvägar",
+      "muistuttajille_kappale3": "(sv) {{viranomainenLyhyt}} meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
+      "muistuttajille_kappale4": "(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).",
+      "projektipaallikko": "Projektledare"
     },
     "kuulutus_hyvaksymispaatoksesta": {
       "otsikko": "Kungörelse av beslut om godkännande av plan",

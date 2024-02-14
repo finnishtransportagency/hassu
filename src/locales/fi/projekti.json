@@ -331,7 +331,16 @@
       "muistuttajille_kappale1": "{{viranomainenLyhyt}} ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
       "muistuttajille_kappale2": "{{viranomainenLyhyt}} lähettää hyväksymispäätöksen tiedoksenne. ({{lakiviite_muistuttajille}}). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).",
       "lakiviite_muistuttajille_tie": "laki liikennejärjestelmästä ja maanteistä 104 §",
-      "lakiviite_muistuttajille_rata": "ratalaki 91 §"
+      "lakiviite_muistuttajille_rata": "ratalaki 91 §",
+      "otsikko": "Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,",
+      "lain2_tie": "liikennejärjestelmästä ja maanteistä annetun lain (503/2005)",
+      "lain2_rata": "ratalain (110/2007)",
+      "kappale5": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_paatos}} ({{paatoslaki}}).",
+      "paatoslaki_rata": "ratalaki 90 §",
+      "paatoslaki_tie": "LjMTL 103 §",
+      "muistuttajille_kappale3": "{{viranomainenLyhyt}} ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
+      "muistuttajille_kappale4": "Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).",
+      "projektipaallikko": "Projektipäällikkö"
     },
     "kuulutus_hyvaksymispaatoksesta": {
       "otsikko": "Suunnitelman hyväksymispäätöksen kuuluttaminen",

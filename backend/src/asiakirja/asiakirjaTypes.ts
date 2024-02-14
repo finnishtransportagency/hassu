@@ -90,6 +90,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   euRahoitusLogot?: LocalizedMap<string> | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  osoite?: Osoite;
 };
 
 export function determineAsiakirjaMuoto(

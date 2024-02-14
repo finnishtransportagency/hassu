@@ -4,19 +4,26 @@ import { LocalizedMap, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import { fileService } from "../../files/fileService";
-import { AsiakirjanMuoto, EnhancedPDF } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, EnhancedPDF, Osoite } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { toPdfPoints } from "../asiakirjaUtil";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: KaannettavaKieli;
   kutsuAdapter: T;
   protected euLogo?: string | Buffer;
+  private osoite?: Osoite;
+  private asiaTunnusX?: number;
+  private logoX?: number;
 
-  protected constructor(kieli: KaannettavaKieli, kutsuAdapter: T) {
+  protected constructor(kieli: KaannettavaKieli, kutsuAdapter: T, osoite?: Osoite, asiaTunnusX?: number, logoX?: number) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
+    this.osoite = osoite;
+    this.logoX = logoX;
+    this.asiaTunnusX = asiaTunnusX;
   }
 
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
@@ -65,6 +72,30 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
       return this.paragraph(text);
     } else {
       return this.paragraph("");
+    }
+  }
+
+  protected appendHeader() {
+    if (this.osoite) {
+      const x = toPdfPoints(21);
+      //TODO: Lähettäjä vastaavan viranomaisen mukaan, pitää saada kaikkien ely keskusten osoitteet
+      this.doc.text("Väylävirasto", x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
+      this.doc.text("PL 33", undefined, undefined, { width: toPdfPoints(72) });
+      this.doc.text("00521 HELSINKI", undefined, undefined, { width: toPdfPoints(72) });
+
+      const iPostX = this.isVaylaTilaaja() ? toPdfPoints(75) : toPdfPoints(70);
+      const iPostY = this.isVaylaTilaaja() ? toPdfPoints(18) : toPdfPoints(20);
+      this.doc.image(this.iPostLogo(), iPostX, iPostY, { fit: this.isVaylaTilaaja() ? [50, 43.48] : [63, 22.09], valign: "bottom" });
+
+      this.doc.text(this.osoite?.nimi, x, toPdfPoints(55), { width: toPdfPoints(62), baseline: "top" });
+      this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
+      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka.toUpperCase()}`, undefined, undefined, { width: toPdfPoints(72) });
+      this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), this.asiaTunnusX, 110);
+
+      this.doc.moveDown(12);
+      this.osoite = undefined;
+    } else {
+      super.appendHeader(this.asiaTunnusX, this.logoX);
     }
   }
 
