@@ -22,6 +22,7 @@ import { setLogContextOid } from "../../src/logger";
 import { identifyMockUser } from "../../src/user/userService";
 import { config } from "../../src/config";
 import { DBOmistaja } from "../../src/database/omistajaDatabase";
+import { IllegalArgumentError } from "hassu-common/error";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -257,6 +258,151 @@ describe("kiinteistoHandler", () => {
     expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
     expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"][0]).to.be.equal("33");
     expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"][1]).to.be.equal(o2.id);
+  });
+
+  it("heittää virhettä olemattoman omistajan poistamisesta", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    const omistajaIdt = ["11", "22"];
+    const muutOmistajaIdt = ["33", "44"];
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+      Item: { id: "1", omistajat: omistajaIdt, muutOmistajat: muutOmistajaIdt, kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+    });
+    dbMock
+      .on(QueryCommand, {
+        TableName: config.kiinteistonomistajaTableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": "1",
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+      })
+      .resolves({
+        Items: [
+          { id: omistajaIdt[0], oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: true },
+          { id: omistajaIdt[1], oid: "1", etunimet: "Marko", sukunimi: "Markon sukunimi", suomifiLahetys: true },
+          { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
+          { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
+        ],
+      });
+    await expect(
+      tallennaKiinteistonOmistajat({
+        oid: "1",
+        muutOmistajat: [
+          {
+            id: "33",
+            kiinteistotunnus: "1",
+            jakeluosoite: "Osoite 2",
+            postinumero: "00100",
+            paikkakunta: "Helsinki",
+          },
+          {
+            kiinteistotunnus: "2",
+            nimi: "Matti Ruohonen",
+            jakeluosoite: "Osoite 1",
+            postinumero: "01000",
+            paikkakunta: "Vantaa",
+          },
+        ],
+        poistettavatOmistajat: ["77"],
+      })
+    ).to.eventually.rejectedWith(IllegalArgumentError, "Poistettavaa omistajaa id:'77' ei löytynyt");
+  });
+
+  it("heittää virhettä jos muokattava omistaja ei ole muuOmistaja", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    const omistajaIdt = ["11", "22"];
+    const muutOmistajaIdt = ["33", "44"];
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+      Item: { id: "1", omistajat: omistajaIdt, muutOmistajat: muutOmistajaIdt, kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+    });
+    dbMock
+      .on(QueryCommand, {
+        TableName: config.kiinteistonomistajaTableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": "1",
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+      })
+      .resolves({
+        Items: [
+          { id: omistajaIdt[0], oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: true },
+          { id: omistajaIdt[1], oid: "1", etunimet: "Marko", sukunimi: "Markon sukunimi", suomifiLahetys: true },
+          { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
+          { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
+        ],
+      });
+    await expect(
+      tallennaKiinteistonOmistajat({
+        oid: "1",
+        muutOmistajat: [
+          {
+            id: "11",
+            kiinteistotunnus: "1",
+            jakeluosoite: "Osoite 2",
+            postinumero: "00100",
+            paikkakunta: "Helsinki",
+          },
+        ],
+        poistettavatOmistajat: [],
+      })
+    ).to.eventually.rejectedWith(IllegalArgumentError, "Tallennettava omistaja id:'11' ei ole muutOmistajat listalla");
+  });
+
+  it("heittää virhettä jos poistettavaa omistajaa yritetään muokata", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    const omistajaIdt = ["11", "22"];
+    const muutOmistajaIdt = ["33", "44"];
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+      Item: { id: "1", omistajat: omistajaIdt, muutOmistajat: muutOmistajaIdt, kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+    });
+    dbMock
+      .on(QueryCommand, {
+        TableName: config.kiinteistonomistajaTableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": "1",
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+      })
+      .resolves({
+        Items: [
+          { id: omistajaIdt[0], oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: true },
+          { id: omistajaIdt[1], oid: "1", etunimet: "Marko", sukunimi: "Markon sukunimi", suomifiLahetys: true },
+          { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
+          { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
+        ],
+      });
+    await expect(
+      tallennaKiinteistonOmistajat({
+        oid: "1",
+        muutOmistajat: [
+          {
+            id: "33",
+            kiinteistotunnus: "1",
+            jakeluosoite: "Osoite 2",
+            postinumero: "00100",
+            paikkakunta: "Helsinki",
+          },
+        ],
+        poistettavatOmistajat: ["33"],
+      })
+    ).to.eventually.rejectedWith(IllegalArgumentError, "Tallennettava omistaja id:'33' ei ole muutOmistajat listalla");
   });
 
   it.skip("hae kiinteistön omistajat", async () => {
