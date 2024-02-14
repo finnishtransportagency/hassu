@@ -972,6 +972,7 @@ type SuomifiKayttaja {
   osoite: String
   postitoimipaikka: String
   postinumero: String
+  maakoodi: String
 }
 
 type Features {

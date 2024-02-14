@@ -97,13 +97,6 @@ function getViranomainen(options: Options): Viranomainen {
     SanomaVersio: "1.0",
     SanomaVarmenneNimi: process.env.ENVIRONMENT === "prod" ? "vayliensuunnittelu.fi" : "hassudev.testivaylapilvi.fi",
     SanomaTunniste: uuid.v4(),
-    Osoite: {
-      Nimi: "Väylävirasto",
-      Lahiosoite: "PL 33",
-      Postinumero: "00521",
-      Postitoimipaikka: "Helsinki",
-      Maa: "FI",
-    },
   };
 }
 
@@ -201,7 +194,7 @@ async function lahetaViesti(
             KuvausTeksti: viesti.sisalto,
             EmailLisatietoOtsikko: viesti.emailOtsikko,
             EmailLisatietoSisalto: viesti.emailSisalto,
-            LisaaOsoitesivu: "true",
+            LisaaOsoitesivu: "false",
             VaadiLukukuittaus: "0",
             VahvistusVaatimus: "0",
             Tiedostot: {

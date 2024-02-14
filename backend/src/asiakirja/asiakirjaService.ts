@@ -23,6 +23,8 @@ import { Kuulutus70 } from "./suunnittelunAloitus/Kuulutus70";
 import { Kuulutus71 } from "./suunnittelunAloitus/Kuulutus71";
 import { Kuulutus72 } from "./suunnittelunAloitus/Kuulutus72";
 import { getPaatosTyyppi } from "../projekti/adapter/projektiAdapterJulkinen";
+import { KiinteistonOmistaja } from "./suunnittelunAloitus/KiinteistonOmistaja";
+import { parameters } from "../aws/parameters";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -101,21 +103,26 @@ export class AsiakirjaService {
     vahainenMenettely,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    osoite,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
+    const suomiFiEnabled = await parameters.isSuomiFiIntegrationEnabled();
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
       nahtavillaoloVaihe,
       kieli,
       asianhallintaPaalla,
-      linkkiAsianhallintaan
+      linkkiAsianhallintaan,
+      osoite
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
       pdf = await new Kuulutus30(params, nahtavillaoloVaihe).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
       pdf = await new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE && !suomiFiEnabled) {
       pdf = await new Kuulutus31(params, nahtavillaoloVaihe).pdf(luonnos);
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+      pdf = await new KiinteistonOmistaja(params, nahtavillaoloVaihe).pdf(luonnos);
     }
     if (pdf) {
       return pdf;

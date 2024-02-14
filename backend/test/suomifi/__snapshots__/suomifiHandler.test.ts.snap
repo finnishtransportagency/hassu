@@ -14,16 +14,30 @@ Object {
     "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
     "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
     "sisalto": Object {
-      "data": Array [
-        116,
-        105,
-        101,
-        100,
-        111,
-        115,
-        116,
-        111,
-      ],
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "vaylavirasto": false,
+  "ytunnus": undefined,
+}
+`;
+
+exports[`suomifiHandler muistuttajan pdf viesti suomi.fi ruotsi 1`] = `
+Object {
+  "hetu": "ABC",
+  "lahiosoite": "Svart katten's gatan 13 c 13, B.O.X 1010",
+  "maa": "SE",
+  "nimi": "Minerva Marttila",
+  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "postinumero": "SE-",
+  "postitoimipaikka": "01230 STOCKHOLM, Ruotsii",
+  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "sisalto": Object {
+      "data": Array [],
       "type": "Buffer",
     },
   },
@@ -37,18 +51,12 @@ Array [
   Object {
     "subject": "Muistutus on vastaanotettu",
     "text": "Muistutus on vastaanotettu
-
 Suunnitelman nimi: Projektin nimi
-
 Suunnitelman asiatunnus: ely123
-
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
-
 Muistutus:
 Muistutus 1
-
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -62,18 +70,12 @@ Array [
   Object {
     "subject": "Muistutus on vastaanotettu",
     "text": "Muistutus on vastaanotettu
-
 Suunnitelman nimi: Projektin nimi2
-
 Suunnitelman asiatunnus: vayla123
-
 Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
-
 Muistutus:
 Muistutus 1
-
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -87,18 +89,12 @@ Array [
   Object {
     "subject": "Muistutus on vastaanotettu",
     "text": "Muistutus on vastaanotettu
-
 Suunnitelman nimi: Projektin nimi3
-
 Suunnitelman asiatunnus: vayla123
-
 Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
-
 Muistutus:
 Muistutus 1
-
 
 ",
     "to": "test@test.fi",
@@ -111,18 +107,12 @@ Object {
   "hetu": "ABC",
   "otsikko": "Muistutus on vastaanotettu",
   "sisalto": "Muistutus on vastaanotettu
-
 Suunnitelman nimi: Projektin nimi
-
 Suunnitelman asiatunnus: ely123
-
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
-
 Muistutus:
 Muistutus 1
-
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -134,18 +124,12 @@ Array [
   Object {
     "subject": "Muistutus on vastaanotettu",
     "text": "Muistutus on vastaanotettu
-
 Suunnitelman nimi: Projektin nimi
-
 Suunnitelman asiatunnus: ely123
-
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
-
 Muistutus:
 Muistutus 1
-
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -168,16 +152,7 @@ Object {
     "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
     "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
     "sisalto": Object {
-      "data": Array [
-        116,
-        105,
-        101,
-        100,
-        111,
-        115,
-        116,
-        111,
-      ],
+      "data": Array [],
       "type": "Buffer",
     },
   },
