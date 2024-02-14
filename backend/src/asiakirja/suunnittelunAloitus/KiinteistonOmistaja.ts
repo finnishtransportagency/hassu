@@ -11,7 +11,7 @@ import convert from "convert-units";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
-  SUOMI: "KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA",
+  SUOMI: "Kuulutus suunnitelman nähtäville asettamisesta",
   RUOTSI: "Kungörelse om framläggandet av planen",
 };
 
