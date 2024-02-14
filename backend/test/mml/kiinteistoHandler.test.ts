@@ -177,14 +177,13 @@ describe("kiinteistoHandler", () => {
     expect(snapshot).toMatchSnapshot();
   });
 
-  it("päivitä kiinteistön omistajat", async () => {
+  it("päivitä ja poista kiinteistön omistajia", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock
-      .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", omistajat: ["33"], muutOmistajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-    dbMock
-      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName, Key: { id: "11", oid: "1" } })
-      .resolves({ Item: { id: "11", oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi" } });
+    const omistajaIdt = ["11", "22"];
+    const muutOmistajaIdt = ["33", "44"];
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+      Item: { id: "1", omistajat: omistajaIdt, muutOmistajat: muutOmistajaIdt, kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+    });
     dbMock
       .on(QueryCommand, {
         TableName: config.kiinteistonomistajaTableName,
@@ -201,15 +200,17 @@ describe("kiinteistoHandler", () => {
       })
       .resolves({
         Items: [
-          { id: "11", oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: false },
-          { id: "33", oid: "1", etunimet: "Jouko", sukunimi: "Joukon sukunimi", suomifiLahetys: true },
+          { id: omistajaIdt[0], oid: "1", etunimet: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: true },
+          { id: omistajaIdt[1], oid: "1", etunimet: "Marko", sukunimi: "Markon sukunimi", suomifiLahetys: true },
+          { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
+          { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
       });
     await tallennaKiinteistonOmistajat({
       oid: "1",
       muutOmistajat: [
         {
-          id: "11",
+          id: "33",
           kiinteistotunnus: "1",
           jakeluosoite: "Osoite 2",
           postinumero: "00100",
@@ -223,28 +224,39 @@ describe("kiinteistoHandler", () => {
           paikkakunta: "Vantaa",
         },
       ],
-      poistettavatOmistajat: [],
+      poistettavatOmistajat: ["11", "44"],
     });
+
     expect(dbMock.commandCalls(PutCommand).length).to.be.equal(2);
     const putCommand = dbMock.commandCalls(PutCommand)[0];
     const o1 = putCommand.args[0].input.Item as DBOmistaja;
+    expect(o1.id).to.be.equal("33");
     expect(o1.jakeluosoite).to.be.equal("Osoite 2");
     expect(o1.postinumero).to.be.equal("00100");
     expect(o1.paikkakunta).to.be.equal("Helsinki");
     const putCommand2 = dbMock.commandCalls(PutCommand)[1];
     const o2 = putCommand2.args[0].input.Item as DBOmistaja;
+    expect([...omistajaIdt, ...muutOmistajaIdt]).to.not.have.members([o2.id]);
     expect(o2.nimi).to.be.equal("Matti Ruohonen");
     expect(o2.jakeluosoite).to.be.equal("Osoite 1");
     expect(o2.postinumero).to.be.equal("01000");
     expect(o2.paikkakunta).to.be.equal("Vantaa");
-    expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
-    const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
-    assert(updateCommand.args[0].input.ExpressionAttributeValues);
-    console.log(updateCommand.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(1);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"][0]).to.be.equal("11");
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutOmistajat"][1]).to.be.equal(o2.id);
+    expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(3);
+    const updateCommand1 = dbMock.commandCalls(UpdateCommand)[0];
+    assert(updateCommand1.args[0].input.ExpressionAttributeValues);
+    expect(updateCommand1.args[0].input.Key).to.eql({ oid: "1", id: "11" });
+    expect(updateCommand1.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
+    const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
+    assert(updateCommand2.args[0].input.ExpressionAttributeValues);
+    expect(updateCommand2.args[0].input.Key).to.eql({ oid: "1", id: "44" });
+    expect(updateCommand2.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
+    const updateCommand3 = dbMock.commandCalls(UpdateCommand)[2];
+    assert(updateCommand3.args[0].input.ExpressionAttributeValues);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(1);
+    console.log(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"]);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"][0]).to.be.equal("33");
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutOmistajat"][1]).to.be.equal(o2.id);
   });
 
   it.skip("hae kiinteistön omistajat", async () => {
