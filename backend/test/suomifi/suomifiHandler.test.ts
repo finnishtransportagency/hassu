@@ -328,13 +328,13 @@ describe("suomifiHandler", () => {
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttajaTableName })
+      .on(GetCommand, { TableName: config.muistuttaja2TableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
       });
-    const body: SuomiFiSanoma = { muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const body: SuomiFiSanoma = { muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO, oid: "1" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     assert(request.pdfViesti);
@@ -596,14 +596,14 @@ describe("suomifiHandler", () => {
       .on(BatchGetCommand)
       .resolves({
         Responses: {
-          [config.omistajaTableName]: [
+          [config.kiinteistonomistajaTableName]: [
             { id: "1", henkilotunnus: "ABC" },
             { id: "2", henkilotunnus: "ABC" },
             { id: "3", henkilotunnus: "DEF" },
             { id: "4", ytunnus: "123" },
             { id: "5", ytunnus: "123" },
           ],
-          [config.muistuttajaTableName]: [
+          [config.muistuttaja2TableName]: [
             { id: "6", henkilotunnus: "ABC" },
             { id: "7", henkilotunnus: "ABC" },
             { id: "8", henkilotunnus: "CAB" },
