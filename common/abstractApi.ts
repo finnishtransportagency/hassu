@@ -321,12 +321,6 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.tallennaKiinteistonOmistajat,
     isYllapitoOperation: true,
   },
-  poistaKiinteistonOmistaja: {
-    name: "poistaKiinteistonOmistaja",
-    operationType: OperationType.Mutation,
-    graphql: mutations.poistaKiinteistonOmistaja,
-    isYllapitoOperation: true,
-  },
   haeMuistuttajat: {
     name: "haeMuistuttajat",
     operationType: OperationType.Query,
@@ -610,13 +604,6 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, {
       oid,
       omistajat,
-    });
-  }
-
-  async poistaKiinteistonOmistaja(oid: string, omistaja: string): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.poistaKiinteistonOmistaja, {
-      oid,
-      omistaja,
     });
   }
 
