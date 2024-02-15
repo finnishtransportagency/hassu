@@ -160,3 +160,49 @@ Object {
   "ytunnus": undefined,
 }
 `;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi hyväksymispäätös 1`] = `
+Object {
+  "hetu": "ABC",
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "tiedosto": Object {
+    "kuvaus": "T431_4 Ilmoitus hyväksymispäätöksestä muistuttajille",
+    "nimi": "T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "vaylavirasto": false,
+  "ytunnus": undefined,
+}
+`;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi nähtävilläolo 1`] = `
+Object {
+  "hetu": "ABC",
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "vaylavirasto": false,
+  "ytunnus": undefined,
+}
+`;

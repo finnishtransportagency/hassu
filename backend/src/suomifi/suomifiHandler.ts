@@ -13,11 +13,10 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
 import { AsiakirjaTyyppi, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, KasittelynTila, Muistutus, SuunnitteluSopimus } from "../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihePDF, KasittelynTila, LocalizedMap, Muistutus, NahtavillaoloPDF, SuunnitteluSopimus } from "../database/model";
 import { getSQS } from "../aws/clients/getSQS";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
 import { fileService } from "../files/fileService";
-import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
@@ -218,7 +217,7 @@ function createGenerateEvent(
         },
         kasittelynTila: projektiFromDB.kasittelynTila as KasittelynTila,
       },
-    }
+    };
   }
 }
 
@@ -227,37 +226,44 @@ export async function generatePdf(
   tyyppi: PublishOrExpireEventType,
   kohde: Kohde
 ): Promise<GeneratedPdf | undefined> {
-  let path: PathTuple | undefined;
+  let vaihe: LocalizedMap<HyvaksymisPaatosVaihePDF | NahtavillaoloPDF> | undefined;
   let asiakirjaTyyppi;
-  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
-    path = new ProjektiPaths(projektiFromDB.oid).nahtavillaoloVaihe(projektiFromDB.nahtavillaoloVaihe);
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
+    vaihe = projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1].nahtavillaoloPDFt;
     asiakirjaTyyppi = AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
-  } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
-    path = new ProjektiPaths(projektiFromDB.oid).hyvaksymisPaatosVaihe(projektiFromDB.hyvaksymisPaatosVaihe);
+  } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {
+    vaihe = projektiFromDB.hyvaksymisPaatosVaiheJulkaisut[projektiFromDB.hyvaksymisPaatosVaiheJulkaisut.length - 1].hyvaksymisPaatosVaihePDFt;
     asiakirjaTyyppi = AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE;
   } else {
-    log.error("Väärä vaiheen tyyppi " + tyyppi + ", kiinteistön omistajia/muistuttajia ei tiedoteta");
+    log.error("Väärä vaiheen tyyppi " + tyyppi + " tai julkaisu puuttuu, kiinteistön omistajia/muistuttajia ei tiedoteta");
     return;
   }
   try {
-    const files: { file: Buffer; tiedostoNimi: string }[] = [];
+    const files: Buffer[] = [];
     const result = await invokeLambda(
       config.pdfGeneratorLambdaArn,
       true,
       JSON.stringify(createGenerateEvent(tyyppi, asiakirjaTyyppi, projektiFromDB, kohde))
     );
     const response = JSON.parse(result!) as EnhancedPDF;
-    files.push({ file: Buffer.from(response.sisalto, "base64"), tiedostoNimi: response.nimi });
+    files.push(Buffer.from(response.sisalto, "base64"));
     const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
     const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
-    if (projektiFromDB.kielitiedot?.toissijainenKieli === Kieli.RUOTSI || projektiFromDB.kielitiedot?.ensisijainenKieli === Kieli.RUOTSI) {
-      const tiedostoNimiSV = convertPdfFileName(createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.RUOTSI));
-      const file = await fileService.getProjektiFile(projektiFromDB.oid, "/" + path.yllapitoPath + "/" + tiedostoNimiSV);
-      files.push({ file, tiedostoNimi: tiedostoNimiSV });
+    if (vaihe && vaihe[Kieli.RUOTSI]) {
+      let tiedosto;
+      if ("hyvaksymisIlmoitusMuistuttajillePDFPath" in vaihe[Kieli.RUOTSI]) {
+        tiedosto = vaihe[Kieli.RUOTSI].hyvaksymisIlmoitusMuistuttajillePDFPath;
+      } else if ("nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath" in vaihe[Kieli.RUOTSI]) {
+        tiedosto = vaihe[Kieli.RUOTSI].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+      }
+      log.info("Haetaan tiedosto " + tiedosto);
+      if (tiedosto) {
+        files.push(await fileService.getProjektiFile(projektiFromDB.oid, tiedosto));
+      }
     }
     const merger = new PdfMerger();
     for (const file of files) {
-      await merger.add(file.file);
+      await merger.add(file);
     }
     merger.setMetadata({ creator: "VLS", producer: "Valtion liikenneväylien suunnittelu", title: tiedostoNimi });
     return {
@@ -265,6 +271,7 @@ export async function generatePdf(
       tiedostoNimi,
     };
   } catch (e) {
+    log.error(e);
     throw new Error("PDF generointi epäonnistui");
   }
 }
