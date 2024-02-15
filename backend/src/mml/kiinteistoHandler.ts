@@ -225,11 +225,6 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
 
-  // Kannattaako siirtää muualle?
-  if (!(await omistajaSearchService.indexExists())) {
-    await omistajaSearchService.createIndex();
-  }
-
   const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset: input.kiinteistotunnukset, uid };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });
   auditLog.info("Omistajien haku event lisätty", { event });
