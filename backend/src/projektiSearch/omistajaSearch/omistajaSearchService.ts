@@ -35,15 +35,15 @@ class OmistajaSearchService {
     }
   }
 
-  async removeOmistaja(oid: string) {
-    await omistajaOpenSearchClient.deleteDocument(oid);
+  async removeOmistaja(id: string) {
+    await omistajaOpenSearchClient.deleteDocument(id);
   }
 
-  async searchByOid(oid: string[]): Promise<DBOmistaja[]> {
+  async searchById(id: string[]): Promise<DBOmistaja[]> {
     const results = await omistajaOpenSearchClient.query({
       query: {
         terms: {
-          _id: oid,
+          _id: id,
         },
       },
       size: 10000,
