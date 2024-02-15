@@ -53,6 +53,9 @@ export type Aineisto = {
   nimi: string;
   // Tunniste, joka on luotu FE:ssä, kun tiedosto on valittu. Ei muutu.
   uuid: string;
+  // Jos tosi, tallennuksen validoinnissa ja tallennuksessa käytetään tunnisteena uuid:n sijaa dokumenttiOid:ta
+  // HUOM! tätä tietoa ei ole oikeasti tarkoitus tallentaa kantaan
+  uuidGeneratedBySchemaMigration?: boolean;
   // Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
   tuotu?: string;
   // Numero jarjestamista varten
