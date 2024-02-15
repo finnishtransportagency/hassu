@@ -9,6 +9,8 @@ import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
+  Omistaja,
+  TallennaKiinteistonOmistajaResponse,
   TallennaKiinteistonOmistajatMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   TuoKarttarajausMutationVariables,
@@ -233,10 +235,12 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   auditLog.info("Omistajien haku event lisätty", { event });
 }
 
-export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables): Promise<void> {
+export async function tallennaKiinteistonOmistajat(
+  input: TallennaKiinteistonOmistajatMutationVariables
+): Promise<TallennaKiinteistonOmistajaResponse> {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-  const uudetOmistajat = [];
+  const uudetOmistajat: DBOmistaja[] = [];
   const expires = getExpires();
   const initialOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projekti.oid);
   const sailytettavatOmistajat = await haeSailytettavatKiinteistonOmistajat(projekti.oid, initialOmistajat, input.poistettavatOmistajat);
@@ -267,7 +271,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
-      uudetOmistajat.push(dbOmistaja.id);
+      uudetOmistajat.push(dbOmistaja);
     }
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
@@ -277,8 +281,29 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   await projektiDatabase.setKiinteistonOmistajat(
     projekti.oid,
     sailytettavatOmistajat.omistajat.map((omistaja) => omistaja.id),
-    [...sailytettavatOmistajat.muutOmistajat.map((omistaja) => omistaja.id), ...uudetOmistajat]
+    [...sailytettavatOmistajat.muutOmistajat.map((omistaja) => omistaja.id), ...uudetOmistajat.map((omistaja) => omistaja.id)]
   );
+
+  const mapToApi = (o: DBOmistaja): Omistaja => ({
+    __typename: "Omistaja",
+    id: o.id,
+    oid: o.oid,
+    kiinteistotunnus: o.kiinteistotunnus,
+    lisatty: o.lisatty,
+    paivitetty: o.paivitetty,
+    etunimet: o.etunimet,
+    sukunimi: o.sukunimi,
+    nimi: o.nimi,
+    jakeluosoite: o.jakeluosoite,
+    paikkakunta: o.paikkakunta,
+    postinumero: o.postinumero,
+  });
+
+  return {
+    omistajat: sailytettavatOmistajat.omistajat.map(mapToApi),
+    muutOmistajat: [...sailytettavatOmistajat.muutOmistajat, ...uudetOmistajat].map<Omistaja>(mapToApi),
+    __typename: "TallennaKiinteistonOmistajaResponse",
+  };
 }
 
 export async function haeSailytettavatKiinteistonOmistajat(

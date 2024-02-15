@@ -1176,6 +1176,11 @@ type Omistaja {
   paikkakunta: String
 }
 
+type TallennaKiinteistonOmistajaResponse {
+  omistajat: [Omistaja!]!
+  muutOmistajat: [Omistaja!]!
+}
+
 type KiinteistonOmistajat {
   hakutulosMaara: Int!
   omistajat: [Omistaja!]!
