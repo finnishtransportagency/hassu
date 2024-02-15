@@ -9,8 +9,9 @@ import {
   QueryCommand,
   BatchWriteCommand,
   UpdateCommand,
+  TransactWriteCommandInput,
+  TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { TransactWriteItem, TransactWriteItemsCommand } from "@aws-sdk/client-dynamodb";
 
 export type OmistajaKey = {
   oid: string;
@@ -122,7 +123,7 @@ class OmistajaDatabase {
       const items = await this.haeProjektinKaytossaolevatOmistajat(oid);
       if (items.length) {
         log.info("Otetaan käytöstä " + items.length + " omistaja(a)");
-        const transactItems = items.map<TransactWriteItem>((item) => ({
+        const transactItems: TransactWriteCommandInput["TransactItems"] = items.map((item) => ({
           Update: {
             ExpressionAttributeNames: {
               "#kaytossa": "kaytossa",
@@ -149,7 +150,7 @@ class OmistajaDatabase {
         const oldOmistajatChunks = chunkArray(transactItems, 25);
 
         for (const chunk of oldOmistajatChunks) {
-          const params = new TransactWriteItemsCommand({
+          const params = new TransactWriteCommand({
             TransactItems: chunk,
           });
           log.info("Päivitetään " + chunk.length + " omistaja(a)");
