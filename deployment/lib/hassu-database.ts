@@ -151,6 +151,7 @@ export class HassuDatabaseStack extends Stack {
       },
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
+      removalPolicy: RemovalPolicy.DESTROY,
     });
     HassuDatabaseStack.enableBackup(table);
 
@@ -194,6 +195,7 @@ export class HassuDatabaseStack extends Stack {
       },
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
+      removalPolicy: RemovalPolicy.DESTROY,
     });
     HassuDatabaseStack.enableBackup(table);
 
