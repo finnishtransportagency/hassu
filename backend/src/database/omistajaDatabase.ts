@@ -68,7 +68,7 @@ class OmistajaDatabase {
     try {
       const params = new ScanCommand({
         TableName: this.tableName,
-        Limit: 10,
+        Limit: 50,
         ExclusiveStartKey: startKey,
       });
       const data: ScanCommandOutput = await getDynamoDBDocumentClient().send(params);

@@ -150,7 +150,7 @@ class MuistutusHandler {
       });
       const response = await getDynamoDBDocumentClient().send(command);
       const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
-      dbMuistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id, projektiOid: variables.oid }));
+      dbMuistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id }));
       return {
         __typename: "Muistuttajat",
         hakutulosMaara: muistuttajat.length,

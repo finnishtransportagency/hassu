@@ -9,7 +9,7 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { getSQS } from "../../aws/clients/getSQS";
 import { parameters } from "../../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
-import { SendMessageCommandInput } from "@aws-sdk/client-sqs";
+import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
 import { DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
 
 async function handleUpdate(record: DynamoDBRecord) {
@@ -43,25 +43,16 @@ async function handleManagementAction(event: MaintenanceEvent) {
     await new OmistajaSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
     let startKey: OmistajaKey | undefined = undefined;
-    const events: MaintenanceEvent[] = [];
+    const queueUrl = await parameters.getIndexerSQSUrl();
     do {
       const scanResult: OmistajaScanResult = await omistajaDatabase.scanOmistajat(startKey);
       startKey = scanResult.startKey;
-      for (const omistaja of scanResult.omistajat) {
-        events.push({ action: "index", omistaja });
-      }
+      const entries = scanResult.omistajat.map<SendMessageBatchRequestEntry>((omistaja) => ({
+        Id: omistaja.id,
+        MessageBody: JSON.stringify({ action: "index", omistaja }),
+      }));
+      await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: entries });
     } while (startKey);
-    let i = 1;
-    for (event of events) {
-      event.index = i++;
-      event.size = events.length;
-      const args: SendMessageCommandInput = {
-        QueueUrl: await parameters.getIndexerSQSUrl(),
-        MessageBody: JSON.stringify(event),
-      };
-      log.info("Sending SQS event " + event.index);
-      await getSQS().sendMessage(args);
-    }
     log.info("Indeksointi aloitettu");
   }
 }
@@ -72,19 +63,26 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
     return handleManagementAction(event as MaintenanceEvent);
   }
   const records = (event as SQSEvent).Records;
-  if (records && records.length == 1 && records[0].body) {
-    const body: MaintenanceEvent = JSON.parse(records[0].body);
-    log.info("SQS event " + body.index + "/" + body.size + " received", { oid: body.omistaja?.oid });
-    if (body.omistaja) {
-      try {
-        await omistajaSearchService.indexOmistaja(body.omistaja);
-      } catch (e) {
-        log.error(e);
-      }
-    }
-    if (body.index === body.size) {
-      log.info("Indeksointi valmis");
-    }
+  if (records.length && records.every((record) => record.body)) {
+    await Promise.all(
+      records.map(async (record) => {
+        if (!record.body) {
+          return;
+        }
+        const body: MaintenanceEvent = JSON.parse(record.body);
+        log.info("SQS event " + body.index + "/" + body.size + " received", { oid: body.omistaja?.oid });
+        if (body.omistaja) {
+          try {
+            await omistajaSearchService.indexOmistaja(body.omistaja);
+          } catch (e) {
+            log.error(e);
+          }
+        }
+        if (body.index === body.size) {
+          log.info("Indeksointi valmis");
+        }
+      })
+    );
     return;
   }
   setupLambdaMonitoring();
