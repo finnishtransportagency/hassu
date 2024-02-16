@@ -356,7 +356,9 @@ export class HassuBackendStack extends Stack {
     streamHandler.node.addDependency(indexerQueue);
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
-    streamHandler.addEventSource(new SqsEventSource(indexerQueue, { batchSize: 100, maxConcurrency: 10 }));
+    streamHandler.addEventSource(
+      new SqsEventSource(indexerQueue, { batchSize: 100, maxConcurrency: 10, maxBatchingWindow: Duration.seconds(5) })
+    );
     return streamHandler;
   }
 
