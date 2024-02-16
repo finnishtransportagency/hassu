@@ -11,8 +11,8 @@ Object {
   "postitoimipaikka": "Helsinki",
   "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
   "tiedosto": Object {
-    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",
@@ -34,8 +34,8 @@ Object {
   "postitoimipaikka": "01230 STOCKHOLM, Ruotsii",
   "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
   "tiedosto": Object {
-    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",
@@ -149,8 +149,8 @@ Object {
   "postitoimipaikka": "Helsinki",
   "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
   "tiedosto": Object {
-    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",
@@ -172,8 +172,8 @@ Object {
   "postitoimipaikka": "Helsinki",
   "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
   "tiedosto": Object {
-    "kuvaus": "T431_4 Ilmoitus hyväksymispäätöksestä muistuttajille",
-    "nimi": "T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+    "kuvaus": "T431_4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
+    "nimi": "T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",
@@ -195,8 +195,8 @@ Object {
   "postitoimipaikka": "Helsinki",
   "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
   "tiedosto": Object {
-    "kuvaus": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-    "nimi": "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",

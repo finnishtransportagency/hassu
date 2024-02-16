@@ -504,7 +504,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 4`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -662,7 +662,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 9`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -820,7 +820,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 14`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -978,7 +978,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -1136,7 +1136,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1294,7 +1294,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1417,7 +1417,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 3`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+  "fileName": "esikatselu_nahtavillaolo_T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -1521,7 +1521,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 6`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+  "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1625,7 +1625,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 9`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1724,7 +1724,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 12`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen sv.pdf",
+  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1823,7 +1823,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 15`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajat nahtaville asettaminen sv.pdf",
+  "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1927,7 +1927,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 18`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen sv.pdf",
+  "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
