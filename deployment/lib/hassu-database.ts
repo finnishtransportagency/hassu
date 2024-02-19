@@ -154,10 +154,6 @@ export class HassuDatabaseStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
     HassuDatabaseStack.enableBackup(table);
-
-    if (Config.isPermanentEnvironment()) {
-      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-    }
     return table;
   }
 
@@ -198,10 +194,6 @@ export class HassuDatabaseStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
     HassuDatabaseStack.enableBackup(table);
-
-    if (Config.isPermanentEnvironment()) {
-      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-    }
     return table;
   }
 

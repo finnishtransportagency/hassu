@@ -678,6 +678,7 @@ Object {
           },
         ],
       },
+      "maanomistajaluettelo": "/hyvaksymispaatos/2/maanomistajaluettelo.xslx",
       "muokkaaja": "A000111",
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -892,6 +893,7 @@ Object {
         "tuotu": "2039-01-02T00:00",
         "uuid": "00000006-6d14-4058-82a9-99a4c224524a",
       },
+      "maanomistajaluettelo": "/hyvaksymispaatos/2/maanomistajaluettelo.xslx",
       "muokkaaja": "A000111",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {

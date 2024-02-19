@@ -31,6 +31,7 @@ type Query {
   lataaPalautteetPDF(oid: String!): PDF
   haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat
   haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
+  lataaTiedotettavatExcel(oid: String!, suomifi: Boolean!, kiinteisto: Boolean!): Excel
 }
 
 type Mutation {

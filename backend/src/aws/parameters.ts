@@ -133,6 +133,10 @@ class Parameters {
     return this.getParamOrVariable("outputs/IndexerSQSUrl");
   }
 
+  async getOmistajaIndexerSQSUrl() {
+    return this.getParamOrVariable("outputs/OmistajaIndexerSQSUrl");
+  }
+
   async getSuomiFiConfig() {
     const param = await this.getRequiredAccountParameter("SuomiFiConfig");
     const cfg: Partial<SuomiFiConfig> = {};

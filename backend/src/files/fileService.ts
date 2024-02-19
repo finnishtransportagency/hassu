@@ -101,7 +101,6 @@ const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 const S3_METADATA_FILE_TYPE = "filetype";
 const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
 const S3_METADATA_KIELI = "kieli";
-
 export class FileService {
   /**
    * Prepare upload URL for a given file. The uploaded file can be persisted to a projekti with persistFileToProjekti function call.

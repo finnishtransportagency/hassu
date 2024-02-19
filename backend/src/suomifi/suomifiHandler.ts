@@ -541,12 +541,12 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
     const viestit: SendMessageBatchRequestEntry[] = [];
     const uniqueIds: Map<string, string> = new Map();
     (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-      const msg: SuomiFiSanoma = { omistajaId: id, tyyppi };
+      const msg: SuomiFiSanoma = { omistajaId: id, tyyppi, oid: projektiFromDB.oid };
       viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
     });
     if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
       (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
+        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi, oid: projektiFromDB.oid };
         viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
       });
     }

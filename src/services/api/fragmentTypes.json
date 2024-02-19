@@ -159,6 +159,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Excel",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Features",
         "possibleTypes": null,
         "__typename": "__Type"

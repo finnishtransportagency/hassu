@@ -4,7 +4,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { MaanomistajaPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
@@ -14,6 +14,7 @@ import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emai
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
+import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -159,6 +160,13 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       julkaisu,
       new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
       PaatosTyyppi.HYVAKSYMISPAATOS
+    );
+
+    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      new MaanomistajaPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      this.vaihe,
+      julkaisu.kuulutusPaiva,
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);

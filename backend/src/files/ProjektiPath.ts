@@ -52,7 +52,7 @@ export class ProjektiPaths extends PathTuple {
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
   static PATH_SUUNNITTELUVAIHE = "suunnitteluvaihe";
 
-  private readonly oid: string;
+  protected readonly oid: string;
 
   public constructor(oid: string) {
     super();
@@ -377,5 +377,14 @@ export class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosV
         return this.parent.yllapitoFullPath + "/" + "paatos";
       }
     })(this);
+  }
+}
+
+export class MaanomistajaPaths extends ProjektiPaths {
+  public constructor(oid: string) {
+    super(oid);
+  }
+  get yllapitoFullPath(): string {
+    return `yllapito/sisaiset/projekti/${this.oid}`;
   }
 }

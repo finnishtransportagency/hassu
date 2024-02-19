@@ -42,7 +42,7 @@ async function handleManagementEvent(event: MaintenanceEvent) {
     await new OmistajaSearchMaintenanceService().deleteIndex();
   } else if (event.action == "index") {
     let startKey: OmistajaKey | undefined = undefined;
-    const queueUrl = await parameters.getIndexerSQSUrl();
+    const queueUrl = await parameters.getOmistajaIndexerSQSUrl();
     do {
       const scanResult: OmistajaScanResult = await omistajaDatabase.scanOmistajat(startKey);
       startKey = scanResult.startKey;

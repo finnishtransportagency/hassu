@@ -1206,3 +1206,9 @@ type Muistuttajat {
   sivunKoko: Int!
   muistuttajat: [Muistuttaja]!
 }
+
+type Excel {
+  nimi: String!
+  sisalto: String!
+  tyyppi: String!
+}
