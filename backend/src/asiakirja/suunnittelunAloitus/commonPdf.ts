@@ -1,5 +1,5 @@
 import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
-import { Kieli } from "hassu-common/graphql/apiModel";
+import { Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { LocalizedMap, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
@@ -75,13 +75,88 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     }
   }
 
+  getLahettaja() : Osoite {
+    const viranomainen = this.kutsuAdapter.velho.suunnittelustaVastaavaViranomainen;
+    if (viranomainen === SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY) {
+      return {
+        nimi: "Etelä-Pohjanmaan ELY-keskus",
+        katuosoite: "PL 156",
+        postinumero: "60101 SEINÄJOKI",
+        postitoimipaikka: "",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_ELY) {
+      return {
+        nimi: "Kaakkois-Suomen ELY-keskus",
+        katuosoite: "PL 1041",
+        postinumero: "45101",
+        postitoimipaikka: "Kouvola",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY) {
+      return {
+        nimi: "Keski-Suomen ELY-keskus",
+        katuosoite: "PL 250",
+        postinumero: "40101",
+        postitoimipaikka: "Jyväskylä",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.LAPIN_ELY) {
+      return {
+        nimi: "Lapin ELY-keskus",
+        katuosoite: "PL 8060",
+        postinumero: "96101",
+        postitoimipaikka: "Rovaniemi",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY) {
+      return {
+        nimi: "Pirkanmaan ELY-keskus",
+        katuosoite: "PL 297",
+        postinumero: "33101",
+        postitoimipaikka: "Tampere",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY) {
+      return {
+        nimi: "Pohjois-Pohjanmaan ELY-keskus",
+        katuosoite: "PL 86",
+        postinumero: "90101",
+        postitoimipaikka: "Oulu",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJOIS_SAVON_ELY) {
+      return {
+        nimi: "Pohjois-Savon ELY-keskus",
+        katuosoite: "PL 2000",
+        postinumero: "70101",
+        postitoimipaikka: "Kuopio",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY) {
+      return {
+        nimi: "Uudenmaan ELY-keskus",
+        katuosoite: "PL 36",
+        postinumero: "00521",
+        postitoimipaikka: "HELSINKI",
+      }
+    } else if (viranomainen === SuunnittelustaVastaavaViranomainen.VARSINAIS_SUOMEN_ELY) {
+      return {
+        nimi: "Varsinais-Suomen ELY-keskus",
+        katuosoite: "PL 236",
+        postinumero: "20101",
+        postitoimipaikka: "TURKU",
+      }
+    } else {
+      return {
+        nimi: "Väylävirasto",
+        katuosoite: "PL 33",
+        postinumero: "00521",
+        postitoimipaikka: "HELSINKI",
+      };
+    }
+  }
+
   protected appendHeader() {
     if (this.osoite) {
       const x = toPdfPoints(21);
-      //TODO: Lähettäjä vastaavan viranomaisen mukaan, pitää saada kaikkien ely keskusten osoitteet
-      this.doc.text("Väylävirasto", x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
-      this.doc.text("PL 33", undefined, undefined, { width: toPdfPoints(72) });
-      this.doc.text("00521 HELSINKI", undefined, undefined, { width: toPdfPoints(72) });
+      const lahettaja = this.getLahettaja();
+      this.doc.text(lahettaja.nimi, x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
+      this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
+      this.doc.text(`${lahettaja.postinumero} ${lahettaja.postitoimipaikka}`, undefined, undefined, { width: toPdfPoints(72) });
 
       const iPostX = this.isVaylaTilaaja() ? toPdfPoints(75) : toPdfPoints(70);
       const iPostY = this.isVaylaTilaaja() ? toPdfPoints(18) : toPdfPoints(20);

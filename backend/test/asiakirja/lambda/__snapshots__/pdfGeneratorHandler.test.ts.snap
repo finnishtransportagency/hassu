@@ -37,7 +37,7 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata ely osoitetiedoilla 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
@@ -246,7 +246,7 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie ely osoitetiedoilla eu 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
@@ -526,7 +526,7 @@ puh. 029, test(at)vayla.fi
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen ely osoitetiedoilla 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
