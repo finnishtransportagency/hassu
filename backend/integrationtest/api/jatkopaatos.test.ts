@@ -102,7 +102,10 @@ describe("Jatkopäätökset", () => {
     return projekti;
   }
 
-  it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
+  it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     userFixture.loginAs(UserFixture.projari112);
     asetaAika("2025-01-02");
     const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
@@ -135,6 +138,9 @@ describe("Jatkopäätökset", () => {
   });
 
   it("suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     const dbProjekti = await createSaameProjektiToVaihe(Status.JATKOPAATOS_1);
     const { oid } = dbProjekti;
 
@@ -222,6 +228,9 @@ describe("Jatkopäätökset", () => {
   });
 
   it("suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     const dbProjekti = await createSaameProjektiToVaihe(Status.JATKOPAATOS_2);
     const { oid } = dbProjekti;
 

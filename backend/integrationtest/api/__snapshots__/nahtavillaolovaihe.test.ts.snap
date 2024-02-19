@@ -98,8 +98,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+    "/1/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -186,8 +186,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+    "/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -569,7 +569,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
@@ -768,7 +768,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
