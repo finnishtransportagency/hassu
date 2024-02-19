@@ -117,7 +117,7 @@ describe("suomifiHandler", () => {
       .stub(emailClient, "sendEmail")
       .resolves({ accepted: [""], messageId: "", pending: [], rejected: [], response: "", envelope: { from: "", to: ["test@test.fi"] } });
     mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
@@ -127,7 +127,7 @@ describe("suomifiHandler", () => {
     expect(emailStub.callCount).to.equal(1);
     expect(emailStub.args[0]).toMatchSnapshot();
     mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
@@ -146,7 +146,7 @@ describe("suomifiHandler", () => {
     expect(emailStub.args[1]).toMatchSnapshot();
     delete muistuttaja.liite;
     mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
@@ -181,7 +181,7 @@ describe("suomifiHandler", () => {
       .stub(emailClient, "sendEmail")
       .resolves({ accepted: [""], messageId: "", pending: [], rejected: [], response: "", envelope: { from: "", to: ["test@test.fi"] } });
     mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
@@ -208,7 +208,7 @@ describe("suomifiHandler", () => {
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
@@ -235,7 +235,7 @@ describe("suomifiHandler", () => {
     const client = mockSuomiFiClient(request, 310);
     setMockSuomiFiClient(client);
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
@@ -279,7 +279,7 @@ describe("suomifiHandler", () => {
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
@@ -328,7 +328,7 @@ describe("suomifiHandler", () => {
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.muistuttaja2TableName })
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
@@ -603,7 +603,7 @@ describe("suomifiHandler", () => {
             { id: "4", ytunnus: "123" },
             { id: "5", ytunnus: "123" },
           ],
-          [config.muistuttaja2TableName]: [
+          [config.projektiMuistuttajaTableName]: [
             { id: "6", henkilotunnus: "ABC" },
             { id: "7", henkilotunnus: "ABC" },
             { id: "8", henkilotunnus: "CAB" },

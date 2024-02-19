@@ -1,8 +1,8 @@
 export function getMuistuttajaTableName() {
-  if (process.env.TABLE_MUISTUTTAJA2) {
-    return process.env.TABLE_MUISTUTTAJA2;
+  if (process.env.TABLE_PROJEKTI_MUISTUTTAJA) {
+    return process.env.TABLE_PROJEKTI_MUISTUTTAJA;
   }
-  throw new Error("Ympäristömuuttujaa TABLE_MUISTUTTAJA2 ei löydy");
+  throw new Error("Ympäristömuuttujaa TABLE_PROJEKTI_MUISTUTTAJA ei löydy");
 }
 
 export function getKiinteistonomistajaTableName() {

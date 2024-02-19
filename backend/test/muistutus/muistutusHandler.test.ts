@@ -158,7 +158,7 @@ describe("muistutusHandler", () => {
           .resolves({ Item: { id: "1", muistuttajat: ["1", "2"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock.on(BatchGetCommand).resolves({
           Responses: {
-            [config.muistuttaja2TableName]: [
+            [config.projektiMuistuttajaTableName]: [
               {
                 id: "1",
                 etunimi: "Matti",
@@ -182,7 +182,7 @@ describe("muistutusHandler", () => {
         expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
         let batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
         assert(batchCommand.args[0].input.RequestItems);
-        let keys = batchCommand.args[0].input.RequestItems[config.muistuttaja2TableName].Keys;
+        let keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
         assert(keys);
         expect(keys.length).to.be.equal(1);
         expect(keys[0].id).to.be.equal("1");
@@ -195,7 +195,7 @@ describe("muistutusHandler", () => {
         await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, sivu: 2, sivuKoko: 1 });
         batchCommand = dbMock.commandCalls(BatchGetCommand)[1];
         assert(batchCommand.args[0].input.RequestItems);
-        keys = batchCommand.args[0].input.RequestItems[config.muistuttaja2TableName].Keys;
+        keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
         assert(keys);
         expect(keys.length).to.be.equal(1);
         expect(keys[0].id).to.be.equal("2");
@@ -208,7 +208,7 @@ describe("muistutusHandler", () => {
           .resolves({ Item: { id: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock.on(BatchGetCommand).resolves({
           Responses: {
-            [config.muistuttaja2TableName]: [
+            [config.projektiMuistuttajaTableName]: [
               {
                 id: "11",
                 etunimi: "Matti",
@@ -224,7 +224,7 @@ describe("muistutusHandler", () => {
         expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
         const batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
         assert(batchCommand.args[0].input.RequestItems);
-        const keys = batchCommand.args[0].input.RequestItems[config.muistuttaja2TableName].Keys;
+        const keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
         assert(keys);
         expect(keys.length).to.be.equal(1);
         expect(keys[0].id).to.be.equal("11");
@@ -242,7 +242,7 @@ describe("muistutusHandler", () => {
           .on(GetCommand, { TableName: config.projektiTableName })
           .resolves({ Item: { id: "1", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock
-          .on(GetCommand, { TableName: config.muistuttaja2TableName, Key: { id: "1" } })
+          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1" } })
           .resolves({ Item: { id: "1", nimi: "Matti Teppo" } });
         const muistuttajat = await muistutusHandler.tallennaMuistuttajat({
           oid: "1.2.3",
@@ -285,7 +285,7 @@ describe("muistutusHandler", () => {
           .on(GetCommand, { TableName: config.projektiTableName })
           .resolves({ Item: { id: "1", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock
-          .on(GetCommand, { TableName: config.muistuttaja2TableName, Key: { id: "1" } })
+          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1" } })
           .resolves({ Item: { id: "11", nimi: "Teppo Testaaja" } });
         try {
           await muistutusHandler.tallennaMuistuttajat({

@@ -28,7 +28,7 @@ export class HassuDatabaseStack extends Stack {
 
   public kiinteistonOmistajaTable!: ddb.Table;
   public muistuttajaTable!: ddb.Table;
-  public muistuttajaTable2!: ddb.Table;
+  public projektiMuistuttajaTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -57,7 +57,7 @@ export class HassuDatabaseStack extends Stack {
     this.omistajaTable = this.createOmistajaTable();
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.muistuttajaTable = this.createMuistuttajaTable();
-    this.muistuttajaTable2 = this.createMuistuttaja2Table();
+    this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -164,7 +164,7 @@ export class HassuDatabaseStack extends Stack {
   private createKiinteistonomistajaTable() {
     const table = new ddb.Table(this, "KiinteistonomistajaTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      tableName: Config.kiinteistoOmistajaTableName,
+      tableName: Config.kiinteistonomistajaTableName,
       partitionKey: {
         name: "oid",
         type: ddb.AttributeType.STRING,
@@ -205,10 +205,10 @@ export class HassuDatabaseStack extends Stack {
     return table;
   }
 
-  private createMuistuttaja2Table() {
-    const table = new ddb.Table(this, "MuistuttajaTable2", {
+  private createProjektiMuistuttajaTable() {
+    const table = new ddb.Table(this, "Projektimuistuttaja", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      tableName: Config.muistuttaja2TableName,
+      tableName: Config.projektiMuistuttajaTableName,
       partitionKey: {
         name: "oid",
         type: ddb.AttributeType.STRING,

@@ -100,8 +100,8 @@ export class Config extends BaseConfig {
   public static readonly omistajaTableName = `Omistaja-${Config.env}`;
   public static readonly muistuttajaTableName = `Muistuttaja-${Config.env}`;
 
-  public static readonly kiinteistoOmistajaTableName = `Kiinteistonomistaja-${Config.env}`;
-  public static readonly muistuttaja2TableName = `Muistuttaja2-${Config.env}`;
+  public static readonly kiinteistonomistajaTableName = `Kiinteistonomistaja-${Config.env}`;
+  public static readonly projektiMuistuttajaTableName = `ProjektiMuistuttaja-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
