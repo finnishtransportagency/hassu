@@ -81,8 +81,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
       return {
         nimi: "Etelä-Pohjanmaan ELY-keskus",
         katuosoite: "PL 156",
-        postinumero: "60101 SEINÄJOKI",
-        postitoimipaikka: "",
+        postinumero: "60101",
+        postitoimipaikka: "SEINÄJOKI",
       }
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_ELY) {
       return {
