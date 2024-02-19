@@ -37,11 +37,7 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata ely osoitetiedoilla 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
-
-
-
-
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
@@ -81,12 +77,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
-
-
-
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
+Jakelu
+
+
+Erillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
 
 
 "
@@ -94,10 +90,6 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -137,12 +129,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
-
-
-
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+Jakelu
+
+
+Erillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
 
 
 "
@@ -150,10 +142,6 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla ruotsi 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -191,14 +179,14 @@ Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetande
 
 
 
-Teppo Projektipäällikkö(sv) ProjektipäällikköVäylävirasto
+Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
-
-
-
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
-(sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
+(sv) Jakelu
+
+
+(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
 
 
 "
@@ -206,10 +194,6 @@ tel. 029, test(at)vayla.fi
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla vahainen menettely 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -248,13 +232,13 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikkö
-
-
-Väylävirasto
+Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
+
+
+
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
 
 
@@ -262,11 +246,7 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie ely osoitetiedoilla eu 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
-
-
-
-
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
@@ -306,12 +286,12 @@ Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia 
 
 Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
-
-
-
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
+Jakelu
+
+
+Erillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
 
 
 "
@@ -368,10 +348,6 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 
 
-
-
-
-
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
 Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
@@ -398,12 +374,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
-
-
-
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+Jakelu
+
+
+Erillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
 
 
 "
@@ -411,10 +387,6 @@ JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojä
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla ruotsi 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -452,13 +424,13 @@ Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetande
 
 
 
-Teppo Projektipäällikkö(sv) Projektipäällikkö
-
-
-Väylävirasto
+Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
+
+
+
 (sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
 
 
@@ -467,10 +439,6 @@ tel. 029, test(at)vayla.fi
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla vahainen menettely 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -509,11 +477,11 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo Projektipäällikkö
-
-
-ProjektipäällikköVäylävirasto
+Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
+
+
+
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
@@ -558,11 +526,7 @@ puh. 029, test(at)vayla.fi
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen ely osoitetiedoilla 1`] = `
-"VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
-
-
-
-
+"Uudenmaan ELY-keskusPL 3600521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIELY/456
 
 
 
@@ -599,21 +563,11 @@ Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-
-
-
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
-
-
-"
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo"
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -650,21 +604,11 @@ Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-
-
-
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
-
-
-"
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo"
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla ruotsi 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -697,14 +641,14 @@ Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetande
 
 
 
-Teppo Projektipäällikkö(sv) ProjektipäällikköVäylävirasto
+Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
+(sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi
 
 
-
-(sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
+(sv) Trafikledsverket kirjaamoVAYLA/123
 
 
 "
@@ -712,10 +656,6 @@ tel. 029, test(at)vayla.fi
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla vahainen menettely 1`] = `
 "VäylävirastoPL 3300521 HELSINKITessa TestiläHenrikintie 14 B00370 HELSINKIVAYLA/123
-
-
-
-
 
 
 
@@ -751,12 +691,12 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
-
-
-
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+Jakelu
+
+
+Erillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
 
 
 "

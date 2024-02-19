@@ -1,9 +1,7 @@
-import deburr from "lodash/deburr";
-
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
-import { linkExtractRegEx } from "./asiakirjaUtil";
+import { convertPdfFileName, linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 
@@ -26,10 +24,7 @@ export abstract class AbstractPdf {
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
-    this.fileName =
-      deburr(fileName)
-        .replace(/[^\w() -]/g, " ")
-        .slice(0, 100) + ".pdf";
+    this.fileName = convertPdfFileName(fileName);
     this.fileBasePath = __dirname;
     this.setupAccessibleDocument();
     this.baseline = baseline;
@@ -236,6 +231,11 @@ export abstract class AbstractPdf {
       this.doc.switchToPage(page);
       this.appendHeader();
     }
+  }
+
+  iPostLogo(): string {
+    const isVaylaTilaaja = this.isVaylaTilaaja();
+    return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
   }
 
   protected appendHeader(asiaTunnusX = 400, logoX = 19) {

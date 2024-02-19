@@ -1,6 +1,7 @@
 import {
   AsiakirjaTyyppi,
   ELY,
+  HallintoOikeus,
   IlmoitettavaViranomainen,
   KayttajaTyyppi,
   Kieli,
@@ -38,11 +39,11 @@ type PdfEvent = {
 
 function pdfFileName({ tyyppi, kieli }: PdfEvent) {
   if (tyyppi === ProjektiTyyppi.TIE) {
-    return `T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else if (tyyppi === ProjektiTyyppi.RATA) {
-    return `31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `63R Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else {
-    return `31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `63YS Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   }
 }
 
@@ -61,15 +62,22 @@ function testPdfFileName({
       suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "vayla" : "ely"
     }${lisaaOsoite && !vanha ? "_osoite" : ""}${vahainenMenettely ? "_vahainen" : ""}${eunRahoittama ? "_eu" : ""}${vanha ? "_vanha" : ""}${
       kieli === Kieli.RUOTSI ? "_sv" : ""
-    }.pdf`
+    }_hyvaksymispaatos.pdf`
   );
 }
 
 function generateEvent(event: PdfEvent): GeneratePDFEvent {
   return {
-    createNahtavillaoloKuulutusPdf: {
-      asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+    createHyvaksymisPaatosKuulutusPdf: {
+      asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
       asianhallintaPaalla: false,
+      kasittelynTila: {
+        hyvaksymisesitysTraficomiinPaiva: "",
+        hyvaksymispaatos: {
+          asianumero: "ABC/123",
+          paatoksenPvm: "2024-02-13",
+        },
+      },
       kayttoOikeudet: [
         {
           etunimi: "Teppo",
@@ -86,23 +94,38 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
       linkkiAsianhallintaan: undefined,
       luonnos: false,
       lyhytOsoite: "lyhytOsoite",
-      nahtavillaoloVaihe: {
+      hyvaksymisPaatosVaihe: {
         id: 1,
+        hallintoOikeus: HallintoOikeus.HELSINKI,
         kielitiedot: {
           ensisijainenKieli: event.ensisijainenKieli,
           toissijainenKieli: event.toissijainenKieli,
           projektinNimiVieraskielella: "Projekti 1 på svenska",
         },
+        ilmoituksenVastaanottajat: {
+          kunnat: [{ id: 91, sahkoposti: "kirjaamo@helsinki.fi" }],
+          viranomaiset: [
+            {
+              nimi:
+                event.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+                  ? IlmoitettavaViranomainen.VAYLAVIRASTO
+                  : IlmoitettavaViranomainen.UUDENMAAN_ELY,
+              sahkoposti: "test@vayla.fi",
+            },
+          ],
+        },
         kuulutusYhteystiedot: {},
         velho: {
           nimi: "Projekti 1",
+          asiatunnusELY: "ELY/456",
+          asiatunnusVayla: "VAYLA/123",
+          tyyppi: event.tyyppi,
+          kunnat: [91],
+          suunnittelustaVastaavaViranomainen: event.suunnittelustaVastaavaViranomainen,
+          vaylamuoto: ["tie", "rata"],
         },
         kuulutusVaihePaattyyPaiva: "2024-02-08",
         kuulutusPaiva: "2024-01-01",
-        hankkeenKuvaus: {
-          SUOMI: "Hankkeen kuvaus",
-          RUOTSI: "Hankkeen kuvaus på svenska",
-        },
         yhteystiedot: [
           {
             etunimi: "Testi",
@@ -114,26 +137,12 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
         ],
       },
       oid: "1.2.3",
-      velho: {
-        nimi: "Projekti 1",
-        asiatunnusELY: "ELY/456",
-        asiatunnusVayla: "VAYLA/123",
-        tyyppi: event.tyyppi,
-        kunnat: [91],
-        suunnittelustaVastaavaViranomainen: event.suunnittelustaVastaavaViranomainen,
-        vaylamuoto: ["tie", "rata"],
-      },
-      vahainenMenettely: event.vahainenMenettely,
       euRahoitusLogot: event.eunRahoittama
         ? {
             SUOMI: "xxx",
             RUOTSI: "yyy",
           }
         : undefined,
-      suunnitteluSopimus: {
-        kunta: 91,
-        yhteysHenkilo: "",
-      },
       osoite: event.lisaaOsoite
         ? {
             nimi: "Tessa Testilä",
@@ -146,7 +155,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
   };
 }
 
-describe("pdfGeneratorHandler", () => {
+describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
   let parameterStub: sinon.SinonStub;
   before(() => {
     parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled");
@@ -168,20 +177,6 @@ describe("pdfGeneratorHandler", () => {
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
-      eunRahoittama: false,
-    };
-    const pdf = await handleEvent(generateEvent(event));
-    expect(pdf.textContent).toMatchSnapshot();
-    expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
-  });
-  it("generate kiinteiston omistaja pdf tie vaylavirasto ei osoitetta", async () => {
-    const event: PdfEvent = {
-      kieli: Kieli.SUOMI,
-      ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-      tyyppi: ProjektiTyyppi.TIE,
-      lisaaOsoite: false,
       eunRahoittama: false,
     };
     const pdf = await handleEvent(generateEvent(event));
@@ -217,59 +212,14 @@ describe("pdfGeneratorHandler", () => {
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-  it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla ruotsi", async () => {
-    const event: PdfEvent = {
-      kieli: Kieli.RUOTSI,
-      ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-      tyyppi: ProjektiTyyppi.TIE,
-      lisaaOsoite: true,
-      eunRahoittama: false,
-      toissijainenKieli: Kieli.RUOTSI,
-    };
-    const pdf = await handleEvent(generateEvent(event));
-    expect(pdf.textContent).toMatchSnapshot();
-    expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
-  });
-  it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla ruotsi", async () => {
-    const event: PdfEvent = {
-      kieli: Kieli.RUOTSI,
-      ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-      tyyppi: ProjektiTyyppi.RATA,
-      lisaaOsoite: true,
-      eunRahoittama: false,
-      toissijainenKieli: Kieli.RUOTSI,
-    };
-    const pdf = await handleEvent(generateEvent(event));
-    expect(pdf.textContent).toMatchSnapshot();
-    expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
-  });
-  it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla ruotsi", async () => {
-    const event: PdfEvent = {
-      kieli: Kieli.RUOTSI,
-      ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-      tyyppi: ProjektiTyyppi.YLEINEN,
-      lisaaOsoite: true,
-      eunRahoittama: false,
-      toissijainenKieli: Kieli.RUOTSI,
-    };
-    const pdf = await handleEvent(generateEvent(event));
-    expect(pdf.textContent).toMatchSnapshot();
-    expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
-  });
-  it("generate kiinteiston omistaja pdf tie ely osoitetiedoilla eu", async () => {
+  it("generate kiinteiston omistaja pdf tie ely osoitetiedoilla", async () => {
     const event: PdfEvent = {
       kieli: Kieli.SUOMI,
       ensisijainenKieli: Kieli.SUOMI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
-      eunRahoittama: true,
+      eunRahoittama: false,
     };
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
@@ -304,12 +254,12 @@ describe("pdfGeneratorHandler", () => {
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-  it("generate kiinteiston omistaja pdf rata ely ei osoitetta", async () => {
+  it("generate kiinteiston omistaja pdf tie vaylavirasto", async () => {
     const event: PdfEvent = {
       kieli: Kieli.SUOMI,
       ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
-      tyyppi: ProjektiTyyppi.RATA,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: false,
       eunRahoittama: false,
     };
@@ -318,66 +268,108 @@ describe("pdfGeneratorHandler", () => {
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-
-  it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla vahainen menettely", async () => {
+  it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla eu", async () => {
     const event: PdfEvent = {
       kieli: Kieli.SUOMI,
       ensisijainenKieli: Kieli.SUOMI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
-      eunRahoittama: false,
-      vahainenMenettely: true,
+      eunRahoittama: true,
     };
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-  it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla vahainen menettely", async () => {
+  it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
-      kieli: Kieli.SUOMI,
+      kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli:Kieli.RUOTSI,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      tyyppi: ProjektiTyyppi.TIE,
+      lisaaOsoite: true,
+      eunRahoittama: false,
+    };
+    const pdf = await handleEvent(generateEvent(event));
+    expect(pdf.textContent).toMatchSnapshot();
+    expect(pdf.nimi).to.equal(pdfFileName(event));
+    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+  });
+  it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla ruotsi", async () => {
+    const event: PdfEvent = {
+      kieli: Kieli.RUOTSI,
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli:Kieli.RUOTSI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.RATA,
       lisaaOsoite: true,
       eunRahoittama: false,
-      vahainenMenettely: true,
     };
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-  it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla vahainen menettely", async () => {
+  it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
-      kieli: Kieli.SUOMI,
-      ensisijainenKieli: Kieli.SUOMI,
+      kieli: Kieli.RUOTSI,
+      ensisijainenKieli: Kieli.RUOTSI,
+      toissijainenKieli:Kieli.SUOMI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.YLEINEN,
       lisaaOsoite: true,
       eunRahoittama: false,
-      vahainenMenettely: true,
     };
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
     fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
-  it("generate kiinteiston omistaja pdf tie vaylavirasto vanha", async () => {
-    parameterStub.resolves(false);
+  it("generate kiinteiston omistaja pdf tie ely osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
-      kieli: Kieli.SUOMI,
+      kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
-      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      toissijainenKieli:Kieli.RUOTSI,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
       eunRahoittama: false,
-      vahainenMenettely: true,
     };
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName({ ...event, vanha: true }), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+  });
+  it("generate kiinteiston omistaja pdf rata ely osoitetiedoilla ruotsi", async () => {
+    const event: PdfEvent = {
+      kieli: Kieli.RUOTSI,
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli:Kieli.RUOTSI,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      tyyppi: ProjektiTyyppi.RATA,
+      lisaaOsoite: true,
+      eunRahoittama: false,
+    };
+    const pdf = await handleEvent(generateEvent(event));
+    expect(pdf.textContent).toMatchSnapshot();
+    expect(pdf.nimi).to.equal(pdfFileName(event));
+    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+  });
+  it("generate kiinteiston omistaja pdf yleinen ely osoitetiedoilla ruotsi", async () => {
+    const event: PdfEvent = {
+      kieli: Kieli.RUOTSI,
+      ensisijainenKieli: Kieli.RUOTSI,
+      toissijainenKieli:Kieli.SUOMI,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      tyyppi: ProjektiTyyppi.YLEINEN,
+      lisaaOsoite: true,
+      eunRahoittama: false,
+    };
+    const pdf = await handleEvent(generateEvent(event));
+    expect(pdf.textContent).toMatchSnapshot();
+    expect(pdf.nimi).to.equal(pdfFileName(event));
+    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
   });
 });

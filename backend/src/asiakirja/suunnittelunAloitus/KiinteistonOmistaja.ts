@@ -1,13 +1,11 @@
 import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
-import { formatDate } from "../asiakirjaUtil";
+import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { formatDate, toPdfPoints } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { assertIsDefined } from "../../util/assertions";
-import convert from "convert-units";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -20,7 +18,6 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   protected header: string;
   protected kieli: KaannettavaKieli;
   protected vahainenMenettely: boolean | undefined | null;
-  private osoite?: Osoite;
   private readonly velho: Velho;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
@@ -71,7 +68,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       velho.tyyppi,
       params.kieli
     );
-    super(params.kieli, kutsuAdapter);
+    super(params.kieli, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.velho = velho;
     const language = params.kieli;
     this.header = headers[language];
@@ -79,47 +76,12 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
     this.vahainenMenettely = params.vahainenMenettely;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.osoite = params.osoite;
-
     this.kutsuAdapter.addTemplateResolver(this);
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
-  private toPdfPoints(mm: number) {
-    return convert(mm).from("mm").to("in") * 72;
-  }
-
-  iPostLogo(): string {
-    const isVaylaTilaaja = this.isVaylaTilaaja();
-    return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
-  }
-
-  protected appendHeader() {
-    if (this.osoite) {
-      let x = this.toPdfPoints(21);
-      this.doc.text("Väylävirasto", x, this.toPdfPoints(20), { width: this.toPdfPoints(72), baseline: "top" });
-      this.doc.text("PL 33", undefined, undefined, { width: this.toPdfPoints(72) });
-      this.doc.text("00521 HELSINKI", undefined, undefined, { width: this.toPdfPoints(72) });
-
-      this.doc.text(this.osoite?.nimi, x, this.toPdfPoints(55), { width: this.toPdfPoints(62), baseline: "top" });
-      this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: this.toPdfPoints(72) });
-      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka.toUpperCase()}`, undefined, undefined, { width: this.toPdfPoints(72) });
-      x = this.isVaylaTilaaja() ? this.toPdfPoints(75) : this.toPdfPoints(70);
-      const y = this.isVaylaTilaaja() ? this.toPdfPoints(53) : this.toPdfPoints(57);
-      this.doc.image(this.iPostLogo(), x, y, { fit: this.isVaylaTilaaja() ? [50, 43.48] : [63, 22.09] });
-      this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), 350, 110);
-      assertIsDefined(this.logo, "PDF:stä puuttuu logo");
-      this.doc.image(this.logo, this.toPdfPoints(21), this.toPdfPoints(100), { height: 75 });
-
-      this.doc.moveDown(16);
-      this.osoite = undefined;
-    } else {
-      super.appendHeader(350, this.toPdfPoints(21));
-    }
-  }
-
   protected getIndention() {
-    return this.toPdfPoints(25);
+    return toPdfPoints(25);
   }
 
   protected addContent(): void {

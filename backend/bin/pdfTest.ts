@@ -3,7 +3,7 @@ import { GeneratePDFEvent } from "../src/asiakirja/lambda/generatePDFEvent";
 import { handleEvent } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { projektiDatabase } from "../src/database/projektiDatabase";
 import fs from "fs";
-import { SuunnitteluSopimus } from "../src/database/model";
+import { KasittelynTila, SuunnitteluSopimus } from "../src/database/model";
 import { generatePdf } from "../src/suomifi/suomifiHandler";
 import { PublishOrExpireEventType } from "../src/sqsEvents/projektiScheduleManager";
 
@@ -15,29 +15,34 @@ projektiDatabase
       const osoite = process.argv.includes("--address");
       const ruotsi = process.argv.includes("--sv");
       const ipost = process.argv.includes("--ipost");
-      if (projekti.nahtavillaoloVaiheJulkaisut) {
-        if (ipost) {
-          return generatePdf(projekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO, {
+      const hyvaksymisPaatosExists = projekti.hyvaksymisPaatosVaiheJulkaisut && projekti.hyvaksymisPaatosVaiheJulkaisut.length > 0;
+      if (ipost) {
+        return generatePdf(
+          projekti,
+          hyvaksymisPaatosExists ? PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE : PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO,
+          {
             id: "1",
             nimi: "Tessa Testilä Pitkääääää Pitkää Pitkääääää Pitkääääää",
             lahiosoite: "Henrikintie 14 B",
             postinumero: "00370",
             postitoimipaikka: "HELSINKI",
             maakoodi: "FI",
-          }).then((pdf) => {
-            return {
-              __typename: "PDF",
-              nimi: pdf?.tiedostoNimi as string,
-              sisalto: pdf?.file.toString("base64") as string,
-              textContent: "",
-            };
-          });
-        }
+          }
+        ).then((pdf) => {
+          return {
+            __typename: "PDF",
+            nimi: pdf?.tiedostoNimi as string,
+            sisalto: pdf?.file.toString("base64") as string,
+            textContent: "",
+          };
+        });
+      }
+      if (!hyvaksymisPaatosExists && projekti.nahtavillaoloVaiheJulkaisut) {
         const generateEvent: GeneratePDFEvent = {
           createNahtavillaoloKuulutusPdf: {
             asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-            asianhallintaPaalla: false,
-            kayttoOikeudet: [],
+            asianhallintaPaalla: !(projekti.asianhallinta?.inaktiivinen ?? true),
+            kayttoOikeudet: projekti.kayttoOikeudet,
             kieli: ruotsi ? Kieli.RUOTSI : Kieli.SUOMI,
             linkkiAsianhallintaan: undefined,
             luonnos: false,
@@ -56,6 +61,31 @@ projektiDatabase
                   postitoimipaikka: "HELSINKI",
                 }
               : undefined,
+          },
+        };
+        return handleEvent(generateEvent);
+      } else if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+        const generateEvent: GeneratePDFEvent = {
+          createHyvaksymisPaatosKuulutusPdf: {
+            asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+            asianhallintaPaalla: !(projekti.asianhallinta?.inaktiivinen ?? true),
+            kayttoOikeudet: projekti.kayttoOikeudet,
+            kieli: ruotsi ? Kieli.RUOTSI : Kieli.SUOMI,
+            linkkiAsianhallintaan: undefined,
+            luonnos: false,
+            lyhytOsoite: projekti.lyhytOsoite,
+            hyvaksymisPaatosVaihe: projekti.hyvaksymisPaatosVaiheJulkaisut[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1],
+            oid: projekti.oid,
+            euRahoitusLogot: projekti.euRahoitusLogot,
+            osoite: osoite
+              ? {
+                  nimi: "Tessa Testilä Pitkääääää Pitkää Pitkääääää Pitkääääää",
+                  katuosoite: "Henrikintie 14 B",
+                  postinumero: "00370",
+                  postitoimipaikka: "HELSINKI",
+                }
+              : undefined,
+            kasittelynTila: projekti.kasittelynTila as KasittelynTila,
           },
         };
         return handleEvent(generateEvent);

@@ -1,7 +1,7 @@
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -33,7 +33,8 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
   paatosTyyppi: PaatosTyyppi,
   asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined
+  linkkiAsianhallintaan: string | undefined,
+  osoite?: Osoite,
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
@@ -76,6 +77,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     viimeinenVoimassaolovuosi: hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    osoite,
   };
 }
 
@@ -85,11 +87,14 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends KuulutusKutsuAda
   hallintoOikeus: HallintoOikeus;
   paatosTyyppi: PaatosTyyppi;
   viimeinenVoimassaolovuosi?: string | null;
+  osoite?: Osoite;
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<HyvaksymisPaatosVaiheKutsuAdapterProps> {
-  constructor(props: HyvaksymisPaatosVaiheKutsuAdapterProps) {
+  private lakiKey: string;
+  constructor(props: HyvaksymisPaatosVaiheKutsuAdapterProps, lakiKey = "lain") {
     super(props, "asiakirja.hyvaksymispaatoksesta_ilmoittaminen.");
+    this.lakiKey = lakiKey;
   }
 
   get kuulutusNimiCapitalized(): string {
@@ -112,7 +117,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
   }
 
   get lain(): string {
-    return this.tieRataOptionTextFor("lain");
+    return this.tieRataOptionTextFor(this.lakiKey);
   }
 
   get lakiviite_hyvaksymispaatoksesta_ilmoittaminen(): string {

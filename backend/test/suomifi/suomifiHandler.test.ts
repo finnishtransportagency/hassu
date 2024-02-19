@@ -11,23 +11,31 @@ import { DBMuistuttaja } from "../../src/muistutus/muistutusHandler";
 import { now } from "lodash";
 import { emailClient } from "../../src/email/email";
 import { assert, expect } from "chai";
-import { ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { PdfViesti, SuomiFiClient, Viesti } from "../../src/suomifi/viranomaispalvelutwsinterface/suomifi";
 import { HaeTilaTietoResponse, ViranomaispalvelutWsInterfaceClient } from "../../src/suomifi/viranomaispalvelutwsinterface";
 import { PublishOrExpireEventType } from "../../src/sqsEvents/projektiScheduleManager";
 import { fileService } from "../../src/files/fileService";
-import { DBProjekti } from "../../src/database/model";
+import {
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
+  LocalizedMap,
+  NahtavillaoloPDF,
+  NahtavillaoloVaiheJulkaisu,
+} from "../../src/database/model";
 import { DBOmistaja } from "../../src/mml/kiinteistoHandler";
 import { fail } from "assert";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { EnhancedPDF } from "../../src/asiakirja/asiakirjaTypes";
 import { SQS, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
 
+const testiPdf =
+  "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlPVVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBSCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAxCi9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
 const lambdaResponse: EnhancedPDF = {
   __typename: "PDF",
   nimi: "T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-  sisalto:
-    "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlPVVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBSCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAxCi9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G",
+  sisalto: testiPdf,
   textContent: "",
 };
 
@@ -265,6 +273,7 @@ describe("suomifiHandler", () => {
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
@@ -313,6 +322,7 @@ describe("suomifiHandler", () => {
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
@@ -356,6 +366,7 @@ describe("suomifiHandler", () => {
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
@@ -382,6 +393,140 @@ describe("suomifiHandler", () => {
     parameterStub.restore();
     fileStub.restore();
   });
+  it("omistajan pdf viesti suomi.fi nähtävilläolo", async () => {
+    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const omistaja: DBOmistaja = {
+      id: "123",
+      expires: 0,
+      lisatty: now().toString(),
+      oid: "1",
+      henkilotunnus: "ABC",
+      etunimet: "Testi",
+      sukunimi: "Teppo",
+      jakeluosoite: "Osoite 1",
+      postinumero: "00100",
+      paikkakunta: "Helsinki",
+      kiinteistotunnus: "123",
+    };
+    const request: SuomiFiRequest = {};
+    const client = mockSuomiFiClient(request, 300);
+    setMockSuomiFiClient(client);
+    const dbProjekti: Partial<DBProjekti> = {
+      oid: "1",
+      nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          nahtavillaoloPDFt: {
+            RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
+          } as unknown as LocalizedMap<NahtavillaoloPDF>,
+        } as unknown as NahtavillaoloVaiheJulkaisu,
+        {
+          id: 2,
+          nahtavillaoloPDFt: {
+            RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/22" },
+          } as unknown as LocalizedMap<NahtavillaoloPDF>,
+        } as unknown as NahtavillaoloVaiheJulkaisu,
+      ],
+      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+    };
+    const mock = mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.omistajaTableName })
+      .resolves({ Item: omistaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: dbProjekti,
+      });
+    const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
+    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const msg = { Records: [{ body: JSON.stringify(body) }] };
+    await handleEvent(msg as SQSEvent);
+    expect(fileStub.getCalls()[0].args[0]).to.equal("1");
+    expect(fileStub.getCalls()[0].args[1]).to.equal("/path/22");
+    assert(request.pdfViesti);
+    request.pdfViesti.tiedosto.sisalto = Buffer.from("");
+    expect(request.pdfViesti).toMatchSnapshot();
+    expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
+    parameterStub.restore();
+    fileStub.restore();
+  });
+  it("omistajan pdf viesti suomi.fi hyväksymispäätös", async () => {
+    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const omistaja: DBOmistaja = {
+      id: "123",
+      expires: 0,
+      lisatty: now().toString(),
+      oid: "1",
+      henkilotunnus: "ABC",
+      etunimet: "Testi",
+      sukunimi: "Teppo",
+      jakeluosoite: "Osoite 1",
+      postinumero: "00100",
+      paikkakunta: "Helsinki",
+      kiinteistotunnus: "123",
+    };
+    const request: SuomiFiRequest = {};
+    const client = mockSuomiFiClient(request, 300);
+    setMockSuomiFiClient(client);
+    const dbProjekti: Partial<DBProjekti> = {
+      oid: "1",
+      hyvaksymisPaatosVaihe: { id: 1 },
+      hyvaksymisPaatosVaiheJulkaisut: [
+        {
+          id: 1,
+          hyvaksymisPaatosVaihePDFt: {
+            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/1" },
+          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+        {
+          id: 2,
+          hyvaksymisPaatosVaihePDFt: {
+            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/2" },
+          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+      ],
+      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+    };
+    const mock = mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.omistajaTableName })
+      .resolves({ Item: omistaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: dbProjekti,
+      });
+    const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
+    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE };
+    const msg = { Records: [{ body: JSON.stringify(body) }] };
+    await handleEvent(msg as SQSEvent);
+    expect(fileStub.getCalls()[0].args[0]).to.equal("1");
+    expect(fileStub.getCalls()[0].args[1]).to.equal("/path/2");
+    assert(request.pdfViesti);
+    request.pdfViesti.tiedosto.sisalto = Buffer.from("");
+    expect(request.pdfViesti).toMatchSnapshot();
+    expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
+    parameterStub.restore();
+    fileStub.restore();
+  });
   it("omistajan pdf viesti suomi.fi epäonnistui", async () => {
     const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
@@ -403,6 +548,7 @@ describe("suomifiHandler", () => {
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
     };
     const mock = mockClient(DynamoDBDocumentClient)
