@@ -29,14 +29,14 @@ export default function LausuntoPyynnotWrapper() {
   );
 }
 
-const defaultLausuntoPyynto: LausuntoPyyntoLisakentilla = {
+const getDefaultLausuntoPyynto: () => LausuntoPyyntoLisakentilla = () => ({
   uuid: uuid.v4(),
   poistumisPaiva: dayjs(new Date()).add(180, "day").format("YYYY-MM-DD"),
   lisaAineistot: [],
   poistetutLisaAineistot: [],
   muistiinpano: "",
   tallennettu: false,
-};
+});
 
 function adaptLausuntoPyyntoToLausuntoPyyntoLisakentilla(lausuntoPyynto: LausuntoPyynto) {
   const { lisatty: lisaAineistot, poistettu: poistetutLisaAineistot } = handleLadattuTiedostoArrayForDefaultValues(
@@ -59,7 +59,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
       reduceToLisatytJaPoistetut<LausuntoPyynto>({ onPoistettu: (lp: LausuntoPyynto) => !!lp.poistetaan }),
       { lisatty: [] as LausuntoPyynto[], poistettu: [] as LausuntoPyynto[] }
     );
-    const lausuntoPyynnot = lisatty.length ? lisatty.map(adaptLausuntoPyyntoToLausuntoPyyntoLisakentilla) : [defaultLausuntoPyynto];
+    const lausuntoPyynnot = lisatty.length ? lisatty.map(adaptLausuntoPyyntoToLausuntoPyyntoLisakentilla) : [getDefaultLausuntoPyynto()];
     return {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -108,7 +108,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             id="add_new_lausuntopyynto"
             type="button"
             onClick={() => {
-              append(defaultLausuntoPyynto);
+              append(getDefaultLausuntoPyynto());
             }}
           >
             Lisää uusi +

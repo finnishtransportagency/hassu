@@ -1,4 +1,5 @@
 import {
+  Aineisto,
   DBProjekti,
   DBVaylaUser,
   IlmoituksenVastaanottajat,
@@ -380,7 +381,7 @@ function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
       Array.isArray(value)
     ) {
       if (!value.every((item) => !!item.uuid)) {
-        return value.map((item) => ({ ...item, uuid: uuid.v4() }));
+        return value.map<Aineisto>((item) => ({ ...item, uuid: uuid.v4(), uuidGeneratedBySchemaMigration: true }));
       } else {
         return value;
       }

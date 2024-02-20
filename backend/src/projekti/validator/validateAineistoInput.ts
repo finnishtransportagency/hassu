@@ -2,14 +2,22 @@ import { AineistoInput, AineistoTila } from "hassu-common/graphql/apiModel";
 import { Aineisto } from "../../database/model";
 import { IllegalArgumentError } from "hassu-common/error";
 
+const findDbAineistoFromInput = (dbaineisto: Aineisto) => (inputaineisto: AineistoInput) =>
+  dbaineisto.uuidGeneratedBySchemaMigration
+    ? inputaineisto.dokumenttiOid === dbaineisto.dokumenttiOid
+    : inputaineisto.uuid === dbaineisto.uuid;
+
 export function validateAineistoInput(dbAineistot: Aineisto[] | undefined | null, inputAineistot: AineistoInput[] | undefined | null) {
   const dbTiedostoJotaEiMainitaInputissa = dbAineistot?.find(
-    (dbaineisto) =>
-      dbaineisto.tila != AineistoTila.ODOTTAA_POISTOA && !inputAineistot?.find((inputaineisto) => inputaineisto.uuid == dbaineisto.uuid)
+    (dbaineisto) => dbaineisto.tila !== AineistoTila.ODOTTAA_POISTOA && !inputAineistot?.find(findDbAineistoFromInput(dbaineisto))
   );
   if (dbAineistot && inputAineistot !== undefined && dbTiedostoJotaEiMainitaInputissa) {
     throw new IllegalArgumentError(
-      `Jokainen db:ssä oleva aineisto on mainittava inputissa. Puuttuu: ${dbTiedostoJotaEiMainitaInputissa?.uuid}`
+      `Jokainen db:ssä oleva aineisto on mainittava inputissa. Puuttuu: ${
+        dbTiedostoJotaEiMainitaInputissa.uuidGeneratedBySchemaMigration
+          ? dbTiedostoJotaEiMainitaInputissa.dokumenttiOid
+          : dbTiedostoJotaEiMainitaInputissa.uuid
+      }`
     );
   }
   if (
@@ -19,7 +27,7 @@ export function validateAineistoInput(dbAineistot: Aineisto[] | undefined | null
     throw new IllegalArgumentError("Kahdella aineistolla ei voi olla samaa uuid:ta inputissa.");
   }
   const dbAineistoJokaMuutettuInputissaValmiiksi = dbAineistot?.find((dbaineisto) => {
-    const inputVastine = inputAineistot?.find((inputaineisto) => inputaineisto.uuid == dbaineisto.uuid);
+    const inputVastine = inputAineistot?.find(findDbAineistoFromInput(dbaineisto));
     return inputVastine && dbaineisto.tila != AineistoTila.VALMIS && inputVastine.tila == AineistoTila.VALMIS;
   });
   if (dbAineistot && inputAineistot !== undefined && dbAineistoJokaMuutettuInputissaValmiiksi) {
