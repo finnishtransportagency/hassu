@@ -306,7 +306,9 @@ export abstract class KuulutusTilaManager<
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
     await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
-    await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
+    if (!approvedJulkaisu.aineistoMuokkaus) {
+      await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
+    }
   }
 
   checkPriviledgesAvaaAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
