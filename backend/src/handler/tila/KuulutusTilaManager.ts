@@ -11,7 +11,7 @@ import {
 import { assertIsDefined } from "../../util/assertions";
 import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
-import { auditLog } from "../../logger";
+import { auditLog, log } from "../../logger";
 import { TilaManager } from "./TilaManager";
 import { isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
@@ -307,7 +307,10 @@ export abstract class KuulutusTilaManager<
     await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
     if (!approvedJulkaisu.aineistoMuokkaus) {
+      log.info("Viedään julkaisun asiakirjat asianhallintaan", approvedJulkaisu.asianhallintaEventId);
       await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
+    } else {
+      log.info("Julkaisu on aineistomuokkaus asianhallintaan vietäviä asiakirjoja ei ole");
     }
   }
 
