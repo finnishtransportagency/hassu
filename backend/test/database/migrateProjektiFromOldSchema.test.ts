@@ -5,8 +5,6 @@ import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
 import MockDate from "mockdate";
 import { expect } from "chai";
 import { VuorovaikutusAineistoKategoria } from "hassu-common/vuorovaikutusAineistoKategoria";
-import { uuid } from "hassu-common/util/uuid";
-import sinon from "sinon";
 import { nyt } from "../../src/util/dateUtil";
 import cloneDeepWith from "lodash/cloneDeepWith";
 
@@ -1173,11 +1171,13 @@ describe("migrateFromOldSchema", () => {
             ...aineisto,
             kategoriaId: VuorovaikutusAineistoKategoria.ESITTELYAINEISTO,
             uuid: "***migrationtest***",
+            uuidGeneratedBySchemaMigration: true,
           })),
           ...suunnitelmaluonnokset.map((aineisto) => ({
             ...aineisto,
             kategoriaId: VuorovaikutusAineistoKategoria.SUUNNITELMALUONNOS,
             uuid: "***migrationtest***",
+            uuidGeneratedBySchemaMigration: true,
           })),
         ],
       },
@@ -1322,6 +1322,7 @@ describe("migrateFromOldSchema", () => {
             tila: "VALMIS",
             tuotu: "2023-12-12T10:34:22+02:00",
             uuid: "***migrationtest***",
+            uuidGeneratedBySchemaMigration: true,
           },
         ],
         lisaAineisto: [
@@ -1350,6 +1351,7 @@ describe("migrateFromOldSchema", () => {
               tila: "VALMIS",
               tuotu: "2023-12-12T10:34:22+02:00",
               uuid: "***migrationtest***",
+              uuidGeneratedBySchemaMigration: true,
             },
           ],
           lisaAineisto: [
@@ -1381,6 +1383,7 @@ describe("migrateFromOldSchema", () => {
               tila: "VALMIS",
               tuotu: "2023-12-12T10:34:36+02:00",
               uuid: "***migrationtest***",
+              uuidGeneratedBySchemaMigration: true,
             },
           ],
           legacy: 1,
