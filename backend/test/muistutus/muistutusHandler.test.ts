@@ -285,7 +285,7 @@ describe("muistutusHandler", () => {
           .on(GetCommand, { TableName: config.projektiTableName })
           .resolves({ Item: { id: "1", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock
-          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1" } })
+          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1" } })
           .resolves({ Item: { id: "11", nimi: "Teppo Testaaja" } });
         try {
           await muistutusHandler.tallennaMuistuttajat({
