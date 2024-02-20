@@ -1,5 +1,5 @@
 import yargs from "yargs";
-import { OpenSearchClient } from "../../backend/src/projektiSearch/openSearchClient";
+import OpenSearchClient from "../../backend/src/projektiSearch/openSearchClient";
 import fs from "fs";
 import assert from "assert";
 

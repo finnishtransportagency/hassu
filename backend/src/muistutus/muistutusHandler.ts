@@ -122,6 +122,7 @@ class MuistutusHandler {
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
     await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id]);
     const msg: SuomiFiSanoma = {
+      oid,
       muistuttajaId: muistuttaja.id,
     };
     await getSQS().sendMessage({ QueueUrl: await parameters.getSuomiFiSQSUrl(), MessageBody: JSON.stringify(msg) });
@@ -142,6 +143,7 @@ class MuistutusHandler {
           [getMuistuttajaTableName()]: {
             Keys: ids.map((key) => ({
               id: key,
+              oid: variables.oid,
             })),
           },
         },
@@ -190,7 +192,7 @@ class MuistutusHandler {
     for (const muistuttaja of input.muistuttajat) {
       if (muistuttaja.id) {
         const response = await getDynamoDBDocumentClient().send(
-          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id } })
+          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id, oid: input.oid } })
         );
         dbmuistuttaja = response.Item as DBMuistuttaja;
         if (!dbmuistuttaja || !projekti.muutMuistuttajat?.includes(muistuttaja.id)) {

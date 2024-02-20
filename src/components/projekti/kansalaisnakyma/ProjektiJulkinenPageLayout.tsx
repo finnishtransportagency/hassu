@@ -48,7 +48,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
           </div>
         )}
-        <div>
+        <div className="min-w-0">
           <Section noDivider className="mb-10">
             <H1 id="mainPageContent">{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
             <ProjektiJulkinenStepper

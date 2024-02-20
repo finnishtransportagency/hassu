@@ -1,4 +1,4 @@
-import ButtonFlat from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 
@@ -8,7 +8,7 @@ type Props = {
 };
 export function AccordionToggleButton({ expandedAineisto, setExpandedAineisto }: Props) {
   return (
-    <ButtonFlat
+    <ButtonFlatWithIcon
       type="button"
       onClick={() => {
         if (!!expandedAineisto.length) {
@@ -25,6 +25,6 @@ export function AccordionToggleButton({ expandedAineisto, setExpandedAineisto }:
       }
     >
       {!!expandedAineisto.length ? "Sulje" : "Avaa"} kaikki kategoriat
-    </ButtonFlat>
+    </ButtonFlatWithIcon>
   );
 }

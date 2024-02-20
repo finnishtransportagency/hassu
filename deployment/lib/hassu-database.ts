@@ -22,15 +22,20 @@ export class HassuDatabaseStack extends Stack {
   public lyhytOsoiteTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
   public feedbackTable!: ddb.Table;
+
+  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   public omistajaTable!: ddb.Table;
+
+  public kiinteistonOmistajaTable!: ddb.Table;
   public muistuttajaTable!: ddb.Table;
+  public projektiMuistuttajaTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
   public publicBucket!: Bucket;
   private config!: Config;
 
-  constructor(scope: Construct, awsAccountId:string) {
+  constructor(scope: Construct, awsAccountId: string) {
     super(scope, "database", {
       stackName: databaseStackName,
       terminationProtection: Config.getEnvConfig().terminationProtection,
@@ -50,7 +55,9 @@ export class HassuDatabaseStack extends Stack {
     this.projektiArchiveTable = this.createProjektiArchiveTable();
     this.feedbackTable = this.createFeedbackTable();
     this.omistajaTable = this.createOmistajaTable();
+    this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.muistuttajaTable = this.createMuistuttajaTable();
+    this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -133,6 +140,7 @@ export class HassuDatabaseStack extends Stack {
     return table;
   }
 
+  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   private createOmistajaTable() {
     const table = new ddb.Table(this, "OmistajaTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
@@ -141,6 +149,31 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createKiinteistonomistajaTable() {
+    const table = new ddb.Table(this, "KiinteistonomistajaTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.kiinteistonomistajaTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
     });
@@ -160,6 +193,31 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createProjektiMuistuttajaTable() {
+    const table = new ddb.Table(this, "Projektimuistuttaja", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.projektiMuistuttajaTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
       timeToLiveAttribute: "expires",
     });
@@ -220,7 +278,8 @@ export class HassuDatabaseStack extends Stack {
       bucketName: Config.internalBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
-      encryption: BucketEncryption.S3_MANAGED,enforceSSL:true,
+      encryption: BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
     });
   }
 
@@ -230,8 +289,8 @@ export class HassuDatabaseStack extends Stack {
       versioned: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
-      encryption: BucketEncryption.S3_MANAGED,enforceSSL:true
-
+      encryption: BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
     });
 
     if (originAccessIdentity) {

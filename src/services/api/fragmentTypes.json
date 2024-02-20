@@ -863,6 +863,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "TallennaKiinteistonOmistajaResponse",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,

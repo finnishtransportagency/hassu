@@ -9,7 +9,7 @@ import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanot
 import ExtLink from "@components/ExtLink";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
-import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "common/testUtil.dev";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";

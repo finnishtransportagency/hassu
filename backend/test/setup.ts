@@ -30,7 +30,7 @@ process.env.VELHO_READ_ONLY = "true";
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.TABLE_LYHYTOSOITE = "Lyhytosoite-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";
-process.env.TABLE_MUISTUTTAJA = "Muistuttaja-localstack";
+process.env.TABLE_PROJEKTI_MUISTUTTAJA = "ProjektiMuistuttaja-localstack";
 process.env.AWS_REGION = "eu-west-1";
 
 process.env.UPLOAD_BUCKET_NAME = "hassu-localstack-upload";

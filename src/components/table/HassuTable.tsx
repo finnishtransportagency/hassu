@@ -240,7 +240,7 @@ function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
   return (
     <Thead>
       {table.getHeaderGroups().map((headerGroup) => (
-        <Tr key={headerGroup.id} sx={{ gridTemplateColumns }}>
+        <Tr key={headerGroup.id} sx={{ gridTemplateColumns, alignItems: "end" }}>
           {headerGroup.headers.map((header) => {
             const isSorted = header.column.getIsSorted();
             const canSort = table.options.enableSorting && header.column.getCanSort();
