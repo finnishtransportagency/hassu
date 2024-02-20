@@ -411,6 +411,7 @@ describe("suomifiHandler", () => {
       postinumero: "00100",
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
+      kaytossa: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -439,14 +440,14 @@ describe("suomifiHandler", () => {
       },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.omistajaTableName })
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({ Item: omistaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
-    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(fileStub.getCalls()[0].args[0]).to.equal("1");
@@ -478,6 +479,7 @@ describe("suomifiHandler", () => {
       postinumero: "00100",
       paikkakunta: "Helsinki",
       kiinteistotunnus: "123",
+      kaytossa: true,
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -506,14 +508,14 @@ describe("suomifiHandler", () => {
       },
     };
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(GetCommand, { TableName: config.omistajaTableName })
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({ Item: omistaja })
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
-    const body: SuomiFiSanoma = { omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE };
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
     expect(fileStub.getCalls()[0].args[0]).to.equal("1");

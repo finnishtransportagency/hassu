@@ -236,13 +236,14 @@ describe("muistutusHandler", () => {
         loadProjektiByOidStub.restore();
         identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
       });
+
       it("should save muistuttajat", async () => {
         const dbMock = mockClient(DynamoDBDocumentClient);
         dbMock
           .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+          .resolves({ Item: { id: "1.2.3", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
         dbMock
-          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1" } })
+          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1.2.3" } })
           .resolves({ Item: { id: "1", nimi: "Matti Teppo" } });
         const muistuttajat = await muistutusHandler.tallennaMuistuttajat({
           oid: "1.2.3",
@@ -278,14 +279,15 @@ describe("muistutusHandler", () => {
         expect(muistuttajat[1].tiedotusosoite).to.equal("test@test.fi");
         expect(muistuttajat[1].tiedotustapa).to.equal(undefined);
       });
+
       it("should not save muistuttajat", async () => {
         const dbMock = mockClient(DynamoDBDocumentClient);
         dbMock.reset();
+        dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+          Item: { oid: "1.2.3", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+        });
         dbMock
-          .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-        dbMock
-          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1" } })
+          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1.2.3" } })
           .resolves({ Item: { id: "11", nimi: "Teppo Testaaja" } });
         try {
           await muistutusHandler.tallennaMuistuttajat({
