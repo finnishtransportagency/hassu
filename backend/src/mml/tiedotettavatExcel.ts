@@ -22,21 +22,11 @@ function formatDate(date: string | undefined | null, format = "DD.MM.YYYY HH:mm:
 }
 
 export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQueryVariables): Promise<Excel> {
-  return generateExcelByOid(variables.oid, variables.suomifi, variables.kiinteisto, undefined, undefined);
-}
-
-export async function generateExcelByOid(
-  oid: string,
-  suomifi: boolean,
-  kiinteisto: boolean,
-  vaihe?: Vaihe,
-  kuulutusPaiva?: string
-): Promise<Excel> {
-  const projekti = await requirePermissionMuokkaaProjekti(oid);
-  const file = await generateExcel(projekti, kiinteisto, vaihe, kuulutusPaiva, suomifi);
+  const projekti = await requirePermissionMuokkaaProjekti(variables.oid);
+  const file = await generateExcel(projekti, variables.kiinteisto, undefined, undefined, variables.suomifi);
   return {
     __typename: "Excel",
-    nimi: `${kiinteisto ? "kiinteistonomistajat" : "muistuttajat"}-${suomifi ? "suomifi" : "muut"}-${oid}.xlsx`,
+    nimi: `${variables.kiinteisto ? "kiinteistonomistajat" : "muistuttajat"}-${variables.suomifi ? "suomifi" : "muut"}-${variables.oid}.xlsx`,
     sisalto: file.toString("base64"),
     tyyppi: CONTENT_TYPE_EXCEL,
   };
@@ -150,7 +140,7 @@ async function haeRivit(oid: string, kiinteisto: boolean): Promise<Rivi[]> {
   }
 }
 
-async function generateExcel(
+export async function generateExcel(
   projekti: DBProjekti,
   kiinteisto: boolean,
   vaihe: Vaihe | undefined,

@@ -1,0 +1,329 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon Suomi.fi 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon graphql Suomi.fi 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon graphql muut 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös 1`] = `
+Array [
+  Array [
+    "Kuulutus suunnitelman hyväksymisestä",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös 2`] = `
+Array [
+  Array [
+    "Kuulutus suunnitelman hyväksymisestä",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistönomistajien tiedotus muilla tavoin",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon muut 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon nähtävilläolo 1`] = `
+Array [
+  Array [
+    "Kuulutus suunnitelman nähtäville asettamisesta",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon nähtävilläolo 2`] = `
+Array [
+  Array [
+    "Kuulutus suunnitelman nähtäville asettamisesta",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistönomistajien tiedotus muilla tavoin",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
