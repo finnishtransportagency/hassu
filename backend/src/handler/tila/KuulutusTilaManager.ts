@@ -323,7 +323,12 @@ export abstract class KuulutusTilaManager<
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
     await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva, this.getApprovalType());
     await this.sendApprovalMailsAndAttachments(projekti.oid);
-    await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
+    if (!approvedJulkaisu.aineistoMuokkaus) {
+      auditLog.info("Viedään julkaisun asiakirjat asianhallintaan", approvedJulkaisu.asianhallintaEventId);
+      await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
+    } else {
+      auditLog.info("Julkaisu on aineistomuokkaus asianhallintaan vietäviä asiakirjoja ei ole");
+    }
   }
 
   checkPriviledgesAvaaAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
