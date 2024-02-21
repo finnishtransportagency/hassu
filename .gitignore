@@ -81,5 +81,3 @@ cypress/downloads/downloads.html
 static/graphql-playground/index.html
 testpdf.pdf
 backend/test/asiakirja/lambda/*.pdf
-kiinteistonomistajat-*.xlsx
-muistuttajat-*.xlsx
