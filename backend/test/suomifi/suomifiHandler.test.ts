@@ -3,7 +3,7 @@ import { setLogContextOid } from "../../src/logger";
 import { SuomiFiSanoma, handleEvent, lahetaSuomiFiViestit, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { parameters } from "../../src/aws/parameters";
 import * as sinon from "sinon";
 import { config } from "../../src/config";
@@ -88,9 +88,7 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mockClient(LambdaClient)
-      .on(InvokeCommand)
-      .resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
+    mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
   beforeEach(() => {
@@ -595,23 +593,25 @@ describe("suomifiHandler", () => {
       muistuttajat: ["6", "7", "8"],
     };
     mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand)
+      .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({
-        Responses: {
-          [config.kiinteistonomistajaTableName]: [
-            { id: "1", henkilotunnus: "ABC" },
-            { id: "2", henkilotunnus: "ABC" },
-            { id: "3", henkilotunnus: "DEF" },
-            { id: "4", ytunnus: "123" },
-            { id: "5", ytunnus: "123" },
-          ],
-          [config.projektiMuistuttajaTableName]: [
-            { id: "6", henkilotunnus: "ABC" },
-            { id: "7", henkilotunnus: "ABC" },
-            { id: "8", henkilotunnus: "CAB" },
-          ],
-        },
+        Items: [
+          { id: "1", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "2", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "3", henkilotunnus: "DEF", suomifiLahetys: true },
+          { id: "4", ytunnus: "123", suomifiLahetys: true },
+          { id: "5", ytunnus: "123", suomifiLahetys: true },
+        ],
+      })
+      .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({
+        Items: [
+          { id: "6", henkilotunnus: "ABC" },
+          { id: "7", henkilotunnus: "ABC" },
+          { id: "8", henkilotunnus: "CAB" },
+        ],
       });
+
     const mock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
