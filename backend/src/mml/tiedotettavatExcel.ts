@@ -89,10 +89,6 @@ function lisaaOtsikko(kiinteisto: boolean) {
   ];
 }
 
-function columnWidths() {
-  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }];
-}
-
 type Rivi = {
   id: string;
   kiinteistotunnus: string;
@@ -112,7 +108,7 @@ async function haeRivit(oid: string, kiinteisto: boolean): Promise<Rivi[]> {
       return {
         id: o.id,
         kiinteistotunnus: o.kiinteistotunnus,
-        nimi: `${o.etunimet} ${o.sukunimi}`,
+        nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
         postiosoite: o.jakeluosoite ?? "",
         postinumero: o.postinumero ?? "",
         postitoimipaikka: o.paikkakunta ?? "",
@@ -193,11 +189,12 @@ export async function generateExcel(
       data[0].push(lisaaRivi(omistaja));
     }
   }
+  const columnWidths = () =>  [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }];
   return writeXlsxFile(data, {
     buffer: true,
     stickyRowsCount: vaihe === undefined ? 1 : 4,
     sheets,
-    columns: [columnWidths(), columnWidths()],
+    columns: sheets.map(columnWidths),
   });
 }
 

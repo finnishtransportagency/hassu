@@ -1,7 +1,7 @@
-import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DBMuistuttaja } from "../muistutus/muistutusHandler";
+import { getMuistuttajaTableName } from "../util/environment";
 
 class MuistuttajaDatabase {
   private tableName: string;
@@ -28,4 +28,4 @@ class MuistuttajaDatabase {
   }
 }
 
-export const muistuttajaDatabase = new MuistuttajaDatabase(config.projektiMuistuttajaTableName ?? "missing");
+export const muistuttajaDatabase = new MuistuttajaDatabase(getMuistuttajaTableName());

@@ -84,6 +84,24 @@ Array [
     "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
+  Array [
+    "123-456",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
 ]
 `;
 
@@ -193,6 +211,24 @@ Array [
     "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
+  Array [
+    "123-456",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
 ]
 `;
 
@@ -214,6 +250,24 @@ Array [
     "02600",
     "Espoo",
     "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -323,6 +377,24 @@ Array [
     "02600",
     "Espoo",
     "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]

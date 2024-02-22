@@ -51,13 +51,33 @@ const omistaja3: DBOmistaja = {
   paikkakunta: "Espoo",
   suomifiLahetys: false,
 };
-
+const omistaja4: DBOmistaja = {
+  id: "4",
+  kaytossa: true,
+  kiinteistotunnus: "123-456",
+  lisatty: "2024-02-21 10:01:12+02:00",
+  oid: projekti.oid!,
+  nimi: "Yritys Oy Ab",
+  jakeluosoite: "Osoite 4",
+  postinumero: "96101",
+  paikkakunta: "Rovaniemi",
+  suomifiLahetys: false,
+};
+const omistaja5: DBOmistaja = {
+  id: "5",
+  kaytossa: true,
+  kiinteistotunnus: "123-456",
+  lisatty: "2024-02-21 10:01:12+02:00",
+  paivitetty: "2024-02-22 08:43:12+02:00",
+  oid: projekti.oid!,
+  suomifiLahetys: false,
+};
 describe("tiedotettavatExcel", () => {
   before(() => {
     identifyMockUser({ roolit: ["hassu_admin"], etunimi: "Test", sukunimi: "Test", uid: "testuid", __typename: "NykyinenKayttaja" });
     mockClient(DynamoDBDocumentClient)
       .on(QueryCommand)
-      .resolves({ Items: [omistaja1, omistaja2, omistaja3] })
+      .resolves({ Items: [omistaja1, omistaja2, omistaja3, omistaja4, omistaja5] })
       .on(GetCommand)
       .resolves({ Item: projekti });
   });

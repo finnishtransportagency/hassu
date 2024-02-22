@@ -5,6 +5,7 @@ import {
   handleEvent,
   setClient,
   tallennaKiinteistonOmistajat,
+  tuoKarttarajausJaTallennaKiinteistotunnukset,
 } from "../../src/mml/kiinteistoHandler";
 import { MmlClient } from "../../src/mml/mmlClient";
 import {
@@ -23,6 +24,9 @@ import { identifyMockUser } from "../../src/user/userService";
 import { config } from "../../src/config";
 import { DBOmistaja } from "../../src/database/omistajaDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { parameters } from "../../src/aws/parameters";
+import sinon from "sinon";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -141,6 +145,10 @@ describe("kiinteistoHandler", () => {
 
   before(() => {
     setClient(mockMmlClient);
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
   beforeEach(() => {
@@ -443,5 +451,50 @@ describe("kiinteistoHandler", () => {
     assert(keys);
     expect(keys.length).to.be.equal(1);
     expect(keys[0].id).to.be.equal("3");
+  });
+  it("tuoKarttarajausJaTallennaKiinteistotunnukset testiympäristö", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");
+    dbMock
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({ Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+    const sqsMock = mockClient(SQSClient);
+    await tuoKarttarajausJaTallennaKiinteistotunnukset({
+      geoJSON: "",
+      oid: "1",
+      kiinteistotunnukset: ["491001491", "49100263", "227001491"],
+    });
+    const body = sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.MessageBody;
+    assert(body);
+    const hakuEvent = JSON.parse(body) as OmistajaHakuEvent;
+    expect(hakuEvent.oid).to.equal("1");
+    expect(hakuEvent.uid).to.equal("testuid");
+    expect(hakuEvent.kiinteistotunnukset.length).to.equal(3);
+    expect(hakuEvent.kiinteistotunnukset[0]).to.equal("998001491");
+    expect(hakuEvent.kiinteistotunnukset[1]).to.equal("99800263");
+    expect(hakuEvent.kiinteistotunnukset[2]).to.equal("227001491");
+  });
+  it("tuoKarttarajausJaTallennaKiinteistotunnukset tuotantoympäristö", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");
+    sinon.stub(config, "isProd").resolves(true);
+    dbMock
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({ Item: { id: "1.2.3", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+    const sqsMock = mockClient(SQSClient);
+    await tuoKarttarajausJaTallennaKiinteistotunnukset({
+      geoJSON: "",
+      oid: "1.2.3",
+      kiinteistotunnukset: ["491001491", "49100263", "227001491"],
+    });
+    const body = sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.MessageBody;
+    assert(body);
+    const hakuEvent = JSON.parse(body) as OmistajaHakuEvent;
+    expect(hakuEvent.oid).to.equal("1.2.3");
+    expect(hakuEvent.uid).to.equal("testuid");
+    expect(hakuEvent.kiinteistotunnukset.length).to.equal(3);
+    expect(hakuEvent.kiinteistotunnukset[0]).to.equal("491001491");
+    expect(hakuEvent.kiinteistotunnukset[1]).to.equal("49100263");
+    expect(hakuEvent.kiinteistotunnukset[2]).to.equal("227001491");
   });
 });
