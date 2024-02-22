@@ -33,7 +33,7 @@ import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
 import { invokeLambda } from "../aws/lambda";
 import PdfMerger from "pdf-merger-js";
 import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
-import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
+import { DBOmistaja, chunkArray, omistajaDatabase } from "../database/omistajaDatabase";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 
 export type SuomiFiSanoma = {
@@ -516,21 +516,23 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
       });
     }
     if (viestit.length > 0) {
-      const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestit });
-      response.Failed?.forEach((v) => {
-        if (projektiFromDB.omistajat?.includes(v.Id!)) {
-          auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id, message: v.Message, code: v.Code });
-        } else {
-          auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id, message: v.Message, code: v.Code });
-        }
-      });
-      response.Successful?.forEach((v) => {
-        if (projektiFromDB.omistajat?.includes(v.Id!)) {
-          auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id });
-        } else {
-          auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id });
-        }
-      });
+      for (const viestitChunk of chunkArray(viestit, 10)) {
+        const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestitChunk });
+        response.Failed?.forEach((v) => {
+          if (projektiFromDB.omistajat?.includes(v.Id!)) {
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id, message: v.Message, code: v.Code });
+          } else {
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id, message: v.Message, code: v.Code });
+          }
+        });
+        response.Successful?.forEach((v) => {
+          if (projektiFromDB.omistajat?.includes(v.Id!)) {
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id });
+          } else {
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id });
+          }
+        });
+      }
     } else {
       log.info("Projektilla ei ole Suomi.fi tiedotettavia omistajia tai muistuttajia");
     }
