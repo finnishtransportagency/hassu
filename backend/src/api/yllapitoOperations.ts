@@ -31,6 +31,7 @@ import {
   HaeMuistuttajatQueryVariables,
   TallennaMuistuttajatMutationVariables,
   PoistaMuistuttajaMutationVariables,
+  LataaTiedotettavatExcelQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -64,6 +65,7 @@ import {
   tuoKarttarajausJaTallennaKiinteistotunnukset,
   tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
+import { generateExcelByQuery } from "../mml/tiedotettavatExcel";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -145,6 +147,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await muistutusHandler.tallennaMuistuttajat(event.arguments as TallennaMuistuttajatMutationVariables);
     case apiConfig.poistaMuistuttaja.name:
       return await muistutusHandler.poistaMuistuttaja(event.arguments as PoistaMuistuttajaMutationVariables);
+    case apiConfig.lataaTiedotettavatExcel.name:
+      return await generateExcelByQuery(event.arguments as LataaTiedotettavatExcelQueryVariables);
     default:
       return null;
   }

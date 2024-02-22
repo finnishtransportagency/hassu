@@ -224,8 +224,19 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   await projektiDatabase.setOmistajahakuTiedot(input.oid, true, input.kiinteistotunnukset.length);
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
-
-  const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset: input.kiinteistotunnukset, uid };
+  // testiympäristöissä Mikkeli (491) korvataan Testikunnalla (998) jotta saadaan testiaineisto.fi yhteystietoja
+  let kiinteistotunnukset;
+  if(!config.isProd()) {
+    kiinteistotunnukset = input.kiinteistotunnukset.map((k) => {
+      if (k.startsWith("491")) {
+        return k.replace("491", "998");
+      }
+      return k;
+    })
+  } else {
+    kiinteistotunnukset = input.kiinteistotunnukset;
+  }
+  const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset, uid };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });
   auditLog.info("Omistajien haku event lisätty", { event });
 }

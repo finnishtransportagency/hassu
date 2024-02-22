@@ -10,7 +10,7 @@ import { getSQS } from "../../aws/clients/getSQS";
 import { parameters } from "../../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
-import { DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
+import { chunkArray, DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
@@ -42,7 +42,7 @@ async function handleManagementEvent(event: MaintenanceEvent) {
     await new OmistajaSearchMaintenanceService().deleteIndex();
   } else if (event.action == "index") {
     let startKey: OmistajaKey | undefined = undefined;
-    const queueUrl = await parameters.getIndexerSQSUrl();
+    const queueUrl = await parameters.getOmistajaIndexerSQSUrl();
     do {
       const scanResult: OmistajaScanResult = await omistajaDatabase.scanOmistajat(startKey);
       startKey = scanResult.startKey;
@@ -50,7 +50,9 @@ async function handleManagementEvent(event: MaintenanceEvent) {
         Id: omistaja.id,
         MessageBody: JSON.stringify({ action: "index", omistaja }),
       }));
-      await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: entries });
+      for (const chunk of chunkArray(entries, 10)) {
+        await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: chunk });
+      }
     } while (startKey);
     log.info("Indeksointi aloitettu");
   }

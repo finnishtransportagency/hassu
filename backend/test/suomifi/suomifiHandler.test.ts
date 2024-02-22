@@ -3,7 +3,7 @@ import { setLogContextOid } from "../../src/logger";
 import { SuomiFiSanoma, handleEvent, lahetaSuomiFiViestit, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { parameters } from "../../src/aws/parameters";
 import * as sinon from "sinon";
 import { config } from "../../src/config";
@@ -88,9 +88,7 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mockClient(LambdaClient)
-      .on(InvokeCommand)
-      .resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
+    mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
   beforeEach(() => {
@@ -193,7 +191,8 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -217,10 +216,11 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(request.viesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(0);
-    parameterStub.restore();
+    sinon.restore();
   });
   it("muistuttajan viesti suomi.fi paperiposti", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -249,11 +249,12 @@ describe("suomifiHandler", () => {
     expect(mock.commandCalls(UpdateCommand).length).to.equal(0);
     expect(emailStub.callCount).to.equal(1);
     expect(emailStub.args[0]).toMatchSnapshot();
-    parameterStub.restore();
+    sinon.restore();
     emailStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -297,11 +298,12 @@ describe("suomifiHandler", () => {
     assert(input.ExpressionAttributeValues);
     expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
     expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
-    parameterStub.restore();
+    sinon.restore();
     fileStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi ruotsi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -345,7 +347,7 @@ describe("suomifiHandler", () => {
     assert(input.ExpressionAttributeValues);
     expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
     expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
-    parameterStub.restore();
+    sinon.restore();
   });
   it("omistajan pdf viesti suomi.fi", async () => {
     const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
@@ -588,6 +590,7 @@ describe("suomifiHandler", () => {
   });
   it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
     sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
@@ -595,23 +598,25 @@ describe("suomifiHandler", () => {
       muistuttajat: ["6", "7", "8"],
     };
     mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand)
+      .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({
-        Responses: {
-          [config.kiinteistonomistajaTableName]: [
-            { id: "1", henkilotunnus: "ABC" },
-            { id: "2", henkilotunnus: "ABC" },
-            { id: "3", henkilotunnus: "DEF" },
-            { id: "4", ytunnus: "123" },
-            { id: "5", ytunnus: "123" },
-          ],
-          [config.projektiMuistuttajaTableName]: [
-            { id: "6", henkilotunnus: "ABC" },
-            { id: "7", henkilotunnus: "ABC" },
-            { id: "8", henkilotunnus: "CAB" },
-          ],
-        },
+        Items: [
+          { id: "1", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "2", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "3", henkilotunnus: "DEF", suomifiLahetys: true },
+          { id: "4", ytunnus: "123", suomifiLahetys: true },
+          { id: "5", ytunnus: "123", suomifiLahetys: true },
+        ],
+      })
+      .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({
+        Items: [
+          { id: "6", henkilotunnus: "ABC" },
+          { id: "7", henkilotunnus: "ABC" },
+          { id: "8", henkilotunnus: "CAB" },
+        ],
       });
+
     const mock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(1);

@@ -72,6 +72,10 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
         if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
           modifiedJulkaisut.add(julkaisu);
         }
+        if (julkaisu.maanomistajaluettelo) {
+          await this.deleteSisainenTiedosto(julkaisu.maanomistajaluettelo);
+          modifiedJulkaisut.add(julkaisu);
+        }
 
         return modifiedJulkaisut;
       },

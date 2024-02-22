@@ -55,11 +55,18 @@ async function fetchBankHolidaysFromAPI() {
       if (error.isAxiosError) {
         log.error(error.response?.status + " " + error.response?.statusText, { data: error.response?.data });
       }
-      throw e;
+      // ignore no data yet
+      if (error.response?.status !== 400) { 
+        throw e;
+      }
     }
   }
   log.debug("Bank holidays from API:", dates);
-  await s3Cache.put(BANK_HOLIDAYS_CACHE_KEY, dates);
+  if (dates.length === 0) {
+    log.error("BankHolidays lataus epäonnistui");
+  } else {
+    await s3Cache.put(BANK_HOLIDAYS_CACHE_KEY, dates);
+  }
   return dates;
 }
 

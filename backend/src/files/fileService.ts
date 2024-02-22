@@ -20,7 +20,7 @@ import {
 import { getS3Client } from "../aws/client";
 import { getCloudFront } from "../aws/clients/getCloudFront";
 import { parseDate } from "../util/dateUtil";
-import { PathTuple, ProjektiPaths } from "./ProjektiPath";
+import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "./ProjektiPath";
 import isEqual from "lodash/isEqual";
 import { assertIsDefined } from "../util/assertions";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -270,6 +270,10 @@ export class FileService {
     return fileName;
   }
 
+  public static getYllapitoSisainenProjektiDirectory(oid: string): string {
+    return new SisainenProjektiPaths(oid).yllapitoFullPath;
+  }
+
   public static getYllapitoProjektiDirectory(oid: string): string {
     return new ProjektiPaths(oid).yllapitoFullPath;
   }
@@ -315,6 +319,9 @@ export class FileService {
     if (config.env !== "prod") {
       const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
       await this.deleteFilesRecursively(config.yllapitoBucketName, yllapitoProjektiDirectory);
+
+      const yllapitoSisainenProjektiDirectory = FileService.getYllapitoSisainenProjektiDirectory(oid);
+      await this.deleteFilesRecursively(config.yllapitoBucketName, yllapitoSisainenProjektiDirectory);
 
       const publicProjektiDirectory = FileService.getPublicProjektiDirectory(oid);
       await this.deleteFilesRecursively(config.publicBucketName, publicProjektiDirectory);
@@ -463,6 +470,14 @@ export class FileService {
       log.error("CopyObject failed", e);
       throw e;
     }
+  }
+
+  async deleteYllapitoSisainenFileFromProjekti({ oid, filePathInProjekti, reason }: DeleteFileProperties): Promise<void> {
+    if (!filePathInProjekti) {
+      throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
+    }
+    const projektiPath = FileService.getYllapitoSisainenProjektiDirectory(oid);
+    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + filePathInProjekti, reason);
   }
 
   async deleteYllapitoFileFromProjekti({ oid, filePathInProjekti, reason }: DeleteFileProperties): Promise<void> {

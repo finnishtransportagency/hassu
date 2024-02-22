@@ -129,8 +129,16 @@ class Parameters {
     return (await this.getParameter("SuomiFiIntegrationEnabled")) === "true";
   }
 
+  async isSuomiFiViestitIntegrationEnabled(): Promise<boolean> {
+    return (await this.getParameter("SuomiFiViestitIntegrationEnabled")) === "true";
+  }
+
   async getIndexerSQSUrl() {
     return this.getParamOrVariable("outputs/IndexerSQSUrl");
+  }
+
+  async getOmistajaIndexerSQSUrl() {
+    return this.getParamOrVariable("outputs/OmistajaIndexerSQSUrl");
   }
 
   async getSuomiFiConfig() {
