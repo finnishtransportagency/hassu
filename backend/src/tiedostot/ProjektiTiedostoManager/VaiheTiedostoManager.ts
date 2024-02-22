@@ -95,6 +95,14 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
     return false;
   }
 
+  async deleteSisainenTiedosto(path: string) {
+    await fileService.deleteYllapitoSisainenFileFromProjekti({
+      oid: this.oid,
+      filePathInProjekti: path,
+      reason: "Projekti on epäaktiivinen",
+    });
+  }
+
   protected async deleteAineistot(...aineistoArrays: (Array<Aineisto> | null | undefined)[]): Promise<boolean> {
     let modified = false;
     // Yhdistä kaikki aineistot yhdeksi taulukoksi

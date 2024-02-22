@@ -380,7 +380,7 @@ export class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosV
   }
 }
 
-export class MaanomistajaPaths extends ProjektiPaths {
+export class SisainenProjektiPaths extends ProjektiPaths {
   public constructor(oid: string) {
     super(oid);
   }

@@ -73,6 +73,10 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
         if (await this.deleteAineistot(julkaisu.aineistoNahtavilla)) {
           modifiedJulkaisut.add(julkaisu);
         }
+        if (julkaisu.maanomistajaluettelo) {
+          await this.deleteSisainenTiedosto(julkaisu.maanomistajaluettelo);
+          modifiedJulkaisut.add(julkaisu);
+        }
 
         return modifiedJulkaisut;
       },

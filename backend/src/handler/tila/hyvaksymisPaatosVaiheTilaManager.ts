@@ -4,7 +4,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { MaanomistajaPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
@@ -15,6 +15,7 @@ import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/proj
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
+import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -164,9 +165,9 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
       projekti,
-      new MaanomistajaPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
       this.vaihe,
-      julkaisu.kuulutusPaiva,
+      julkaisu.kuulutusPaiva
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
@@ -198,6 +199,13 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
+    if (julkaisu.maanomistajaluettelo) {
+      await fileService.deleteYllapitoSisainenFileFromProjekti({
+        oid: projekti.oid,
+        filePathInProjekti: julkaisu.maanomistajaluettelo,
+        reason: "Hyväksymispäätösvaihe rejected",
+      });
+    }
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
     return {
       ...projekti,

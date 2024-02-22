@@ -355,6 +355,7 @@ function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {
 async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjekti) {
   if (
     (await parameters.isSuomiFiIntegrationEnabled()) &&
+    (await parameters.isSuomiFiViestitIntegrationEnabled()) &&
     muistuttaja.henkilotunnus &&
     (await isSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
   ) {
@@ -502,7 +503,7 @@ async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Ma
 }
 
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
-  if (await parameters.isSuomiFiIntegrationEnabled()) {
+  if ((await parameters.isSuomiFiIntegrationEnabled()) && (await parameters.isSuomiFiViestitIntegrationEnabled())) {
     const viestit: SendMessageBatchRequestEntry[] = [];
     const uniqueIds: Map<string, string> = new Map();
     (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
