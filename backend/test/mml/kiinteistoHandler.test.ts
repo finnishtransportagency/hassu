@@ -27,6 +27,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { parameters } from "../../src/aws/parameters";
 import sinon from "sinon";
+import { OmistajahakuTila } from "hassu-common/graphql/apiModel";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -171,13 +172,13 @@ describe("kiinteistoHandler", () => {
     const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
     const updateCommand3 = dbMock.commandCalls(UpdateCommand)[2];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnissa"]).to.be.equal(true);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuTila"]).to.be.equal(OmistajahakuTila.KAYNNISSA);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(5);
     assert(updateCommand2.args[0].input.ExpressionAttributeValues);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(4);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
     assert(updateCommand3.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnissa"]).to.be.equal(false);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuTila"]).to.be.equal(OmistajahakuTila.VALMIS);
     expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(null);
     const snapshot: DBOmistaja[] = [];
     writeCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].forEach((c, i) => {

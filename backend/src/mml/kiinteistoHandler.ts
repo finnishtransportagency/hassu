@@ -10,6 +10,7 @@ import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
   Omistaja,
+  OmistajahakuTila,
   TallennaKiinteistonOmistajaResponse,
   TallennaKiinteistonOmistajatMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
@@ -77,7 +78,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
       setLogContextOid(hakuEvent.oid);
       identifyMockUser({ etunimi: "", sukunimi: "", uid: hakuEvent.uid, __typename: "NykyinenKayttaja" });
       try {
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, true, hakuEvent.kiinteistotunnukset.length);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.KAYNNISSA, hakuEvent.kiinteistotunnukset.length);
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
@@ -164,11 +165,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
         auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
         await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.VALMIS, null);
       } catch (e) {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.VIRHE, null);
         throw e;
-      } finally {
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, false, null);
       }
     }
   } catch (e) {
@@ -218,10 +219,10 @@ async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> 
 
 export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables) {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
-  if (projekti.omistajahakuKaynnissa) {
+  if (projekti.omistajahakuTila === OmistajahakuTila.KAYNNISSA) {
     throw new Error("Omistajien haku on jo käynnissä");
   }
-  await projektiDatabase.setOmistajahakuTiedot(input.oid, true, input.kiinteistotunnukset.length);
+  await projektiDatabase.setOmistajahakuTiedot(input.oid, OmistajahakuTila.KAYNNISSA, input.kiinteistotunnukset.length);
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
   // testiympäristöissä Mikkeli (491) korvataan Testikunnalla (998) jotta saadaan testiaineisto.fi yhteystietoja

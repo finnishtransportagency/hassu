@@ -1,4 +1,4 @@
-import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, OmistajahakuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -182,7 +182,7 @@ export type DBProjekti = {
   muutOmistajat?: string[];
   muistuttajat?: string[];
   muutMuistuttajat?: string[];
-  omistajahakuKaynnissa?: boolean;
+  omistajahakuTila?: OmistajahakuTila;
   omistajahakuKiinteistotunnusMaara?: number;
 };
 

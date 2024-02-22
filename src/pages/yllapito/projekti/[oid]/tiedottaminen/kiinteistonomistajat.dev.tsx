@@ -1,4 +1,4 @@
-import React, { useCallback, useState, VFC } from "react";
+import React, { useCallback, useState, VFC, useMemo } from "react";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
@@ -12,6 +12,8 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
 import KiinteistonomistajaTable from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
 import { useProjektinTila } from "src/hooks/useProjektinTila";
+import { OmistajahakuTila } from "@services/api";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -83,6 +85,8 @@ const KarttaDialogi = styled(
 
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { showErrorMessage } = useSnackbars();
+
   const close = useCallback(() => {
     setIsOpen(false);
   }, []);
@@ -94,6 +98,13 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
 
   const kiinteistotunnusMaara = 15;
   const omistajaMaara = 16;
+
+  const hakuKaynnissa = useMemo(() => {
+    if (projektinTila?.omistajahakuTila === OmistajahakuTila.VIRHE) {
+      showErrorMessage("Omistajien haussa on tapahtunut virhe. Yritä myöhemmin uudelleen tai ota yhteys järjestelmän ylläpitäjään");
+    }
+    return projektinTila?.omistajahakuTila === OmistajahakuTila.KAYNNISSA;
+  }, [projektinTila?.omistajahakuTila, showErrorMessage]);
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
@@ -150,7 +161,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
         />
       </Section>
       <HassuDialog
-        open={!!projektinTila?.omistajahakuKaynnissa}
+        open={hakuKaynnissa}
         title="Haetaan kiinteistönomistajia"
         maxWidth="sm"
         hideCloseButton

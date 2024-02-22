@@ -27,11 +27,11 @@ class OmistajaSearchService {
     setLogContextOid(omistaja.oid);
     try {
       const omistajaToIndex = adaptOmistajaToIndex(omistaja);
-      log.info("Index omistaja", { oid: omistaja.oid, id: omistaja.id });
+      log.info("Index omistaja", { id: omistaja.id });
       await omistajaOpenSearchClient.putDocument(omistaja.id, omistajaToIndex);
     } catch (e) {
       log.error(e);
-      log.error("OmistajaSearchService.indexProjekti failed.", { oid: omistaja.oid, id: omistaja.id });
+      log.error("OmistajaSearchService.indexProjekti failed.", { id: omistaja.id });
     }
   }
 

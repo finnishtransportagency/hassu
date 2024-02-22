@@ -25,6 +25,7 @@ import {
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { OmistajahakuTila } from "hassu-common/graphql/apiModel";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -522,20 +523,20 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
-  async setOmistajahakuTiedot(oid: string, kaynnissa: boolean, kiinteistotunnusMaara: number | null) {
+  async setOmistajahakuTiedot(oid: string, omistajahakuTila: OmistajahakuTila, kiinteistotunnusMaara: number | null) {
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression:
-        "SET #omistajahakuKaynnissa = :omistajahakuKaynnissa, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
+        "SET #omistajahakuTila = :omistajahakuTila, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
       ExpressionAttributeNames: {
-        ["#omistajahakuKaynnissa"]: "omistajahakuKaynnissa",
+        ["#omistajahakuTila"]: "omistajahakuTila",
         ["#omistajahakuKiinteistotunnusMaara"]: "omistajahakuKiinteistotunnusMaara",
       },
       ExpressionAttributeValues: {
-        ":omistajahakuKaynnissa": kaynnissa,
+        ":omistajahakuTila": omistajahakuTila,
         ":omistajahakuKiinteistotunnusMaara": kiinteistotunnusMaara,
       },
     });

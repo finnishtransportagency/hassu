@@ -20,40 +20,40 @@ const PAGE_SIZE = 25;
 
 export default function KiinteistonomistajaTable({ instructionText, title, muutOmistajat = false, oid }: Props) {
   const [expanded, setExpanded] = React.useState(false);
-  const [hasBeenExpanded, setHasBeenExpanded] = useState(false);
-  const [initialSearchDone, setInitialSearchDone] = useState(false);
 
-  const [omistajat, setOmistajat] = useState<Omistaja[]>([]);
-  const [hakutulosMaara, setHakutulosMaara] = useState<number>(0);
+  const [omistajat, setOmistajat] = useState<Omistaja[] | null>(null);
+  const [hakutulosMaara, setHakutulosMaara] = useState<number | null>(null);
+  const [query, setQuery] = useState<string | undefined>(undefined);
 
   const { withLoadingSpinner } = useLoadingSpinner();
   const api = useApi();
 
   const searchOmistajat = useCallback(
-    (query?: string, from = omistajat.length, size = PAGE_SIZE) => {
+    (query?: string, from = omistajat?.length ?? 0, size = PAGE_SIZE) => {
       withLoadingSpinner(
         (async () => {
           try {
             const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, false, query, from, size);
             setHakutulosMaara(response.hakutulosMaara);
-            setOmistajat((oldOmistajat) => [...oldOmistajat, ...response.omistajat]);
-            setInitialSearchDone(true);
+            setOmistajat((oldOmistajat) => [...(oldOmistajat ?? []), ...response.omistajat]);
           } catch {}
         })()
       );
     },
-    [api, muutOmistajat, oid, omistajat.length, withLoadingSpinner]
+    [api, muutOmistajat, oid, omistajat?.length, withLoadingSpinner]
   );
 
   const handleChange = useCallback(
     (_event: React.SyntheticEvent, isExpanded: boolean) => {
-      if (isExpanded && !hasBeenExpanded) {
-        setHasBeenExpanded(true);
+      if (isExpanded) {
         searchOmistajat();
+      } else {
+        setOmistajat(null);
+        setHakutulosMaara(null);
       }
       setExpanded(isExpanded);
     },
-    [hasBeenExpanded, searchOmistajat]
+    [searchOmistajat]
   );
 
   return (
@@ -67,7 +67,8 @@ export default function KiinteistonomistajaTable({ instructionText, title, muutO
         muutOmistajat={muutOmistajat}
         searchOmistajat={searchOmistajat}
         hakutulosMaara={hakutulosMaara}
-        initialSearchDone={initialSearchDone}
+        query={query}
+        setQuery={setQuery}
       />
     </TableAccordion>
   );
@@ -108,33 +109,33 @@ const TableAccordionDetails = styled(
     instructionText,
     searchOmistajat,
     hakutulosMaara,
-    initialSearchDone,
     omistajat,
     setOmistajat,
+    query,
+    setQuery,
     ...props
   }: Omit<AccordionDetailsProps, "children"> &
     Pick<Props, "oid" | "muutOmistajat" | "instructionText"> & {
-      omistajat: Omistaja[];
+      query: string | undefined;
+      setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
+      omistajat: Omistaja[] | null;
       searchOmistajat: (query?: string, from?: any, size?: any) => void;
-      hakutulosMaara: number;
-      initialSearchDone: boolean;
-      setOmistajat: React.Dispatch<React.SetStateAction<Omistaja[]>>;
+      hakutulosMaara: number | null;
+      setOmistajat: React.Dispatch<React.SetStateAction<Omistaja[] | null>>;
     }) => {
-    const [query, setQuery] = useState<string | undefined>(undefined);
-
     const getNextPage = useCallback(() => {
       searchOmistajat(query);
     }, [searchOmistajat, query]);
 
     const toggleShowHideAll = useCallback(() => {
-      if (omistajat.length < hakutulosMaara) {
-        searchOmistajat(query, undefined, hakutulosMaara - omistajat.length);
+      if ((omistajat?.length ?? 0) < (hakutulosMaara ?? 0)) {
+        searchOmistajat(query, undefined, (hakutulosMaara ?? 0) - (omistajat?.length ?? 0));
       } else {
         setOmistajat((oldOmistajat) => {
-          return oldOmistajat.slice(0, PAGE_SIZE);
+          return oldOmistajat?.slice(0, PAGE_SIZE) ?? [];
         });
       }
-    }, [omistajat.length, hakutulosMaara, searchOmistajat, query, setOmistajat]);
+    }, [omistajat?.length, hakutulosMaara, searchOmistajat, query, setOmistajat]);
 
     const columns: ColumnDef<Omistaja>[] = useMemo(() => {
       const cols: ColumnDef<Omistaja>[] = [
@@ -212,7 +213,7 @@ const TableAccordionDetails = styled(
     const table = useReactTable({
       columns,
       getCoreRowModel: getCoreRowModel(),
-      data: omistajat,
+      data: omistajat ?? [],
       enableSorting: false,
       defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
       state: { pagination: undefined },
@@ -220,12 +221,12 @@ const TableAccordionDetails = styled(
 
     const onSubmit: SubmitHandler<SearchForm> = useCallback(
       (data) => {
-        const q = !!data.query ? data.query : undefined;
+        const q = data.query ? data.query : undefined;
         setQuery(q);
         setOmistajat([]);
         searchOmistajat(q, 0);
       },
-      [searchOmistajat, setOmistajat]
+      [searchOmistajat, setOmistajat, setQuery]
     );
 
     const resetSearch = useCallback(async () => {
@@ -233,12 +234,12 @@ const TableAccordionDetails = styled(
       setQuery(undefined);
       setOmistajat([]);
       searchOmistajat(undefined, 0);
-    }, [searchOmistajat, setOmistajat, setValue]);
+    }, [searchOmistajat, setOmistajat, setQuery, setValue]);
 
     const showLess = useCallback(() => {
       setOmistajat((oldOmistajat) => {
-        const remainder = oldOmistajat.length % PAGE_SIZE || PAGE_SIZE;
-        return oldOmistajat.slice(0, oldOmistajat.length - remainder);
+        const remainder = (oldOmistajat?.length ?? 0) % PAGE_SIZE || PAGE_SIZE;
+        return oldOmistajat?.slice(0, oldOmistajat.length - remainder) ?? [];
       });
     }, [setOmistajat]);
 
@@ -283,12 +284,12 @@ const TableAccordionDetails = styled(
               </ButtonFlat>
             )}
           </ContentSpacer>
-          {initialSearchDone && (
+          {typeof hakutulosMaara === "number" && (
             <p>
               Suodatuksella {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
             </p>
           )}
-          {initialSearchDone && !!hakutulosMaara && !!omistajat.length && (
+          {typeof hakutulosMaara === "number" && !!omistajat?.length && (
             <>
               <HassuTable table={table} />
               <Grid>
