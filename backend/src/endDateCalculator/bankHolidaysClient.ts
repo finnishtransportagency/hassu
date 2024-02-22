@@ -40,7 +40,7 @@ async function fetchBankHolidaysFromAPI() {
   // Fetch current year and two more as they are available in the API
 
   const currentYear = nyt().year();
-  const rangeEndYear = currentYear + 1;
+  const rangeEndYear = currentYear + 2;
   const dates: string[] = [];
   for (let year = currentYear; year <= rangeEndYear; year++) {
     try {
