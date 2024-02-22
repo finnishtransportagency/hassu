@@ -108,13 +108,13 @@ function eventIsSqsEvent(event: DynamoDBStreamEvent | MaintenanceEvent | SQSEven
 }
 
 async function handleSqsEvent(event: SQSEvent) {
+  log.info("SQS records: " + event.Records.length);
   await Promise.all(
     event.Records.map(async (record) => {
       if (!record.body) {
         return;
       }
       const body: MaintenanceEvent = JSON.parse(record.body);
-      log.info("SQS event " + body.index + "/" + body.size + " received", { oid: body.omistaja?.oid });
       if (body.omistaja) {
         try {
           await omistajaSearchService.indexOmistaja(body.omistaja);
@@ -122,9 +122,7 @@ async function handleSqsEvent(event: SQSEvent) {
           log.error(e);
         }
       }
-      if (body.index === body.size) {
-        log.info("Indeksointi valmis");
-      }
     })
   );
+  log.info("Batchin indeksointi valmis");
 }
