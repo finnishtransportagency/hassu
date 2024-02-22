@@ -53,6 +53,9 @@ class ProjektiSchedulerService {
           case PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE:
             await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS);
             break;
+          case PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK:
+            await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.ONE_MONTH_TO_INACTIVE);
+            break;
           default:
             break;
         }
@@ -98,7 +101,13 @@ class ProjektiSchedulerService {
     );
   }
 
-  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, approvalType: PublishOrExpireEventType,  type: SqsEventType): Promise<void> {
+  async triggerEventAtSpecificTime(
+    scheduleParams: ScheduleParams,
+    date: Dayjs,
+    reason: string,
+    approvalType: PublishOrExpireEventType,
+    type: SqsEventType
+  ): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
     const event: SqsEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date), approvalType };
     const params: CreateScheduleCommandInput = {
@@ -189,6 +198,8 @@ function typeSuffix(type: SqsEventType, publishOrExpire: PublishOrExpireEventTyp
     return "PNA";
   } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS) {
     return "PVU";
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK) {
+    return "PHE";
   } else {
     return "PVT";
   }
