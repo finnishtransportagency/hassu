@@ -1,5 +1,6 @@
 import React, { useCallback, useState, VFC, useMemo } from "react";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
+import IconButton from "@components/button/IconButton";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -10,15 +11,18 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import KiinteistonomistajaTable from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
+import KiinteistonomistajaTable, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
 import { useProjektinTila } from "src/hooks/useProjektinTila";
-import { OmistajahakuTila } from "@services/api";
+import useApi from "src/hooks/useApi";
+import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
+import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
+import { ColumnDef } from "@tanstack/react-table";
 
 export default function Kiinteistonomistajat() {
   return (
     <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
-      {(projekti) => <KiinteistonomistajatPage projekti={projekti}></KiinteistonomistajatPage>}
+      {(projekti) => <KiinteistonomistajatPage projekti={projekti} />}
     </ProjektiConsumer>
   );
 }
@@ -83,6 +87,66 @@ const KarttaDialogi = styled(
   }
 )({});
 
+const columns: ColumnDef<Omistaja>[] = [
+  {
+    header: "Kiinteistötunnus",
+    accessorKey: "kiinteistotunnus",
+    id: "kiinteistotunnus",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
+  {
+    header: "Omistajan nimi",
+    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    id: "omistajan_nimi",
+    meta: {
+      widthFractions: 5,
+      minWidth: 140,
+    },
+  },
+  {
+    header: "Postiosoite",
+    accessorKey: "jakeluosoite",
+    id: "postiosoite",
+    meta: {
+      widthFractions: 3,
+      minWidth: 120,
+    },
+  },
+  {
+    header: "Postinumero",
+    accessorKey: "postinumero",
+    id: "postinumero",
+    meta: {
+      widthFractions: 1,
+      minWidth: 120,
+    },
+  },
+  {
+    header: "Postitoimipaikka",
+    accessorKey: "paikkakunta",
+    id: "postitoimipaikka",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
+  {
+    header: "",
+    id: "actions",
+    meta: {
+      widthFractions: 2,
+      minWidth: 120,
+    },
+    accessorKey: "id",
+    cell: () => {
+      return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
+    },
+  },
+];
+
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { showErrorMessage } = useSnackbars();
@@ -107,6 +171,22 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     }
     return projektinTila?.omistajahakuTila === OmistajahakuTila.KAYNNISSA;
   }, [projektinTila?.omistajahakuTila, showErrorMessage]);
+
+  const api = useApi();
+
+  const searchTiedotettavat: SearchTiedotettavatFunction<Omistaja> = useCallback(
+    async (
+      oid: string,
+      muutOmistajat: boolean,
+      query: string | null | undefined,
+      from: number | null | undefined,
+      size: number | null | undefined
+    ) => {
+      const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, query, from, size);
+      return { hakutulosMaara: response.hakutulosMaara, tulokset: response.omistajat };
+    },
+    [api]
+  );
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
@@ -144,12 +224,18 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           </p>
         </GrayBackgroundText>
         <KiinteistonomistajaTable
+          searchTiedotettavat={searchTiedotettavat}
+          columns={columns}
           oid={projekti.oid}
+          filterText="Suodata kiinteistönomistajia"
           title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
           instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
         />
         <KiinteistonomistajaTable
+          searchTiedotettavat={searchTiedotettavat}
+          columns={columns}
           oid={projekti.oid}
+          filterText="Suodata kiinteistönomistajia"
           title="Kiinteistönomistajien tiedotus muilla tavoin"
           instructionText={
             <>
@@ -159,7 +245,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
               Kiinteistönomistajista viedään vastaanottajalista asianhallintaan, kun kuulutus julkaistaan.
             </>
           }
-          muutOmistajat
+          muutTiedotettavat
         />
       </Section>
       <HassuDialog
@@ -177,11 +263,3 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     </TiedottaminenPageLayout>
   );
 };
-
-const GrayBackgroundText = styled("div")(({ theme }) => ({
-  background: "#EFF0F1",
-  padding: `${theme.spacing(4)} ${theme.spacing(5)}`,
-  "& p": {
-    margin: 0,
-  },
-}));

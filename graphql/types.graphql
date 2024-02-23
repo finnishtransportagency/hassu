@@ -1211,9 +1211,7 @@ type Muistuttaja {
 
 type Muistuttajat {
   hakutulosMaara: Int!
-  sivu: Int!
-  sivunKoko: Int!
-  muistuttajat: [Muistuttaja]!
+  muistuttajat: [Muistuttaja!]!
 }
 
 type Excel {

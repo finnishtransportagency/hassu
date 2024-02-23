@@ -131,10 +131,9 @@ class MuistutusHandler {
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
     const projekti = await getProjektiAndCheckPermissions(variables.oid);
-    const sivuKoko = variables.sivuKoko ?? 10;
     const muistuttajat = variables.muutMuistuttajat ? projekti?.muutMuistuttajat ?? [] : projekti?.muistuttajat ?? [];
-    const start = (variables.sivu - 1) * sivuKoko;
-    const end = start + sivuKoko > muistuttajat.length ? undefined : start + sivuKoko;
+    const start = variables.from ?? 0;
+    const end = start + (variables?.size ?? 25);
     const ids = muistuttajat.slice(start, end);
     if (muistuttajat.length > 0 && ids.length > 0) {
       log.info("Haetaan muistuttajia", { tunnukset: ids });
@@ -154,8 +153,6 @@ class MuistutusHandler {
       return {
         __typename: "Muistuttajat",
         hakutulosMaara: muistuttajat.length,
-        sivunKoko: sivuKoko,
-        sivu: variables.sivu,
         muistuttajat: dbMuistuttajat.map((m) => ({
           __typename: "Muistuttaja",
           id: m.id,
@@ -175,8 +172,6 @@ class MuistutusHandler {
       return {
         __typename: "Muistuttajat",
         hakutulosMaara: muistuttajat.length,
-        sivunKoko: sivuKoko,
-        sivu: variables.sivu,
         muistuttajat: [],
       };
     }
