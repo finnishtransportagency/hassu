@@ -28,6 +28,7 @@ import { DBProjekti } from "../database/model";
 import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
+import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -78,7 +79,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
       setLogContextOid(hakuEvent.oid);
       identifyMockUser({ etunimi: "", sukunimi: "", uid: hakuEvent.uid, __typename: "NykyinenKayttaja" });
       try {
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.KAYNNISSA, hakuEvent.kiinteistotunnukset.length);
+        await projektiDatabase.setOmistajahakuTiedot(
+          hakuEvent.oid,
+          nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+          false,
+          hakuEvent.kiinteistotunnukset.length
+        );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
@@ -165,10 +171,10 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
         auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
         await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.VALMIS, null);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, false, null);
       } catch (e) {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, OmistajahakuTila.VIRHE, null);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, true, null);
         throw e;
       }
     }
@@ -219,21 +225,26 @@ async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> 
 
 export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables) {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
-  if (projekti.omistajahakuTila === OmistajahakuTila.KAYNNISSA) {
+  if (adaptOmistajahakuTila(projekti) === OmistajahakuTila.KAYNNISSA) {
     throw new Error("Omistajien haku on jo käynnissä");
   }
-  await projektiDatabase.setOmistajahakuTiedot(input.oid, OmistajahakuTila.KAYNNISSA, input.kiinteistotunnukset.length);
+  await projektiDatabase.setOmistajahakuTiedot(
+    input.oid,
+    nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+    false,
+    input.kiinteistotunnukset.length
+  );
   await tallennaKarttarajaus(input.oid, input.geoJSON);
   const uid = getVaylaUser()?.uid as string;
   // testiympäristöissä Mikkeli (491) korvataan Testikunnalla (998) jotta saadaan testiaineisto.fi yhteystietoja
   let kiinteistotunnukset;
-  if(!config.isProd()) {
+  if (!config.isProd()) {
     kiinteistotunnukset = input.kiinteistotunnukset.map((k) => {
       if (k.startsWith("491")) {
         return k.replace("491", "998");
       }
       return k;
-    })
+    });
   } else {
     kiinteistotunnukset = input.kiinteistotunnukset;
   }

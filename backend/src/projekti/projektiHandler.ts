@@ -50,6 +50,7 @@ import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsi
 import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorovaikutus";
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
+import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -58,7 +59,7 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
     return {
       __typename: "ProjektinTila",
       aineistotValmiit: aineistoManager.isReady(),
-      omistajahakuTila: projektiFromDB.omistajahakuTila,
+      omistajahakuTila: adaptOmistajahakuTila(projektiFromDB),
       omistajahakuKiinteistotunnusMaara: projektiFromDB.omistajahakuKiinteistotunnusMaara,
     };
   } else {

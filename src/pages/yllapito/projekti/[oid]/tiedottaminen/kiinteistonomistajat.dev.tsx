@@ -102,6 +102,8 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
   const hakuKaynnissa = useMemo(() => {
     if (projektinTila?.omistajahakuTila === OmistajahakuTila.VIRHE) {
       showErrorMessage("Omistajien haussa on tapahtunut virhe. Yritä myöhemmin uudelleen tai ota yhteys järjestelmän ylläpitäjään");
+    } else if (projektinTila?.omistajahakuTila === OmistajahakuTila.VIRHE_AIKAKATKAISU) {
+      showErrorMessage("Omistajien haku aikakatkaistiin. Yritä myöhemmin uudelleen tai ota yhteys järjestelmän ylläpitäjään");
     }
     return projektinTila?.omistajahakuTila === OmistajahakuTila.KAYNNISSA;
   }, [projektinTila?.omistajahakuTila, showErrorMessage]);
