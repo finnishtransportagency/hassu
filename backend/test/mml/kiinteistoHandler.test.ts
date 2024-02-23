@@ -147,7 +147,7 @@ describe("kiinteistoHandler", () => {
 
   before(() => {
     setClient(mockMmlClient);
-    MockDate.set(time); //Lisätään sekunti keskiyön jälkeen, jotta isBefore-kutsut menisivät samana päivänä läpi oikein
+    MockDate.set(time);
   });
 
   afterEach(() => {
