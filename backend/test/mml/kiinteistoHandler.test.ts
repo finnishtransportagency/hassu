@@ -27,6 +27,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { parameters } from "../../src/aws/parameters";
 import sinon from "sinon";
+import MockDate from "mockdate";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -139,12 +140,14 @@ const mockMmlClient: MmlClient = {
 };
 
 describe("kiinteistoHandler", () => {
+  const time = "2024-02-23T12:32:54+02:00";
   after(() => {
     setClient(undefined);
   });
 
   before(() => {
     setClient(mockMmlClient);
+    MockDate.set(time);
   });
 
   afterEach(() => {
@@ -171,13 +174,15 @@ describe("kiinteistoHandler", () => {
     const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
     const updateCommand3 = dbMock.commandCalls(UpdateCommand)[2];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnissa"]).to.be.equal(true);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuVirhe"]).to.be.equal(false);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnistetty"]).to.be.equal(time);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(5);
     assert(updateCommand2.args[0].input.ExpressionAttributeValues);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(4);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
     assert(updateCommand3.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnissa"]).to.be.equal(false);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuVirhe"]).to.be.equal(false);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnistetty"]).to.be.equal(null);
     expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(null);
     const snapshot: DBOmistaja[] = [];
     writeCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].forEach((c, i) => {

@@ -132,9 +132,16 @@ enum MuokkausTila {
   AINEISTO_MUOKKAUS
 }
 
+enum OmistajahakuTila {
+  VALMIS
+  KAYNNISSA
+  VIRHE
+  VIRHE_AIKAKATKAISU
+}
+
 type ProjektinTila {
   aineistotValmiit: Boolean
-  omistajahakuKaynnissa: Boolean
+  omistajahakuTila: OmistajahakuTila
   omistajahakuKiinteistotunnusMaara: Int
 }
 
@@ -186,7 +193,6 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
-  omistajahakuKaynnissa: Boolean
 }
 
 type Asianhallinta {

@@ -9,8 +9,8 @@ import {
   QueryCommand,
   BatchWriteCommand,
   UpdateCommand,
-  TransactWriteCommandInput,
   TransactWriteCommand,
+  TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 
 export type OmistajaKey = {
@@ -43,6 +43,8 @@ export type OmistajaScanResult = {
   startKey: OmistajaKey | undefined;
   omistajat: DBOmistaja[];
 };
+
+type TransactionItem = Exclude<TransactWriteCommandInput["TransactItems"], undefined>[0];
 
 export function* chunkArray<T>(arr: T[], stride = 1) {
   for (let i = 0; i < arr.length; i += stride) {
@@ -123,38 +125,31 @@ class OmistajaDatabase {
       const items = await this.haeProjektinKaytossaolevatOmistajat(oid);
       if (items.length) {
         log.info("Otetaan käytöstä " + items.length + " omistaja(a)");
-        const transactItems: TransactWriteCommandInput["TransactItems"] = items.map((item) => ({
+        const transactItems = items.map<TransactionItem>((item) => ({
           Update: {
             ExpressionAttributeNames: {
               "#kaytossa": "kaytossa",
             },
             ExpressionAttributeValues: {
-              ":kaytossa": {
-                BOOL: false,
-              },
+              ":kaytossa": false,
             },
             UpdateExpression: "set #kaytossa = :kaytossa",
             TableName: this.tableName,
             Key: {
-              id: {
-                S: item.id,
-              },
-              oid: {
-                S: item.oid,
-              },
+              id: item.id,
+              oid: item.oid,
             },
-            ReturnValuesOnConditionCheckFailure: "ALL_OLD",
           },
         }));
 
         const oldOmistajatChunks = chunkArray(transactItems, 25);
 
         for (const chunk of oldOmistajatChunks) {
-          const params = new TransactWriteCommand({
+          const transactCommand = new TransactWriteCommand({
             TransactItems: chunk,
           });
           log.info("Päivitetään " + chunk.length + " omistaja(a)");
-          await getDynamoDBDocumentClient().send(params);
+          await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
 
