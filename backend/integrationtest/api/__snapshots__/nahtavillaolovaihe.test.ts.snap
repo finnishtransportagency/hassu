@@ -564,7 +564,7 @@ Object {
           },
         ],
       },
-      "maanomistajaluettelo": "/nahtavillaolo/2/maanomistajaluettelo.xslx",
+      "maanomistajaluettelo": "/nahtavillaolo/2/maanomistajaluettelo.xlsx",
       "muistutusoikeusPaattyyPaiva": "2022-06-08",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
@@ -764,7 +764,7 @@ Object {
         "tuotu": "2040-01-01T00:00",
         "uuid": "00000006-2631-4d4f-9d26-c792007df5d2",
       },
-      "maanomistajaluettelo": "/nahtavillaolo/2/maanomistajaluettelo.xslx",
+      "maanomistajaluettelo": "/nahtavillaolo/2/maanomistajaluettelo.xlsx",
       "muistutusoikeusPaattyyPaiva": "2022-06-08",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
