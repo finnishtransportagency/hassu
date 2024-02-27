@@ -1,9 +1,9 @@
 import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
-import { Excel, LataaTiedotettavatExcelQueryVariables, Vaihe } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, Vaihe } from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
-import { SheetData } from "write-excel-file";
+import { Columns, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
@@ -22,7 +22,7 @@ function formatDate(date: string | undefined | null, format = "DD.MM.YYYY HH:mm:
 }
 
 function formatKiinteistotunnus(tunnus: string) {
-  return `${Number(tunnus.substring(0, 3))}-${Number(tunnus.substring(3, 6))}-${Number(tunnus.substring(6, 10))}-${Number(tunnus.substring(10))}`
+  return `${Number(tunnus.substring(0, 3))}-${Number(tunnus.substring(3, 6))}-${Number(tunnus.substring(6, 10))}-${Number(tunnus.substring(10))}`;
 }
 
 export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQueryVariables): Promise<Excel> {
@@ -146,39 +146,95 @@ type Rivi = {
   haettu: string;
   tiedotustapa: string;
   suomifiLahetys: boolean | undefined;
-  kiinteisto: boolean;
 };
 
-async function haeRivit(oid: string, kiinteisto: boolean): Promise<Rivi[]> {
-  if (kiinteisto) {
-    return (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid)).map((o) => {
-      return {
-        id: o.id,
-        kiinteistotunnus: o.kiinteistotunnus,
-        nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
-        postiosoite: o.jakeluosoite ?? "",
-        postinumero: o.postinumero ?? "",
-        postitoimipaikka: o.paikkakunta ?? "",
-        haettu: o.paivitetty ?? o.lisatty,
-        tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
-        suomifiLahetys: o.suomifiLahetys,
-        kiinteisto,
-      };
-    });
-  } else {
-    return (await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(oid)).map((m) => {
-      return {
-        id: m.id,
-        nimi: `${m.etunimi} ${m.sukunimi}`,
-        postiosoite: m.lahiosoite ?? "",
-        postinumero: m.postinumero ?? "",
-        postitoimipaikka: m.postitoimipaikka ?? "",
-        haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
-        suomifiLahetys: !!m.henkilotunnus,
-        kiinteisto,
-      };
-    });
+async function haeOmistajat(oid: string): Promise<Rivi[]> {
+  return (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid)).map((o) => {
+    return {
+      id: o.id,
+      kiinteistotunnus: o.kiinteistotunnus,
+      nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
+      postiosoite: o.jakeluosoite ?? "",
+      postinumero: o.postinumero ?? "",
+      postitoimipaikka: o.paikkakunta ?? "",
+      haettu: o.paivitetty ?? o.lisatty,
+      tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
+      suomifiLahetys: o.suomifiLahetys,
+    };
+  });
+}
+
+async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
+  return (await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(oid)).map((m) => {
+    return {
+      id: m.id,
+      nimi: `${m.etunimi} ${m.sukunimi}`,
+      postiosoite: m.lahiosoite ?? "",
+      postinumero: m.postinumero ?? "",
+      postitoimipaikka: m.postitoimipaikka ?? "",
+      haettu: m.paivitetty ?? m.lisatty,
+      tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
+      suomifiLahetys: !!m.henkilotunnus,
+    };
+  });
+}
+
+async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
+  data[0].push([
+    {
+      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      fontWeight: "bold",
+    },
+  ]);
+  data[0].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
+  data[0].push([{ value: "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
+  data[0].push(lisaaOtsikko());
+  const omistajat = await haeOmistajat(oid);
+  for (const omistaja of omistajat.filter((o) => o.suomifiLahetys)) {
+    data[0].push(lisaaRivi(omistaja));
+  }
+  data[1] = [];
+  data[1].push([
+    {
+      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      fontWeight: "bold",
+    },
+  ]);
+  data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
+  data[1].push([{ value: "Kiinteistönomistajien tiedotus muilla tavoin", fontWeight: "bold" }]);
+  data[1].push(lisaaOtsikko());
+  for (const omistaja of omistajat.filter((o) => !o.suomifiLahetys)) {
+    data[1].push(lisaaRivi(omistaja));
+  }
+}
+
+async function lisaaMuistuttajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
+  data[2] = [];
+  data[2].push([
+    {
+      value: "Kuulutus suunnitelman hyväksymisestä",
+      fontWeight: "bold",
+    },
+  ]);
+  data[2].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
+  data[2].push([{ value: "Muistuttajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
+  data[2].push(lisaaMuistuttajanOtsikko());
+  const muistuttajat = await haeMuistuttajat(oid);
+  for (const muistuttaja of muistuttajat.filter((o) => o.suomifiLahetys)) {
+    data[2].push(lisaaMuistuttajaRivi(muistuttaja));
+  }
+  data[3] = [];
+  data[3].push([
+    {
+      value: "Kuulutus suunnitelman hyväksymisestä",
+      fontWeight: "bold",
+    },
+  ]);
+  data[3].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
+  data[3].push([{ value: "Muistuttajien tiedotus muilla tavoin", fontWeight: "bold" }]);
+  data[3].push(lisaaMuistuttajanOtsikko());
+  for (const muistuttaja of muistuttajat.filter((o) => !o.suomifiLahetys)) {
+    data[3].push(lisaaMuistuttajaRivi(muistuttaja));
   }
 }
 
@@ -192,91 +248,64 @@ export async function generateExcel(
   const data: SheetData[] = [];
   data[0] = [];
   const sheets: string[] = [];
+  const columns: Columns[] = [];
   if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push("Suomi.fi kiinteistön omistajat", "Muut kiinteistön omistajat");
-    data[0].push([
-      {
-        value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
-        fontWeight: "bold",
-      },
-    ]);
-    data[0].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-    data[0].push([{ value: "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
-    data[0].push(lisaaOtsikko());
-    const omistajat = await haeRivit(projekti.oid, true);
-    for (const omistaja of omistajat.filter((o) => o.suomifiLahetys)) {
-      data[0].push(lisaaRivi(omistaja));
-    }
-    data[1] = [];
-    data[1].push([
-      {
-        value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
-        fontWeight: "bold",
-      },
-    ]);
-    data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-    data[1].push([{ value: "Kiinteistönomistajien tiedotus muilla tavoin", fontWeight: "bold" }]);
-    data[1].push(lisaaOtsikko());
-    for (const omistaja of omistajat.filter((o) => !o.suomifiLahetys)) {
-      data[1].push(lisaaRivi(omistaja));
-    }
+    columns.push(
+      [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }],
+      [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]
+    );
+    await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
       sheets.push("Suomi.fi muistuttajat", "Muut muistuttajat");
-      data[2] = [];
-      data[2].push([
-        {
-          value: "Kuulutus suunnitelman hyväksymisestä",
-          fontWeight: "bold",
-        },
-      ]);
-      data[2].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-      data[2].push([{ value: "Muistuttajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
-      data[2].push(lisaaMuistuttajanOtsikko());
-      const muistuttajat = await haeRivit(projekti.oid, false);
-      for (const muistuttaja of muistuttajat.filter((o) => o.suomifiLahetys)) {
-        data[2].push(lisaaMuistuttajaRivi(muistuttaja));
-      }
-      data[3] = [];
-      data[3].push([
-        {
-          value: "Kuulutus suunnitelman hyväksymisestä",
-          fontWeight: "bold",
-        },
-      ]);
-      data[3].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-      data[3].push([{ value: "Muistuttajien tiedotus muilla tavoin", fontWeight: "bold" }]);
-      data[3].push(lisaaMuistuttajanOtsikko());
-      for (const muistuttaja of muistuttajat.filter((o) => !o.suomifiLahetys)) {
-        data[3].push(lisaaMuistuttajaRivi(muistuttaja));
-      }
+      columns.push(
+        [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }],
+        [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]
+      );
+      await lisaaMuistuttajat(data, projekti.oid, vaihe, kuulutusPaiva);
     }
   } else if (suomifi) {
-    sheets.push(kiinteisto ? "Suomi.fi kiinteistön omistajat" : "Suomi.fi muistuttajat");
-    data[0].push(kiinteisto ? lisaaOtsikko() : lisaaMuistuttajanOtsikko());
-    const rivit = await haeRivit(projekti.oid, kiinteisto);
-    for (const rivi of rivit.filter((o) => o.suomifiLahetys)) {
-      data[0].push(rivi.kiinteisto ? lisaaRivi(rivi) : lisaaMuistuttajaRivi(rivi));
+    if (kiinteisto) {
+      sheets.push("Suomi.fi kiinteistön omistajat");
+      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      data[0].push(lisaaOtsikko());
+      const rivit = await haeOmistajat(projekti.oid);
+      for (const rivi of rivit.filter((o) => o.suomifiLahetys)) {
+        data[0].push(lisaaRivi(rivi));
+      }
+    } else {
+      sheets.push("Suomi.fi muistuttajat");
+      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      data[0].push(lisaaMuistuttajanOtsikko());
+      const rivit = await haeMuistuttajat(projekti.oid);
+      for (const rivi of rivit.filter((o) => o.suomifiLahetys)) {
+        data[0].push(lisaaMuistuttajaRivi(rivi));
+      }
     }
   } else {
-    sheets.push(kiinteisto ? "Muut kiinteistön omistajat" : "Muut muistuttajat");
-    data[0].push(kiinteisto ? lisaaOtsikko() : lisaaMuistuttajanOtsikko());
-    const rivit = await haeRivit(projekti.oid, kiinteisto);
-    for (const rivi of rivit.filter((o) => !o.suomifiLahetys)) {
-      data[0].push(rivi.kiinteisto ? lisaaRivi(rivi) : lisaaMuistuttajaRivi(rivi));
+    if (kiinteisto) {
+      sheets.push("Muut kiinteistön omistajat");
+      data[0].push(lisaaOtsikko());
+      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      const rivit = await haeOmistajat(projekti.oid);
+      for (const rivi of rivit.filter((o) => !o.suomifiLahetys)) {
+        data[0].push(lisaaRivi(rivi));
+      }
+    } else {
+      sheets.push("Muut muistuttajat");
+      data[0].push(lisaaMuistuttajanOtsikko());
+      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      const rivit = await haeMuistuttajat(projekti.oid);
+      for (const rivi of rivit.filter((o) => !o.suomifiLahetys)) {
+        data[0].push(lisaaMuistuttajaRivi(rivi));
+      }
     }
   }
-  const columnWidths = (_value: string, idx: number) =>  {
-    if (idx < 2) {
-      return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }];
-    } else {
-      return [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }];
-    }
-  };
   return writeXlsxFile(data, {
     buffer: true,
     stickyRowsCount: vaihe === undefined ? 1 : 4,
     sheets,
-    columns: sheets.map(columnWidths),
+    columns,
   });
 }
 
@@ -287,12 +316,16 @@ export async function tallennaMaanomistajaluettelo(
   kuulutusPaiva: string | undefined | null
 ) {
   log.info("Tallennetaan maanomistajaluettelo projektille", { oid: projekti.oid, path: path.yllapitoPath });
-  const fileLocation = "maanomistajaluettelo.xslx";
+  const fileLocation = vaihe === Vaihe.NAHTAVILLAOLO ? "maanomistajaluettelo.xlsx" : "maanomistajaluettelo ja muistuttajat.xlsx";
   return await fileService.createFileToProjekti({
     oid: projekti.oid,
     fileName: fileLocation,
     path,
     contents: await generateExcel(projekti, true, vaihe, kuulutusPaiva),
     contentType: CONTENT_TYPE_EXCEL,
+    asiakirjaTyyppi:
+      vaihe === Vaihe.NAHTAVILLAOLO
+        ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_NAHTAVILLAOLO
+        : AsiakirjaTyyppi.MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS,
   });
 }
