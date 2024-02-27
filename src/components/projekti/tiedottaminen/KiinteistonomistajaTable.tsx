@@ -8,7 +8,7 @@ import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionSummary, T
 import { Stack, styled } from "@mui/system";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { useCallback, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 export type SearchTiedotettavatFunction<T> = (
@@ -33,6 +33,10 @@ const PAGE_SIZE = 25;
 
 type Tiedotettava = Record<string, unknown>;
 
+type SearchForm = {
+  query: string;
+};
+
 export default function KiinteistonomistajaTable<T extends Tiedotettava>({
   instructionText,
   title,
@@ -46,7 +50,13 @@ export default function KiinteistonomistajaTable<T extends Tiedotettava>({
 
   const [tiedotettavat, setTiedotettavat] = useState<T[] | null>(null);
   const [hakutulosMaara, setHakutulosMaara] = useState<number | null>(null);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [queryResettable, setQueryResettable] = useState<boolean>(false);
+
+  const useFormReturn = useForm<SearchForm>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: { query: "" },
+  });
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -56,6 +66,7 @@ export default function KiinteistonomistajaTable<T extends Tiedotettava>({
         (async () => {
           try {
             const response = await searchTiedotettavat(oid, muutTiedotettavat, query, from, size);
+            setQueryResettable(query !== undefined);
             setHakutulosMaara(response.hakutulosMaara);
             setTiedotettavat((oldOmistajat) => [...(oldOmistajat ?? []), ...response.tulokset]);
           } catch {}
@@ -72,29 +83,43 @@ export default function KiinteistonomistajaTable<T extends Tiedotettava>({
       } else {
         setTiedotettavat(null);
         setHakutulosMaara(null);
+        useFormReturn.setValue("query", "");
+        setQueryResettable(false);
       }
       setExpanded(isExpanded);
     },
-    [updateTiedotettavat]
+    [updateTiedotettavat, useFormReturn]
+  );
+
+  const onSubmit: SubmitHandler<SearchForm> = useCallback(
+    (data) => {
+      const q = data.query;
+      setTiedotettavat([]);
+      updateTiedotettavat(q ? q : undefined, 0);
+    },
+    [setTiedotettavat, updateTiedotettavat]
   );
 
   return (
-    <TableAccordion expanded={expanded} onChange={handleChange}>
-      <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
-      <TableAccordionDetails
-        oid={oid}
-        tiedotettavat={tiedotettavat}
-        setTiedotettavat={setTiedotettavat}
-        instructionText={instructionText}
-        muutTiedotettavat={muutTiedotettavat}
-        updateTiedotettavat={updateTiedotettavat}
-        hakutulosMaara={hakutulosMaara}
-        columns={columns}
-        query={query}
-        setQuery={setQuery}
-        filterText={filterText}
-      />
-    </TableAccordion>
+    <FormProvider {...useFormReturn}>
+      <form onSubmit={useFormReturn.handleSubmit(onSubmit)}>
+        <TableAccordion expanded={expanded} onChange={handleChange}>
+          <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
+          <TableAccordionDetails
+            oid={oid}
+            tiedotettavat={tiedotettavat}
+            setTiedotettavat={setTiedotettavat}
+            instructionText={instructionText}
+            muutTiedotettavat={muutTiedotettavat}
+            updateTiedotettavat={updateTiedotettavat}
+            hakutulosMaara={hakutulosMaara}
+            columns={columns}
+            filterText={filterText}
+            queryResettable={queryResettable}
+          />
+        </TableAccordion>
+      </form>
+    </FormProvider>
   );
 }
 
@@ -134,43 +159,33 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   hakutulosMaara,
   tiedotettavat,
   setTiedotettavat,
-  query,
-  setQuery,
   columns,
   filterText,
+  queryResettable,
   ...props
 }: Omit<AccordionDetailsProps, "children"> &
   Pick<Props<T>, "oid" | "muutTiedotettavat" | "instructionText" | "columns" | "filterText"> & {
-    query: string | undefined;
-    setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
     tiedotettavat: T[] | null;
     updateTiedotettavat: (query?: string, from?: any, size?: any) => void;
     hakutulosMaara: number | null;
     setTiedotettavat: React.Dispatch<React.SetStateAction<T[] | null>>;
+    queryResettable: boolean;
   }) => {
+  const { getValues, control, reset } = useFormContext<SearchForm>();
+
   const getNextPage = useCallback(() => {
-    updateTiedotettavat(query);
-  }, [query, updateTiedotettavat]);
+    updateTiedotettavat(getValues().query);
+  }, [getValues, updateTiedotettavat]);
 
   const toggleShowHideAll = useCallback(() => {
     if ((tiedotettavat?.length ?? 0) < (hakutulosMaara ?? 0)) {
-      updateTiedotettavat(query, undefined, (hakutulosMaara ?? 0) - (tiedotettavat?.length ?? 0));
+      updateTiedotettavat(getValues().query, undefined, (hakutulosMaara ?? 0) - (tiedotettavat?.length ?? 0));
     } else {
       setTiedotettavat((oldOmistajat) => {
         return oldOmistajat?.slice(0, PAGE_SIZE) ?? [];
       });
     }
-  }, [tiedotettavat?.length, hakutulosMaara, updateTiedotettavat, query, setTiedotettavat]);
-
-  type SearchForm = {
-    query: string;
-  };
-
-  const { handleSubmit, control, setValue } = useForm<SearchForm>({
-    mode: "onChange",
-    reValidateMode: "onChange",
-    defaultValues: { query: "" },
-  });
+  }, [tiedotettavat?.length, hakutulosMaara, updateTiedotettavat, getValues, setTiedotettavat]);
 
   const table = useReactTable({
     columns,
@@ -181,22 +196,11 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
     state: { pagination: undefined },
   });
 
-  const onSubmit: SubmitHandler<SearchForm> = useCallback(
-    (data) => {
-      const q = data.query ? data.query : undefined;
-      setQuery(q);
-      setTiedotettavat([]);
-      updateTiedotettavat(q, 0);
-    },
-    [setQuery, setTiedotettavat, updateTiedotettavat]
-  );
-
   const resetSearch = useCallback(async () => {
-    setValue("query", "");
-    setQuery(undefined);
+    reset();
     setTiedotettavat([]);
     updateTiedotettavat(undefined, 0);
-  }, [setValue, setQuery, setTiedotettavat, updateTiedotettavat]);
+  }, [reset, setTiedotettavat, updateTiedotettavat]);
 
   const showLess = useCallback(() => {
     setTiedotettavat((oldOmistajat) => {
@@ -210,16 +214,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
       <ContentSpacer gap={7}>
         <p>{instructionText}</p>
         <ContentSpacer>
-          <Stack
-            component="form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="end"
-          >
+          <Stack direction="row" justifyContent="space-between" alignItems="end">
             <Controller
               control={control}
               name="query"
@@ -236,11 +231,11 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
                 />
               )}
             />
-            <Button primary type="button" endIcon="search" onClick={handleSubmit(onSubmit)}>
+            <Button primary type="submit" endIcon="search">
               Suodata
             </Button>
           </Stack>
-          {query && (
+          {queryResettable && (
             <ButtonFlat onClick={resetSearch} type="button">
               Nollaa suodatus
             </ButtonFlat>

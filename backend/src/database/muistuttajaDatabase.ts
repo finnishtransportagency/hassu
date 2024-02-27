@@ -25,6 +25,7 @@ export type DBMuistuttaja = {
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
   liite?: string | null;
   maakoodi?: string | null;
+  suomifiLahetys?: boolean;
 };
 
 export type MuistuttajaKey = {
@@ -43,19 +44,16 @@ class MuistuttajaDatabase {
     this.tableName = tableName;
   }
 
-  async haeProjektinKaytossaolevatMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
+  async haeProjektinMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
     const command = new QueryCommand({
       TableName: this.tableName,
       KeyConditionExpression: "#oid = :oid",
       ExpressionAttributeValues: {
         ":oid": oid,
-        ":kaytossa": true,
       },
       ExpressionAttributeNames: {
         "#oid": "oid",
-        "#kaytossa": "kaytossa",
       },
-      FilterExpression: "#kaytossa = :kaytossa",
     });
     const data = await getDynamoDBDocumentClient().send(command);
     return (data?.Items ?? []) as DBMuistuttaja[];

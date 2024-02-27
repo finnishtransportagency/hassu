@@ -15,6 +15,7 @@ export type MuistuttajaDocument = Pick<
   | "oid"
   | "tiedotusosoite"
   | "paivitetty"
+  | "suomifiLahetys"
 >;
 
 export function adaptMuistuttajaToIndex({
@@ -29,6 +30,7 @@ export function adaptMuistuttajaToIndex({
   oid,
   paivitetty,
   tiedotusosoite,
+  suomifiLahetys,
 }: DBMuistuttaja): MuistuttajaDocument {
   return {
     etunimi,
@@ -42,6 +44,7 @@ export function adaptMuistuttajaToIndex({
     oid,
     paivitetty,
     tiedotusosoite,
+    suomifiLahetys,
   };
 }
 
@@ -58,7 +61,7 @@ export function adaptSearchResultsToMuistuttajaDocuments(results: any): DBMuistu
 export function adaptSearchResultsToApiMuistuttaja(results: any): API.Muistuttaja[] {
   if (results.status && results.status >= 400) {
     log.error(results);
-    throw new Error("Muistuttaja tapahtui virhe");
+    throw new Error("Muistuttajahaussa tapahtui virhe");
   }
   return results.hits?.hits?.map(mapHitToApiMuistuttaja) ?? [];
 }

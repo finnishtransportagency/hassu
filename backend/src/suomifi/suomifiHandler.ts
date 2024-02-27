@@ -522,9 +522,9 @@ async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqu
 }
 
 async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
+  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinMuistuttajat(projektiFromDB.oid);
   const newIds: string[] = [];
-  for (const muistuttaja of dbMuistuttajat.filter((m) => m.henkilotunnus)) {
+  for (const muistuttaja of dbMuistuttajat.filter((m) => m.suomifiLahetys)) {
     if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
       uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
       newIds.push(muistuttaja.id);

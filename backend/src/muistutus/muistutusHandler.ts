@@ -16,7 +16,7 @@ import { adaptMuistutusInput } from "./muistutusAdapter";
 import { auditLog, log } from "../logger";
 import { getSuomiFiCognitoKayttaja, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchGetCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
 import { config } from "../config";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
@@ -26,6 +26,7 @@ import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SuomiFiSanoma } from "../suomifi/suomifiHandler";
 import { DBMuistuttaja } from "../database/muistuttajaDatabase";
+import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 
 function getExpires() {
   // muistuttajien tiedot säilyvät seitsemän vuotta auditointilokia varten
@@ -77,13 +78,15 @@ class MuistutusHandler {
 
     const loggedInUser = getSuomiFiCognitoKayttaja();
 
+    const henkilotunnus = loggedInUser?.["custom:hetu"];
+
     const muistuttaja: DBMuistuttaja = {
       id: muistutus.id,
       expires: getExpires(),
       lisatty: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
       etunimi: muistutus.etunimi,
       sukunimi: muistutus.sukunimi,
-      henkilotunnus: loggedInUser ? loggedInUser["custom:hetu"] : undefined,
+      henkilotunnus,
       lahiosoite: muistutus.katuosoite,
       postinumero: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[0],
       postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ").slice(1).join(" "),
@@ -94,10 +97,11 @@ class MuistutusHandler {
       muistutus: muistutus.muistutus,
       oid: projektiFromDB.oid,
       liite: muistutus.liite,
+      suomifiLahetys: !!henkilotunnus,
     };
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
-    await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id]);
+    await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id], !henkilotunnus);
     const msg: SuomiFiSanoma = {
       oid,
       muistuttajaId: muistuttaja.id,
@@ -107,51 +111,11 @@ class MuistutusHandler {
   }
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
-    const projekti = await getProjektiAndCheckPermissions(variables.oid);
-    const muistuttajat = variables.muutMuistuttajat ? projekti?.muutMuistuttajat ?? [] : projekti?.muistuttajat ?? [];
-    const start = variables.from ?? 0;
-    const end = start + (variables?.size ?? 25);
-    const ids = muistuttajat.slice(start, end);
-    if (muistuttajat.length > 0 && ids.length > 0) {
-      log.info("Haetaan muistuttajia", { tunnukset: ids });
-      const command = new BatchGetCommand({
-        RequestItems: {
-          [getMuistuttajaTableName()]: {
-            Keys: ids.map((key) => ({
-              id: key,
-              oid: variables.oid,
-            })),
-          },
-        },
-      });
-      const response = await getDynamoDBDocumentClient().send(command);
-      const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
-      dbMuistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id }));
-      return {
-        __typename: "Muistuttajat",
-        hakutulosMaara: muistuttajat.length,
-        muistuttajat: dbMuistuttajat.map((m) => ({
-          __typename: "Muistuttaja",
-          id: m.id,
-          lisatty: m.lisatty,
-          paivitetty: m.paivitetty,
-          etunimi: m.etunimi,
-          sukunimi: m.sukunimi,
-          jakeluosoite: m.lahiosoite,
-          postinumero: m.postinumero,
-          paikkakunta: m.postitoimipaikka,
-          nimi: m.nimi,
-          tiedotusosoite: m.tiedotusosoite,
-          tiedotustapa: m.tiedotustapa,
-        })),
-      };
-    } else {
-      return {
-        __typename: "Muistuttajat",
-        hakutulosMaara: muistuttajat.length,
-        muistuttajat: [],
-      };
-    }
+    await getProjektiAndCheckPermissions(variables.oid);
+    log.info("Haetaan muistuttajatiedot", variables);
+    const muistuttajatResponse = await muistuttajaSearchService.searchMuistuttajat(variables);
+    muistuttajatResponse.muistuttajat.forEach((m) => auditLog.info("Näytetään muistuttajan tiedot", { muistuttajaId: m.id }));
+    return muistuttajatResponse;
   }
 
   async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
