@@ -141,6 +141,10 @@ class Parameters {
     return this.getParamOrVariable("outputs/OmistajaIndexerSQSUrl");
   }
 
+  async getMuistuttajaIndexerSQSUrl() {
+    return this.getParamOrVariable("outputs/MuistuttajaIndexerSQSUrl");
+  }
+
   async getSuomiFiConfig() {
     const param = await this.getRequiredAccountParameter("SuomiFiConfig");
     const cfg: Partial<SuomiFiConfig> = {};
@@ -152,11 +156,11 @@ class Parameters {
   }
 
   async getSuomiFiCertificate() {
-    return this.getParameterForEnv("SuomiFiCertificate")
+    return this.getParameterForEnv("SuomiFiCertificate");
   }
 
   async getSuomiFiPrivateKey() {
-    return this.getParameterForEnv("SuomiFiPrivateKey")
+    return this.getParameterForEnv("SuomiFiPrivateKey");
   }
 
   async getSuomiFiSQSUrl() {

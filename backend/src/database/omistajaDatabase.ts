@@ -12,6 +12,7 @@ import {
   TransactWriteCommand,
   TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
+import { chunkArray } from "./chunkArray";
 
 export type OmistajaKey = {
   oid: string;
@@ -45,12 +46,6 @@ export type OmistajaScanResult = {
 };
 
 type TransactionItem = Exclude<TransactWriteCommandInput["TransactItems"], undefined>[0];
-
-export function* chunkArray<T>(arr: T[], stride = 1) {
-  for (let i = 0; i < arr.length; i += stride) {
-    yield arr.slice(i, Math.min(i + stride, arr.length));
-  }
-}
 
 class OmistajaDatabase {
   private tableName: string;

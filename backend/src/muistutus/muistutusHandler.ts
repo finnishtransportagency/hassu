@@ -25,6 +25,7 @@ import { getMuistuttajaTableName } from "../util/environment";
 import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SuomiFiSanoma } from "../suomifi/suomifiHandler";
+import { DBMuistuttaja } from "../database/muistuttajaDatabase";
 
 function getExpires() {
   // muistuttajien tiedot säilyvät seitsemän vuotta auditointilokia varten
@@ -34,30 +35,6 @@ function getExpires() {
   }
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
-
-export type DBMuistuttaja = {
-  id: string;
-  expires: number;
-  lisatty: string;
-  etunimi?: string | null;
-  sukunimi?: string | null;
-  henkilotunnus?: string | null;
-  lahiosoite?: string | null;
-  postinumero?: string | null;
-  postitoimipaikka?: string | null;
-  sahkoposti?: string | null;
-  puhelinnumero?: string | null;
-  nimi?: string | null;
-  tiedotusosoite?: string | null;
-  tiedotustapa?: string | null;
-  paivitetty?: string | null;
-  vastaanotettu?: string | null;
-  muistutus?: string | null;
-  oid: string;
-  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
-  liite?: string | null;
-  maakoodi?: string | null;
-};
 
 async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
   const projekti = await projektiDatabase.loadProjektiByOid(oid);

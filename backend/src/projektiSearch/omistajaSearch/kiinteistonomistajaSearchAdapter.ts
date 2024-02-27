@@ -9,7 +9,6 @@ export type OmistajaDocument = Pick<
   | "kiinteistotunnus"
   | "nimi"
   | "oid"
-  | "id"
   | "paikkakunta"
   | "postinumero"
   | "sukunimi"
@@ -22,7 +21,6 @@ export type OmistajaDocument = Pick<
 export function adaptOmistajaToIndex({
   etunimet,
   jakeluosoite,
-  id,
   kiinteistotunnus,
   oid,
   nimi,
@@ -37,7 +35,6 @@ export function adaptOmistajaToIndex({
   return {
     etunimet,
     jakeluosoite,
-    id,
     kiinteistotunnus,
     oid,
     nimi,

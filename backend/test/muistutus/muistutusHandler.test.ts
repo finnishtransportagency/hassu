@@ -8,7 +8,7 @@ import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { emailClient } from "../../src/email/email";
-import { DBMuistuttaja, muistutusHandler } from "../../src/muistutus/muistutusHandler";
+import { muistutusHandler } from "../../src/muistutus/muistutusHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { S3Mock } from "../aws/awsMock";
@@ -21,6 +21,7 @@ import { identifyMockUser } from "../../src/user/userService";
 import { fail } from "assert";
 import { parameters } from "../../src/aws/parameters";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -178,7 +179,7 @@ describe("muistutusHandler", () => {
             ],
           },
         });
-        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, sivu: 1, sivuKoko: 1 });
+        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, from: 0, size: 1 });
         expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
         let batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
         assert(batchCommand.args[0].input.RequestItems);
@@ -192,7 +193,7 @@ describe("muistutusHandler", () => {
         expect(muistuttajat.muistuttajat[0]?.jakeluosoite).to.equal("Osoite 1");
         expect(muistuttajat.muistuttajat[0]?.postinumero).to.equal("00100");
         expect(muistuttajat.muistuttajat[0]?.paikkakunta).to.equal("Helsinki");
-        await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, sivu: 2, sivuKoko: 1 });
+        await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, from: 1, size: 1 });
         batchCommand = dbMock.commandCalls(BatchGetCommand)[1];
         assert(batchCommand.args[0].input.RequestItems);
         keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
@@ -220,7 +221,7 @@ describe("muistutusHandler", () => {
             ],
           },
         });
-        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: true, sivu: 1, sivuKoko: 1 });
+        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: true, from: 0, size: 1 });
         expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
         const batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
         assert(batchCommand.args[0].input.RequestItems);

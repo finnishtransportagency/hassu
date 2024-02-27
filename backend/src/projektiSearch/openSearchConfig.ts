@@ -4,4 +4,5 @@ export const openSearchConfig = {
   opensearchJulkinenIndexPrefix: "projekti-" + process.env.ENVIRONMENT + "-julkinen-",
   opensearchIlmoitustauluSyoteIndex: "projekti-" + process.env.ENVIRONMENT + "-ilmoitustaulusyote",
   opensearchKiinteistonomistajaIndex: "kiinteistonomistaja-" + process.env.ENVIRONMENT,
+  opensearchMuistuttajaIndex: "muistuttaja-" + process.env.ENVIRONMENT,
 };
