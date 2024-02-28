@@ -196,6 +196,9 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  muistuttajaMaara: Int
+  kiinteistotunnusMaara: Int
+  kiinteistonomistajaMaara: Int
 }
 
 type Asianhallinta {

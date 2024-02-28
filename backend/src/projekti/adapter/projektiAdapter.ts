@@ -40,6 +40,8 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { muistuttajaSearchService } from "../../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
+import { omistajaSearchService } from "../../projektiSearch/omistajaSearch/omistajaSearchService";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -171,6 +173,10 @@ export class ProjektiAdapter {
           apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinnanTila(apiProjekti);
         }
       }
+      apiProjekti.muistuttajaMaara = await muistuttajaSearchService.getMuistuttajaMaara(dbProjekti.oid);
+      const { kiinteistotunnusMaara, omistajaMaara } = await omistajaSearchService.getOmistajaJaKiinteistotunnusMaarat(dbProjekti.oid);
+      apiProjekti.kiinteistonomistajaMaara = omistajaMaara;
+      apiProjekti.kiinteistotunnusMaara = kiinteistotunnusMaara;
     }
 
     return apiProjekti;

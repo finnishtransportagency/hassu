@@ -53,6 +53,33 @@ class OmistajaSearchService {
     return searchResults;
   }
 
+  async getOmistajaJaKiinteistotunnusMaarat(
+    oid: string
+  ): Promise<{ kiinteistotunnusMaara: number | undefined; omistajaMaara: number | undefined }> {
+    const response = await omistajaOpenSearchClient.query({
+      query: {
+        bool: {
+          must: [
+            {
+              term: { oid },
+            },
+            {
+              term: { kaytossa: true },
+            },
+          ],
+        },
+      },
+      aggs: {
+        unique_kiinteistotunnus: {
+          cardinality: {
+            field: "kiinteistotunnus.keyword",
+          },
+        },
+      },
+    });
+    return { kiinteistotunnusMaara: response?.aggregations?.unique_kiinteistotunnus?.value, omistajaMaara: response.hits.total.value };
+  }
+
   async searchOmistajat(params: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
     const searchResult = await omistajaOpenSearchClient.query({
       query: this.buildQuery(params),

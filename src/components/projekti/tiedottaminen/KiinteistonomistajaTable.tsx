@@ -27,6 +27,8 @@ export type Props<T> = {
   oid: string;
   searchTiedotettavat: SearchTiedotettavatFunction<T>;
   columns: ColumnDef<T>[];
+  expanded?: boolean;
+  setExpanded?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PAGE_SIZE = 25;
@@ -37,7 +39,7 @@ type SearchForm = {
   query: string;
 };
 
-export default function KiinteistonomistajaTable<T extends Tiedotettava>({
+export default function KiinteistonomistajaHaitari<T extends Tiedotettava>({
   instructionText,
   title,
   muutTiedotettavat = false,
@@ -45,8 +47,13 @@ export default function KiinteistonomistajaTable<T extends Tiedotettava>({
   columns,
   searchTiedotettavat,
   filterText,
+  expanded: controlledExpanded,
+  setExpanded: setControlledExpanded,
 }: Readonly<Props<T>>) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [uncontrolledExpanded, setUncontrolledExpanded] = React.useState(false);
+
+  const expanded = controlledExpanded ?? uncontrolledExpanded;
+  const setExpanded = setControlledExpanded ?? setUncontrolledExpanded;
 
   const [tiedotettavat, setTiedotettavat] = useState<T[] | null>(null);
   const [hakutulosMaara, setHakutulosMaara] = useState<number | null>(null);
@@ -88,7 +95,7 @@ export default function KiinteistonomistajaTable<T extends Tiedotettava>({
       }
       setExpanded(isExpanded);
     },
-    [updateTiedotettavat, useFormReturn]
+    [setExpanded, updateTiedotettavat, useFormReturn]
   );
 
   const onSubmit: SubmitHandler<SearchForm> = useCallback(

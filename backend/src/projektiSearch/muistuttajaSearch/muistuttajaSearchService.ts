@@ -53,6 +53,13 @@ class MuistuttajaSearchService {
     return searchResults;
   }
 
+  async getMuistuttajaMaara(oid: string): Promise<number> {
+    const response = await muistuttajaOpenSearchClient.count({
+      term: { oid },
+    });
+    return response.count;
+  }
+
   async searchMuistuttajat(params: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
     const searchResult = await muistuttajaOpenSearchClient.query({
       query: this.buildQuery(params),

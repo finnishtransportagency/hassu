@@ -7,7 +7,7 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import KiinteistonomistajaTable, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
+import KiinteistonomistajaHaitari, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
 import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
 import { Muistuttaja } from "@services/api";
 import useApi from "src/hooks/useApi";
@@ -144,8 +144,6 @@ const columnsMuutMuistuttajat: ColumnDef<Muistuttaja>[] = [
 ];
 
 const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
-  const muistuttajaMaara = 10;
-
   const api = useApi();
 
   const searchTiedotettavat: SearchTiedotettavatFunction<Muistuttaja> = useCallback(
@@ -176,10 +174,12 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
             julkaisupäivänä. Tämä koskee myös tälle sivulle kerättyjen tunnistautumattomien muistuttajien tietoja.
           </p>
           <GrayBackgroundText>
-            <p>Muistuttajia on yhteensä {"x" ?? muistuttajaMaara} henkilöä.</p>
+            <p>
+              Muistuttajia on yhteensä <b>{projekti.muistuttajaMaara ?? 0} henkilö(ä)</b>.
+            </p>
           </GrayBackgroundText>
         </ContentSpacer>
-        <KiinteistonomistajaTable
+        <KiinteistonomistajaHaitari
           searchTiedotettavat={searchTiedotettavat}
           columns={columnsSuomifi}
           oid={projekti.oid}
@@ -187,7 +187,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           title="Muistuttajien tiedotus Suomi.fi -palvelulla"
           instructionText="Tällä listalla oleville henkilöille lähetetään automaattisesti tieto hyväksymispäätöksen kuulutuksesta Suomi.fi-palvelun kautta. Muistuttajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
         />
-        <KiinteistonomistajaTable
+        <KiinteistonomistajaHaitari
           searchTiedotettavat={searchTiedotettavat}
           columns={columnsMuutMuistuttajat}
           muutTiedotettavat

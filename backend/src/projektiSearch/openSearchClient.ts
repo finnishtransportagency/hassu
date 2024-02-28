@@ -85,6 +85,22 @@ export default class OpenSearchClient {
     return false;
   }
 
+  async count(query?: unknown): Promise<any> {
+    const body = query ? JSON.stringify({ query }) : undefined;
+    log.info("count " + this.index, { query });
+    const request = new HttpRequest({
+      body,
+      headers: {
+        "Content-Type": "application/json",
+        host: domain,
+      },
+      hostname: domain,
+      method: "POST",
+      path: this.index + "/_count",
+    });
+    return sendRequest(request);
+  }
+
   async query(query: SearchOpts): Promise<any> {
     const body = JSON.stringify(query);
     log.info("query " + this.index, { query });
