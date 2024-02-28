@@ -76,6 +76,15 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
     "123-456-1-291",
     "Etunimi Sukunimi",
     "Osoite 1",
@@ -111,15 +120,6 @@ Array [
     "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
-  Array [
-    "41-56-1-0",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
-  ],
 ]
 `;
 
@@ -133,6 +133,15 @@ Array [
     "Postitoimipaikka",
     "Tiedot haettu",
     "Tiedotustapa",
+  ],
+  Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
   ],
   Array [
     "123-456-1-291",
@@ -150,15 +159,6 @@ Array [
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "41-56-1-0",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -262,6 +262,15 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
     "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
@@ -277,15 +286,6 @@ Array [
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "41-56-1-0",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -401,6 +401,15 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
     "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
@@ -416,15 +425,6 @@ Array [
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "41-56-1-0",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -528,6 +528,15 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
     "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
@@ -543,15 +552,6 @@ Array [
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "41-56-1-0",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -618,6 +618,14 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
     "Tytti Testaaja",
     "Osoite 456",
     "02600",
@@ -632,14 +640,6 @@ Array [
     "Vantaa",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
-  ],
-  Array [
-    "Teppo Muistuttaja",
-    "Muistuttajan osoite",
-    "00100",
-    "Helsinki",
-    "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
   ],
 ]
 `;

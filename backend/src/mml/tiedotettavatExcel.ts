@@ -161,7 +161,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
       tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
       suomifiLahetys: o.suomifiLahetys,
     };
-  });
+  }).sort((a, b) => a.kiinteistotunnus.localeCompare(b.kiinteistotunnus));
 }
 
 async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
@@ -176,7 +176,7 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
       tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
       suomifiLahetys: !!m.henkilotunnus,
     };
-  });
+  }).sort((a, b) => a.tiedotustapa.localeCompare(b.tiedotustapa));
 }
 
 async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
