@@ -3,6 +3,7 @@ import { SuomiFiClient, SuomiFiConfig, getSuomiFiClient } from "../src/suomifi/v
 import express from "express";
 import fs from "fs";
 import { LisaaKohteitaResponse, HaeAsiakkaitaResponse } from "../src/suomifi/viranomaispalvelutwsinterface";
+import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 
 const app = express();
 const port = 8081;
@@ -190,7 +191,7 @@ euWestSSMClient
                 viranomaisTunnus: cfg.viranomaistunnus,
                 palveluTunnus: cfg.palvelutunnus,
                 laskutusTunniste: cfg.laskutustunniste,
-                laskutusTunnisteEly: cfg.laskutustunnisteely,
+                laskutusTunnisteEly: {},
               }).then((client) => {
                 soapClient = client;
                 if (process.argv.length === 2 || process.argv[2] === "tila") {
@@ -212,7 +213,7 @@ euWestSSMClient
                     otsikko: "VLS PDF viestin otsikko",
                     sisalto: "VLS PDF viestin sisältö",
                     tiedosto: { kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) },
-                    vaylavirasto: true,
+                    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
                   });
                 } else if (process.argv[2] === "hae") {
                   return client.haeAsiakas("010280-952L", "SSN");

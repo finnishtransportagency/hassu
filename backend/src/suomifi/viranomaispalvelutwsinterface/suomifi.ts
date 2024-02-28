@@ -8,6 +8,7 @@ import { uuid } from "hassu-common/util/uuid";
 import { LahetaViestiResponse } from "./definitions/LahetaViestiResponse";
 import { Readable } from "stream";
 import { HaeAsiakkaitaResponse } from "./definitions/HaeAsiakkaitaResponse";
+import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 
 export type Viesti = {
   hetu?: string;
@@ -30,7 +31,7 @@ export type PdfViesti = Viesti & {
   postinumero: string;
   postitoimipaikka: string;
   maa: string;
-  vaylavirasto: boolean;
+  suunnittelustaVastaavaViranomainen?: string | null;
   tiedosto: Tiedosto;
 };
 
@@ -42,7 +43,7 @@ export type Options = {
   viranomaisTunnus: string;
   palveluTunnus: string;
   laskutusTunniste?: string;
-  laskutusTunnisteEly?: string;
+  laskutusTunnisteEly?: Record<string, string>;
 };
 
 export type SuomiFiConfig = {
@@ -169,6 +170,16 @@ async function lahetaViesti(
   if (!tunnus) {
     throw new Error("Hetu tai y-tunnus pakollinen");
   }
+  let laskutusTunniste;
+  if (
+    viesti.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
+    options.laskutusTunnisteEly &&
+    viesti.suunnittelustaVastaavaViranomainen
+  ) {
+    laskutusTunniste = options.laskutusTunnisteEly[viesti.suunnittelustaVastaavaViranomainen];
+  } else {
+    laskutusTunniste = options.laskutusTunniste;
+  }
   const response = await client.LahetaViestiAsync({
     Kysely: {
       Paperi: "false",
@@ -211,7 +222,9 @@ async function lahetaViesti(
         ],
       },
       Tulostustoimittaja: "Posti",
-      Laskutus: { Tunniste: viesti.vaylavirasto ? options.laskutusTunniste : options.laskutusTunnisteEly },
+      Laskutus: {
+        Tunniste: laskutusTunniste,
+      },
       Varitulostus: "false",
     },
     Viranomainen: getViranomainen(options),
