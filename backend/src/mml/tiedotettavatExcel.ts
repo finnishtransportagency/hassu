@@ -1,7 +1,7 @@
 import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
-import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, Vaihe } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { Columns, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
@@ -30,7 +30,7 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
   const file = await generateExcel(projekti, variables.kiinteisto, undefined, undefined, variables.suomifi);
   return {
     __typename: "Excel",
-    nimi: `${variables.kiinteisto ? "kiinteistonomistajat" : "muistuttajat"}-${variables.suomifi ? "suomifi" : "muut"}-${variables.oid}.xlsx`,
+    nimi: `${variables.kiinteisto ? "Maanomistajaluettelo" : "Muistuttajat"}${variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muilla tavoin)" : ""} ${dayjs(new Date()).format("YYYYMMDD")}.xlsx`,
     sisalto: file.toString("base64"),
     tyyppi: CONTENT_TYPE_EXCEL,
   };
@@ -250,7 +250,7 @@ export async function generateExcel(
   const sheets: string[] = [];
   const columns: Columns[] = [];
   if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
-    sheets.push("Suomi.fi kiinteistön omistajat", "Muut kiinteistön omistajat");
+    sheets.push("Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat");
     columns.push(
       [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }],
       [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]
@@ -266,7 +266,7 @@ export async function generateExcel(
     }
   } else if (suomifi) {
     if (kiinteisto) {
-      sheets.push("Suomi.fi kiinteistön omistajat");
+      sheets.push("Suomi.fi kiinteistönomistajat");
       columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
       data[0].push(lisaaOtsikko());
       const rivit = await haeOmistajat(projekti.oid);
@@ -282,9 +282,9 @@ export async function generateExcel(
         data[0].push(lisaaMuistuttajaRivi(rivi));
       }
     }
-  } else {
+  } else if (suomifi === false) {
     if (kiinteisto) {
-      sheets.push("Muut kiinteistön omistajat");
+      sheets.push("Muut kiinteistönomistajat");
       data[0].push(lisaaOtsikko());
       columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
       const rivit = await haeOmistajat(projekti.oid);
@@ -300,6 +300,24 @@ export async function generateExcel(
         data[0].push(lisaaMuistuttajaRivi(rivi));
       }
     }
+  } else {
+    if (kiinteisto) {
+      sheets.push("Kiinteistönomistajat");
+      data[0].push(lisaaOtsikko());
+      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      const rivit = await haeOmistajat(projekti.oid);
+      for (const rivi of rivit) {
+        data[0].push(lisaaRivi(rivi));
+      }
+    } else {
+      sheets.push("Muistuttajat");
+      data[0].push(lisaaMuistuttajanOtsikko());
+      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      const rivit = await haeMuistuttajat(projekti.oid);
+      for (const rivi of rivit) {
+        data[0].push(lisaaMuistuttajaRivi(rivi));
+      }
+    }
   }
   return writeXlsxFile(data, {
     buffer: true,
@@ -309,14 +327,36 @@ export async function generateExcel(
   });
 }
 
+function getMaanomistajaluetteloFilename(
+  tyyppi: ProjektiTyyppi | undefined | null,
+  vaihe: Vaihe,
+  kuulutusPaiva: string | null | undefined,
+  id: number
+) {
+  let prefix;
+  if (tyyppi === ProjektiTyyppi.RATA) {
+    prefix = "R417";
+  } else if (tyyppi === ProjektiTyyppi.YLEINEN) {
+    prefix = "Y416";
+  } else {
+    prefix = "T416";
+  }
+  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+    return `${prefix} Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
+  } else {
+    return `${prefix} Maanomistajaluettelo ja muistuttajat ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
+  }
+}
+
 export async function tallennaMaanomistajaluettelo(
   projekti: DBProjekti,
   path: PathTuple,
   vaihe: Vaihe,
-  kuulutusPaiva: string | undefined | null
+  kuulutusPaiva: string | undefined | null,
+  id: number
 ) {
-  log.info("Tallennetaan maanomistajaluettelo projektille", { oid: projekti.oid, path: path.yllapitoPath });
-  const fileLocation = vaihe === Vaihe.NAHTAVILLAOLO ? "maanomistajaluettelo.xlsx" : "maanomistajaluettelo ja muistuttajat.xlsx";
+  log.info("Tallennetaan maanomistajaluettelo projektille", { path: path.yllapitoPath });
+  const fileLocation = getMaanomistajaluetteloFilename(projekti.velho?.tyyppi, vaihe, kuulutusPaiva, id);
   return await fileService.createFileToProjekti({
     oid: projekti.oid,
     fileName: fileLocation,

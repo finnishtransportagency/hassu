@@ -260,7 +260,8 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       projekti,
       new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
       this.vaihe,
-      nahtavillaoloVaiheJulkaisu.kuulutusPaiva
+      nahtavillaoloVaiheJulkaisu.kuulutusPaiva,
+      nahtavillaoloVaiheJulkaisu.id
     );
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);

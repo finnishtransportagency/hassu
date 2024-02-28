@@ -1,6 +1,6 @@
-import { Vaihe } from "hassu-common/graphql/apiModel";
+import { ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, DBVaylaUser } from "../../src/database/model";
-import { generateExcel, generateExcelByQuery } from "../../src/mml/tiedotettavatExcel";
+import { generateExcel, generateExcelByQuery, tallennaMaanomistajaluettelo } from "../../src/mml/tiedotettavatExcel";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DBOmistaja } from "../../src/database/omistajaDatabase";
@@ -10,10 +10,34 @@ import { identifyMockUser } from "../../src/user/userService";
 import { getKiinteistonomistajaTableName, getMuistuttajaTableName } from "../../src/util/environment";
 import { DBMuistuttaja } from "../../src/muistutus/muistutusHandler";
 import fs from "fs";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import { fileService } from "../../src/files/fileService";
+import sinon from "sinon";
+import MockDate from "mockdate";
 
 const projekti: Partial<DBProjekti> = {
   oid: "1.2.3",
   kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
+  velho: {
+    nimi: "Testiprojekti 1",
+    tyyppi: ProjektiTyyppi.TIE,
+  }
+};
+const rataProjekti: Partial<DBProjekti> = {
+  oid: "1.2.3",
+  kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
+  velho: {
+    nimi: "Testiprojekti 1",
+    tyyppi: ProjektiTyyppi.RATA
+  }
+};
+const yleisProjekti: Partial<DBProjekti> = {
+  oid: "1.2.3",
+  kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
+  velho: {
+    nimi: "Testiprojekti 1",
+    tyyppi: ProjektiTyyppi.YLEINEN,
+  }
 };
 const omistaja1: DBOmistaja = {
   id: "1",
@@ -113,6 +137,7 @@ const muistuttaja3: DBMuistuttaja = {
 };
 describe("tiedotettavatExcel", () => {
   before(() => {
+    MockDate.set("2024-02-27");
     identifyMockUser({ roolit: ["hassu_admin"], etunimi: "Test", sukunimi: "Test", uid: "testuid", __typename: "NykyinenKayttaja" });
     mockClient(DynamoDBDocumentClient)
       .on(QueryCommand, { TableName: getKiinteistonomistajaTableName() })
@@ -122,20 +147,23 @@ describe("tiedotettavatExcel", () => {
       .on(GetCommand)
       .resolves({ Item: projekti });
   });
+  after(() => {
+    MockDate.reset();
+  })
   it("tallenna kiinteistön omistajat excel tiedostoon nähtävilläolo", async () => {
     const buffer = await generateExcel(projekti as DBProjekti, true, Vaihe.NAHTAVILLAOLO, "2024-02-21");
     fs.writeFileSync(__dirname + "/maanomistajaluettelo_nahtavillaolo.xlsx", buffer);
-    let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistön omistajat" });
+    let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
-    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistön omistajat" });
+    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös", async () => {
     const buffer = await generateExcel(projekti as DBProjekti, true, Vaihe.HYVAKSYMISPAATOS, "2024-02-21");
     fs.writeFileSync(__dirname + "/maanomistajaluettelo_hyvaksymispaatos.xlsx", buffer);
-    let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistön omistajat" });
+    let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
-    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistön omistajat" });
+    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
     rows = await readXlsxFile(buffer, { sheet: "Suomi.fi muistuttajat" });
     expect(rows).toMatchSnapshot();
@@ -144,22 +172,76 @@ describe("tiedotettavatExcel", () => {
   });
   it("tallenna kiinteistön omistajat excel tiedostoon Suomi.fi", async () => {
     const buffer = await generateExcel(projekti as DBProjekti, true, undefined, undefined, true);
-    const rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistön omistajat" });
+    const rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon muut", async () => {
     const buffer = await generateExcel(projekti as DBProjekti, true, undefined, undefined, false);
-    const rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistön omistajat" });
+    const rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon graphql Suomi.fi", async () => {
     const excel = await generateExcelByQuery({ kiinteisto: true, oid: "1.2.3", suomifi: true });
-    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Suomi.fi kiinteistön omistajat" });
+    expect(excel.nimi).to.be.equal("Maanomistajaluettelo (suomi.fi) 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon graphql muut", async () => {
     const excel = await generateExcelByQuery({ kiinteisto: true, oid: "1.2.3", suomifi: false });
-    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muut kiinteistön omistajat" });
+    expect(excel.nimi).to.be.equal("Maanomistajaluettelo (muilla tavoin) 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
+  });
+  it("tallenna kiinteistön omistajat excel tiedostoon graphql kaikki", async () => {
+    const excel = await generateExcelByQuery({ kiinteisto: true, oid: "1.2.3", suomifi: null });
+    expect(excel.nimi).to.be.equal("Maanomistajaluettelo 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Kiinteistönomistajat" });
+    expect(rows).toMatchSnapshot();
+  });
+  it("tallenna muistuttajat excel tiedostoon graphql Suomi.fi", async () => {
+    const excel = await generateExcelByQuery({ kiinteisto: false, oid: "1.2.3", suomifi: true });
+    expect(excel.nimi).to.be.equal("Muistuttajat (suomi.fi) 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Suomi.fi muistuttajat" });
+    expect(rows).toMatchSnapshot();
+  });
+  it("tallenna muistuttajat  excel tiedostoon graphql muut", async () => {
+    const excel = await generateExcelByQuery({ kiinteisto: false, oid: "1.2.3", suomifi: false });
+    expect(excel.nimi).to.be.equal("Muistuttajat (muilla tavoin) 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muut muistuttajat" });
+    expect(rows).toMatchSnapshot();
+  });
+  it("tallenna muistuttajat excel tiedostoon graphql kaikki", async () => {
+    const excel = await generateExcelByQuery({ kiinteisto: false, oid: "1.2.3", suomifi: null });
+    expect(excel.nimi).to.be.equal("Muistuttajat 20240227.xlsx");
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muistuttajat" });
+    expect(rows).toMatchSnapshot();
+  });
+  it("tallenna maanomistajaluettelo excel nähtävilläolo tie", async () => {
+    const file = sinon.stub(fileService, "createFileToProjekti");
+    await tallennaMaanomistajaluettelo(projekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 1);
+    const createParams = file.getCall(0).args[0];
+    expect(createParams.fileName).to.be.equal("T416 Maanomistajaluettelo 20240228.xlsx");
+    file.restore();
+  });
+  it("tallenna maanomistajaluettelo excel nähtävilläolo yleis", async () => {
+    const file = sinon.stub(fileService, "createFileToProjekti");
+    await tallennaMaanomistajaluettelo(yleisProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 1);
+    const createParams = file.getCall(0).args[0];
+    expect(createParams.fileName).to.be.equal("Y416 Maanomistajaluettelo 20240228.xlsx");
+    file.restore();
+  });
+  it("tallenna maanomistajaluettelo excel nähtävilläolo yleis 2", async () => {
+    const file = sinon.stub(fileService, "createFileToProjekti");
+    await tallennaMaanomistajaluettelo(yleisProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 2);
+    const createParams = file.getCall(0).args[0];
+    expect(createParams.fileName).to.be.equal("Y416 Maanomistajaluettelo 20240228 2.xlsx");
+    file.restore();
+  });
+  it("tallenna maanomistajaluettelo excel hyväksymispäätös", async () => {
+    const file = sinon.stub(fileService, "createFileToProjekti");
+    await tallennaMaanomistajaluettelo(rataProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.HYVAKSYMISPAATOS, "2024-02-28", 1);
+    const createParams = file.getCall(0).args[0];
+    expect(createParams.fileName).to.be.equal("R417 Maanomistajaluettelo ja muistuttajat 20240228.xlsx");
+    file.restore();
   });
 });

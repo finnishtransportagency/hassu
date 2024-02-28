@@ -167,7 +167,8 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       projekti,
       new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
       this.vaihe,
-      julkaisu.kuulutusPaiva
+      julkaisu.kuulutusPaiva,
+      julkaisu.id
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);

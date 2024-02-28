@@ -64,6 +64,65 @@ Array [
 ]
 `;
 
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon graphql kaikki 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
 exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon graphql muut 1`] = `
 Array [
   Array [
@@ -493,6 +552,93 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat  excel tiedostoon graphql muut 1`] = `
+Array [
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql Suomi.fi 1`] = `
+Array [
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Tytti Testaaja",
+    "Osoite 456",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Matti Testaaja",
+    "Osoite 123",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql kaikki 1`] = `
+Array [
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Tytti Testaaja",
+    "Osoite 456",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Matti Testaaja",
+    "Osoite 123",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
 ]
