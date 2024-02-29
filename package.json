@@ -256,7 +256,6 @@
     "deploy:database": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy database --require-approval never",
     "postdeploy:database": "npm run setupenvironment",
     "diff:backend": "./deployment/bin/runcdk.sh diff backend",
-    "predeploy:backend": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy -e backend --require-approval never && npm run setupenvironment && npm run graphQLIntrospection",
     "deploy:backend": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never && npm run setupenvironment && npm run graphQLIntrospection",
     "deploy:backend:hotswap": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "deploy:backend:hotswap-fallback": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap-fallback",
