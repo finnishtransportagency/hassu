@@ -76,7 +76,7 @@ class MuistutusHandler {
 
     await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
 
-    const loggedInUser = getSuomiFiCognitoKayttaja();
+    const loggedInUser = this.getLoggedInUser();
 
     const henkilotunnus = loggedInUser?.["custom:hetu"];
 
@@ -108,6 +108,10 @@ class MuistutusHandler {
     };
     await getSQS().sendMessage({ QueueUrl: await parameters.getSuomiFiSQSUrl(), MessageBody: JSON.stringify(msg) });
     return "OK";
+  }
+
+  getLoggedInUser() {
+    return getSuomiFiCognitoKayttaja();
   }
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {

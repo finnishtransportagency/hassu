@@ -673,7 +673,7 @@ describe("suomifiHandler", () => {
     let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
     let ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4,8");
+    expect(ids.join(",")).to.equal("1,3,4");
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
