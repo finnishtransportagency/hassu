@@ -61,6 +61,7 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
     const aineistoManager = new ProjektiTiedostoManager(projektiFromDB);
     return {
       __typename: "ProjektinTila",
+      oid,
       aineistotValmiit: aineistoManager.isReady(),
     };
   } else {

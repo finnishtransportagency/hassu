@@ -25,6 +25,7 @@ import {
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { Status } from "hassu-common/graphql/apiModel";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -526,7 +527,8 @@ export class ProjektiDatabase {
     oid: string,
     omistajahakuKaynnistetty: string | null,
     omistajahakuVirhe: boolean,
-    kiinteistotunnusMaara: number | null
+    kiinteistotunnusMaara: number | null,
+    status: Status | null = null
   ) {
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
@@ -534,16 +536,18 @@ export class ProjektiDatabase {
         oid,
       },
       UpdateExpression:
-        "SET #omistajahakuKaynnistetty = :omistajahakuKaynnistetty, #omistajahakuVirhe = :omistajahakuVirhe, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
+        "SET #omistajahakuKaynnistetty = :omistajahakuKaynnistetty, #omistajahakuVirhe = :omistajahakuVirhe, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara, #omistajahakuStatus = :omistajahakuStatus",
       ExpressionAttributeNames: {
         ["#omistajahakuVirhe"]: "omistajahakuVirhe",
         ["#omistajahakuKaynnistetty"]: "omistajahakuKaynnistetty",
         ["#omistajahakuKiinteistotunnusMaara"]: "omistajahakuKiinteistotunnusMaara",
+        ["#omistajahakuStatus"]: "omistajahakuStatus",
       },
       ExpressionAttributeValues: {
         ":omistajahakuVirhe": omistajahakuVirhe,
         ":omistajahakuKaynnistetty": omistajahakuKaynnistetty,
         ":omistajahakuKiinteistotunnusMaara": kiinteistotunnusMaara,
+        ":omistajahakuStatus": status,
       },
     });
     return await getDynamoDBDocumentClient().send(params);

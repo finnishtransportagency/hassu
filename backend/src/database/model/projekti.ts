@@ -1,4 +1,4 @@
-import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -185,6 +185,7 @@ export type DBProjekti = {
   omistajahakuVirhe?: boolean;
   omistajahakuKaynnistetty?: string;
   omistajahakuKiinteistotunnusMaara?: number;
+  omistajahakuStatus?: Status | null;
 };
 
 export type Asianhallinta = {

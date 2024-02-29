@@ -654,6 +654,7 @@ export class HassuBackendStack extends Stack {
         "omistajahakuVirhe",
         "omistajahakuKaynnistetty",
         "omistajahakuKiinteistotunnusMaara",
+        "omistajahakuStatus",
       ],
     });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);

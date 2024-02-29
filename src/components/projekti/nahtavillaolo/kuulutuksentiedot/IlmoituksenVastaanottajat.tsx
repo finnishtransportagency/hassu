@@ -14,6 +14,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -222,6 +223,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
               </HassuGrid>
             ))}
           </SectionContent>
+          <KiinteistonomistajatOhje />
         </Section>
       </div>
     </>

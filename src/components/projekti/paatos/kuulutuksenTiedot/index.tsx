@@ -159,7 +159,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
               {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi paatosTyyppi={paatosTyyppi} />}
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
-              <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} />
+              <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
 
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />

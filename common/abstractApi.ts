@@ -77,6 +77,7 @@ import {
   LataaTiedotettavatExcelQueryVariables,
   HaeProjektinTiedottamistiedotQueryVariables,
   ProjektinTiedottaminen,
+  Status,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -608,11 +609,12 @@ export abstract class AbstractApi {
     } as SuoritaTestiKomentoMutationVariables);
   }
 
-  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[]): Promise<string> {
+  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[], status: Status| null | undefined): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset, {
       oid,
       geoJSON,
       kiinteistotunnukset,
+      status,
     } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 

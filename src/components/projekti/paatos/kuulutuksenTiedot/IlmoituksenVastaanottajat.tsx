@@ -15,6 +15,9 @@ import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutu
 import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
+import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
+import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -23,9 +26,10 @@ interface HelperType {
 
 interface Props {
   paatosVaihe: HyvaksymisPaatosVaihe | null | undefined;
+  paatosTyyppi: PaatosTyyppi;
 }
 
-export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -216,6 +220,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
               </HassuGrid>
             ))}
           </SectionContent>
+          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje />}
         </Section>
       </div>
     </>
