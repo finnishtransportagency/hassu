@@ -14,6 +14,7 @@ import useApi from "src/hooks/useApi";
 import IconButton from "@components/button/IconButton";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
+import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 
 export default function Muistuttajat() {
   return (
@@ -160,6 +161,8 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
     [api]
   );
 
+  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
+
   return (
     <TiedottaminenPageLayout projekti={projekti}>
       <Section>
@@ -175,7 +178,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           </p>
           <GrayBackgroundText>
             <p>
-              Muistuttajia on yhteensä <b>{projekti.muistuttajaMaara ?? 0} henkilö(ä)</b>.
+              Muistuttajia on yhteensä <b>{projektinTiedottaminen?.muistuttajaMaara ?? 0} henkilö(ä)</b>.
             </p>
           </GrayBackgroundText>
         </ContentSpacer>

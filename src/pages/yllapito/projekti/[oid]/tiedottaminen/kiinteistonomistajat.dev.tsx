@@ -12,13 +12,13 @@ import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
 import KiinteistonomistajaHaitari, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
-import { useProjektinTila } from "src/hooks/useProjektinTila";
 import useApi from "src/hooks/useApi";
 import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
 import { ColumnDef } from "@tanstack/react-table";
 import { useProjekti } from "src/hooks/useProjekti";
+import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -162,18 +162,18 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     setIsOpen(true);
   }, []);
 
-  const { data: projektinTila } = useProjektinTila();
+  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
 
   const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
   const { mutate } = useProjekti();
 
   useEffect(() => {
-    if (projektinTila?.omistajahakuTila === OmistajahakuTila.VIRHE) {
+    if (projektinTiedottaminen?.omistajahakuTila === OmistajahakuTila.VIRHE) {
       showErrorMessage("Omistajien haussa on tapahtunut virhe. Yritä myöhemmin uudelleen tai ota yhteys järjestelmän ylläpitäjään");
-    } else if (projektinTila?.omistajahakuTila === OmistajahakuTila.VIRHE_AIKAKATKAISU) {
+    } else if (projektinTiedottaminen?.omistajahakuTila === OmistajahakuTila.VIRHE_AIKAKATKAISU) {
       showErrorMessage("Omistajien haku aikakatkaistiin. Yritä myöhemmin uudelleen tai ota yhteys järjestelmän ylläpitäjään");
     }
-    const newHakuKaynnissa = projektinTila?.omistajahakuTila === OmistajahakuTila.KAYNNISSA;
+    const newHakuKaynnissa = projektinTiedottaminen?.omistajahakuTila === OmistajahakuTila.KAYNNISSA;
     const hakuPaattymassa = hakuKaynnissa && !newHakuKaynnissa;
     const hakuAlkamassa = !hakuKaynnissa && newHakuKaynnissa;
     if (hakuPaattymassa) {
@@ -184,7 +184,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
       setSuomifiExpanded(false);
     }
     setHakuKaynnissa(newHakuKaynnissa);
-  }, [hakuKaynnissa, mutate, projektinTila?.omistajahakuTila, showErrorMessage]);
+  }, [hakuKaynnissa, mutate, projektinTiedottaminen?.omistajahakuTila, showErrorMessage]);
 
   const api = useApi();
 
@@ -234,9 +234,8 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
         </Stack>
         <GrayBackgroundText>
           <p>
-            Listalla on yhteensä <b>{!hakuKaynnissa ? projekti.kiinteistonomistajaMaara ?? 0 : "x"} kiinteistönomistaja(a)</b>.
-            Kiinteistötunnuksia on {!hakuKaynnissa ? projekti.kiinteistotunnusMaara ?? 0 : projektinTila?.omistajahakuKiinteistotunnusMaara}
-            .
+            Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistaja(a)</b>.
+            Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
           </p>
         </GrayBackgroundText>
         <KiinteistonomistajaHaitari
@@ -277,7 +276,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
       >
         <DialogContent>
           <p>Tietojen hakuaika kiinteistöjen osalta vaihtelee kartan alueen laajuuden mukaan. Älä sulje selainta tai selainikkunaa.</p>
-          <p>Haettavien kiinteistöjen määrä {projektinTila?.omistajahakuKiinteistotunnusMaara ?? "x"} kpl.</p>
+          <p>Haettavien kiinteistöjen määrä {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0} kpl.</p>
         </DialogContent>
       </HassuDialog>
     </TiedottaminenPageLayout>

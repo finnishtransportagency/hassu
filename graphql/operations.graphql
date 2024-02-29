@@ -32,6 +32,7 @@ type Query {
   haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat
   lataaTiedotettavatExcel(oid: String!, suomifi: Boolean, kiinteisto: Boolean!): Excel
   haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, query: String, from: Int, size: Int): Muistuttajat
+  haeProjektinTiedottamistiedot(oid: String!): ProjektinTiedottaminen
 }
 
 type Mutation {

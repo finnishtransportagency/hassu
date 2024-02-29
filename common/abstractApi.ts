@@ -75,6 +75,8 @@ import {
   Muistuttajat,
   Excel,
   LataaTiedotettavatExcelQueryVariables,
+  HaeProjektinTiedottamistiedotQueryVariables,
+  ProjektinTiedottaminen,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -345,6 +347,12 @@ export const apiConfig: ApiConfig = {
     name: "lataaTiedotettavatExcel",
     operationType: OperationType.Query,
     graphql: queries.lataaTiedotettavatExcel,
+    isYllapitoOperation: true,
+  },
+  haeProjektinTiedottamistiedot: {
+    name: "haeProjektinTiedottamistiedot",
+    operationType: OperationType.Query,
+    graphql: queries.haeProjektinTiedottamistiedot,
     isYllapitoOperation: true,
   },
 };
@@ -667,6 +675,12 @@ export abstract class AbstractApi {
       suomifi,
       kiinteisto,
     } as LataaTiedotettavatExcelQueryVariables);
+  }
+
+  async haeProjektinTiedottamistiedot(oid: string): Promise<ProjektinTiedottaminen> {
+    return await this.callYllapitoAPI(apiConfig.haeProjektinTiedottamistiedot, {
+      oid,
+    } as HaeProjektinTiedottamistiedotQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;
