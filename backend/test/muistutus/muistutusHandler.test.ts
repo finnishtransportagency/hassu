@@ -23,7 +23,6 @@ import { parameters } from "../../src/aws/parameters";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
-import { mockOpenSearch } from "../../commonTestUtil/mockOpenSearch";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -158,7 +157,6 @@ describe("muistutusHandler", () => {
 
       it("should save muistuttajat", async () => {
         const dbMock = mockClient(DynamoDBDocumentClient);
-        mockOpenSearch;
         dbMock
           .on(GetCommand, { TableName: config.projektiTableName })
           .resolves({ Item: { id: "1.2.3", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });

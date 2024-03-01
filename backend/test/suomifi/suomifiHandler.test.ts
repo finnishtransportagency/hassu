@@ -94,9 +94,8 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mockClient(LambdaClient)
-      .on(InvokeCommand)
-      .resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
+    // prettier-ignore
+    mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
   beforeEach(() => {

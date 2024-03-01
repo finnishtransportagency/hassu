@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import useApi from "./useApi";
-import { useProjekti } from "./useProjekti";
 import { API } from "@services/api/commonApi";
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
 import { apiConfig, ProjektinTiedottaminen } from "@services/api";
+import { useRouter } from "next/router";
 
 export type UseIsProjektinTilaOptions =
   | SWRConfiguration<ProjektinTiedottaminen | null, any, Fetcher<ProjektinTiedottaminen | null>>
@@ -19,11 +19,12 @@ const defaultOptions = {
 export const useProjektinTiedottaminen = (_config: UseIsProjektinTilaOptions = {}) => {
   const config: UseIsProjektinTilaOptions = useMemo(() => ({ ...defaultOptions, ..._config }), [_config]);
   const api = useApi();
-  const { data: projekti } = useProjekti();
+  const router = useRouter();
 
   const projektiLoader = useMemo(() => getProjektinTilaLoader(api), [api]);
 
-  return useSWR([apiConfig.haeProjektinTiedottamistiedot.graphql, projekti?.oid], projektiLoader, config);
+  const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
+  return useSWR([apiConfig.haeProjektinTiedottamistiedot.graphql, oid], projektiLoader, config);
 };
 
 const getProjektinTilaLoader = (api: API) => async (_query: string, oid: string | undefined) => {
