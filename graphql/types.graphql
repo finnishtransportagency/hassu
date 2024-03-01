@@ -203,6 +203,7 @@ type ProjektinTiedottaminen {
   kiinteistotunnusMaara: Int
   kiinteistonomistajaMaara: Int
   omistajahakuTila: OmistajahakuTila
+  omistajahakuStatus: Status
 }
 
 type Asianhallinta {

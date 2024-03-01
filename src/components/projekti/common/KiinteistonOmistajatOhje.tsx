@@ -1,15 +1,15 @@
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektinTila } from "@services/api";
-import { useProjektinTila } from "src/hooks/useProjektinTila";
+import { ProjektinTiedottaminen } from "@services/api";
+import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 
 interface ProjektinTilaProps {
-  projektinTila: ProjektinTila;
+  tiedottaminen: ProjektinTiedottaminen;
 }
 
-function KiinteistojaEiLisatty({ projektinTila }: ProjektinTilaProps) {
+function KiinteistojaEiLisatty({ tiedottaminen: projektinTila }: ProjektinTilaProps) {
   return (
     <>
       <p>
@@ -26,7 +26,7 @@ function KiinteistojaEiLisatty({ projektinTila }: ProjektinTilaProps) {
   );
 }
 
-function KiinteistotLisatty({ projektinTila }: ProjektinTilaProps) {
+function KiinteistotLisatty({ tiedottaminen: projektinTila }: ProjektinTilaProps) {
   return (
     <p>
       Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen-sivun{" "}
@@ -41,15 +41,15 @@ function KiinteistotLisatty({ projektinTila }: ProjektinTilaProps) {
 
 export default function KiinteistonomistajatOhje() {
   const { data } = useSuomifiUser();
-  const { data: projektinTila } = useProjektinTila({ refreshInterval: 0 });
-  if (data?.suomifiEnabled && projektinTila) {
+  const { data: tiedottaminen } = useProjektinTiedottaminen({ refreshInterval: 0 });
+  if (data?.suomifiEnabled && tiedottaminen) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
-        {projektinTila.omistajahakuStatus !== null ? (
-          <KiinteistotLisatty projektinTila={projektinTila} />
+        {tiedottaminen.omistajahakuStatus !== null ? (
+          <KiinteistotLisatty tiedottaminen={tiedottaminen} />
         ) : (
-          <KiinteistojaEiLisatty projektinTila={projektinTila} />
+          <KiinteistojaEiLisatty tiedottaminen={tiedottaminen} />
         )}
       </SectionContent>
     );
