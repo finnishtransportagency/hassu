@@ -656,7 +656,7 @@ export abstract class AbstractApi {
     });
   }
 
-  async lataaTiedotettavatExcel(oid: string, suomifi: boolean, kiinteisto: boolean): Promise<Excel> {
+  async lataaTiedotettavatExcel(oid: string, suomifi: boolean | undefined | null, kiinteisto: boolean): Promise<Excel> {
     return await this.callYllapitoAPI(apiConfig.lataaTiedotettavatExcel, {
       oid,
       suomifi,

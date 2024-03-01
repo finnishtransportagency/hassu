@@ -28,7 +28,7 @@ import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { Aineisto } from "../database/model";
 import Mail from "nodemailer/lib/mailer";
@@ -88,6 +88,7 @@ export type PersistFileProperties = {
   uploadedFileSource: string;
   oid: string;
   asiakirjaTyyppi?: AsiakirjaTyyppi;
+  kieli?: Kieli;
 };
 
 export type DeleteFileProperties = { filePathInProjekti: string; oid: string; reason: string };
@@ -158,6 +159,9 @@ export class FileService {
       const metadata: { [key: string]: string } = {};
       if (param.asiakirjaTyyppi) {
         metadata[S3_METADATA_ASIAKIRJATYYPPI] = param.asiakirjaTyyppi;
+      }
+      if (param.kieli) {
+        metadata[S3_METADATA_KIELI] = param.kieli;
       }
       await getS3Client().send(
         new CopyObjectCommand({

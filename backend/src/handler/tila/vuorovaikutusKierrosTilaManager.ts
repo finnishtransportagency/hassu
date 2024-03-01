@@ -39,6 +39,7 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
+import { log } from "../../logger";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -164,6 +165,13 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vuorovaikutusKierrosJulkaisu);
 
     const sentMessageInfo = await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
+    const aikaleima = localDateTimeString();
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
+      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
+    );
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
     const oid = projekti.oid;
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
@@ -174,17 +182,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       },
     });
 
-    const aikaleima = localDateTimeString();
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
-      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
-    );
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-    );
-
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
-
     await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva, PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS);
+    log.info("VuorovaikutusKierrosJulkaisu ennen lisäystä", { vuorovaikutusKierrosJulkaisu });
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 

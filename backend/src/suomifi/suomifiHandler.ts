@@ -11,7 +11,7 @@ import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { AsiakirjaTyyppi, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
   HyvaksymisPaatosVaihePDF,
@@ -35,6 +35,7 @@ import PdfMerger from "pdf-merger-js";
 import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
 import { DBOmistaja, chunkArray, omistajaDatabase } from "../database/omistajaDatabase";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { translate } from "../util/localization";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -60,6 +61,21 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
 }
 
+export function parseLaskutusTunniste(tunniste?: string) {
+  if (tunniste) {
+    const parsedTunniste: Record<string, string> = {};
+    const tunnisteet = tunniste.split(",");
+    for (let i = 0; i < tunnisteet.length; i++) {
+      const keyValue = tunnisteet[i].split(":");
+      if (keyValue.length === 2) {
+        parsedTunniste[keyValue[0].trim()] = keyValue[1].trim();
+      }
+    }
+    return parsedTunniste;
+  }
+  return {};
+}
+
 async function getClient(): Promise<SuomiFiClient> {
   if (config.isInTest) {
     if (!mockSuomiFiClient) {
@@ -76,8 +92,7 @@ async function getClient(): Promise<SuomiFiClient> {
       endpoint: cfg.endpoint,
       palveluTunnus: cfg.palvelutunnus,
       viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: cfg.laskutustunniste,
-      laskutusTunnisteEly: cfg.laskutustunnisteely,
+      laskutusTunniste: parseLaskutusTunniste(cfg.laskutustunniste),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
     });
@@ -294,10 +309,23 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     if (!pdf) {
       return;
     }
+    const otsikko = tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? "Ilmoitus suunnitelman nähtäville asettamisesta" : "Ilmoitus suunnitelman hyväksymispäätöksestä";
+    const sisaltoNahtavillaolo = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    const sisaltoHyvaksymispaatos = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
     const viesti: PdfViesti = {
       nimi: kohde.nimi,
-      otsikko: "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-      sisalto: "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+      otsikko,
+      sisalto: tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? sisaltoNahtavillaolo : sisaltoHyvaksymispaatos,
       lahiosoite: kohde.lahiosoite,
       postinumero: kohde.postinumero,
       postitoimipaikka: kohde.postitoimipaikka,
@@ -309,7 +337,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         nimi: convertPdfFileName(pdf.tiedostoNimi),
         sisalto: pdf.file,
       },
-      vaylavirasto: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      suunnittelustaVastaavaViranomainen: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen,
     };
     const client = await getClient();
     const resp = await client.lahetaViesti(viesti);

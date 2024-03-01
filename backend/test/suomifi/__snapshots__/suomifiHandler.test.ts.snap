@@ -6,10 +6,16 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
-  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Väylävirasto",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
     "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
@@ -18,7 +24,6 @@ Object {
       "type": "Buffer",
     },
   },
-  "vaylavirasto": false,
   "ytunnus": undefined,
 }
 `;
@@ -29,10 +34,16 @@ Object {
   "lahiosoite": "Svart katten's gatan 13 c 13, B.O.X 1010",
   "maa": "SE",
   "nimi": "Minerva Marttila",
-  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "SE-",
   "postitoimipaikka": "01230 STOCKHOLM, Ruotsii",
-  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Väylävirasto",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
     "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
@@ -41,7 +52,6 @@ Object {
       "type": "Buffer",
     },
   },
-  "vaylavirasto": false,
   "ytunnus": undefined,
 }
 `;
@@ -144,10 +154,16 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
-  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Väylävirasto",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
     "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
@@ -156,7 +172,6 @@ Object {
       "type": "Buffer",
     },
   },
-  "vaylavirasto": false,
   "ytunnus": undefined,
 }
 `;
@@ -167,10 +182,16 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "otsikko": "Ilmoitus suunnitelman hyväksymispäätöksestä",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
-  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
+
+Ystävällisin terveisin
+Pirkanmaan ELY-keskus",
+  "suunnittelustaVastaavaViranomainen": "PIRKANMAAN_ELY",
   "tiedosto": Object {
     "kuvaus": "T431_4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
     "nimi": "T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
@@ -179,7 +200,6 @@ Object {
       "type": "Buffer",
     },
   },
-  "vaylavirasto": false,
   "ytunnus": undefined,
 }
 `;
@@ -190,10 +210,16 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
-  "sisalto": "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Uudenmaan ELY-keskus",
+  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
     "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
@@ -202,7 +228,6 @@ Object {
       "type": "Buffer",
     },
   },
-  "vaylavirasto": false,
   "ytunnus": undefined,
 }
 `;

@@ -3,6 +3,8 @@ import { SuomiFiClient, SuomiFiConfig, getSuomiFiClient } from "../src/suomifi/v
 import express from "express";
 import fs from "fs";
 import { LisaaKohteitaResponse, HaeAsiakkaitaResponse } from "../src/suomifi/viranomaispalvelutwsinterface";
+import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { parseLaskutusTunniste } from "../src/suomifi/suomifiHandler";
 
 const app = express();
 const port = 8081;
@@ -167,8 +169,7 @@ euWestSSMClient
           .then((config) => {
             if (config && key && cert) {
               const partialCfg: Partial<SuomiFiConfig> = {
-                laskutustunniste: "xxx",
-                laskutustunnisteely: "yyy",
+                laskutustunniste: `${SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO}:123456,${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:456789`,
               };
               config.split("\n").forEach((e) => {
                 const v = e.split("=");
@@ -189,8 +190,7 @@ euWestSSMClient
                 publicCertificate: sign ? cert : undefined,
                 viranomaisTunnus: cfg.viranomaistunnus,
                 palveluTunnus: cfg.palvelutunnus,
-                laskutusTunniste: cfg.laskutustunniste,
-                laskutusTunnisteEly: cfg.laskutustunnisteely,
+                laskutusTunniste: parseLaskutusTunniste(partialCfg.laskutustunniste),
               }).then((client) => {
                 soapClient = client;
                 if (process.argv.length === 2 || process.argv[2] === "tila") {
@@ -212,7 +212,7 @@ euWestSSMClient
                     otsikko: "VLS PDF viestin otsikko",
                     sisalto: "VLS PDF viestin sisältö",
                     tiedosto: { kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) },
-                    vaylavirasto: true,
+                    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
                   });
                 } else if (process.argv[2] === "hae") {
                   return client.haeAsiakas("010280-952L", "SSN");

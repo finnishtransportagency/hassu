@@ -30,7 +30,7 @@ export type PdfViesti = Viesti & {
   postinumero: string;
   postitoimipaikka: string;
   maa: string;
-  vaylavirasto: boolean;
+  suunnittelustaVastaavaViranomainen?: string | null;
   tiedosto: Tiedosto;
 };
 
@@ -41,8 +41,7 @@ export type Options = {
   publicCertificate?: string;
   viranomaisTunnus: string;
   palveluTunnus: string;
-  laskutusTunniste?: string;
-  laskutusTunnisteEly?: string;
+  laskutusTunniste: Record<string, string>;
 };
 
 export type SuomiFiConfig = {
@@ -51,7 +50,6 @@ export type SuomiFiConfig = {
   palvelutunnus: string;
   viranomaistunnus: string;
   laskutustunniste?: string;
-  laskutustunnisteely?: string;
 };
 
 export type SuomiFiClient = {
@@ -160,6 +158,20 @@ async function toBase64(stream: Readable | Buffer): Promise<string> {
   });
 }
 
+function getLaskutus(viesti: PdfViesti, options: Options) {
+  const laskutusTunniste = viesti.suunnittelustaVastaavaViranomainen
+    ? options.laskutusTunniste[viesti.suunnittelustaVastaavaViranomainen]
+    : undefined;
+  if (laskutusTunniste) {
+    return {
+      Laskutus: {
+        Tunniste: laskutusTunniste,
+      },
+    };
+  }
+  return {};
+}
+
 async function lahetaViesti(
   client: ViranomaispalvelutWsInterfaceClient,
   options: Options,
@@ -211,8 +223,8 @@ async function lahetaViesti(
         ],
       },
       Tulostustoimittaja: "Posti",
-      Laskutus: { Tunniste: viesti.vaylavirasto ? options.laskutusTunniste : options.laskutusTunnisteEly },
-      Varitulostus: "false",
+      ...getLaskutus(viesti, options),
+      Varitulostus: "true",
     },
     Viranomainen: getViranomainen(options),
   });

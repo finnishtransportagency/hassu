@@ -20,7 +20,7 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
       authorization: createAuthorizationHeader(username, password),
     });
 
-    const excel = await api.lataaTiedotettavatExcel(oid, suomifi === "true", kiinteisto === "true");
+    const excel = await api.lataaTiedotettavatExcel(oid, suomifi ? suomifi === "true" : null, kiinteisto === "true");
     res.setHeader("Content-Type", excel.tyyppi);
     res.setHeader("Content-disposition", "inline; filename=" + excel.nimi);
     res.send(Buffer.from(excel.sisalto, "base64"));

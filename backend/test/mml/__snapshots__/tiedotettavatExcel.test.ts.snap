@@ -12,7 +12,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi Sukunimi",
     "Osoite 1",
     "00100",
@@ -21,7 +21,7 @@ Array [
     "Suomi.fi",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi2 Sukunimi2",
     "Osoite 2",
     "01600",
@@ -44,7 +44,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi Sukunimi",
     "Osoite 1",
     "00100",
@@ -53,13 +53,72 @@ Array [
     "Suomi.fi",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi2 Sukunimi2",
     "Osoite 2",
     "01600",
     "Vantaa",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon graphql kaikki 1`] = `
+Array [
+  Array [
+    "Kiinteistötunnus",
+    "Omistajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi Sukunimi",
+    "Osoite 1",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi2 Sukunimi2",
+    "Osoite 2",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "123-456-1-291",
+    "Etunimi3 Sukunimi3",
+    "Osoite 3",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
+    "Yritys Oy Ab",
+    "Osoite 4",
+    "96101",
+    "Rovaniemi",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
   ],
 ]
 `;
@@ -76,7 +135,16 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
     "02600",
@@ -85,21 +153,12 @@ Array [
     "Kirjeitse",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Yritys Oy Ab",
     "Osoite 4",
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "123-456",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -144,7 +203,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi Sukunimi",
     "Osoite 1",
     "00100",
@@ -153,7 +212,7 @@ Array [
     "Suomi.fi",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi2 Sukunimi2",
     "Osoite 2",
     "01600",
@@ -203,7 +262,16 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
     "02600",
@@ -212,7 +280,7 @@ Array [
     "Kirjeitse",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Yritys Oy Ab",
     "Osoite 4",
     "96101",
@@ -220,13 +288,102 @@ Array [
     "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös 3`] = `
+Array [
   Array [
-    "123-456",
+    "Kuulutus suunnitelman hyväksymisestä",
     null,
     null,
     null,
     null,
-    "22.02.2024 08:43:12+02:00",
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Muistuttajien tiedotus Suomi.fi -palvelulla",
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Tytti Testaaja",
+    "Osoite 456",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Matti Testaaja",
+    "Osoite 123",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös 4`] = `
+Array [
+  Array [
+    "Kuulutus suunnitelman hyväksymisestä",
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "21.02.2024",
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Muistuttajien tiedotus muilla tavoin",
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -244,7 +401,16 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
     "02600",
@@ -253,21 +419,12 @@ Array [
     "Kirjeitse",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Yritys Oy Ab",
     "Osoite 4",
     "96101",
     "Rovaniemi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
-  ],
-  Array [
-    "123-456",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
     "Kirjeitse",
   ],
 ]
@@ -312,7 +469,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi Sukunimi",
     "Osoite 1",
     "00100",
@@ -321,7 +478,7 @@ Array [
     "Suomi.fi",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Etunimi2 Sukunimi2",
     "Osoite 2",
     "01600",
@@ -371,7 +528,16 @@ Array [
     "Tiedotustapa",
   ],
   Array [
-    "123-456",
+    "41-56-1-0",
+    null,
+    null,
+    null,
+    null,
+    "22.02.2024 08:43:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "123-456-1-291",
     "Etunimi3 Sukunimi3",
     "Osoite 3",
     "02600",
@@ -380,7 +546,7 @@ Array [
     "Kirjeitse",
   ],
   Array [
-    "123-456",
+    "123-456-1-291",
     "Yritys Oy Ab",
     "Osoite 4",
     "96101",
@@ -388,14 +554,92 @@ Array [
     "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
   ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat  excel tiedostoon graphql muut 1`] = `
+Array [
   Array [
-    "123-456",
-    null,
-    null,
-    null,
-    null,
-    "22.02.2024 08:43:12+02:00",
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
     "Kirjeitse",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql Suomi.fi 1`] = `
+Array [
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Tytti Testaaja",
+    "Osoite 456",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Matti Testaaja",
+    "Osoite 123",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+]
+`;
+
+exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql kaikki 1`] = `
+Array [
+  Array [
+    "Muistuttajan nimi",
+    "Postiosoite",
+    "Postinumero",
+    "Postitoimipaikka",
+    "Tiedot haettu",
+    "Tiedotustapa",
+  ],
+  Array [
+    "Teppo Muistuttaja",
+    "Muistuttajan osoite",
+    "00100",
+    "Helsinki",
+    "21.02.2024 10:01:12+02:00",
+    "Kirjeitse",
+  ],
+  Array [
+    "Tytti Testaaja",
+    "Osoite 456",
+    "02600",
+    "Espoo",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
+  ],
+  Array [
+    "Matti Testaaja",
+    "Osoite 123",
+    "01600",
+    "Vantaa",
+    "21.02.2024 10:01:12+02:00",
+    "Suomi.fi",
   ],
 ]
 `;

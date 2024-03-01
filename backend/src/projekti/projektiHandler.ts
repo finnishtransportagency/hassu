@@ -452,7 +452,8 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   container: T | undefined,
   path: PathTuple,
   keys: K[],
-  asiakirjaTyypit: API.AsiakirjaTyyppi[]
+  asiakirjaTyypit: API.AsiakirjaTyyppi[],
+  kielet: API.Kieli[]
 ): Promise<T | undefined> {
   if (!container) {
     return container;
@@ -468,6 +469,7 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
           ladattuTiedosto,
           targetFilePathInProjekti: path.yllapitoPath,
           asiakirjaTyyppi: asiakirjaTyypit[i],
+          kieli: kielet[i],
         });
         break;
       case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
@@ -499,7 +501,8 @@ async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).aloituskuulutus(aloitusKuulutus),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.ALOITUSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA]
+        [API.AsiakirjaTyyppi.ALOITUSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -521,6 +524,7 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
             ladattuTiedosto: kutsuPDFLadattuTiedosto,
             targetFilePathInProjekti: new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath,
             asiakirjaTyyppi: API.AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+            kieli: API.Kieli.POHJOISSAAME,
           });
           break;
         case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
@@ -551,7 +555,8 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE]
+        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -574,7 +579,8 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         [
           API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
           API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
-        ]
+        ],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -594,7 +600,8 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE]
+        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -617,7 +624,8 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
         [
           API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
           API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
-        ]
+        ],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });

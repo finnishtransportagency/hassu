@@ -54,7 +54,7 @@ export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }:
                 <React.Fragment key={index}>
                   <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
                   <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lahetetty" : "Ei lähetetty"}</p>
+                  <p className={getStyleForRow(index)}>{kunta.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
                   <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
                 </React.Fragment>
               ))}
