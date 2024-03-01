@@ -144,8 +144,6 @@ enum OmistajahakuTila {
 
 type ProjektinTila {
   aineistotValmiit: Boolean
-  omistajahakuTila: OmistajahakuTila
-  omistajahakuKiinteistotunnusMaara: Int
 }
 
 type ProjektipaallikkoVirhe {
@@ -196,6 +194,14 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+}
+
+type ProjektinTiedottaminen {
+  oid: String
+  muistuttajaMaara: Int
+  kiinteistotunnusMaara: Int
+  kiinteistonomistajaMaara: Int
+  omistajahakuTila: OmistajahakuTila
 }
 
 type Asianhallinta {
@@ -1211,9 +1217,7 @@ type Muistuttaja {
 
 type Muistuttajat {
   hakutulosMaara: Int!
-  sivu: Int!
-  sivunKoko: Int!
-  muistuttajat: [Muistuttaja]!
+  muistuttajat: [Muistuttaja!]!
 }
 
 type Excel {

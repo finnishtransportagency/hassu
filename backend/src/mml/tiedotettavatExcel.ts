@@ -22,7 +22,9 @@ function formatDate(date: string | undefined | null, format = "DD.MM.YYYY HH:mm:
 }
 
 function formatKiinteistotunnus(tunnus: string) {
-  return `${Number(tunnus.substring(0, 3))}-${Number(tunnus.substring(3, 6))}-${Number(tunnus.substring(6, 10))}-${Number(tunnus.substring(10))}`;
+  return `${Number(tunnus.substring(0, 3))}-${Number(tunnus.substring(3, 6))}-${Number(tunnus.substring(6, 10))}-${Number(
+    tunnus.substring(10)
+  )}`;
 }
 
 export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQueryVariables): Promise<Excel> {
@@ -30,7 +32,9 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
   const file = await generateExcel(projekti, variables.kiinteisto, undefined, undefined, variables.suomifi);
   return {
     __typename: "Excel",
-    nimi: `${variables.kiinteisto ? "Maanomistajaluettelo" : "Muistuttajat"}${variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muilla tavoin)" : ""} ${dayjs(new Date()).format("YYYYMMDD")}.xlsx`,
+    nimi: `${variables.kiinteisto ? "Maanomistajaluettelo" : "Muistuttajat"}${
+      variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muilla tavoin)" : ""
+    } ${dayjs(new Date()).format("YYYYMMDD")}.xlsx`,
     sisalto: file.toString("base64"),
     tyyppi: CONTENT_TYPE_EXCEL,
   };
@@ -149,34 +153,38 @@ type Rivi = {
 };
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
-  return (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid)).map((o) => {
-    return {
-      id: o.id,
-      kiinteistotunnus: o.kiinteistotunnus,
-      nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
-      postiosoite: o.jakeluosoite ?? "",
-      postinumero: o.postinumero ?? "",
-      postitoimipaikka: o.paikkakunta ?? "",
-      haettu: o.paivitetty ?? o.lisatty,
-      tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
-      suomifiLahetys: o.suomifiLahetys,
-    };
-  }).sort((a, b) => a.kiinteistotunnus.localeCompare(b.kiinteistotunnus));
+  return (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid))
+    .map((o) => {
+      return {
+        id: o.id,
+        kiinteistotunnus: o.kiinteistotunnus,
+        nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
+        postiosoite: o.jakeluosoite ?? "",
+        postinumero: o.postinumero ?? "",
+        postitoimipaikka: o.paikkakunta ?? "",
+        haettu: o.paivitetty ?? o.lisatty,
+        tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
+        suomifiLahetys: o.suomifiLahetys,
+      };
+    })
+    .sort((a, b) => a.kiinteistotunnus.localeCompare(b.kiinteistotunnus));
 }
 
 async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
-  return (await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(oid)).map((m) => {
-    return {
-      id: m.id,
-      nimi: `${m.etunimi} ${m.sukunimi}`,
-      postiosoite: m.lahiosoite ?? "",
-      postinumero: m.postinumero ?? "",
-      postitoimipaikka: m.postitoimipaikka ?? "",
-      haettu: m.paivitetty ?? m.lisatty,
-      tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
-      suomifiLahetys: !!m.henkilotunnus,
-    };
-  }).sort((a, b) => a.tiedotustapa.localeCompare(b.tiedotustapa));
+  return (await muistuttajaDatabase.haeProjektinMuistuttajat(oid))
+    .map((m) => {
+      return {
+        id: m.id,
+        nimi: `${m.etunimi} ${m.sukunimi}`,
+        postiosoite: m.lahiosoite ?? "",
+        postinumero: m.postinumero ?? "",
+        postitoimipaikka: m.postitoimipaikka ?? "",
+        haettu: m.paivitetty ?? m.lisatty,
+        tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
+        suomifiLahetys: !!m.henkilotunnus,
+      };
+    })
+    .sort((a, b) => a.tiedotustapa.localeCompare(b.tiedotustapa));
 }
 
 async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {

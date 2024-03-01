@@ -75,6 +75,8 @@ import {
   Muistuttajat,
   Excel,
   LataaTiedotettavatExcelQueryVariables,
+  HaeProjektinTiedottamistiedotQueryVariables,
+  ProjektinTiedottaminen,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -345,6 +347,12 @@ export const apiConfig: ApiConfig = {
     name: "lataaTiedotettavatExcel",
     operationType: OperationType.Query,
     graphql: queries.lataaTiedotettavatExcel,
+    isYllapitoOperation: true,
+  },
+  haeProjektinTiedottamistiedot: {
+    name: "haeProjektinTiedottamistiedot",
+    operationType: OperationType.Query,
+    graphql: queries.haeProjektinTiedottamistiedot,
     isYllapitoOperation: true,
   },
 };
@@ -618,7 +626,6 @@ export abstract class AbstractApi {
   async haeKiinteistonOmistajat(
     oid: string,
     muutOmistajat: boolean,
-    onlyKiinteistotunnus: boolean,
     query: string | null | undefined,
     from: number | null | undefined,
     size: number | null | undefined
@@ -626,19 +633,25 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
       muutOmistajat,
-      onlyKiinteistotunnus,
       query,
       from,
       size,
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 
-  async haeMuistuttajat(oid: string, sivu: number, muutMuistuttajat: boolean, sivuKoko?: number): Promise<Muistuttajat> {
+  async haeMuistuttajat(
+    oid: string,
+    muutMuistuttajat: boolean,
+    query: string | null | undefined,
+    from: number | null | undefined,
+    size: number | null | undefined
+  ): Promise<Muistuttajat> {
     return await this.callYllapitoAPI(apiConfig.haeMuistuttajat, {
       oid,
-      sivu,
       muutMuistuttajat,
-      sivuKoko,
+      query,
+      from,
+      size,
     } as HaeMuistuttajatQueryVariables);
   }
 
@@ -662,6 +675,12 @@ export abstract class AbstractApi {
       suomifi,
       kiinteisto,
     } as LataaTiedotettavatExcelQueryVariables);
+  }
+
+  async haeProjektinTiedottamistiedot(oid: string): Promise<ProjektinTiedottaminen> {
+    return await this.callYllapitoAPI(apiConfig.haeProjektinTiedottamistiedot, {
+      oid,
+    } as HaeProjektinTiedottamistiedotQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

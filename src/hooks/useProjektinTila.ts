@@ -53,7 +53,7 @@ export const useProjektinTila = (_config: UseIsProjektinTilaOptions = {}) => {
 
   const projektiLoader = useMemo(() => getProjektinTilaLoader(api), [api]);
 
-  return useSWR([apiConfig.lataaProjekti.graphql, projekti?.oid], projektiLoader, config);
+  return useSWR([apiConfig.projektinTila.graphql, projekti?.oid], projektiLoader, config);
 };
 
 const getProjektinTilaLoader = (api: API) => async (_query: string, oid: string | undefined) => {

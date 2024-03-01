@@ -8,19 +8,21 @@ import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { emailClient } from "../../src/email/email";
-import { DBMuistuttaja, muistutusHandler } from "../../src/muistutus/muistutusHandler";
+import { muistutusHandler } from "../../src/muistutus/muistutusHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { S3Mock } from "../aws/awsMock";
 
 import { assert, expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../src/config";
 import { identifyMockUser } from "../../src/user/userService";
 import { fail } from "assert";
 import { parameters } from "../../src/aws/parameters";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
+import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -82,6 +84,7 @@ describe("muistutusHandler", () => {
 
     describe("lisaaMuistutus", () => {
       it("should send email only to kirjaamo", async () => {
+        sinon.stub(muistutusHandler, "getLoggedInUser").returns({ "custom:hetu": "12123-041212" } as SuomiFiCognitoKayttaja);
         const dbMockClient = mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
@@ -144,91 +147,6 @@ describe("muistutusHandler", () => {
             return call.args[0].to;
           })
         ).to.have.members(["kirjaamo.uusimaa@ely-keskus.fi"]);
-      });
-    });
-    describe("haeMuistuttajat", () => {
-      beforeEach(() => {
-        loadProjektiByOidStub.restore();
-        identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
-      });
-      it("should get muistuttajat", async () => {
-        const dbMock = mockClient(DynamoDBDocumentClient);
-        dbMock
-          .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1", muistuttajat: ["1", "2"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-        dbMock.on(BatchGetCommand).resolves({
-          Responses: {
-            [config.projektiMuistuttajaTableName]: [
-              {
-                id: "1",
-                etunimi: "Matti",
-                sukunimi: "Teppo",
-                lahiosoite: "Osoite 1",
-                postinumero: "00100",
-                postitoimipaikka: "Helsinki",
-              },
-              {
-                id: "2",
-                etunimi: "Teppo",
-                sukunimi: "Testaaja",
-                lahiosoite: "Osoite 2",
-                postinumero: "01000",
-                postitoimipaikka: "Vantaa",
-              },
-            ],
-          },
-        });
-        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, sivu: 1, sivuKoko: 1 });
-        expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
-        let batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
-        assert(batchCommand.args[0].input.RequestItems);
-        let keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
-        assert(keys);
-        expect(keys.length).to.be.equal(1);
-        expect(keys[0].id).to.be.equal("1");
-        expect(muistuttajat.hakutulosMaara).to.equal(2);
-        expect(muistuttajat.muistuttajat[0]?.etunimi).to.equal("Matti");
-        expect(muistuttajat.muistuttajat[0]?.sukunimi).to.equal("Teppo");
-        expect(muistuttajat.muistuttajat[0]?.jakeluosoite).to.equal("Osoite 1");
-        expect(muistuttajat.muistuttajat[0]?.postinumero).to.equal("00100");
-        expect(muistuttajat.muistuttajat[0]?.paikkakunta).to.equal("Helsinki");
-        await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: false, sivu: 2, sivuKoko: 1 });
-        batchCommand = dbMock.commandCalls(BatchGetCommand)[1];
-        assert(batchCommand.args[0].input.RequestItems);
-        keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
-        assert(keys);
-        expect(keys.length).to.be.equal(1);
-        expect(keys[0].id).to.be.equal("2");
-        expect(muistuttajat.hakutulosMaara).to.equal(2);
-      });
-      it("should get muut muistuttajat", async () => {
-        const dbMock = mockClient(DynamoDBDocumentClient);
-        dbMock
-          .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-        dbMock.on(BatchGetCommand).resolves({
-          Responses: {
-            [config.projektiMuistuttajaTableName]: [
-              {
-                id: "11",
-                etunimi: "Matti",
-                sukunimi: "Teppo",
-                lahiosoite: "Osoite 1",
-                postinumero: "00100",
-                postitoimipaikka: "Helsinki",
-              },
-            ],
-          },
-        });
-        const muistuttajat = await muistutusHandler.haeMuistuttajat({ oid: "1.2.3", muutMuistuttajat: true, sivu: 1, sivuKoko: 1 });
-        expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
-        const batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
-        assert(batchCommand.args[0].input.RequestItems);
-        const keys = batchCommand.args[0].input.RequestItems[config.projektiMuistuttajaTableName].Keys;
-        assert(keys);
-        expect(keys.length).to.be.equal(1);
-        expect(keys[0].id).to.be.equal("11");
-        expect(muistuttajat.hakutulosMaara).to.equal(1);
       });
     });
     describe("tallennaMuistuttajat", () => {

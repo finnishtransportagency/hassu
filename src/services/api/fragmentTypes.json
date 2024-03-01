@@ -753,6 +753,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ProjektinTiedottaminen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "ProjektinTila",
         "possibleTypes": null,
         "__typename": "__Type"

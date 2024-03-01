@@ -1,8 +1,8 @@
 import { log } from "../../logger";
 import { DynamoDBRecord, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
-import { omistajaSearchService } from "./omistajaSearchService";
+import { muistuttajaSearchService } from "./muistuttajaSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../../aws/monitoring";
-import { MaintenanceEvent, OmistajaSearchMaintenanceService } from "./omistajaSearchMaintenanceService";
+import { MaintenanceEvent, MuistuttajaSearchMaintenanceService } from "./muistuttajaSearchMaintenanceService";
 
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
@@ -10,19 +10,15 @@ import { getSQS } from "../../aws/clients/getSQS";
 import { parameters } from "../../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
-import { DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
 import { chunkArray } from "../../database/chunkArray";
+import { DBMuistuttaja, muistuttajaDatabase, MuistuttajaKey, MuistuttajaScanResult } from "../../database/muistuttajaDatabase";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
-    const omistaja = unmarshall(record.dynamodb.NewImage as unknown as Record<string, AttributeValue>) as DBOmistaja;
-    log.info(`${record.eventName}`, { id: omistaja.id, oid: omistaja.oid, kaytossa: omistaja.kaytossa });
+    const muistuttaja = unmarshall(record.dynamodb.NewImage as unknown as Record<string, AttributeValue>) as DBMuistuttaja;
+    log.info(`${record.eventName}`, { id: muistuttaja.id, oid: muistuttaja.oid });
 
-    if (omistaja.kaytossa) {
-      await omistajaSearchService.indexOmistaja(omistaja);
-    } else {
-      await omistajaSearchService.removeOmistaja(omistaja.id);
-    }
+    await muistuttajaSearchService.indexMuistuttaja(muistuttaja);
   } else {
     log.error("No DynamoDB record to update");
   }
@@ -32,7 +28,7 @@ async function handleRemove(record: DynamoDBRecord) {
   if (record.dynamodb?.Keys?.id.S) {
     const id: string = record.dynamodb.Keys.id.S;
     log.info("REMOVE", { id });
-    await omistajaSearchService.removeOmistaja(id);
+    await muistuttajaSearchService.removeMuistuttaja(id);
   } else {
     log.error("No DynamoDB key to remove");
   }
@@ -40,16 +36,16 @@ async function handleRemove(record: DynamoDBRecord) {
 
 async function handleManagementEvent(event: MaintenanceEvent) {
   if (event.action === "deleteIndex") {
-    await new OmistajaSearchMaintenanceService().deleteIndex();
+    await new MuistuttajaSearchMaintenanceService().deleteIndex();
   } else if (event.action === "index") {
-    let startKey: OmistajaKey | undefined = undefined;
-    const queueUrl = await parameters.getOmistajaIndexerSQSUrl();
+    let startKey: MuistuttajaKey | undefined = undefined;
+    const queueUrl = await parameters.getMuistuttajaIndexerSQSUrl();
     do {
-      const scanResult: OmistajaScanResult = await omistajaDatabase.scanOmistajat(startKey);
+      const scanResult: MuistuttajaScanResult = await muistuttajaDatabase.scanMuistuttajat(startKey);
       startKey = scanResult.startKey;
-      const entries = scanResult.omistajat.map<SendMessageBatchRequestEntry>((omistaja) => ({
-        Id: omistaja.id,
-        MessageBody: JSON.stringify({ action: "index", omistaja }),
+      const entries = scanResult.muistuttajat.map<SendMessageBatchRequestEntry>((muistuttaja) => ({
+        Id: muistuttaja.id,
+        MessageBody: JSON.stringify({ action: "index", muistuttaja }),
       }));
       for (const chunk of chunkArray(entries, 10)) {
         await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: chunk });
@@ -117,9 +113,9 @@ async function handleSqsEvent(event: SQSEvent) {
         return;
       }
       const body: MaintenanceEvent = JSON.parse(record.body);
-      if (body.omistaja) {
+      if (body.muistuttaja) {
         try {
-          await omistajaSearchService.indexOmistaja(body.omistaja);
+          await muistuttajaSearchService.indexMuistuttaja(body.muistuttaja);
         } catch (e) {
           log.error(e);
         }

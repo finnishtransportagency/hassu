@@ -51,16 +51,49 @@ import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorova
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
+import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
+import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
+  requirePermissionLuku();
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
     const aineistoManager = new ProjektiTiedostoManager(projektiFromDB);
     return {
       __typename: "ProjektinTila",
       aineistotValmiit: aineistoManager.isReady(),
-      omistajahakuTila: adaptOmistajahakuTila(projektiFromDB),
-      omistajahakuKiinteistotunnusMaara: projektiFromDB.omistajahakuKiinteistotunnusMaara,
+    };
+  } else {
+    throw new NotFoundError("Projektia ei löydy: " + oid);
+  }
+}
+
+export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.ProjektinTiedottaminen> {
+  requirePermissionLuku();
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiFromDB) {
+    const omistajahakuTila = adaptOmistajahakuTila(projektiFromDB);
+    const muistuttajaMaara = await muistuttajaSearchService.getMuistuttajaMaara(oid);
+
+    if (omistajahakuTila === API.OmistajahakuTila.KAYNNISSA) {
+      return {
+        __typename: "ProjektinTiedottaminen",
+        omistajahakuTila,
+        muistuttajaMaara,
+        kiinteistotunnusMaara: projektiFromDB.omistajahakuKiinteistotunnusMaara ?? null,
+        oid,
+      };
+    }
+
+    const { kiinteistotunnusMaara, omistajaMaara } = await omistajaSearchService.getOmistajaJaKiinteistotunnusMaarat(oid);
+
+    return {
+      __typename: "ProjektinTiedottaminen",
+      omistajahakuTila,
+      kiinteistonomistajaMaara: omistajaMaara ?? null,
+      kiinteistotunnusMaara: kiinteistotunnusMaara ?? null,
+      muistuttajaMaara,
+      oid,
     };
   } else {
     throw new NotFoundError("Projektia ei löydy: " + oid);

@@ -6,7 +6,6 @@ import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName, getKiinteistonomistajaTableName } from "../util/environment";
-import { DBMuistuttaja } from "../muistutus/muistutusHandler";
 import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
@@ -33,9 +32,10 @@ import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
 import { invokeLambda } from "../aws/lambda";
 import PdfMerger from "pdf-merger-js";
 import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
-import { DBOmistaja, chunkArray, omistajaDatabase } from "../database/omistajaDatabase";
-import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { translate } from "../util/localization";
+import { chunkArray } from "../database/chunkArray";
+import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatabase";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -309,7 +309,10 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     if (!pdf) {
       return;
     }
-    const otsikko = tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? "Ilmoitus suunnitelman nähtäville asettamisesta" : "Ilmoitus suunnitelman hyväksymispäätöksestä";
+    const otsikko =
+      tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO
+        ? "Ilmoitus suunnitelman nähtäville asettamisesta"
+        : "Ilmoitus suunnitelman hyväksymispäätöksestä";
     const sisaltoNahtavillaolo = `Hei,
 
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
@@ -519,9 +522,9 @@ async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqu
 }
 
 async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
+  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinMuistuttajat(projektiFromDB.oid);
   const newIds: string[] = [];
-  for (const muistuttaja of dbMuistuttajat.filter((m) => m.henkilotunnus)) {
+  for (const muistuttaja of dbMuistuttajat.filter((m) => m.suomifiLahetys)) {
     if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
       uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
       newIds.push(muistuttaja.id);
