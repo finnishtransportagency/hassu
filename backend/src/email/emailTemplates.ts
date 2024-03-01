@@ -390,11 +390,11 @@ const kuukausiEpaaktiiviseenTeksti: (obj: {
   projektiPaallikkoSuffix: string;
 }) => string = template`Suunnitelma ${"velho.nimi"} siirtyy epäaktiiviseen tilaan Valtion liikenneväylien suunnittelu -järjestelmässä kuukauden kuluttua. Tämä tarkoittaa sitä, että suunnitelma poistuu palvelun kansalaisnäkymästä ja samalla virkamiesnäkymässä suunnitelman tiedot lukittuvat eli tietoja ei pysty muokkaamaan ja suunnitelmaan liittyvät asiakirjat poistetaan palvelusta.
 
- Tarkista ennen suunnitelman siirtymistä epäaktiiviseksi, että asianhallintaan tallennettavat asiakirjat (kuulutukset ja ilmoitukset) löytyvät suunnitelman asialta. Ota tarvittaessa talteen myös suunnitelmasta saadut palautteet.
+Tarkista ennen suunnitelman siirtymistä epäaktiiviseksi, että asianhallintaan tallennettavat asiakirjat (kuulutukset ja ilmoitukset) löytyvät suunnitelman asialta. Ota tarvittaessa talteen myös suunnitelmasta saadut palautteet.
 
- Suunnitelma siirtyy epäaktiiviseen tilaan kun hyväksymispäätöksen kuulutuksen päättymisestä on kulunut yksi vuosi. Käsittelyn tila -sivu pysyy pääkäyttäjän muokattavissa. Pääkäyttäjä aktivoi suunnitelman uudelleen, jos suunnitelman voimassaoloa myöhemmin jatketaan.
+Suunnitelma siirtyy epäaktiiviseen tilaan kun hyväksymispäätöksen kuulutuksen päättymisestä on kulunut yksi vuosi. Käsittelyn tila -sivu pysyy pääkäyttäjän muokattavissa. Pääkäyttäjä aktivoi suunnitelman uudelleen, jos suunnitelman voimassaoloa myöhemmin jatketaan.
 
-  ${"projektiPaallikkoSuffix"}`;
+${"projektiPaallikkoSuffix"}`;
 
 export function createKuukausiEpaaktiiviseenEmail(projekti: DBProjekti): EmailOptions {
   return {
