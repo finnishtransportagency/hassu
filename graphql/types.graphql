@@ -143,7 +143,6 @@ enum OmistajahakuTila {
 }
 
 type ProjektinTila {
-  oid: String!
   aineistotValmiit: Boolean
 }
 
