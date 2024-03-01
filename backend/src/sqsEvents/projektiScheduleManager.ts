@@ -17,6 +17,7 @@ import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } 
 import { Dayjs } from "dayjs";
 import { uniqBy } from "lodash";
 import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../projekti/status/statusHandler";
+import { log } from "../logger";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -105,6 +106,8 @@ export class ProjektiScheduleManager {
       .concat(this.getHyvaksymisPaatosVaihe().getSchedule())
       .concat(this.getJatkoPaatos1Vaihe().getSchedule())
       .concat(this.getJatkoPaatos2Vaihe().getSchedule());
+    log.info("HELLLO: ");
+    log.info(publishOrExpireEvents);
     const schedule = uniqBy(publishOrExpireEvents, (event) => `${event.date.format("YYYY-MM-DDTHH:mm:ss")}-${event.type}`); // Poista duplikaatit
     return schedule.sort((a, b) => a.date.date() - b.date.date());
   }
