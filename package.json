@@ -288,7 +288,7 @@
     "deleteVelhoProjekti": "ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/deleteVelhoProjekti dotenv_config_path=.env.test",
     "upgradeDatabase": "ts-node --project=backend/tsconfig.json ./backend/bin/upgradeDatabase.ts",
     "db:tool": "ts-node --project=backend/tsconfig.json ./backend/bin/dbTool.ts",
-    "suomifi:test": "ts-node --project=backend/tsconfig.json ./backend/bin/suomifiTest.ts",
+    "suomifi:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/suomifiTest.ts",
     "pdf:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/pdfTest.ts",
     "e2e:test:run": "cypress run -b chrome",
     "e2e:test:open": "cypress open",

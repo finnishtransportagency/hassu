@@ -92,8 +92,7 @@ async function getClient(): Promise<SuomiFiClient> {
       endpoint: cfg.endpoint,
       palveluTunnus: cfg.palvelutunnus,
       viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: cfg.laskutustunniste,
-      laskutusTunnisteEly: parseLaskutusTunniste(cfg.laskutustunnisteely),
+      laskutusTunniste: parseLaskutusTunniste(cfg.laskutustunniste),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
     });

@@ -8,7 +8,6 @@ import { uuid } from "hassu-common/util/uuid";
 import { LahetaViestiResponse } from "./definitions/LahetaViestiResponse";
 import { Readable } from "stream";
 import { HaeAsiakkaitaResponse } from "./definitions/HaeAsiakkaitaResponse";
-import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 
 export type Viesti = {
   hetu?: string;
@@ -42,8 +41,7 @@ export type Options = {
   publicCertificate?: string;
   viranomaisTunnus: string;
   palveluTunnus: string;
-  laskutusTunniste?: string;
-  laskutusTunnisteEly?: Record<string, string>;
+  laskutusTunniste: Record<string, string>;
 };
 
 export type SuomiFiConfig = {
@@ -52,7 +50,6 @@ export type SuomiFiConfig = {
   palvelutunnus: string;
   viranomaistunnus: string;
   laskutustunniste?: string;
-  laskutustunnisteely?: string;
 };
 
 export type SuomiFiClient = {
@@ -161,6 +158,20 @@ async function toBase64(stream: Readable | Buffer): Promise<string> {
   });
 }
 
+function getLaskutus(viesti: PdfViesti, options: Options) {
+  const laskutusTunniste = viesti.suunnittelustaVastaavaViranomainen
+    ? options.laskutusTunniste[viesti.suunnittelustaVastaavaViranomainen]
+    : undefined;
+  if (laskutusTunniste) {
+    return {
+      Laskutus: {
+        Tunniste: laskutusTunniste,
+      },
+    };
+  }
+  return {};
+}
+
 async function lahetaViesti(
   client: ViranomaispalvelutWsInterfaceClient,
   options: Options,
@@ -169,16 +180,6 @@ async function lahetaViesti(
   const tunnus = viesti.hetu || viesti.ytunnus;
   if (!tunnus) {
     throw new Error("Hetu tai y-tunnus pakollinen");
-  }
-  let laskutusTunniste;
-  if (
-    viesti.suunnittelustaVastaavaViranomainen !== SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
-    options.laskutusTunnisteEly &&
-    viesti.suunnittelustaVastaavaViranomainen
-  ) {
-    laskutusTunniste = options.laskutusTunnisteEly[viesti.suunnittelustaVastaavaViranomainen];
-  } else {
-    laskutusTunniste = options.laskutusTunniste;
   }
   const response = await client.LahetaViestiAsync({
     Kysely: {
@@ -222,10 +223,8 @@ async function lahetaViesti(
         ],
       },
       Tulostustoimittaja: "Posti",
-      Laskutus: {
-        Tunniste: laskutusTunniste,
-      },
-      Varitulostus: "false",
+      ...getLaskutus(viesti, options),
+      Varitulostus: "true",
     },
     Viranomainen: getViranomainen(options),
   });
