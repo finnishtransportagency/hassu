@@ -76,12 +76,13 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: Kiinteistonomis
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
         <p>
-          Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan kuulutuksen hyväksymispäivänä. Osaa
-          kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
+          Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan, kun kuulutus hyväksytään
+          julkaistavaksi.
+        </p>
+        <p>
+          Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
           tiedotettavat löytyvät{" "}
-          <StyledLink
-            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}
-          >
+          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
             Tiedottaminen
           </StyledLink>{" "}
           -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
@@ -93,15 +94,13 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: Kiinteistonomis
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
         <p>
-          Lista kuulutuksen ja ilmoituksen vastaanottaneista kiinteistönomistajista ja muistuttajista muodostuu asianhallintaan kuulutuksen
-          hyväksymispäivänä.
+          Lista kuulutuksen ja ilmoituksen vastaanottaneista kiinteistönomistajista ja muistuttajista muodostuu asianhallintaan, kun
+          kuulutus julkaistaan hyväksyttäväksi.
         </p>
         <p>
           Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.
           Kirjeitse tiedotettavat löytyvät{" "}
-          <StyledLink
-            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}
-          >
+          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
             Tiedottaminen
           </StyledLink>{" "}
           -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus muilla tavoin -listoista.
