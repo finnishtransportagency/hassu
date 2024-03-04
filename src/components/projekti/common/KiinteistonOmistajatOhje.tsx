@@ -76,7 +76,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: Kiinteistonomis
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
         <p>
-          Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan kuulutuksen julkaisupäivänä. Osaa
+          Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan kuulutuksen hyväksymispäivänä. Osaa
           kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
           tiedotettavat löytyvät{" "}
           <StyledLink
@@ -94,7 +94,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: Kiinteistonomis
         <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
         <p>
           Lista kuulutuksen ja ilmoituksen vastaanottaneista kiinteistönomistajista ja muistuttajista muodostuu asianhallintaan kuulutuksen
-          julkaisupäivänä.
+          hyväksymispäivänä.
         </p>
         <p>
           Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.

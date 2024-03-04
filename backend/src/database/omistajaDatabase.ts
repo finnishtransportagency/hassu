@@ -170,6 +170,36 @@ class OmistajaDatabase {
       throw error;
     }
   }
+
+  async deleteOmistajatByOid(oid: string) {
+    if (config.env !== "prod") {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+        },
+      });
+      const data = await getDynamoDBDocumentClient().send(command);
+      for (const chunk of chunkArray(data?.Items ?? [], 25)) {
+        const deleteRequests = chunk.map((omistaja) => ({
+          DeleteRequest: {
+            Key: { oid, id: omistaja.id },
+          },
+        }));
+        await getDynamoDBDocumentClient().send(
+          new BatchWriteCommand({
+            RequestItems: {
+              [this.tableName]: deleteRequests,
+            },
+          })
+        );
+      }
+    }
+  }
 }
 
 export const omistajaDatabase = new OmistajaDatabase(config.kiinteistonomistajaTableName ?? "missing");
