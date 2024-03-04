@@ -7,7 +7,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Readable } from "stream";
 import { expectAwsCalls, S3Mock } from "../aws/awsMock";
-import { createKuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
+import { createKuukausiEpaaktiiviseenEmail, createKuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
@@ -319,6 +319,20 @@ describe("emailHandler", () => {
         )?.email;
         expect(vastaanottajaLista2).to.include.all.members([projektiPaallikonEmail]);
       });
+    });
+  });
+
+  describe("sendOneMonthToExpireMail", () => {
+    it("should send email to projektipaallikko succesfully", async () => {
+      const emailOptions = createKuukausiEpaaktiiviseenEmail(fixture.dbProjekti5());
+      expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Suunnitelma Testiprojekti 2 siirtyy epäaktiiviseen tilaan");
+
+      expect(emailOptions.text).to.eq(
+        "Suunnitelma Testiprojekti 2 siirtyy epäaktiiviseen tilaan Valtion liikenneväylien suunnittelu -järjestelmässä kuukauden kuluttua. Tämä tarkoittaa sitä, että suunnitelma poistuu palvelun kansalaisnäkymästä ja samalla virkamiesnäkymässä suunnitelman tiedot lukittuvat eli tietoja ei pysty muokkaamaan ja suunnitelmaan liittyvät asiakirjat poistetaan palvelusta.\n\n" +
+          "Suunnitelma siirtyy epäaktiiviseen tilaan kun hyväksymispäätöksen kuulutuksen päättymisestä on kulunut yksi vuosi. Käsittelyn tila -sivu pysyy pääkäyttäjän muokattavissa. Pääkäyttäjä aktivoi suunnitelman uudelleen, jos suunnitelman voimassaoloa myöhemmin jatketaan.\n\n" +
+          "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
+      );
+      expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
     });
   });
 });
