@@ -3,17 +3,20 @@ import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanot
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
+import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
   julkaisunTila: KuulutusJulkaisuTila | null | undefined;
   epaaktiivinen?: boolean;
+  vaihe?: KiinteistonomistajatVaihe;
 }
 
 export default function IlmoituksenVastaanottajat({
   epaaktiivinen = false,
   ilmoituksenVastaanottajat,
   julkaisunTila,
+  vaihe,
 }: Props): ReactElement {
   return (
     <Section>
@@ -43,6 +46,7 @@ export default function IlmoituksenVastaanottajat({
         )}
       </SectionContent>
       <IlmoituksenVastaanottajatCommon ilmoituksenVastaanottajat={ilmoituksenVastaanottajat} />
+      { vaihe && <KiinteistonOmistajatOhjeLukutila vaihe={vaihe}/>}
     </Section>
   );
 }

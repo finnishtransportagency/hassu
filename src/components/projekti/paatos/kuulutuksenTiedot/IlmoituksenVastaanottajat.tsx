@@ -4,7 +4,7 @@ import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { HyvaksymisPaatosVaihe } from "@services/api";
+import { HyvaksymisPaatosVaihe, Vaihe } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -220,7 +220,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi }:
               </HassuGrid>
             ))}
           </SectionContent>
-          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje />}
+          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} />}
         </Section>
       </div>
     </>
