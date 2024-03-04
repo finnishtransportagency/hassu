@@ -16,7 +16,7 @@ import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
-import { TilasiirtymaTyyppi, KayttajaTyyppi, KuulutusJulkaisuTila, Vaihe } from "hassu-common/graphql/apiModel";
+import { KayttajaTyyppi, KuulutusJulkaisuTila, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { parameters } from "../../src/aws/parameters";
 import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
@@ -25,6 +25,8 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
+import { fakeEventInSqsQueue } from "../sqsEvents/sqsEventHandlerLambdaTests/util/util";
+import { SqsEventType } from "../../src/sqsEvents/sqsEvent";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -323,7 +325,7 @@ describe("emailHandler", () => {
   });
 
   describe("sendOneMonthToExpireMail", () => {
-    it("should send email to projektipaallikko succesfully", async () => {
+    it("should create email to projektipaallikko succesfully", async () => {
       const emailOptions = createKuukausiEpaaktiiviseenEmail(fixture.dbProjekti5());
       expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Suunnitelma Testiprojekti 2 siirtyy epäaktiiviseen tilaan");
 
@@ -334,6 +336,24 @@ describe("emailHandler", () => {
           "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
       );
       expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
+    });
+
+    it("should send email to projektipaallikko succesfully on sqs event", async () => {
+      const handler = fakeEventInSqsQueue({ eventType: SqsEventType.ONE_MONTH_TO_INACTIVE, projektiOid: "1" });
+      const projekti: DBProjekti = {
+        oid: "1",
+        versio: 1,
+        kayttoOikeudet: [],
+        salt: "salt",
+        tallennettu: true,
+        velho: { nimi: "Projekti 1" },
+      };
+
+      loadProjektiByOidStub.resolves(projekti);
+
+      await handler();
+      // Viesti projektipäällikölle
+      expect(emailClientStub.sendEmailStub.called).to.be.true;
     });
   });
 });
