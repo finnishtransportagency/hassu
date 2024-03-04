@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType } from "@services/api";
+import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType, Status } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
@@ -10,6 +10,8 @@ interface Props {
   julkaisunTila: KuulutusJulkaisuTila | null | undefined;
   epaaktiivinen?: boolean;
   vaihe?: KiinteistonomistajatVaihe;
+  oid: string;
+  omistajahakuStatus: Status | null | undefined;
 }
 
 export default function IlmoituksenVastaanottajat({
@@ -17,6 +19,8 @@ export default function IlmoituksenVastaanottajat({
   ilmoituksenVastaanottajat,
   julkaisunTila,
   vaihe,
+  oid,
+  omistajahakuStatus,
 }: Props): ReactElement {
   return (
     <Section>
@@ -46,7 +50,7 @@ export default function IlmoituksenVastaanottajat({
         )}
       </SectionContent>
       <IlmoituksenVastaanottajatCommon ilmoituksenVastaanottajat={ilmoituksenVastaanottajat} />
-      { vaihe && <KiinteistonOmistajatOhjeLukutila vaihe={vaihe}/>}
+      { vaihe && <KiinteistonOmistajatOhjeLukutila vaihe={vaihe} oid={oid} omistajahakuStatus={omistajahakuStatus}/>}
     </Section>
   );
 }

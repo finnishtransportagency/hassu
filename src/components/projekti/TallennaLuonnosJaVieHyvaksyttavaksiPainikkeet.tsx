@@ -90,11 +90,18 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
     const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
     const lacksKunnat = !kuntavastaanottajat?.length;
-
+    let kiinteistonomistajatOk = true;
+    if (
+      (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
+      !projekti.omistajahakuStatus
+    ) {
+      kiinteistonomistajatOk = false;
+    }
     return (
       invalidStatus ||
       !isProjektiReadyForTilaChange ||
       lacksKunnat ||
+      !kiinteistonomistajatOk ||
       isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
     );
   }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi]);

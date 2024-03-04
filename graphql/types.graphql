@@ -194,6 +194,7 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  omistajahakuStatus: Status
 }
 
 type ProjektinTiedottaminen {
@@ -202,7 +203,6 @@ type ProjektinTiedottaminen {
   kiinteistotunnusMaara: Int
   kiinteistonomistajaMaara: Int
   omistajahakuTila: OmistajahakuTila
-  omistajahakuStatus: Status
 }
 
 type Asianhallinta {

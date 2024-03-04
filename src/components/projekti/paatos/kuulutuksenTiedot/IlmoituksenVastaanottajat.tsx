@@ -4,7 +4,7 @@ import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { HyvaksymisPaatosVaihe, Vaihe } from "@services/api";
+import { HyvaksymisPaatosVaihe, Status, Vaihe } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -27,9 +27,11 @@ interface HelperType {
 interface Props {
   paatosVaihe: HyvaksymisPaatosVaihe | null | undefined;
   paatosTyyppi: PaatosTyyppi;
+  oid: string;
+  omistajahakuStatus: Status | null | undefined;
 }
 
-export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, oid, omistajahakuStatus }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -220,7 +222,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi }:
               </HassuGrid>
             ))}
           </SectionContent>
-          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} />}
+          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} oid={oid} omistajahakuStatus={omistajahakuStatus} />}
         </Section>
       </div>
     </>

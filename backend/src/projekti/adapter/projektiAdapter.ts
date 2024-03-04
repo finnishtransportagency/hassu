@@ -78,6 +78,7 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahakuStatus,
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
@@ -159,6 +160,7 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahakuStatus,
     });
 
     if (apiProjekti.tallennettu) {

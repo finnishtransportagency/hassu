@@ -286,6 +286,8 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           julkaisunTila={julkaisu.tila}
           epaaktiivinen={epaaktiivinen}
           vaihe={paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? Vaihe.HYVAKSYMISPAATOS : undefined}
+          omistajahakuStatus={projekti.omistajahakuStatus}
+          oid={projekti.oid}
         />
       </Section>
     </>

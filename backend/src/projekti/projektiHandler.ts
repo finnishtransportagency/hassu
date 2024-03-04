@@ -94,7 +94,6 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
       kiinteistotunnusMaara: kiinteistotunnusMaara ?? null,
       muistuttajaMaara,
       oid,
-      omistajahakuStatus: projektiFromDB.omistajahakuStatus,
     };
   } else {
     throw new NotFoundError("Projektia ei löydy: " + oid);

@@ -1,21 +1,21 @@
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektinTiedottaminen, Vaihe } from "@services/api";
-import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
-import useSuomifiUser from "src/hooks/useSuomifiUser";
+import { Status, Vaihe } from "@services/api";
 
-interface ProjektinTilaProps {
-  tiedottaminen: ProjektinTiedottaminen;
-  vaihe: KiinteistonomistajatVaihe;
+export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
+interface KiinteistonomistajatOhjeProps {
+  vaihe?: KiinteistonomistajatVaihe;
+  oid: string;
+  omistajahakuStatus: Status | null | undefined;
 }
 
-function KiinteistojaEiLisatty({ tiedottaminen: projektinTila }: ProjektinTilaProps) {
+function KiinteistojaEiLisatty({ oid }: KiinteistonomistajatOhjeProps) {
   return (
     <>
       <p>
         Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
-        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projektinTila?.oid } }}>
+        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
           Kiinteistönomistajat
         </StyledLink>{" "}
         -välilehdelle.
@@ -27,12 +27,12 @@ function KiinteistojaEiLisatty({ tiedottaminen: projektinTila }: ProjektinTilaPr
   );
 }
 
-function KiinteistotLisatty({ tiedottaminen, vaihe }: ProjektinTilaProps) {
+function KiinteistotLisatty({ oid, vaihe }: KiinteistonomistajatOhjeProps) {
   if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <p>
         Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen-sivun{" "}
-        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: tiedottaminen?.oid } }}>
+        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
           Kiinteistönomistajat
         </StyledLink>{" "}
         -välilehdeltä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään
@@ -43,7 +43,7 @@ function KiinteistotLisatty({ tiedottaminen, vaihe }: ProjektinTilaProps) {
     return (
       <p>
         Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
-        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: tiedottaminen?.oid } }}>
+        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
           Tiedottaminen
         </StyledLink>
         -sivulta Kiinteistönomistajat- ja Muistuttajat -välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan, kun
@@ -53,22 +53,15 @@ function KiinteistotLisatty({ tiedottaminen, vaihe }: ProjektinTilaProps) {
   }
 }
 
-export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
-interface KiinteistonomistajatOhjeProps {
-  vaihe?: KiinteistonomistajatVaihe;
-}
-
-export default function KiinteistonomistajatOhje({ vaihe }: KiinteistonomistajatOhjeProps) {
-  const { data } = useSuomifiUser();
-  const { data: tiedottaminen } = useProjektinTiedottaminen({ refreshInterval: 0 });
-  if (data?.suomifiEnabled && tiedottaminen && vaihe) {
+export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatus }: KiinteistonomistajatOhjeProps) {
+  if (vaihe) {
     return (
       <SectionContent>
         <h6 className="font-bold">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h6>
-        {tiedottaminen.omistajahakuStatus !== null ? (
-          <KiinteistotLisatty tiedottaminen={tiedottaminen} vaihe={vaihe} />
+        {omistajahakuStatus !== null ? (
+          <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
         ) : (
-          <KiinteistojaEiLisatty tiedottaminen={tiedottaminen} vaihe={vaihe} />
+          <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
         )}
       </SectionContent>
     );
@@ -77,10 +70,8 @@ export default function KiinteistonomistajatOhje({ vaihe }: Kiinteistonomistajat
   }
 }
 
-export function KiinteistonOmistajatOhjeLukutila({ vaihe }: KiinteistonomistajatOhjeProps) {
-  const { data } = useSuomifiUser();
-  const { data: tiedottaminen } = useProjektinTiedottaminen({ refreshInterval: 0 });
-  if (data?.suomifiEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
+export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: KiinteistonomistajatOhjeProps) {
+  if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
@@ -89,7 +80,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe }: Kiinteistonomistajat
           kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
           tiedotettavat löytyvät{" "}
           <StyledLink
-            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: tiedottaminen?.oid } }}
+            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}
           >
             Tiedottaminen
           </StyledLink>{" "}
@@ -97,7 +88,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe }: Kiinteistonomistajat
         </p>
       </SectionContent>
     );
-  } else if (data?.suomifiEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
+  } else if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
@@ -109,7 +100,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe }: Kiinteistonomistajat
           Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.
           Kirjeitse tiedotettavat löytyvät{" "}
           <StyledLink
-            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: tiedottaminen?.oid } }}
+            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}
           >
             Tiedottaminen
           </StyledLink>{" "}
