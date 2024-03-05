@@ -15,6 +15,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
+import useSuomifiUser from "src/hooks/useSuomifiUser";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -86,12 +87,13 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
       ),
     [api, preSubmitFunction, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
   );
-
+  const { data } = useSuomifiUser();
   const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
     const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
     const lacksKunnat = !kuntavastaanottajat?.length;
     let kiinteistonomistajatOk = true;
     if (
+      data?.suomifiViestitEnabled &&
       (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
       !projekti.omistajahakuStatus
     ) {
@@ -104,7 +106,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
       !kiinteistonomistajatOk ||
       isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
     );
-  }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi]);
+  }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi, data?.suomifiViestitEnabled]);
 
   return (
     <Section noDivider>

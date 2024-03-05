@@ -2,6 +2,7 @@ import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Status, Vaihe } from "@services/api";
+import useSuomifiUser from "src/hooks/useSuomifiUser";
 
 export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
 interface KiinteistonomistajatOhjeProps {
@@ -54,7 +55,8 @@ function KiinteistotLisatty({ oid, vaihe }: KiinteistonomistajatOhjeProps) {
 }
 
 export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatus }: KiinteistonomistajatOhjeProps) {
-  if (vaihe) {
+  const { data } = useSuomifiUser();
+  if (data?.suomifiViestitEnabled && vaihe) {
     return (
       <SectionContent>
         <h6 className="font-bold">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h6>
@@ -71,7 +73,8 @@ export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatu
 }
 
 export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: KiinteistonomistajatOhjeProps) {
-  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+  const { data } = useSuomifiUser();
+  if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
@@ -89,7 +92,7 @@ export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: Kiinteistonomis
         </p>
       </SectionContent>
     );
-  } else if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
+  } else if (data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>

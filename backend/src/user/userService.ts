@@ -116,12 +116,14 @@ export function getSuomiFiCognitoKayttaja(): SuomiFiCognitoKayttaja | undefined 
 
 export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined> {
   const isSuomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+  const isSuomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
   if (isSuomifiEnabled) {
     const cognitoKayttaja = getSuomiFiCognitoKayttaja();
     if (cognitoKayttaja) {
       return {
         __typename: "SuomifiKayttaja",
         suomifiEnabled: true,
+        suomifiViestitEnabled: isSuomifiViestitEnabled,
         tunnistautunut: true,
         email: cognitoKayttaja.email,
         etunimi: cognitoKayttaja.given_name,
@@ -136,12 +138,14 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         __typename: "SuomifiKayttaja",
         tunnistautunut: false,
         suomifiEnabled: true,
+        suomifiViestitEnabled: isSuomifiViestitEnabled,
       };
     }
   } else {
     return {
       __typename: "SuomifiKayttaja",
       suomifiEnabled: false,
+      suomifiViestitEnabled: isSuomifiViestitEnabled,
     };
   }
 }

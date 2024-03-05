@@ -984,6 +984,7 @@ type SuomifiKayttaja {
   Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
   """
   suomifiEnabled: Boolean!
+  suomifiViestitEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
   etunimi: String
