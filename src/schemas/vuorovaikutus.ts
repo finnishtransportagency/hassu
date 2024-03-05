@@ -36,7 +36,7 @@ export const palauteSchema = Yup.object().shape({
         return true;
       },
     }),
-  kysymysTaiPalaute: Yup.string().required("palaute_on_jatettava").max(2000),
+  kysymysTaiPalaute: Yup.string().required("palaute_on_pakollinen").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
   liite: Yup.string()

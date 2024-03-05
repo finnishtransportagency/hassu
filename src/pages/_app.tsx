@@ -27,7 +27,12 @@ import { DndProvider } from "react-dnd";
 import SivuaOnMuokattuDialog from "@components/SivuaOnMuokattuDialog";
 import LoadingSpinnerProvider from "@components/layout/LoadingSpinnerProvider";
 import { FormValidationModeProvider } from "@components/FormValidationModeProvider";
+import countries from "i18n-iso-countries";
+import fiCountries from "i18n-iso-countries/langs/fi.json";
+import svCountries from "i18n-iso-countries/langs/sv.json";
 
+countries.registerLocale(fiCountries);
+countries.registerLocale(svCountries);
 log.setDefaultLevel("DEBUG");
 
 function App(props: AppProps) {
