@@ -59,8 +59,10 @@ class ProjektiSchedulerService {
           default:
             break;
         }
-        // always create schedule for SYNCHRONIZE event
-        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.SYNCHRONIZE);
+        // create schedule for SYNCHRONIZE event
+        if (publishOrExpireEvent.type !== PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK) {
+          await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, SqsEventType.SYNCHRONIZE);
+        }
       }
     }
 

@@ -298,7 +298,7 @@ async function handleOneMonthToInactive(ctx: ImportContext) {
   if (kuukausiEpaaktiiviseenMail.to) {
     await emailClient.sendEmail(kuukausiEpaaktiiviseenMail);
   } else {
-    log.error("Epäaktiivisuusmeilille ei loytynyt omistajab sahkopostiosoitetta");
+    log.error("Epäaktiivisuusmeilille ei löytynyt vastaanottaja sähköpostiosoitetta");
   }
 }
 
