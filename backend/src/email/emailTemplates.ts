@@ -333,8 +333,12 @@ ${muistutus.postinumeroJaPostitoimipaikka}
 
 Muistutus
 ${muistutus.muistutus}
-${muistutus.liite ? `Muistutuksen liitteet
-${muistutus.liite.substring(idx + 1)}` : ""}
+${
+  muistutus.liite
+    ? `Muistutuksen liitteet
+${muistutus.liite.substring(idx + 1)}`
+    : ""
+}
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}`;
   return {
     subject: `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}`,
@@ -375,5 +379,32 @@ export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }
     subject: "Palvelua koskeva palaute",
     text: palveluPalauteTeksti({ arvosana, kehitysehdotus }),
     to: "tuki.vayliensuunnittelu@vayla.fi",
+  };
+}
+
+const kuukausiEpaaktiiviseenOtsikko = (obj: { velho: Velho | null | undefined }) =>
+  otsikko({ otsikkoSuffix: `Suunnitelma ${obj.velho?.nimi} siirtyy epäaktiiviseen tilaan` });
+
+const kuukausiEpaaktiiviseenTeksti: (obj: {
+  velho: Velho | null | undefined;
+  projektiPaallikkoSuffix: string;
+}) => string = template`Suunnitelma ${"velho.nimi"} siirtyy epäaktiiviseen tilaan Valtion liikenneväylien suunnittelu -järjestelmässä kuukauden kuluttua. Tämä tarkoittaa sitä, että suunnitelma poistuu palvelun kansalaisnäkymästä ja samalla virkamiesnäkymässä suunnitelman tiedot lukittuvat eli tietoja ei pysty muokkaamaan ja suunnitelmaan liittyvät asiakirjat poistetaan palvelusta.
+
+Tarkista ennen suunnitelman siirtymistä epäaktiiviseksi, että asianhallintaan tallennettavat asiakirjat (kuulutukset ja ilmoitukset) löytyvät suunnitelman asialta. Ota tarvittaessa talteen myös suunnitelmasta saadut palautteet.
+
+Suunnitelma siirtyy epäaktiiviseen tilaan kun hyväksymispäätöksen kuulutuksen päättymisestä on kulunut yksi vuosi. Käsittelyn tila -sivu pysyy pääkäyttäjän muokattavissa. Pääkäyttäjä aktivoi suunnitelman uudelleen, jos suunnitelman voimassaoloa myöhemmin jatketaan.
+
+${"projektiPaallikkoSuffix"}`;
+
+export function createKuukausiEpaaktiiviseenEmail(projekti: DBProjekti): EmailOptions {
+  return {
+    subject: kuukausiEpaaktiiviseenOtsikko({
+      velho: projekti.velho,
+    }),
+    text: kuukausiEpaaktiiviseenTeksti({
+      velho: projekti.velho,
+      projektiPaallikkoSuffix,
+    }),
+    to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }

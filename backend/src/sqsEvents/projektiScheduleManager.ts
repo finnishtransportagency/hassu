@@ -28,6 +28,7 @@ export enum PublishOrExpireEventType {
   PUBLISH_HYVAKSYMISPAATOSVAIHE = "PUBLISH_HYVAKSYMISPAATOSVAIHE",
   PUBLISH_JATKOPAATOS1VAIHE = "PUBLISH_JATKOPAATOS1VAIHE",
   PUBLISH_JATKOPAATOS2VAIHE = "PUBLISH_JATKOPAATOS2VAIHE",
+  PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK = "PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK",
 }
 
 export type PublishOrExpireEvent = {
@@ -315,6 +316,11 @@ function getPublishExpireScheduleForVaiheJulkaisut(
             reason: description + " muuttuu epäaktiiviseksi",
             type: PublishOrExpireEventType.EXPIRE,
             date: kuulutusVaihePaattyyPaiva.add(epaAktiivinenDuration[0], epaAktiivinenDuration[1]).add(1, "day").startOf("day"),
+          });
+          events.push({
+            reason: description + " muuttuu epäaktiiviseksi kuukauden kuluttua",
+            type: PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK,
+            date: kuulutusVaihePaattyyPaiva.add(epaAktiivinenDuration[0], epaAktiivinenDuration[1]).subtract(1, "month"),
           });
         }
       }

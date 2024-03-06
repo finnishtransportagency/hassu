@@ -23,6 +23,8 @@ import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/Projekt
 import { assertIsDefined } from "../util/assertions";
 import { PublishOrExpireEventType } from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
+import { emailClient } from "../email/email";
+import { createKuukausiEpaaktiiviseenEmail } from "../email/emailTemplates";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -291,6 +293,15 @@ async function handleChangedAineistoAndFiles(ctx: ImportContext) {
   }
 }
 
+async function handleOneMonthToInactive(ctx: ImportContext) {
+  const kuukausiEpaaktiiviseenMail = createKuukausiEpaaktiiviseenEmail(ctx.projekti);
+  if (kuukausiEpaaktiiviseenMail.to) {
+    await emailClient.sendEmail(kuukausiEpaaktiiviseenMail);
+  } else {
+    log.error("Epäaktiivisuusmeilille ei löytynyt vastaanottaja sähköpostiosoitetta");
+  }
+}
+
 async function synchronizeEULogot(ctx: ImportContext) {
   // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
   const julkinenStatus = ctx.julkinenStatus;
@@ -388,6 +399,9 @@ export const handlerFactory = (event: SQSEvent) => async () => {
             break;
           case SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET:
             await handleLausuntoPyynnonTaydennyksetZipping(ctx);
+            break;
+          case SqsEventType.ONE_MONTH_TO_INACTIVE:
+            await handleOneMonthToInactive(ctx);
             break;
           default:
             break;
