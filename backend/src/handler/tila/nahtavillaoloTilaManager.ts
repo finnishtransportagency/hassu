@@ -31,6 +31,8 @@ import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
+import { parameters } from "../../aws/parameters";
+import { log } from "../../logger";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -140,6 +142,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+    if (suomifiViestitEnabled && !projekti.omistajahakuStatus) {
+      const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
+      log.error(msg);
+      throw new Error(msg);
+    }
     await super.approve(projekti, hyvaksyja);
     //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
     await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
