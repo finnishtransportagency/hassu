@@ -8,7 +8,7 @@ import {
   TilasiirtymaTyyppi,
 } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
-import { DBProjekti, DBVaylaUser, Muistutus, Velho } from "../database/model";
+import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import {
   findHyvaksymisPaatosVaiheWaitingForApproval,
@@ -45,7 +45,7 @@ const otsikko: (obj: { otsikkoSuffix: string }) => string = template`Valtion lii
 const perustamisOtsikko = (obj: { asiatunnus: string | undefined }) =>
   otsikko({ otsikkoSuffix: `Uusi projekti perustettu ${obj.asiatunnus}` });
 const perustamisTeksti: (obj: {
-  velho: Velho | null | undefined;
+  velho: DBProjekti["velho"];
   oid: string;
   suffix: string;
   domain: string;
@@ -62,7 +62,7 @@ const kuulutusHyvaksyttavanaOtsikko: (obj: {
   asiatunnus: string | undefined;
 }) => string = template`Valtion liikenneväylien suunnittelu: ${"kuulutusTyyppiUpperCase"} odottaa hyväksyntää ${"asiatunnus"}`;
 const kuulutusHyvaksyttavanaTeksti: (obj: {
-  velho: Velho | null | undefined;
+  velho: DBProjekti["velho"];
   kuulutusTyyppiLowerCase: string;
   kuulutusKohde: string;
   domain: string;
@@ -311,7 +311,7 @@ export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient:
 
 export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
-  const idx = muistutus.liite?.lastIndexOf("/") ?? -1;
+  const muistutusLiiteTeksti = getMuistutusLiiteTeksti(muistutus);
   const vastaanotettu = Date.parse(muistutus.vastaanotettu);
   const text = `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}
 
@@ -329,16 +329,11 @@ Nimi
 ${muistutus.etunimi} ${muistutus.sukunimi}
 Osoite
 ${muistutus.katuosoite}
-${muistutus.postinumeroJaPostitoimipaikka}
+${muistutus.postinumero} ${muistutus.postitoimipaikka}
 
 Muistutus
 ${muistutus.muistutus}
-${
-  muistutus.liite
-    ? `Muistutuksen liitteet
-${muistutus.liite.substring(idx + 1)}`
-    : ""
-}
+${muistutusLiiteTeksti}
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}`;
   return {
     subject: `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}`,
@@ -349,7 +344,9 @@ Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti,
 
 export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutus: Muistutus): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
-  const idx = muistutus.liite?.lastIndexOf("/") ?? -1;
+
+  const muistutusLiiteTeksti = getMuistutusLiiteTeksti(muistutus);
+
   const text = `Muistutus on vastaanotettu
 Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
 Suunnitelman asiatunnus: ${asiatunnus}
@@ -359,12 +356,7 @@ ${
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}
 Muistutus:
 ${muistutus.muistutus ?? ""}
-${
-  muistutus.liite
-    ? `Muistutuksen mukana toimitettu seuraavannimiset liitteet:
-${muistutus.liite.substring(idx + 1)}`
-    : ""
-}
+${muistutusLiiteTeksti}
 `;
   const email = {
     subject: "Muistutus on vastaanotettu",
@@ -372,6 +364,20 @@ ${muistutus.liite.substring(idx + 1)}`
     to: muistutus.sahkoposti ?? undefined,
   };
   return email;
+}
+
+function getMuistutusLiiteTeksti(muistutus: Muistutus) {
+  if (!muistutus.liitteet?.length) {
+    return "";
+  }
+
+  return `Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+${muistutus.liitteet
+  .map((liite) => {
+    const idx = liite?.lastIndexOf("/") ?? -1;
+    return liite.substring(idx + 1);
+  })
+  .join("\n")}`;
 }
 
 export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }: PalveluPalauteInput): EmailOptions {
@@ -382,11 +388,11 @@ export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }
   };
 }
 
-const kuukausiEpaaktiiviseenOtsikko = (obj: { velho: Velho | null | undefined }) =>
+const kuukausiEpaaktiiviseenOtsikko = (obj: { velho: DBProjekti["velho"] }) =>
   otsikko({ otsikkoSuffix: `Suunnitelma ${obj.velho?.nimi} siirtyy epäaktiiviseen tilaan` });
 
 const kuukausiEpaaktiiviseenTeksti: (obj: {
-  velho: Velho | null | undefined;
+  velho: DBProjekti["velho"];
   projektiPaallikkoSuffix: string;
 }) => string = template`Suunnitelma ${"velho.nimi"} siirtyy epäaktiiviseen tilaan Valtion liikenneväylien suunnittelu -järjestelmässä kuukauden kuluttua. Tämä tarkoittaa sitä, että suunnitelma poistuu palvelun kansalaisnäkymästä ja samalla virkamiesnäkymässä suunnitelman tiedot lukittuvat eli tietoja ei pysty muokkaamaan ja suunnitelmaan liittyvät asiakirjat poistetaan palvelusta.
 

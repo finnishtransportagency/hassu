@@ -84,7 +84,9 @@ describe("muistutusHandler", () => {
 
     describe("lisaaMuistutus", () => {
       it("should send email only to kirjaamo", async () => {
-        sinon.stub(muistutusHandler, "getLoggedInUser").returns({ "custom:hetu": "12123-041212" } as SuomiFiCognitoKayttaja);
+        sinon
+          .stub(muistutusHandler, "getLoggedInUser")
+          .returns({ "custom:hetu": "12123-041212", given_name: "Mika", family_name: "Muistuttaja" } as SuomiFiCognitoKayttaja);
         const dbMockClient = mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
@@ -112,7 +114,6 @@ describe("muistutusHandler", () => {
         expect(m.lahiosoite).to.equal("Muistojentie 1 a");
         expect(m.postinumero).to.equal("00100");
         expect(m.postitoimipaikka).to.equal("Helsinki");
-        expect(m.puhelinnumero).to.equal("040123123");
         const updateCommand = dbMockClient.commandCalls(UpdateCommand)[0];
         assert(updateCommand.args[0].input.ExpressionAttributeValues);
         expect(updateCommand.args[0].input.ExpressionAttributeValues[":id"][0]).to.equal(m.id);
@@ -127,7 +128,7 @@ describe("muistutusHandler", () => {
           katuosoite: "Katuosoite 1",
           postitoimipaikka: "Postitoimipaikka1",
           postinumero: "123123",
-          maa: "276",
+          maa: "246",
           sahkoposti: "mika.muistuttaja@mikamuistutta.ja",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
           liitteet: [],

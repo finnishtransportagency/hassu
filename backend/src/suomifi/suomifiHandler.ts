@@ -277,7 +277,7 @@ export async function generatePdf(
     files.push(Buffer.from(response.sisalto, "base64"));
     const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
     const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
-    if (vaihe && vaihe[Kieli.RUOTSI]) {
+    if (vaihe?.[Kieli.RUOTSI]) {
       let tiedosto;
       if ("hyvaksymisIlmoitusMuistuttajillePDFPath" in vaihe[Kieli.RUOTSI]) {
         tiedosto = vaihe[Kieli.RUOTSI].hyvaksymisIlmoitusMuistuttajillePDFPath;
@@ -392,15 +392,13 @@ async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjek
     (await isSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
   ) {
     await lahetaInfoViesti(muistuttaja.henkilotunnus, projektiFromDB, muistuttaja);
+  } else if (muistuttaja.sahkoposti && isValidEmail(muistuttaja.sahkoposti)) {
+    await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
+    auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
   } else {
-    if (muistuttaja.sahkoposti && isValidEmail(muistuttaja.sahkoposti)) {
-      await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
-      auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
-    } else {
-      log.error(
-        "Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta")
-      );
-    }
+    log.error(
+      "Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta")
+    );
   }
 }
 
@@ -434,26 +432,24 @@ async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: Pu
   const muistuttaja = kohde.kohde as DBMuistuttaja;
   if (tyyppi === undefined) {
     await lahetaViesti(muistuttaja, kohde.projekti);
+  } else if (isMuistuttujanTiedotOk(muistuttaja)) {
+    await lahetaPdfViesti(
+      kohde.projekti,
+      {
+        id: muistuttaja.id,
+        nimi: `${muistuttaja.etunimi} ${muistuttaja.sukunimi}`,
+        lahiosoite: muistuttaja.lahiosoite!,
+        postinumero: muistuttaja.postinumero!,
+        postitoimipaikka: muistuttaja.postitoimipaikka!,
+        hetu: muistuttaja.henkilotunnus!,
+        maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
+      },
+      false,
+      tyyppi
+    );
   } else {
-    if (isMuistuttujanTiedotOk(muistuttaja)) {
-      await lahetaPdfViesti(
-        kohde.projekti,
-        {
-          id: muistuttaja.id,
-          nimi: `${muistuttaja.etunimi} ${muistuttaja.sukunimi}`,
-          lahiosoite: muistuttaja.lahiosoite!,
-          postinumero: muistuttaja.postinumero!,
-          postitoimipaikka: muistuttaja.postitoimipaikka!,
-          hetu: muistuttaja.henkilotunnus!,
-          maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
-        },
-        false,
-        tyyppi
-      );
-    } else {
-      auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
-      await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
-    }
+    auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
+    await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
   }
 }
 

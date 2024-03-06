@@ -52,7 +52,7 @@ export async function testNahtavillaoloApproval(
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   let dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
-  const julkaisutLengthBeginning = dbProjekti?.nahtavillaoloVaiheJulkaisut?.length || 0;
+  const julkaisutLengthBeginning = dbProjekti?.nahtavillaoloVaiheJulkaisut?.length ?? 0;
 
   await api.tallennaJaSiirraTilaa(
     {
@@ -137,18 +137,18 @@ export async function testLisaaMuistutusIncrement(
   userFixture.logout();
   expect(projekti.muistutusMaara).to.equal(initialMuistutusMaara);
   await api.lisaaMuistutus(oid, {
-    etunimi: "Etunimi",
-    sukunimi: "Sukunimi",
     katuosoite: "Katuosoite 123",
-    muistutus: "Muistutus " + ((initialMuistutusMaara || 0) + 1),
-    postinumeroJaPostitoimipaikka: "03132 Postitoimipaikka",
-    puhelinnumero: "1234567890",
+    muistutus: "Muistutus " + ((initialMuistutusMaara ?? 0) + 1),
+    postinumero: "03132",
+    postitoimipaikka: "Postitoimipaikka",
     sahkoposti: "etunimi.sukunimi@org.fi",
+    maa: "246",
+    liitteet: [],
   });
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   userFixture.logout();
-  expect(projekti.muistutusMaara).to.equal((initialMuistutusMaara || 0) + 1);
+  expect(projekti.muistutusMaara).to.equal((initialMuistutusMaara ?? 0) + 1);
 }
 
 export async function testImportNahtavillaoloAineistot(projekti: Projekti, velhoToimeksiannot: VelhoToimeksianto[]): Promise<Projekti> {
