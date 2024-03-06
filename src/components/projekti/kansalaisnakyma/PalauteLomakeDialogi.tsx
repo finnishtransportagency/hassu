@@ -234,7 +234,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       <div style={{ marginTop: "auto", marginBottom: "auto" }}>
                         <div>{tiedosto.name}</div>
                         {tiedostoLiianSuuri && (
-                          <div style={{ color: "red", fontWeight: "bold" }}>{t("common:tiedosto_on_liian_suuri")}</div>
+                          <div style={{ color: "red", fontWeight: "bold" }}>{t("common:virheet.tiedosto_on_liian_suuri")}</div>
                         )}
                       </div>
                       <IconButton

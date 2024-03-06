@@ -163,7 +163,9 @@
     "katuosoite_max_100": "Gatuadressen får vara max 100 tecken",
     "postinumero_max_30": "Postnummer får vara max 30 tecken",
     "postitoimipaikka_max_30": "Postkontor får vara max 30 tecken",
-    "puh_vain_numerot": "Ett telefonnummer kan bara innehålla nummer"
+    "puh_vain_numerot": "Ett telefonnummer kan bara innehålla nummer",
+    "tiedosto_on_liian_suuri": "Filen är för stor",
+    "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "RUOTSIKSI Tallennus onnistui",
@@ -177,8 +179,8 @@
   "postinumero": "Postnummer",
   "sahkoposti": "E-post",
   "puhelinnumero": "Telefonnummer",
-  "tiedosto_on_liian_suuri": "Filen är för stor",
   "valittu_tiedosto": "Vald fil",
+  "valitut_tiedostot": "Valda filer",
   "hae_tiedosto": "Hämta fil",
   "sulje": "Stäng",
   "liite": "Bilaga",

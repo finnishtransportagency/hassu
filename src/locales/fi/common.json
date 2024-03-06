@@ -163,7 +163,9 @@
     "katuosoite_max_100": "Katuosoite voi olla enintään 100 merkkiä",
     "postinumero_max_30": "Postinumero voi olla enintään 30 merkkiä",
     "postitoimipaikka_max_30": "Postitoimipaikka voi olla enintään 30 merkkiä",
-    "puh_vain_numerot": "Puhelinnumero voi sisältää vain numeroita"
+    "puh_vain_numerot": "Puhelinnumero voi sisältää vain numeroita",
+    "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
+    "tiedostotyyppi_ei_tuettu": "Tiedostotyyppi ei ole tuettu"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",
@@ -177,8 +179,8 @@
   "postinumero": "Postinumero",
   "sahkoposti": "Sähköposti",
   "puhelinnumero": "Puhelinnumero",
-  "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
   "valittu_tiedosto": "Valittu tiedosto",
+  "valitut_tiedostot": "Valitut tiedostot",
   "hae_tiedosto": "Hae tiedosto",
   "sulje": "Sulje",
   "liite": "Liite",

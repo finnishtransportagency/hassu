@@ -1,10 +1,10 @@
-import { Autocomplete, DialogActions, DialogContent, TextField, Typography } from "@mui/material";
-import React, { ReactElement, useCallback, useMemo, useState } from "react";
+import { Autocomplete, DialogActions, DialogContent, styled, TextField, Typography } from "@mui/material";
+import React, { ReactElement, useCallback, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { Controller, useController, useForm, UseFormProps } from "react-hook-form";
+import { useController, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@services/api";
 import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
-import FormGroup from "@components/form/FormGroup";
+import { ErrorSpan } from "@components/form/FormGroup";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import Section from "@components/layout/Section2";
@@ -33,6 +33,7 @@ import countries from "i18n-iso-countries";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { ErrorMessage } from "@hookform/error-message";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -40,61 +41,49 @@ interface Props {
   kayttaja?: SuomifiKayttaja;
 }
 
-interface MuistutusFormInput {
-  katuosoite: string;
-  postitoimipaikka: string;
-  postinumero: string;
-  sahkoposti?: string;
-  maa: string;
-  puhelinnumero: string;
-  muistutus: string;
-  liite: string | null;
-}
+type MuistutusInputForm = Omit<MuistutusInput, "liitteet"> & { liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[] };
 
 const countryCodes = Object.keys(countries.getNumericCodes());
 const FINLAND_COUNTRYCODE = "246";
 
+const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => {
+  const input: MuistutusInputForm = {
+    katuosoite: kayttaja?.osoite ?? "",
+    postinumero: kayttaja?.postinumero ?? "",
+    postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
+    maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
+    muistutus: "",
+    liitteet: [],
+    puhelinnumero: "",
+  };
+  if (kayttaja?.suomifiEnabled) {
+    input.sahkoposti = kayttaja?.email ?? "";
+  }
+  return input;
+};
+
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Props): ReactElement {
   const { t, lang } = useTranslation();
 
-  const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
-  const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
 
   const { data: suomifiUser } = useSuomifiUser();
 
-  const newDefaultValues: MuistutusFormInput = useMemo(() => {
-    const input: MuistutusFormInput = {
-      katuosoite: kayttaja?.osoite ?? "",
-      postinumero: kayttaja?.postinumero ?? "",
-      postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
-      maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
-      muistutus: "",
-      liite: null,
-      puhelinnumero: "",
-    };
-    if (kayttaja?.suomifiEnabled) {
-      input.sahkoposti = kayttaja?.email ?? "";
-    }
-    return input;
-  }, [kayttaja?.email, kayttaja?.maakoodi, kayttaja?.osoite, kayttaja?.postinumero, kayttaja?.postitoimipaikka, kayttaja?.suomifiEnabled]);
-  const formOptions: UseFormProps<MuistutusFormInput> = {
+  const formOptions: UseFormProps<MuistutusInputForm> = {
     resolver: yupResolver(muistutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: newDefaultValues,
+    defaultValues: getDefaultFormValues(suomifiUser),
     context: { suomifiUser },
   };
   const { showSuccessMessage } = useSnackbars();
-  const useFormReturn = useForm<MuistutusFormInput>(formOptions);
+  const useFormReturn = useForm<MuistutusInputForm>(formOptions);
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-    setValue,
-    reset,
-  } = useFormReturn;
+  const { handleSubmit, control, reset, watch, formState, trigger } = useFormReturn;
+
+  const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
+
+  const liitteetWatch = watch("liitteet");
 
   const api = useApi();
 
@@ -108,24 +97,23 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const save = useCallback(
-    (formData: MuistutusFormInput) =>
+    ({ liitteet, ...formData }: MuistutusInputForm) =>
       withLoadingSpinner(
         (async () => {
           try {
-            const muistutusFinalValues: MuistutusInput = { ...formData, liite: null };
-            if (tiedosto) {
-              muistutusFinalValues.liite = await talletaTiedosto(tiedosto);
-            }
-            (Object.keys(muistutusFinalValues) as Array<keyof MuistutusInput>).forEach((key) => {
-              if (!muistutusFinalValues[key]) {
-                delete muistutusFinalValues[key];
-              }
-            });
+            const muistutusFinalValues: MuistutusInput = { ...formData, liitteet: [] };
+            const talletaTiedosto = async (tiedosto: File) => lataaTiedosto(api, tiedosto);
+
+            await Promise.all(
+              liitteet.map(async (liite) => {
+                if (liite.tiedosto instanceof File) {
+                  muistutusFinalValues.liitteet.push(await talletaTiedosto(liite.tiedosto));
+                }
+              })
+            );
             await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
             showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
             setKiitosDialogiOpen(true);
@@ -135,10 +123,12 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
           }
         })()
       ),
-    [withLoadingSpinner, tiedosto, api, projekti.oid, showSuccessMessage, t, reset, talletaTiedosto]
+    [withLoadingSpinner, api, projekti.oid, showSuccessMessage, t, reset]
   );
 
   const close = useCallback(() => setKiitosDialogiOpen(false), []);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     field: { ref, onChange, onBlur, name, value },
@@ -251,61 +241,63 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
           <ContentSpacer>
             <Typography sx={{ fontWeight: 700 }}>{t("projekti:muistutuslomake.muistutuksen_liitteet")}</Typography>
             <p>{t("projekti:muistutuslomake.tuetut_tiedostomuodot_ovat")}</p>
-            {tiedosto ? (
-              <FormGroup
-                label={t("common:valittu_tiedosto")}
-                errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
-              >
-                <HassuStack direction="row">
-                  <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                    <div>{tiedosto.name}</div>
-                    {tiedostoLiianSuuri && <div style={{ color: "red", fontWeight: "bold" }}>{t("common:tiedosto_on_liian_suuri")}</div>}
+            {!!liitteetWatch.length && (
+              <ContentSpacer>
+                <label>{t("common:valitut_tiedostot")}</label>
+                {liitteetFieldArray.fields.map((item, index) => (
+                  <div key={item.id}>
+                    <FileDiv>
+                      <span>{item.nimi}</span>
+                      <IconButton
+                        sx={{ justifySelf: "end" }}
+                        icon="trash"
+                        type="button"
+                        onClick={() => {
+                          liitteetFieldArray.remove(index);
+                        }}
+                      />
+                    </FileDiv>
+                    <ErrorMessage
+                      errors={formState.errors}
+                      name={`liitteet.${index}.koko`}
+                      render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+                    />
+                    <ErrorMessage
+                      errors={formState.errors}
+                      name={`liitteet.${index}.tyyppi`}
+                      render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+                    />
                   </div>
-                  <IconButton
-                    icon="trash"
-                    onClick={() => {
-                      setTiedosto(undefined);
-                      setTiedostoLiianSuuri(false);
-                      (document.getElementById("file-input") as HTMLInputElement).value = "";
-                      setValue("liite", null);
-                    }}
-                  />
-                </HassuStack>
-              </FormGroup>
-            ) : (
-              <Button
-                onClick={() => {
-                  document.getElementById("file-input")?.click();
-                }}
-                type="button"
-              >
-                {t("common:hae_tiedosto")}
-              </Button>
+                ))}
+              </ContentSpacer>
             )}
-            <Controller
-              render={({ field }) => (
-                <input
-                  className="hidden"
-                  id="file-input"
-                  type="file"
-                  accept={allowedUploadFileTypes.join(", ")}
-                  onChange={(e) => {
-                    const tiedosto = e.target.files?.[0];
-                    setTiedosto(tiedosto);
-                    if (tiedosto && tiedosto.size > 25 * 1024 * 1024) {
-                      setTiedostoLiianSuuri(true);
-                    }
-                    field.onChange(e.target.value);
-                  }}
-                />
-              )}
-              name="liite"
-              control={control}
-              defaultValue={null}
-              shouldUnregister
+            <input
+              className="hidden"
+              id="file-input"
+              type="file"
+              ref={inputRef}
+              multiple
+              accept={allowedUploadFileTypes.join(", ")}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!!files?.length) {
+                  Array.from(files).forEach((file) =>
+                    liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type })
+                  );
+                }
+                trigger("liitteet");
+              }}
             />
+            <Button
+              onClick={() => {
+                inputRef.current?.click();
+              }}
+              type="button"
+            >
+              {t("common:hae_tiedosto")}
+            </Button>
           </ContentSpacer>
-          <Button className="ml-auto" id="submit_feedback" type="button" primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
+          <Button className="ml-auto" id="submit_feedback" type="button" primary onClick={handleSubmit(save)}>
             {t("common:laheta")}
           </Button>
         </ContentSpacer>
@@ -314,6 +306,8 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
     </Section>
   );
 }
+
+const FileDiv = styled("div")({ display: "flex", justifyContent: "space-between", alignItems: "center" });
 
 interface KiitosProps {
   open: boolean;
