@@ -143,7 +143,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahakuStatus) {
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
       const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
       log.error(msg);
       throw new Error(msg);

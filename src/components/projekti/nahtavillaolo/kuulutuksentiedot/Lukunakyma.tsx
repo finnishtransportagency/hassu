@@ -233,7 +233,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         julkaisunTila={nahtavillaoloVaiheJulkaisu.tila}
         ilmoituksenVastaanottajat={nahtavillaoloVaiheJulkaisu.ilmoituksenVastaanottajat}
         vaihe={Vaihe.NAHTAVILLAOLO}
-        omistajahakuStatus={projekti.omistajahakuStatus}
+        omistajahakuStatus={projekti.omistajahaku?.status}
         oid={projekti.oid}
       />
     </>

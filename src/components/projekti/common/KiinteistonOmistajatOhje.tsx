@@ -60,7 +60,7 @@ export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatu
     return (
       <SectionContent>
         <h6 className="font-bold">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h6>
-        {omistajahakuStatus !== null ? (
+        {omistajahakuStatus ? (
           <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
         ) : (
           <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />

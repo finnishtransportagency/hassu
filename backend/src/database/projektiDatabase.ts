@@ -4,6 +4,7 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
+  OmistajaHaku,
   PartialDBProjekti,
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
@@ -530,24 +531,24 @@ export class ProjektiDatabase {
     kiinteistotunnusMaara: number | null,
     status: Status | null = null
   ) {
+    const omistajahaku: OmistajaHaku = {
+      kaynnistetty: omistajahakuKaynnistetty,
+      kiinteistotunnusMaara,
+      virhe: omistajahakuVirhe,
+      status,
+    }
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression:
-        "SET #omistajahakuKaynnistetty = :omistajahakuKaynnistetty, #omistajahakuVirhe = :omistajahakuVirhe, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara, #omistajahakuStatus = :omistajahakuStatus",
+        "SET #omistajahaku = :omistajahaku",
       ExpressionAttributeNames: {
-        ["#omistajahakuVirhe"]: "omistajahakuVirhe",
-        ["#omistajahakuKaynnistetty"]: "omistajahakuKaynnistetty",
-        ["#omistajahakuKiinteistotunnusMaara"]: "omistajahakuKiinteistotunnusMaara",
-        ["#omistajahakuStatus"]: "omistajahakuStatus",
+        ["#omistajahaku"]: "omistajahaku",
       },
       ExpressionAttributeValues: {
-        ":omistajahakuVirhe": omistajahakuVirhe,
-        ":omistajahakuKaynnistetty": omistajahakuKaynnistetty,
-        ":omistajahakuKiinteistotunnusMaara": kiinteistotunnusMaara,
-        ":omistajahakuStatus": status,
+        ":omistajahaku": omistajahaku,
       },
     });
     return await getDynamoDBDocumentClient().send(params);

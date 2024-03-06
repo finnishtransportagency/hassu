@@ -3,17 +3,17 @@ import * as API from "hassu-common/graphql/apiModel";
 import { nyt, parseDate } from "../../../util/dateUtil";
 
 export function adaptOmistajahakuTila(projektiFromDB: DBProjekti | undefined): API.OmistajahakuTila {
-  if (projektiFromDB?.omistajahakuVirhe) {
+  if (projektiFromDB?.omistajahaku?.virhe) {
     return API.OmistajahakuTila.VIRHE;
-  } else if (hasHakuTimeouted(projektiFromDB?.omistajahakuKaynnistetty)) {
+  } else if (hasHakuTimeouted(projektiFromDB?.omistajahaku?.kaynnistetty)) {
     return API.OmistajahakuTila.VIRHE_AIKAKATKAISU;
-  } else if (projektiFromDB?.omistajahakuKaynnistetty) {
+  } else if (projektiFromDB?.omistajahaku?.kaynnistetty) {
     return API.OmistajahakuTila.KAYNNISSA;
   } else {
     return API.OmistajahakuTila.VALMIS;
   }
 }
 
-function hasHakuTimeouted(omistajahakuKaynnistetty: string | undefined): boolean | undefined {
+function hasHakuTimeouted(omistajahakuKaynnistetty: string | undefined | null): boolean | undefined {
   return !!omistajahakuKaynnistetty && nyt().diff(parseDate(omistajahakuKaynnistetty), "minutes") >= 10;
 }

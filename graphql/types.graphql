@@ -194,7 +194,14 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
-  omistajahakuStatus: Status
+  omistajahaku: OmistajaHaku
+}
+
+type OmistajaHaku {
+  virhe: Boolean
+  kaynnistetty: String
+  kiinteistotunnusMaara: Int
+  status: Status
 }
 
 type ProjektinTiedottaminen {

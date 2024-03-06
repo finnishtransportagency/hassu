@@ -651,10 +651,7 @@ export class HassuBackendStack extends Stack {
       "dynamodb:Attributes": [
         "muutOmistajat",
         "omistajat",
-        "omistajahakuVirhe",
-        "omistajahakuKaynnistetty",
-        "omistajahakuKiinteistotunnusMaara",
-        "omistajahakuStatus",
+        "omistajahaku",
       ],
     });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);

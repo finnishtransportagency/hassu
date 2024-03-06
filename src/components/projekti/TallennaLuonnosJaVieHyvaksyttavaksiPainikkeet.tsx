@@ -95,7 +95,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     if (
       data?.suomifiViestitEnabled &&
       (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
-      !projekti.omistajahakuStatus
+      !projekti.omistajahaku?.status
     ) {
       kiinteistonomistajatOk = false;
     }

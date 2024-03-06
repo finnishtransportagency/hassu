@@ -182,10 +182,14 @@ export type DBProjekti = {
   muutOmistajat?: string[];
   muistuttajat?: string[];
   muutMuistuttajat?: string[];
-  omistajahakuVirhe?: boolean;
-  omistajahakuKaynnistetty?: string;
-  omistajahakuKiinteistotunnusMaara?: number;
-  omistajahakuStatus?: Status | null;
+  omistajahaku?: OmistajaHaku | null;
+};
+
+export type OmistajaHaku = {
+  virhe?: boolean | null;
+  kaynnistetty?: string | null;
+  kiinteistotunnusMaara?: number | null;
+  status?: Status | null;
 };
 
 export type Asianhallinta = {
