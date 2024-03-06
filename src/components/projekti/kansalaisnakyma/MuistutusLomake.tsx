@@ -54,7 +54,6 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
     maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
     muistutus: "",
     liitteet: [],
-    puhelinnumero: "",
   };
   if (kayttaja?.suomifiEnabled) {
     input.sahkoposti = kayttaja?.email ?? "";

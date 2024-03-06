@@ -116,7 +116,7 @@ describe("suomifiHandler", () => {
       oid: "1",
       sahkoposti: "test@test.fi",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const emailStub = sinon
       .stub(emailClient, "sendEmail")
@@ -149,7 +149,7 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(emailStub.callCount).to.equal(2);
     expect(emailStub.args[1]).toMatchSnapshot();
-    delete muistuttaja.liite;
+    delete muistuttaja.liitteet;
     mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
@@ -180,7 +180,7 @@ describe("suomifiHandler", () => {
       oid: "1",
       sahkoposti: "",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const emailStub = sinon
       .stub(emailClient, "sendEmail")
@@ -208,7 +208,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -236,7 +236,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "test@test.fi",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 310);
@@ -270,7 +270,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
       etunimi: "Testi",
       sukunimi: "Teppo",
       lahiosoite: "Osoite 1",
@@ -326,7 +326,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
       etunimi: "Minerva",
       sukunimi: "Marttila",
       lahiosoite: "Svart katten's gatan 13 c 13, B.O.X 1010",

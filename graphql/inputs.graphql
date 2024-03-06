@@ -402,7 +402,6 @@ input MuistutusInput {
   postinumero: String!
   postitoimipaikka: String!
   sahkoposti: String
-  puhelinnumero: String!
   muistutus: String!
   maa: String!
   liitteet: [String!]!

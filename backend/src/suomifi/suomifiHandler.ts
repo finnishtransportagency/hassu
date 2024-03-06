@@ -109,10 +109,11 @@ function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
     sukunimi: muistuttaja.sukunimi,
     katuosoite: muistuttaja.lahiosoite,
     muistutus: muistuttaja.muistutus,
-    postinumeroJaPostitoimipaikka: muistuttaja.postinumero + " " + muistuttaja.postitoimipaikka,
+    postitoimipaikka: muistuttaja.postitoimipaikka,
+    postinumero: muistuttaja.postinumero,
     puhelinnumero: muistuttaja.puhelinnumero,
     sahkoposti: muistuttaja.sahkoposti,
-    liite: muistuttaja.liite,
+    liitteet: muistuttaja.liitteet,
   };
 }
 

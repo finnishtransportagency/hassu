@@ -88,14 +88,13 @@ describe("muistutusHandler", () => {
         const dbMockClient = mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
-          etunimi: "Mika",
-          sukunimi: "Muistuttaja",
           katuosoite: "Muistojentie 1 a",
-          postinumeroJaPostitoimipaikka: "00100 Helsinki",
+          postitoimipaikka: "Helsinki",
+          postinumero: "00100",
+          maa: "246",
           sahkoposti: undefined,
-          puhelinnumero: "040123123",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
-          liite: undefined,
+          liitteet: [],
         };
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
@@ -125,14 +124,13 @@ describe("muistutusHandler", () => {
         mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
-          etunimi: "Mika",
-          sukunimi: "Muistuttaja",
-          katuosoite: undefined,
-          postinumeroJaPostitoimipaikka: undefined,
+          katuosoite: "Katuosoite 1",
+          postitoimipaikka: "Postitoimipaikka1",
+          postinumero: "123123",
+          maa: "276",
           sahkoposti: "mika.muistuttaja@mikamuistutta.ja",
-          puhelinnumero: undefined,
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
-          liite: undefined,
+          liitteet: [],
         };
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
