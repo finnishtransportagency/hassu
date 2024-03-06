@@ -69,7 +69,6 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
     sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
-    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(false);
     await nahtavillaoloTilaManager.approve(projekti1, { __typename: "NykyinenKayttaja", etunimi: "", sukunimi: "" });
     expect(zipLausuntoPyyntoAineistoStub.callCount).to.eql(1);
   });
