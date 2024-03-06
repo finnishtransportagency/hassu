@@ -66,12 +66,18 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     return { aineistoNahtavilla, hyvaksymisPaatos, hyvaksymisPaatosVaiheSaamePDFt };
   }
 
-  validateSendForApproval(projekti: DBProjekti): void {
+  async validateSendForApproval(projekti: DBProjekti): Promise<void> {
     const vaihe = this.getVaihe(projekti);
     this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe?.hyvaksymisPaatosVaiheSaamePDFt);
 
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
+    }
+    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
+      const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
+      log.error(msg);
+      throw new Error(msg);
     }
   }
 
@@ -215,16 +221,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       hyvaksymisPaatosVaihe,
       hyvaksymisPaatosVaiheJulkaisut: projekti.jatkoPaatos1VaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
     };
-  }
-
-  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
-    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
-      const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
-      log.error(msg);
-      throw new Error(msg);
-    }
-    await super.approve(projekti, hyvaksyja);
   }
 }
 

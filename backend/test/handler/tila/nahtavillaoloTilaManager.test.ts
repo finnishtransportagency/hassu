@@ -46,7 +46,7 @@ describe("nahtavillaoloTilaManager", () => {
       vuorovaikutusNumero: 2,
       tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
     };
-    await expect(() => nahtavillaoloTilaManager.validateSendForApproval(projekti)).to.throw(
+    expect(nahtavillaoloTilaManager.validateSendForApproval(projekti)).rejectedWith(
       "Toiminto ei ole sallittu, koska vuorovaikutuskierros on vielä julkaisematta."
     );
   });

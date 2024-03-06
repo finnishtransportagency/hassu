@@ -132,22 +132,22 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return { aineistoNahtavilla: paivitetytAineistoNahtavilla, nahtavillaoloSaamePDFt };
   }
 
-  validateSendForApproval(projekti: DBProjekti): void {
+  async validateSendForApproval(projekti: DBProjekti): Promise<void> {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     validateVuorovaikutusKierrosEiOleJulkaisematta(projekti);
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
-  }
-
-  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
       const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
       log.error(msg);
       throw new Error(msg);
     }
+  }
+
+  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     await super.approve(projekti, hyvaksyja);
     //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
     await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
