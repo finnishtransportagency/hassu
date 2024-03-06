@@ -4,6 +4,7 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
+  OmistajaHaku,
   PartialDBProjekti,
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
@@ -25,6 +26,7 @@ import {
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { Status } from "hassu-common/graphql/apiModel";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -526,24 +528,27 @@ export class ProjektiDatabase {
     oid: string,
     omistajahakuKaynnistetty: string | null,
     omistajahakuVirhe: boolean,
-    kiinteistotunnusMaara: number | null
+    kiinteistotunnusMaara: number | null,
+    status: Status | null = null
   ) {
+    const omistajahaku: OmistajaHaku = {
+      kaynnistetty: omistajahakuKaynnistetty,
+      kiinteistotunnusMaara,
+      virhe: omistajahakuVirhe,
+      status,
+    }
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression:
-        "SET #omistajahakuKaynnistetty = :omistajahakuKaynnistetty, #omistajahakuVirhe = :omistajahakuVirhe, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
+        "SET #omistajahaku = :omistajahaku",
       ExpressionAttributeNames: {
-        ["#omistajahakuVirhe"]: "omistajahakuVirhe",
-        ["#omistajahakuKaynnistetty"]: "omistajahakuKaynnistetty",
-        ["#omistajahakuKiinteistotunnusMaara"]: "omistajahakuKiinteistotunnusMaara",
+        ["#omistajahaku"]: "omistajahaku",
       },
       ExpressionAttributeValues: {
-        ":omistajahakuVirhe": omistajahakuVirhe,
-        ":omistajahakuKaynnistetty": omistajahakuKaynnistetty,
-        ":omistajahakuKiinteistotunnusMaara": kiinteistotunnusMaara,
+        ":omistajahaku": omistajahaku,
       },
     });
     return await getDynamoDBDocumentClient().send(params);

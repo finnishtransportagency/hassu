@@ -220,7 +220,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
               try {
                 const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
                 const kiinteistoTunnukset = Array.from(getKiinteistotunnuksetFromSource(geoJsonSource));
-                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset);
+                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset, projekti.status);
                 clearMapEditedByUser();
                 showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
                 closeDialog(isMapEditedByUserRef.current);

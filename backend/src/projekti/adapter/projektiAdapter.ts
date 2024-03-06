@@ -78,6 +78,7 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahaku,
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
@@ -159,6 +160,15 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahaku: omistajahaku
+        ? {
+            __typename: "OmistajaHaku",
+            status: omistajahaku.status,
+            virhe: omistajahaku.virhe,
+            kaynnistetty: omistajahaku.kaynnistetty,
+            kiinteistotunnusMaara: omistajahaku.kiinteistotunnusMaara,
+          }
+        : undefined,
     });
 
     if (apiProjekti.tallennettu) {

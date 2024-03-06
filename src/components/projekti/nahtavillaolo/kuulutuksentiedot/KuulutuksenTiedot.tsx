@@ -125,7 +125,11 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
               />
               <HankkeenSisallonKuvaus projekti={projekti} kielitiedot={projekti?.kielitiedot} />
               <KuulutuksessaEsitettavatYhteystiedot />
-              <IlmoituksenVastaanottajatKomponentti nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe} />
+              <IlmoituksenVastaanottajatKomponentti
+                nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
+                oid={projekti.oid}
+                omistajahakuStatus={projekti.omistajahaku?.status}
+              />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}

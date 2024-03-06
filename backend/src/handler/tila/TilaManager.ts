@@ -222,7 +222,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
 
-  abstract validateSendForApproval(projekti: DBProjekti): void;
+  abstract validateSendForApproval(projekti: DBProjekti): Promise<void>;
 
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
 

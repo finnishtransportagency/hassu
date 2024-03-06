@@ -194,6 +194,14 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  omistajahaku: OmistajaHaku
+}
+
+type OmistajaHaku {
+  virhe: Boolean
+  kaynnistetty: String
+  kiinteistotunnusMaara: Int
+  status: Status
 }
 
 type ProjektinTiedottaminen {
@@ -983,6 +991,7 @@ type SuomifiKayttaja {
   Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
   """
   suomifiEnabled: Boolean!
+  suomifiViestitEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
   etunimi: String

@@ -129,7 +129,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     return findAloitusKuulutusWaitingForApproval(projekti);
   }
 
-  validateSendForApproval(projekti: DBProjekti): void {
+  async validateSendForApproval(projekti: DBProjekti): Promise<void> {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     if (!this.getVaiheAineisto(projekti).isReady()) {

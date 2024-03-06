@@ -1,7 +1,9 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { QueryCommand, ScanCommand, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { BatchWriteCommand, QueryCommand, ScanCommand, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName } from "../util/environment";
 import { log } from "../logger";
+import { config } from "../config";
+import { chunkArray } from "./chunkArray";
 
 export type DBMuistuttaja = {
   id: string;
@@ -74,6 +76,25 @@ class MuistuttajaDatabase {
     } catch (e) {
       log.error(e);
       throw e;
+    }
+  }
+
+  async deleteMuistuttajatByOid(oid: string) {
+    if (config.env !== "prod") {
+      for (const chunk of chunkArray(await this.haeProjektinMuistuttajat(oid), 25)) {
+        const deleteRequests = chunk.map((muistuttaja) => ({
+          DeleteRequest: {
+            Key: { oid, id: muistuttaja.id },
+          },
+        }));
+        await getDynamoDBDocumentClient().send(
+          new BatchWriteCommand({
+            RequestItems: {
+              [this.tableName]: deleteRequests,
+            },
+          })
+        );
+      }
     }
   }
 }

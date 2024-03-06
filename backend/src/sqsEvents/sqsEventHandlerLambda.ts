@@ -422,8 +422,9 @@ export const handlerFactory = (event: SQSEvent) => async () => {
       if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
         await projektiSearchService.indexProjekti(projekti);
         if (
-          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ||
-          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE
+          successfulSynchronization &&
+          (sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ||
+            sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE)
         ) {
           await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
         }

@@ -80,7 +80,7 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
         __typename: "ProjektinTiedottaminen",
         omistajahakuTila,
         muistuttajaMaara,
-        kiinteistotunnusMaara: projektiFromDB.omistajahakuKiinteistotunnusMaara ?? null,
+        kiinteistotunnusMaara: projektiFromDB.omistajahaku?.kiinteistotunnusMaara ?? null,
         oid,
       };
     }
