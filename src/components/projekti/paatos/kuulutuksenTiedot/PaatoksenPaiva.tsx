@@ -37,7 +37,7 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
           {isHyvaksymisPaatos ? (
             <>
               Järjestelmän pääkäyttäjä tai projektipäällikkö lisää Liikenne- ja viestintäviraston päätöksen päivämäärän ja asiatunnuksen.
-              Kuulutus on mahdollista julkaista vasta, kun hyväksymispäätös on annettu. Käsittelyn tilaa voi seurata
+              Kuulutus on mahdollista julkaista vasta, kun hyväksymispäätös on annettu. Käsittelyn tilaa voi seurata{" "}
             </>
           ) : (
             <>Liikenne- ja viestintäviraston jatkopäätöksen päivämäärän ja asiatunnus tulee automaattisesti </>

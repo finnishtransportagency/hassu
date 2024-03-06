@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF, Vaihe } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -285,6 +285,11 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           ilmoituksenVastaanottajat={julkaisu.ilmoituksenVastaanottajat}
           julkaisunTila={julkaisu.tila}
           epaaktiivinen={epaaktiivinen}
+          vaihe={paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? Vaihe.HYVAKSYMISPAATOS : undefined}
+          omistajahakuStatus={projekti.omistajahaku?.status}
+          oid={projekti.oid}
+          uudelleenKuulutus={julkaisu.uudelleenKuulutus}
+          kuulutusPaiva={kuulutusPaiva}
         />
       </Section>
     </>

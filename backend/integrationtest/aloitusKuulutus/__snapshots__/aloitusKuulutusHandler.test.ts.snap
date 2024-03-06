@@ -435,6 +435,7 @@ Object {
           "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
           "__typename": "LokalisoituTeksti",
         },
+        "tiedotaKiinteistonomistajia": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
       },
       "velho": Object {

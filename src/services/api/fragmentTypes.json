@@ -650,6 +650,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "OmistajaHaku",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "OmistajahakuTila",
         "possibleTypes": null,

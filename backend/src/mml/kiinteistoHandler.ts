@@ -11,6 +11,7 @@ import {
   KiinteistonOmistajat,
   Omistaja,
   OmistajahakuTila,
+  Status,
   TallennaKiinteistonOmistajaResponse,
   TallennaKiinteistonOmistajatMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
@@ -34,6 +35,7 @@ export type OmistajaHakuEvent = {
   oid: string;
   uid: string;
   kiinteistotunnukset: string[];
+  status?: Status | null;
 };
 
 let mmlClient: MmlClient | undefined = undefined;
@@ -171,7 +173,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
         auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
         await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
-        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, false, null);
+        await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, false, null, hakuEvent.status);
       } catch (e) {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
         await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, true, null);
@@ -180,7 +182,6 @@ const handlerFactory = (event: SQSEvent) => async () => {
     }
   } catch (e) {
     log.error("Kiinteistöjen haku epäonnistui: " + e);
-    throw e;
   } finally {
     setLogContextOid(undefined);
     identifyMockUser(undefined);
@@ -248,7 +249,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   } else {
     kiinteistotunnukset = input.kiinteistotunnukset;
   }
-  const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset, uid };
+  const event: OmistajaHakuEvent = { oid: input.oid, kiinteistotunnukset, uid, status: input.status };
   await getSQS().sendMessage({ MessageBody: JSON.stringify(event), QueueUrl: await parameters.getKiinteistoSQSUrl() });
   auditLog.info("Omistajien haku event lisätty", { event });
 }

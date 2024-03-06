@@ -473,6 +473,7 @@ Object {
         "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
+        "tiedotaKiinteistonomistajia": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
       },
     },
@@ -612,6 +613,7 @@ Object {
           "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
           "__typename": "LokalisoituTeksti",
         },
+        "tiedotaKiinteistonomistajia": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
       },
       "velho": Object {
@@ -812,6 +814,7 @@ Object {
           "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
           "__typename": "LokalisoituTeksti",
         },
+        "tiedotaKiinteistonomistajia": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
       },
       "velho": Object {

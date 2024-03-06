@@ -1,4 +1,4 @@
-import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, Vaihe } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -232,6 +232,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         epaaktiivinen={epaaktiivinen}
         julkaisunTila={nahtavillaoloVaiheJulkaisu.tila}
         ilmoituksenVastaanottajat={nahtavillaoloVaiheJulkaisu.ilmoituksenVastaanottajat}
+        vaihe={Vaihe.NAHTAVILLAOLO}
+        omistajahakuStatus={projekti.omistajahaku?.status}
+        oid={projekti.oid}
+        uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus}
+        kuulutusPaiva={kuulutusPaiva}
       />
     </>
   );

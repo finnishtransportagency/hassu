@@ -1,5 +1,13 @@
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
-import { DBProjekti, LausuntoPyynnonTaydennys, LausuntoPyynto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
+import {
+  DBProjekti,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  LausuntoPyynnonTaydennys,
+  LausuntoPyynto,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+} from "../database/model";
 
 export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   projekti: Pick<DBProjekti, "nahtavillaoloVaiheJulkaisut" | "nahtavillaoloVaihe">
@@ -7,6 +15,16 @@ export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   return (
     projekti.nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
     projekti.nahtavillaoloVaihe ??
+    undefined
+  );
+}
+
+export function findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(
+  projekti: Pick<DBProjekti, "hyvaksymisPaatosVaiheJulkaisut" | "hyvaksymisPaatosVaihe">
+): HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe | undefined {
+  return (
+    projekti.hyvaksymisPaatosVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
+    projekti.hyvaksymisPaatosVaihe ??
     undefined
   );
 }

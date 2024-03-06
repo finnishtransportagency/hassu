@@ -59,7 +59,7 @@ export function adaptSearchResultsToMuistuttajaDocuments(results: any): DBMuistu
 }
 
 export function adaptSearchResultsToApiMuistuttaja(results: any): API.Muistuttaja[] {
-  if (results.status && results.status >= 400) {
+  if (results.status && results.status >= 400 && results.status !== 404) {
     log.error(results);
     throw new Error("Muistuttajahaussa tapahtui virhe");
   }
