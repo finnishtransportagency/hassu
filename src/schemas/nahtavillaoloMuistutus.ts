@@ -1,8 +1,5 @@
-import { allowedUploadFileTypes } from "common/allowedUploadFileTypes";
+import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
 import * as Yup from "yup";
-
-// 25MB
-const MAX_LIITE_FILE_SIZE = 25 * 1024 * 1024;
 
 export const muistutusSchema = Yup.object().shape({
   katuosoite: Yup.string().required("katuosoite_on_pakollinen").max(100, "katuosoite_max_100"),
@@ -13,8 +10,8 @@ export const muistutusSchema = Yup.object().shape({
   muistutus: Yup.string().required("muistutus_on_pakollinen").max(2000),
   liitteet: Yup.array().of(
     Yup.object().shape({
-      koko: Yup.number().required("tiedosto_on_liian_suuri").max(MAX_LIITE_FILE_SIZE, "tiedosto_on_liian_suuri"),
-      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedUploadFileTypes, "tiedostotyyppi_ei_tuettu"),
+      koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
+      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypes, "tiedostotyyppi_ei_tuettu"),
     })
   ),
 });

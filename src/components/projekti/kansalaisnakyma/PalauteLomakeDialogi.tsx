@@ -18,9 +18,9 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
-import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
 
 interface Props {
   open: boolean;
@@ -48,7 +48,7 @@ const defaultValues = {
   liite: null,
 };
 
-export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Props): ReactElement {
+export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
@@ -264,11 +264,11 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       className="hidden"
                       id="file-input"
                       type="file"
-                      accept={allowedUploadFileTypes.join(", ")}
+                      accept={allowedFileTypes.join(", ")}
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
-                        if (tiedosto && tiedosto.size > 25 * 1024 * 1024) {
+                        if (tiedosto && tiedosto.size > maxFileSize) {
                           setTiedostoLiianSuuri(true);
                         }
                         field.onChange(e.target.value);
@@ -309,7 +309,7 @@ interface KiitosProps {
   onClose: () => void;
 }
 
-export function KiitosDialogi({ open, onClose }: KiitosProps): ReactElement {
+export function KiitosDialogi({ open, onClose }: Readonly<KiitosProps>): ReactElement {
   const { t } = useTranslation();
   return (
     <HassuDialog scroll="body" open={open} title={t("projekti:palautelomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>

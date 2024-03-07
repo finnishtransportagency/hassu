@@ -1,5 +1,5 @@
 import { Autocomplete, DialogActions, DialogContent, styled, TextField, Typography } from "@mui/material";
-import React, { ReactElement, useCallback, useRef, useState } from "react";
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
@@ -24,7 +24,6 @@ import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 import useApi from "src/hooks/useApi";
 import Trans from "next-translate/Trans";
 import ExtLink from "@components/ExtLink";
-import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
@@ -34,6 +33,7 @@ import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
+import { allowedFileTypes } from "common/fileValidationSettings";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -61,7 +61,7 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
   return input;
 };
 
-export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Props): ReactElement {
+export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
 
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
@@ -138,6 +138,14 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
 
   const constructErrorMessage = useCallback((msg) => t(`common:virheet.${msg}`), [t]);
 
+  const viranomainenText = useMemo(() => {
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    if (!viranomainen) {
+      return "<Viranomaistieto puuttuu>";
+    }
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylavirasto") : t("common:ely-keskus");
+  }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
+
   return (
     <Section noDivider>
       <H2>{t("projekti:muistutuslomake.jata_muistutus")}</H2>
@@ -154,11 +162,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
         <ContentSpacer>
           <p>
             {t("projekti:muistutuslomake.viranomainen_tarvitsee", {
-              viranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen
-                ? projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-                  ? t("common:vaylavirasto")
-                  : t("common:ely-keskus")
-                : "<Viranomaistieto puuttuu>",
+              viranomainen: viranomainenText,
             })}
           </p>
           <p>{t(`projekti:muistutuslomake.saat_tekemastasi_muistutuksesta_${kayttaja?.suomifiEnabled ? "suomifi" : "email"}`)}</p>
@@ -276,10 +280,10 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: P
               type="file"
               ref={inputRef}
               multiple
-              accept={allowedUploadFileTypes.join(", ")}
+              accept={allowedFileTypes.join(", ")}
               onChange={(e) => {
                 const files = e.target.files;
-                if (!!files?.length) {
+                if (files?.length) {
                   Array.from(files).forEach((file) =>
                     liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type })
                   );
@@ -315,18 +319,21 @@ interface KiitosProps {
   projekti: ProjektiJulkinen;
 }
 
-export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: KiitosProps): ReactElement {
+export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: Readonly<KiitosProps>): ReactElement {
   const { t } = useTranslation();
+  const viranomaisenText = useMemo(() => {
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    if (!viranomainen) {
+      return "<Viranomaistieto puuttuu>";
+    }
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
+  }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   return (
     <HassuDialog scroll="body" open={open} title={t("projekti:muistutuslomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>
       <DialogContent>
         <p>
           {t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi", {
-            viranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen
-              ? projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
-                ? t("common:vaylaviraston")
-                : t("common:ely-keskuksen")
-              : "<Viranomaistieto puuttuu>",
+            viranomainen: viranomaisenText,
           })}
         </p>
         <p>
