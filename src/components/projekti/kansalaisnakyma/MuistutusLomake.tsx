@@ -46,20 +46,15 @@ type MuistutusInputForm = Omit<MuistutusInput, "liitteet"> & { liitteet: { nimi:
 const countryCodes = Object.keys(countries.getNumericCodes());
 const FINLAND_COUNTRYCODE = "246";
 
-const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => {
-  const input: MuistutusInputForm = {
-    katuosoite: kayttaja?.osoite ?? "",
-    postinumero: kayttaja?.postinumero ?? "",
-    postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
-    maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
-    muistutus: "",
-    liitteet: [],
-  };
-  if (kayttaja?.suomifiEnabled) {
-    input.sahkoposti = kayttaja?.email ?? "";
-  }
-  return input;
-};
+const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => ({
+  katuosoite: kayttaja?.osoite ?? "",
+  postinumero: kayttaja?.postinumero ?? "",
+  postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
+  maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
+  muistutus: "",
+  liitteet: [],
+  sahkoposti: kayttaja?.email ?? "",
+});
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
@@ -138,6 +133,16 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
 
   const constructErrorMessage = useCallback((msg) => t(`common:virheet.${msg}`), [t]);
 
+  const countryCodesSorted = useMemo(
+    () =>
+      countryCodes.sort((codeA, codeB) => {
+        const nameA = countries.getName(codeA, lang) ?? codeA;
+        const nameB = countries.getName(codeB, lang) ?? codeB;
+        return nameA.localeCompare(nameB);
+      }),
+    [lang]
+  );
+
   const viranomainenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
     if (!viranomainen) {
@@ -193,21 +198,19 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 label={t("common:postitoimipaikka")}
               />
               <Autocomplete
-                options={countryCodes}
-                renderInput={({ inputProps = {}, ...params }) => {
-                  return (
-                    <TextField
-                      {...params}
-                      name={name}
-                      label={t("common:maa")}
-                      inputProps={{ ref, ...inputProps }}
-                      error={!!fieldState.error?.message}
-                      helperText={fieldState.error?.message ? constructErrorMessage(fieldState.error.message) : undefined}
-                      required
-                    />
-                  );
-                }}
-                getOptionLabel={(option) => countries.getName(option, lang) ?? option}
+                options={countryCodesSorted}
+                renderInput={({ inputProps = {}, ...params }) => (
+                  <TextField
+                    {...params}
+                    name={name}
+                    label={t("common:maa")}
+                    inputProps={{ ref, ...inputProps }}
+                    error={!!fieldState.error?.message}
+                    helperText={fieldState.error?.message ? constructErrorMessage(fieldState.error.message) : undefined}
+                    required
+                  />
+                )}
+                getOptionLabel={(code) => countries.getName(code, lang) ?? code}
                 value={value}
                 inputValue={inputValue}
                 onInputChange={(_event, newInputValue) => {
@@ -218,12 +221,10 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 }}
                 onBlur={onBlur}
               />
-              {!kayttaja?.suomifiEnabled && (
-                <TextFieldWithController
-                  controllerProps={{ control, name: "sahkoposti", constructErrorMessage }}
-                  label={t("common:sahkoposti")}
-                />
-              )}
+              <TextFieldWithController
+                controllerProps={{ control, name: "sahkoposti", constructErrorMessage }}
+                label={t("common:sahkoposti")}
+              />
             </HassuGrid>
           </HassuStack>
           <hr />

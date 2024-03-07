@@ -70,7 +70,6 @@ export type Muistutus = {
   postinumero?: string | null;
   postitoimipaikka?: string | null;
   sahkoposti?: string | null;
-  puhelinnumero?: string | null;
   muistutus?: string | null;
   liitteet?: string[] | null;
   maakoodi?: string | null;

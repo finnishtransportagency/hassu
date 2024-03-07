@@ -1,9 +1,38 @@
 import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { Muistutus } from "../database/model";
-import { localDateTimeString } from "../util/dateUtil";
-import { uuid } from "hassu-common/util/uuid";
+import { SuomiFiCognitoKayttaja } from "../user/suomiFiCognitoKayttaja";
 
-export function adaptMuistutusInput(muistutus: MuistutusInput): Muistutus {
-  const aikaleima = localDateTimeString();
-  return { ...muistutus, vastaanotettu: aikaleima, id: uuid.v4() };
+type AdaptMuistutusInputOptions = {
+  aikaleima: string;
+  muistutusId: string;
+  liitteet: string[] | null | undefined;
+  loggedInUser: SuomiFiCognitoKayttaja | undefined;
+  muistutusInput: MuistutusInput;
+};
+
+const FINLAND_COUNTRYCODE = "246";
+
+export function adaptMuistutusInput({
+  aikaleima,
+  muistutusId,
+  liitteet,
+  loggedInUser,
+  muistutusInput,
+}: AdaptMuistutusInputOptions): Muistutus {
+  // Set country code as undefined when it is the country code of Finland
+  // We don't want it to be visible anywhere
+  const maakoodi = muistutusInput.maa !== FINLAND_COUNTRYCODE ? muistutusInput.maa : undefined;
+  return {
+    vastaanotettu: aikaleima,
+    id: muistutusId,
+    liitteet,
+    etunimi: loggedInUser?.given_name,
+    sukunimi: loggedInUser?.family_name,
+    maakoodi,
+    katuosoite: muistutusInput.katuosoite,
+    muistutus: muistutusInput.muistutus,
+    postinumero: muistutusInput.postinumero,
+    postitoimipaikka: muistutusInput.postitoimipaikka,
+    sahkoposti: muistutusInput.sahkoposti,
+  };
 }

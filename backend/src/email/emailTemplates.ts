@@ -22,6 +22,7 @@ import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksym
 import { EmailOptions } from "./model/emailOptions";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "../asiakirja/adapter/kuulutusKutsuAdapter";
 import dayjs from "dayjs";
+import countries from "i18n-iso-countries";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -313,6 +314,7 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
   const muistutusLiiteTeksti = getMuistutusLiiteTeksti(muistutus);
   const vastaanotettu = Date.parse(muistutus.vastaanotettu);
+  const maaTeksti = muistutus.maakoodi ? `${countries.getName(muistutus.maakoodi, "fi")}\n` : "";
   const text = `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}
 
 Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
@@ -327,10 +329,11 @@ ${asiatunnus}
 Muistutuksen lähettäjän tiedot
 Nimi
 ${muistutus.etunimi} ${muistutus.sukunimi}
+
 Osoite
 ${muistutus.katuosoite}
 ${muistutus.postinumero} ${muistutus.postitoimipaikka}
-
+${maaTeksti}
 Muistutus
 ${muistutus.muistutus}
 ${muistutusLiiteTeksti}
@@ -377,7 +380,7 @@ ${muistutus.liitteet
     const idx = liite?.lastIndexOf("/") ?? -1;
     return liite.substring(idx + 1);
   })
-  .join("\n")}`;
+  .join("\n")}\n`;
 }
 
 export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }: PalveluPalauteInput): EmailOptions {

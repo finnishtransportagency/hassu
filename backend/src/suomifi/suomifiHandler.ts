@@ -111,7 +111,6 @@ function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
     muistutus: muistuttaja.muistutus,
     postitoimipaikka: muistuttaja.postitoimipaikka,
     postinumero: muistuttaja.postinumero,
-    puhelinnumero: muistuttaja.puhelinnumero,
     sahkoposti: muistuttaja.sahkoposti,
     liitteet: muistuttaja.liitteet,
   };
@@ -135,9 +134,7 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
     hetu,
   };
   const resp = await client.lahetaInfoViesti(viesti);
-  const kohde = resp.LisaaKohteitaResult?.Kohteet?.Kohde?.find(
-    (k) => k.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu) !== undefined
-  );
+  const kohde = resp.LisaaKohteitaResult?.Kohteet?.Kohde?.find((k) => k.Asiakas?.some((a) => a.attributes.AsiakasTunnus === hetu));
   const asiakas = kohde?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
   const success = resp.LisaaKohteitaResult?.TilaKoodi?.TilaKoodi === 0 && asiakas?.KohteenTila === 200;
   if (success) {
