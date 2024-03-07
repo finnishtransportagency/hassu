@@ -34,10 +34,10 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
     aineistopaketti: string | null
   ): Promise<API.LadattavatTiedostot> {
     const oid = projekti.oid;
-    const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
+    const hyvaksymisEsitysTiedostot: API.HyvaksymisEsitysLadattavaTiedosto[] = (
       await Promise.all(
         (hyvaksymisEsitys.hyvaksymisEsitys?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu) ?? []).map((tiedosto) =>
-          this.adaptLadattuTiedostoToLadattavaTiedosto(oid, tiedosto)
+          this.adaptHyvaksymisEsitysLadattuTiedostoToLadattavaTiedosto(oid, tiedosto)
         )
       )
     ).sort(jarjestaTiedostot);

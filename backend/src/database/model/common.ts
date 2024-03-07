@@ -133,7 +133,7 @@ export type Velho = {
   geoJSON?: string | null;
 };
 
-export type LadattuTiedosto = {
+export interface ILadattuTiedosto {
   // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   tiedosto: string;
   // Kayttajalle esitettava tiedostonimi
@@ -143,8 +143,13 @@ export type LadattuTiedosto = {
   //Numero jarjestamista varten
   jarjestys?: number;
   tila: LadattuTiedostoTila;
-  kunta?: number;
 };
+
+export type LadattuTiedosto = ILadattuTiedosto;
+
+export type HyvaksymisEsitysLadattuTiedosto = {
+  kunta?: number;
+} & ILadattuTiedosto;
 
 export type Laskutustiedot = {
   OVTtunnus?: string | null;

@@ -177,6 +177,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsitys",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "HyvaksymisEsitysInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Hyvaksymispaatos",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -220,6 +232,12 @@
       {
         "kind": "OBJECT",
         "name": "HyvaksymisPaatosVaihePDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "HyvaksymisTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -435,6 +453,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Laskutustiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LaskutustiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "LatausTiedot",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -495,6 +525,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "ListaaHyvaksymisEsityksenTiedostotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "ListaaKayttajatInput",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -550,6 +586,12 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "LokalisoituTekstiInputEiPakollinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MmlYhteystieto",
         "possibleTypes": null,
         "__typename": "__Type"
       },

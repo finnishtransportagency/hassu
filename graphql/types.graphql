@@ -105,7 +105,7 @@ enum AsiakirjaTyyppi {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
   MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS
-  
+
   JATKOPAATOSKUULUTUS
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
@@ -819,7 +819,7 @@ type LokalisoituLinkki {
   RUOTSI: Linkki
 }
 
-type LadattuTiedosto {
+interface ILadattuTiedosto {
   """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
@@ -836,6 +836,24 @@ type LadattuTiedosto {
   """
   Numero jarjestamista varten
   """
+  jarjestys: Int
+  tila: LadattuTiedostoTila!
+}
+
+type LadattuTiedosto implements ILadattuTiedosto {
+  tiedosto: String!
+  nimi: String!
+  uuid: String!
+  tuotu: String
+  jarjestys: Int
+  tila: LadattuTiedostoTila!
+}
+
+type HyvaksymisEsitysLadattuTiedosto implements ILadattuTiedosto {
+  tiedosto: String!
+  nimi: String!
+  uuid: String!
+  tuotu: String
   jarjestys: Int
   tila: LadattuTiedostoTila!
   kunta: Int
@@ -1130,7 +1148,7 @@ type LadattavatTiedostot {
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
-  hyvaksymisEsitys: [LadattavaTiedosto!]
+  hyvaksymisEsitys: [HyvaksymisEsitysLadattavaTiedosto!]
   suunnitelma: [LadattavaTiedosto!]
   lausunnot: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
@@ -1138,7 +1156,7 @@ type LadattavatTiedostot {
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }
 
-type LadattavaTiedosto {
+interface ILadattavaTiedosto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
   """
@@ -1155,6 +1173,22 @@ type LadattavaTiedosto {
   """
   Numero jarjestamista varten
   """
+  jarjestys: Int
+}
+
+type LadattavaTiedosto implements ILadattavaTiedosto{
+  kategoriaId: String
+  linkki: String
+  nimi: String!
+  tuotu: String
+  jarjestys: Int
+}
+
+type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto{
+  kategoriaId: String
+  linkki: String
+  nimi: String!
+  tuotu: String
   jarjestys: Int
   kunta: Int
 }
