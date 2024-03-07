@@ -18,6 +18,7 @@ import { assertIsDefined } from "../util/assertions";
 import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
 import { hyvaksymisEsitysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/HyvaksymisEsitysDownloadLinkService";
+import { requirePermissionMuokkaa } from "../user";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonTiedostot({
@@ -168,6 +169,7 @@ class TiedostoDownloadLinkHandler {
     log.info("Loading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
+      requirePermissionMuokkaa(projekti);
       return hyvaksymisEsitysDownloadLinkService.esikatseleTiedostot(projekti, hyvaksymisEsitys);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);

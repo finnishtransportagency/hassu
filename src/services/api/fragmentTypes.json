@@ -189,6 +189,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsitysLadattavaTiedosto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisEsitysLadattuTiedosto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Hyvaksymispaatos",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -245,6 +257,36 @@
         "kind": "SCALAR",
         "name": "ID",
         "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ILadattavaTiedosto",
+        "possibleTypes": [
+          {
+            "name": "HyvaksymisEsitysLadattavaTiedosto",
+            "__typename": "__Type"
+          },
+          {
+            "name": "LadattavaTiedosto",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ILadattuTiedosto",
+        "possibleTypes": [
+          {
+            "name": "HyvaksymisEsitysLadattuTiedosto",
+            "__typename": "__Type"
+          },
+          {
+            "name": "LadattuTiedosto",
+            "__typename": "__Type"
+          }
+        ],
         "__typename": "__Type"
       },
       {
