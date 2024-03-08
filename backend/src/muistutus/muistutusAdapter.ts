@@ -10,8 +10,6 @@ type AdaptMuistutusInputOptions = {
   muistutusInput: MuistutusInput;
 };
 
-const FINLAND_COUNTRYCODE = "246";
-
 export function adaptMuistutusInput({
   aikaleima,
   muistutusId,
@@ -21,7 +19,7 @@ export function adaptMuistutusInput({
 }: AdaptMuistutusInputOptions): Muistutus {
   // Set country code as undefined when it is the country code of Finland
   // We don't want it to be visible anywhere
-  const maakoodi = muistutusInput.maa !== FINLAND_COUNTRYCODE ? muistutusInput.maa : undefined;
+  const maakoodi = muistutusInput.maa !== "FI" ? muistutusInput.maa : undefined;
   return {
     vastaanotettu: aikaleima,
     id: muistutusId,

@@ -27,13 +27,14 @@ import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import countries from "i18n-iso-countries";
 
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypes } from "common/fileValidationSettings";
+import lookup from "country-code-lookup";
+import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -43,18 +44,20 @@ interface Props {
 
 type MuistutusInputForm = Omit<MuistutusInput, "liitteet"> & { liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[] };
 
-const countryCodes = Object.keys(countries.getNumericCodes());
-const FINLAND_COUNTRYCODE = "246";
+const countryCodes = lookup.countries.map((country) => country.iso2);
 
-const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => ({
-  katuosoite: kayttaja?.osoite ?? "",
-  postinumero: kayttaja?.postinumero ?? "",
-  postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
-  maa: kayttaja?.maakoodi ?? FINLAND_COUNTRYCODE,
-  muistutus: "",
-  liitteet: [],
-  sahkoposti: kayttaja?.email ?? "",
-});
+const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => {
+  const maa = lookup.byIso(kayttaja?.maakoodi ?? "FI")?.iso2 ?? "FI";
+  return {
+    katuosoite: kayttaja?.osoite ?? "",
+    postinumero: kayttaja?.postinumero ?? "",
+    postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
+    maa,
+    muistutus: "",
+    liitteet: [],
+    sahkoposti: kayttaja?.email ?? "",
+  };
+};
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
@@ -136,8 +139,8 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
   const countryCodesSorted = useMemo(
     () =>
       countryCodes.sort((codeA, codeB) => {
-        const nameA = countries.getName(codeA, lang) ?? codeA;
-        const nameB = countries.getName(codeB, lang) ?? codeB;
+        const nameA = getLocalizedCountryName(lang, codeA);
+        const nameB = getLocalizedCountryName(lang, codeB);
         return nameA.localeCompare(nameB);
       }),
     [lang]
@@ -210,7 +213,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                     required
                   />
                 )}
-                getOptionLabel={(code) => countries.getName(code, lang) ?? code}
+                getOptionLabel={(code) => getLocalizedCountryName(lang, code)}
                 value={value}
                 inputValue={inputValue}
                 onInputChange={(_event, newInputValue) => {

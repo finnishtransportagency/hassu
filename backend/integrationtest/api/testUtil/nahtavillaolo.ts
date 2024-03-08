@@ -142,7 +142,7 @@ export async function testLisaaMuistutusIncrement(
     postinumero: "03132",
     postitoimipaikka: "Postitoimipaikka",
     sahkoposti: "etunimi.sukunimi@org.fi",
-    maa: "246",
+    maa: "FI",
     liitteet: [],
   });
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);

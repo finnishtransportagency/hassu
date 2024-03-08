@@ -10,6 +10,7 @@ import {
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
+import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import {
   findHyvaksymisPaatosVaiheWaitingForApproval,
   findJatkoPaatos1VaiheWaitingForApproval,
@@ -22,7 +23,6 @@ import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksym
 import { EmailOptions } from "./model/emailOptions";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "../asiakirja/adapter/kuulutusKutsuAdapter";
 import dayjs from "dayjs";
-import countries from "i18n-iso-countries";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -314,7 +314,8 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
   const muistutusLiiteTeksti = getMuistutusLiiteTeksti(muistutus);
   const vastaanotettu = Date.parse(muistutus.vastaanotettu);
-  const maaTeksti = muistutus.maakoodi ? `${countries.getName(muistutus.maakoodi, "fi")}\n` : "";
+
+  const maaTeksti = muistutus.maakoodi ? `${getLocalizedCountryName("fi", muistutus.maakoodi)}\n` : "";
   const text = `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}
 
 Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
@@ -336,7 +337,7 @@ ${muistutus.postinumero} ${muistutus.postitoimipaikka}
 ${maaTeksti}
 Muistutus
 ${muistutus.muistutus}
-${muistutusLiiteTeksti}
+${muistutusLiiteTeksti ? muistutusLiiteTeksti + "\n" : ""}
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}`;
   return {
     subject: `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}`,
@@ -380,7 +381,7 @@ ${muistutus.liitteet
     const idx = liite?.lastIndexOf("/") ?? -1;
     return liite.substring(idx + 1);
   })
-  .join("\n")}\n`;
+  .join("\n")}`;
 }
 
 export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }: PalveluPalauteInput): EmailOptions {
