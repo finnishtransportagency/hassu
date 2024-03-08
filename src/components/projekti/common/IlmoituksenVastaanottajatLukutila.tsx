@@ -61,6 +61,7 @@ export default function IlmoituksenVastaanottajat({
           omistajahakuStatus={omistajahakuStatus}
           uudelleenKuulutus={uudelleenKuulutus}
           kuulutusPaiva={kuulutusPaiva}
+          julkaisunTila={julkaisunTila}
         />
       )}
     </Section>

@@ -223,15 +223,20 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               </HassuGrid>
             ))}
           </SectionContent>
-          {!paatosIsJatkopaatos(paatosTyyppi) && !paatosVaihe?.uudelleenKuulutus && (
-            <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} oid={oid} omistajahakuStatus={omistajahakuStatus} />
-          )}
           {!paatosIsJatkopaatos(paatosTyyppi) && (
-            <KiinteistonOmistajatUudelleenkuulutus
-              oid={oid}
-              uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
-              vaihe={Vaihe.HYVAKSYMISPAATOS}
-            />
+            <>
+              <KiinteistonomistajatOhje
+                vaihe={Vaihe.HYVAKSYMISPAATOS}
+                oid={oid}
+                omistajahakuStatus={omistajahakuStatus}
+                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+              />
+              <KiinteistonOmistajatUudelleenkuulutus
+                oid={oid}
+                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+                vaihe={Vaihe.HYVAKSYMISPAATOS}
+              />
+            </>
           )}
         </Section>
       </div>

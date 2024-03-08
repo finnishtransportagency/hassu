@@ -1,7 +1,7 @@
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { Status, UudelleenKuulutus, Vaihe } from "@services/api";
+import { KuulutusJulkaisuTila, Status, UudelleenKuulutus, Vaihe } from "@services/api";
 import { nyt } from "backend/src/util/dateUtil";
 import dayjs from "dayjs";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
@@ -13,6 +13,7 @@ interface KiinteistonomistajatOhjeProps {
   omistajahakuStatus: Status | null | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   kuulutusPaiva?: string | null;
+  julkaisunTila?: KuulutusJulkaisuTila | null;
 }
 
 function KiinteistojaEiLisatty({ oid }: KiinteistonomistajatOhjeProps) {
@@ -58,9 +59,9 @@ function KiinteistotLisatty({ oid, vaihe }: KiinteistonomistajatOhjeProps) {
   }
 }
 
-export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatus }: KiinteistonomistajatOhjeProps) {
+export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatus, uudelleenKuulutus }: KiinteistonomistajatOhjeProps) {
   const { data } = useSuomifiUser();
-  if (data?.suomifiViestitEnabled && vaihe) {
+  if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
     return (
       <SectionContent>
         <h6 className="font-bold">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h6>
@@ -76,10 +77,16 @@ export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatu
   }
 }
 
-export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid, uudelleenKuulutus, kuulutusPaiva }: KiinteistonomistajatOhjeProps) {
+export function KiinteistonOmistajatOhjeLukutila({
+  vaihe,
+  oid,
+  uudelleenKuulutus,
+  kuulutusPaiva,
+  julkaisunTila,
+}: KiinteistonomistajatOhjeProps) {
   const { data } = useSuomifiUser();
   const pvm = dayjs(kuulutusPaiva, "DD.MM.YYYY").startOf("date");
-  const inPast = pvm.isBefore(nyt());
+  const inPast = pvm.isBefore(nyt()) && julkaisunTila !== KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
   if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>

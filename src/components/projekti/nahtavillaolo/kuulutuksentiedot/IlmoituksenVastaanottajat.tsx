@@ -226,9 +226,12 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               </HassuGrid>
             ))}
           </SectionContent>
-          {!nahtavillaoloVaihe?.uudelleenKuulutus && (
-            <KiinteistonomistajatOhje vaihe={Vaihe.NAHTAVILLAOLO} oid={oid} omistajahakuStatus={omistajahakuStatus} />
-          )}
+          <KiinteistonomistajatOhje
+            vaihe={Vaihe.NAHTAVILLAOLO}
+            oid={oid}
+            omistajahakuStatus={omistajahakuStatus}
+            uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
+          />
           <KiinteistonOmistajatUudelleenkuulutus
             oid={oid}
             uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
