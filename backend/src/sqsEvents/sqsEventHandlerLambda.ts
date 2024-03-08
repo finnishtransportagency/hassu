@@ -25,6 +25,10 @@ import { PublishOrExpireEventType } from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
 import { emailClient } from "../email/email";
 import { createKuukausiEpaaktiiviseenEmail } from "../email/emailTemplates";
+import {
+  findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu,
+  findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+} from "../util/lausuntoPyyntoUtil";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -421,12 +425,20 @@ export const handlerFactory = (event: SQSEvent) => async () => {
 
       if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
         await projektiSearchService.indexProjekti(projekti);
-        if (
-          successfulSynchronization &&
-          (sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ||
-            sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE)
-        ) {
-          await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+        if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+          const julkaisu = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+          if (!julkaisu?.uudelleenKuulutus || julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) {
+            await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+          } else {
+            log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia");
+          }
+        } else if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+          const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
+          if (!julkaisu?.uudelleenKuulutus || julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) {
+            await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+          } else {
+            log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia ja muistuttajia");
+          }
         }
       }
       if (!successfulSynchronization) {

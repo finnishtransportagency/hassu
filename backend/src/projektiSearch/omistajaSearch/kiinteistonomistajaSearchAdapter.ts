@@ -59,7 +59,7 @@ export function adaptSearchResultsToProjektiDocuments(results: any): DBOmistaja[
 }
 
 export function adaptSearchResultsToApiOmistaja(results: any): API.Omistaja[] {
-  if (results.status && results.status >= 400) {
+  if (results.status && results.status >= 400 && results.status !== 404) {
     log.error(results);
     throw new Error("Omistajahaussa tapahtui virhe");
   }

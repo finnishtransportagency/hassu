@@ -1004,7 +1004,7 @@ export class HassuBackendStack extends Stack {
       queueName: "kiinteisto-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(12),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.hours(2),
+      retentionPeriod: Duration.minutes(10),
     });
     new ssm.StringParameter(this, "KiinteistoSQSUrl", {
       description: "Generated KiinteistoSQSUrl",

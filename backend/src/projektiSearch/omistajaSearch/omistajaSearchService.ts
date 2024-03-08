@@ -77,7 +77,7 @@ class OmistajaSearchService {
         },
       },
     });
-    return { kiinteistotunnusMaara: response?.aggregations?.unique_kiinteistotunnus?.value, omistajaMaara: response.hits.total.value };
+    return { kiinteistotunnusMaara: response?.aggregations?.unique_kiinteistotunnus?.value, omistajaMaara: response?.hits?.total?.value };
   }
 
   async searchOmistajat(params: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {

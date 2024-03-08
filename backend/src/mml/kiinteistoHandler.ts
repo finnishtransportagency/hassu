@@ -177,7 +177,6 @@ const handlerFactory = (event: SQSEvent) => async () => {
       } catch (e) {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
         await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, true, null);
-        throw e;
       }
     }
   } catch (e) {

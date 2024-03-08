@@ -18,6 +18,7 @@ import { MenuItem } from "@mui/material";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
 import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
+import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -222,7 +223,16 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               </HassuGrid>
             ))}
           </SectionContent>
-          {!paatosIsJatkopaatos(paatosTyyppi) && <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} oid={oid} omistajahakuStatus={omistajahakuStatus} />}
+          {!paatosIsJatkopaatos(paatosTyyppi) && !paatosVaihe?.uudelleenKuulutus && (
+            <KiinteistonomistajatOhje vaihe={Vaihe.HYVAKSYMISPAATOS} oid={oid} omistajahakuStatus={omistajahakuStatus} />
+          )}
+          {!paatosIsJatkopaatos(paatosTyyppi) && (
+            <KiinteistonOmistajatUudelleenkuulutus
+              oid={oid}
+              uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+              vaihe={Vaihe.HYVAKSYMISPAATOS}
+            />
+          )}
         </Section>
       </div>
     </>

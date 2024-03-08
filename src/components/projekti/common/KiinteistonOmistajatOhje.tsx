@@ -1,7 +1,9 @@
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { Status, Vaihe } from "@services/api";
+import { Status, UudelleenKuulutus, Vaihe } from "@services/api";
+import { nyt } from "backend/src/util/dateUtil";
+import dayjs from "dayjs";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 
 export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
@@ -9,6 +11,8 @@ interface KiinteistonomistajatOhjeProps {
   vaihe?: KiinteistonomistajatVaihe;
   oid: string;
   omistajahakuStatus: Status | null | undefined;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
+  kuulutusPaiva?: string | null;
 }
 
 function KiinteistojaEiLisatty({ oid }: KiinteistonomistajatOhjeProps) {
@@ -72,42 +76,58 @@ export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatu
   }
 }
 
-export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid }: KiinteistonomistajatOhjeProps) {
+export function KiinteistonOmistajatOhjeLukutila({ vaihe, oid, uudelleenKuulutus, kuulutusPaiva }: KiinteistonomistajatOhjeProps) {
   const { data } = useSuomifiUser();
+  const pvm = dayjs(kuulutusPaiva, "DD.MM.YYYY").startOf("date");
+  const inPast = pvm.isBefore(nyt());
   if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat</h6>
-        <p>
-          Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan, kun kuulutus hyväksytään
-          julkaistavaksi.
-        </p>
-        <p>
-          Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
-          tiedotettavat löytyvät{" "}
-          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
-            Tiedottaminen
-          </StyledLink>{" "}
-          -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
-        </p>
+        {uudelleenKuulutus?.tiedotaKiinteistonomistajia === false && (
+          <p>{`Kiinteistönomistajia ei ${inPast ? "tiedotettu" : "tiedoteta"} uudelleenkuulutuksen yhteydessä.`}</p>
+        )}
+        {(!uudelleenKuulutus || uudelleenKuulutus.tiedotaKiinteistonomistajia === true) && (
+          <>
+            <p>
+              Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan, kun kuulutus hyväksytään
+              julkaistavaksi.
+            </p>
+            <p>
+              Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
+              tiedotettavat löytyvät{" "}
+              <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                Tiedottaminen
+              </StyledLink>{" "}
+              -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
+            </p>
+          </>
+        )}
       </SectionContent>
     );
   } else if (data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
     return (
       <SectionContent>
         <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
-        <p>
-          Lista kuulutuksen ja ilmoituksen vastaanottaneista kiinteistönomistajista ja muistuttajista muodostuu asianhallintaan, kun
-          kuulutus julkaistaan hyväksyttäväksi.
-        </p>
-        <p>
-          Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.
-          Kirjeitse tiedotettavat löytyvät{" "}
-          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
-            Tiedottaminen
-          </StyledLink>{" "}
-          -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus muilla tavoin -listoista.
-        </p>
+        {uudelleenKuulutus?.tiedotaKiinteistonomistajia === false && (
+          <p>{`Kiinteistönomistajia ja muistuttajia ei ${inPast ? "tiedotettu" : "tiedoteta"} uudelleenkuulutuksen yhteydessä.`}</p>
+        )}
+        {(!uudelleenKuulutus || uudelleenKuulutus.tiedotaKiinteistonomistajia === true) && (
+          <>
+            <p>
+              Lista kuulutuksen ja ilmoituksen vastaanottaneista kiinteistönomistajista ja muistuttajista muodostuu asianhallintaan, kun
+              kuulutus julkaistaan hyväksyttäväksi.
+            </p>
+            <p>
+              Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa
+              kirjeitse. Kirjeitse tiedotettavat löytyvät{" "}
+              <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                Tiedottaminen
+              </StyledLink>{" "}
+              -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus muilla tavoin -listoista.
+            </p>
+          </>
+        )}
       </SectionContent>
     );
   } else {

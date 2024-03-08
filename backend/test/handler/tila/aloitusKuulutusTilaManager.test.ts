@@ -96,6 +96,7 @@ describe("aloitusKuulutusTilaManager", () => {
     expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({
       tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
       alkuperainenHyvaksymisPaiva: "2022-03-21",
+      alkuperainenKuulutusPaiva: projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva,
     });
   });
 
@@ -106,6 +107,7 @@ describe("aloitusKuulutusTilaManager", () => {
     expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({
       tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
       alkuperainenHyvaksymisPaiva: "2022-03-21",
+      alkuperainenKuulutusPaiva: projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva,
     });
   });
 });
