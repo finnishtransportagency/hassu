@@ -14,5 +14,6 @@ export function adaptUudelleenKuulutusJulkinen(
     alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
     selosteKuulutukselle: adaptPakotettuLokalisoituTekstiToAPI(uudelleenKuulutus?.selosteKuulutukselle),
     selosteLahetekirjeeseen: null,
+    alkuperainenKuulutusPaiva: uudelleenKuulutus.alkuperainenKuulutusPaiva,
   };
 }

@@ -531,6 +531,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "alkuperainenKuulutusPaiva": "2022-06-09",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
         "tiedotaKiinteistonomistajia": undefined,
@@ -685,6 +686,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "alkuperainenKuulutusPaiva": "2022-06-09",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -901,6 +903,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "alkuperainenKuulutusPaiva": "2022-06-09",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -1191,6 +1194,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "alkuperainenKuulutusPaiva": "2022-06-09",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",

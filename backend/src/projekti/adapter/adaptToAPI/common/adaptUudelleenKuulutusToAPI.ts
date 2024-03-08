@@ -15,5 +15,6 @@ export function adaptUudelleenKuulutusToAPI(
     selosteKuulutukselle: adaptPakotettuLokalisoituTekstiToAPI(uudelleenKuulutus.selosteKuulutukselle),
     selosteLahetekirjeeseen: adaptPakotettuLokalisoituTekstiToAPI(uudelleenKuulutus.selosteLahetekirjeeseen),
     tiedotaKiinteistonomistajia: uudelleenKuulutus.tiedotaKiinteistonomistajia,
+    alkuperainenKuulutusPaiva: uudelleenKuulutus.alkuperainenKuulutusPaiva,
   };
 }

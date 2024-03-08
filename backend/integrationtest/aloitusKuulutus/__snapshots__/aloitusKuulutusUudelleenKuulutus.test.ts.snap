@@ -8,6 +8,7 @@ Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
       "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "alkuperainenKuulutusPaiva": "2000-01-01",
       "selosteKuulutukselle": undefined,
       "selosteLahetekirjeeseen": undefined,
       "tiedotaKiinteistonomistajia": undefined,
@@ -25,6 +26,7 @@ Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
       "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "alkuperainenKuulutusPaiva": "2000-01-01",
       "selosteKuulutukselle": Object {
         "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
         "SUOMI": "Suomiseloste uudelleenkuulutukselle",
@@ -52,6 +54,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+        "alkuperainenKuulutusPaiva": "2000-01-01",
         "selosteKuulutukselle": Object {
           "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
           "SUOMI": "Suomiseloste uudelleenkuulutukselle",
@@ -291,6 +294,7 @@ Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
       "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "alkuperainenKuulutusPaiva": "2000-01-01",
       "selosteKuulutukselle": Object {
         "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
         "SUOMI": "Suomiseloste uudelleenkuulutukselle",

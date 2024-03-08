@@ -425,6 +425,7 @@ Object {
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
+        "alkuperainenKuulutusPaiva": "2022-03-28",
         "selosteKuulutukselle": Object {
           "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
           "SUOMI": "Suomiseloste uudelleenkuulutukselle",

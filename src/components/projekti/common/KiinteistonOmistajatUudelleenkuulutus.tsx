@@ -8,7 +8,7 @@ import styled from "@emotion/styled";
 import FormGroup from "@components/form/FormGroup";
 import RadioButton from "@components/form/RadioButton";
 import dayjs from "dayjs";
-import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "backend/src/util/dateUtil";
+import { ISO_DATE_FORMAT, nyt } from "backend/src/util/dateUtil";
 
 interface KiinteistonomistajatUudelleenkuulutusProps {
   vaihe?: KiinteistonomistajatVaihe;
@@ -85,7 +85,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
       </SectionContent>
     );
   } else if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
-    const pvm = dayjs(uudelleenKuulutus.alkuperainenHyvaksymisPaiva, FULL_DATE_TIME_FORMAT_WITH_TZ).endOf("date");
+    const pvm = dayjs(uudelleenKuulutus.alkuperainenKuulutusPaiva, ISO_DATE_FORMAT).endOf("date");
     const inPast = pvm.isBefore(nyt());
     return (
       <SectionContent>

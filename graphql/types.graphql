@@ -768,6 +768,7 @@ type UudelleenKuulutus {
   selosteLahetekirjeeseen: LokalisoituTeksti
   alkuperainenHyvaksymisPaiva: String
   tiedotaKiinteistonomistajia: Boolean
+  alkuperainenKuulutusPaiva: String
 }
 
 type AineistoMuokkaus {

@@ -95,6 +95,7 @@ export type UudelleenKuulutus = {
   selosteLahetekirjeeseen?: RequiredLocalizedMap<string>;
   alkuperainenHyvaksymisPaiva?: string;
   tiedotaKiinteistonomistajia?: boolean;
+  alkuperainenKuulutusPaiva?: string;
 };
 
 export type AineistoMuokkaus = {
