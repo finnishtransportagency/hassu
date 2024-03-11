@@ -307,7 +307,8 @@
       "projektipaallikko": "Projektchef",
       "jakelu1": "Distribution",
       "jakelu2": "Enligt separat sändlista",
-      "jakelu3": "Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företagsdatasystemet",
+      "jakelu3": "Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och",
+      "jakelu4": "företagsdatasystemet",
       "tiedoksi1": "För kännedom",
       "tiedoksi2": "{{tilaajaGenetiivi}} registratorskontor"
     },
