@@ -9,6 +9,7 @@ import FormGroup from "@components/form/FormGroup";
 import RadioButton from "@components/form/RadioButton";
 import dayjs from "dayjs";
 import { ISO_DATE_FORMAT, nyt } from "backend/src/util/dateUtil";
+import { H4 } from "@components/Headings";
 
 interface KiinteistonomistajatUudelleenkuulutusProps {
   vaihe?: KiinteistonomistajatVaihe;
@@ -44,7 +45,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
   if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
-        <h6 className="font-bold">Kiinteistönomistajat</h6>
+        <H4 className="font-bold">Kiinteistönomistajat</H4>
         <Controller
           name="nahtavillaoloVaihe.uudelleenKuulutus.tiedotaKiinteistonomistajia"
           control={control}
@@ -89,7 +90,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
     const inPast = pvm.isBefore(nyt());
     return (
       <SectionContent>
-        <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
+        <H4 className="font-bold">Kiinteistönomistajat ja muistuttajat</H4>
         <Controller
           name="paatos.uudelleenKuulutus.tiedotaKiinteistonomistajia"
           control={control}

@@ -59,6 +59,7 @@ export function adaptSearchResultsToProjektiDocuments(results: any): DBOmistaja[
 }
 
 export function adaptSearchResultsToApiOmistaja(results: any): API.Omistaja[] {
+  // jos indeksiä ei löydy tulee 404 virhe, käsitellään se samoin kuin ei löytyisi mitään
   if (results.status && results.status >= 400 && results.status !== 404) {
     log.error(results);
     throw new Error("Omistajahaussa tapahtui virhe");
