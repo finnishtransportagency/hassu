@@ -173,6 +173,7 @@ type Projekti implements IProjekti {
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
   hyvaksymisEsitys: HyvaksymisEsitys
+  hyvaksymisesitys: [Hyvaksymisesitys!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -433,6 +434,31 @@ enum HyvaksymisTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   MUOKKAUS
+}
+
+type Laskutustiedot {
+  yTunnus: String!
+  ovtTunnus: String!
+  verkkolaskuoperaattorinTunnus: String!
+  viitetieto: String
+}
+
+type Hyvaksymisesitys {
+  kunta: Int!
+  uuid: String!
+  poistumisPaiva: String!
+  kiireellinenKasittely: Boolean
+  viesti: String
+  laskutustiedot: Laskutustiedot!
+  suunnitelma: [LadattuTiedosto!]
+  muistutukset: [LadattuTiedosto!]
+  lausunnot: [LadattuTiedosto!]
+  maanomistajaluettelo: [LadattuTiedosto!]
+  kuulutuksetJaKutsut: [LadattuTiedosto!]
+  muuAineistoVelhosta: [Aineisto!]
+  muuAineistoLadattu: [LadattuTiedosto!]
+  hash: String!
+  poistetaan: Boolean
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

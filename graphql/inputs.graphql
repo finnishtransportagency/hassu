@@ -15,6 +15,7 @@ input TallennaProjektiInput {
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
   hyvaksymisEsitys: HyvaksymisEsitysInput
   hyvaksymisesitys: HyvaksymisesitysInput
+  hyvaksymisesitys: [HyvaksymisesitysInput!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
