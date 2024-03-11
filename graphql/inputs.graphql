@@ -14,6 +14,7 @@ input TallennaProjektiInput {
   lausuntoPyynnot: [LausuntoPyyntoInput!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
   hyvaksymisEsitys: HyvaksymisEsitysInput
+  hyvaksymisesitys: HyvaksymisesitysInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
@@ -216,6 +217,34 @@ input NahtavillaoloVaiheInput {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   nahtavillaoloSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
+}
+
+input LaskutustiedotInput {
+  yTunnus: String!
+  ovtTunnus: String!
+  verkkolaskuoperaattorinTunnus: String!
+  viitetieto: String!
+}
+
+input HyvaksymisesitysInput {
+  kunta: Int!
+  uuid: String!
+  poistumisPaiva: String!
+  kiireellinenKasittely: Boolean
+  viesti: String!
+  laskutustiedot: LaskutustiedotInput!
+  suunnitelma: [LadattuTiedostoInput!]
+  muistutukset: [LadattuTiedostoInput!]
+  lausunnot: [LadattuTiedostoInput!]
+  maanomistajaluettelo: [LadattuTiedostoInput!]
+  kuulutuksetJaKutsut: [LadattuTiedostoInput!]
+  muuAineistoVelhosta: [AineistoInput!]
+  muuAineistoLadattu: [LadattuTiedostoInput!]
+  poistetaan: Boolean
+  """
+  lista sahkopostiosoitteita
+  """
+  esityksenVastaanottajat: [String!]
 }
 
 input LausuntoPyyntoInput {
