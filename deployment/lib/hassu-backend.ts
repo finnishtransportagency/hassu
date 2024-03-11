@@ -720,7 +720,6 @@ export class HassuBackendStack extends Stack {
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
-    pdfGeneratorLambda.grantInvoke(suomiFiLambda);
     return suomiFiLambda;
   }
 
