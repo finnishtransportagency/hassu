@@ -354,12 +354,16 @@ export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutu
   const text = `Muistutus on vastaanotettu
 Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
 Suunnitelman asiatunnus: ${asiatunnus}
+
 ${
   projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
 } käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}
+
 Muistutus:
 ${muistutus.muistutus ?? ""}
+
 ${muistutusLiiteTeksti}
 `;
   const email = {

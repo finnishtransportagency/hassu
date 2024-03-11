@@ -11,6 +11,7 @@ import { isAorL } from "../util/userUtil";
 import { parameters } from "../aws/parameters";
 import fetch from "cross-fetch";
 import { SuomiFiCognitoKayttaja } from "./suomiFiCognitoKayttaja";
+import { invokeLambda } from "../aws/lambda";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -132,6 +133,7 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         postinumero: cognitoKayttaja["custom:postinumero"],
         postitoimipaikka: cognitoKayttaja["custom:postitoimipaikka"] ?? cognitoKayttaja["custom:ulkomainenkunta"],
         maakoodi: cognitoKayttaja["custom:maakoodi"],
+        kayttajaSuomifiViestitEnabled: await haeSuomifiKayttajaViestitEnabled(cognitoKayttaja),
       };
     } else {
       return {
@@ -139,6 +141,7 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         tunnistautunut: false,
         suomifiEnabled: true,
         suomifiViestitEnabled: isSuomifiViestitEnabled,
+        kayttajaSuomifiViestitEnabled: false,
       };
     }
   } else {
@@ -146,6 +149,7 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
       __typename: "SuomifiKayttaja",
       suomifiEnabled: false,
       suomifiViestitEnabled: isSuomifiViestitEnabled,
+      kayttajaSuomifiViestitEnabled: false,
     };
   }
 }
@@ -171,6 +175,10 @@ export const installIdentifyUserFunction = (func: IdentifyUserFunc): void => {
 
 if (process.env.USER_IDENTIFIER_FUNCTIONS) {
   import(process.env.USER_IDENTIFIER_FUNCTIONS);
+}
+
+async function haeSuomifiKayttajaViestitEnabled(cognitoKayttaja: SuomiFiCognitoKayttaja): Promise<boolean> {
+  return !!(await invokeLambda("hassu-suomifi-" + config.env, true, JSON.stringify({ hetu: cognitoKayttaja["custom:hetu"] })));
 }
 
 /**

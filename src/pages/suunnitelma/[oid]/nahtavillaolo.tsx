@@ -195,15 +195,19 @@ export default function Nahtavillaolo(): ReactElement {
             <br />
             <p>{t("muistutuslomake.muistutus_info_2")}</p>
           </Notification>
-          {!kayttaja?.suomifiEnabled || kayttaja?.tunnistautunut || !authUrl ? (
-            <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
-          ) : (
-            <JataPalautettaNappi
-              teksti={t("muistutuslomake.jata_muistutus")}
-              onClick={() => {
-                router.push(authUrl);
-              }}
-            />
+          {!!authUrl && !!kayttaja && (
+            <>
+              {kayttaja.tunnistautunut ? (
+                <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
+              ) : (
+                <JataPalautettaNappi
+                  teksti={t("muistutuslomake.jata_muistutus")}
+                  onClick={() => {
+                    router.push(authUrl);
+                  }}
+                />
+              )}
+            </>
           )}
         </ContentSpacer>
       )}

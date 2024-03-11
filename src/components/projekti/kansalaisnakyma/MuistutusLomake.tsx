@@ -173,7 +173,13 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               viranomainen: viranomainenText,
             })}
           </p>
-          <p>{t(`projekti:muistutuslomake.saat_tekemastasi_muistutuksesta_${kayttaja?.suomifiEnabled ? "suomifi" : "email"}`)}</p>
+          <p>
+            {t(
+              `projekti:muistutuslomake.saat_tekemastasi_muistutuksesta_${
+                kayttaja?.kayttajaSuomifiViestitEnabled && kayttaja.suomifiViestitEnabled ? "suomifi" : "email"
+              }`
+            )}
+          </p>
           <Trans
             i18nKey="projekti:muistutuslomake.lisatietoja_henkilotietojesi"
             components={{ p: <p />, a: <ExtLink href={getTietosuojaUrl()} /> }}

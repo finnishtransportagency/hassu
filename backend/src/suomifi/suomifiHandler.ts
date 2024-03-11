@@ -36,6 +36,7 @@ import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { translate } from "../util/localization";
 import { chunkArray } from "../database/chunkArray";
 import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { Asiakas1 } from "./viranomaispalvelutwsinterface";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -116,13 +117,21 @@ function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
   };
 }
 
-async function isSuomiFiViestitEnabled(hetu: string, id: string) {
+async function haeAsiakasTiedot(hetu: string): Promise<Asiakas1 | undefined> {
   const client = await getClient();
   const response = await client.haeAsiakas(hetu, "SSN");
-  const asiakas = response.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
-  const enabled = asiakas && asiakas.Tila === 300;
-  auditLog.info("Suomi.fi viestit tila", { muistuttajaId: id, tila: asiakas?.Tila });
-  return enabled;
+  return response.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
+}
+
+async function isCognitoKayttajaSuomiFiViestitEnabled(hetu: string): Promise<boolean> {
+  const asiakas = await haeAsiakasTiedot(hetu);
+  return asiakas?.Tila === 300;
+}
+
+async function isMuistuttajaSuomiFiViestitEnabled(hetu: string, muistuttajaId: string): Promise<boolean> {
+  const asiakas = await haeAsiakasTiedot(hetu);
+  auditLog.info("Suomi.fi viestit tila", { muistuttajaId, tila: asiakas?.Tila });
+  return asiakas?.Tila === 300;
 }
 
 async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistuttaja: DBMuistuttaja) {
@@ -386,7 +395,7 @@ async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjek
     (await parameters.isSuomiFiIntegrationEnabled()) &&
     (await parameters.isSuomiFiViestitIntegrationEnabled()) &&
     muistuttaja.henkilotunnus &&
-    (await isSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
+    (await isMuistuttajaSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
   ) {
     await lahetaInfoViesti(muistuttaja.henkilotunnus, projektiFromDB, muistuttaja);
   } else if (muistuttaja.sahkoposti && isValidEmail(muistuttaja.sahkoposti)) {
@@ -478,7 +487,18 @@ async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOr
   }
 }
 
-const handlerFactory = (event: SQSEvent) => async () => {
+const handlerFactory = (event: SuomifiEvent) => async () => {
+  if (isEventStatusCheckAction(event)) {
+    return await isCognitoKayttajaSuomiFiViestitEnabled(event.hetu);
+  }
+  if (isEventSqsEvent(event)) {
+    await handleSqsEvent(event);
+  } else {
+    throw new Error("Unknown event:" + JSON.stringify(event));
+  }
+};
+
+async function handleSqsEvent(event: SQSEvent) {
   log.info("SQS sanomien määrä " + event.Records.length);
   for (const record of event.Records) {
     try {
@@ -496,9 +516,24 @@ const handlerFactory = (event: SQSEvent) => async () => {
       throw e;
     }
   }
+}
+
+function isEventStatusCheckAction(event: SuomifiEvent): event is SuomiFiViestitStatusCheckAction {
+  return !!(event as SuomiFiViestitStatusCheckAction).hetu;
+}
+
+function isEventSqsEvent(event: SuomifiEvent): event is SQSEvent {
+  const records = (event as SQSEvent).Records;
+  return !!records.length && records.every((record) => record.body);
+}
+
+type SuomiFiViestitStatusCheckAction = {
+  hetu: string;
 };
 
-export const handleEvent = async (event: SQSEvent) => {
+type SuomifiEvent = SuomiFiViestitStatusCheckAction | SQSEvent;
+
+export const handleEvent = async (event: SuomifiEvent) => {
   setupLambdaMonitoring();
   await wrapXRayAsync("handler", handlerFactory(event));
 };

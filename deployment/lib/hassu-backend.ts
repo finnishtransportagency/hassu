@@ -118,7 +118,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
+    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -127,7 +127,8 @@ export class HassuBackendStack extends Stack {
       kiinteistoSQS,
       suomiFiSQS,
       pdfGeneratorLambda,
-      true
+      true,
+      suomifiLambda
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -143,7 +144,8 @@ export class HassuBackendStack extends Stack {
       kiinteistoSQS,
       suomiFiSQS,
       pdfGeneratorLambda,
-      false
+      false,
+      suomifiLambda
     );
     this.attachDatabaseToLambda(julkinenBackendLambda, false);
     HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
@@ -175,14 +177,14 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(emailQueueLambda, true);
 
     new CfnOutput(this, "AppSyncAPIKey", {
-      value: api.apiKey || "",
+      value: api.apiKey ?? "",
     });
     new CfnOutput(this, "EventSqsUrl", {
-      value: eventSQS.queueUrl || "",
+      value: eventSQS.queueUrl ?? "",
     });
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
-        value: api.graphqlUrl || "",
+        value: api.graphqlUrl ?? "",
       });
     }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
@@ -428,7 +430,8 @@ export class HassuBackendStack extends Stack {
     kiinteistoSQS: Queue,
     suomifiSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
-    isYllapitoBackend: boolean
+    isYllapitoBackend: boolean,
+    suomifiLambda: NodejsFunction
   ) {
     let define;
     if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
@@ -553,6 +556,7 @@ export class HassuBackendStack extends Stack {
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     suomifiSQS.grantSendMessages(backendLambda);
+    suomifiLambda.grantInvoke(backendLambda);
     return backendLambda;
   }
 
@@ -648,11 +652,7 @@ export class HassuBackendStack extends Stack {
       actions: ["dynamodb:UpdateItem"],
     });
     updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", {
-      "dynamodb:Attributes": [
-        "muutOmistajat",
-        "omistajat",
-        "omistajahaku",
-      ],
+      "dynamodb:Attributes": ["muutOmistajat", "omistajat", "omistajahaku"],
     });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
@@ -720,6 +720,8 @@ export class HassuBackendStack extends Stack {
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
+    pdfGeneratorLambda.grantInvoke(suomiFiLambda);
+    return suomiFiLambda;
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {

@@ -1043,9 +1043,16 @@ type NykyinenKayttaja {
 
 type SuomifiKayttaja {
   """
-  Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
+  Kertoo onko kayttaja aktivoinut suomifi viestit
+  """
+  kayttajaSuomifiViestitEnabled: Boolean!
+  """
+  Kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
   """
   suomifiEnabled: Boolean!
+  """
+  Kertoo onko suomifi viestit kaytossa ymparistossa
+  """
   suomifiViestitEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
