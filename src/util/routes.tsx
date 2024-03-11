@@ -99,6 +99,21 @@ export const LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE: Route = {
   visible: false,
 };
 
+export const HYVAKSYMISESITYS_MAIN_ROUTE: Route = {
+  title: "Hyväksymisesitys",
+  id: "hyvaksymisesitys",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/hyvaksymisesitys`,
+};
+
+export const HYVAKSYMISESITYS_ROUTE: Route = {
+  title: "Hyväksymisesitys",
+  id: "hyvaksymisesitys",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/hyvaksymisesitys/hyvaksymisesitys`,
+  visible: false,
+};
+
 export const HYVAKSYMINEN_ROUTE: Route = {
   title: "Hyväksyminen",
   id: "hyvaksyminen",
@@ -198,6 +213,7 @@ export const projektinVaiheetNavigaatiossa: Route[] = [
   SUUNNITTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
   LAUSUNTOPYYNNOT_MAIN_ROUTE,
+  HYVAKSYMISESITYS_MAIN_ROUTE,
   HYVAKSYMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_ROUTE,
   TOINEN_JATKAMINEN_ROUTE,
