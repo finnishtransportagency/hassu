@@ -31,7 +31,7 @@ export const uudelleenKuulutus = ({ requiredText, uudelleenKuulutusKey }: Uudell
         })
         .default(undefined)
         .optional(),
-        tiedotaKiinteistonomistajia: Yup.boolean().default(false),
+        tiedotaKiinteistonomistajia: Yup.boolean().default(true),
     })
     .when(uudelleenKuulutusKey, {
       is: (uudelleenKuulutus: UudelleenKuulutus | null | undefined) => !!uudelleenKuulutus,
