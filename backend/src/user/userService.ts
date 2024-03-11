@@ -116,15 +116,15 @@ export function getSuomiFiCognitoKayttaja(): SuomiFiCognitoKayttaja | undefined 
 }
 
 export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined> {
-  const isSuomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
-  const isSuomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-  if (isSuomifiEnabled) {
+  const suomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+  const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+  if (suomifiEnabled) {
     const cognitoKayttaja = getSuomiFiCognitoKayttaja();
     if (cognitoKayttaja) {
       return {
         __typename: "SuomifiKayttaja",
-        suomifiEnabled: true,
-        suomifiViestitEnabled: isSuomifiViestitEnabled,
+        suomifiEnabled,
+        suomifiViestitEnabled,
         tunnistautunut: true,
         email: cognitoKayttaja.email,
         etunimi: cognitoKayttaja.given_name,
@@ -135,23 +135,15 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         maakoodi: cognitoKayttaja["custom:maakoodi"],
         kayttajaSuomifiViestitEnabled: await haeSuomifiKayttajaViestitEnabled(cognitoKayttaja),
       };
-    } else {
-      return {
-        __typename: "SuomifiKayttaja",
-        tunnistautunut: false,
-        suomifiEnabled: true,
-        suomifiViestitEnabled: isSuomifiViestitEnabled,
-        kayttajaSuomifiViestitEnabled: false,
-      };
     }
-  } else {
-    return {
-      __typename: "SuomifiKayttaja",
-      suomifiEnabled: false,
-      suomifiViestitEnabled: isSuomifiViestitEnabled,
-      kayttajaSuomifiViestitEnabled: false,
-    };
   }
+  return {
+    __typename: "SuomifiKayttaja",
+    tunnistautunut: false,
+    suomifiEnabled,
+    suomifiViestitEnabled,
+    kayttajaSuomifiViestitEnabled: false,
+  };
 }
 
 export const identifyUser = async (event: AppSyncResolverEvent<unknown>): Promise<void> => {
