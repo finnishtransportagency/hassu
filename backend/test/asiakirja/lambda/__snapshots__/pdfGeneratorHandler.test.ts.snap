@@ -155,7 +155,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto
 
 
 
-(sv) Ilmoitus suunnitelman nähtäville asettamisesta
+Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
 Trafikledsverket har utarbetat en järnvägsplan enligt banlagen (110/2007): Projekti 1 på svenska.
 Hankkeen kuvaus på svenska
@@ -174,19 +174,19 @@ Detta tillkännagivande har skickats till alla ägare och innehavare av (banlage
 	- de fastigheter på vars område det bildas skydds- eller frisiktsområden,
 	- de fastigheter till vars område det grundas någon annan rättighet eller
 	- de fastigheter som gränsar till järnvägsområdet.
-(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
+Enligt markägaruppgifterna äger ni en fastighet i planområdet. Om er fastighet är arrenderad önskar vi att ni informerar era arrendatorer om att planen finns framlagd.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
+Teppo ProjektipäällikköProjektchefVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
-(sv) Jakelu
+Distribution
 
 
-(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
+Enligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företagsdatasystemetFör kännedomTrafikledsverket registratorskontorVAYLA/123
 
 
 "
@@ -400,7 +400,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 
 
-(sv) Ilmoitus suunnitelman nähtäville asettamisesta
+Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
 Trafikledsverket har utarbetat en vägplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
 Hankkeen kuvaus på svenska
@@ -419,19 +419,19 @@ Detta tillkännagivande har skickats till alla ägare och innehavare av (lagen o
 	- de fastigheter på vars område det bildas skydds- eller frisiktsområden,
 	- de fastigheter till vars område det grundas någon annan rättighet eller
 	- de fastigheter som gränsar till vägområdet.
-(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
+Enligt markägaruppgifterna äger ni en fastighet i planområdet. Om er fastighet är arrenderad önskar vi att ni informerar era arrendatorer om att planen finns framlagd.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
+Teppo ProjektipäällikköProjektchefVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
 
 
 
-(sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi(sv) Trafikledsverket kirjaamoVAYLA/123
+DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företagsdatasystemetFör kännedomTrafikledsverket registratorskontorVAYLA/123
 
 
 "
@@ -622,7 +622,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 
 
-(sv) Ilmoitus suunnitelman nähtäville asettamisesta
+Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
 Trafikledsverket har utarbetat en utredningsplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
 Hankkeen kuvaus på svenska
@@ -636,19 +636,19 @@ Anmärkningen kan göras på adressen https://localhost:3000/sv/s/lyhytOsoite/na
 
 
 Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya vägen är belägen (lagen om trafiksystem och landsvägar 27 § 3 mom. ).
-(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
+Enligt markägaruppgifterna äger ni en fastighet i planområdet. Om er fastighet är arrenderad önskar vi att ni informerar era arrendatorer om att planen finns framlagd.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
+Teppo ProjektipäällikköProjektchefVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
-(sv) Jakelu(sv) Erillisen jakelun mukaan(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä(sv) Tiedoksi
+DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företagsdatasystemet
 
 
-(sv) Trafikledsverket kirjaamoVAYLA/123
+För kännedomTrafikledsverket registratorskontorVAYLA/123
 
 
 "
