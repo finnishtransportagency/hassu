@@ -70,7 +70,7 @@ class MuistuttajaSearchService {
 
     // Adaptoidaan hakutulos, ja samalla otetaan kiinni mahdollinen virhe.
     const searchResultDocuments = adaptSearchResultsToApiMuistuttaja(searchResult);
-    const resultCount = searchResult.hits.total.value;
+    const resultCount = searchResult.hits?.total?.value ?? 0;
 
     log.info(resultCount + " search results from OpenSearch");
     const result: Muistuttajat = {

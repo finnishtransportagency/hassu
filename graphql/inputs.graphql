@@ -67,6 +67,7 @@ input KuulutusSaamePDFtInput {
 input UudelleenKuulutusInput {
   selosteKuulutukselle: LokalisoituTekstiInput
   selosteLahetekirjeeseen: LokalisoituTekstiInput
+  tiedotaKiinteistonomistajia: Boolean
 }
 
 input LokalisoituTekstiInput {

@@ -157,6 +157,7 @@ export abstract class KuulutusTilaManager<
       ? {
           tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
           alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva ?? undefined,
+          alkuperainenKuulutusPaiva: hyvaksyttyJulkaisu.kuulutusPaiva,
         }
       : {
           tila: UudelleenkuulutusTila.PERUUTETTU,

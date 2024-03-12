@@ -59,7 +59,8 @@ export function adaptSearchResultsToMuistuttajaDocuments(results: any): DBMuistu
 }
 
 export function adaptSearchResultsToApiMuistuttaja(results: any): API.Muistuttaja[] {
-  if (results.status && results.status >= 400) {
+  // jos indeksiä ei löydy tulee 404 virhe, käsitellään se samoin kuin ei löytyisi mitään
+  if (results.status && results.status >= 400 && results.status !== 404) {
     log.error(results);
     throw new Error("Muistuttajahaussa tapahtui virhe");
   }

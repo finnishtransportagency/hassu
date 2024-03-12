@@ -77,7 +77,7 @@ class OmistajaSearchService {
         },
       },
     });
-    return { kiinteistotunnusMaara: response?.aggregations?.unique_kiinteistotunnus?.value, omistajaMaara: response.hits.total.value };
+    return { kiinteistotunnusMaara: response?.aggregations?.unique_kiinteistotunnus?.value, omistajaMaara: response?.hits?.total?.value };
   }
 
   async searchOmistajat(params: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
@@ -90,7 +90,7 @@ class OmistajaSearchService {
 
     // Adaptoidaan hakutulos, ja samalla otetaan kiinni mahdollinen virhe.
     const searchResultDocuments = adaptSearchResultsToApiOmistaja(searchResult);
-    const resultCount = searchResult.hits.total.value;
+    const resultCount = searchResult.hits?.total?.value ?? 0;
 
     log.info(resultCount + " search results from OpenSearch");
     const result: KiinteistonOmistajat = {

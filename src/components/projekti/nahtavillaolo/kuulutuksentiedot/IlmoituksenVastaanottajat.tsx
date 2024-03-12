@@ -15,6 +15,7 @@ import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
 import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
+import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -225,7 +226,17 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               </HassuGrid>
             ))}
           </SectionContent>
-          <KiinteistonomistajatOhje vaihe={Vaihe.NAHTAVILLAOLO} oid={oid} omistajahakuStatus={omistajahakuStatus} />
+          <KiinteistonomistajatOhje
+            vaihe={Vaihe.NAHTAVILLAOLO}
+            oid={oid}
+            omistajahakuStatus={omistajahakuStatus}
+            uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
+          />
+          <KiinteistonOmistajatUudelleenkuulutus
+            oid={oid}
+            uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
+            vaihe={Vaihe.NAHTAVILLAOLO}
+          />
         </Section>
       </div>
     </>
