@@ -65,9 +65,6 @@ function HyvaksymisesitysPageLayout({ projekti, children }: { projekti: Projekti
                 </OhjelistaNotification>
               </>
             )}
-            {!migroitu && (
-              <>Hahaa</>
-            )}
           </Section>
           {children}
         </>

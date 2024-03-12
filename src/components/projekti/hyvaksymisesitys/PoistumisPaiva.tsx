@@ -1,24 +1,17 @@
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import SectionContent from "@components/layout/SectionContent";
 
-export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: number; kunta?: number }>) {
-  const keyWord = kunta ? "lausuntoPyynnonTaydennykset" : "lausuntoPyynnot";
-
+export default function PoistumisPaiva({ index }: Readonly<{ index: number; kunta?: number }>) {
   return (
     <SectionContent>
-      {kunta ? (
-        <h3 className="vayla-small-title">Täydennysaineiston voimassaoloaika</h3>
-      ) : (
-        <h3 className="vayla-subtitle mb-1">Aineistolinkin voimassaoloaika</h3>
-      )}
+      <h3 className="vayla-subtitle mb-1">Linkin voimassaoloaika</h3>
       <p className="mb-4">
-        Valitse {kunta ? "lausuntopyynnön täydennyksen" : "lausuntopyynnön"} sisällölle voimassaoloaika. Linkki ja sen sisältö on
-        tarkasteltavissa alla olevaan päiväärään saakka. Päivämäärää on mahdollista päivittää jälkikäteen
+        Valitse hyväksymisesityksenä toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaikaa voi muuttaa jälkikäteen.
       </p>
       <HassuDatePickerWithController
         label="Päättyy"
         controllerProps={{
-          name: `${keyWord}.${index}.poistumisPaiva`,
+          name: `hyvaksymisesitykset.${index}.poistumisPaiva`,
         }}
         onChange={(date) => {
           if (date?.isValid()) {

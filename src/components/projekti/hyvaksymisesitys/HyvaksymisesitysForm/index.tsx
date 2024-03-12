@@ -1,7 +1,6 @@
 import Section from "@components/layout/Section2";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import PoistumisPaiva from "../PoistumisPaiva";
-import Linkki from "../Linkki";
 import LisaAineistot from "./Kuulutukset";
 import Viesti from "./Viesti";
 import Muistutukset from "./Muistutukset";
@@ -12,6 +11,7 @@ import { UseFieldArrayRemove, useFieldArray, useFormContext } from "react-hook-f
 import { HyvaksymisesitysFormValues } from "../types";
 import VarmistusDialogi from "./VarmistusDialogi";
 import { useCallback, useState } from "react";
+import Laskutustiedot from "./Laskutustiedot";
 
 export default function HyvaksymisesitysForm({
   index,
@@ -31,36 +31,41 @@ export default function HyvaksymisesitysForm({
     }
   }, [appendToPoistetut, getValues, index, remove]);
 
-  const formDataForThisLink = getValues(`hyvaksymisesitykset.${index}`);
-
   return (
-    <Section style={{ marginBottom: "6em" }}>
-      <Stack direction="row" justifyContent="space-between">
-        <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
-        {!!index && (
-          <Button
-            className="pl-12 pr-12 pt-1 pb-1"
-            style={{ color: "orangered", borderColor: "orangered" }}
-            onClick={() => setDialogOpen(true)}
-          >
-            Poista
-          </Button>
-        )}
-      </Stack>
-      <Muistutukset index={index} projekti={projekti} />
-      <MuuAineisto index={index} projekti={projekti} />
-      <PoistumisPaiva index={index} />
-      <Viesti index={index} />
-      <Linkki index={index} projekti={projekti} uuid={formDataForThisLink.uuid} formData={formDataForThisLink} />
-      <LisaAineistot index={index} projekti={projekti} />
-      <VarmistusDialogi
-        dialogiOnAuki={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onAccept={() => {
-          poista();
-          setDialogOpen(false);
-        }}
-      />
-    </Section>
+    <>
+      <Section style={{ marginBottom: "2.5em" }}>
+        <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
+        <PoistumisPaiva index={index} />
+      </Section>
+      <Section>
+        <Viesti index={index} />
+        <Laskutustiedot index={index} />
+      </Section>
+      <Section style={{ marginBottom: "2.5em" }}>
+        <Stack direction="row" justifyContent="space-between">
+          <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
+          {!!index && (
+            <Button
+              className="pl-12 pr-12 pt-1 pb-1"
+              style={{ color: "orangered", borderColor: "orangered" }}
+              onClick={() => setDialogOpen(true)}
+            >
+              Poista
+            </Button>
+          )}
+        </Stack>
+        <Muistutukset index={index} projekti={projekti} />
+        <MuuAineisto index={index} projekti={projekti} />
+        <LisaAineistot index={index} projekti={projekti} />
+        <VarmistusDialogi
+          dialogiOnAuki={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          onAccept={() => {
+            poista();
+            setDialogOpen(false);
+          }}
+        />
+      </Section>
+    </>
   );
 }
