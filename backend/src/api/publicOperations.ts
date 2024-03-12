@@ -8,6 +8,7 @@ import {
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
+  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { apiConfig, OperationName } from "hassu-common/abstractApi";
@@ -50,6 +51,10 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
     case apiConfig.listaaLausuntoPyynnonTaydennyksenTiedostot.name:
       return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot(
         event.arguments as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables
+      );
+    case apiConfig.listaaHyvaksymisEsityksenTiedostot.name:
+      return tiedostoDownloadLinkHandler.listaaHyvaksymisEsityksenTiedostot(
+        event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables
       );
     default:
       return null;

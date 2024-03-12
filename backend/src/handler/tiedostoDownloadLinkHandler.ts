@@ -5,6 +5,8 @@ import {
   ListaaLausuntoPyynnonTiedostotQueryVariables,
   ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
   KayttajaTyyppi,
+  EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
@@ -15,6 +17,8 @@ import { adaptProjektiKayttajaJulkinen } from "../projekti/adapter/adaptToAPI/ju
 import { assertIsDefined } from "../util/assertions";
 import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
+import { hyvaksymisEsitysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/HyvaksymisEsitysDownloadLinkService";
+import { requirePermissionMuokkaa } from "../user";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonTiedostot({
@@ -88,6 +92,41 @@ class TiedostoDownloadLinkHandler {
     }
   }
 
+  async listaaHyvaksymisEsityksenTiedostot({
+    oid,
+    listaaHyvaksymisEsityksenTiedostotInput: params,
+  }: ListaaHyvaksymisEsityksenTiedostotQueryVariables): Promise<LadattavatTiedostot> {
+    log.info("Loading projekti", { oid });
+    if (!params) {
+      throw new Error("params ei annettu (listaaHyvaksymisEsityksenTiedostot)");
+    }
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (projekti) {
+      const hyvaksymisEsitys = projekti.hyvaksymisEsitys;
+      if (!hyvaksymisEsitys) {
+        throw new NotFoundError("Hyvaksymisesitystä ei löydy");
+      }
+      // projekti.salt on määritelty
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      hyvaksymisEsitysDownloadLinkService.validateHash(oid, projekti.salt, params.hash, hyvaksymisEsitys);
+      const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
+      if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
+        const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+        assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+        return Promise.resolve({
+          __typename: "LadattavatTiedostot",
+          poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
+          linkkiVanhentunut: true,
+          projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+        });
+      }
+      return hyvaksymisEsitysDownloadLinkService.listaaTiedostot(projekti, params);
+    } else {
+      throw new NotFoundError(`Projektia ${oid} ei löydy`);
+    }
+  }
+
   async esikatseleLausuntoPyynnonTiedostot({
     oid,
     lausuntoPyynto,
@@ -115,6 +154,23 @@ class TiedostoDownloadLinkHandler {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
       return lausuntoPyynnonTaydennysDownloadLinkService.esikatseleTiedostot(projekti, lausuntoPyynnonTaydennys);
+    } else {
+      throw new NotFoundError(`Projektia ${oid} ei löydy`);
+    }
+  }
+
+  async esikatseleHyvaksymisEsityksenTiedostot({
+    oid,
+    hyvaksymisEsitys,
+  }: EsikatseleHyvaksymisEsityksenTiedostotQueryVariables): Promise<LadattavatTiedostot> {
+    if (!hyvaksymisEsitys) {
+      throw new Error("hyvaksymisEsitys ei annettu (esikatseleHyvaksymisEsityksenTiedostot)");
+    }
+    log.info("Loading projekti", { oid });
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (projekti) {
+      requirePermissionMuokkaa(projekti);
+      return hyvaksymisEsitysDownloadLinkService.esikatseleTiedostot(projekti, hyvaksymisEsitys);
     } else {
       throw new NotFoundError(`Projektia ${oid} ei löydy`);
     }

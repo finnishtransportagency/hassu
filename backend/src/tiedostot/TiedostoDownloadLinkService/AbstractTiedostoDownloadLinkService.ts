@@ -1,6 +1,6 @@
-import { AineistoTila, LadattavaTiedosto, LadattavatTiedostot } from "hassu-common/graphql/apiModel";
+import { AineistoTila, HyvaksymisEsitysLadattavaTiedosto, LadattavaTiedosto, LadattavatTiedostot } from "hassu-common/graphql/apiModel";
 import crypto from "crypto";
-import { Aineisto, DBProjekti, LadattuTiedosto } from "../../database/model";
+import { Aineisto, DBProjekti, HyvaksymisEsitysLadattuTiedosto, LadattuTiedosto } from "../../database/model";
 import { log } from "../../logger";
 import { fileService } from "../../files/fileService";
 
@@ -32,6 +32,21 @@ export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, 
       linkki = "";
     }
     return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
+  }
+
+  protected async adaptHyvaksymisEsitysLadattuTiedostoToLadattavaTiedosto(
+    oid: string,
+    tiedosto: HyvaksymisEsitysLadattuTiedosto
+  ): Promise<HyvaksymisEsitysLadattavaTiedosto> {
+    const { jarjestys } = tiedosto;
+    const nimi: string = tiedosto.nimi ?? "";
+    let linkki;
+    if (tiedosto.tuotu) {
+      linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
+    } else {
+      linkki = "";
+    }
+    return { __typename: "HyvaksymisEsitysLadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu, kunta: tiedosto.kunta };
   }
 
   protected async adaptTiedostoPathToLadattavaTiedosto(oid: string, tiedostoPath: string): Promise<LadattavaTiedosto> {

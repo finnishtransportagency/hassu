@@ -13,6 +13,7 @@ input TallennaProjektiInput {
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   lausuntoPyynnot: [LausuntoPyyntoInput!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
+  hyvaksymisEsitys: HyvaksymisEsitysInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
@@ -234,6 +235,28 @@ input LausuntoPyynnonTaydennysInput {
   poistetaan: Boolean
 }
 
+input HyvaksymisEsitysInput {
+  poistumisPaiva: String!
+  kiireellinen: Boolean
+  lisatiedot: String
+  laskutustiedot: LaskutustiedotInput
+  hyvaksymisEsitys: [LadattuTiedostoInput!]
+  suunnitelma: [AineistoInput!]
+  muistutukset: [LadattuTiedostoInput!]
+  lausunnot: [LadattuTiedostoInput!]
+  kuulutuksetJaKutsu: [LadattuTiedostoInput!]
+  muuAineistoVelhosta: [AineistoInput!]
+  muuAineistoKoneelta: [LadattuTiedostoInput!]
+  maanomistajaluettelo: [LadattuTiedostoInput!]
+  vastaanottajat: [String!]
+}
+
+input LaskutustiedotInput {
+  OVTtunnus: String
+  verkkolaskuOperaattorinValittajaTunnus: String
+  viite: String
+}
+
 input HyvaksymisPaatosVaiheInput {
   hyvaksymisPaatos: [AineistoInput!]
   aineistoNahtavilla: [AineistoInput!]
@@ -290,6 +313,7 @@ input LadattuTiedostoInput {
   """
   jarjestys: Int
   tila: LadattuTiedostoTila!
+  kunta: Int
 }
 
 input ProjektiKayttajaInput {
@@ -349,6 +373,7 @@ enum TilasiirtymaTyyppi {
   ALOITUSKUULUTUS
   VUOROVAIKUTUSKIERROS
   NAHTAVILLAOLO
+  HYVAKSYMISESITYS
   HYVAKSYMISPAATOSVAIHE
   JATKOPAATOS_1
   JATKOPAATOS_2
@@ -396,6 +421,10 @@ input ListaaLausuntoPyyntoTiedostotInput {
 
 input ListaaLausuntoPyynnonTaydennyksenTiedostotInput {
   lausuntoPyynnonTaydennysUuid: String!
+  hash: String!
+}
+
+input ListaaHyvaksymisEsityksenTiedostotInput {
   hash: String!
 }
 
