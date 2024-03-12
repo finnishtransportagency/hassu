@@ -85,14 +85,6 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     return toPdfPoints(25);
   }
 
-  private projektiPaallikko(): PDFKit.PDFStructureElementChild {
-    return () => {
-      this.doc.text(this.kutsuAdapter.projektipaallikkoNimi);
-      this.doc.text(this.kutsuAdapter.text("projektipaallikko"));
-      this.doc.text(this.kutsuAdapter.projektipaallikkoOrganisaatio!).moveDown();
-    }
-  }
-
   pyydamme_valittamaan_ilmoituksen(): string {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.pyydamme_valittamaan_ilmoituksen");
@@ -141,7 +133,6 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
       this.paragraphFromKey("kappale5"),
       this.paragraphFromKey("muistuttajille_kappale4"),
       this.tietosuojaParagraph(),
-      this.projektiPaallikko(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
     ].filter((elem): elem is PDFStructureElement => !!elem);;

@@ -342,7 +342,7 @@
       "kappale5": "Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden {{kuulutusNahtavillaAika}} på adressen {{linkki_paatos}} ({{paatoslaki}}).",
       "paatoslaki_rata": "90 § i banlagen",
       "paatoslaki_tie": "103 § i lagen om trafiksystem och landsvägar",
-      "muistuttajille_kappale3": "{{viranomainenLyhyt}} meddelar dem som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
+      "muistuttajille_kappale3": "{{viranomainenLyhyt}} meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den {{hyvaksymis_pvm}} har godkänt en {{suunnitelma}} gällande {{asianumero_traficom}} enligt {{lain}}: {{suunnitelman_nimi}}.",
       "muistuttajille_kappale4": "Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).",
       "projektipaallikko": "Projektledare"
     },
@@ -393,7 +393,7 @@
       "lakiviite_muistuttajille_rata": "91 § i banlagen"
     },
     "ala_vastaa": "Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.",
-    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
+    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}.",
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {
