@@ -189,6 +189,7 @@ async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, 
 type GeneratedPdf = {
   file: Buffer;
   tiedostoNimi: string;
+  kielet: Kieli[];
 };
 
 function createGenerateEvent(
@@ -283,6 +284,7 @@ export async function generatePdf(
     files.push(Buffer.from(response.sisalto, "base64"));
     const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
     const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
+    const kielet = [Kieli.SUOMI];
     if (vaihe?.[Kieli.RUOTSI]) {
       let tiedosto;
       if ("hyvaksymisIlmoitusMuistuttajillePDFPath" in vaihe[Kieli.RUOTSI]) {
@@ -293,6 +295,7 @@ export async function generatePdf(
       log.info("Haetaan tiedosto " + tiedosto);
       if (tiedosto) {
         files.push(await fileService.getProjektiFile(projektiFromDB.oid, tiedosto));
+        kielet.push(Kieli.RUOTSI);
       }
     }
     const merger = new PdfMerger();
@@ -303,6 +306,7 @@ export async function generatePdf(
     return {
       file: await merger.saveAsBuffer(),
       tiedostoNimi,
+      kielet,
     };
   } catch (e) {
     log.error(e);
@@ -310,14 +314,16 @@ export async function generatePdf(
   }
 }
 
-function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti) {
+function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti, kielet: Kieli[]) {
   if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
-    const sisalto = `Hei,
+    let sisalto = `Hei,
 
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
-${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    if (kielet.includes(Kieli.RUOTSI)) {
+      sisalto += `
 
 Hej,
 
@@ -326,27 +332,35 @@ Ni har fått ett brev med information om framläggandet av planen samt om möjli
 Med vänlig hälsning
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
 `;
+    }
     return {
-      otsikko: "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
+      otsikko: `Ilmoitus suunnitelman nähtäville asettamisesta${
+        kielet.includes(Kieli.RUOTSI) ? " / Meddelande om framläggande av planen" : ""
+      }`,
       sisalto,
     };
   } else {
-    const sisalto = `Hei,
+    let sisalto = `Hei,
 
 Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
 
 Ystävällisin terveisin
-${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    if (kielet.includes(Kieli.RUOTSI)) {
+      sisalto += `
 
-Hej, 
+Hej,
 
 Ni har fått ett brev med information om beslut om godkännande av planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med beslutet och det bifogade planeringsmaterialet.
 
 Med vänlig hälsning
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
 `;
+    }
     return {
-      otsikko: "Ilmoitus suunnitelman hyväksymispäätöksestä / Meddelande om beslut om godkännande av planen",
+      otsikko: `Ilmoitus suunnitelman hyväksymispäätöksestä${
+        kielet.includes(Kieli.RUOTSI) ? " / Meddelande om beslut om godkännande av planen" : ""
+      }`,
       sisalto,
     };
   }
@@ -358,7 +372,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     if (!pdf) {
       return;
     }
-    const saate = getSaateteksti(tyyppi, projektiFromDB);
+    const saate = getSaateteksti(tyyppi, projektiFromDB, pdf.kielet);
     const viesti: PdfViesti = {
       nimi: kohde.nimi,
       otsikko: saate.otsikko,

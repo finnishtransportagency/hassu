@@ -6,7 +6,7 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
   "sisalto": "Hei,
@@ -14,15 +14,7 @@ Object {
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
-Väylävirasto
-
-Hej,
-
-Ni har fått ett brev med information om framläggandet av planen samt om möjligheten att göra en anmärkning på planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
-
-Med vänlig hälsning
-Trafikledsverket
-",
+Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
@@ -42,7 +34,7 @@ Object {
   "lahiosoite": "Svart katten's gatan 13 c 13, B.O.X 1010",
   "maa": "SE",
   "nimi": "Minerva Marttila",
-  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "SE-",
   "postitoimipaikka": "01230 STOCKHOLM, Ruotsii",
   "sisalto": "Hei,
@@ -50,15 +42,7 @@ Object {
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
-Väylävirasto
-
-Hej,
-
-Ni har fått ett brev med information om framläggandet av planen samt om möjligheten att göra en anmärkning på planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
-
-Med vänlig hälsning
-Trafikledsverket
-",
+Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
@@ -190,7 +174,7 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
   "sisalto": "Hei,
@@ -198,15 +182,7 @@ Object {
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
-Väylävirasto
-
-Hej,
-
-Ni har fått ett brev med information om framläggandet av planen samt om möjligheten att göra en anmärkning på planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
-
-Med vänlig hälsning
-Trafikledsverket
-",
+Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
@@ -236,7 +212,7 @@ Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispää
 Ystävällisin terveisin
 Pirkanmaan ELY-keskus
 
-Hej, 
+Hej,
 
 Ni har fått ett brev med information om beslut om godkännande av planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med beslutet och det bifogade planeringsmaterialet.
 
