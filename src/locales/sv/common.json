@@ -151,6 +151,7 @@
     "katuosoite_on_pakollinen": "Gatuadressen är obligatorisk information",
     "postinumero_on_pakollinen": "Postnummer är obligatorisk information",
     "postitoimipaikka_on_pakollinen": "Postkontor är obligatorisk information",
+    "saman_niminen_liite": "En fil med samma namn har redan lagts till som en bilaga",
     "maa_on_pakollinen": "Land är obligatorisk information",
     "sahkoposti_ei_kelpaa": "Ogiltig e-postadress",
     "vain_kuva_tai_pdf": "Filen måste vara av typen PDF, PNG eller JPG",

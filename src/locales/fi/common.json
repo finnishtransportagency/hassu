@@ -151,6 +151,7 @@
     "katuosoite_on_pakollinen": "Katuosoite on pakollinen tieto",
     "postinumero_on_pakollinen": "Postinumero on pakollinen tieto",
     "postitoimipaikka_on_pakollinen": "Postitoimipaikka on pakollinen tieto",
+    "saman_niminen_liite": "Saman niminen tiedosto on jo lisätty liitteeksi",
     "maa_on_pakollinen": "Maa on pakollinen tieto",
     "sahkoposti_ei_kelpaa": "Sähköposti ei kelpaa",
     "vain_kuva_tai_pdf": "Tiedoston on oltava tyyppiä PDF, PNG tai JPG",

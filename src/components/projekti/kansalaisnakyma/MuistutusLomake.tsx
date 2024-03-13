@@ -42,7 +42,9 @@ interface Props {
   kayttaja?: SuomifiKayttaja;
 }
 
-type MuistutusInputForm = Omit<MuistutusInput, "liitteet"> & { liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[] };
+type MuistutusInputForm = Omit<MuistutusInput, "liitteet"> & {
+  liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[];
+};
 
 const countryCodes = lookup.countries.map((country) => country.iso2);
 
@@ -72,11 +74,12 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
     reValidateMode: "onChange",
     defaultValues: getDefaultFormValues(suomifiUser),
     context: { suomifiUser },
+    shouldUnregister: false,
   };
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const useFormReturn = useForm<MuistutusInputForm>(formOptions);
 
-  const { handleSubmit, control, reset, watch, formState, trigger } = useFormReturn;
+  const { handleSubmit, control, reset, watch, formState } = useFormReturn;
 
   const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
 
@@ -264,8 +267,8 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
             {!!liitteetWatch.length && (
               <ContentSpacer>
                 <label>{t("common:valitut_tiedostot")}</label>
-                {liitteetFieldArray.fields.map((item, index) => (
-                  <div key={item.id}>
+                {liitteetWatch.map((item, index) => (
+                  <div key={item.nimi}>
                     <FileDiv>
                       <span>{item.nimi}</span>
                       <IconButton
@@ -301,11 +304,24 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               onChange={(e) => {
                 const files = e.target.files;
                 if (files?.length) {
-                  Array.from(files).forEach((file) =>
-                    liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type })
-                  );
+                  let duplicateLiite = false;
+                  Array.from(files)
+                    .filter((tiedosto) => {
+                      const nameAlreadyExists = liitteetWatch.some((liite) => liite.nimi === tiedosto.name);
+                      if (nameAlreadyExists) {
+                        duplicateLiite = true;
+                      }
+                      return !nameAlreadyExists;
+                    })
+                    .forEach((file) => liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type }));
+                  if (duplicateLiite) {
+                    showErrorMessage(t("common:virheet.saman_niminen_liite"));
+                  }
                 }
-                trigger("liitteet");
+                if (inputRef.current) {
+                  // Clear input value so onchange will trigger for the same file
+                  inputRef.current.value = "";
+                }
               }}
             />
             <Button
