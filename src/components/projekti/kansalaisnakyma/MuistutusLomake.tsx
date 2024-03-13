@@ -35,6 +35,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypes } from "common/fileValidationSettings";
 import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
+import { joinStringArrays } from "hassu-common/util/joinStringArrays";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -304,18 +305,28 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               onChange={(e) => {
                 const files = e.target.files;
                 if (files?.length) {
-                  let duplicateLiite = false;
+                  let duplicateLiitteet: File[] = [];
                   Array.from(files)
                     .filter((tiedosto) => {
                       const nameAlreadyExists = liitteetWatch.some((liite) => liite.nimi === tiedosto.name);
                       if (nameAlreadyExists) {
-                        duplicateLiite = true;
+                        duplicateLiitteet.push(tiedosto);
                       }
                       return !nameAlreadyExists;
                     })
                     .forEach((file) => liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type }));
-                  if (duplicateLiite) {
-                    showErrorMessage(t("common:virheet.saman_niminen_liite"));
+                  if (duplicateLiitteet.length) {
+                    const nimet = joinStringArrays(
+                      duplicateLiitteet.map((liite) => `'${liite.name}'`),
+                      ", ",
+                      ` ${t("common:ja")} `
+                    );
+                    showErrorMessage(
+                      t("common:virheet.saman_niminen_liite", {
+                        count: duplicateLiitteet.length,
+                        nimet,
+                      })
+                    );
                   }
                 }
                 if (inputRef.current) {
