@@ -18,6 +18,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
 
 
@@ -51,6 +53,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).
 
 
@@ -84,6 +88,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
 
 
@@ -117,6 +123,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).
 
 
@@ -150,6 +158,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -183,6 +193,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 NTM-centralen i Nyland meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en vägplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
@@ -206,6 +218,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -239,6 +253,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -272,6 +288,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -305,6 +323,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en vägplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
@@ -338,6 +358,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -371,6 +393,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 NTM-centralen i Nyland meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en utredningsplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
@@ -404,6 +428,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -437,6 +463,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en utredningsplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
