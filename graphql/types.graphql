@@ -173,7 +173,6 @@ type Projekti implements IProjekti {
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
   hyvaksymisEsitys: HyvaksymisEsitys
-  hyvaksymisesitys: [Hyvaksymisesitys!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -406,10 +405,10 @@ type LausuntoPyynnonTaydennys {
 type HyvaksymisEsitys {
   poistumisPaiva: String!
   kiireellinen: Boolean
-  lisatiedot: String
+  viesti: String
   laskutustiedot: Laskutustiedot
   hyvaksymisEsitys: [LadattuTiedosto!]
-  suunnitelma: [Aineisto!]
+  suunnitelma: [LadattuTiedosto!]
   muistutukset: [LadattuTiedosto!]
   lausunnot: [LadattuTiedosto!]
   kuulutuksetJaKutsu: [LadattuTiedosto!]
@@ -422,12 +421,7 @@ type HyvaksymisEsitys {
   hyvaksymisPaiva: String
   palautusSyy: String
   aineistopaketti: String
-}
-
-type Laskutustiedot {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  poistetaan: Boolean
 }
 
 enum HyvaksymisTila {
@@ -437,28 +431,10 @@ enum HyvaksymisTila {
 }
 
 type Laskutustiedot {
-  yTunnus: String!
-  ovtTunnus: String!
-  verkkolaskuoperaattorinTunnus: String!
+  yTunnus: String
+  ovtTunnus: String
+  verkkolaskuoperaattorinTunnus: String
   viitetieto: String
-}
-
-type Hyvaksymisesitys {
-  kunta: Int!
-  uuid: String!
-  poistumisPaiva: String!
-  kiireellinenKasittely: Boolean
-  viesti: String
-  laskutustiedot: Laskutustiedot!
-  suunnitelma: [LadattuTiedosto!]
-  muistutukset: [LadattuTiedosto!]
-  lausunnot: [LadattuTiedosto!]
-  maanomistajaluettelo: [LadattuTiedosto!]
-  kuulutuksetJaKutsut: [LadattuTiedosto!]
-  muuAineistoVelhosta: [Aineisto!]
-  muuAineistoLadattu: [LadattuTiedosto!]
-  hash: String!
-  poistetaan: Boolean
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

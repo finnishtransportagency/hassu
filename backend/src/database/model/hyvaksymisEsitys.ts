@@ -7,7 +7,7 @@ export type HyvaksymisEsitys = {
   lisatiedot?: string | null;
   laskutustiedot?: Laskutustiedot | null;
   hyvaksymisEsitys?: Array<LadattuTiedosto> | null;
-  suunnitelma?: Array<Aineisto> | null;
+  suunnitelma?: Array<LadattuTiedosto> | null;
   muistutukset?: Array<LadattuTiedosto> | null;
   lausunnot?: Array<LadattuTiedosto> | null;
   maanomistajaluettelo?: Array<LadattuTiedosto> | null;

@@ -48,9 +48,9 @@ export default function Muistutukset({ index, projekti }: Readonly<{ index: numb
   return (
     <SectionContent className="mt-16">
       <h2 className="vayla-subtitle">Muistutukset</h2>
-      <p>Tuo kuntaa koskevat muistutukset omalta koneeltasi.</p>
+      <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
       {!!hyvaksymisesitys?.muistutukset?.length && (
-        <MuistutuksetTable lptIndex={index} joTallennetutMuistutukset={projekti.hyvaksymisesitys?.[index]?.muistutukset ?? []} />
+        <MuistutuksetTable lptIndex={index} joTallennetutMuistutukset={projekti.hyvaksymisEsitys?.muistutukset ?? []} />
       )}
       <input
         type="file"
@@ -67,7 +67,7 @@ export default function Muistutukset({ index, projekti }: Readonly<{ index: numb
       />
       <label htmlFor={`muistutukset-${index}-input`}>
         <Button className="mt-4" type="button" id={`tuo_muistutukset_${index}_button`} onClick={onButtonClick}>
-          Tuo muistutuksia
+          Tuo tiedostot
         </Button>
       </label>
     </SectionContent>

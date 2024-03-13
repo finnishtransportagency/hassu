@@ -12,7 +12,7 @@ import { uuid } from "common/util/uuid";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue } = useFormContext<HyvaksymisesitysFormValues>();
-  const muuAineisto = watch(`hyvaksymisesitykset.${index}.muuAineistoLadattu`);
+  const muuAineisto = watch(`hyvaksymisesitykset.${index}.muuAineistoKoneelta`);
   const hyvaksymisesitys: HyvaksymisesitysLisakentilla | undefined = watch(`hyvaksymisesitykset.${index}`);
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const onButtonClick = () => {
@@ -37,7 +37,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
-            setValue(`hyvaksymisesitykset.${index}.muuAineistoLadattu`, (muuAineisto ?? []).concat(tiedostoInputs), { shouldDirty: true });
+            setValue(`hyvaksymisesitykset.${index}.muuAineistoKoneelta`, (muuAineisto ?? []).concat(tiedostoInputs), { shouldDirty: true });
           }
         })()
       ),
@@ -46,12 +46,12 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
   return (
     <SectionContent className="mt-16">
       <h2 className="vayla-subtitle">Muu aineisto</h2>
-      <p>
-        Voit halutessasi liittää omalta koneelta lausuntopyynnön täydennyksen yhteydessä muuta lisäaineistoa, esimerkiksi
-        lyhennelmätiedoston.
-      </p>
-      {!!hyvaksymisesitys?.muuAineistoLadattu?.length && (
-        <MuuAineistoTable hyvaksymisesitysIndex={index} joTallennetutMuuAineisto={projekti.hyvaksymisesitys?.[index]?.muuAineistoLadattu ?? []} />
+      <p>Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.</p>
+      {!!hyvaksymisesitys?.muuAineistoKoneelta?.length && (
+        <MuuAineistoTable
+          hyvaksymisesitysIndex={index}
+          joTallennetutMuuAineisto={projekti.hyvaksymisEsitys?.muuAineistoKoneelta ?? []}
+        />
       )}
       <input
         type="file"
@@ -68,7 +68,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
       />
       <label htmlFor={`muu-aineisto-${index}-input`}>
         <Button className="mt-4" type="button" id={`tuo_muu_aineisto_${index}_button`} onClick={onButtonClick}>
-          Hae tiedostot
+          Tuo tiedostot
         </Button>
       </label>
     </SectionContent>

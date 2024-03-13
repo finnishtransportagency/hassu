@@ -15,7 +15,7 @@ export default function Viesti({ index }: Readonly<{ index: number }>) {
     <SectionContent className="mb-8">
       <h3 className="vayla-subtitle mb-1">Viesti vastaanottajalle</h3>
       <Controller
-        name={`hyvaksymisesitykset.${index}.kiireellinenKasittely`}
+        name={`hyvaksymisesitykset.${index}.kiireellinen`}
         shouldUnregister
         control={control}
         render={({ field: { value, onChange, ...field } }) => (

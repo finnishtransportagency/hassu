@@ -19,8 +19,8 @@ export default function AineistoTable({
   joTallennetutKuulutukset: LadattuTiedosto[];
 }) {
   const { control, formState, register, setValue } = useFormContext<HyvaksymisesitysFormValues>();
-  const { fields, move, remove } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsut`, control });
-  const { append: appendToPoistetut } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.poistetutKuulutuksetJaKutsut`, control });
+  const { fields, move, remove } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsu`, control });
+  const { append: appendToPoistetut } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.poistetutKuulutuksetJaKutsu`, control });
 
   const enrichedFields: FormLadattuTiedosto[] = useMemo(
     () =>
@@ -39,7 +39,7 @@ export default function AineistoTable({
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
           const aineistoIndex = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
-          const errorMessage = (formState.errors.hyvaksymisesitykset?.[hyvaksymisesitysIndex]?.kuulutuksetJaKutsut?.[aineistoIndex] as any | undefined)
+          const errorMessage = (formState.errors.hyvaksymisesitykset?.[hyvaksymisesitysIndex]?.kuulutuksetJaKutsu?.[aineistoIndex] as any | undefined)
             ?.message;
           return (
             <>
@@ -49,8 +49,8 @@ export default function AineistoTable({
                 tiedostoTila={aineisto.tila}
               />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
-              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsut.${aineistoIndex}.tiedosto`)} />
-              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsut.${aineistoIndex}.nimi`)} />
+              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsu.${aineistoIndex}.tiedosto`)} />
+              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsu.${aineistoIndex}.nimi`)} />
             </>
           );
         },
@@ -83,8 +83,8 @@ export default function AineistoTable({
   const onDragAndDrop = useCallback(
     (id: string, targetRowIndex: number) => {
       const aineistoIndex = findRowIndex(id);
-      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsut.${aineistoIndex}.jarjestys`, targetRowIndex);
-      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsut.${targetRowIndex}.jarjestys`, aineistoIndex);
+      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsu.${aineistoIndex}.jarjestys`, targetRowIndex);
+      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.kuulutuksetJaKutsu.${targetRowIndex}.jarjestys`, aineistoIndex);
       move(aineistoIndex, targetRowIndex);
     },
     [findRowIndex, move, setValue, hyvaksymisesitysIndex]
@@ -106,7 +106,7 @@ export default function AineistoTable({
 
 type ActionColumnProps = {
   aineisto: FormLadattuTiedosto;
-  appendToPoistetut: UseFieldArrayAppend<HyvaksymisesitysFormValues, `hyvaksymisesitykset.${number}.poistetutKuulutuksetJaKutsut`>;
+  appendToPoistetut: UseFieldArrayAppend<HyvaksymisesitysFormValues, `hyvaksymisesitykset.${number}.poistetutKuulutuksetJaKutsu`>;
   index: number;
   remove: UseFieldArrayRemove;
 } & MUIStyledCommonProps &

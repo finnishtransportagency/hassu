@@ -16,7 +16,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
   const { watch, setValue } = useFormContext<HyvaksymisesitysFormValues>();
 
   const hyvaksymisesitys = watch(`hyvaksymisesitykset.${index}`);
-  const kuulutukset = watch(`hyvaksymisesitykset.${index}.kuulutuksetJaKutsut`);
+  const kuulutukset = watch(`hyvaksymisesitykset.${index}.kuulutuksetJaKutsu`);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -58,7 +58,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
               uuid: uuid.v4(),
             }));
 
-            setValue(`hyvaksymisesitykset.${index}.kuulutuksetJaKutsut`, (kuulutukset ?? []).concat(tiedostoInputs), { shouldDirty: true });
+            setValue(`hyvaksymisesitykset.${index}.kuulutuksetJaKutsu`, (kuulutukset ?? []).concat(tiedostoInputs), { shouldDirty: true });
 
             if (nonAllowedTypeFiles.length) {
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
@@ -72,15 +72,11 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
 
   return (
     <SectionContent className="mt-16">
-      <h4 className="vayla-small-title">Liitettävät lisäaineistot</h4>
-      <p>
-        Voit liittää asetettujen aineistojen lisäksi lausuntopyyntöön lisäaineistoa. Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista
-        palvelun kansalaispuolelle. Liitettyjen lisäaineistojen sisältö näkyy automaattisesti linkin takana, kun aineistot on tuotu tälle
-        sivulle ja muutokset on tallennettu. Esikatselu-toiminnolla voit nähdä tallentamattomat lisäaineistomuutokset.
-      </p>
-      {!!hyvaksymisesitys?.kuulutuksetJaKutsut?.length && (
+      <h4 className="vayla-small-title">Kuulutukset ja kutsu vuorovaikutukseen</h4>
+      <p>Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen.</p>
+      {!!hyvaksymisesitys?.kuulutuksetJaKutsu?.length && (
         <LisaAineistotTable
-          joTallennetutKuulutukset={projekti.lausuntoPyynnot?.[index]?.lisaAineistot ?? []}
+          joTallennetutKuulutukset={projekti.hyvaksymisEsitys?.kuulutuksetJaKutsu ?? []}
           hyvaksymisesitysIndex={index}
         />
       )}
@@ -99,7 +95,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       />
       <label htmlFor={`lisa-aineistot-${index}-input`}>
         <Button className="mt-4" type="button" id={`tuo_lisa-aineistoja_${index}_button`} onClick={onButtonClick}>
-          Hae tiedostot
+          Tuo tiedostot
         </Button>
       </label>
     </SectionContent>

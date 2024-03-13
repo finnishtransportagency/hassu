@@ -3,7 +3,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
 import HyvaksymisesitysPageLayout from "@components/projekti/hyvaksymisesitys/HyvaksymisesitysPageLayout";
-import { Hyvaksymisesitys, Laskutustiedot, LaskutustiedotInput } from "@services/api";
+import { HyvaksymisEsitys, Laskutustiedot, LaskutustiedotInput } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { FormProvider, UseFormProps, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,7 +13,6 @@ import SectionContent from "@components/layout/SectionContent";
 import HyvaksymisesitysPainikkeet from "@components/projekti/hyvaksymisesitys/HyvaksymisesitysForm/HyvaksymisesitysPainikkeet";
 import { HyvaksymisesitysFormValues, HyvaksymisesitysLisakentilla } from "@components/projekti/hyvaksymisesitys/types";
 import { handleLadattuTiedostoArrayForDefaultValues } from "@components/projekti/lausuntopyynnot/util";
-import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut";
 import dayjs from "dayjs";
 import HyvaksymisesitysForm from "@components/projekti/hyvaksymisesitys/HyvaksymisesitysForm";
 
@@ -40,23 +39,23 @@ const getDefaultLausuntoPyynto: () => HyvaksymisesitysLisakentilla = () => ({
   poistetutLausunnot: [],
   maanomistajaluettelo: [],
   poistettuMaanomistajaluettelo: [],
-  kuulutuksetJaKutsut: [],
-  poistetutKuulutuksetJaKutsut: [],
-  muuAineistoLadattu: [],
-  poistetutMuuAineistoLadattu: [],
+  kuulutuksetJaKutsu: [],
+  poistetutKuulutuksetJaKutsu: [],
+  muuAineistoKoneelta: [],
+  poistetutMuuAineistoKoneelta: [],
   muuAineistoVelhosta: [],
   tallennettu: false,
 });
 
-function adaptLaskutustiedotToLaskutustiedotInput(laskutustiedot: Laskutustiedot): LaskutustiedotInput {
-  const yTunnus = laskutustiedot.yTunnus ?? "";
-  const ovtTunnus = laskutustiedot.ovtTunnus ?? "";
-  const verkkolaskuoperaattorinTunnus = laskutustiedot.verkkolaskuoperaattorinTunnus ?? "";
-  const viitetieto = laskutustiedot.viitetieto ?? "";
+function adaptLaskutustiedotToLaskutustiedotInput(laskutustiedot: Laskutustiedot | null | undefined): LaskutustiedotInput {
+  const yTunnus = laskutustiedot?.yTunnus ?? "";
+  const ovtTunnus = laskutustiedot?.ovtTunnus ?? "";
+  const verkkolaskuoperaattorinTunnus = laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "";
+  const viitetieto = laskutustiedot?.viitetieto ?? "";
   return { yTunnus, ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto };
 }
 
-function adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(hyvaksymisesitys: Hyvaksymisesitys): HyvaksymisesitysLisakentilla {
+function adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(hyvaksymisesitys: HyvaksymisEsitys): HyvaksymisesitysLisakentilla {
   const { lisatty: suunnitelma, poistettu: poistettuSuunnitelma } = handleLadattuTiedostoArrayForDefaultValues(
     hyvaksymisesitys.suunnitelma,
     true
@@ -73,21 +72,19 @@ function adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(hyvaksymisesitys: H
     hyvaksymisesitys.maanomistajaluettelo,
     true
   );
-  const { lisatty: kuulutuksetJaKutsut, poistettu: poistetutKuulutuksetJaKutsut } = handleLadattuTiedostoArrayForDefaultValues(
-    hyvaksymisesitys.kuulutuksetJaKutsut,
+  const { lisatty: kuulutuksetJaKutsu, poistettu: poistetutKuulutuksetJaKutsu } = handleLadattuTiedostoArrayForDefaultValues(
+    hyvaksymisesitys.kuulutuksetJaKutsu,
     true
   );
-  const { lisatty: muuAineistoLadattu, poistettu: poistetutMuuAineistoLadattu } = handleLadattuTiedostoArrayForDefaultValues(
-    hyvaksymisesitys.muuAineistoLadattu,
+  const { lisatty: muuAineistoKoneelta, poistettu: poistetutMuuAineistoKoneelta } = handleLadattuTiedostoArrayForDefaultValues(
+    hyvaksymisesitys.muuAineistoKoneelta,
     true
   );
   return {
-    uuid: hyvaksymisesitys.uuid,
-    kunta: hyvaksymisesitys.kunta,
     laskutustiedot: adaptLaskutustiedotToLaskutustiedotInput(hyvaksymisesitys.laskutustiedot),
     poistumisPaiva: hyvaksymisesitys.poistumisPaiva,
     viesti: hyvaksymisesitys.viesti ?? "",
-    kiireellinenKasittely: hyvaksymisesitys.kiireellinenKasittely ?? false,
+    kiireellinen: hyvaksymisesitys.kiireellinen ?? false,
     suunnitelma,
     poistettuSuunnitelma,
     muistutukset,
@@ -96,10 +93,10 @@ function adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(hyvaksymisesitys: H
     poistetutLausunnot,
     maanomistajaluettelo,
     poistettuMaanomistajaluettelo,
-    kuulutuksetJaKutsut,
-    poistetutKuulutuksetJaKutsut,
-    muuAineistoLadattu,
-    poistetutMuuAineistoLadattu,
+    kuulutuksetJaKutsu,
+    poistetutKuulutuksetJaKutsu,
+    muuAineistoKoneelta,
+    poistetutMuuAineistoKoneelta,
     muuAineistoVelhosta: hyvaksymisesitys.muuAineistoVelhosta,
     tallennettu: true,
   };
@@ -107,18 +104,14 @@ function adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(hyvaksymisesitys: H
 
 const Hyvaksymisesitykset = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {
   const defaultValues: HyvaksymisesitysFormValues = useMemo(() => {
-    const { lisatty, poistettu } = (projekti.hyvaksymisesitys || []).reduce(
-      reduceToLisatytJaPoistetut<Hyvaksymisesitys>({ onPoistettu: (lp: Hyvaksymisesitys) => !!lp.poistetaan }),
-      { lisatty: [] as Hyvaksymisesitys[], poistettu: [] as Hyvaksymisesitys[] }
-    );
-    const hyvaksymisesitykset = lisatty.length
-      ? lisatty.map(adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla)
+    const hyvaksymisesitykset = projekti.hyvaksymisEsitys
+      ? [adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla(projekti.hyvaksymisEsitys)]
       : [getDefaultLausuntoPyynto()];
     return {
       oid: projekti.oid,
       versio: projekti.versio,
       hyvaksymisesitykset,
-      poistetutHyvaksymisesitykset: poistettu.map(adaptHyvaksymisesitysToHyvaksymisesitysLisakentilla) || [],
+      poistetutHyvaksymisesitykset: [],
     };
   }, [projekti]);
 

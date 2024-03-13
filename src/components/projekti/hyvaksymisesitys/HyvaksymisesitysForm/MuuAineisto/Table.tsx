@@ -19,8 +19,8 @@ export default function AineistoTable({
   joTallennetutMuuAineisto: LadattuTiedosto[];
 }) {
   const { control, formState, register, setValue } = useFormContext<HyvaksymisesitysFormValues>();
-  const { fields, move, remove } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoLadattu`, control });
-  const { append: appendToPoistetut } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.poistetutMuuAineistoLadattu`, control });
+  const { fields, move, remove } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoKoneelta`, control });
+  const { append: appendToPoistetut } = useFieldArray({ name: `hyvaksymisesitykset.${hyvaksymisesitysIndex}.poistetutMuuAineistoKoneelta`, control });
 
   const enrichedFields: FormLadattuTiedosto[] = useMemo(
     () =>
@@ -40,7 +40,7 @@ export default function AineistoTable({
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
           const aineistoIndex = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
-          const errorMessage = (formState.errors.hyvaksymisesitykset?.[hyvaksymisesitysIndex].muuAineistoLadattu?.[aineistoIndex] as any | undefined)
+          const errorMessage = (formState.errors.hyvaksymisesitykset?.[hyvaksymisesitysIndex].muuAineistoKoneelta?.[aineistoIndex] as any | undefined)
             ?.message;
           return (
             <>
@@ -50,8 +50,8 @@ export default function AineistoTable({
                 tiedostoTila={aineisto.tila}
               />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
-              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoLadattu.${aineistoIndex}.tiedosto`)} />
-              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoLadattu.${aineistoIndex}.nimi`)} />
+              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoKoneelta.${aineistoIndex}.tiedosto`)} />
+              <input type="hidden" {...register(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoKoneelta.${aineistoIndex}.nimi`)} />
             </>
           );
         },
@@ -84,8 +84,8 @@ export default function AineistoTable({
   const onDragAndDrop = useCallback(
     (id: string, targetRowIndex: number) => {
       const aineistoIndex = findRowIndex(id);
-      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoLadattu.${aineistoIndex}.jarjestys`, targetRowIndex);
-      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoLadattu.${targetRowIndex}.jarjestys`, aineistoIndex);
+      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoKoneelta.${aineistoIndex}.jarjestys`, targetRowIndex);
+      setValue(`hyvaksymisesitykset.${hyvaksymisesitysIndex}.muuAineistoKoneelta.${targetRowIndex}.jarjestys`, aineistoIndex);
       move(aineistoIndex, targetRowIndex);
     },
     [findRowIndex, move, setValue, hyvaksymisesitysIndex]
@@ -107,7 +107,7 @@ export default function AineistoTable({
 
 type ActionColumnProps = {
   aineisto: FormLadattuTiedosto;
-  appendToPoistetut: UseFieldArrayAppend<HyvaksymisesitysFormValues, `hyvaksymisesitykset.${number}.poistetutMuuAineistoLadattu`>;
+  appendToPoistetut: UseFieldArrayAppend<HyvaksymisesitysFormValues, `hyvaksymisesitykset.${number}.poistetutMuuAineistoKoneelta`>;
   index: number;
   remove: UseFieldArrayRemove;
 } & MUIStyledCommonProps &

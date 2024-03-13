@@ -1,10 +1,4 @@
-import {
-  HyvaksymisesitysInput,
-  LadattuTiedosto,
-  LadattuTiedostoInput,
-  LausuntoPyyntoInput,
-  TallennaProjektiInput,
-} from "@services/api";
+import { HyvaksymisEsitysInput, LadattuTiedosto, LadattuTiedostoInput, LausuntoPyyntoInput, TallennaProjektiInput } from "@services/api";
 import { FieldArrayWithId } from "react-hook-form";
 import { handleLadattuTiedostoArraysForSave } from "src/util/handleLadattuTiedostoArraysForSave";
 
@@ -13,13 +7,8 @@ export type SplitLadattuTiedostoInput = { poistettu: LadattuTiedostoInput[]; lis
 export type FormLadattuTiedosto = FieldArrayWithId<LausuntoPyyntoInput, "lisaAineistot", "id"> & Pick<LadattuTiedosto, "tuotu">;
 
 export type HyvaksymisesitysLisakentilla = Omit<
-  HyvaksymisesitysInput,
-  | "suunnitelma"
-  | "muistutukset"
-  | "lausunnot"
-  | "maanomistajaluettelo"
-  | "kuulutuksetJaKutsut"
-  | "muuAineistoLadattu"
+  HyvaksymisEsitysInput,
+  "suunnitelma" | "muistutukset" | "lausunnot" | "maanomistajaluettelo" | "kuulutuksetJaKutsu" | "muuAineistoKoneelta"
 > & {
   suunnitelma: LadattuTiedostoInput[];
   poistettuSuunnitelma: LadattuTiedostoInput[];
@@ -29,10 +18,10 @@ export type HyvaksymisesitysLisakentilla = Omit<
   poistetutLausunnot: LadattuTiedostoInput[];
   maanomistajaluettelo: LadattuTiedostoInput[];
   poistettuMaanomistajaluettelo: LadattuTiedostoInput[];
-  kuulutuksetJaKutsut: LadattuTiedostoInput[];
-  poistetutKuulutuksetJaKutsut: LadattuTiedostoInput[];
-  muuAineistoLadattu: LadattuTiedostoInput[];
-  poistetutMuuAineistoLadattu: LadattuTiedostoInput[];
+  kuulutuksetJaKutsu: LadattuTiedostoInput[];
+  poistetutKuulutuksetJaKutsu: LadattuTiedostoInput[];
+  muuAineistoKoneelta: LadattuTiedostoInput[];
+  poistetutMuuAineistoKoneelta: LadattuTiedostoInput[];
   tallennettu: boolean;
 };
 type HyvaksymisesitysFormData = {
@@ -56,10 +45,10 @@ export function adaptHyvaksymisesitysLisakentillaToHyvaksymisesitysInput(lausunt
     poistetutLausunnot,
     maanomistajaluettelo,
     poistettuMaanomistajaluettelo,
-    kuulutuksetJaKutsut,
-    poistetutKuulutuksetJaKutsut,
-    muuAineistoLadattu,
-    poistetutMuuAineistoLadattu: poistettuMuuAineistoLadattu,
+    kuulutuksetJaKutsu,
+    poistetutKuulutuksetJaKutsu,
+    muuAineistoKoneelta,
+    poistetutMuuAineistoKoneelta,
     tallennettu,
     ...rest
   } = lausuntoPyynto;
@@ -69,8 +58,8 @@ export function adaptHyvaksymisesitysLisakentillaToHyvaksymisesitysInput(lausunt
     muistutukset: handleLadattuTiedostoArraysForSave(muistutukset, poistetutMuistutukset),
     lausunnot: handleLadattuTiedostoArraysForSave(lausunnot, poistetutLausunnot),
     maanomistajaluettelo: handleLadattuTiedostoArraysForSave(maanomistajaluettelo, poistettuMaanomistajaluettelo),
-    kuulutuksetJaKutsut: handleLadattuTiedostoArraysForSave(kuulutuksetJaKutsut, poistetutKuulutuksetJaKutsut),
-    muuAineistoLadattu: handleLadattuTiedostoArraysForSave(muuAineistoLadattu, poistettuMuuAineistoLadattu),
+    kuulutuksetJaKutsut: handleLadattuTiedostoArraysForSave(kuulutuksetJaKutsu, poistetutKuulutuksetJaKutsu),
+    muuAineistoLadattu: handleLadattuTiedostoArraysForSave(muuAineistoKoneelta, poistetutMuuAineistoKoneelta),
   };
 }
 export const mapHyvaksymisesitysFormValuesToHyvaksymisesitysInput = (
@@ -82,11 +71,7 @@ export const mapHyvaksymisesitysFormValuesToHyvaksymisesitysInput = (
   };
 
   const hyvaksymisesitykset = hyvaksymisesitysFormData.hyvaksymisesitykset.map(adaptHyvaksymisesitysLisakentillaToHyvaksymisesitysInput);
-  const poistetutHyvaksymisesitykset = hyvaksymisesitysFormData.poistetutHyvaksymisesitykset.map(
-    adaptHyvaksymisesitysLisakentillaToHyvaksymisesitysInput
-  );
 
-  input.hyvaksymisesitys = hyvaksymisesitykset.concat(poistetutHyvaksymisesitykset);
+  input.hyvaksymisEsitys = hyvaksymisesitykset[0];
   return input;
 };
-

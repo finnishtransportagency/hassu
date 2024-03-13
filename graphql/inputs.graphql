@@ -14,8 +14,6 @@ input TallennaProjektiInput {
   lausuntoPyynnot: [LausuntoPyyntoInput!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
   hyvaksymisEsitys: HyvaksymisEsitysInput
-  hyvaksymisesitys: HyvaksymisesitysInput
-  hyvaksymisesitys: [HyvaksymisesitysInput!]
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
@@ -227,27 +225,6 @@ input LaskutustiedotInput {
   viitetieto: String!
 }
 
-input HyvaksymisesitysInput {
-  kunta: Int!
-  uuid: String!
-  poistumisPaiva: String!
-  kiireellinenKasittely: Boolean
-  viesti: String!
-  laskutustiedot: LaskutustiedotInput!
-  suunnitelma: [LadattuTiedostoInput!]
-  muistutukset: [LadattuTiedostoInput!]
-  lausunnot: [LadattuTiedostoInput!]
-  maanomistajaluettelo: [LadattuTiedostoInput!]
-  kuulutuksetJaKutsut: [LadattuTiedostoInput!]
-  muuAineistoVelhosta: [AineistoInput!]
-  muuAineistoLadattu: [LadattuTiedostoInput!]
-  poistetaan: Boolean
-  """
-  lista sahkopostiosoitteita
-  """
-  esityksenVastaanottajat: [String!]
-}
-
 input LausuntoPyyntoInput {
   uuid: String!
   poistumisPaiva: String!
@@ -268,10 +245,10 @@ input LausuntoPyynnonTaydennysInput {
 input HyvaksymisEsitysInput {
   poistumisPaiva: String!
   kiireellinen: Boolean
-  lisatiedot: String
+  viesti: String
   laskutustiedot: LaskutustiedotInput
   hyvaksymisEsitys: [LadattuTiedostoInput!]
-  suunnitelma: [AineistoInput!]
+  suunnitelma: [LadattuTiedostoInput!]
   muistutukset: [LadattuTiedostoInput!]
   lausunnot: [LadattuTiedostoInput!]
   kuulutuksetJaKutsu: [LadattuTiedostoInput!]
@@ -279,12 +256,7 @@ input HyvaksymisEsitysInput {
   muuAineistoKoneelta: [LadattuTiedostoInput!]
   maanomistajaluettelo: [LadattuTiedostoInput!]
   vastaanottajat: [String!]
-}
-
-input LaskutustiedotInput {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  poistetaan: Boolean
 }
 
 input HyvaksymisPaatosVaiheInput {
