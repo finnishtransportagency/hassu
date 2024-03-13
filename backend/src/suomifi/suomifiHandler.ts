@@ -310,32 +310,59 @@ export async function generatePdf(
   }
 }
 
+function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti) {
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+    const sisalto = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}
+
+Hej,
+
+Ni har fått ett brev med information om framläggandet av planen samt om möjligheten att göra en anmärkning på planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
+
+Med vänlig hälsning
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
+`;
+    return {
+      otsikko: "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
+      sisalto,
+    };
+  } else {
+    const sisalto = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}
+
+Hej, 
+
+Ni har fått ett brev med information om beslut om godkännande av planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med beslutet och det bifogade planeringsmaterialet.
+
+Med vänlig hälsning
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
+`;
+    return {
+      otsikko: "Ilmoitus suunnitelman hyväksymispäätöksestä / Meddelande om beslut om godkännande av planen",
+      sisalto,
+    };
+  }
+}
+
 async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaja: boolean, tyyppi: PublishOrExpireEventType) {
   try {
     const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
     if (!pdf) {
       return;
     }
-    const otsikko =
-      tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO
-        ? "Ilmoitus suunnitelman nähtäville asettamisesta"
-        : "Ilmoitus suunnitelman hyväksymispäätöksestä";
-    const sisaltoNahtavillaolo = `Hei,
-
-Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
-
-Ystävällisin terveisin
-${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
-    const sisaltoHyvaksymispaatos = `Hei,
-
-Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
-
-Ystävällisin terveisin
-${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    const saate = getSaateteksti(tyyppi, projektiFromDB);
     const viesti: PdfViesti = {
       nimi: kohde.nimi,
-      otsikko,
-      sisalto: tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? sisaltoNahtavillaolo : sisaltoHyvaksymispaatos,
+      otsikko: saate.otsikko,
+      sisalto: saate.sisalto,
       lahiosoite: kohde.lahiosoite,
       postinumero: kohde.postinumero,
       postitoimipaikka: kohde.postitoimipaikka,
