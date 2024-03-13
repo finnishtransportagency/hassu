@@ -222,6 +222,13 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 getOptionLabel={(code) => getLocalizedCountryName(lang, code)}
                 value={value}
                 inputValue={inputValue}
+                renderOption={(props, code) => {
+                  return (
+                    <li {...props} key={code}>
+                      {getLocalizedCountryName(lang, code)}
+                    </li>
+                  );
+                }}
                 onInputChange={(_event, newInputValue) => {
                   setInputValue(newInputValue);
                 }}
