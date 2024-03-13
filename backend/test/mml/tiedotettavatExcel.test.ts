@@ -8,12 +8,12 @@ import readXlsxFile from "read-excel-file/node";
 import { expect } from "chai";
 import { identifyMockUser } from "../../src/user/userService";
 import { getKiinteistonomistajaTableName, getMuistuttajaTableName } from "../../src/util/environment";
-import { DBMuistuttaja } from "../../src/muistutus/muistutusHandler";
 import fs from "fs";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { fileService } from "../../src/files/fileService";
 import sinon from "sinon";
 import MockDate from "mockdate";
+import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 
 const projekti: Partial<DBProjekti> = {
   oid: "1.2.3",
@@ -21,15 +21,15 @@ const projekti: Partial<DBProjekti> = {
   velho: {
     nimi: "Testiprojekti 1",
     tyyppi: ProjektiTyyppi.TIE,
-  }
+  },
 };
 const rataProjekti: Partial<DBProjekti> = {
   oid: "1.2.3",
   kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
   velho: {
     nimi: "Testiprojekti 1",
-    tyyppi: ProjektiTyyppi.RATA
-  }
+    tyyppi: ProjektiTyyppi.RATA,
+  },
 };
 const yleisProjekti: Partial<DBProjekti> = {
   oid: "1.2.3",
@@ -37,7 +37,7 @@ const yleisProjekti: Partial<DBProjekti> = {
   velho: {
     nimi: "Testiprojekti 1",
     tyyppi: ProjektiTyyppi.YLEINEN,
-  }
+  },
 };
 const omistaja1: DBOmistaja = {
   id: "1",
@@ -149,7 +149,7 @@ describe("tiedotettavatExcel", () => {
   });
   after(() => {
     MockDate.reset();
-  })
+  });
   it("tallenna kiinteistön omistajat excel tiedostoon nähtävilläolo", async () => {
     const buffer = await generateExcel(projekti as DBProjekti, true, Vaihe.NAHTAVILLAOLO, "2024-02-21");
     fs.writeFileSync(__dirname + "/maanomistajaluettelo_nahtavillaolo.xlsx", buffer);
@@ -239,7 +239,13 @@ describe("tiedotettavatExcel", () => {
   });
   it("tallenna maanomistajaluettelo excel hyväksymispäätös", async () => {
     const file = sinon.stub(fileService, "createFileToProjekti");
-    await tallennaMaanomistajaluettelo(rataProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.HYVAKSYMISPAATOS, "2024-02-28", 1);
+    await tallennaMaanomistajaluettelo(
+      rataProjekti as DBProjekti,
+      new ProjektiPaths(projekti.oid!),
+      Vaihe.HYVAKSYMISPAATOS,
+      "2024-02-28",
+      1
+    );
     const createParams = file.getCall(0).args[0];
     expect(createParams.fileName).to.be.equal("R417 Maanomistajaluettelo ja muistuttajat 20240228.xlsx");
     file.restore();

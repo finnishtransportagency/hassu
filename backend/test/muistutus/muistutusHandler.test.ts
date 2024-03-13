@@ -84,18 +84,19 @@ describe("muistutusHandler", () => {
 
     describe("lisaaMuistutus", () => {
       it("should send email only to kirjaamo", async () => {
-        sinon.stub(muistutusHandler, "getLoggedInUser").returns({ "custom:hetu": "12123-041212" } as SuomiFiCognitoKayttaja);
+        sinon
+          .stub(muistutusHandler, "getLoggedInUser")
+          .returns({ "custom:hetu": "12123-041212", given_name: "Mika", family_name: "Muistuttaja" } as SuomiFiCognitoKayttaja);
         const dbMockClient = mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
-          etunimi: "Mika",
-          sukunimi: "Muistuttaja",
           katuosoite: "Muistojentie 1 a",
-          postinumeroJaPostitoimipaikka: "00100 Helsinki",
+          postitoimipaikka: "Helsinki",
+          postinumero: "00100",
+          maa: "FI",
           sahkoposti: undefined,
-          puhelinnumero: "040123123",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
-          liite: undefined,
+          liitteet: [],
         };
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
@@ -113,7 +114,6 @@ describe("muistutusHandler", () => {
         expect(m.lahiosoite).to.equal("Muistojentie 1 a");
         expect(m.postinumero).to.equal("00100");
         expect(m.postitoimipaikka).to.equal("Helsinki");
-        expect(m.puhelinnumero).to.equal("040123123");
         const updateCommand = dbMockClient.commandCalls(UpdateCommand)[0];
         assert(updateCommand.args[0].input.ExpressionAttributeValues);
         expect(updateCommand.args[0].input.ExpressionAttributeValues[":id"][0]).to.equal(m.id);
@@ -125,14 +125,13 @@ describe("muistutusHandler", () => {
         mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);
         const muistutusInput: MuistutusInput = {
-          etunimi: "Mika",
-          sukunimi: "Muistuttaja",
-          katuosoite: undefined,
-          postinumeroJaPostitoimipaikka: undefined,
+          katuosoite: "Katuosoite 1",
+          postitoimipaikka: "Postitoimipaikka1",
+          postinumero: "123123",
+          maa: "FI",
           sahkoposti: "mika.muistuttaja@mikamuistutta.ja",
-          puhelinnumero: undefined,
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
-          liite: undefined,
+          liitteet: [],
         };
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });

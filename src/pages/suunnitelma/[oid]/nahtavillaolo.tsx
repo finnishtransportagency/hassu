@@ -9,7 +9,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
+import MuistutusLomake from "@components/projekti/kansalaisnakyma/MuistutusLomake";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -46,7 +46,6 @@ export default function Nahtavillaolo(): ReactElement {
   };
 
   const velho = projekti?.velho;
-  const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(router.asPath.indexOf("#muistutus") !== -1);
   const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(true);
 
   const kieli = useKansalaiskieli();
@@ -85,7 +84,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const nahtavillaoloKuulutusPDFPath = kuulutus.kuulutusPDF?.[kieli];
 
-  const authUrl = getSuomiFiAuthenticationURL(`suunnitelma/${projekti?.oid}/nahtavillaolo#muistutus`);
+  const authUrl = getSuomiFiAuthenticationURL(`suunnitelma/${projekti?.oid}/nahtavillaolo`);
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
@@ -113,7 +112,7 @@ export default function Nahtavillaolo(): ReactElement {
       }
       vahainenMenettely={projekti.vahainenMenettely}
     >
-      <Section noDivider>
+      <Section noDivider={!isProjektiInNahtavillaoloVaihe}>
         <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
         {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && (
           <PreWrapParagraph>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</PreWrapParagraph>
@@ -146,57 +145,6 @@ export default function Nahtavillaolo(): ReactElement {
           kuulutus={kuulutus}
           uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
         />
-        {isProjektiInNahtavillaoloVaihe && (
-          <ContentSpacer>
-            <H3 variant="h4">
-              {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
-              {!muistutusInfoOpen && (
-                <FontAwesomeIcon
-                  color="rgb(0, 100, 175)"
-                  size="lg"
-                  icon="info-circle"
-                  type={NotificationType.INFO_GRAY}
-                  onClick={() => setMuistutusInfoOpen(true)}
-                  aria-label={t("muistutuslomake.lue_lisaa")}
-                />
-              )}
-            </H3>
-            <p>
-              <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
-            </p>
-
-            <Notification
-              type={NotificationType.INFO_GRAY}
-              className="mt-4"
-              open={muistutusInfoOpen}
-              onClose={() => setMuistutusInfoOpen(false)}
-              closable
-            >
-              <h4 className="vayla-small-title">{t("muistutuslomake.muistutus_info_otsikko")}</h4>
-              <p>{t("muistutuslomake.muistutus_info_1")}</p>
-              <br />
-              <p>{t("muistutuslomake.muistutus_info_2")}</p>
-            </Notification>
-            <JataPalautettaNappi
-              teksti={t("muistutuslomake.jata_muistutus")}
-              onClick={() => {
-                if (!kayttaja?.suomifiEnabled || kayttaja?.tunnistautunut || !authUrl) {
-                  setMuistutusLomakeOpen(true);
-                } else {
-                  router.push(authUrl);
-                }
-              }}
-            />
-            <MuistutusLomakeDialogi
-              nahtavillaolo={kuulutus}
-              open={muistutusLomakeOpen}
-              onClose={() => setMuistutusLomakeOpen(false)}
-              projekti={projekti}
-              kayttaja={kayttaja}
-            />
-          </ContentSpacer>
-        )}
-
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</H3>
           <p>
@@ -208,7 +156,6 @@ export default function Nahtavillaolo(): ReactElement {
             <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
           ))}
         </ContentSpacer>
-
         <ContentSpacer>
           <H3 variant="h4">{t("projekti:ui-otsikot.ladattava_kuulutus")}</H3>
           {kuulutus.kuulutusPaiva && nahtavillaoloKuulutusPDFPath && (
@@ -217,6 +164,53 @@ export default function Nahtavillaolo(): ReactElement {
         </ContentSpacer>
         <EuLogo projekti={projekti} />
       </Section>
+      {isProjektiInNahtavillaoloVaihe && (
+        <ContentSpacer>
+          <H3 variant="h4">
+            {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
+            {!muistutusInfoOpen && (
+              <FontAwesomeIcon
+                color="rgb(0, 100, 175)"
+                size="lg"
+                icon="info-circle"
+                type={NotificationType.INFO_GRAY}
+                cursor="pointer"
+                onClick={() => setMuistutusInfoOpen(true)}
+                aria-label={t("muistutuslomake.lue_lisaa")}
+              />
+            )}
+          </H3>
+          <p>
+            <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
+          </p>
+
+          <Notification
+            type={NotificationType.INFO_GRAY}
+            className="mt-4"
+            open={muistutusInfoOpen}
+            onClose={() => setMuistutusInfoOpen(false)}
+            closable
+          >
+            <p>{t("muistutuslomake.muistutus_info_1")}</p>
+            <br />
+            <p>{t("muistutuslomake.muistutus_info_2")}</p>
+          </Notification>
+          {!!authUrl && !!kayttaja && (
+            <>
+              {kayttaja.tunnistautunut ? (
+                <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
+              ) : (
+                <JataPalautettaNappi
+                  teksti={t("muistutuslomake.jata_muistutus")}
+                  onClick={() => {
+                    router.push(authUrl);
+                  }}
+                />
+              )}
+            </>
+          )}
+        </ContentSpacer>
+      )}
     </ProjektiJulkinenPageLayout>
   );
 }

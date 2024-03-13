@@ -12,21 +12,21 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { muistutusEmailService } from "./muistutusEmailService";
-import { adaptMuistutusInput } from "./muistutusAdapter";
 import { auditLog, log } from "../logger";
 import { getSuomiFiCognitoKayttaja, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
 import { config } from "../config";
-import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
-import { DBProjekti } from "../database/model";
+import { FULL_DATE_TIME_FORMAT_WITH_TZ, localDateTimeString, nyt } from "../util/dateUtil";
+import { DBProjekti, Muistutus } from "../database/model";
 import { getMuistuttajaTableName } from "../util/environment";
 import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SuomiFiSanoma } from "../suomifi/suomifiHandler";
 import { DBMuistuttaja } from "../database/muistuttajaDatabase";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
+import { adaptMuistutusInput } from "./muistutusAdapter";
 
 function getExpires() {
   // muistuttajien tiedot säilyvät seitsemän vuotta auditointilokia varten
@@ -65,18 +65,14 @@ class MuistutusHandler {
       throw new NotFoundError("Projekti ei ole nähtävilläolovaiheessa, joten muistutuksia ei voi antaa");
     }
 
-    const muistutus = adaptMuistutusInput(muistutusInput);
-    if (muistutus.liite) {
-      muistutus.liite = await fileService.persistFileToProjekti({
-        uploadedFileSource: muistutus.liite,
-        oid,
-        targetFilePathInProjekti: "muistutukset/" + muistutus.id,
-      });
-    }
+    const loggedInUser = this.getLoggedInUser();
+
+    const aikaleima = localDateTimeString();
+    const muistutusId = uuid.v4();
+    const liitteet = await this.persistLiitteet(muistutusInput.liitteet, oid, muistutusId);
+    const muistutus: Muistutus = adaptMuistutusInput({ aikaleima, muistutusId, liitteet, loggedInUser, muistutusInput });
 
     await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
-
-    const loggedInUser = this.getLoggedInUser();
 
     const henkilotunnus = loggedInUser?.["custom:hetu"];
 
@@ -84,20 +80,19 @@ class MuistutusHandler {
       id: muistutus.id,
       expires: getExpires(),
       lisatty: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
-      etunimi: muistutus.etunimi,
-      sukunimi: muistutus.sukunimi,
       henkilotunnus,
+      etunimi: muistutus?.etunimi,
+      sukunimi: muistutus?.sukunimi,
       lahiosoite: muistutus.katuosoite,
-      postinumero: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[0],
-      postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ").slice(1).join(" "),
+      postinumero: muistutus.postinumero,
+      postitoimipaikka: muistutus.postitoimipaikka,
       maakoodi: muistutus.maakoodi,
       sahkoposti: muistutus.sahkoposti,
-      puhelinnumero: muistutus.puhelinnumero,
       vastaanotettu: muistutus.vastaanotettu,
       muistutus: muistutus.muistutus,
       oid: projektiFromDB.oid,
-      liite: muistutus.liite,
       suomifiLahetys: !!henkilotunnus,
+      liitteet: muistutus.liitteet,
     };
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
@@ -112,6 +107,27 @@ class MuistutusHandler {
 
   getLoggedInUser() {
     return getSuomiFiCognitoKayttaja();
+  }
+
+  private async persistLiitteet(
+    liitteet: string[] | undefined | null,
+    oid: string,
+    muistutusId: string
+  ): Promise<DBMuistuttaja["liitteet"]> {
+    if (!liitteet) {
+      return liitteet;
+    }
+
+    return await Promise.all(
+      liitteet.map(
+        async (liite) =>
+          await fileService.persistFileToProjekti({
+            uploadedFileSource: liite,
+            oid,
+            targetFilePathInProjekti: "muistutukset/" + muistutusId,
+          })
+      )
+    );
   }
 
   async haeMuistuttajat(variables: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {

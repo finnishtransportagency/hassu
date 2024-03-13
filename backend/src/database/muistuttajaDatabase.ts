@@ -25,7 +25,7 @@ export type DBMuistuttaja = {
   muistutus?: string | null;
   oid: string;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
-  liite?: string | null;
+  liitteet?: string[] | null;
   maakoodi?: string | null;
   suomifiLahetys?: boolean;
 };

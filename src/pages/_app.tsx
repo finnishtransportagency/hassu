@@ -27,7 +27,6 @@ import { DndProvider } from "react-dnd";
 import SivuaOnMuokattuDialog from "@components/SivuaOnMuokattuDialog";
 import LoadingSpinnerProvider from "@components/layout/LoadingSpinnerProvider";
 import { FormValidationModeProvider } from "@components/FormValidationModeProvider";
-
 log.setDefaultLevel("DEBUG");
 
 function App(props: AppProps) {

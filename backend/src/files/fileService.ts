@@ -27,12 +27,12 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
-import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { Aineisto } from "../database/model";
 import Mail from "nodemailer/lib/mailer";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import fileValidation from "hassu-common/fileValidationSettings";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -127,7 +127,7 @@ export class FileService {
         "Content-Type": contentType,
       },
       Expires: 600,
-      Conditions: [{ "Content-Type": contentType }, ["content-length-range", 0, 25 * 1024 * 1024]],
+      Conditions: [{ "Content-Type": contentType }, ["content-length-range", 0, fileValidation.maxFileSize]],
     });
 
     return { fileNameWithPath, uploadURL: presignedPost.url, uploadFields: JSON.stringify(presignedPost.fields) };
@@ -139,7 +139,7 @@ export class FileService {
    * @private
    */
   private validateContentType(contentType: string) {
-    if (!allowedUploadFileTypes.some((allowedType) => contentType.startsWith(allowedType))) {
+    if (!fileValidation.allowedFileTypes.some((allowedType) => contentType.startsWith(allowedType))) {
       log.error("Tiedostotyyppi ei ole sallittu! (" + contentType + ")");
       throw new IllegalArgumentError("Tiedostotyyppi ei ole sallittu!");
     }

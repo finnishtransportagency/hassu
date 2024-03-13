@@ -398,14 +398,13 @@ input PalauteInput {
 }
 
 input MuistutusInput {
-  etunimi: String
-  sukunimi: String
-  katuosoite: String
-  postinumeroJaPostitoimipaikka: String
+  katuosoite: String!
+  postinumero: String!
+  postitoimipaikka: String!
   sahkoposti: String
-  puhelinnumero: String
-  muistutus: String
-  liite: String
+  muistutus: String!
+  maa: String!
+  liitteet: [String!]!
 }
 
 input ListaaLisaAineistoInput {

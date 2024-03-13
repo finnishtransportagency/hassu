@@ -11,6 +11,7 @@ import { isAorL } from "../util/userUtil";
 import { parameters } from "../aws/parameters";
 import fetch from "cross-fetch";
 import { SuomiFiCognitoKayttaja } from "./suomiFiCognitoKayttaja";
+import { invokeLambda } from "../aws/lambda";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -115,15 +116,15 @@ export function getSuomiFiCognitoKayttaja(): SuomiFiCognitoKayttaja | undefined 
 }
 
 export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined> {
-  const isSuomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
-  const isSuomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-  if (isSuomifiEnabled) {
+  const suomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+  const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+  if (suomifiEnabled) {
     const cognitoKayttaja = getSuomiFiCognitoKayttaja();
     if (cognitoKayttaja) {
       return {
         __typename: "SuomifiKayttaja",
-        suomifiEnabled: true,
-        suomifiViestitEnabled: isSuomifiViestitEnabled,
+        suomifiEnabled,
+        suomifiViestitEnabled,
         tunnistautunut: true,
         email: cognitoKayttaja.email,
         etunimi: cognitoKayttaja.given_name,
@@ -132,22 +133,17 @@ export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined>
         postinumero: cognitoKayttaja["custom:postinumero"],
         postitoimipaikka: cognitoKayttaja["custom:postitoimipaikka"] ?? cognitoKayttaja["custom:ulkomainenkunta"],
         maakoodi: cognitoKayttaja["custom:maakoodi"],
-      };
-    } else {
-      return {
-        __typename: "SuomifiKayttaja",
-        tunnistautunut: false,
-        suomifiEnabled: true,
-        suomifiViestitEnabled: isSuomifiViestitEnabled,
+        kayttajaSuomifiViestitEnabled: await haeSuomifiKayttajaViestitEnabled(cognitoKayttaja),
       };
     }
-  } else {
-    return {
-      __typename: "SuomifiKayttaja",
-      suomifiEnabled: false,
-      suomifiViestitEnabled: isSuomifiViestitEnabled,
-    };
   }
+  return {
+    __typename: "SuomifiKayttaja",
+    tunnistautunut: false,
+    suomifiEnabled,
+    suomifiViestitEnabled,
+    kayttajaSuomifiViestitEnabled: false,
+  };
 }
 
 export const identifyUser = async (event: AppSyncResolverEvent<unknown>): Promise<void> => {
@@ -171,6 +167,10 @@ export const installIdentifyUserFunction = (func: IdentifyUserFunc): void => {
 
 if (process.env.USER_IDENTIFIER_FUNCTIONS) {
   import(process.env.USER_IDENTIFIER_FUNCTIONS);
+}
+
+async function haeSuomifiKayttajaViestitEnabled(cognitoKayttaja: SuomiFiCognitoKayttaja): Promise<boolean> {
+  return !!(await invokeLambda("hassu-suomifi-" + config.env, true, JSON.stringify({ hetu: cognitoKayttaja["custom:hetu"] })));
 }
 
 /**

@@ -63,10 +63,14 @@ Array [
     "text": "Muistutus on vastaanotettu
 Suunnitelman nimi: Projektin nimi
 Suunnitelman asiatunnus: ely123
+
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
 Muistutus:
 Muistutus 1
+
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -82,10 +86,14 @@ Array [
     "text": "Muistutus on vastaanotettu
 Suunnitelman nimi: Projektin nimi2
 Suunnitelman asiatunnus: vayla123
+
 Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
 Muistutus:
 Muistutus 1
+
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -101,10 +109,14 @@ Array [
     "text": "Muistutus on vastaanotettu
 Suunnitelman nimi: Projektin nimi3
 Suunnitelman asiatunnus: vayla123
+
 Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
 Muistutus:
 Muistutus 1
+
 
 ",
     "to": "test@test.fi",
@@ -119,10 +131,14 @@ Object {
   "sisalto": "Muistutus on vastaanotettu
 Suunnitelman nimi: Projektin nimi
 Suunnitelman asiatunnus: ely123
+
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
 Muistutus:
 Muistutus 1
+
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
@@ -136,10 +152,14 @@ Array [
     "text": "Muistutus on vastaanotettu
 Suunnitelman nimi: Projektin nimi
 Suunnitelman asiatunnus: ely123
+
 ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
 Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
 Muistutus:
 Muistutus 1
+
 Muistutuksen mukana toimitettu seuraavannimiset liitteet:
 test.txt
 ",
