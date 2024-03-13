@@ -15,7 +15,7 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1
+Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
@@ -48,7 +48,7 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1 på svenska
+Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).
@@ -81,7 +81,7 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1
+Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
@@ -114,7 +114,7 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1 på svenska
+Meddelande om beslut om godkännande
 Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
 Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).

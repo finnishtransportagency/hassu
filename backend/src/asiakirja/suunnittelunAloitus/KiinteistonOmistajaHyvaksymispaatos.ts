@@ -73,11 +73,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
       velho.tyyppi,
       kieli
     );
-    if (kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      this.header = kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
-    } else {
-      this.header = kutsuAdapter.title;
-    }
+    this.header = kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
