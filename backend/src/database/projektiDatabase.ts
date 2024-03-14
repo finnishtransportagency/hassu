@@ -505,25 +505,6 @@ export class ProjektiDatabase {
     );
   }
 
-  async setKiinteistonOmistajat(oid: string, omistajat: string[], muutOmistajat: string[]) {
-    const params = new UpdateCommand({
-      TableName: this.projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: "SET #omistajat = :omistajat, #muutOmistajat = :muutOmistajat",
-      ExpressionAttributeNames: {
-        ["#omistajat"]: "omistajat",
-        ["#muutOmistajat"]: "muutOmistajat",
-      },
-      ExpressionAttributeValues: {
-        ":omistajat": omistajat,
-        ":muutOmistajat": muutOmistajat,
-      },
-    });
-    return await getDynamoDBDocumentClient().send(params);
-  }
-
   async setOmistajahakuTiedot(
     oid: string,
     omistajahakuKaynnistetty: string | null,

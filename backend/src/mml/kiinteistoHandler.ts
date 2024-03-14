@@ -169,10 +169,6 @@ const handlerFactory = (event: SQSEvent) => async () => {
         await omistajaDatabase.vaihdaProjektinKaytossaolevatOmistajat(hakuEvent.oid, dbOmistajat);
 
         dbOmistajat.forEach((o) => auditLog.info("Omistajan tiedot tallennettu", { omistajaId: o.id }));
-        const omistajat = dbOmistajat.filter((omistaja) => omistaja.suomifiLahetys).map((o) => o.id);
-        const muutOmistajat = dbOmistajat.filter((omistaja) => !omistaja.suomifiLahetys).map((o) => o.id);
-        auditLog.info("Tallennetaan omistajat projektille", { omistajat, muutOmistajat });
-        await projektiDatabase.setKiinteistonOmistajat(hakuEvent.oid, omistajat, muutOmistajat);
         await projektiDatabase.setOmistajahakuTiedot(hakuEvent.oid, null, false, null, hakuEvent.status);
       } catch (e) {
         log.error("Kiinteistöjen haku epäonnistui projektilla: '" + hakuEvent.oid + "' " + e);
@@ -297,11 +293,6 @@ export async function tallennaKiinteistonOmistajat(
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
   }
-  await projektiDatabase.setKiinteistonOmistajat(
-    projekti.oid,
-    sailytettavatOmistajat.omistajat.map((omistaja) => omistaja.id),
-    [...sailytettavatOmistajat.muutOmistajat.map((omistaja) => omistaja.id), ...uudetOmistajat.map((omistaja) => omistaja.id)]
-  );
 
   const mapToApi = (o: DBOmistaja): Omistaja => ({
     __typename: "Omistaja",
