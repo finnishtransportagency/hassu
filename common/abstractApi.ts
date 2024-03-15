@@ -78,10 +78,11 @@ import {
   HaeProjektinTiedottamistiedotQueryVariables,
   ProjektinTiedottaminen,
   Status,
+  TallennaKiinteistonOmistajatMutationVariables,
   ListaaHyvaksymisEsityksenTiedostotInput,
-  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
-  HyvaksymisEsitysInput,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  HyvaksymisEsitysInput,
+  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -641,7 +642,12 @@ export abstract class AbstractApi {
     } as SuoritaTestiKomentoMutationVariables);
   }
 
-  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[], status: Status| null | undefined): Promise<string> {
+  async tuoKarttarajausJaTallennaKiinteistotunnukset(
+    oid: string,
+    geoJSON: string,
+    kiinteistotunnukset: string[],
+    status: Status | null | undefined
+  ): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset, {
       oid,
       geoJSON,
@@ -650,11 +656,8 @@ export abstract class AbstractApi {
     } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 
-  async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<Omistaja[]> {
-    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, {
-      oid,
-      omistajat,
-    });
+  async tallennaKiinteistonOmistajat(mutationVariables: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
+    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, mutationVariables);
   }
 
   async haeKiinteistonOmistajat(

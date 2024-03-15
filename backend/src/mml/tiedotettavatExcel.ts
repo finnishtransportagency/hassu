@@ -9,6 +9,7 @@ import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
 import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { formatKiinteistotunnus } from "hassu-common/util/formatKiinteistotunnus";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -19,12 +20,6 @@ function formatDate(date: string | undefined | null, format = "DD.MM.YYYY HH:mm:
   } else {
     return "";
   }
-}
-
-function formatKiinteistotunnus(tunnus: string) {
-  return `${Number(tunnus.substring(0, 3))}-${Number(tunnus.substring(3, 6))}-${Number(tunnus.substring(6, 10))}-${Number(
-    tunnus.substring(10)
-  )}`;
 }
 
 export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQueryVariables): Promise<Excel> {

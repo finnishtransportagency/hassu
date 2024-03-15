@@ -41,6 +41,7 @@ import {
   faPlus,
   faMapMarkerAlt,
   faExpandAlt,
+  faTrashRestore,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -83,7 +84,8 @@ library.add(
   faMinus,
   faPlus,
   faMapMarkerAlt,
-  faExpandAlt
+  faExpandAlt,
+  faTrashRestore
 );
 
 import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";

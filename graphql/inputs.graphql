@@ -502,7 +502,7 @@ input TestiKomentoInput {
 
 input OmistajaInput {
   id: String
-  kiinteistotunnus: String!
+  kiinteistotunnus: String
   nimi: String
   jakeluosoite: String
   postinumero: String
