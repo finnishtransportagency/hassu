@@ -446,6 +446,7 @@ export class CommonKutsuAdapter {
   }
 
   public substituteText(translation: string): string {
+    // prettier-ignore
     return translation.replace(/{{(.+?)}}/g, (_, part) => { // NOSONAR
       const textFromResolver = this.findTextFromResolver(part);
       if (textFromResolver !== undefined) {
