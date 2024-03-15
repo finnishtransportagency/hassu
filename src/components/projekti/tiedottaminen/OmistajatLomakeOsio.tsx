@@ -1,13 +1,17 @@
 import React, { useCallback, useMemo, useState, VFC } from "react";
-import TiedotettavaHaitari from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
+import TiedotettavaHaitari, { TiedotettavaHaitariProps } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import useApi from "src/hooks/useApi";
-import { Controller, useFieldArray, UseFieldArrayProps, useFormContext, UseFormRegister } from "react-hook-form";
+import { Controller, useFieldArray, UseFieldArrayProps, UseFieldArrayRemove, useFormContext, UseFormRegister } from "react-hook-form";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { OmistajaRow, FormData, PAGE_SIZE } from "../../../pages/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat.dev";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatKiinteistotunnus } from "common/util/formatKiinteistotunnus";
 import { Checkbox, TextField } from "@mui/material";
 import debounce from "lodash/debounce";
+import { H4 } from "@components/Headings";
+import HassuTable from "@components/table/HassuTable";
+import Button from "@components/button/Button";
+import IconButton from "@components/button/IconButton";
 
 type FieldArrayName = UseFieldArrayProps<FormData>["name"];
 
@@ -18,20 +22,21 @@ type OmistajatLomakeOsioProps = {
   muutOmistajat?: boolean;
   title: string;
   instructionText: string | JSX.Element;
-  fieldArrayName: FieldArrayName;
+  fieldArrayName: "suomifiOmistajat" | "muutOmistajat";
   queryFieldName: "muutOmistajatQuery" | "suomifiOmistajatQuery";
 };
 
-const createColumns: (fieldArrayName: FieldArrayName, register: UseFormRegister<FormData>) => ColumnDef<OmistajaRow>[] = (
-  fieldArrayName,
-  register
-) => [
-  createKiinteistotunnusColumn(),
-  createNimiColumn(),
+const createColumns: (
+  fieldArrayName: FieldArrayName | "uudetOmistajat",
+  register: UseFormRegister<FormData>,
+  removeUusiOmistaja?: UseFieldArrayRemove
+) => ColumnDef<OmistajaRow>[] = (fieldArrayName, register, removeUusiOmistaja) => [
+  createKiinteistotunnusColumn(register, fieldArrayName),
+  createNimiColumn(register, fieldArrayName),
   createPostiosoiteColumn(register, fieldArrayName),
   createPostinumeroColumn(register, fieldArrayName),
   createPostitoimipaikkaColumn(register, fieldArrayName),
-  createPoistaColumn(fieldArrayName),
+  createPoistaColumn(fieldArrayName, removeUusiOmistaja),
 ];
 
 export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
@@ -107,8 +112,28 @@ export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
 
   const columns = useMemo(() => createColumns(fieldArrayName, register), [fieldArrayName, register]);
 
+  if (fieldArrayName === "suomifiOmistajat") {
+    return (
+      <TiedotettavaHaitari
+        expanded={expanded}
+        onChange={handleExpansionChange}
+        hakutulosMaara={hakutulosMaara}
+        updateTiedotettavat={updateTiedotettavat}
+        columns={columns}
+        queryResettable={queryResettable}
+        setTiedotettavat={setNaytettavatOmistajat}
+        tiedotettavat={naytettavatOmistajat}
+        oid={oid}
+        filterText="Suodata kiinteistönomistajia"
+        title={title}
+        instructionText={instructionText}
+        queryFieldName={queryFieldName}
+      />
+    );
+  }
+
   return (
-    <TiedotettavaHaitari
+    <MuutOmistajatHaitari
       expanded={expanded}
       onChange={handleExpansionChange}
       hakutulosMaara={hakutulosMaara}
@@ -126,17 +151,98 @@ export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
   );
 };
 
-function createPoistaColumn(fieldArrayName: string): ColumnDef<OmistajaRow, unknown> {
-  return {
+const MuutOmistajatHaitari: VFC<TiedotettavaHaitariProps<OmistajaRow>> = ({
+  expanded,
+  onChange,
+  hakutulosMaara,
+  updateTiedotettavat,
+  columns,
+  queryResettable,
+  setTiedotettavat,
+  tiedotettavat,
+  oid,
+  filterText,
+  title,
+  instructionText,
+  queryFieldName,
+}) => {
+  const { control, register } = useFormContext<FormData>();
+  const { append, fields, remove: removeUusiOmistaja } = useFieldArray({ control, name: "uudetOmistajat" });
+
+  const appendNewRow = useCallback(() => {
+    append({ kiinteistotunnus: "", nimi: "", jakeluosoite: "", postinumero: "", paikkakunta: "" });
+  }, [append]);
+
+  const uudetOmistajatColumns = useMemo(
+    () => createColumns("uudetOmistajat", register, removeUusiOmistaja),
+    [register, removeUusiOmistaja]
+  );
+
+  const table = useReactTable({
+    columns: uudetOmistajatColumns,
+    getCoreRowModel: getCoreRowModel(),
+    data: fields,
+    enableSorting: false,
+    defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+    state: { pagination: undefined },
+  });
+
+  return (
+    <TiedotettavaHaitari
+      expanded={expanded}
+      onChange={onChange}
+      hakutulosMaara={hakutulosMaara}
+      updateTiedotettavat={updateTiedotettavat}
+      columns={columns}
+      queryResettable={queryResettable}
+      setTiedotettavat={setTiedotettavat}
+      tiedotettavat={tiedotettavat}
+      oid={oid}
+      filterText={filterText}
+      title={title}
+      instructionText={instructionText}
+      queryFieldName={queryFieldName}
+      bottomContent={
+        <>
+          <H4>Lisää uusi kiinteistönomistaja</H4>
+          {!!fields.length && <HassuTable table={table} />}
+          <Button type="button" onClick={appendNewRow}>
+            Lisää uusi rivi
+          </Button>
+        </>
+      }
+    />
+  );
+};
+
+const defaultColumnMeta = {
+  widthFractions: 3,
+  minWidth: 200,
+};
+
+function createPoistaColumn(fieldArrayName: FieldArrayName, removeUusiOmistaja?: UseFieldArrayRemove): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
     header: "Poista",
     id: "actions",
     meta: {
       widthFractions: 2,
       minWidth: 120,
     },
-    accessorKey: "rowIndex",
     cell: (context) => {
       const rowIndex = context.row.original.rowIndex;
+
+      if (fieldArrayName === "uudetOmistajat" && removeUusiOmistaja) {
+        return (
+          <IconButton
+            type="button"
+            onClick={() => {
+              removeUusiOmistaja(context.row.index);
+            }}
+            icon="trash"
+          />
+        );
+      }
+
       return (
         <Controller
           name={`${fieldArrayName}.${rowIndex}.toBeDeleted`}
@@ -155,6 +261,7 @@ function createPoistaColumn(fieldArrayName: string): ColumnDef<OmistajaRow, unkn
       );
     },
   };
+  return column;
 }
 
 function createPostitoimipaikkaColumn(
@@ -165,12 +272,9 @@ function createPostitoimipaikkaColumn(
     header: "Postitoimipaikka",
     accessorKey: "paikkakunta",
     id: "postitoimipaikka",
-    meta: {
-      widthFractions: 3,
-      minWidth: 200,
-    },
+    meta: defaultColumnMeta,
   };
-  if (fieldArrayName === "muutOmistajat") {
+  if (fieldArrayName !== "suomifiOmistajat") {
     column.cell = (context) => {
       const rowIndex = context.row.original.rowIndex;
       const { onChange, ...registerProps } = register(`${fieldArrayName}.${rowIndex}.paikkakunta`);
@@ -185,12 +289,9 @@ function createPostinumeroColumn(register: UseFormRegister<FormData>, fieldArray
     header: "Postinumero",
     accessorKey: "postinumero",
     id: "postinumero",
-    meta: {
-      widthFractions: 3,
-      minWidth: 200,
-    },
+    meta: defaultColumnMeta,
   };
-  if (fieldArrayName === "muutOmistajat") {
+  if (fieldArrayName !== "suomifiOmistajat") {
     column.cell = (context) => {
       const rowIndex = context.row.original.rowIndex;
       const { onChange, ...registerProps } = register(`${fieldArrayName}.${rowIndex}.postinumero`);
@@ -205,12 +306,9 @@ function createPostiosoiteColumn(register: UseFormRegister<FormData>, fieldArray
     header: "Postiosoite",
     accessorKey: "jakeluosoite",
     id: "postiosoite",
-    meta: {
-      widthFractions: 3,
-      minWidth: 200,
-    },
+    meta: defaultColumnMeta,
   };
-  if (fieldArrayName === "muutOmistajat") {
+  if (fieldArrayName !== "suomifiOmistajat") {
     column.cell = (context) => {
       const rowIndex = context.row.original.rowIndex;
       const { onChange, ...registerProps } = register(`${fieldArrayName}.${rowIndex}.jakeluosoite`);
@@ -220,26 +318,53 @@ function createPostiosoiteColumn(register: UseFormRegister<FormData>, fieldArray
   return column;
 }
 
-function createNimiColumn(): ColumnDef<OmistajaRow, unknown> {
-  return {
+function createNimiColumn(register: UseFormRegister<FormData>, fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
+  const meta =
+    fieldArrayName === "uudetOmistajat"
+      ? defaultColumnMeta
+      : {
+          widthFractions: 3,
+          minWidth: 250,
+        };
+  const column: ColumnDef<OmistajaRow, unknown> = {
     header: "Omistajan nimi",
     accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
     id: "omistajan_nimi",
-    meta: {
-      widthFractions: 3,
-      minWidth: 250,
-    },
+    meta,
   };
+  if (fieldArrayName === "uudetOmistajat") {
+    column.cell = (context) => {
+      const rowIndex = context.row.original.rowIndex;
+      const { onChange, ...registerProps } = register(`${fieldArrayName}.${rowIndex}.nimi`);
+      return <TextField {...registerProps} onChange={debounce(onChange, 1000)} />;
+    };
+  }
+  return column;
 }
 
-function createKiinteistotunnusColumn(): ColumnDef<OmistajaRow, unknown> {
-  return {
+function createKiinteistotunnusColumn(
+  register: UseFormRegister<FormData>,
+  fieldArrayName: FieldArrayName
+): ColumnDef<OmistajaRow, unknown> {
+  const meta =
+    fieldArrayName === "uudetOmistajat"
+      ? defaultColumnMeta
+      : {
+          widthFractions: 2,
+          minWidth: 160,
+        };
+  const column: ColumnDef<OmistajaRow, unknown> = {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
     accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnus(kiinteistotunnus),
-    meta: {
-      widthFractions: 2,
-      minWidth: 160,
-    },
+    meta,
   };
+  if (fieldArrayName === "uudetOmistajat") {
+    column.cell = (context) => {
+      const rowIndex = context.row.original.rowIndex;
+      const { onChange, ...registerProps } = register(`${fieldArrayName}.${rowIndex}.kiinteistotunnus`);
+      return <TextField {...registerProps} onChange={debounce(onChange, 1000)} />;
+    };
+  }
+  return column;
 }
