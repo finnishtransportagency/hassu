@@ -1,6 +1,5 @@
 import React, { useCallback, useState, VFC, useEffect } from "react";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
-import IconButton from "@components/button/IconButton";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -11,14 +10,15 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import KiinteistonomistajaHaitari, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
-import useApi from "src/hooks/useApi";
 import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
-import { ColumnDef } from "@tanstack/react-table";
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { UseFormProps, useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
+import { OmistajatLomakeOsio } from "@components/projekti/tiedottaminen/OmistajatLomakeOsio";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -27,6 +27,16 @@ export default function Kiinteistonomistajat() {
     </ProjektiConsumer>
   );
 }
+
+export type OmistajaRow = Omistaja & { toBeDeleted: boolean; rowIndex: number };
+
+export type FormData = {
+  oid: string;
+  muutOmistajatQuery: string;
+  suomifiOmistajatQuery: string;
+  suomifiOmistajat: OmistajaRow[];
+  muutOmistajat: OmistajaRow[];
+};
 
 const KarttaDialogi = styled(
   ({
@@ -88,72 +98,35 @@ const KarttaDialogi = styled(
   }
 )({});
 
-const columns: ColumnDef<Omistaja>[] = [
-  {
-    header: "Kiinteistötunnus",
-    accessorKey: "kiinteistotunnus",
-    id: "kiinteistotunnus",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Omistajan nimi",
-    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
-    id: "omistajan_nimi",
-    meta: {
-      widthFractions: 5,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Postiosoite",
-    accessorKey: "jakeluosoite",
-    id: "postiosoite",
-    meta: {
-      widthFractions: 3,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postinumero",
-    accessorKey: "postinumero",
-    id: "postinumero",
-    meta: {
-      widthFractions: 1,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
-    id: "postitoimipaikka",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "",
-    id: "actions",
-    meta: {
-      widthFractions: 2,
-      minWidth: 120,
-    },
-    accessorKey: "id",
-    cell: () => {
-      return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
-    },
-  },
-];
+export const PAGE_SIZE = 25;
+
+const getFormDefaultValues: (oid: string) => FormData = (oid) => ({
+  oid,
+  muutOmistajat: [],
+  suomifiOmistajat: [],
+  muutOmistajatQuery: "",
+  suomifiOmistajatQuery: "",
+});
+
+const formOptions: (oid: string) => UseFormProps<FormData> = (oid) => ({
+  resolver: yupResolver(kiinteistonOmistajatSchema, { abortEarly: false, recursive: true }),
+  mode: "onChange",
+  reValidateMode: "onChange",
+  defaultValues: getFormDefaultValues(oid),
+  shouldUnregister: false,
+});
 
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { showErrorMessage } = useSnackbars();
+  const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
 
   const [suomifiExpanded, setSuomifiExpanded] = useState(false);
+
   const [muutExpanded, setMuutExpanded] = useState(false);
+
+  const { showErrorMessage } = useSnackbars();
+  const { mutate } = useProjekti();
+  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
 
   const close = useCallback(() => {
     setIsOpen(false);
@@ -161,11 +134,6 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
   const open = useCallback(() => {
     setIsOpen(true);
   }, []);
-
-  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
-
-  const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
-  const { mutate } = useProjekti();
 
   useEffect(() => {
     if (projektinTiedottaminen?.omistajahakuTila === OmistajahakuTila.VIRHE) {
@@ -186,21 +154,12 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     setHakuKaynnissa(newHakuKaynnissa);
   }, [hakuKaynnissa, mutate, projektinTiedottaminen?.omistajahakuTila, showErrorMessage]);
 
-  const api = useApi();
+  const useFormReturn = useForm<FormData>(formOptions(projekti.oid));
 
-  const searchTiedotettavat: SearchTiedotettavatFunction<Omistaja> = useCallback(
-    async (
-      oid: string,
-      muutOmistajat: boolean,
-      query: string | null | undefined,
-      from: number | null | undefined,
-      size: number | null | undefined
-    ) => {
-      const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, query, from, size);
-      return { hakutulosMaara: response.hakutulosMaara, tulokset: response.omistajat };
-    },
-    [api]
-  );
+  const onSubmit = useCallback<SubmitHandler<FormData>>((data) => {
+    console.log(data);
+    // withLoadingSpinner((async () => await api.tallennaKiinteistonOmistajat(data))());
+  }, []);
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
@@ -238,34 +197,39 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
           </p>
         </GrayBackgroundText>
-        <KiinteistonomistajaHaitari
-          expanded={suomifiExpanded}
-          setExpanded={setSuomifiExpanded}
-          searchTiedotettavat={searchTiedotettavat}
-          columns={columns}
-          oid={projekti.oid}
-          filterText="Suodata kiinteistönomistajia"
-          title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
-          instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
-        />
-        <KiinteistonomistajaHaitari
-          expanded={muutExpanded}
-          setExpanded={setMuutExpanded}
-          searchTiedotettavat={searchTiedotettavat}
-          columns={columns}
-          oid={projekti.oid}
-          filterText="Suodata kiinteistönomistajia"
-          title="Kiinteistönomistajien tiedotus muilla tavoin"
-          instructionText={
-            <>
-              Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tälläisiä ovat{" "}
-              <span style={{ color: "#C73F01" }}>x, z, y</span> jolloin tieto kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän
-              ulkopuolella. Voit listata alle kiinteistönomistajien osoitteet muistiin ja lähettää heille kuulutuksen postiosoitteisiin.
-              Kiinteistönomistajista viedään vastaanottajalista asianhallintaan, kun kuulutus julkaistaan.
-            </>
-          }
-          muutTiedotettavat
-        />
+        <FormProvider {...useFormReturn}>
+          <Form>
+            <OmistajatLomakeOsio
+              oid={projekti.oid}
+              expanded={suomifiExpanded}
+              setExpanded={setSuomifiExpanded}
+              title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
+              instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
+              fieldArrayName="suomifiOmistajat"
+              queryFieldName="suomifiOmistajatQuery"
+            />
+            <OmistajatLomakeOsio
+              oid={projekti.oid}
+              expanded={muutExpanded}
+              setExpanded={setMuutExpanded}
+              title="Kiinteistönomistajien tiedotus muilla tavoin"
+              instructionText={
+                <>
+                  Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tälläisiä ovat{" "}
+                  <span style={{ color: "#C73F01" }}>x, z, y</span> jolloin tieto kuulutuksesta toimitetaan kiinteistönomistajalle
+                  järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteet muistiin ja lähettää heille kuulutuksen
+                  postiosoitteisiin. Kiinteistönomistajista viedään vastaanottajalista asianhallintaan, kun kuulutus julkaistaan.
+                </>
+              }
+              fieldArrayName="muutOmistajat"
+              queryFieldName="muutOmistajatQuery"
+              muutOmistajat
+            />
+            <TallennaButton primary type="button" onClick={useFormReturn.handleSubmit(onSubmit)}>
+              Tallenna
+            </TallennaButton>
+          </Form>
+        </FormProvider>
       </Section>
       <HassuDialog
         open={hakuKaynnissa}
@@ -282,3 +246,6 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     </TiedottaminenPageLayout>
   );
 };
+
+const Form = styled("form")({ display: "contents" });
+const TallennaButton = styled(Button)({ marginLeft: "auto" });

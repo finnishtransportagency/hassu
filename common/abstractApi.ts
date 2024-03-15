@@ -78,9 +78,8 @@ import {
   HaeProjektinTiedottamistiedotQueryVariables,
   ProjektinTiedottaminen,
   Status,
+  TallennaKiinteistonOmistajatMutationVariables,
   ListaaHyvaksymisEsityksenTiedostotInput,
-  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
-  HyvaksymisEsitysInput,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaHyvaksymisEsitysInput,
   TallennaHyvaksymisesitysMutationVariables,
@@ -93,6 +92,8 @@ import {
   SuljeHyvaksymisEsityksenMuokkausMutationVariables,
   HyvaksymisEsityksenTiedot,
   HaeHyvaksymisEsityksenTiedotQueryVariables,
+  HyvaksymisEsitysInput,
+  ListaaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -750,11 +751,8 @@ export abstract class AbstractApi {
     } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 
-  async tallennaKiinteistonOmistajat(oid: string, omistajat: OmistajaInput[]): Promise<Omistaja[]> {
-    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, {
-      oid,
-      omistajat,
-    });
+  async tallennaKiinteistonOmistajat(mutationVariables: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
+    return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, mutationVariables);
   }
 
   async haeKiinteistonOmistajat(

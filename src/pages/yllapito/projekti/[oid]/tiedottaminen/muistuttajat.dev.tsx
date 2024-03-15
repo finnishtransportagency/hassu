@@ -1,4 +1,5 @@
-import React, { useCallback, VFC } from "react";
+import React, { VFC } from "react";
+// import React, { useCallback, VFC } from "react";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import Button from "@components/button/Button";
@@ -7,13 +8,13 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import KiinteistonomistajaHaitari, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
+// import KiinteistonomistajaHaitari, { SearchTiedotettavatFunction } from "@components/projekti/tiedottaminen/KiinteistonomistajaTable";
 import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
-import { Muistuttaja } from "@services/api";
-import useApi from "src/hooks/useApi";
-import IconButton from "@components/button/IconButton";
-import { ColumnDef } from "@tanstack/react-table";
-import { formatDateTime } from "common/util/dateUtils";
+// import { Muistuttaja } from "@services/api";
+// import useApi from "src/hooks/useApi";
+// import IconButton from "@components/button/IconButton";
+// import { ColumnDef } from "@tanstack/react-table";
+// import { formatDateTime } from "common/util/dateUtils";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 
 export default function Muistuttajat() {
@@ -24,142 +25,142 @@ export default function Muistuttajat() {
   );
 }
 
-const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
-  {
-    header: "Nimi",
-    accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
-    id: "muistuttajan_nimi",
-    meta: {
-      widthFractions: 5,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Postiosoite",
-    accessorKey: "jakeluosoite",
-    id: "postiosoite",
-    meta: {
-      widthFractions: 3,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postinumero",
-    accessorKey: "postinumero",
-    id: "postinumero",
-    meta: {
-      widthFractions: 1,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
-    id: "postitoimipaikka",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Muistutusaika",
-    accessorFn: ({ lisatty }) => (lisatty ? formatDateTime(lisatty) : null),
-    id: "muistutusaika",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "",
-    id: "actions",
-    meta: {
-      widthFractions: 2,
-      minWidth: 120,
-    },
-    accessorKey: "id",
-    cell: () => {
-      return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
-    },
-  },
-];
+// const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
+//   {
+//     header: "Nimi",
+//     accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
+//     id: "muistuttajan_nimi",
+//     meta: {
+//       widthFractions: 5,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "Postiosoite",
+//     accessorKey: "jakeluosoite",
+//     id: "postiosoite",
+//     meta: {
+//       widthFractions: 3,
+//       minWidth: 120,
+//     },
+//   },
+//   {
+//     header: "Postinumero",
+//     accessorKey: "postinumero",
+//     id: "postinumero",
+//     meta: {
+//       widthFractions: 1,
+//       minWidth: 120,
+//     },
+//   },
+//   {
+//     header: "Postitoimipaikka",
+//     accessorKey: "paikkakunta",
+//     id: "postitoimipaikka",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "Muistutusaika",
+//     accessorFn: ({ lisatty }) => (lisatty ? formatDateTime(lisatty) : null),
+//     id: "muistutusaika",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "",
+//     id: "actions",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 120,
+//     },
+//     accessorKey: "id",
+//     cell: () => {
+//       return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
+//     },
+//   },
+// ];
 
-const columnsMuutMuistuttajat: ColumnDef<Muistuttaja>[] = [
-  {
-    header: "Nimi",
-    accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
-    id: "muistuttajan_nimi",
-    meta: {
-      widthFractions: 5,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Postiosoite",
-    accessorKey: "jakeluosoite",
-    id: "postiosoite",
-    meta: {
-      widthFractions: 3,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postinumero",
-    accessorKey: "postinumero",
-    id: "postinumero",
-    meta: {
-      widthFractions: 1,
-      minWidth: 120,
-    },
-  },
-  {
-    header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
-    id: "postitoimipaikka",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Tiedotustapa",
-    accessorKey: "tiedotustapa",
-    id: "tiedotustapa",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "",
-    id: "actions",
-    meta: {
-      widthFractions: 2,
-      minWidth: 120,
-    },
-    accessorKey: "id",
-    cell: () => {
-      return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
-    },
-  },
-];
+// const columnsMuutMuistuttajat: ColumnDef<Muistuttaja>[] = [
+//   {
+//     header: "Nimi",
+//     accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
+//     id: "muistuttajan_nimi",
+//     meta: {
+//       widthFractions: 5,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "Postiosoite",
+//     accessorKey: "jakeluosoite",
+//     id: "postiosoite",
+//     meta: {
+//       widthFractions: 3,
+//       minWidth: 120,
+//     },
+//   },
+//   {
+//     header: "Postinumero",
+//     accessorKey: "postinumero",
+//     id: "postinumero",
+//     meta: {
+//       widthFractions: 1,
+//       minWidth: 120,
+//     },
+//   },
+//   {
+//     header: "Postitoimipaikka",
+//     accessorKey: "paikkakunta",
+//     id: "postitoimipaikka",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "Tiedotustapa",
+//     accessorKey: "tiedotustapa",
+//     id: "tiedotustapa",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 140,
+//     },
+//   },
+//   {
+//     header: "",
+//     id: "actions",
+//     meta: {
+//       widthFractions: 2,
+//       minWidth: 120,
+//     },
+//     accessorKey: "id",
+//     cell: () => {
+//       return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
+//     },
+//   },
+// ];
 
 const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
-  const api = useApi();
+  // const api = useApi();
 
-  const searchTiedotettavat: SearchTiedotettavatFunction<Muistuttaja> = useCallback(
-    async (
-      oid: string,
-      muutOmistajat: boolean,
-      query: string | null | undefined,
-      from: number | null | undefined,
-      size: number | null | undefined
-    ) => {
-      const response = await api.haeMuistuttajat(oid, muutOmistajat, query, from, size);
-      return { hakutulosMaara: response.hakutulosMaara, tulokset: response.muistuttajat };
-    },
-    [api]
-  );
+  // const searchTiedotettavat: SearchTiedotettavatFunction<Muistuttaja> = useCallback(
+  //   async (
+  //     oid: string,
+  //     muutOmistajat: boolean,
+  //     query: string | null | undefined,
+  //     from: number | null | undefined,
+  //     size: number | null | undefined
+  //   ) => {
+  //     const response = await api.haeMuistuttajat(oid, muutOmistajat, query, from, size);
+  //     return { hakutulosMaara: response.hakutulosMaara, tulokset: response.muistuttajat };
+  //   },
+  //   [api]
+  // );
 
   const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
 
@@ -182,7 +183,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
             </p>
           </GrayBackgroundText>
         </ContentSpacer>
-        <KiinteistonomistajaHaitari
+        {/* <KiinteistonomistajaHaitari
           searchTiedotettavat={searchTiedotettavat}
           columns={columnsSuomifi}
           oid={projekti.oid}
@@ -198,7 +199,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           filterText="Suodata muistuttajia"
           title="Muistuttajien tiedotus muilla tavoin"
           instructionText="Muistutuksen suunnitelmaan on mahdollista jättää myös kirjaamon sähköpostiin, joten on mahdollista, etteivät kaikki muistuttajat ole tunnistautuneet. Voit listata alle nämä muistuttajat ja tiedottaa heitä hyväksymispäätöksestä järjestelmän ulkopuolella. Muistuttajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
-        />
+        /> */}
       </Section>
     </TiedottaminenPageLayout>
   );
