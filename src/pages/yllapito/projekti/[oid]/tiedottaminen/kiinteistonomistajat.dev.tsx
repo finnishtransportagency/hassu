@@ -36,6 +36,7 @@ export type FormData = {
   suomifiOmistajatQuery: string;
   suomifiOmistajat: OmistajaRow[];
   muutOmistajat: OmistajaRow[];
+  uudetOmistajat: OmistajaRow[];
 };
 
 const KarttaDialogi = styled(
@@ -104,6 +105,7 @@ const getFormDefaultValues: (oid: string) => FormData = (oid) => ({
   oid,
   muutOmistajat: [],
   suomifiOmistajat: [],
+  uudetOmistajat: [],
   muutOmistajatQuery: "",
   suomifiOmistajatQuery: "",
 });

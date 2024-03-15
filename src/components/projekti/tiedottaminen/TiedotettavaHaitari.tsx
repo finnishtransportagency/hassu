@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionProps, AccordionSummary, TextField } from "@mui/material";
 import { Stack, styled } from "@mui/system";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import React, { useCallback } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 
 export type SearchTiedotettavatFunction<T> = (
@@ -18,7 +18,7 @@ export type SearchTiedotettavatFunction<T> = (
   size: number | null | undefined
 ) => Promise<{ tulokset: T[]; hakutulosMaara: number }>;
 
-export type Props<T> = {
+export type TiedotettavaHaitariProps<T> = {
   title: string;
   instructionText: string | JSX.Element;
   filterText: string;
@@ -32,6 +32,7 @@ export type Props<T> = {
   expanded: boolean;
   onChange: Exclude<AccordionProps["onChange"], undefined>;
   queryFieldName: string;
+  bottomContent?: ReactNode;
 };
 
 type Tiedotettava = Record<string, unknown>;
@@ -52,7 +53,8 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
   expanded,
   onChange,
   queryFieldName,
-}: Readonly<Props<T>>) {
+  bottomContent,
+}: Readonly<TiedotettavaHaitariProps<T>>) {
   return (
     <TableAccordion expanded={expanded} onChange={onChange}>
       <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
@@ -67,6 +69,7 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
         filterText={filterText}
         queryResettable={queryResettable}
         queryFieldName={queryFieldName}
+        bottomContent={bottomContent}
       />
     </TableAccordion>
   );
@@ -111,9 +114,13 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   filterText,
   queryResettable,
   queryFieldName,
+  bottomContent,
   ...props
 }: Omit<AccordionDetailsProps, "children"> &
-  Pick<Props<T>, "oid" | "instructionText" | "columns" | "filterText" | "tiedotettavat" | "setTiedotettavat" | "queryFieldName"> & {
+  Pick<
+    TiedotettavaHaitariProps<T>,
+    "oid" | "instructionText" | "columns" | "filterText" | "tiedotettavat" | "setTiedotettavat" | "queryFieldName" | "bottomContent"
+  > & {
     updateTiedotettavat: (query?: string, from?: any, size?: any) => void;
     hakutulosMaara: number | null;
     queryResettable: boolean;
@@ -224,6 +231,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
                 Vie Exceliin
               </Button>
             </Grid>
+            {bottomContent}
           </>
         )}
       </ContentSpacer>
