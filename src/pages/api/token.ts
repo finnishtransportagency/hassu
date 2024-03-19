@@ -11,7 +11,7 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
   if (value) {
     return value;
   }
-  throw new Error("Getting parameter " + name  + " failed");
+  throw new Error("Getting parameter " + name + " failed");
 }
 
 function getRedirectUri() {
@@ -49,10 +49,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     body: formBody,
   });
   const json = await response.json();
-  if (json["access_token"]) {
-    const expires = new Date(Date.now() + parseInt(json["expires_in"]) * 1000);
+  if (json["access_token"] && json["refresh_token"]) {
     // set cookie as Secure AND SameSite=Strict
-    const cookie = `x-vls-access-token=${json["access_token"]};expires=${expires};path=/;Secure;SameSite=Strict`;
+    const cookie = [
+      `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict`,
+      `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict`,
+    ];
     res.setHeader("Set-Cookie", cookie);
   }
   res.setHeader("Location", redirect_uri + (state ?? ""));
