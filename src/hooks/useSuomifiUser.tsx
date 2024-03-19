@@ -12,7 +12,7 @@ export function useSuomifiUser() {
 
 export function useRefreshToken() {
   const fetcher = (url: string) => fetch(url).then((r) => r.status);
-  return useSWR("/api/refreshtoken", fetcher, { refreshInterval: 60 * 1000 * 30 });
+  return useSWR("/api/refreshtoken", fetcher, { refreshInterval: 60 * 1000 * 3 });
 }
 
 const getUserLoader = (api: API) => async (_: string) => {
