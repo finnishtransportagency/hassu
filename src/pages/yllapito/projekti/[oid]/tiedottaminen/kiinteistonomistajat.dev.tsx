@@ -10,7 +10,7 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import { Omistaja, OmistajahakuTila } from "@services/api";
+import { Omistaja, OmistajahakuTila, OmistajaInput, TallennaKiinteistonOmistajatMutationVariables } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -19,6 +19,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { UseFormProps, useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
 import { OmistajatLomakeOsio } from "@components/projekti/tiedottaminen/OmistajatLomakeOsio";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import useApi from "src/hooks/useApi";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -118,6 +120,29 @@ const formOptions: (oid: string) => UseFormProps<FormData> = (oid) => ({
   shouldUnregister: false,
 });
 
+const mapFormDataForApi: (data: FormData) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
+  const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat]
+    .filter((omistaja) => omistaja.toBeDeleted)
+    .map(({ id }) => id);
+  const muutOmistajat = data.muutOmistajat
+    .filter((omistaja) => !omistaja.toBeDeleted)
+    .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero }) => ({
+      id,
+      jakeluosoite,
+      kiinteistotunnus,
+      nimi,
+      paikkakunta,
+      postinumero,
+    }));
+  const variables: TallennaKiinteistonOmistajatMutationVariables = {
+    oid: data.oid,
+    muutOmistajat,
+    poistettavatOmistajat,
+  };
+
+  return variables;
+};
+
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
@@ -129,6 +154,8 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
   const { showErrorMessage } = useSnackbars();
   const { mutate } = useProjekti();
   const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
+  const { withLoadingSpinner } = useLoadingSpinner();
+  const api = useApi();
 
   const close = useCallback(() => {
     setIsOpen(false);
@@ -158,10 +185,17 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
 
   const useFormReturn = useForm<FormData>(formOptions(projekti.oid));
 
-  const onSubmit = useCallback<SubmitHandler<FormData>>((data) => {
-    console.log(data);
-    // withLoadingSpinner((async () => await api.tallennaKiinteistonOmistajat(data))());
-  }, []);
+  const onSubmit = useCallback<SubmitHandler<FormData>>(
+    (data) => {
+      withLoadingSpinner(
+        (async () => {
+          const apiData = mapFormDataForApi(data);
+          await api.tallennaKiinteistonOmistajat(apiData);
+        })()
+      );
+    },
+    [api, withLoadingSpinner]
+  );
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
@@ -189,18 +223,18 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
         </ContentSpacer>
       </Section>
       <Section>
-        <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
-          <H2>Kiinteistönomistajat</H2>
-          <Button disabled>Vie exceliin</Button>
-        </Stack>
-        <GrayBackgroundText>
-          <p>
-            Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistaja(a)</b>.
-            Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
-          </p>
-        </GrayBackgroundText>
         <FormProvider {...useFormReturn}>
-          <Form>
+          <ContentSpacer as="form" gap={7}>
+            <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
+              <H2>Kiinteistönomistajat</H2>
+              <Button disabled>Vie exceliin</Button>
+            </Stack>
+            <GrayBackgroundText>
+              <p>
+                Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistaja(a)</b>.
+                Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
+              </p>
+            </GrayBackgroundText>
             <OmistajatLomakeOsio
               oid={projekti.oid}
               expanded={suomifiExpanded}
@@ -230,7 +264,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             <TallennaButton primary type="button" onClick={useFormReturn.handleSubmit(onSubmit)}>
               Tallenna
             </TallennaButton>
-          </Form>
+          </ContentSpacer>
         </FormProvider>
       </Section>
       <HassuDialog
@@ -249,5 +283,4 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
   );
 };
 
-const Form = styled("form")({ display: "contents" });
 const TallennaButton = styled(Button)({ marginLeft: "auto" });
