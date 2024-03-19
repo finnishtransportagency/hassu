@@ -1183,7 +1183,7 @@ interface ILadattavaTiedosto {
   jarjestys: Int
 }
 
-type LadattavaTiedosto implements ILadattavaTiedosto{
+type LadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!
@@ -1191,7 +1191,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto{
   jarjestys: Int
 }
 
-type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto{
+type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!

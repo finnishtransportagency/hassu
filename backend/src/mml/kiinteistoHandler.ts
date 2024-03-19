@@ -333,7 +333,7 @@ export async function haeSailytettavatKiinteistonOmistajat(
   poistettavatOmistajat.forEach((poistettavaId) => {
     const idFound = initialOmistajat.some((omistaja) => omistaja.id === poistettavaId);
     if (!idFound) {
-      throw new IllegalArgumentError(`Poistettavaa omistajaa id:'${poistettavaId}' ei löytynyt`);
+      throw new IllegalArgumentError(`Poistettavaa omistajaa id: '${poistettavaId}' ei löytynyt`);
     }
   });
 
@@ -354,7 +354,7 @@ export async function haeSailytettavatKiinteistonOmistajat(
 
   await Promise.all(
     poistettavat.map(async (omistaja) => {
-      auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: omistaja.id });
+      auditLog.info("Poistetaan omistaja", { omistajaId: omistaja.id });
       await omistajaDatabase.poistaOmistajaKaytosta(oid, omistaja.id);
     })
   );
