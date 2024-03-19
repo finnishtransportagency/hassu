@@ -26,7 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   redirect_uri.searchParams.set("client_id", keycloakClientId);
   redirect_uri.searchParams.set("post_logout_redirect_uri", domain);
 
-  const cookie = "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  const cookie = [
+    "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",
+    "x-vls-refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",
+  ];
   res.setHeader("Set-Cookie", cookie);
   res.setHeader("Location", redirect_uri.toString());
   res.status(302).send("");
