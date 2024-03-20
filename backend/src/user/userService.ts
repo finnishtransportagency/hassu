@@ -71,7 +71,7 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   }
   let userPoolUrlStr: any;
   try {
-    userPoolUrlStr = await parameters.getSuomifiCognitoDomain();
+    userPoolUrlStr = await parameters.getKeycloakDomain();
   } catch (e) {
     log.error(e);
   }
@@ -80,15 +80,29 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
     return;
   }
   const userPoolUrl = new URL(userPoolUrlStr);
-  userPoolUrl.pathname = "/oauth2/userInfo";
+  userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/userinfo";
   const response = await fetch(userPoolUrl.toString(), {
     headers: {
       Authorization: "Bearer " + accessToken,
     },
   });
   if (response.status === 200) {
-    const body = await response.text();
-    const user = JSON.parse(body) as SuomiFiCognitoKayttaja;
+    const body = await response.json();
+    const user: SuomiFiCognitoKayttaja = {
+      "custom:hetu": body.hetu,
+      "custom:lahiosoite": body.lahiosoite,
+      "custom:postinumero": body.postinumero,
+      "custom:postitoimipaikka": body.postitoimipaikka,
+      "custom:ulkomainenkunta": body.ulkomainenkunta,
+      "custom:ulkomainenlahiosoite": body.ulkomainenlahiosoite,
+      "custom:maakoodi": body.maakoodi,
+      email: body.email,
+      email_verified: body.email_verified,
+      family_name: body.family_name,
+      given_name: body.given_name,
+      sub: body.sub,
+      username: body.preferred_username,
+    }
     setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {

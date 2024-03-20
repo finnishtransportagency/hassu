@@ -111,10 +111,9 @@ export class HassuFrontendStack extends Stack {
       EVENT_SQS_URL: EventSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
-      SUOMI_FI_COGNITO_DOMAIN: ssmParameters.SuomifiCognitoDomain,
-      SUOMI_FI_USERPOOL_CLIENT_ID: ssmParameters.SuomifiUserPoolClientId,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_LOGOUT_PATH: ssmParameters.KeycloakLogoutPath,
+      KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;

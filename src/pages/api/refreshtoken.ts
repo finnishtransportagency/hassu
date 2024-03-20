@@ -17,9 +17,9 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const refresh_token = req.cookies["x-vls-refresh-token"];
   if (refresh_token) {
-    const client_id = process.env.SUOMI_FI_USERPOOL_CLIENT_ID!;
-    const userPoolUrl = new URL(process.env.SUOMI_FI_COGNITO_DOMAIN!);
-    userPoolUrl.pathname = "/oauth2/token";
+    const client_id = process.env.KEYCLOAK_CLIENT_ID!;
+    const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
+    userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";
     const details: Record<string, string> = {
       grant_type: "refresh_token",
       client_id,
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(details[key]))
       .join("&");
 
-    const clientSecret = await getParameter("SuomifiUserPoolClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
+    const clientSecret = await getParameter("KeycloakClientSecret", "KEYCLOAK_CLIENT_SECRET");
     const response = await fetch(userPoolUrl.toString(), {
       headers: {
         Authorization: "Basic " + Buffer.from(client_id + ":" + clientSecret).toString("base64"),
@@ -39,11 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       body: formBody,
     });
     const json = await response.json();
-    if (json["access_token"]) {
+    if (json["access_token"] && json["refresh_token"]) {
       // set cookie as Secure AND SameSite=Strict
-      const cookie = `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict`;
+      const cookie = [
+        `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict`,
+        `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict`,
+      ];
       res.setHeader("Set-Cookie", cookie);
     }
   }
-  res.status(200).send("");
+  res.status(200).send(new Date().toUTCString());
 }

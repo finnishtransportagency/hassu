@@ -16,7 +16,7 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
 
 function getRedirectUri() {
   if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000/";
+    return "http://hassu.dev.local:3000/";
   } else {
     return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
   }
@@ -26,9 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
   const redirect_uri = getRedirectUri();
-  const client_id = process.env.SUOMI_FI_USERPOOL_CLIENT_ID!;
-  const userPoolUrl = new URL(process.env.SUOMI_FI_COGNITO_DOMAIN!);
-  userPoolUrl.pathname = "/oauth2/token";
+  const client_id = process.env.KEYCLOAK_CLIENT_ID!;
+  const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
+  userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";
   const details: Record<string, string> = {
     grant_type: "authorization_code",
     client_id,
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(details[key]))
     .join("&");
 
-  const clientSecret = await getParameter("SuomifiUserPoolClientSecret", "SUOMI_FI_USERPOOL_CLIENT_SECRET");
+  const clientSecret = await getParameter("KeycloakClientSecret", "KEYCLOAK_CLIENT_SECRET");
   const response = await fetch(userPoolUrl.toString(), {
     headers: {
       Authorization: "Basic " + Buffer.from(client_id + ":" + clientSecret).toString("base64"),
@@ -57,6 +57,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ];
     res.setHeader("Set-Cookie", cookie);
   }
-  res.setHeader("Location", redirect_uri + (state ?? ""));
+  res.setHeader("Location", (process.env.NODE_ENV === "development" ? "http://localhost:3000/": redirect_uri) + (state ?? ""));
   res.status(302).send("");
 }
