@@ -56,6 +56,7 @@ export type DBMuistuttaja = {
   oid: string;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
   liite?: string | null;
+  maakoodi?: string | null;
 };
 
 async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
@@ -109,6 +110,7 @@ class MuistutusHandler {
       lahiosoite: muistutus.katuosoite,
       postinumero: muistutus.postinumeroJaPostitoimipaikka?.split(" ")[0],
       postitoimipaikka: muistutus.postinumeroJaPostitoimipaikka?.split(" ").slice(1).join(" "),
+      maakoodi: muistutus.maakoodi,
       sahkoposti: muistutus.sahkoposti,
       puhelinnumero: muistutus.puhelinnumero,
       vastaanotettu: muistutus.vastaanotettu,
@@ -120,6 +122,7 @@ class MuistutusHandler {
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
     await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id]);
     const msg: SuomiFiSanoma = {
+      oid,
       muistuttajaId: muistuttaja.id,
     };
     await getSQS().sendMessage({ QueueUrl: await parameters.getSuomiFiSQSUrl(), MessageBody: JSON.stringify(msg) });
@@ -140,6 +143,7 @@ class MuistutusHandler {
           [getMuistuttajaTableName()]: {
             Keys: ids.map((key) => ({
               id: key,
+              oid: variables.oid,
             })),
           },
         },
@@ -188,7 +192,7 @@ class MuistutusHandler {
     for (const muistuttaja of input.muistuttajat) {
       if (muistuttaja.id) {
         const response = await getDynamoDBDocumentClient().send(
-          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id } })
+          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id, oid: input.oid } })
         );
         dbmuistuttaja = response.Item as DBMuistuttaja;
         if (!dbmuistuttaja || !projekti.muutMuistuttajat?.includes(muistuttaja.id)) {

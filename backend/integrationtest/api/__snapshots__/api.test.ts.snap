@@ -15669,59 +15669,55 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 32`] = `
 Array [
   Object {
-    "subject": "Muistutus - 00000033-0be9-455d-a434-0fab721acaa2",
-    "text": "
-Muistutus vastaanotettu
-2024-01-01T00:00
+    "subject": "Muistutus (VLS) Etunimi Sukunimi HASSU/123/2023",
+    "text": "Muistutus (VLS) Etunimi Sukunimi HASSU/123/2023
 
-Nimi
-Etunimi Sukunimi
-
-Postiosoite
-Katuosoite 123 03132 Postitoimipaikka
-
-Sähköposti
-etunimi.sukunimi@org.fi
-
-Puhelinnumero
-1234567890
-
+Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Muistutus on vastaanotettu
+01.01.2024 klo 00:00
+Suunnitelman nimi
+HASSU AUTOMAATTITESTIPROJEKTI1
 Suunnitelman asiatunnus
 HASSU/123/2023
+
+Muistutuksen lähettäjän tiedot
+Nimi
+Etunimi Sukunimi
+Osoite
+Katuosoite 123
+03132 Postitoimipaikka
 
 Muistutus
 Muistutus 1
 
-
-      Muistutukseen ei ole lisätty liitettä",
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/s/3c1d/nahtavillaolo",
     "to": "kirjaamo@vayla.vayla",
   },
   Object {
-    "subject": "Muistutus - 00000034-0be9-455d-a434-0fab721acaa2",
-    "text": "
-Muistutus vastaanotettu
-2024-01-01T00:00
+    "subject": "Muistutus (VLS) Etunimi Sukunimi HASSU/123/2023",
+    "text": "Muistutus (VLS) Etunimi Sukunimi HASSU/123/2023
 
-Nimi
-Etunimi Sukunimi
-
-Postiosoite
-Katuosoite 123 03132 Postitoimipaikka
-
-Sähköposti
-etunimi.sukunimi@org.fi
-
-Puhelinnumero
-1234567890
-
+Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Muistutus on vastaanotettu
+01.01.2024 klo 00:00
+Suunnitelman nimi
+HASSU AUTOMAATTITESTIPROJEKTI1
 Suunnitelman asiatunnus
 HASSU/123/2023
+
+Muistutuksen lähettäjän tiedot
+Nimi
+Etunimi Sukunimi
+Osoite
+Katuosoite 123
+03132 Postitoimipaikka
 
 Muistutus
 Muistutus 2
 
-
-      Muistutukseen ei ole lisätty liitettä",
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/s/3c1d/nahtavillaolo",
     "to": "kirjaamo@vayla.vayla",
   },
 ]

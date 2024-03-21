@@ -13,7 +13,7 @@ import Trans from "next-translate/Trans";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ButtonFlat from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
@@ -70,7 +70,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
         components={{ p: <p />, b: <b /> }}
       />
       {!paatos && !isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
-        <ButtonFlat
+        <ButtonFlatWithIcon
           type="button"
           id="toggle_open_close_kategoriat"
           onClick={() => {
@@ -88,7 +88,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
           }
         >
           {areToimeksiannotExpanded ? t(`aineisto:sulje_kaikki`) : t(`aineisto:avaa_kaikki`)}
-        </ButtonFlat>
+        </ButtonFlatWithIcon>
       )}
       {!isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
         <AineistoKategoriaAccordion

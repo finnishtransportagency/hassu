@@ -7,8 +7,14 @@ const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,
   lyhytOsoiteTableName: process.env.TABLE_LYHYTOSOITE,
   feedbackTableName: process.env.TABLE_FEEDBACK,
+
+  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   omistajaTableName: process.env.TABLE_OMISTAJA!,
+  // TODO: Vanha MuistuttajaTable, poista kun ei viittauksia
   muistuttajaTableName: process.env.TABLE_MUISTUTTAJA!,
+
+  kiinteistonomistajaTableName: process.env.TABLE_KIINTEISTONOMISTAJA!,
+  projektiMuistuttajaTableName: process.env.TABLE_PROJEKTI_MUISTUTTAJA!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,

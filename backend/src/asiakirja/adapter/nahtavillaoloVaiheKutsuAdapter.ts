@@ -1,6 +1,6 @@
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { DBProjekti, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
@@ -19,7 +19,8 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   julkaisu: NahtavillaoloVaiheJulkaisu,
   kieli: KaannettavaKieli,
   asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined
+  linkkiAsianhallintaan: string | undefined,
+  osoite?: Osoite
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
 
@@ -48,21 +49,24 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     vahainenMenettely,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    osoite,
   };
 }
 
 export interface NahtavillaoloVaiheKutsuAdapterProps extends KuulutusKutsuAdapterProps {
   kirjaamoOsoitteet: KirjaamoOsoite[];
+  osoite?: Osoite;
 }
 
 export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<NahtavillaoloVaiheKutsuAdapterProps> {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly vahainenMenettely: boolean | null | undefined;
-
-  constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
+  readonly ratalakiKey: string;
+  constructor(props: NahtavillaoloVaiheKutsuAdapterProps, ratalakiKey = "lakiviite_ilmoitus_rata") {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
     this.ilmoituksenVastaanottajat = props.ilmoituksenVastaanottajat;
     this.vahainenMenettely = props.vahainenMenettely;
+    this.ratalakiKey = ratalakiKey;
   }
 
   get kuulutusNimiCapitalized(): string {
@@ -99,7 +103,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
   }
 
   get lakiviite(): string {
-    return this.text(this.projektiTyyppi == ProjektiTyyppi.RATA ? "lakiviite_ilmoitus_rata" : "lakiviite_ilmoitus_tie");
+    return this.text(this.projektiTyyppi == ProjektiTyyppi.RATA ? this.ratalakiKey : "lakiviite_ilmoitus_tie");
   }
 
   get lakiviite_vahainen_menettely(): string {

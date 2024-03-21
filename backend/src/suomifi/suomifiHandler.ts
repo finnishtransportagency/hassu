@@ -4,26 +4,39 @@ import { auditLog, log } from "../logger";
 import { PdfViesti, SuomiFiClient, Viesti, getSuomiFiClient } from "./viranomaispalvelutwsinterface/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { getMuistuttajaTableName, getOmistajaTableName } from "../util/environment";
-import { DBOmistaja } from "../mml/kiinteistoHandler";
+import { BatchGetCommand, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { getMuistuttajaTableName, getKiinteistonomistajaTableName } from "../util/environment";
 import { DBMuistuttaja } from "../muistutus/muistutusHandler";
 import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, Muistutus } from "../database/model";
+import { AsiakirjaTyyppi, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import {
+  DBProjekti,
+  HyvaksymisPaatosVaihePDF,
+  KasittelynTila,
+  LocalizedMap,
+  Muistutus,
+  NahtavillaoloPDF,
+  SuunnitteluSopimus,
+} from "../database/model";
 import { getSQS } from "../aws/clients/getSQS";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
 import { fileService } from "../files/fileService";
-import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
-import { translate } from "../util/localization";
 import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { config } from "../config";
+import { createPDFFileName } from "../asiakirja/pdfFileName";
+import { EnhancedPDF, determineAsiakirjaMuoto } from "../asiakirja/asiakirjaTypes";
+import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
+import { invokeLambda } from "../aws/lambda";
+import PdfMerger from "pdf-merger-js";
+import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
+import { DBOmistaja } from "../database/omistajaDatabase";
 
 export type SuomiFiSanoma = {
+  oid: string;
   muistuttajaId?: string;
   omistajaId?: string;
   tyyppi?: PublishOrExpireEventType;
@@ -35,6 +48,7 @@ type Kohde = {
   lahiosoite: string;
   postinumero: string;
   postitoimipaikka: string;
+  maakoodi: string;
   hetu?: string;
   ytunnus?: string;
 };
@@ -125,11 +139,12 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
   }
 }
 
-async function paivitaLahetysStatus(id: string, omistaja: boolean, success: boolean, approvalType: PublishOrExpireEventType) {
+async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, success: boolean, approvalType: PublishOrExpireEventType) {
   const params = new UpdateCommand({
-    TableName: omistaja ? getOmistajaTableName() : getMuistuttajaTableName(),
+    TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
       id,
+      oid,
     },
     UpdateExpression: "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
     ExpressionAttributeNames: { "#l": "lahetykset" },
@@ -148,30 +163,133 @@ async function paivitaLahetysStatus(id: string, omistaja: boolean, success: bool
   }
 }
 
-async function generatePdf(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
-  // TODO: kutsu pdf lambdaa, testausta varten haetaan pdf s3 bucketista
-  let path: PathTuple | undefined;
-  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
-    path = new ProjektiPaths(projektiFromDB.oid).nahtavillaoloVaihe(projektiFromDB.nahtavillaoloVaihe);
+type GeneratedPdf = {
+  file: Buffer;
+  tiedostoNimi: string;
+};
+
+function createGenerateEvent(
+  tyyppi: PublishOrExpireEventType,
+  asiakirjaTyyppi: AsiakirjaTyyppi,
+  projektiFromDB: DBProjekti,
+  kohde: Kohde
+): GeneratePDFEvent | undefined {
+  if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO &&
+    projektiFromDB.nahtavillaoloVaiheJulkaisut
+  ) {
+    return {
+      createNahtavillaoloKuulutusPdf: {
+        asiakirjaTyyppi,
+        asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
+        kayttoOikeudet: projektiFromDB.kayttoOikeudet,
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        nahtavillaoloVaihe: projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1],
+        oid: projektiFromDB.oid,
+        velho: projektiFromDB.velho!,
+        vahainenMenettely: projektiFromDB.vahainenMenettely,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus as SuunnitteluSopimus | undefined,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka,
+        },
+      },
+    };
+  } else if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE &&
+    tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE &&
+    projektiFromDB.hyvaksymisPaatosVaiheJulkaisut
+  ) {
+    return {
+      createHyvaksymisPaatosKuulutusPdf: {
+        asiakirjaTyyppi,
+        asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
+        kayttoOikeudet: projektiFromDB.kayttoOikeudet,
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        hyvaksymisPaatosVaihe: projektiFromDB.hyvaksymisPaatosVaiheJulkaisut[projektiFromDB.hyvaksymisPaatosVaiheJulkaisut.length - 1],
+        oid: projektiFromDB.oid,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka,
+        },
+        kasittelynTila: projektiFromDB.kasittelynTila as KasittelynTila,
+      },
+    };
+  }
+}
+
+export async function generatePdf(
+  projektiFromDB: DBProjekti,
+  tyyppi: PublishOrExpireEventType,
+  kohde: Kohde
+): Promise<GeneratedPdf | undefined> {
+  let vaihe: LocalizedMap<HyvaksymisPaatosVaihePDF | NahtavillaoloPDF> | undefined;
+  let asiakirjaTyyppi;
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
+    vaihe = projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1].nahtavillaoloPDFt;
+    asiakirjaTyyppi = AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+  } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {
+    vaihe =
+      projektiFromDB.hyvaksymisPaatosVaiheJulkaisut[projektiFromDB.hyvaksymisPaatosVaiheJulkaisut.length - 1].hyvaksymisPaatosVaihePDFt;
+    asiakirjaTyyppi = AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE;
   } else {
-    log.error("Väärä vaiheen tyyppi " + tyyppi + ", kiinteistön omistajia/muistuttajia ei tiedoteta");
+    log.error("Väärä vaiheen tyyppi " + tyyppi + " tai julkaisu puuttuu, kiinteistön omistajia/muistuttajia ei tiedoteta");
     return;
   }
   try {
-    const tiedostoNimi = translate("tiedostonimi.T415", Kieli.SUOMI) as string;
+    const files: Buffer[] = [];
+    const result = await invokeLambda(
+      config.pdfGeneratorLambdaArn,
+      true,
+      JSON.stringify(createGenerateEvent(tyyppi, asiakirjaTyyppi, projektiFromDB, kohde))
+    );
+    const response = JSON.parse(result!) as EnhancedPDF;
+    files.push(Buffer.from(response.sisalto, "base64"));
+    const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
+    const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
+    if (vaihe && vaihe[Kieli.RUOTSI]) {
+      let tiedosto;
+      if ("hyvaksymisIlmoitusMuistuttajillePDFPath" in vaihe[Kieli.RUOTSI]) {
+        tiedosto = vaihe[Kieli.RUOTSI].hyvaksymisIlmoitusMuistuttajillePDFPath;
+      } else if ("nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath" in vaihe[Kieli.RUOTSI]) {
+        tiedosto = vaihe[Kieli.RUOTSI].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+      }
+      log.info("Haetaan tiedosto " + tiedosto);
+      if (tiedosto) {
+        files.push(await fileService.getProjektiFile(projektiFromDB.oid, tiedosto));
+      }
+    }
+    const merger = new PdfMerger();
+    for (const file of files) {
+      await merger.add(file);
+    }
+    merger.setMetadata({ creator: "VLS", producer: "Valtion liikenneväylien suunnittelu", title: tiedostoNimi });
     return {
-      file: await fileService.getProjektiFile(projektiFromDB.oid, "/" + path.yllapitoPath + "/" + tiedostoNimi + ".pdf"),
+      file: await merger.saveAsBuffer(),
       tiedostoNimi,
-      tyyppi,
     };
   } catch (e) {
-    log.error("PDF generointi epäonnistui", e);
+    log.error(e);
+    throw new Error("PDF generointi epäonnistui");
   }
 }
 
 async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaja: boolean, tyyppi: PublishOrExpireEventType) {
   try {
-    const pdf = await generatePdf(projektiFromDB, tyyppi);
+    const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
     if (!pdf) {
       return;
     }
@@ -182,12 +300,12 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
       lahiosoite: kohde.lahiosoite,
       postinumero: kohde.postinumero,
       postitoimipaikka: kohde.postitoimipaikka,
-      maa: "FI",
+      maa: kohde.maakoodi,
       hetu: kohde.hetu,
       ytunnus: kohde.ytunnus,
       tiedosto: {
         kuvaus: pdf.tiedostoNimi,
-        nimi: pdf.tiedostoNimi + ".pdf",
+        nimi: convertPdfFileName(pdf.tiedostoNimi),
         sisalto: pdf.file,
       },
       vaylavirasto: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
@@ -201,7 +319,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
       });
-      await paivitaLahetysStatus(kohde.id, omistaja, true, tyyppi);
+      await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, true, tyyppi);
     } else {
       auditLog.info("Suomi.fi pdf-viestin lähetys epäonnistui", {
         omistajaId: omistaja ? kohde.id : undefined,
@@ -212,7 +330,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
       throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui");
     }
   } catch (e) {
-    await paivitaLahetysStatus(kohde.id, omistaja, false, tyyppi);
+    await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, false, tyyppi);
     throw e;
   }
 }
@@ -257,9 +375,9 @@ type DBKohde = {
   projekti: DBProjekti;
 };
 
-async function getKohde(id: string, omistaja: boolean): Promise<DBKohde | undefined> {
+async function getKohde(oid: string, id: string, omistaja: boolean): Promise<DBKohde | undefined> {
   const dbResponse = await getDynamoDBDocumentClient().send(
-    new GetCommand({ TableName: omistaja ? getOmistajaTableName() : getMuistuttajaTableName(), Key: { id } })
+    new GetCommand({ TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(), Key: { id, oid } })
   );
   const kohde = dbResponse.Item as DBMuistuttaja | DBOmistaja | undefined;
   if (!kohde) {
@@ -274,8 +392,8 @@ async function getKohde(id: string, omistaja: boolean): Promise<DBKohde | undefi
   return { kohde, projekti };
 }
 
-async function handleMuistuttaja(muistuttajaId: string, tyyppi?: PublishOrExpireEventType) {
-  const kohde = await getKohde(muistuttajaId, false);
+async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: PublishOrExpireEventType) {
+  const kohde = await getKohde(oid, muistuttajaId, false);
   if (!kohde) {
     return;
   }
@@ -293,19 +411,20 @@ async function handleMuistuttaja(muistuttajaId: string, tyyppi?: PublishOrExpire
           postinumero: muistuttaja.postinumero!,
           postitoimipaikka: muistuttaja.postitoimipaikka!,
           hetu: muistuttaja.henkilotunnus!,
+          maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
         },
         false,
         tyyppi
       );
     } else {
       auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
-      await paivitaLahetysStatus(muistuttaja.id, false, false, tyyppi);
+      await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
     }
   }
 }
 
-async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventType) {
-  const kohde = await getKohde(omistajaId, true);
+async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOrExpireEventType) {
+  const kohde = await getKohde(oid, omistajaId, true);
   if (!kohde) {
     return;
   }
@@ -321,13 +440,14 @@ async function handleOmistaja(omistajaId: string, tyyppi: PublishOrExpireEventTy
         postitoimipaikka: omistaja.paikkakunta!,
         hetu: omistaja.henkilotunnus,
         ytunnus: omistaja.ytunnus,
+        maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
       },
       true,
       tyyppi
     );
   } else {
     auditLog.info("Omistajalta puuttuu pakollisia tietoja", { omistajaId: omistaja.id });
-    await paivitaLahetysStatus(omistaja.id, true, false, tyyppi);
+    await paivitaLahetysStatus(omistaja.oid, omistaja.id, true, false, tyyppi);
   }
 }
 
@@ -338,9 +458,9 @@ const handlerFactory = (event: SQSEvent) => async () => {
       const msg = JSON.parse(record.body) as SuomiFiSanoma;
       log.info("Suomi.fi sanoma", { sanoma: msg });
       if (msg.omistajaId && msg.tyyppi) {
-        await handleOmistaja(msg.omistajaId, msg.tyyppi);
+        await handleOmistaja(msg.oid, msg.omistajaId, msg.tyyppi);
       } else if (msg.muistuttajaId) {
-        await handleMuistuttaja(msg.muistuttajaId, msg.tyyppi);
+        await handleMuistuttaja(msg.oid, msg.muistuttajaId, msg.tyyppi);
       } else {
         log.error("Suomi.fi sanoma virheellinen", { sanoma: msg });
       }
@@ -356,17 +476,80 @@ export const handleEvent = async (event: SQSEvent) => {
   await wrapXRayAsync("handler", handlerFactory(event));
 };
 
+const MAX = 100;
+
+async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
+  const ids = projektiFromDB.omistajat ? [...projektiFromDB.omistajat] : [];
+  if (ids.length === 0) {
+    return [];
+  }
+  do {
+    const batchIds = ids.splice(0, MAX);
+    const command = new BatchGetCommand({
+      RequestItems: {
+        [getKiinteistonomistajaTableName()]: {
+          Keys: batchIds.map((key) => ({
+            id: key,
+          })),
+        },
+      },
+    });
+    const response = await getDynamoDBDocumentClient().send(command);
+    const dbOmistajat = response.Responses ? (response.Responses[getKiinteistonomistajaTableName()] as DBOmistaja[]) : [];
+    for (const omistaja of dbOmistajat) {
+      if (omistaja.henkilotunnus && !uniqueIds.has(omistaja.henkilotunnus)) {
+        uniqueIds.set(omistaja.henkilotunnus, omistaja.id);
+      } else if (omistaja.ytunnus && !uniqueIds.has(omistaja.ytunnus)) {
+        uniqueIds.set(omistaja.ytunnus, omistaja.id);
+      }
+    }
+  } while (ids.length > 0);
+  return [...uniqueIds.values()];
+}
+
+async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
+  const ids = projektiFromDB.muistuttajat ? [...projektiFromDB.muistuttajat] : [];
+  if (ids.length === 0) {
+    return [];
+  }
+  const newIds: string[] = [];
+  do {
+    const batchIds = ids.splice(0, MAX);
+    const command = new BatchGetCommand({
+      RequestItems: {
+        [getMuistuttajaTableName()]: {
+          Keys: batchIds.map((key) => ({
+            id: key,
+          })),
+        },
+      },
+    });
+    const response = await getDynamoDBDocumentClient().send(command);
+    const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
+    for (const muistuttaja of dbMuistuttajat) {
+      if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
+        uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
+        newIds.push(muistuttaja.id);
+      }
+    }
+  } while (ids.length > 0);
+  return newIds;
+}
+
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
   if (await parameters.isSuomiFiIntegrationEnabled()) {
     const viestit: SendMessageBatchRequestEntry[] = [];
-    projektiFromDB.omistajat?.forEach((id) => {
+    const uniqueIds: Map<string, string> = new Map();
+    (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
       const msg: SuomiFiSanoma = { omistajaId: id, tyyppi };
       viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
     });
-    projektiFromDB.muistuttajat?.forEach((id) => {
-      const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
-      viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
-    });
+    if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+      (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
+        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
+        viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
+      });
+    }
     if (viestit.length > 0) {
       const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestit });
       response.Failed?.forEach((v) => {

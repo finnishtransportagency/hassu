@@ -21,6 +21,7 @@ import { assertIsDefined } from "../util/assertions";
 import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { EmailOptions } from "./model/emailOptions";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "../asiakirja/adapter/kuulutusKutsuAdapter";
+import dayjs from "dayjs";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -120,29 +121,6 @@ Ystävällisin terveisin
 
 {{projektipaallikkoOrganisaatio}}`;
 
-const muistutusTeksti = template`
-Muistutus vastaanotettu
-${"vastaanotettu"}
-
-Nimi
-${"etunimi"} ${"sukunimi"}
-
-Postiosoite
-${"katuosoite"} ${"postinumeroJaPostitoimipaikka"}
-
-Sähköposti
-${"sahkoposti"}
-
-Puhelinnumero
-${"puhelinnumero"}
-
-Suunnitelman asiatunnus
-${"asiatunnus"}
-
-Muistutus
-${"muistutus"}
-`;
-const muistutusOtsikko = template`Muistutus - ${"id"}`;
 const palveluPalauteTeksti = template`Kansalaiskäyttäjä on antanut palvelusta palautetta.
 
 Arvosana: ${"arvosana"}
@@ -333,9 +311,34 @@ export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient:
 
 export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus: Muistutus, sahkoposti: string): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
+  const idx = muistutus.liite?.lastIndexOf("/") ?? -1;
+  const vastaanotettu = Date.parse(muistutus.vastaanotettu);
+  const text = `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}
+
+Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Muistutus on vastaanotettu
+${dayjs(vastaanotettu).format("DD.MM.YYYY")} klo ${dayjs(vastaanotettu).format("HH:mm")}
+Suunnitelman nimi
+${projekti.velho?.nimi}
+Suunnitelman asiatunnus
+${asiatunnus}
+
+Muistutuksen lähettäjän tiedot
+Nimi
+${muistutus.etunimi} ${muistutus.sukunimi}
+Osoite
+${muistutus.katuosoite}
+${muistutus.postinumeroJaPostitoimipaikka}
+
+Muistutus
+${muistutus.muistutus}
+${muistutus.liite ? `Muistutuksen liitteet
+${muistutus.liite.substring(idx + 1)}` : ""}
+Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}`;
   return {
-    subject: muistutusOtsikko(muistutus),
-    text: muistutusTeksti({ asiatunnus, ...muistutus }),
+    subject: `Muistutus (VLS) ${muistutus.etunimi} ${muistutus.sukunimi} ${asiatunnus}`,
+    text,
     to: sahkoposti,
   };
 }
@@ -344,20 +347,14 @@ export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutu
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
   const idx = muistutus.liite?.lastIndexOf("/") ?? -1;
   const text = `Muistutus on vastaanotettu
-
 Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
-
 Suunnitelman asiatunnus: ${asiatunnus}
-
 ${
   projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
 } käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
-
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}
-
 Muistutus:
 ${muistutus.muistutus ?? ""}
-
 ${
   muistutus.liite
     ? `Muistutuksen mukana toimitettu seuraavannimiset liitteet:

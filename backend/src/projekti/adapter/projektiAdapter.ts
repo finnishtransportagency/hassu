@@ -67,13 +67,18 @@ export class ProjektiAdapter {
       jatkoPaatos1VaiheJulkaisut,
       jatkoPaatos2Vaihe,
       jatkoPaatos2VaiheJulkaisut,
-      salt: _salt,
       kasittelynTila,
       annetutMuistutukset,
       muistuttajat,
       muutMuistuttajat,
-      asianhallinta: _asianhallinta,
-      ...fieldsToCopyAsIs
+      oid,
+      versio,
+      euRahoitus,
+      omistajahakuKaynnissa,
+      muistiinpano,
+      paivitetty,
+      vahainenMenettely,
+      vaihe,
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
@@ -148,7 +153,14 @@ export class ProjektiAdapter {
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
       muistutusMaara: (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
       asianhallinta: await adaptAsianhallinta(dbProjekti),
-      ...fieldsToCopyAsIs,
+      oid,
+      versio,
+      euRahoitus,
+      omistajahakuKaynnissa,
+      muistiinpano,
+      paivitetty,
+      vahainenMenettely,
+      vaihe,
     });
 
     if (apiProjekti.tallennettu) {

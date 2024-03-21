@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus rata ely 1`] = `
+"ELY/456
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Uudenmaan ELY-keskus on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen rataverkon haltijalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (ratalaki 9 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (ratalaki 22 §). 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus rata vaylavirasto 1`] = `
+"VAYLA/123
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen rataverkon haltijalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (ratalaki 9 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (ratalaki 22 §). 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus tie ely 1`] = `
+"ELY/456
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Uudenmaan ELY-keskus on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus tie vaylavirasto 1`] = `
+"VAYLA/123
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Väylävirasto aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus yleinen ely 1`] = `
+"ELY/456
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen yleissuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Uudenmaan ELY-keskus on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;
+
+exports[`pdfGeneratorHandlerAloituskuulutus generate aloituskuulutus yleinen vaylavirasto 1`] = `
+"VAYLA/123
+
+
+
+Kuulutus suunnittelun aloittamisesta
+Projekti 1
+Väylävirasto aloittaa otsikon mukaisen yleissuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Hankkeen kuvaus
+Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/lyhytOsoite/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2024 - 31.1.2024.
+
+
+
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
+Lisätietoja antaa 
+Testi Teppo (), 
+puh. 029, test(at)vayla.fi 
+"
+`;

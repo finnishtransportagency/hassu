@@ -71,4 +71,5 @@ export type Muistutus = {
   puhelinnumero?: string | null;
   muistutus?: string | null;
   liite?: string | null;
+  maakoodi?: string | null;
 };

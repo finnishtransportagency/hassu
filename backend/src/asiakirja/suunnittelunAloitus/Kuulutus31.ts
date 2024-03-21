@@ -55,6 +55,9 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       kayttoOikeudet: params.kayttoOikeudet,
       kirjaamoOsoitteet: params.kirjaamoOsoitteet,
       euRahoitusLogot: params.euRahoitusLogot,
+      asianhallintaPaalla: params.asianhallintaPaalla,
+      linkkiAsianhallintaan: params.linkkiAsianhallintaan,
+      yhteystiedot: params.yhteystiedot,
     });
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,

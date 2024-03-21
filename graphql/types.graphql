@@ -134,6 +134,8 @@ enum MuokkausTila {
 
 type ProjektinTila {
   aineistotValmiit: Boolean
+  omistajahakuKaynnissa: Boolean
+  omistajahakuKiinteistotunnusMaara: Int
 }
 
 type ProjektipaallikkoVirhe {
@@ -184,6 +186,7 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  omistajahakuKaynnissa: Boolean
 }
 
 type Asianhallinta {
@@ -972,6 +975,7 @@ type SuomifiKayttaja {
   osoite: String
   postitoimipaikka: String
   postinumero: String
+  maakoodi: String
 }
 
 type Features {
@@ -1172,11 +1176,14 @@ type Omistaja {
   paikkakunta: String
 }
 
+type TallennaKiinteistonOmistajaResponse {
+  omistajat: [Omistaja!]!
+  muutOmistajat: [Omistaja!]!
+}
+
 type KiinteistonOmistajat {
   hakutulosMaara: Int!
-  sivu: Int!
-  sivunKoko: Int!
-  omistajat: [Omistaja]!
+  omistajat: [Omistaja!]!
 }
 
 type Muistuttaja {

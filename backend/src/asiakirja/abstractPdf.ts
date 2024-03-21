@@ -1,9 +1,7 @@
-import deburr from "lodash/deburr";
-
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
-import { linkExtractRegEx } from "./asiakirjaUtil";
+import { convertPdfFileName, linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 
@@ -21,15 +19,12 @@ export abstract class AbstractPdf {
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
-  private logo?: string | Buffer;
+  protected logo?: string | Buffer;
 
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
-    this.fileName =
-      deburr(fileName)
-        .replace(/[^\w() -]/g, " ")
-        .slice(0, 100) + ".pdf";
+    this.fileName = convertPdfFileName(fileName);
     this.fileBasePath = __dirname;
     this.setupAccessibleDocument();
     this.baseline = baseline;
@@ -238,10 +233,15 @@ export abstract class AbstractPdf {
     }
   }
 
-  private appendHeader() {
+  iPostLogo(): string {
+    const isVaylaTilaaja = this.isVaylaTilaaja();
+    return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
+  }
+
+  protected appendHeader(asiaTunnusX = 400, logoX = 19) {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
-    this.doc.image(this.logo, 19, 32, { height: 75 });
-    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), 400, 64);
+    this.doc.image(this.logo, logoX, 32, { height: 75 });
+    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), asiaTunnusX, 64);
     this.doc.moveDown(3);
   }
 
@@ -254,12 +254,16 @@ export abstract class AbstractPdf {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
+  protected getIndention() {
+    return INDENTATION_BODY;
+  }
+
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     this.logo = await this.loadLogo();
     this.doc.addStructure(
       this.doc.struct("Document", {}, () => {
         this.appendHeader();
-        this.doc.text("", INDENTATION_BODY);
+        this.doc.text("", this.getIndention());
       })
     );
 

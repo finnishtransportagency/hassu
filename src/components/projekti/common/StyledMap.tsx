@@ -63,6 +63,7 @@ import Collection from "ol/Collection";
 import { MonikulmioIkoni } from "src/svg/MonikulmioIkoni";
 import { SuorakulmioIkoni } from "src/svg/SuorakulmioIkoni";
 import { KumoaIkoni } from "src/svg/KumoaIkoni";
+import { useProjektinTila } from "src/hooks/useProjektinTila";
 
 const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
@@ -127,6 +128,8 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { isLoading, withLoadingSpinner } = useLoadingSpinner();
+
+  const { mutate } = useProjektinTila();
 
   const [geoJSON, setGeoJSON] = useState<string | null>(null);
 
@@ -215,13 +218,17 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
             (async () => {
               try {
                 const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
-                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(
-                  projekti.oid,
-                  geoJSON,
-                  Array.from(getKiinteistotunnuksetFromSource(geoJsonSource))
-                );
+                const kiinteistoTunnukset = Array.from(getKiinteistotunnuksetFromSource(geoJsonSource));
+                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset);
                 clearMapEditedByUser();
                 showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
+                closeDialog(isMapEditedByUserRef.current);
+                mutate((old) => {
+                  if (!old) {
+                    return null;
+                  }
+                  return { ...old, omistajahakuKaynnissa: true, omistajahakuKiinteistotunnusMaara: kiinteistoTunnukset.length };
+                });
               } catch {
                 showErrorMessage("Karttajarajauksen tallentaminen ja hakeminen epäonnistui");
               }
@@ -239,7 +246,8 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
     api,
     clearMapEditedByUser,
     closeDialog,
-    projekti,
+    mutate,
+    projekti.oid,
     showErrorMessage,
     showSuccessMessage,
     t,

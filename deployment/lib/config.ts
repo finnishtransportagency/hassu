@@ -95,8 +95,13 @@ export class Config extends BaseConfig {
   public readonly cloudfrontCertificateArn?: string;
   public static readonly feedbackTableName = `Palaute-${Config.env}`;
   public static readonly projektiArchiveTableName = `Projekti-arkisto-${Config.env}`;
+
+  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   public static readonly omistajaTableName = `Omistaja-${Config.env}`;
   public static readonly muistuttajaTableName = `Muistuttaja-${Config.env}`;
+
+  public static readonly kiinteistonomistajaTableName = `Kiinteistonomistaja-${Config.env}`;
+  public static readonly projektiMuistuttajaTableName = `ProjektiMuistuttaja-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;

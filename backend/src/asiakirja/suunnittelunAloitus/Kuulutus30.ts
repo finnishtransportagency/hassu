@@ -48,6 +48,9 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       hankkeenKuvaus: params.hankkeenKuvaus,
       kirjaamoOsoitteet: params.kirjaamoOsoitteet,
       euRahoitusLogot: params.euRahoitusLogot,
+      asianhallintaPaalla: params.asianhallintaPaalla,
+      linkkiAsianhallintaan: params.linkkiAsianhallintaan,
+      yhteystiedot: params.yhteystiedot,
     });
     const fileName = createPDFFileName(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, params.kieli);
     super(params.kieli, kutsuAdapter);

@@ -321,12 +321,6 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.tallennaKiinteistonOmistajat,
     isYllapitoOperation: true,
   },
-  poistaKiinteistonOmistaja: {
-    name: "poistaKiinteistonOmistaja",
-    operationType: OperationType.Mutation,
-    graphql: mutations.poistaKiinteistonOmistaja,
-    isYllapitoOperation: true,
-  },
   haeMuistuttajat: {
     name: "haeMuistuttajat",
     operationType: OperationType.Query,
@@ -344,7 +338,7 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.poistaMuistuttaja,
     isYllapitoOperation: true,
-  }
+  },
 };
 
 export abstract class AbstractApi {
@@ -613,19 +607,21 @@ export abstract class AbstractApi {
     });
   }
 
-  async poistaKiinteistonOmistaja(oid: string, omistaja: string): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.poistaKiinteistonOmistaja, {
-      oid,
-      omistaja,
-    });
-  }
-
-  async haeKiinteistonOmistajat(oid: string, sivu: number, muutOmistajat: boolean, sivuKoko?: number): Promise<KiinteistonOmistajat> {
+  async haeKiinteistonOmistajat(
+    oid: string,
+    muutOmistajat: boolean,
+    onlyKiinteistotunnus: boolean,
+    query: string | null | undefined,
+    from: number | null | undefined,
+    size: number | null | undefined
+  ): Promise<KiinteistonOmistajat> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
-      sivu,
-      sivuKoko,
       muutOmistajat,
+      onlyKiinteistotunnus,
+      query,
+      from,
+      size,
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 

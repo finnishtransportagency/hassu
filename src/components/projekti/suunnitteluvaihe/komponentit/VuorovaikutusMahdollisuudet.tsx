@@ -17,7 +17,7 @@ import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "common/testUtil.dev";
 
 interface Props {

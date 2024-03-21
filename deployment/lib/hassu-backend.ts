@@ -43,8 +43,13 @@ export type HassuBackendStackProps = {
   lyhytOsoiteTable: Table;
   feedbackTable: Table;
   projektiArchiveTable: Table;
+
+  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
   omistajaTable: Table;
+
+  kiinteistonomistajaTable: Table;
   muistuttajaTable: Table;
+  projektiMuistuttajaTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -56,6 +61,7 @@ export type BackendStackOutputs = {
   AppSyncAPIKey?: string;
   AppSyncAPIURL: string;
   EventSqsUrl: string;
+  PdfGeneratorLambda: string;
 };
 
 export const backendStackName = "hassu-backend-" + Config.env;
@@ -117,7 +123,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    this.createSuomiFiLambda(suomiFiSQS, vpc, config);
+    this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -151,6 +157,9 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
     const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
+    const omistajaSearchIndexer = this.createOmistajaSearchIndexer(commonEnvironmentVariables);
+    this.attachDatabaseToLambda(omistajaSearchIndexer, true);
+
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     this.createAndProvideSchedulerExecutionRole(eventSQS, aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
@@ -161,6 +170,8 @@ export class HassuBackendStack extends Stack {
       julkinenBackendLambda,
       searchDomain
     );
+
+    searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", omistajaSearchIndexer);
 
     const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda, true);
@@ -288,6 +299,66 @@ export class HassuBackendStack extends Stack {
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
     streamHandler.addEventSource(new SqsEventSource(indexerQueue, { batchSize: 1, maxConcurrency: 10 }));
+    return streamHandler;
+  }
+
+  private createOmistajaSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
+    const resourcePrefix = "arn:aws:lambda:eu-west-1:" + this.account + ":function:";
+    const functionName = "hassu-omistaja-dynamodb-stream-handler-" + Config.env;
+    const streamHandler = new NodejsFunction(this, "OmistajaDynamoDBStreamHandler", {
+      functionName,
+      runtime: lambdaRuntime,
+      entry: `${__dirname}/../../backend/src/projektiSearch/omistajaSearch/omistajaDynamoDBStreamHandler.ts`,
+      handler: "handleDynamoDBEvents",
+      memorySize: 256,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        externalModules,
+      },
+      environment: {
+        HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
+        ...commonEnvironmentVariables,
+      },
+      timeout: Duration.seconds(120),
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    this.addPermissionsForMonitoring(streamHandler);
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [resourcePrefix + functionName],
+      })
+    );
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
+        resources: ["*"],
+      })
+    );
+
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.props.kiinteistonomistajaTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+
+    const indexerQueue = this.createOmistajaIndexerQueue();
+    streamHandler.node.addDependency(indexerQueue);
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
+    streamHandler.addEventSource(
+      new SqsEventSource(indexerQueue, { batchSize: 100, maxConcurrency: 10, maxBatchingWindow: Duration.seconds(5) })
+    );
     return streamHandler;
   }
 
@@ -493,7 +564,11 @@ export class HassuBackendStack extends Stack {
         INFRA_ENVIRONMENT: Config.infraEnvironment,
         TZ: "Europe/Helsinki",
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
+
+        // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
         TABLE_OMISTAJA: this.props.omistajaTable.tableName,
+
+        TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
       },
       tracing: Tracing.ACTIVE,
@@ -513,16 +588,19 @@ export class HassuBackendStack extends Stack {
     kiinteistoSQS.grantConsumeMessages(kiinteistoLambda);
     kiinteistoLambda.addEventSource(new SqsEventSource(kiinteistoSQS, { maxConcurrency: 3 }));
     this.props.omistajaTable.grantFullAccess(kiinteistoLambda);
+    this.props.kiinteistonomistajaTable.grantFullAccess(kiinteistoLambda);
     const updateSynkronointiPolicy = new PolicyStatement({
       effect: Effect.ALLOW,
       resources: [this.props.projektiTable.tableArn],
       actions: ["dynamodb:UpdateItem"],
     });
-    updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", { "dynamodb:Attributes": ["muutOmistajat", "omistajat"] });
+    updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", {
+      "dynamodb:Attributes": ["muutOmistajat", "omistajat", "omistajahakuKaynnissa"],
+    });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 
-  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config) {
+  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config, pdfGeneratorLambda: NodejsFunction) {
     const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
       functionName: "hassu-suomifi-" + Config.env,
       runtime: lambdaRuntime,
@@ -539,7 +617,9 @@ export class HassuBackendStack extends Stack {
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `${path.normalize("./node_modules/.bin/copyfiles")} -f -u 1 ${inputDir}/backend/src/suomifi/viranomaispalvelutwsinterface/Viranomaispalvelut* ${outputDir}`,
+              `${path.normalize(
+                "./node_modules/.bin/copyfiles"
+              )} -f -u 1 ${inputDir}/backend/src/suomifi/viranomaispalvelutwsinterface/Viranomaispalvelut* ${outputDir}`,
             ];
           },
           afterBundling(): string[] {
@@ -557,9 +637,11 @@ export class HassuBackendStack extends Stack {
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
         TABLE_OMISTAJA: this.props.omistajaTable.tableName,
         TABLE_MUISTUTTAJA: this.props.muistuttajaTable.tableName,
+        TABLE_PROJEKTIMUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+        PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -579,8 +661,10 @@ export class HassuBackendStack extends Stack {
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
+    pdfGeneratorLambda.grantInvoke(suomiFiLambda);
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
@@ -630,6 +714,8 @@ export class HassuBackendStack extends Stack {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         NODE_OPTIONS: "--enable-source-maps",
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
+        ENVIRONMENT: Config.env,
+        INFRA_ENVIRONMENT: Config.infraEnvironment,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -640,6 +726,9 @@ export class HassuBackendStack extends Stack {
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
     this.grantInternalBucket(pdfGeneratorLambda); // Vapaapäivien cachetusta varten
     this.grantYllapitoBucketRead(pdfGeneratorLambda); // Logon lukemista varten pdf:iin
+    new CfnOutput(this, "PdfGeneratorLambda", {
+      value: pdfGeneratorLambda.functionArn,
+    });
     return pdfGeneratorLambda;
   }
 
@@ -800,11 +889,16 @@ export class HassuBackendStack extends Stack {
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
       this.props.omistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_OMISTAJA", this.props.omistajaTable.tableName);
+      this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
+      backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
+      this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
       this.props.muistuttajaTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
       this.props.muistuttajaTable.grantWriteData(backendFn);
+      this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
     }
+    backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_MUISTUTTAJA", this.props.muistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 
@@ -875,7 +969,7 @@ export class HassuBackendStack extends Stack {
       queueName: "suomifi-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(30),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.hours(1),
+      retentionPeriod: Duration.minutes(35),
     });
     new ssm.StringParameter(this, "SuomiFiSQSUrl", {
       description: "Generated SuomiFiSQSUrl",
@@ -894,6 +988,20 @@ export class HassuBackendStack extends Stack {
     new ssm.StringParameter(this, "IndexerSQSUrl", {
       description: "Generated IndexerSQSUrl",
       parameterName: "/" + Config.env + "/outputs/IndexerSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
+  }
+
+  private createOmistajaIndexerQueue() {
+    const queue = new Queue(this, "OmistajaIndexer", {
+      queueName: "omistaja-indexer-" + Config.env,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    new ssm.StringParameter(this, "OmistajaIndexerSQSUrl", {
+      description: "Generated OmistajaIndexerSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/OmistajaIndexerSQSUrl",
       stringValue: queue.queueUrl,
     });
     return queue;

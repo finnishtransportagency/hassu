@@ -27,11 +27,13 @@ async function main() {
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
-    TABLE_OMISTAJA: Config.omistajaTableName,
-    TABLE_MUISTUTTAJA: Config.muistuttajaTableName,
+    TABLE_KIINTEISTONOMISTAJA: Config.kiinteistonomistajaTableName,
+    TABLE_PROJEKTI_MUISTUTTAJA: Config.projektiMuistuttajaTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,
+    YLLAPITO_BUCKET_NAME: Config.yllapitoBucketName,
+    PDF_GENERATOR_LAMBDA_ARN: backendStackOutputs.PdfGeneratorLambda,
     ...environmentVariables,
   });
 
