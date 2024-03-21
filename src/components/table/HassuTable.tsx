@@ -16,6 +16,21 @@ import { useIsAboveBreakpoint } from "src/hooks/useIsSize";
 import dynamic from "next/dynamic";
 import { BodyContentVirtualWindowProps } from "./BodyContentVirtualWindow";
 import { BodyContentVirtualElementProps } from "./BodyContentVirtualElement";
+import {
+  Tbody,
+  TableWrapper,
+  StyledTable,
+  TbodyWrapper,
+  Thead,
+  Tr,
+  HeaderCell,
+  HeaderCellContents,
+  BodyTrWrapper,
+  BodyTr,
+  DataCell,
+  DataCellHeaderContent,
+  DataCellContent,
+} from "./StyledTableComponents";
 
 export type HassuTableProps<T> = {
   table: Table<T>;
@@ -422,60 +437,3 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
     </TableDragConnectSourceContext.Provider>
   );
 }
-
-const TableWrapper = styled("div")(
-  sx({
-    overflowX: "auto",
-  })
-);
-
-const StyledTable = styled("div")(
-  sx({
-    width: "fit-content",
-    minWidth: "100%",
-    overflowWrap: "anywhere",
-    hyphens: "auto",
-  })
-);
-
-const Thead = styled("div")(sx({ fontWeight: 700, color: "#7A7A7A", paddingBottom: { md: 2 }, textAlign: "left" }));
-const Cell = styled("div")(sx({}));
-const HeaderCell = styled(Cell)(({ onClick }) =>
-  sx({
-    cursor: onClick ? "pointer" : undefined,
-  })
-);
-const DataCell = styled(Cell)(sx({}));
-const DataCellContent = styled("div")({});
-const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
-const HeaderCellContents = styled("div")(sx({}));
-
-export const Tbody = styled("div")(sx({}));
-export const TbodyWrapper = styled("div")(
-  sx({
-    width: "100%",
-    position: "relative",
-  })
-);
-
-const Tr = styled("div")(
-  sx({
-    display: { xs: "flex", md: "grid" },
-    flexDirection: { xs: "column", md: null },
-    paddingLeft: 4,
-    paddingRight: 4,
-    rowGap: 2,
-    columnGap: 4,
-  })
-);
-
-const BodyTrWrapper = styled("div")(
-  sx({
-    display: "block",
-    paddingTop: { xs: 4, md: 7.5 },
-    paddingBottom: { xs: 4, md: 7.5 },
-    position: "relative",
-  })
-);
-
-const BodyTr = styled(Tr)(sx({}));

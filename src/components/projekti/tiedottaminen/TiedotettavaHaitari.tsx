@@ -10,6 +10,9 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import React, { ReactNode, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 
+const typedMemo: <T>(c: T) => T = React.memo;
+const MemoHassuTable = typedMemo(HassuTable);
+
 export type SearchTiedotettavatFunction<T> = (
   oid: string,
   muutTiedotettavat: boolean,
@@ -204,7 +207,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
         )}
         {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (
           <>
-            <HassuTable table={table} />
+            <MemoHassuTable table={table} />
             <Grid>
               <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
                 {tiedotettavat.length > PAGE_SIZE && (
