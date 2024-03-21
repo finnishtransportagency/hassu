@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const keycloakLogoutPath = await getParameter(`/${process.env.INFRA_ENVIRONMENT}/KeycloakLogoutPath`, "KEYCLOAK_LOGOUT_PATH");
   const domain = currenturl.hostname == "localhost" ? "https://hassudev.testivaylapilvi.fi" : currenturl.origin;
 
-  const redirect_uri = new URL(domain);
+  const redirect_uri = new URL("https://hassudev.testivaylapilvi.fi");
   redirect_uri.pathname = keycloakLogoutPath;
   redirect_uri.searchParams.set("client_id", keycloakClientId);
   redirect_uri.searchParams.set("post_logout_redirect_uri", domain);
