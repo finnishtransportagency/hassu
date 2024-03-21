@@ -35,7 +35,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypes } from "common/fileValidationSettings";
 import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
-import { joinStringArrays } from "hassu-common/util/joinStringArrays";
+import { joinStringArray } from "hassu-common/util/joinStringArray";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -316,7 +316,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                     })
                     .forEach((file) => liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type }));
                   if (duplicateLiitteet.length) {
-                    const nimet = joinStringArrays(
+                    const nimet = joinStringArray(
                       duplicateLiitteet.map((liite) => `'${liite.name}'`),
                       ", ",
                       ` ${t("common:ja")} `
