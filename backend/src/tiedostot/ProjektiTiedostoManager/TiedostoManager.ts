@@ -1,5 +1,5 @@
 import { AineistoPathsPair, handleAineistot, handleTiedostot } from ".";
-import { ProjektiPaths } from "../../files/ProjektiPath";
+import { ProjektiPaths, SisainenProjektiPaths } from "../../files/ProjektiPath";
 import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 
@@ -7,11 +7,13 @@ export abstract class TiedostoManager<T> {
   public readonly oid: string;
   public readonly vaihe: T | undefined;
   public readonly projektiPaths: ProjektiPaths;
+  public readonly sisainenProjektiPaths: SisainenProjektiPaths;
 
   constructor(oid: string, vaihe: T | undefined | null) {
     this.oid = oid;
     this.vaihe = vaihe ?? undefined;
     this.projektiPaths = new ProjektiPaths(oid);
+    this.sisainenProjektiPaths = new SisainenProjektiPaths(oid);
   }
 
   async handleChanges(): Promise<T | undefined> {

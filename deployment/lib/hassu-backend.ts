@@ -43,12 +43,7 @@ export type HassuBackendStackProps = {
   lyhytOsoiteTable: Table;
   feedbackTable: Table;
   projektiArchiveTable: Table;
-
-  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
-  omistajaTable: Table;
-
   kiinteistonomistajaTable: Table;
-  muistuttajaTable: Table;
   projektiMuistuttajaTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
@@ -564,10 +559,6 @@ export class HassuBackendStack extends Stack {
         INFRA_ENVIRONMENT: Config.infraEnvironment,
         TZ: "Europe/Helsinki",
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
-
-        // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
-        TABLE_OMISTAJA: this.props.omistajaTable.tableName,
-
         TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
       },
@@ -587,7 +578,6 @@ export class HassuBackendStack extends Stack {
     );
     kiinteistoSQS.grantConsumeMessages(kiinteistoLambda);
     kiinteistoLambda.addEventSource(new SqsEventSource(kiinteistoSQS, { maxConcurrency: 3 }));
-    this.props.omistajaTable.grantFullAccess(kiinteistoLambda);
     this.props.kiinteistonomistajaTable.grantFullAccess(kiinteistoLambda);
     const updateSynkronointiPolicy = new PolicyStatement({
       effect: Effect.ALLOW,
@@ -595,7 +585,13 @@ export class HassuBackendStack extends Stack {
       actions: ["dynamodb:UpdateItem"],
     });
     updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", {
-      "dynamodb:Attributes": ["muutOmistajat", "omistajat", "omistajahakuKaynnissa"],
+      "dynamodb:Attributes": [
+        "muutOmistajat",
+        "omistajat",
+        "omistajahakuVirhe",
+        "omistajahakuKaynnistetty",
+        "omistajahakuKiinteistotunnusMaara",
+      ],
     });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
@@ -635,9 +631,8 @@ export class HassuBackendStack extends Stack {
         INFRA_ENVIRONMENT: Config.infraEnvironment,
         TZ: "Europe/Helsinki",
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
-        TABLE_OMISTAJA: this.props.omistajaTable.tableName,
-        TABLE_MUISTUTTAJA: this.props.muistuttajaTable.tableName,
-        TABLE_PROJEKTIMUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
+        TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
+        TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
@@ -659,8 +654,7 @@ export class HassuBackendStack extends Stack {
     );
     suomiFiSQS.grantConsumeMessages(suomiFiLambda);
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
-    this.props.omistajaTable.grantReadWriteData(suomiFiLambda);
-    this.props.muistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
@@ -887,19 +881,14 @@ export class HassuBackendStack extends Stack {
       projektiTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
-      this.props.omistajaTable.grantFullAccess(backendFn);
-      backendFn.addEnvironment("TABLE_OMISTAJA", this.props.omistajaTable.tableName);
       this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
-      this.props.muistuttajaTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
-      this.props.muistuttajaTable.grantWriteData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
-    backendFn.addEnvironment("TABLE_MUISTUTTAJA", this.props.muistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;

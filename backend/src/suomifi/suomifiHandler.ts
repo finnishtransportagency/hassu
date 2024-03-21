@@ -4,14 +4,14 @@ import { auditLog, log } from "../logger";
 import { PdfViesti, SuomiFiClient, Viesti, getSuomiFiClient } from "./viranomaispalvelutwsinterface/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchGetCommand, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName, getKiinteistonomistajaTableName } from "../util/environment";
 import { DBMuistuttaja } from "../muistutus/muistutusHandler";
 import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { AsiakirjaTyyppi, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
   HyvaksymisPaatosVaihePDF,
@@ -33,7 +33,9 @@ import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
 import { invokeLambda } from "../aws/lambda";
 import PdfMerger from "pdf-merger-js";
 import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
-import { DBOmistaja } from "../database/omistajaDatabase";
+import { DBOmistaja, chunkArray, omistajaDatabase } from "../database/omistajaDatabase";
+import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { translate } from "../util/localization";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -59,6 +61,21 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
 }
 
+export function parseLaskutusTunniste(tunniste?: string) {
+  if (tunniste) {
+    const parsedTunniste: Record<string, string> = {};
+    const tunnisteet = tunniste.split(",");
+    for (let i = 0; i < tunnisteet.length; i++) {
+      const keyValue = tunnisteet[i].split(":");
+      if (keyValue.length === 2) {
+        parsedTunniste[keyValue[0].trim()] = keyValue[1].trim();
+      }
+    }
+    return parsedTunniste;
+  }
+  return {};
+}
+
 async function getClient(): Promise<SuomiFiClient> {
   if (config.isInTest) {
     if (!mockSuomiFiClient) {
@@ -75,8 +92,7 @@ async function getClient(): Promise<SuomiFiClient> {
       endpoint: cfg.endpoint,
       palveluTunnus: cfg.palvelutunnus,
       viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: cfg.laskutustunniste,
-      laskutusTunnisteEly: cfg.laskutustunnisteely,
+      laskutusTunniste: parseLaskutusTunniste(cfg.laskutustunniste),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
     });
@@ -293,10 +309,23 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     if (!pdf) {
       return;
     }
+    const otsikko = tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? "Ilmoitus suunnitelman nähtäville asettamisesta" : "Ilmoitus suunnitelman hyväksymispäätöksestä";
+    const sisaltoNahtavillaolo = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    const sisaltoHyvaksymispaatos = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
     const viesti: PdfViesti = {
       nimi: kohde.nimi,
-      otsikko: "Ilmoitus kiinteistonomistajat nahtaville asettaminen",
-      sisalto: "Ilmoitus kiinteistonomistajat nahtaville asettaminen...",
+      otsikko,
+      sisalto: tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? sisaltoNahtavillaolo : sisaltoHyvaksymispaatos,
       lahiosoite: kohde.lahiosoite,
       postinumero: kohde.postinumero,
       postitoimipaikka: kohde.postitoimipaikka,
@@ -308,7 +337,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         nimi: convertPdfFileName(pdf.tiedostoNimi),
         sisalto: pdf.file,
       },
-      vaylavirasto: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      suunnittelustaVastaavaViranomainen: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen,
     };
     const client = await getClient();
     const resp = await client.lahetaViesti(viesti);
@@ -354,6 +383,7 @@ function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {
 async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjekti) {
   if (
     (await parameters.isSuomiFiIntegrationEnabled()) &&
+    (await parameters.isSuomiFiViestitIntegrationEnabled()) &&
     muistuttaja.henkilotunnus &&
     (await isSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
   ) {
@@ -476,96 +506,62 @@ export const handleEvent = async (event: SQSEvent) => {
   await wrapXRayAsync("handler", handlerFactory(event));
 };
 
-const MAX = 100;
-
 async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const ids = projektiFromDB.omistajat ? [...projektiFromDB.omistajat] : [];
-  if (ids.length === 0) {
-    return [];
-  }
-  do {
-    const batchIds = ids.splice(0, MAX);
-    const command = new BatchGetCommand({
-      RequestItems: {
-        [getKiinteistonomistajaTableName()]: {
-          Keys: batchIds.map((key) => ({
-            id: key,
-          })),
-        },
-      },
-    });
-    const response = await getDynamoDBDocumentClient().send(command);
-    const dbOmistajat = response.Responses ? (response.Responses[getKiinteistonomistajaTableName()] as DBOmistaja[]) : [];
-    for (const omistaja of dbOmistajat) {
-      if (omistaja.henkilotunnus && !uniqueIds.has(omistaja.henkilotunnus)) {
-        uniqueIds.set(omistaja.henkilotunnus, omistaja.id);
-      } else if (omistaja.ytunnus && !uniqueIds.has(omistaja.ytunnus)) {
-        uniqueIds.set(omistaja.ytunnus, omistaja.id);
-      }
+  const dbOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projektiFromDB.oid);
+  for (const omistaja of dbOmistajat.filter((o) => o.suomifiLahetys)) {
+    if (omistaja.henkilotunnus && !uniqueIds.has(omistaja.henkilotunnus)) {
+      uniqueIds.set(omistaja.henkilotunnus, omistaja.id);
+    } else if (omistaja.ytunnus && !uniqueIds.has(omistaja.ytunnus)) {
+      uniqueIds.set(omistaja.ytunnus, omistaja.id);
     }
-  } while (ids.length > 0);
+  }
   return [...uniqueIds.values()];
 }
 
 async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const ids = projektiFromDB.muistuttajat ? [...projektiFromDB.muistuttajat] : [];
-  if (ids.length === 0) {
-    return [];
-  }
+  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
   const newIds: string[] = [];
-  do {
-    const batchIds = ids.splice(0, MAX);
-    const command = new BatchGetCommand({
-      RequestItems: {
-        [getMuistuttajaTableName()]: {
-          Keys: batchIds.map((key) => ({
-            id: key,
-          })),
-        },
-      },
-    });
-    const response = await getDynamoDBDocumentClient().send(command);
-    const dbMuistuttajat = response.Responses ? (response.Responses[getMuistuttajaTableName()] as DBMuistuttaja[]) : [];
-    for (const muistuttaja of dbMuistuttajat) {
-      if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
-        uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
-        newIds.push(muistuttaja.id);
-      }
+  for (const muistuttaja of dbMuistuttajat.filter((m) => m.henkilotunnus)) {
+    if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
+      uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
+      newIds.push(muistuttaja.id);
     }
-  } while (ids.length > 0);
+  }
   return newIds;
 }
 
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
-  if (await parameters.isSuomiFiIntegrationEnabled()) {
+  if ((await parameters.isSuomiFiIntegrationEnabled()) && (await parameters.isSuomiFiViestitIntegrationEnabled())) {
     const viestit: SendMessageBatchRequestEntry[] = [];
     const uniqueIds: Map<string, string> = new Map();
     (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-      const msg: SuomiFiSanoma = { omistajaId: id, tyyppi };
+      const msg: SuomiFiSanoma = { omistajaId: id, tyyppi, oid: projektiFromDB.oid };
       viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
     });
     if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
       (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi };
+        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi, oid: projektiFromDB.oid };
         viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
       });
     }
     if (viestit.length > 0) {
-      const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestit });
-      response.Failed?.forEach((v) => {
-        if (projektiFromDB.omistajat?.includes(v.Id!)) {
-          auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id, message: v.Message, code: v.Code });
-        } else {
-          auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id, message: v.Message, code: v.Code });
-        }
-      });
-      response.Successful?.forEach((v) => {
-        if (projektiFromDB.omistajat?.includes(v.Id!)) {
-          auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id });
-        } else {
-          auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id });
-        }
-      });
+      for (const viestitChunk of chunkArray(viestit, 10)) {
+        const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestitChunk });
+        response.Failed?.forEach((v) => {
+          if (projektiFromDB.omistajat?.includes(v.Id!)) {
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id, message: v.Message, code: v.Code });
+          } else {
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id, message: v.Message, code: v.Code });
+          }
+        });
+        response.Successful?.forEach((v) => {
+          if (projektiFromDB.omistajat?.includes(v.Id!)) {
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id });
+          } else {
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id });
+          }
+        });
+      }
     } else {
       log.info("Projektilla ei ole Suomi.fi tiedotettavia omistajia tai muistuttajia");
     }

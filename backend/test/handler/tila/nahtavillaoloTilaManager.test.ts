@@ -14,11 +14,17 @@ import { assertIsDefined } from "../../../src/util/assertions";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
+
+  before(() => {
+    mockClient(DynamoDBDocumentClient);
+  });
 
   beforeEach(() => {
     projekti = new ProjektiFixture().nahtavillaoloVaihe();

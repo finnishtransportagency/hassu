@@ -64,6 +64,7 @@ import { MonikulmioIkoni } from "src/svg/MonikulmioIkoni";
 import { SuorakulmioIkoni } from "src/svg/SuorakulmioIkoni";
 import { KumoaIkoni } from "src/svg/KumoaIkoni";
 import { useProjektinTila } from "src/hooks/useProjektinTila";
+import { OmistajahakuTila } from "@services/api";
 
 const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
@@ -227,7 +228,11 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
                   if (!old) {
                     return null;
                   }
-                  return { ...old, omistajahakuKaynnissa: true, omistajahakuKiinteistotunnusMaara: kiinteistoTunnukset.length };
+                  return {
+                    ...old,
+                    omistajahakuTila: OmistajahakuTila.KAYNNISSA,
+                    omistajahakuKiinteistotunnusMaara: kiinteistoTunnukset.length,
+                  };
                 });
               } catch {
                 showErrorMessage("Karttajarajauksen tallentaminen ja hakeminen epäonnistui");

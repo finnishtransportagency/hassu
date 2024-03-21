@@ -12,7 +12,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
-import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
@@ -30,6 +30,7 @@ import { approvalEmailSender } from "../email/approvalEmailSender";
 import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -255,7 +256,13 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
-
+    nahtavillaoloVaiheJulkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
+      this.vaihe,
+      nahtavillaoloVaiheJulkaisu.kuulutusPaiva,
+      nahtavillaoloVaiheJulkaisu.id
+    );
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
@@ -280,7 +287,13 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
     }
     await this.deletePDFs(projekti.oid, julkaisu.nahtavillaoloPDFt);
-
+    if (julkaisu.maanomistajaluettelo) {
+      await fileService.deleteYllapitoSisainenFileFromProjekti({
+        oid: projekti.oid,
+        filePathInProjekti: julkaisu.maanomistajaluettelo,
+        reason: "Nähtävilläolo rejected",
+      });
+    }
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisu.id);
     return {
       ...projekti,

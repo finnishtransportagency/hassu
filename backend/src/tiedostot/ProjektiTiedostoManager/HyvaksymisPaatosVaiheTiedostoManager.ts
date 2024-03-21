@@ -10,6 +10,7 @@ import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 import { Dayjs } from "dayjs";
+import { SisainenProjektiPaths } from "../../files/ProjektiPath";
 
 export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -72,6 +73,10 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
         if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
           modifiedJulkaisut.add(julkaisu);
         }
+        if (julkaisu.maanomistajaluettelo) {
+          await this.deleteSisainenTiedosto(julkaisu.maanomistajaluettelo);
+          modifiedJulkaisut.add(julkaisu);
+        }
 
         return modifiedJulkaisut;
       },
@@ -111,12 +116,15 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
+    const s3SisainenPaths = new S3Paths(new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu));
+    s3SisainenPaths.pushYllapitoFilesIfDefined(julkaisu.maanomistajaluettelo);
+
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
       toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      dokumentit: s3Paths.getDokumentit(),
+      dokumentit: [...s3Paths.getDokumentit(), ...s3SisainenPaths.getDokumentit()],
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
     };

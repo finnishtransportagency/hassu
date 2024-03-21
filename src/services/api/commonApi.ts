@@ -110,7 +110,7 @@ export class API extends AbstractApi {
             }
           }
           log.warn(queryResponse.errors);
-          throw new Error("API palautti virheen.");
+          throw new Error("API palautti virheen: " + queryResponse.errors.at(0)?.message);
         }
         return data;
       case OperationType.Mutation:

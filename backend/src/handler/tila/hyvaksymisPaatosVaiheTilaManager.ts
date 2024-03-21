@@ -4,7 +4,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
@@ -14,6 +14,8 @@ import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emai
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
+import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
+import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -161,6 +163,14 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       PaatosTyyppi.HYVAKSYMISPAATOS
     );
 
+    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      this.vaihe,
+      julkaisu.kuulutusPaiva,
+      julkaisu.id
+    );
+
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
@@ -190,6 +200,13 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
+    if (julkaisu.maanomistajaluettelo) {
+      await fileService.deleteYllapitoSisainenFileFromProjekti({
+        oid: projekti.oid,
+        filePathInProjekti: julkaisu.maanomistajaluettelo,
+        reason: "Hyväksymispäätösvaihe rejected",
+      });
+    }
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
     return {
       ...projekti,

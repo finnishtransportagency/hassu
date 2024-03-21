@@ -2,13 +2,15 @@ import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import LisaAineistotTable from "./Table";
-import { useCallback, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { lataaTiedosto } from "src/util/fileUtil";
 import { LadattuTiedostoInput, LadattuTiedostoTila, api } from "@services/api";
 import { LausuntoPyynnotFormValues } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
+import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
+import useSnackbars from "../../../../../hooks/useSnackbars";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue } = useFormContext<LausuntoPyynnotFormValues>();
@@ -24,22 +26,44 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       hiddenInputRef.current.click();
     }
   };
+
+  const { showErrorMessage } = useSnackbars();
+
   const handleUploadedFiles = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) =>
       withLoadingSpinner(
         (async () => {
           const files: FileList | null = event.target.files;
+
           if (files?.length) {
-            const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedosto(api, files[key]))
-            );
-            const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
-              nimi: files[index].name,
+            const nonAllowedTypeFiles: File[] = [];
+            const allowedTypeFiles: File[] = [];
+            const uploadedFileNamesPromises: Promise<string>[] = [];
+
+            Array.from(Array(files.length).keys()).forEach((key: number) => {
+              if (allowedUploadFileTypes.find((type) => type === files[key].type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key]));
+                allowedTypeFiles.push(files[key]);
+              } else {
+                nonAllowedTypeFiles.push(files[key]);
+              }
+            });
+
+            const uploadedFileNames: string[] = await Promise.all(uploadedFileNamesPromises);
+
+            const tiedostoInputs: LadattuTiedostoInput[] = uploadedFileNames.map((filename, index) => ({
+              nimi: allowedTypeFiles[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
               uuid: uuid.v4(),
             }));
+
             setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
+
+            if (nonAllowedTypeFiles.length) {
+              const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
+              showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");
+            }
           }
         })()
       ),
@@ -63,7 +87,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       <input
         type="file"
         multiple
-        accept="*/*"
+        accept={allowedUploadFileTypes.join(", ")}
         style={{ display: "none" }}
         id={`lisa-aineistot-${index}-input`}
         onChange={handleUploadedFiles}

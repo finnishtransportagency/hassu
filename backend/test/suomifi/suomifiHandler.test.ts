@@ -1,9 +1,15 @@
 import { SQSEvent } from "aws-lambda";
 import { setLogContextOid } from "../../src/logger";
-import { SuomiFiSanoma, handleEvent, lahetaSuomiFiViestit, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
+import {
+  SuomiFiSanoma,
+  handleEvent,
+  lahetaSuomiFiViestit,
+  parseLaskutusTunniste,
+  setMockSuomiFiClient,
+} from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
 import { mockClient } from "aws-sdk-client-mock";
-import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { parameters } from "../../src/aws/parameters";
 import * as sinon from "sinon";
 import { config } from "../../src/config";
@@ -88,9 +94,7 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mockClient(LambdaClient)
-      .on(InvokeCommand)
-      .resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
+    mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
   beforeEach(() => {
@@ -193,7 +197,8 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -217,10 +222,11 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(request.viesti).toMatchSnapshot();
     expect(mock.commandCalls(UpdateCommand).length).to.equal(0);
-    parameterStub.restore();
+    sinon.restore();
   });
   it("muistuttajan viesti suomi.fi paperiposti", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -249,11 +255,12 @@ describe("suomifiHandler", () => {
     expect(mock.commandCalls(UpdateCommand).length).to.equal(0);
     expect(emailStub.callCount).to.equal(1);
     expect(emailStub.args[0]).toMatchSnapshot();
-    parameterStub.restore();
+    sinon.restore();
     emailStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -276,7 +283,14 @@ describe("suomifiHandler", () => {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
       nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
     };
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
@@ -297,11 +311,12 @@ describe("suomifiHandler", () => {
     assert(input.ExpressionAttributeValues);
     expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
     expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
-    parameterStub.restore();
+    sinon.restore();
     fileStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi ruotsi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -325,7 +340,14 @@ describe("suomifiHandler", () => {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
       nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
     };
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
@@ -345,7 +367,7 @@ describe("suomifiHandler", () => {
     assert(input.ExpressionAttributeValues);
     expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
     expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
-    parameterStub.restore();
+    sinon.restore();
   });
   it("omistajan pdf viesti suomi.fi", async () => {
     const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
@@ -371,7 +393,14 @@ describe("suomifiHandler", () => {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
       nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
     };
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
@@ -433,7 +462,14 @@ describe("suomifiHandler", () => {
           } as unknown as LocalizedMap<NahtavillaoloPDF>,
         } as unknown as NahtavillaoloVaiheJulkaisu,
       ],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      },
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
         toissijainenKieli: Kieli.RUOTSI,
@@ -501,7 +537,14 @@ describe("suomifiHandler", () => {
           } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
         } as unknown as HyvaksymisPaatosVaiheJulkaisu,
       ],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY,
+      },
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
         toissijainenKieli: Kieli.RUOTSI,
@@ -557,7 +600,14 @@ describe("suomifiHandler", () => {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
       nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
-      velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123", tyyppi: ProjektiTyyppi.TIE, vaylamuoto: [] },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY,
+      },
     };
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
@@ -588,6 +638,7 @@ describe("suomifiHandler", () => {
   });
   it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
     sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
@@ -595,23 +646,25 @@ describe("suomifiHandler", () => {
       muistuttajat: ["6", "7", "8"],
     };
     mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand)
+      .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({
-        Responses: {
-          [config.kiinteistonomistajaTableName]: [
-            { id: "1", henkilotunnus: "ABC" },
-            { id: "2", henkilotunnus: "ABC" },
-            { id: "3", henkilotunnus: "DEF" },
-            { id: "4", ytunnus: "123" },
-            { id: "5", ytunnus: "123" },
-          ],
-          [config.projektiMuistuttajaTableName]: [
-            { id: "6", henkilotunnus: "ABC" },
-            { id: "7", henkilotunnus: "ABC" },
-            { id: "8", henkilotunnus: "CAB" },
-          ],
-        },
+        Items: [
+          { id: "1", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "2", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "3", henkilotunnus: "DEF", suomifiLahetys: true },
+          { id: "4", ytunnus: "123", suomifiLahetys: true },
+          { id: "5", ytunnus: "123", suomifiLahetys: true },
+        ],
+      })
+      .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({
+        Items: [
+          { id: "6", henkilotunnus: "ABC" },
+          { id: "7", henkilotunnus: "ABC" },
+          { id: "8", henkilotunnus: "CAB" },
+        ],
       });
+
     const mock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
@@ -626,5 +679,16 @@ describe("suomifiHandler", () => {
     ids = input.Entries.map((e) => e.Id);
     expect(ids.join(",")).to.equal("1,3,4");
     sinon.restore();
+  });
+  it("test parse elyn laskutustunnisteet", async () => {
+    const tunniste = `${SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY}: 1, ${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:2, ${SuunnittelustaVastaavaViranomainen.LAPIN_ELY}:1, ${SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY} :32 `;
+    const parsed = parseLaskutusTunniste(tunniste);
+    expect(parsed[SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY]).to.equal("1");
+    expect(parsed[SuunnittelustaVastaavaViranomainen.LAPIN_ELY]).to.equal("1");
+    expect(parsed[SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY]).to.equal("2");
+    expect(parsed[SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY]).to.equal("32");
+    expect(parsed[SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY]).to.equal(undefined);
+    expect(Object.keys(parseLaskutusTunniste("")).length).to.equal(0);
+    expect(Object.keys(parseLaskutusTunniste("blaah")).length).to.equal(0);
   });
 });

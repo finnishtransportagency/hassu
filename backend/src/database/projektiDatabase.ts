@@ -522,20 +522,27 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
-  async setOmistajahakuTiedot(oid: string, kaynnissa: boolean, kiinteistotunnusMaara: number | null) {
+  async setOmistajahakuTiedot(
+    oid: string,
+    omistajahakuKaynnistetty: string | null,
+    omistajahakuVirhe: boolean,
+    kiinteistotunnusMaara: number | null
+  ) {
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression:
-        "SET #omistajahakuKaynnissa = :omistajahakuKaynnissa, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
+        "SET #omistajahakuKaynnistetty = :omistajahakuKaynnistetty, #omistajahakuVirhe = :omistajahakuVirhe, #omistajahakuKiinteistotunnusMaara = :omistajahakuKiinteistotunnusMaara",
       ExpressionAttributeNames: {
-        ["#omistajahakuKaynnissa"]: "omistajahakuKaynnissa",
+        ["#omistajahakuVirhe"]: "omistajahakuVirhe",
+        ["#omistajahakuKaynnistetty"]: "omistajahakuKaynnistetty",
         ["#omistajahakuKiinteistotunnusMaara"]: "omistajahakuKiinteistotunnusMaara",
       },
       ExpressionAttributeValues: {
-        ":omistajahakuKaynnissa": kaynnissa,
+        ":omistajahakuVirhe": omistajahakuVirhe,
+        ":omistajahakuKaynnistetty": omistajahakuKaynnistetty,
         ":omistajahakuKiinteistotunnusMaara": kiinteistotunnusMaara,
       },
     });

@@ -79,7 +79,7 @@ export const handlePdfRequest = async ({ req, res, type }: PdfRequestProps) => {
     } else {
       res.status(500);
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send("");
+      res.send(e.message ?? "");
     }
   }
 };

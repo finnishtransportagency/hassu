@@ -159,6 +159,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Excel",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Features",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -640,6 +646,12 @@
       {
         "kind": "OBJECT",
         "name": "Omistaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "OmistajahakuTila",
         "possibleTypes": null,
         "__typename": "__Type"
       },

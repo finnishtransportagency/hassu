@@ -9,6 +9,7 @@ import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { TiedostoManager } from "./TiedostoManager";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { translate } from "../../util/localization";
+import { log } from "../../logger";
 
 export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
   public readonly julkaisut: J[] | undefined;
@@ -95,6 +96,14 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
     return false;
   }
 
+  async deleteSisainenTiedosto(path: string) {
+    await fileService.deleteYllapitoSisainenFileFromProjekti({
+      oid: this.oid,
+      filePathInProjekti: path,
+      reason: "Projekti on epäaktiivinen",
+    });
+  }
+
   protected async deleteAineistot(...aineistoArrays: (Array<Aineisto> | null | undefined)[]): Promise<boolean> {
     let modified = false;
     // Yhdistä kaikki aineistot yhdeksi taulukoksi
@@ -112,6 +121,21 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
       modified = true;
     }
     return modified;
+  }
+
+  protected async deleteAineistoZip(aineistopaketti: string) {
+    log.info("Poistetaan aineisto zip: " + aineistopaketti);
+    await fileService.deleteYllapitoFileFromProjekti({
+      oid: this.oid,
+      filePathInProjekti: aineistopaketti,
+      reason: "Projekti on epäaktiivinen",
+    });
+    const publicFullFilePathInProjekti = aineistopaketti.replace(this.projektiPaths.yllapitoPath, this.projektiPaths.publicPath);
+    await fileService.deletePublicFileFromProjekti({
+      oid: this.oid,
+      filePathInProjekti: publicFullFilePathInProjekti,
+      reason: "Projekti on epäaktiivinen",
+    });
   }
 
   protected getIlmoituksenVastaanottajat(vastaanottajat: IlmoituksenVastaanottajat | undefined | null) {

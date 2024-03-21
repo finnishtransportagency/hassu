@@ -11,7 +11,7 @@ export class S3Paths {
     this.s3Paths = [];
   }
 
-  pushYllapitoFilesIfDefined(...filePaths: (string | undefined)[]) {
+  pushYllapitoFilesIfDefined(...filePaths: (string | undefined | null)[]) {
     if (filePaths) {
       filePaths.forEach((filePath) => {
         if (filePath) {
