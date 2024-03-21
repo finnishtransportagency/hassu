@@ -13,7 +13,6 @@ import { DynamoDBDocumentClient, GetCommand, QueryCommand, UpdateCommand } from 
 import { parameters } from "../../src/aws/parameters";
 import * as sinon from "sinon";
 import { config } from "../../src/config";
-import { DBMuistuttaja } from "../../src/muistutus/muistutusHandler";
 import { now } from "lodash";
 import { emailClient } from "../../src/email/email";
 import { assert, expect } from "chai";
@@ -35,6 +34,7 @@ import { fail } from "assert";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { EnhancedPDF } from "../../src/asiakirja/asiakirjaTypes";
 import { SQS, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
+import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 
 const testiPdf =
   "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlPVVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBSCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAxCi9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
@@ -94,6 +94,7 @@ describe("suomifiHandler", () => {
   before(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // prettier-ignore
     mockClient(LambdaClient).on(InvokeCommand).resolves({ Payload: Buffer.from(JSON.stringify(lambdaResponse)) });
   });
 
@@ -115,7 +116,7 @@ describe("suomifiHandler", () => {
       oid: "1",
       sahkoposti: "test@test.fi",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const emailStub = sinon
       .stub(emailClient, "sendEmail")
@@ -148,7 +149,7 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(emailStub.callCount).to.equal(2);
     expect(emailStub.args[1]).toMatchSnapshot();
-    delete muistuttaja.liite;
+    delete muistuttaja.liitteet;
     mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
@@ -179,7 +180,7 @@ describe("suomifiHandler", () => {
       oid: "1",
       sahkoposti: "",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const emailStub = sinon
       .stub(emailClient, "sendEmail")
@@ -207,7 +208,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
@@ -235,7 +236,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "test@test.fi",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
     };
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 310);
@@ -269,7 +270,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
       etunimi: "Testi",
       sukunimi: "Teppo",
       lahiosoite: "Osoite 1",
@@ -325,7 +326,7 @@ describe("suomifiHandler", () => {
       sahkoposti: "",
       henkilotunnus: "ABC",
       muistutus: "Muistutus 1",
-      liite: "test.txt",
+      liitteet: ["test.txt"],
       etunimi: "Minerva",
       sukunimi: "Marttila",
       lahiosoite: "Svart katten's gatan 13 c 13, B.O.X 1010",
@@ -671,7 +672,7 @@ describe("suomifiHandler", () => {
     let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
     let ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4,8");
+    expect(ids.join(",")).to.equal("1,3,4");
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;

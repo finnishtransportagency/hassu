@@ -31,6 +31,8 @@ import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
+import { parameters } from "../../aws/parameters";
+import { log } from "../../logger";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -130,12 +132,18 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return { aineistoNahtavilla: paivitetytAineistoNahtavilla, nahtavillaoloSaamePDFt };
   }
 
-  validateSendForApproval(projekti: DBProjekti): void {
+  async validateSendForApproval(projekti: DBProjekti): Promise<void> {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     validateVuorovaikutusKierrosEiOleJulkaisematta(projekti);
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
+    }
+    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
+      const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
+      log.error(msg);
+      throw new Error(msg);
     }
   }
 

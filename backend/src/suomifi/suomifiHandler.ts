@@ -6,7 +6,6 @@ import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName, getKiinteistonomistajaTableName } from "../util/environment";
-import { DBMuistuttaja } from "../muistutus/muistutusHandler";
 import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
@@ -33,9 +32,11 @@ import { GeneratePDFEvent } from "../asiakirja/lambda/generatePDFEvent";
 import { invokeLambda } from "../aws/lambda";
 import PdfMerger from "pdf-merger-js";
 import { convertPdfFileName } from "../asiakirja/asiakirjaUtil";
-import { DBOmistaja, chunkArray, omistajaDatabase } from "../database/omistajaDatabase";
-import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { translate } from "../util/localization";
+import { chunkArray } from "../database/chunkArray";
+import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { Asiakas1 } from "./viranomaispalvelutwsinterface";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -109,20 +110,28 @@ function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
     sukunimi: muistuttaja.sukunimi,
     katuosoite: muistuttaja.lahiosoite,
     muistutus: muistuttaja.muistutus,
-    postinumeroJaPostitoimipaikka: muistuttaja.postinumero + " " + muistuttaja.postitoimipaikka,
-    puhelinnumero: muistuttaja.puhelinnumero,
+    postitoimipaikka: muistuttaja.postitoimipaikka,
+    postinumero: muistuttaja.postinumero,
     sahkoposti: muistuttaja.sahkoposti,
-    liite: muistuttaja.liite,
+    liitteet: muistuttaja.liitteet,
   };
 }
 
-async function isSuomiFiViestitEnabled(hetu: string, id: string) {
+async function haeAsiakasTiedot(hetu: string): Promise<Asiakas1 | undefined> {
   const client = await getClient();
   const response = await client.haeAsiakas(hetu, "SSN");
-  const asiakas = response.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
-  const enabled = asiakas && asiakas.Tila === 300;
-  auditLog.info("Suomi.fi viestit tila", { muistuttajaId: id, tila: asiakas?.Tila });
-  return enabled;
+  return response.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
+}
+
+async function isCognitoKayttajaSuomiFiViestitEnabled(hetu: string): Promise<boolean> {
+  const asiakas = await haeAsiakasTiedot(hetu);
+  return asiakas?.Tila === 300;
+}
+
+async function isMuistuttajaSuomiFiViestitEnabled(hetu: string, muistuttajaId: string): Promise<boolean> {
+  const asiakas = await haeAsiakasTiedot(hetu);
+  auditLog.info("Suomi.fi viestit tila", { muistuttajaId, tila: asiakas?.Tila });
+  return asiakas?.Tila === 300;
 }
 
 async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistuttaja: DBMuistuttaja) {
@@ -134,9 +143,7 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
     hetu,
   };
   const resp = await client.lahetaInfoViesti(viesti);
-  const kohde = resp.LisaaKohteitaResult?.Kohteet?.Kohde?.find(
-    (k) => k.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu) !== undefined
-  );
+  const kohde = resp.LisaaKohteitaResult?.Kohteet?.Kohde?.find((k) => k.Asiakas?.some((a) => a.attributes.AsiakasTunnus === hetu));
   const asiakas = kohde?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === hetu);
   const success = resp.LisaaKohteitaResult?.TilaKoodi?.TilaKoodi === 0 && asiakas?.KohteenTila === 200;
   if (success) {
@@ -276,7 +283,7 @@ export async function generatePdf(
     files.push(Buffer.from(response.sisalto, "base64"));
     const vaylamuoto = determineAsiakirjaMuoto(projektiFromDB.velho?.tyyppi, projektiFromDB.velho?.vaylamuoto);
     const tiedostoNimi = createPDFFileName(asiakirjaTyyppi, vaylamuoto, projektiFromDB.velho?.tyyppi, Kieli.SUOMI);
-    if (vaihe && vaihe[Kieli.RUOTSI]) {
+    if (vaihe?.[Kieli.RUOTSI]) {
       let tiedosto;
       if ("hyvaksymisIlmoitusMuistuttajillePDFPath" in vaihe[Kieli.RUOTSI]) {
         tiedosto = vaihe[Kieli.RUOTSI].hyvaksymisIlmoitusMuistuttajillePDFPath;
@@ -309,7 +316,10 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     if (!pdf) {
       return;
     }
-    const otsikko = tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ? "Ilmoitus suunnitelman nähtäville asettamisesta" : "Ilmoitus suunnitelman hyväksymispäätöksestä";
+    const otsikko =
+      tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO
+        ? "Ilmoitus suunnitelman nähtäville asettamisesta"
+        : "Ilmoitus suunnitelman hyväksymispäätöksestä";
     const sisaltoNahtavillaolo = `Hei,
 
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
@@ -385,18 +395,16 @@ async function lahetaViesti(muistuttaja: DBMuistuttaja, projektiFromDB: DBProjek
     (await parameters.isSuomiFiIntegrationEnabled()) &&
     (await parameters.isSuomiFiViestitIntegrationEnabled()) &&
     muistuttaja.henkilotunnus &&
-    (await isSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
+    (await isMuistuttajaSuomiFiViestitEnabled(muistuttaja.henkilotunnus, muistuttaja.id))
   ) {
     await lahetaInfoViesti(muistuttaja.henkilotunnus, projektiFromDB, muistuttaja);
+  } else if (muistuttaja.sahkoposti && isValidEmail(muistuttaja.sahkoposti)) {
+    await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
+    auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
   } else {
-    if (muistuttaja.sahkoposti && isValidEmail(muistuttaja.sahkoposti)) {
-      await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, createMuistutus(muistuttaja));
-      auditLog.info("Muistuttajalle lähetetty sähköposti", { muistuttajaId: muistuttaja.id });
-    } else {
-      log.error(
-        "Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta")
-      );
-    }
+    log.error(
+      "Muistuttajalle ei voitu lähettää kuittausviestiä: " + (muistuttaja.sahkoposti ? muistuttaja.sahkoposti : "ei sähköpostiosoitetta")
+    );
   }
 }
 
@@ -430,26 +438,24 @@ async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: Pu
   const muistuttaja = kohde.kohde as DBMuistuttaja;
   if (tyyppi === undefined) {
     await lahetaViesti(muistuttaja, kohde.projekti);
+  } else if (isMuistuttujanTiedotOk(muistuttaja)) {
+    await lahetaPdfViesti(
+      kohde.projekti,
+      {
+        id: muistuttaja.id,
+        nimi: `${muistuttaja.etunimi} ${muistuttaja.sukunimi}`,
+        lahiosoite: muistuttaja.lahiosoite!,
+        postinumero: muistuttaja.postinumero!,
+        postitoimipaikka: muistuttaja.postitoimipaikka!,
+        hetu: muistuttaja.henkilotunnus!,
+        maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
+      },
+      false,
+      tyyppi
+    );
   } else {
-    if (isMuistuttujanTiedotOk(muistuttaja)) {
-      await lahetaPdfViesti(
-        kohde.projekti,
-        {
-          id: muistuttaja.id,
-          nimi: `${muistuttaja.etunimi} ${muistuttaja.sukunimi}`,
-          lahiosoite: muistuttaja.lahiosoite!,
-          postinumero: muistuttaja.postinumero!,
-          postitoimipaikka: muistuttaja.postitoimipaikka!,
-          hetu: muistuttaja.henkilotunnus!,
-          maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
-        },
-        false,
-        tyyppi
-      );
-    } else {
-      auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
-      await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
-    }
+    auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
+    await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
   }
 }
 
@@ -481,7 +487,18 @@ async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOr
   }
 }
 
-const handlerFactory = (event: SQSEvent) => async () => {
+const handlerFactory = (event: SuomifiEvent) => async () => {
+  if (isEventStatusCheckAction(event)) {
+    return await isCognitoKayttajaSuomiFiViestitEnabled(event.hetu);
+  }
+  if (isEventSqsEvent(event)) {
+    await handleSqsEvent(event);
+  } else {
+    throw new Error("Unknown event:" + JSON.stringify(event));
+  }
+};
+
+async function handleSqsEvent(event: SQSEvent) {
   log.info("SQS sanomien määrä " + event.Records.length);
   for (const record of event.Records) {
     try {
@@ -499,9 +516,24 @@ const handlerFactory = (event: SQSEvent) => async () => {
       throw e;
     }
   }
+}
+
+function isEventStatusCheckAction(event: SuomifiEvent): event is SuomiFiViestitStatusCheckAction {
+  return !!(event as SuomiFiViestitStatusCheckAction).hetu;
+}
+
+function isEventSqsEvent(event: SuomifiEvent): event is SQSEvent {
+  const records = (event as SQSEvent).Records;
+  return !!records.length && records.every((record) => record.body);
+}
+
+type SuomiFiViestitStatusCheckAction = {
+  hetu: string;
 };
 
-export const handleEvent = async (event: SQSEvent) => {
+type SuomifiEvent = SuomiFiViestitStatusCheckAction | SQSEvent;
+
+export const handleEvent = async (event: SuomifiEvent) => {
   setupLambdaMonitoring();
   await wrapXRayAsync("handler", handlerFactory(event));
 };
@@ -519,9 +551,9 @@ async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqu
 }
 
 async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
+  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinMuistuttajat(projektiFromDB.oid);
   const newIds: string[] = [];
-  for (const muistuttaja of dbMuistuttajat.filter((m) => m.henkilotunnus)) {
+  for (const muistuttaja of dbMuistuttajat.filter((m) => m.suomifiLahetys)) {
     if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
       uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
       newIds.push(muistuttaja.id);

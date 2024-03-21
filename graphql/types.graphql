@@ -105,7 +105,7 @@ enum AsiakirjaTyyppi {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
   MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS
-  
+
   JATKOPAATOSKUULUTUS
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
@@ -144,8 +144,6 @@ enum OmistajahakuTila {
 
 type ProjektinTila {
   aineistotValmiit: Boolean
-  omistajahakuTila: OmistajahakuTila
-  omistajahakuKiinteistotunnusMaara: Int
 }
 
 type ProjektipaallikkoVirhe {
@@ -174,6 +172,7 @@ type Projekti implements IProjekti {
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
+  hyvaksymisEsitys: HyvaksymisEsitys
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
@@ -196,6 +195,22 @@ type Projekti implements IProjekti {
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
+  omistajahaku: OmistajaHaku
+}
+
+type OmistajaHaku {
+  virhe: Boolean
+  kaynnistetty: String
+  kiinteistotunnusMaara: Int
+  status: Status
+}
+
+type ProjektinTiedottaminen {
+  oid: String
+  muistuttajaMaara: Int
+  kiinteistotunnusMaara: Int
+  kiinteistonomistajaMaara: Int
+  omistajahakuTila: OmistajahakuTila
 }
 
 type Asianhallinta {
@@ -385,6 +400,39 @@ type LausuntoPyynnonTaydennys {
   muuAineisto: [LadattuTiedosto!]
   hash: String!
   poistetaan: Boolean
+}
+
+type HyvaksymisEsitys {
+  poistumisPaiva: String!
+  kiireellinen: Boolean
+  lisatiedot: String
+  laskutustiedot: Laskutustiedot
+  hyvaksymisEsitys: [LadattuTiedosto!]
+  suunnitelma: [Aineisto!]
+  muistutukset: [LadattuTiedosto!]
+  lausunnot: [LadattuTiedosto!]
+  kuulutuksetJaKutsu: [LadattuTiedosto!]
+  muuAineistoVelhosta: [Aineisto!]
+  muuAineistoKoneelta: [LadattuTiedosto!]
+  maanomistajaluettelo: [LadattuTiedosto!]
+  vastaanottajat: [SahkopostiVastaanottaja!]
+  tila: HyvaksymisTila
+  hyvaksyja: String
+  hyvaksymisPaiva: String
+  palautusSyy: String
+  aineistopaketti: String
+}
+
+type Laskutustiedot {
+  OVTtunnus: String
+  verkkolaskuOperaattorinValittajaTunnus: String
+  viite: String
+}
+
+enum HyvaksymisTila {
+  ODOTTAA_HYVAKSYNTAA
+  HYVAKSYTTY
+  MUOKKAUS
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -753,6 +801,8 @@ type UudelleenKuulutus {
   selosteKuulutukselle: LokalisoituTeksti
   selosteLahetekirjeeseen: LokalisoituTeksti
   alkuperainenHyvaksymisPaiva: String
+  tiedotaKiinteistonomistajia: Boolean
+  alkuperainenKuulutusPaiva: String
 }
 
 type AineistoMuokkaus {
@@ -769,7 +819,7 @@ type LokalisoituLinkki {
   RUOTSI: Linkki
 }
 
-type LadattuTiedosto {
+interface ILadattuTiedosto {
   """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
@@ -788,6 +838,25 @@ type LadattuTiedosto {
   """
   jarjestys: Int
   tila: LadattuTiedostoTila!
+}
+
+type LadattuTiedosto implements ILadattuTiedosto {
+  tiedosto: String!
+  nimi: String!
+  uuid: String!
+  tuotu: String
+  jarjestys: Int
+  tila: LadattuTiedostoTila!
+}
+
+type HyvaksymisEsitysLadattuTiedosto implements ILadattuTiedosto {
+  tiedosto: String!
+  nimi: String!
+  uuid: String!
+  tuotu: String
+  jarjestys: Int
+  tila: LadattuTiedostoTila!
+  kunta: Int
 }
 
 type AloitusKuulutusPDF {
@@ -974,9 +1043,17 @@ type NykyinenKayttaja {
 
 type SuomifiKayttaja {
   """
-  Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
+  Kertoo onko kayttaja aktivoinut suomifi viestit
+  """
+  kayttajaSuomifiViestitEnabled: Boolean!
+  """
+  Kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
   """
   suomifiEnabled: Boolean!
+  """
+  Kertoo onko suomifi viestit kaytossa ymparistossa
+  """
+  suomifiViestitEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
   etunimi: String
@@ -1078,11 +1155,15 @@ type LadattavatTiedostot {
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
+  hyvaksymisEsitys: [HyvaksymisEsitysLadattavaTiedosto!]
+  suunnitelma: [LadattavaTiedosto!]
+  lausunnot: [LadattavaTiedosto!]
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }
 
-type LadattavaTiedosto {
+interface ILadattavaTiedosto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
   """
@@ -1100,6 +1181,23 @@ type LadattavaTiedosto {
   Numero jarjestamista varten
   """
   jarjestys: Int
+}
+
+type LadattavaTiedosto implements ILadattavaTiedosto{
+  kategoriaId: String
+  linkki: String
+  nimi: String!
+  tuotu: String
+  jarjestys: Int
+}
+
+type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto{
+  kategoriaId: String
+  linkki: String
+  nimi: String!
+  tuotu: String
+  jarjestys: Int
+  kunta: Int
 }
 
 type LisaAineistoParametrit {
@@ -1171,6 +1269,12 @@ type AsianhallinnanTila {
   asianTila: AsianTila
 }
 
+type MmlYhteystieto {
+  jakeluosoite: String
+  postinumero: String
+  paikkakunta: String
+}
+
 type Omistaja {
   id: String!
   oid: String!
@@ -1211,9 +1315,7 @@ type Muistuttaja {
 
 type Muistuttajat {
   hakutulosMaara: Int!
-  sivu: Int!
-  sivunKoko: Int!
-  muistuttajat: [Muistuttaja]!
+  muistuttajat: [Muistuttaja!]!
 }
 
 type Excel {

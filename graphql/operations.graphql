@@ -25,13 +25,19 @@ type Query {
     oid: String!
     listaaLausuntoPyynnonTaydennyksenTiedostotInput: ListaaLausuntoPyynnonTaydennyksenTiedostotInput
   ): LadattavatTiedostot!
+  listaaHyvaksymisEsityksenTiedostot(
+    oid: String!
+    listaaHyvaksymisEsityksenTiedostotInput: ListaaHyvaksymisEsityksenTiedostotInput
+  ): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTiedostot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
+  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput): LadattavatTiedostot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
   haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat
-  haeMuistuttajat(oid: String!, sivu: Int!, muutMuistuttajat: Boolean!, sivuKoko: Int): Muistuttajat
   lataaTiedotettavatExcel(oid: String!, suomifi: Boolean, kiinteisto: Boolean!): Excel
+  haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, query: String, from: Int, size: Int): Muistuttajat
+  haeProjektinTiedottamistiedot(oid: String!): ProjektinTiedottaminen
 }
 
 type Mutation {
@@ -53,7 +59,7 @@ type Mutation {
   suoritaTestiKomento(testiKomento: TestiKomentoInput!): String
 
   tuoKarttarajaus(oid: String!, geoJSON: String!): String
-  tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!): String
+  tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!, status: Status): String
   tallennaKiinteistonOmistajat(
     oid: String!
     muutOmistajat: [OmistajaInput!]!

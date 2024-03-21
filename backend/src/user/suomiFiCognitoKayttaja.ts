@@ -12,4 +12,4 @@ export type SuomiFiCognitoKayttaja = {
   ["custom:ulkomainenlahiosoite"]: string;
   ["custom:ulkomainenkunta"]: string;
   ["custom:maakoodi"]: string;
-}
+};

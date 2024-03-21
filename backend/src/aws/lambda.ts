@@ -3,9 +3,9 @@ import { log } from "../logger";
 
 const lambda: Lambda = new Lambda({});
 
-export async function invokeLambda(functionName: string, synchronousCall: boolean, payload?: string): Promise<string | undefined> {
+export async function invokeLambda(functionName: string, asynchronousCall: boolean, payload?: string): Promise<string | undefined> {
   try {
-    if (synchronousCall) {
+    if (asynchronousCall) {
       const output = await lambda.invoke({
         FunctionName: functionName,
         Payload: new TextEncoder().encode(payload ?? "{}"),

@@ -16,6 +16,8 @@ import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { fileService } from "../../files/fileService";
+import { log } from "../../logger";
+import { parameters } from "../../aws/parameters";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -64,12 +66,18 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     return { aineistoNahtavilla, hyvaksymisPaatos, hyvaksymisPaatosVaiheSaamePDFt };
   }
 
-  validateSendForApproval(projekti: DBProjekti): void {
+  async validateSendForApproval(projekti: DBProjekti): Promise<void> {
     const vaihe = this.getVaihe(projekti);
     this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe?.hyvaksymisPaatosVaiheSaamePDFt);
 
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
+    }
+    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
+      const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
+      log.error(msg);
+      throw new Error(msg);
     }
   }
 

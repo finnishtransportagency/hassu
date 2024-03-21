@@ -9,7 +9,6 @@ export type OmistajaDocument = Pick<
   | "kiinteistotunnus"
   | "nimi"
   | "oid"
-  | "id"
   | "paikkakunta"
   | "postinumero"
   | "sukunimi"
@@ -22,7 +21,6 @@ export type OmistajaDocument = Pick<
 export function adaptOmistajaToIndex({
   etunimet,
   jakeluosoite,
-  id,
   kiinteistotunnus,
   oid,
   nimi,
@@ -37,7 +35,6 @@ export function adaptOmistajaToIndex({
   return {
     etunimet,
     jakeluosoite,
-    id,
     kiinteistotunnus,
     oid,
     nimi,
@@ -62,7 +59,8 @@ export function adaptSearchResultsToProjektiDocuments(results: any): DBOmistaja[
 }
 
 export function adaptSearchResultsToApiOmistaja(results: any): API.Omistaja[] {
-  if (results.status && results.status >= 400) {
+  // jos indeksiä ei löydy tulee 404 virhe, käsitellään se samoin kuin ei löytyisi mitään
+  if (results.status && results.status >= 400 && results.status !== 404) {
     log.error(results);
     throw new Error("Omistajahaussa tapahtui virhe");
   }

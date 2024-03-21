@@ -1,76 +1,132 @@
 import Button from "@components/button/Button";
 import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
-import IconButton from "@components/button/IconButton";
 import { RectangleButton } from "@components/button/RectangleButton";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import HassuTable from "@components/table/HassuTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionSummary, TextField } from "@mui/material";
 import { Stack, styled } from "@mui/system";
-import { Omistaja } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import React, { useCallback, useMemo, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import useApi from "src/hooks/useApi";
+import React, { useCallback, useState } from "react";
+import { Controller, FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
-type Props = { title: string; instructionText: string | JSX.Element; muutOmistajat?: boolean; oid: string };
+export type SearchTiedotettavatFunction<T> = (
+  oid: string,
+  muutTiedotettavat: boolean,
+  query: string | null | undefined,
+  from: number | null | undefined,
+  size: number | null | undefined
+) => Promise<{ tulokset: T[]; hakutulosMaara: number }>;
+
+export type Props<T> = {
+  title: string;
+  instructionText: string | JSX.Element;
+  filterText: string;
+  muutTiedotettavat?: boolean;
+  oid: string;
+  searchTiedotettavat: SearchTiedotettavatFunction<T>;
+  columns: ColumnDef<T>[];
+  expanded?: boolean;
+  setExpanded?: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const PAGE_SIZE = 25;
 
-export default function KiinteistonomistajaTable({ instructionText, title, muutOmistajat = false, oid }: Props) {
-  const [expanded, setExpanded] = React.useState(false);
+type Tiedotettava = Record<string, unknown>;
 
-  const [omistajat, setOmistajat] = useState<Omistaja[] | null>(null);
+type SearchForm = {
+  query: string;
+};
+
+export default function KiinteistonomistajaHaitari<T extends Tiedotettava>({
+  instructionText,
+  title,
+  muutTiedotettavat = false,
+  oid,
+  columns,
+  searchTiedotettavat,
+  filterText,
+  expanded: controlledExpanded,
+  setExpanded: setControlledExpanded,
+}: Readonly<Props<T>>) {
+  const [uncontrolledExpanded, setUncontrolledExpanded] = React.useState(false);
+
+  const expanded = controlledExpanded ?? uncontrolledExpanded;
+  const setExpanded = setControlledExpanded ?? setUncontrolledExpanded;
+
+  const [tiedotettavat, setTiedotettavat] = useState<T[] | null>(null);
   const [hakutulosMaara, setHakutulosMaara] = useState<number | null>(null);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [queryResettable, setQueryResettable] = useState<boolean>(false);
+
+  const useFormReturn = useForm<SearchForm>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: { query: "" },
+  });
 
   const { withLoadingSpinner } = useLoadingSpinner();
-  const api = useApi();
 
-  const searchOmistajat = useCallback(
-    (query?: string, from = omistajat?.length ?? 0, size = PAGE_SIZE) => {
+  const updateTiedotettavat = useCallback(
+    (query?: string, from = tiedotettavat?.length ?? 0, size = PAGE_SIZE) => {
       withLoadingSpinner(
         (async () => {
           try {
-            const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, false, query, from, size);
+            const response = await searchTiedotettavat(oid, muutTiedotettavat, query, from, size);
+            setQueryResettable(query !== undefined);
             setHakutulosMaara(response.hakutulosMaara);
-            setOmistajat((oldOmistajat) => [...(oldOmistajat ?? []), ...response.omistajat]);
+            setTiedotettavat((oldOmistajat) => [...(oldOmistajat ?? []), ...response.tulokset]);
           } catch {}
         })()
       );
     },
-    [api, muutOmistajat, oid, omistajat?.length, withLoadingSpinner]
+    [muutTiedotettavat, oid, tiedotettavat?.length, searchTiedotettavat, withLoadingSpinner]
   );
 
   const handleChange = useCallback(
     (_event: React.SyntheticEvent, isExpanded: boolean) => {
       if (isExpanded) {
-        searchOmistajat();
+        updateTiedotettavat();
       } else {
-        setOmistajat(null);
+        setTiedotettavat(null);
         setHakutulosMaara(null);
+        useFormReturn.setValue("query", "");
+        setQueryResettable(false);
       }
       setExpanded(isExpanded);
     },
-    [searchOmistajat]
+    [setExpanded, updateTiedotettavat, useFormReturn]
+  );
+
+  const onSubmit: SubmitHandler<SearchForm> = useCallback(
+    (data) => {
+      const q = data.query;
+      setTiedotettavat([]);
+      updateTiedotettavat(q ? q : undefined, 0);
+    },
+    [setTiedotettavat, updateTiedotettavat]
   );
 
   return (
-    <TableAccordion expanded={expanded} onChange={handleChange}>
-      <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
-      <TableAccordionDetails
-        oid={oid}
-        omistajat={omistajat}
-        setOmistajat={setOmistajat}
-        instructionText={instructionText}
-        muutOmistajat={muutOmistajat}
-        searchOmistajat={searchOmistajat}
-        hakutulosMaara={hakutulosMaara}
-        query={query}
-        setQuery={setQuery}
-      />
-    </TableAccordion>
+    <FormProvider {...useFormReturn}>
+      <form onSubmit={useFormReturn.handleSubmit(onSubmit)}>
+        <TableAccordion expanded={expanded} onChange={handleChange}>
+          <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
+          <TableAccordionDetails
+            oid={oid}
+            tiedotettavat={tiedotettavat}
+            setTiedotettavat={setTiedotettavat}
+            instructionText={instructionText}
+            muutTiedotettavat={muutTiedotettavat}
+            updateTiedotettavat={updateTiedotettavat}
+            hakutulosMaara={hakutulosMaara}
+            columns={columns}
+            filterText={filterText}
+            queryResettable={queryResettable}
+          />
+        </TableAccordion>
+      </form>
+    </FormProvider>
   );
 }
 
@@ -102,233 +158,142 @@ const TableAccordionSummary = styled(AccordionSummary)({
   },
 });
 
-const TableAccordionDetails = styled(
-  ({
-    oid,
-    muutOmistajat = false,
-    instructionText,
-    searchOmistajat,
-    hakutulosMaara,
-    omistajat,
-    setOmistajat,
-    query,
-    setQuery,
-    ...props
-  }: Omit<AccordionDetailsProps, "children"> &
-    Pick<Props, "oid" | "muutOmistajat" | "instructionText"> & {
-      query: string | undefined;
-      setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
-      omistajat: Omistaja[] | null;
-      searchOmistajat: (query?: string, from?: any, size?: any) => void;
-      hakutulosMaara: number | null;
-      setOmistajat: React.Dispatch<React.SetStateAction<Omistaja[] | null>>;
-    }) => {
-    const getNextPage = useCallback(() => {
-      searchOmistajat(query);
-    }, [searchOmistajat, query]);
+const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
+  oid,
+  muutTiedotettavat = false,
+  instructionText,
+  updateTiedotettavat,
+  hakutulosMaara,
+  tiedotettavat,
+  setTiedotettavat,
+  columns,
+  filterText,
+  queryResettable,
+  ...props
+}: Omit<AccordionDetailsProps, "children"> &
+  Pick<Props<T>, "oid" | "muutTiedotettavat" | "instructionText" | "columns" | "filterText"> & {
+    tiedotettavat: T[] | null;
+    updateTiedotettavat: (query?: string, from?: any, size?: any) => void;
+    hakutulosMaara: number | null;
+    setTiedotettavat: React.Dispatch<React.SetStateAction<T[] | null>>;
+    queryResettable: boolean;
+  }) => {
+  const { getValues, control, reset } = useFormContext<SearchForm>();
 
-    const toggleShowHideAll = useCallback(() => {
-      if ((omistajat?.length ?? 0) < (hakutulosMaara ?? 0)) {
-        searchOmistajat(query, undefined, (hakutulosMaara ?? 0) - (omistajat?.length ?? 0));
-      } else {
-        setOmistajat((oldOmistajat) => {
-          return oldOmistajat?.slice(0, PAGE_SIZE) ?? [];
-        });
-      }
-    }, [omistajat?.length, hakutulosMaara, searchOmistajat, query, setOmistajat]);
+  const getNextPage = useCallback(() => {
+    updateTiedotettavat(getValues().query);
+  }, [getValues, updateTiedotettavat]);
 
-    const columns: ColumnDef<Omistaja>[] = useMemo(() => {
-      const cols: ColumnDef<Omistaja>[] = [
-        {
-          header: "Kiinteistötunnus",
-          accessorKey: "kiinteistotunnus",
-          id: "kiinteistotunnus",
-          meta: {
-            widthFractions: 2,
-            minWidth: 140,
-          },
-        },
-        {
-          header: "Omistajan nimi",
-          accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
-          id: "omistajan_nimi",
-          meta: {
-            widthFractions: 5,
-            minWidth: 140,
-          },
-        },
-        {
-          header: "Postiosoite",
-          accessorKey: "jakeluosoite",
-          id: "postiosoite",
-          meta: {
-            widthFractions: 3,
-            minWidth: 120,
-          },
-        },
-        {
-          header: "Postinumero",
-          accessorKey: "postinumero",
-          id: "postinumero",
-          meta: {
-            widthFractions: 1,
-            minWidth: 120,
-          },
-        },
-        {
-          header: "Postitoimipaikka",
-          accessorKey: "paikkakunta",
-          id: "postitoimipaikka",
-          meta: {
-            widthFractions: 2,
-            minWidth: 140,
-          },
-        },
-        {
-          header: "",
-          id: "actions",
-          meta: {
-            widthFractions: 2,
-            minWidth: 120,
-          },
-          accessorKey: "id",
-          cell: () => {
-            return <IconButton sx={{ display: "block", margin: "auto" }} type="button" disabled icon="trash" />;
-          },
-        },
-      ];
-      return cols;
-    }, []);
-
-    type SearchForm = {
-      query: string;
-    };
-
-    const { handleSubmit, control, setValue } = useForm<SearchForm>({
-      mode: "onChange",
-      reValidateMode: "onChange",
-      defaultValues: { query: "" },
-    });
-
-    const table = useReactTable({
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      data: omistajat ?? [],
-      enableSorting: false,
-      defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
-      state: { pagination: undefined },
-    });
-
-    const onSubmit: SubmitHandler<SearchForm> = useCallback(
-      (data) => {
-        const q = data.query ? data.query : undefined;
-        setQuery(q);
-        setOmistajat([]);
-        searchOmistajat(q, 0);
-      },
-      [searchOmistajat, setOmistajat, setQuery]
-    );
-
-    const resetSearch = useCallback(async () => {
-      setValue("query", "");
-      setQuery(undefined);
-      setOmistajat([]);
-      searchOmistajat(undefined, 0);
-    }, [searchOmistajat, setOmistajat, setQuery, setValue]);
-
-    const showLess = useCallback(() => {
-      setOmistajat((oldOmistajat) => {
-        const remainder = (oldOmistajat?.length ?? 0) % PAGE_SIZE || PAGE_SIZE;
-        return oldOmistajat?.slice(0, oldOmistajat.length - remainder) ?? [];
+  const toggleShowHideAll = useCallback(() => {
+    if ((tiedotettavat?.length ?? 0) < (hakutulosMaara ?? 0)) {
+      updateTiedotettavat(getValues().query, undefined, (hakutulosMaara ?? 0) - (tiedotettavat?.length ?? 0));
+    } else {
+      setTiedotettavat((oldOmistajat) => {
+        return oldOmistajat?.slice(0, PAGE_SIZE) ?? [];
       });
-    }, [setOmistajat]);
+    }
+  }, [tiedotettavat?.length, hakutulosMaara, updateTiedotettavat, getValues, setTiedotettavat]);
 
-    return (
-      <AccordionDetails {...props}>
-        <ContentSpacer gap={7}>
-          <p>{instructionText}</p>
-          <ContentSpacer>
-            <Stack
-              component="form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              direction="row"
-              justifyContent="space-between"
-              alignItems="end"
-            >
-              <Controller
-                control={control}
-                name="query"
-                render={({ field: { name, onBlur, onChange, ref, value } }) => (
-                  <HaeField
-                    sx={{ flexGrow: 1 }}
-                    name={name}
-                    onBlur={onBlur}
-                    onChange={onChange}
-                    inputRef={ref}
-                    value={value}
-                    label="Suodata kiinteistönomistajia"
-                    autoComplete="off"
-                  />
-                )}
-              />
-              <Button primary type="button" endIcon="search" onClick={handleSubmit(onSubmit)}>
-                Suodata
-              </Button>
-            </Stack>
-            {query && (
-              <ButtonFlat onClick={resetSearch} type="button">
-                Nollaa suodatus
-              </ButtonFlat>
-            )}
-          </ContentSpacer>
-          {typeof hakutulosMaara === "number" && (
-            <p>
-              Suodatuksella {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
-            </p>
-          )}
-          {typeof hakutulosMaara === "number" && !!omistajat?.length && (
-            <>
-              <HassuTable table={table} />
-              <Grid>
-                <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
-                  {omistajat.length > PAGE_SIZE && (
-                    <RectangleButton type="button" onClick={showLess}>
-                      Näytä vähemmän kiinteistönomistajia
-                    </RectangleButton>
-                  )}
-                  {hakutulosMaara > omistajat.length && (
-                    <RectangleButton type="button" onClick={getNextPage}>
-                      Näytä enemmän kiinteistönomistajia
-                    </RectangleButton>
-                  )}
-                  {hakutulosMaara > PAGE_SIZE && (
-                    <ButtonFlatWithIcon
-                      type="button"
-                      icon={hakutulosMaara <= omistajat.length ? "chevron-up" : "chevron-down"}
-                      onClick={toggleShowHideAll}
-                    >
-                      {hakutulosMaara <= omistajat.length ? "Piilota kaikki" : "Näytä kaikki"}
-                    </ButtonFlatWithIcon>
-                  )}
-                </Stack>
-                <Button className="ml-auto" disabled>
-                  Vie Exceliin
-                </Button>
-              </Grid>
-            </>
+  const table = useReactTable({
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    data: tiedotettavat ?? [],
+    enableSorting: false,
+    defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+    state: { pagination: undefined },
+  });
+
+  const resetSearch = useCallback(async () => {
+    reset();
+    setTiedotettavat([]);
+    updateTiedotettavat(undefined, 0);
+  }, [reset, setTiedotettavat, updateTiedotettavat]);
+
+  const showLess = useCallback(() => {
+    setTiedotettavat((oldOmistajat) => {
+      const remainder = (oldOmistajat?.length ?? 0) % PAGE_SIZE || PAGE_SIZE;
+      return oldOmistajat?.slice(0, oldOmistajat.length - remainder) ?? [];
+    });
+  }, [setTiedotettavat]);
+
+  return (
+    <AccordionDetails {...props}>
+      <ContentSpacer gap={7}>
+        <p>{instructionText}</p>
+        <ContentSpacer>
+          <Stack direction="row" justifyContent="space-between" alignItems="end">
+            <Controller
+              control={control}
+              name="query"
+              render={({ field: { name, onBlur, onChange, ref, value } }) => (
+                <HaeField
+                  sx={{ flexGrow: 1 }}
+                  name={name}
+                  onBlur={onBlur}
+                  onChange={onChange}
+                  inputRef={ref}
+                  value={value}
+                  label={filterText}
+                  autoComplete="off"
+                />
+              )}
+            />
+            <Button primary type="submit" endIcon="search">
+              Suodata
+            </Button>
+          </Stack>
+          {queryResettable && (
+            <ButtonFlat onClick={resetSearch} type="button">
+              Nollaa suodatus
+            </ButtonFlat>
           )}
         </ContentSpacer>
-      </AccordionDetails>
-    );
-  }
-)({
+        {typeof hakutulosMaara === "number" && (
+          <p>
+            Suodatuksella {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
+          </p>
+        )}
+        {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (
+          <>
+            <HassuTable table={table} />
+            <Grid>
+              <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
+                {tiedotettavat.length > PAGE_SIZE && (
+                  <RectangleButton type="button" onClick={showLess}>
+                    Näytä vähemmän kiinteistönomistajia
+                  </RectangleButton>
+                )}
+                {hakutulosMaara > tiedotettavat.length && (
+                  <RectangleButton type="button" onClick={getNextPage}>
+                    Näytä enemmän kiinteistönomistajia
+                  </RectangleButton>
+                )}
+                {hakutulosMaara > PAGE_SIZE && (
+                  <ButtonFlatWithIcon
+                    type="button"
+                    icon={hakutulosMaara <= tiedotettavat.length ? "chevron-up" : "chevron-down"}
+                    onClick={toggleShowHideAll}
+                  >
+                    {hakutulosMaara <= tiedotettavat.length ? "Piilota kaikki" : "Näytä kaikki"}
+                  </ButtonFlatWithIcon>
+                )}
+              </Stack>
+              <Button className="ml-auto" disabled>
+                Vie Exceliin
+              </Button>
+            </Grid>
+          </>
+        )}
+      </ContentSpacer>
+    </AccordionDetails>
+  );
+};
+
+const TableAccordionDetails = styled(UnstyledTableAccordionDetails)({
   border: "1px solid #999999",
   borderTopWidth: "0px",
   padding: "1rem 1rem",
-});
+}) as typeof UnstyledTableAccordionDetails;
 
 const Grid = styled("div")({
   display: "grid",

@@ -95,7 +95,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     return requirePermissionMuokkaa(projekti);
   }
 
-  validateSendForApproval(): void {
+  async validateSendForApproval(): Promise<void> {
     throw new Error("validateSendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 

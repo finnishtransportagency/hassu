@@ -74,7 +74,7 @@ async function runTestCommand(query: ParsedUrlQuery) {
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
       vaihe: TestiKomentoVaihe.HYVAKSYMISVAIHE,
-      ajansiirtoPaivina: 366,
+      ajansiirtoPaivina: 367,
     });
   });
 
@@ -92,7 +92,7 @@ async function runTestCommand(query: ParsedUrlQuery) {
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
       vaihe: TestiKomentoVaihe.JATKOPAATOS1VAIHE,
-      ajansiirtoPaivina: 366,
+      ajansiirtoPaivina: 367,
     });
   });
 
@@ -110,7 +110,7 @@ async function runTestCommand(query: ParsedUrlQuery) {
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
       vaihe: TestiKomentoVaihe.JATKOPAATOS2VAIHE,
-      ajansiirtoPaivina: 366,
+      ajansiirtoPaivina: 367,
     });
   });
 

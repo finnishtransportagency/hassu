@@ -4,7 +4,7 @@ import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { HyvaksymisPaatosVaihe } from "@services/api";
+import { HyvaksymisPaatosVaihe, Status, Vaihe } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -15,6 +15,10 @@ import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutu
 import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
+import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
+import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
+import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -23,9 +27,12 @@ interface HelperType {
 
 interface Props {
   paatosVaihe: HyvaksymisPaatosVaihe | null | undefined;
+  paatosTyyppi: PaatosTyyppi;
+  oid: string;
+  omistajahakuStatus: Status | null | undefined;
 }
 
-export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, oid, omistajahakuStatus }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -216,6 +223,21 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
               </HassuGrid>
             ))}
           </SectionContent>
+          {!paatosIsJatkopaatos(paatosTyyppi) && (
+            <>
+              <KiinteistonomistajatOhje
+                vaihe={Vaihe.HYVAKSYMISPAATOS}
+                oid={oid}
+                omistajahakuStatus={omistajahakuStatus}
+                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+              />
+              <KiinteistonOmistajatUudelleenkuulutus
+                oid={oid}
+                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+                vaihe={Vaihe.HYVAKSYMISPAATOS}
+              />
+            </>
+          )}
         </Section>
       </div>
     </>

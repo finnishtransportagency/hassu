@@ -21,6 +21,7 @@ import {
   adaptVelhoToAPI,
   adaptVuorovaikutusKierrosToAPI,
   adaptVuorovaikutusKierrosJulkaisutToAPI,
+  adaptHyvaksymisEsitysToAPI,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
@@ -40,6 +41,7 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { adaptHyvaksymisEsitysToSave } from "./adaptToDB/adaptHyvaksymisEsitysToSave";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -61,6 +63,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisut,
       lausuntoPyynnot,
       lausuntoPyynnonTaydennykset,
+      hyvaksymisEsitys,
       hyvaksymisPaatosVaihe,
       hyvaksymisPaatosVaiheJulkaisut,
       jatkoPaatos1Vaihe,
@@ -78,6 +81,7 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahaku,
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
@@ -109,6 +113,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
       lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToAPI(dbProjekti, hyvaksymisEsitys),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
@@ -159,6 +164,15 @@ export class ProjektiAdapter {
       paivitetty,
       vahainenMenettely,
       vaihe,
+      omistajahaku: omistajahaku
+        ? {
+            __typename: "OmistajaHaku",
+            status: omistajahaku.status,
+            virhe: omistajahaku.virhe,
+            kaynnistetty: omistajahaku.kaynnistetty,
+            kiinteistotunnusMaara: omistajahaku.kiinteistotunnusMaara,
+          }
+        : undefined,
     });
 
     if (apiProjekti.tallennettu) {
@@ -197,6 +211,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe,
       lausuntoPyynnot,
       lausuntoPyynnonTaydennykset,
+      hyvaksymisEsitys,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -227,6 +242,7 @@ export class ProjektiAdapter {
         lausuntoPyynnonTaydennykset,
         projektiAdaptationResult
       ),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToSave(projekti.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(
         projekti.hyvaksymisPaatosVaihe,
         hyvaksymisPaatosVaihe,

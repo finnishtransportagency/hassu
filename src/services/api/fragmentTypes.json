@@ -177,6 +177,30 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsitys",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "HyvaksymisEsitysInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisEsitysLadattavaTiedosto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HyvaksymisEsitysLadattuTiedosto",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Hyvaksymispaatos",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -224,9 +248,45 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "HyvaksymisTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "SCALAR",
         "name": "ID",
         "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ILadattavaTiedosto",
+        "possibleTypes": [
+          {
+            "name": "HyvaksymisEsitysLadattavaTiedosto",
+            "__typename": "__Type"
+          },
+          {
+            "name": "LadattavaTiedosto",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ILadattuTiedosto",
+        "possibleTypes": [
+          {
+            "name": "HyvaksymisEsitysLadattuTiedosto",
+            "__typename": "__Type"
+          },
+          {
+            "name": "LadattuTiedosto",
+            "__typename": "__Type"
+          }
+        ],
         "__typename": "__Type"
       },
       {
@@ -435,6 +495,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Laskutustiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LaskutustiedotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "LatausTiedot",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -495,6 +567,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "ListaaHyvaksymisEsityksenTiedostotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "ListaaKayttajatInput",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -550,6 +628,12 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "LokalisoituTekstiInputEiPakollinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MmlYhteystieto",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -646,6 +730,12 @@
       {
         "kind": "OBJECT",
         "name": "Omistaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "OmistajaHaku",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -748,6 +838,12 @@
       {
         "kind": "OBJECT",
         "name": "ProjektiKayttajaJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektinTiedottaminen",
         "possibleTypes": null,
         "__typename": "__Type"
       },

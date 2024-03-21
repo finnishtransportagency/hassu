@@ -1,9 +1,7 @@
-import React, { ReactElement } from "react";
-import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, SelectProps, styled } from "@mui/material";
+import React, { ReactNode } from "react";
+import { capitalize, FormControl, InputLabel, MenuItem, Select, SelectProps } from "@mui/material";
 import { Controller, FieldError } from "react-hook-form";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useTranslation from "next-translate/useTranslation";
-import classNames from "classnames";
 import FormGroup from "./FormGroup";
 
 type Props = {
@@ -11,35 +9,10 @@ type Props = {
   label: string;
   control: any;
   defaultValue: string;
-  children: ReactElement[];
+  children: ReactNode;
   disabled?: boolean;
   error?: FieldError;
 } & Pick<SelectProps<string>, "onChange">;
-
-export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
-  "label + &": {
-    marginTop: "0px",
-  },
-  "& .MuiInputBase-input": {
-    borderRadius: 1,
-    position: "relative",
-    backgroundColor: theme.palette.background.paper,
-    border: "1px solid #333333",
-    fontSize: "1rem",
-    padding: "10px 26px 10px 12px",
-    transition: theme.transitions.create(["border-color", "box-shadow"], { delay: 0, duration: 0 }),
-    "&:focus": {
-      borderRadius: 1,
-      borderColor: "rgb(0 153 255)",
-      boxShadow: "inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;",
-    },
-  },
-  "&.error": {
-    "& .MuiInputBase-input": {
-      borderColor: "red",
-    },
-  },
-}));
 
 const HassuMuiSelect = (
   { name, label, control, defaultValue, children, disabled, error, onChange: onChangeProp, ...props }: Props,
@@ -58,10 +31,6 @@ const HassuMuiSelect = (
             <>
               <Select<string>
                 MenuProps={{ sx: { maxHeight: 750 } }}
-                className={classNames("w-100", error && "error")}
-                displayEmpty
-                IconComponent={KeyboardArrowDownIcon}
-                input={<HassuSelectInput id={name} />}
                 labelId={labelId}
                 label={label}
                 onChange={(...args) => {

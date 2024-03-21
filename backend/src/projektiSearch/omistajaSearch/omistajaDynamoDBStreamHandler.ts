@@ -10,7 +10,8 @@ import { getSQS } from "../../aws/clients/getSQS";
 import { parameters } from "../../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
-import { chunkArray, DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
+import { DBOmistaja, omistajaDatabase, OmistajaKey, OmistajaScanResult } from "../../database/omistajaDatabase";
+import { chunkArray } from "../../database/chunkArray";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {

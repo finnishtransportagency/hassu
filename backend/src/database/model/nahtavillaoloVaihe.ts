@@ -67,10 +67,10 @@ export type Muistutus = {
   etunimi?: string | null;
   sukunimi?: string | null;
   katuosoite?: string | null;
-  postinumeroJaPostitoimipaikka?: string | null;
+  postinumero?: string | null;
+  postitoimipaikka?: string | null;
   sahkoposti?: string | null;
-  puhelinnumero?: string | null;
   muistutus?: string | null;
-  liite?: string | null;
+  liitteet?: string[] | null;
   maakoodi?: string | null;
 };

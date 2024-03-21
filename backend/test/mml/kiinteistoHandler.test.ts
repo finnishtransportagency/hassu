@@ -174,16 +174,16 @@ describe("kiinteistoHandler", () => {
     const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
     const updateCommand3 = dbMock.commandCalls(UpdateCommand)[2];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuVirhe"]).to.be.equal(false);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnistetty"]).to.be.equal(time);
-    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(5);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahaku"].virhe).to.be.equal(false);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahaku"].kaynnistetty).to.be.equal(time);
+    expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahaku"].kiinteistotunnusMaara).to.be.equal(5);
     assert(updateCommand2.args[0].input.ExpressionAttributeValues);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajat"].length).to.be.equal(4);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":muutOmistajat"].length).to.be.equal(2);
     assert(updateCommand3.args[0].input.ExpressionAttributeValues);
-    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuVirhe"]).to.be.equal(false);
-    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKaynnistetty"]).to.be.equal(null);
-    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahakuKiinteistotunnusMaara"]).to.be.equal(null);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahaku"].virhe).to.be.equal(false);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahaku"].kaynnistetty).to.be.equal(null);
+    expect(updateCommand3.args[0].input.ExpressionAttributeValues[":omistajahaku"].kiinteistotunnusMaara).to.be.equal(null);
     const snapshot: DBOmistaja[] = [];
     writeCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].forEach((c, i) => {
       snapshot.push({ ...c.PutRequest?.Item, id: `${i}`, lisatty: "", expires: 0 } as DBOmistaja);

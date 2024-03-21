@@ -2,6 +2,7 @@ import { PathTuple } from "../../../../files/ProjektiPath";
 import { LadattuTiedosto } from "../../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../../files/fileService";
+import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 
 export function adaptLadattuTiedostoToAPI(
   projektiPath: PathTuple,
@@ -21,4 +22,13 @@ export function adaptLadattuTiedostoToAPI(
     }
     return { __typename: "LadattuTiedosto", tiedosto: fullPath, nimi, tuotu, tila, jarjestys, uuid };
   }
+}
+
+export function adaptLadatutTiedostotToApi(
+  tiedostot: LadattuTiedosto[] | undefined | null,
+  projektiPath: PathTuple
+): Array<API.LadattuTiedosto> | undefined | null {
+  return tiedostot
+    ?.map((tiedosto) => adaptLadattuTiedostoToAPI(projektiPath, tiedosto, false) as API.LadattuTiedosto)
+    .sort(jarjestaTiedostot);
 }

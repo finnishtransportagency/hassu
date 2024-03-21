@@ -63,8 +63,8 @@ import Collection from "ol/Collection";
 import { MonikulmioIkoni } from "src/svg/MonikulmioIkoni";
 import { SuorakulmioIkoni } from "src/svg/SuorakulmioIkoni";
 import { KumoaIkoni } from "src/svg/KumoaIkoni";
-import { useProjektinTila } from "src/hooks/useProjektinTila";
 import { OmistajahakuTila } from "@services/api";
+import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 
 const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
@@ -130,7 +130,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { isLoading, withLoadingSpinner } = useLoadingSpinner();
 
-  const { mutate } = useProjektinTila();
+  const { mutate } = useProjektinTiedottaminen();
 
   const [geoJSON, setGeoJSON] = useState<string | null>(null);
 
@@ -220,7 +220,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
               try {
                 const geoJSON = JSON.stringify(format.writeFeaturesObject(vectorSource.getFeatures()));
                 const kiinteistoTunnukset = Array.from(getKiinteistotunnuksetFromSource(geoJsonSource));
-                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset);
+                await api.tuoKarttarajausJaTallennaKiinteistotunnukset(projekti.oid, geoJSON, kiinteistoTunnukset, projekti.status);
                 clearMapEditedByUser();
                 showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
                 closeDialog(isMapEditedByUserRef.current);

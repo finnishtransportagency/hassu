@@ -23,6 +23,12 @@ import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/Projekt
 import { assertIsDefined } from "../util/assertions";
 import { PublishOrExpireEventType } from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
+import { emailClient } from "../email/email";
+import { createKuukausiEpaaktiiviseenEmail } from "../email/emailTemplates";
+import {
+  findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu,
+  findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+} from "../util/lausuntoPyyntoUtil";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -291,6 +297,15 @@ async function handleChangedAineistoAndFiles(ctx: ImportContext) {
   }
 }
 
+async function handleOneMonthToInactive(ctx: ImportContext) {
+  const kuukausiEpaaktiiviseenMail = createKuukausiEpaaktiiviseenEmail(ctx.projekti);
+  if (kuukausiEpaaktiiviseenMail.to) {
+    await emailClient.sendEmail(kuukausiEpaaktiiviseenMail);
+  } else {
+    log.error("Epäaktiivisuusmeilille ei löytynyt vastaanottaja sähköpostiosoitetta");
+  }
+}
+
 async function synchronizeEULogot(ctx: ImportContext) {
   // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
   const julkinenStatus = ctx.julkinenStatus;
@@ -389,6 +404,9 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           case SqsEventType.ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET:
             await handleLausuntoPyynnonTaydennyksetZipping(ctx);
             break;
+          case SqsEventType.ONE_MONTH_TO_INACTIVE:
+            await handleOneMonthToInactive(ctx);
+            break;
           default:
             break;
         }
@@ -407,11 +425,20 @@ export const handlerFactory = (event: SQSEvent) => async () => {
 
       if (projekti && sqsEvent.type == SqsEventType.SYNCHRONIZE) {
         await projektiSearchService.indexProjekti(projekti);
-        if (
-          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO ||
-          sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE
-        ) {
-          await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+        if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+          const julkaisu = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
+          if (!julkaisu?.uudelleenKuulutus || julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) {
+            await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+          } else {
+            log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia");
+          }
+        } else if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+          const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
+          if (!julkaisu?.uudelleenKuulutus || julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) {
+            await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+          } else {
+            log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia ja muistuttajia");
+          }
         }
       }
       if (!successfulSynchronization) {

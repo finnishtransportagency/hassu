@@ -36,5 +36,6 @@ export function getDefaultValuesForUudelleenKuulutus(
   if (uudelleenKuulutus?.tila === UudelleenkuulutusTila.JULKAISTU_PERUUTETTU) {
     uudelleenKuulutusInput.selosteKuulutukselle = getDefaultValuesForLokalisoituText(kielitiedot, uudelleenKuulutus?.selosteKuulutukselle);
   }
+  uudelleenKuulutusInput.tiedotaKiinteistonomistajia = uudelleenKuulutus?.tiedotaKiinteistonomistajia ?? true;
   return uudelleenKuulutusInput;
 }

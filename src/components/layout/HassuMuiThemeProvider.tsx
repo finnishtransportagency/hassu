@@ -340,7 +340,7 @@ export const createLocalizedTheme = (locale: Localization) =>
           },
           styleOverrides: {
             popper: {
-              margin: 0,
+              marginTop: "0 !important",
             },
             option: {
               "&[aria-selected='true']": {
@@ -355,11 +355,10 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
             inputRoot: {
               padding: 0,
-              "& .MuiAutocomplete-input": {
-                paddingLeft: "14px",
-                paddingRight: "14px",
-                paddingBottom: "11px",
-                paddingTop: "11px",
+            },
+            input: {
+              "&.MuiAutocomplete-input": {
+                padding: "11px 14px",
               },
             },
           },
@@ -451,6 +450,26 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiInputBase: {
+          styleOverrides: {
+            root: {
+              "&.MuiInputBase-root": {
+                padding: "0",
+                "&.MuiInputBase-adornedStart": {
+                  paddingLeft: "14px",
+                },
+                "&.MuiInputBase-adornedEnd": {
+                  paddingRight: "14px",
+                },
+              },
+            },
+            input: {
+              "&.MuiInputBase-input": {
+                padding: "11px 14px",
+              },
+            },
+          },
+        },
         MuiOutlinedInput: {
           defaultProps: {
             componentsProps: { input: { size: 15 } },
@@ -463,8 +482,6 @@ export const createLocalizedTheme = (locale: Localization) =>
                 color: "#242222",
               },
               "& .MuiOutlinedInput-input": {
-                paddingTop: "11px",
-                paddingBottom: "11px",
                 "&:-webkit-autofill": {
                   WebkitBoxShadow: "0 0 0 30px white inset",
                 },
@@ -490,6 +507,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                   color: "#0064AF",
                 },
               },
+              backgroundColor: "#FFFFFF",
               "&.Mui-error": {
                 "& fieldset.MuiOutlinedInput-notchedOutline": {
                   borderColor: "#F10E0E",
@@ -564,7 +582,7 @@ export const createLocalizedTheme = (locale: Localization) =>
             root: {
               whiteSpace: "normal",
               overflowWrap: "anywhere",
-              maxWidth: "fit-content",
+              maxWidth: "none",
               lineHeight: "0.75rem",
               fontSize: "0.75rem",
               marginTop: "8px",

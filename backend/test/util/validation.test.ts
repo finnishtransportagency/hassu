@@ -14,7 +14,7 @@ describe("the validation function named", () => {
     const project: Partial<DBProjekti> = {
       vuorovaikutusKierros: {
         vuorovaikutusSaamePDFt: {},
-        esittelyaineistot: [],
+        aineistot: [],
         hankkeenKuvaus: { SUOMI: "asdas" },
         videot: [{ SUOMI: { nimi: "", url: "" } }],
         suunnittelunEteneminenJaKesto: {
@@ -56,7 +56,6 @@ describe("the validation function named", () => {
             esitettavatYhteystiedot: { yhteysHenkilot: ["LX523753"] },
           },
         ],
-        suunnitelmaluonnokset: [],
         vuorovaikutusJulkaisuPaiva: "2023-05-11",
         vuorovaikutusNumero: 2,
         tila: VuorovaikutusKierrosTila.JULKINEN,
@@ -67,7 +66,7 @@ describe("the validation function named", () => {
       vuorovaikutusKierrosJulkaisut: [
         {
           vuorovaikutusSaamePDFt: {},
-          esittelyaineistot: [],
+          aineistot: [],
           hankkeenKuvaus: { SUOMI: "asdas" },
           videot: [{ SUOMI: { nimi: "", url: "" } }],
           suunnittelunEteneminenJaKesto: {
@@ -101,7 +100,6 @@ describe("the validation function named", () => {
             },
           ],
           vuorovaikutusPDFt: { SUOMI: { kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf" } },
-          suunnitelmaluonnokset: [],
           yhteystiedot: [
             {
               sukunimi: "Hassu",
@@ -120,7 +118,7 @@ describe("the validation function named", () => {
         },
         {
           vuorovaikutusSaamePDFt: {},
-          esittelyaineistot: [],
+          aineistot: [],
           hankkeenKuvaus: { SUOMI: "asdas" },
           videot: [{ SUOMI: { nimi: "", url: "" } }],
           suunnittelunEteneminenJaKesto: {
@@ -154,7 +152,6 @@ describe("the validation function named", () => {
             },
           ],
           vuorovaikutusPDFt: { SUOMI: { kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf" } },
-          suunnitelmaluonnokset: [],
           yhteystiedot: [
             {
               sukunimi: "Hassu",

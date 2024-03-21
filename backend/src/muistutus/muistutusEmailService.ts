@@ -33,13 +33,17 @@ class MuistutusEmailService {
 
     const emailOptions = createMuistutusKirjaamolleEmail(projekti, muistutus, sahkoposti);
 
-    if (muistutus.liite) {
-      log.info("haetaan muistutuksen liite: ", muistutus.liite);
-      const liite = await fileService.getFileAsAttachment(projekti.oid, muistutus.liite);
-      if (!liite) {
-        throw new Error("Liitetiedostoa ei saatu");
-      }
-      emailOptions.attachments = [liite];
+    if (muistutus.liitteet?.length) {
+      emailOptions.attachments = await Promise.all(
+        muistutus.liitteet.map(async (liite) => {
+          log.info("haetaan muistutuksen liite: ", liite);
+          const liiteTiedosto = await fileService.getFileAsAttachment(projekti.oid, liite);
+          if (!liiteTiedosto) {
+            throw new Error("Liitetiedostoa ei saatu");
+          }
+          return liiteTiedosto;
+        })
+      );
     }
 
     await emailClient.sendTurvapostiEmail(emailOptions);

@@ -118,7 +118,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
+    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -127,7 +127,8 @@ export class HassuBackendStack extends Stack {
       kiinteistoSQS,
       suomiFiSQS,
       pdfGeneratorLambda,
-      true
+      true,
+      suomifiLambda
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -143,7 +144,8 @@ export class HassuBackendStack extends Stack {
       kiinteistoSQS,
       suomiFiSQS,
       pdfGeneratorLambda,
-      false
+      false,
+      suomifiLambda
     );
     this.attachDatabaseToLambda(julkinenBackendLambda, false);
     HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
@@ -153,7 +155,9 @@ export class HassuBackendStack extends Stack {
 
     const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
     const omistajaSearchIndexer = this.createOmistajaSearchIndexer(commonEnvironmentVariables);
+    const muistuttajaSearchIndexer = this.createMuistuttajaSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(omistajaSearchIndexer, true);
+    this.attachDatabaseToLambda(muistuttajaSearchIndexer, true);
 
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
@@ -167,19 +171,20 @@ export class HassuBackendStack extends Stack {
     );
 
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", omistajaSearchIndexer);
+    searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", muistuttajaSearchIndexer);
 
     const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda, true);
 
     new CfnOutput(this, "AppSyncAPIKey", {
-      value: api.apiKey || "",
+      value: api.apiKey ?? "",
     });
     new CfnOutput(this, "EventSqsUrl", {
-      value: eventSQS.queueUrl || "",
+      value: eventSQS.queueUrl ?? "",
     });
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
-        value: api.graphqlUrl || "",
+        value: api.graphqlUrl ?? "",
       });
     }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
@@ -357,6 +362,66 @@ export class HassuBackendStack extends Stack {
     return streamHandler;
   }
 
+  private createMuistuttajaSearchIndexer(commonEnvironmentVariables: Record<string, string>) {
+    const resourcePrefix = "arn:aws:lambda:eu-west-1:" + this.account + ":function:";
+    const functionName = "hassu-muistuttaja-dynamodb-stream-handler-" + Config.env;
+    const streamHandler = new NodejsFunction(this, "MuistuttajaDynamoDBStreamHandler", {
+      functionName,
+      runtime: lambdaRuntime,
+      entry: `${__dirname}/../../backend/src/projektiSearch/muistuttajaSearch/muistuttajaDynamoDBStreamHandler.ts`,
+      handler: "handleDynamoDBEvents",
+      memorySize: 256,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        externalModules,
+      },
+      environment: {
+        HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
+        ...commonEnvironmentVariables,
+      },
+      timeout: Duration.seconds(120),
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    this.addPermissionsForMonitoring(streamHandler);
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [resourcePrefix + functionName],
+      })
+    );
+    streamHandler.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost", "es:ESHttpDelete"],
+        resources: ["*"],
+      })
+    );
+
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.props.projektiMuistuttajaTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+
+    const indexerQueue = this.createMuistuttajaIndexerQueue();
+    streamHandler.node.addDependency(indexerQueue);
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
+    streamHandler.addEventSource(
+      new SqsEventSource(indexerQueue, { batchSize: 100, maxConcurrency: 10, maxBatchingWindow: Duration.seconds(5) })
+    );
+    return streamHandler;
+  }
+
   private async createBackendLambda(
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
@@ -365,7 +430,8 @@ export class HassuBackendStack extends Stack {
     kiinteistoSQS: Queue,
     suomifiSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
-    isYllapitoBackend: boolean
+    isYllapitoBackend: boolean,
+    suomifiLambda: NodejsFunction
   ) {
     let define;
     if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
@@ -490,6 +556,7 @@ export class HassuBackendStack extends Stack {
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     suomifiSQS.grantSendMessages(backendLambda);
+    suomifiLambda.grantInvoke(backendLambda);
     return backendLambda;
   }
 
@@ -585,13 +652,7 @@ export class HassuBackendStack extends Stack {
       actions: ["dynamodb:UpdateItem"],
     });
     updateSynkronointiPolicy.addCondition("ForAnyValue:StringEquals", {
-      "dynamodb:Attributes": [
-        "muutOmistajat",
-        "omistajat",
-        "omistajahakuVirhe",
-        "omistajahakuKaynnistetty",
-        "omistajahakuKiinteistotunnusMaara",
-      ],
+      "dynamodb:Attributes": ["muutOmistajat", "omistajat", "omistajahaku"],
     });
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
@@ -659,6 +720,7 @@ export class HassuBackendStack extends Stack {
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
+    return suomiFiLambda;
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
@@ -943,7 +1005,7 @@ export class HassuBackendStack extends Stack {
       queueName: "kiinteisto-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(12),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.hours(2),
+      retentionPeriod: Duration.minutes(10),
     });
     new ssm.StringParameter(this, "KiinteistoSQSUrl", {
       description: "Generated KiinteistoSQSUrl",
@@ -991,6 +1053,20 @@ export class HassuBackendStack extends Stack {
     new ssm.StringParameter(this, "OmistajaIndexerSQSUrl", {
       description: "Generated OmistajaIndexerSQSUrl",
       parameterName: "/" + Config.env + "/outputs/OmistajaIndexerSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
+  }
+
+  private createMuistuttajaIndexerQueue() {
+    const queue = new Queue(this, "MuistuttajaIndexer", {
+      queueName: "muistuttaja-indexer-" + Config.env,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    new ssm.StringParameter(this, "MuistuttajaIndexerSQSUrl", {
+      description: "Generated MuistuttajaIndexerSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/MuistuttajaIndexerSQSUrl",
       stringValue: queue.queueUrl,
     });
     return queue;

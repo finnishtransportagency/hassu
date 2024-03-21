@@ -35,12 +35,10 @@ export default function FormGroup({
           {errorMessage && (
             <>
               <HassuStack direction={"row"} columnGap={"0.25rem"} alignItems={"baseline"}>
-                <span className="text-red" style={{ fontSize: "14px" }}>
+                <ErrorSpan sx={{ fontSize: "14px" }}>
                   <ErrorOutlineIcon fontSize="inherit" />
-                </span>
-                <span className="text-red" style={{ fontSize: "12px" }}>
-                  {errorMessage}
-                </span>
+                </ErrorSpan>
+                <ErrorSpan>{errorMessage}</ErrorSpan>
               </HassuStack>
             </>
           )}
@@ -57,3 +55,8 @@ export const Label = styled("label")(
     marginBottom: 1,
   })
 );
+
+export const ErrorSpan = styled("span")({
+  color: "#F10E0E",
+  fontSize: "12px",
+});

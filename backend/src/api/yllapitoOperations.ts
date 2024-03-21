@@ -32,6 +32,8 @@ import {
   TallennaMuistuttajatMutationVariables,
   PoistaMuistuttajaMutationVariables,
   LataaTiedotettavatExcelQueryVariables,
+  HaeProjektinTiedottamistiedotQueryVariables,
+  EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -41,6 +43,7 @@ import {
   arkistoiProjekti,
   createOrUpdateProjekti,
   findUpdatesFromVelho,
+  haeProjektinTiedottamistiedot,
   loadProjektiYllapito,
   projektinTila,
   synchronizeUpdatesFromVelho,
@@ -135,6 +138,10 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await tuoKarttarajausJaTallennaKiinteistotunnukset(
         event.arguments as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables
       );
+    case apiConfig.esikatseleHyvaksymisEsityksenTiedostot.name:
+      return await tiedostoDownloadLinkHandler.esikatseleHyvaksymisEsityksenTiedostot(
+        event.arguments as EsikatseleHyvaksymisEsityksenTiedostotQueryVariables
+      );
     case apiConfig.tallennaKiinteistonOmistajat.name:
       return await tallennaKiinteistonOmistajat(event.arguments as TallennaKiinteistonOmistajatMutationVariables);
     case apiConfig.haeKiinteistonOmistajat.name:
@@ -149,6 +156,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await muistutusHandler.poistaMuistuttaja(event.arguments as PoistaMuistuttajaMutationVariables);
     case apiConfig.lataaTiedotettavatExcel.name:
       return await generateExcelByQuery(event.arguments as LataaTiedotettavatExcelQueryVariables);
+    case apiConfig.haeProjektinTiedottamistiedot.name:
+      return await haeProjektinTiedottamistiedot((event.arguments as HaeProjektinTiedottamistiedotQueryVariables).oid);
     default:
       return null;
   }

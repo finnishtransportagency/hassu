@@ -1,4 +1,4 @@
-import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -20,6 +20,7 @@ import {
 } from ".";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { HyvaksymisEsitys } from "./hyvaksymisEsitys";
 
 export type DBVaylaUser = {
   email: string;
@@ -155,6 +156,7 @@ export type DBProjekti = {
   velho?: Velho | null;
   vuorovaikutusKierros?: VuorovaikutusKierros | null;
   vuorovaikutusKierrosJulkaisut?: VuorovaikutusKierrosJulkaisu[] | null;
+  hyvaksymisEsitys?: HyvaksymisEsitys | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   lausuntoPyynnot?: LausuntoPyynto[] | null;
@@ -182,9 +184,14 @@ export type DBProjekti = {
   muutOmistajat?: string[];
   muistuttajat?: string[];
   muutMuistuttajat?: string[];
-  omistajahakuVirhe?: boolean;
-  omistajahakuKaynnistetty?: string;
-  omistajahakuKiinteistotunnusMaara?: number;
+  omistajahaku?: OmistajaHaku | null;
+};
+
+export type OmistajaHaku = {
+  virhe?: boolean | null;
+  kaynnistetty?: string | null;
+  kiinteistotunnusMaara?: number | null;
+  status?: Status | null;
 };
 
 export type Asianhallinta = {

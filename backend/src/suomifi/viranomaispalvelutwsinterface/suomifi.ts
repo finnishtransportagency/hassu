@@ -111,7 +111,7 @@ async function lisaaKohteita(
   options: Options,
   viesti: Viesti
 ): Promise<LisaaKohteitaResponse> {
-  const tunnus = viesti.hetu || viesti.ytunnus;
+  const tunnus = viesti.hetu ?? viesti.ytunnus;
   if (!tunnus) {
     throw new Error("Hetu tai y-tunnus pakollinen");
   }
@@ -177,7 +177,7 @@ async function lahetaViesti(
   options: Options,
   viesti: PdfViesti
 ): Promise<LahetaViestiResponse> {
-  const tunnus = viesti.hetu || viesti.ytunnus;
+  const tunnus = viesti.hetu ?? viesti.ytunnus;
   if (!tunnus) {
     throw new Error("Hetu tai y-tunnus pakollinen");
   }
