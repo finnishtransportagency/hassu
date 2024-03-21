@@ -124,7 +124,7 @@ const mapFormDataForApi: (data: FormData) => TallennaKiinteistonOmistajatMutatio
   const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat]
     .filter((omistaja) => omistaja.toBeDeleted)
     .map(({ id }) => id);
-  const muutOmistajat = data.muutOmistajat
+  const muutOmistajat = [...data.muutOmistajat, ...data.uudetOmistajat]
     .filter((omistaja) => !omistaja.toBeDeleted)
     .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero }) => ({
       id,
