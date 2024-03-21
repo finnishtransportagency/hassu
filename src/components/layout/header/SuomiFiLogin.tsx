@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { styled } from "@mui/system";
 import { getSuomiFiAuthenticationURL, getSuomiFiLogoutURL } from "@services/userService";
@@ -8,9 +8,13 @@ import ButtonLink from "@components/button/ButtonLink";
 const SuomiFiLogin = styled((props) => {
   const { t } = useTranslation("common");
   const { data } = useSuomifiUser();
-  useRefreshToken();
+  const [status, setStatus] = useState<number | undefined>();
+  const { data: refreshData } = useRefreshToken();
+  useEffect(() => {
+    setStatus(refreshData?.status);
+  }, [refreshData?.status]);
   if (data?.suomifiEnabled) {
-    if (!data.tunnistautunut) {
+    if (!data.tunnistautunut || status !== 200) {
       const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL();
       if (!suomiFiAuthenticationURL) {
         return <></>;

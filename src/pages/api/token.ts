@@ -16,7 +16,7 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
 
 function getRedirectUri() {
   if (process.env.NODE_ENV === "development") {
-    return "http://hassu.dev.local:3000/";
+    return "http://localhost:3000/";
   } else {
     return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
   }
@@ -57,6 +57,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ];
     res.setHeader("Set-Cookie", cookie);
   }
-  res.setHeader("Location", (process.env.NODE_ENV === "development" ? "http://localhost:3000/": redirect_uri) + (state ?? ""));
+  res.setHeader("Location", redirect_uri) + (state ?? "");
   res.status(302).send("");
 }

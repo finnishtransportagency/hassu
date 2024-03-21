@@ -1,14 +1,10 @@
 function getAppDomainUri() {
   if (process.env.NODE_ENV === "development") {
-    return "http://hassu.dev.local:3000/";
+    return "http://localhost:3000/";
   } else {
     return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
   }
 }
-
-/*function getKeycoakLogoutUri() {
-  return getAppDomainUri() + "api/slo";
-}*/
 
 export function getSuomiFiAuthenticationURL(state?: string): string | undefined {
   const domain = process.env.KEYCLOAK_DOMAIN;
@@ -26,5 +22,5 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
 }
 
 export function getSuomiFiLogoutURL(): string | undefined {
-  return process.env.NODE_ENV === "development" ? "http://localhost:3000/api/slo" : `https://${process.env.FRONTEND_DOMAIN_NAME}/api/slo`;
+  return getAppDomainUri() + "api/slo";
 }

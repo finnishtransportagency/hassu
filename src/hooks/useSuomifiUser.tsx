@@ -10,8 +10,13 @@ export function useSuomifiUser() {
   return useSWR([apiConfig.nykyinenSuomifiKayttaja.graphql], userLoader);
 }
 
+export type RefreshStatus = {
+  status: number;
+  updated: string;
+}
+
 export function useRefreshToken() {
-  const fetcher = (url: string) => fetch(url).then((r) => r.status);
+  const fetcher = (url: string): Promise<RefreshStatus> => fetch(url).then((r) => r.json());
   return useSWR("/api/refreshtoken", fetcher, { refreshInterval: 60 * 1000 * 3 });
 }
 
