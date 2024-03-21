@@ -455,6 +455,12 @@ export const createLocalizedTheme = (locale: Localization) =>
             root: {
               "&.MuiInputBase-root": {
                 padding: "0",
+                "&.MuiInputBase-adornedStart": {
+                  paddingLeft: "14px",
+                },
+                "&.MuiInputBase-adornedEnd": {
+                  paddingRight: "14px",
+                },
               },
             },
             input: {
