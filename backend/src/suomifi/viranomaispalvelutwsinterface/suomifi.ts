@@ -42,6 +42,7 @@ export type Options = {
   viranomaisTunnus: string;
   palveluTunnus: string;
   laskutusTunniste: Record<string, string>;
+  laskutusSalasana: Record<string, string>;
 };
 
 export type SuomiFiConfig = {
@@ -50,6 +51,7 @@ export type SuomiFiConfig = {
   palvelutunnus: string;
   viranomaistunnus: string;
   laskutustunniste?: string;
+  laskutussalasana?: string;
 };
 
 export type SuomiFiClient = {
@@ -162,10 +164,14 @@ function getLaskutus(viesti: PdfViesti, options: Options) {
   const laskutusTunniste = viesti.suunnittelustaVastaavaViranomainen
     ? options.laskutusTunniste[viesti.suunnittelustaVastaavaViranomainen]
     : undefined;
-  if (laskutusTunniste) {
+  const laskutusSalasana = viesti.suunnittelustaVastaavaViranomainen
+    ? options.laskutusSalasana[viesti.suunnittelustaVastaavaViranomainen]
+    : undefined;
+  if (laskutusTunniste && laskutusSalasana) {
     return {
       Laskutus: {
         Tunniste: laskutusTunniste,
+        Salasana: laskutusSalasana,
       },
     };
   }

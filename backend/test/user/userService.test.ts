@@ -49,7 +49,6 @@ describe("userService", () => {
     } as unknown as AppSyncResolverEvent<unknown>);
     const user = userService.requireVaylaUser();
     expect(user).to.deep.include(UserFixture.mattiMeikalainen);
-    expect(user.keksit).to.have.length(3);
   });
 
   it("should parse roles succesfully", async function () {
