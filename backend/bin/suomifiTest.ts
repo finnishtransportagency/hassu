@@ -193,6 +193,7 @@ euWestSSMClient
                 palveluTunnus: cfg.palvelutunnus,
                 laskutusTunniste: parseLaskutus(partialCfg.laskutustunniste),
                 laskutusSalasana: parseLaskutus(partialCfg.laskutussalasana),
+                yhteysHenkilo: "test@test.fi",
               }).then((client) => {
                 soapClient = client;
                 if (process.argv.length === 2 || process.argv[2] === "tila") {

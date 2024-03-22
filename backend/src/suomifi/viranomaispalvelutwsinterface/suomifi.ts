@@ -40,6 +40,7 @@ export type Options = {
   privateKey?: string;
   publicCertificate?: string;
   viranomaisTunnus: string;
+  yhteysHenkilo: string;
   palveluTunnus: string;
   laskutusTunniste: Record<string, string>;
   laskutusSalasana: Record<string, string>;
@@ -50,6 +51,7 @@ export type SuomiFiConfig = {
   apikey: string;
   palvelutunnus: string;
   viranomaistunnus: string;
+  yhteyshenkilo: string;
   laskutustunniste?: string;
   laskutussalasana?: string;
 };
@@ -97,6 +99,7 @@ function getViranomainen(options: Options): Viranomainen {
     SanomaVersio: "1.0",
     SanomaVarmenneNimi: process.env.ENVIRONMENT === "prod" ? "vayliensuunnittelu.fi" : "hassudev.testivaylapilvi.fi",
     SanomaTunniste: uuid.v4(),
+    Yhteyshenkilo: { attributes: { Sahkoposti: options.yhteysHenkilo, Nimi: "", Matkapuhelin: "" } },
   };
 }
 

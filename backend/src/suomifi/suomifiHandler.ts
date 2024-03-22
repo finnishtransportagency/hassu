@@ -97,6 +97,7 @@ async function getClient(): Promise<SuomiFiClient> {
       laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
+      yhteysHenkilo: cfg.yhteyshenkilo,
     });
   } finally {
     log.info(`Suomi.fi client alustusaika: ${Date.now() - now} ms`);
