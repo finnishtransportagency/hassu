@@ -112,7 +112,6 @@ export type HassuSSMParameters = {
   AsianhallintaSQSUrl: string;
 
   KeycloakClientId: string;
-  KeycloakLogoutPath: string;
   KeycloakDomain: string;
   KeycloakClientSecret: string;
 };
@@ -189,7 +188,6 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
 
     KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
-    KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
     KEYCLOAK_DOMAIN: variables.KeycloakDomain,
   };
 }

@@ -57,7 +57,6 @@ async function main() {
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
-      KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
       KEYCLOAK_DOMAIN: variables.KeycloakDomain,
       KEYCLOAK_CLIENT_SECRET: variables.KeycloakClientSecret,
     });

@@ -115,7 +115,6 @@ module.exports = (phase) => {
     ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
 
     KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
-    KEYCLOAK_LOGOUT_PATH: process.env.KEYCLOAK_LOGOUT_PATH,
     KEYCLOAK_DOMAIN: process.env.KEYCLOAK_DOMAIN,
   };
 

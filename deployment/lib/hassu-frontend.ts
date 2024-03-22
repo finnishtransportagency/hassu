@@ -112,7 +112,6 @@ export class HassuFrontendStack extends Stack {
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
-      KEYCLOAK_LOGOUT_PATH: ssmParameters.KeycloakLogoutPath,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
     };
     if (BaseConfig.env !== "prod") {
