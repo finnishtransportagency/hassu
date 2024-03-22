@@ -43,6 +43,10 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   tallennaJaSiirraTilaa(projekti: TallennaProjektiInput!, tilasiirtyma: TilaSiirtymaInput!): String
+  teeHyvaksymisEsitysToiminto(
+    teeHyvaksymisEsitysToimintoInput: TeeHyvaksymisEsitysToimintoInput!
+    toiminto: HyvaksymisEsitysToiminto!
+  ): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
   paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): String
   paivitaPerustietoja(input: VuorovaikutusPerustiedotInput): String

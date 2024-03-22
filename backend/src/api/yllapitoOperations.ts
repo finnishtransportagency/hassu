@@ -34,6 +34,7 @@ import {
   LataaTiedotettavatExcelQueryVariables,
   HaeProjektinTiedottamistiedotQueryVariables,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  TeeHyvaksymisEsitysToimintoMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -69,6 +70,7 @@ import {
   tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
 import { generateExcelByQuery } from "../mml/tiedotettavatExcel";
+import { teeHyvaksymisEsitysToiminto } from "../HyvaksymisEsitys/actionHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -101,6 +103,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.tallennaJaSiirraTilaa.name:
       return tallennaJaSiirraTilaa(event.arguments as TallennaJaSiirraTilaaMutationVariables);
+    case apiConfig.teeHyvaksymisEsitysToiminto.name:
+      return teeHyvaksymisEsitysToiminto(event.arguments as TeeHyvaksymisEsitysToimintoMutationVariables);
     case apiConfig.esikatseleAsiakirjaPDF.name:
       return lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:

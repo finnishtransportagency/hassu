@@ -82,6 +82,9 @@ import {
   ListaaHyvaksymisEsityksenTiedostotQueryVariables,
   HyvaksymisEsitysInput,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  HyvaksymisEsitysToiminto,
+  TeeHyvaksymisEsitysToimintoMutationVariables,
+  TeeHyvaksymisEsitysToimintoInput,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -113,6 +116,12 @@ export const apiConfig: ApiConfig = {
   },
   tallennaJaSiirraTilaa: {
     name: "tallennaJaSiirraTilaa",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaJaSiirraTilaa,
+    isYllapitoOperation: true,
+  },
+  teeHyvaksymisEsitysToiminto: {
+    name: "teeHyvaksymisEsitysToiminto",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaJaSiirraTilaa,
     isYllapitoOperation: true,
@@ -409,6 +418,16 @@ export abstract class AbstractApi {
     } as TallennaJaSiirraTilaaMutationVariables);
   }
 
+  async teeHyvaksymisEsitysToiminot(
+    teeHyvaksymisEsitysToimintoInput: TeeHyvaksymisEsitysToimintoInput,
+    toiminto: HyvaksymisEsitysToiminto
+  ): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.teeHyvaksymisEsitysToiminto, {
+      teeHyvaksymisEsitysToimintoInput,
+      toiminto,
+    } as TeeHyvaksymisEsitysToimintoMutationVariables);
+  }
+
   async arkistoiProjekti(oid: string): Promise<Projekti> {
     return await this.callYllapitoAPI(apiConfig.arkistoiProjekti, {
       oid,
@@ -641,7 +660,12 @@ export abstract class AbstractApi {
     } as SuoritaTestiKomentoMutationVariables);
   }
 
-  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[], status: Status| null | undefined): Promise<string> {
+  async tuoKarttarajausJaTallennaKiinteistotunnukset(
+    oid: string,
+    geoJSON: string,
+    kiinteistotunnukset: string[],
+    status: Status | null | undefined
+  ): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset, {
       oid,
       geoJSON,

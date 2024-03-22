@@ -21,6 +21,13 @@ input TallennaProjektiInput {
   asianhallinta: AsianhallintaInput
 }
 
+input TeeHyvaksymisEsitysToimintoInput {
+  oid: String!
+  versio: Int!
+  muokattavaHyvaksymisEsitys: HyvaksymisEsitysInput
+  syy: String
+}
+
 input AsianhallintaInput {
   inaktiivinen: Boolean
 }
@@ -368,6 +375,15 @@ enum TilasiirtymaToiminto {
   PALAA
   AVAA_AINEISTOMUOKKAUS
   PERU_AINEISTOMUOKKAUS
+}
+
+enum HyvaksymisEsitysToiminto {
+  TALLENNA
+  AVAA_MUOKKAUS
+  SULJE_MUOKKAUS
+  TALLENNA_JA_LAHETA_HYVAKSYTTAVAKSI
+  HYLKAA
+  HYVAKSY
 }
 
 enum TilasiirtymaTyyppi {
