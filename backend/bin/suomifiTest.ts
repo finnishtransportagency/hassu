@@ -4,7 +4,7 @@ import express from "express";
 import fs from "fs";
 import { LisaaKohteitaResponse, HaeAsiakkaitaResponse } from "../src/suomifi/viranomaispalvelutwsinterface";
 import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { parseLaskutusTunniste } from "../src/suomifi/suomifiHandler";
+import { parseLaskutus } from "../src/suomifi/suomifiHandler";
 
 const app = express();
 const port = 8081;
@@ -170,6 +170,7 @@ euWestSSMClient
             if (config && key && cert) {
               const partialCfg: Partial<SuomiFiConfig> = {
                 laskutustunniste: `${SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO}:123456,${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:456789`,
+                laskutussalasana: `${SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO}:secret1,${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:secret2`,
               };
               config.split("\n").forEach((e) => {
                 const v = e.split("=");
@@ -190,7 +191,8 @@ euWestSSMClient
                 publicCertificate: sign ? cert : undefined,
                 viranomaisTunnus: cfg.viranomaistunnus,
                 palveluTunnus: cfg.palvelutunnus,
-                laskutusTunniste: parseLaskutusTunniste(partialCfg.laskutustunniste),
+                laskutusTunniste: parseLaskutus(partialCfg.laskutustunniste),
+                laskutusSalasana: parseLaskutus(partialCfg.laskutussalasana),
               }).then((client) => {
                 soapClient = client;
                 if (process.argv.length === 2 || process.argv[2] === "tila") {

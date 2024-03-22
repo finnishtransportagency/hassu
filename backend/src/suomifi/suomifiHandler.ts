@@ -62,7 +62,7 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
 }
 
-export function parseLaskutusTunniste(tunniste?: string) {
+export function parseLaskutus(tunniste?: string) {
   if (tunniste) {
     const parsedTunniste: Record<string, string> = {};
     const tunnisteet = tunniste.split(",");
@@ -93,7 +93,8 @@ async function getClient(): Promise<SuomiFiClient> {
       endpoint: cfg.endpoint,
       palveluTunnus: cfg.palvelutunnus,
       viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: parseLaskutusTunniste(cfg.laskutustunniste),
+      laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
+      laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
     });
