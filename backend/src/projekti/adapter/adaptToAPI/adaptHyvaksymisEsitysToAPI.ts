@@ -17,7 +17,7 @@ export function adaptHyvaksymisEsitysToAPI(
     ...hyvaksymisEsitys,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi(hyvaksymisEsitys.hyvaksymisEsitys, paths),
-    suunnitelma: adaptAineistotToAPI(hyvaksymisEsitys.suunnitelma, paths),
+    suunnitelma: adaptLadatutTiedostotToApi(hyvaksymisEsitys.suunnitelma, paths),
     muistutukset: adaptLadatutTiedostotToApi(hyvaksymisEsitys.muistutukset, paths),
     lausunnot: adaptLadatutTiedostotToApi(hyvaksymisEsitys.lausunnot, paths),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi(hyvaksymisEsitys.kuulutuksetJaKutsu, paths),

@@ -25,7 +25,7 @@ export function adaptHyvaksymisEsitysToSave(
   } = hyvaksymisEsitysInput;
   const adapted: HyvaksymisEsitys = {
     hyvaksymisEsitys: adaptTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
-    suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma, projektiAdaptationResult),
+    suunnitelma: adaptTiedostotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma, projektiAdaptationResult),
     muistutukset: adaptTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset, projektiAdaptationResult),
     lausunnot: adaptTiedostotToSave(dbHyvaksymisEsitys?.lausunnot, lausunnot, projektiAdaptationResult),
     kuulutuksetJaKutsu: adaptTiedostotToSave(dbHyvaksymisEsitys?.kuulutuksetJaKutsu, kuulutuksetJaKutsu, projektiAdaptationResult),

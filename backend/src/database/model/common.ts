@@ -152,7 +152,8 @@ export type HyvaksymisEsitysLadattuTiedosto = {
 } & ILadattuTiedosto;
 
 export type Laskutustiedot = {
-  OVTtunnus?: string | null;
-  verkkolaskuOperaattorinValittajaTunnus?: string | null;
-  viite?: string | null;
+  yTunnus?: string | null;
+  ovtTunnus?: string | null;
+  verkkolaskuoperaattorinTunnus?: string | null;
+  viitetieto?: string | null;
 };

@@ -405,10 +405,10 @@ type LausuntoPyynnonTaydennys {
 type HyvaksymisEsitys {
   poistumisPaiva: String!
   kiireellinen: Boolean
-  lisatiedot: String
+  viesti: String
   laskutustiedot: Laskutustiedot
   hyvaksymisEsitys: [LadattuTiedosto!]
-  suunnitelma: [Aineisto!]
+  suunnitelma: [LadattuTiedosto!]
   muistutukset: [LadattuTiedosto!]
   lausunnot: [LadattuTiedosto!]
   kuulutuksetJaKutsu: [LadattuTiedosto!]
@@ -421,18 +421,20 @@ type HyvaksymisEsitys {
   hyvaksymisPaiva: String
   palautusSyy: String
   aineistopaketti: String
-}
-
-type Laskutustiedot {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  poistetaan: Boolean
 }
 
 enum HyvaksymisTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   MUOKKAUS
+}
+
+type Laskutustiedot {
+  yTunnus: String
+  ovtTunnus: String
+  verkkolaskuoperaattorinTunnus: String
+  viitetieto: String
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

@@ -218,6 +218,13 @@ input NahtavillaoloVaiheInput {
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 
+input LaskutustiedotInput {
+  yTunnus: String!
+  ovtTunnus: String!
+  verkkolaskuoperaattorinTunnus: String!
+  viitetieto: String!
+}
+
 input LausuntoPyyntoInput {
   uuid: String!
   poistumisPaiva: String!
@@ -238,10 +245,10 @@ input LausuntoPyynnonTaydennysInput {
 input HyvaksymisEsitysInput {
   poistumisPaiva: String!
   kiireellinen: Boolean
-  lisatiedot: String
+  viesti: String
   laskutustiedot: LaskutustiedotInput
   hyvaksymisEsitys: [LadattuTiedostoInput!]
-  suunnitelma: [AineistoInput!]
+  suunnitelma: [LadattuTiedostoInput!]
   muistutukset: [LadattuTiedostoInput!]
   lausunnot: [LadattuTiedostoInput!]
   kuulutuksetJaKutsu: [LadattuTiedostoInput!]
@@ -249,12 +256,7 @@ input HyvaksymisEsitysInput {
   muuAineistoKoneelta: [LadattuTiedostoInput!]
   maanomistajaluettelo: [LadattuTiedostoInput!]
   vastaanottajat: [String!]
-}
-
-input LaskutustiedotInput {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  poistetaan: Boolean
 }
 
 input HyvaksymisPaatosVaiheInput {
