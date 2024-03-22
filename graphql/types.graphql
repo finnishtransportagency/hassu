@@ -417,10 +417,10 @@ type HyvaksymisEsitys {
   maanomistajaluettelo: [LadattuTiedosto!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tila: HyvaksymisTila
-  hyvaksyja: String
-  hyvaksymisPaiva: String
   palautusSyy: String
   aineistopaketti: String
+  hyvaksyja: String
+  hyvaksymisPaiva: String
 }
 
 type Laskutustiedot {
