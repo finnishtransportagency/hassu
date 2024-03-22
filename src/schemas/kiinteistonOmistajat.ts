@@ -15,8 +15,8 @@ export const kiinteistonOmistajatSchema = Yup.object()
               .required("Kiinteistötunnus on pakollinen tieto")
               .test(
                 "is-valid-kiinteistotunnus",
-                "Anna kiinteistötunnus numeerisessa 14-merkkisessä muodossa",
-                (value) => !!value && !isNaN(+value) && value.length === 14
+                "Anna kiinteistötunnus esitysmuodossa",
+                (value) => !!value && /^\d{1,3}-\d{1,3}-\d{1,4}-\d{1,4}$/.test(value)
               ),
           })
           .required()

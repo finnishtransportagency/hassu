@@ -21,6 +21,7 @@ import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
 import { OmistajatLomakeOsio } from "@components/projekti/tiedottaminen/OmistajatLomakeOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
+import { formatKiinteistotunnusForDatabase } from "common/util/formatKiinteistotunnus";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -124,7 +125,14 @@ const mapFormDataForApi: (data: FormData) => TallennaKiinteistonOmistajatMutatio
   const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat]
     .filter((omistaja) => omistaja.toBeDeleted)
     .map(({ id }) => id);
-  const muutOmistajat = [...data.muutOmistajat, ...data.uudetOmistajat]
+  const muutOmistajatRows = [
+    ...data.muutOmistajat,
+    ...data.uudetOmistajat.map<OmistajaRow>(({ kiinteistotunnus, ...omistaja }) => ({
+      kiinteistotunnus: formatKiinteistotunnusForDatabase(kiinteistotunnus),
+      ...omistaja,
+    })),
+  ];
+  const muutOmistajat = muutOmistajatRows
     .filter((omistaja) => !omistaja.toBeDeleted)
     .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero }) => ({
       id,
@@ -189,12 +197,20 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     (data) => {
       withLoadingSpinner(
         (async () => {
-          const apiData = mapFormDataForApi(data);
-          await api.tallennaKiinteistonOmistajat(apiData);
+          let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
+          try {
+            apiData = mapFormDataForApi(data);
+          } catch {
+            showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
+          }
+          if (apiData) {
+            await api.tallennaKiinteistonOmistajat(apiData);
+            useFormReturn.reset();
+          }
         })()
       );
     },
-    [api, withLoadingSpinner]
+    [api, showErrorMessage, useFormReturn, withLoadingSpinner]
   );
 
   return (
