@@ -56,7 +56,7 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
         throw new NoHassuAccessError(msg);
       }
       // Create signed cookies only for nykyinenKayttaja operation
-      if (event.info?.fieldName === apiConfig.nykyinenKayttaja.name) {
+      if (event.info?.fieldName === apiConfig.nykyinenKayttaja.name && !config.isInTest) {
         user.keksit = await createSignedCookies();
       }
       return user;

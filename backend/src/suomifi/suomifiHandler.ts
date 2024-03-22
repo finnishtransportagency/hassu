@@ -62,7 +62,7 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
 }
 
-export function parseLaskutusTunniste(tunniste?: string) {
+export function parseLaskutus(tunniste?: string) {
   if (tunniste) {
     const parsedTunniste: Record<string, string> = {};
     const tunnisteet = tunniste.split(",");
@@ -93,7 +93,8 @@ async function getClient(): Promise<SuomiFiClient> {
       endpoint: cfg.endpoint,
       palveluTunnus: cfg.palvelutunnus,
       viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: parseLaskutusTunniste(cfg.laskutustunniste),
+      laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
+      laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
       publicCertificate: await parameters.getSuomiFiCertificate(),
       privateKey: await parameters.getSuomiFiPrivateKey(),
     });
@@ -562,35 +563,37 @@ async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Ma
   return newIds;
 }
 
+const OMISTAJA_PREFIX = "omistaja-";
+const MUISTUTTAJA_PREFIX = "muistuttaja-";
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
   if ((await parameters.isSuomiFiIntegrationEnabled()) && (await parameters.isSuomiFiViestitIntegrationEnabled())) {
     const viestit: SendMessageBatchRequestEntry[] = [];
     const uniqueIds: Map<string, string> = new Map();
     (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
       const msg: SuomiFiSanoma = { omistajaId: id, tyyppi, oid: projektiFromDB.oid };
-      viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
+      viestit.push({ Id: OMISTAJA_PREFIX + id, MessageBody: JSON.stringify(msg) });
     });
     if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
       (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
         const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi, oid: projektiFromDB.oid };
-        viestit.push({ Id: id, MessageBody: JSON.stringify(msg) });
+        viestit.push({ Id: MUISTUTTAJA_PREFIX + id, MessageBody: JSON.stringify(msg) });
       });
     }
     if (viestit.length > 0) {
       for (const viestitChunk of chunkArray(viestit, 10)) {
         const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestitChunk });
         response.Failed?.forEach((v) => {
-          if (projektiFromDB.omistajat?.includes(v.Id!)) {
-            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id, message: v.Message, code: v.Code });
+          if (v.Id?.startsWith(OMISTAJA_PREFIX)) {
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id.substring(OMISTAJA_PREFIX.length), message: v.Message, code: v.Code });
           } else {
-            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id, message: v.Message, code: v.Code });
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id?.substring(MUISTUTTAJA_PREFIX.length), message: v.Message, code: v.Code });
           }
         });
         response.Successful?.forEach((v) => {
-          if (projektiFromDB.omistajat?.includes(v.Id!)) {
-            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id });
+          if (v.Id?.startsWith(OMISTAJA_PREFIX)) {
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { omistajaId: v.Id.substring(OMISTAJA_PREFIX.length) });
           } else {
-            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id });
+            auditLog.info("SuomiFi SQS sanoman lähetys onnistui", { muistuttajaId: v.Id?.substring(MUISTUTTAJA_PREFIX.length) });
           }
         });
       }
