@@ -16,7 +16,7 @@ import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackg
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UseFormProps, useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { UseFormProps, useForm, SubmitHandler, FormProvider, useFieldArray } from "react-hook-form";
 import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
 import { OmistajatLomakeOsio } from "@components/projekti/tiedottaminen/OmistajatLomakeOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -35,8 +35,6 @@ export type OmistajaRow = Omistaja & { toBeDeleted: boolean; rowIndex: number };
 
 export type FormData = {
   oid: string;
-  muutOmistajatQuery: string;
-  suomifiOmistajatQuery: string;
   suomifiOmistajat: OmistajaRow[];
   muutOmistajat: OmistajaRow[];
   uudetOmistajat: OmistajaRow[];
@@ -156,8 +154,16 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
   const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
 
   const [suomifiExpanded, setSuomifiExpanded] = useState(false);
+  const [suomifiQueryResettable, setSuomifiQueryResettable] = useState<boolean>(false);
+  const [suomifiHakutulosMaara, setSuomifiHakutulosMaara] = useState<number | null>(null);
+  const [suomifiNaytettavatOmistajat, setSuomifiNaytettavatOmistajat] = useState<OmistajaRow[] | null>(null);
+  const [suomifiQuery, setSuomifiQuery] = useState("");
 
   const [muutExpanded, setMuutExpanded] = useState(false);
+  const [muutQueryResettable, setMuutQueryResettable] = useState<boolean>(false);
+  const [muutHakutulosMaara, setMuutHakutulosMaara] = useState<number | null>(null);
+  const [muutNaytettavatOmistajat, setMuutNaytettavatOmistajat] = useState<OmistajaRow[] | null>(null);
+  const [muutQuery, setMuutQuery] = useState("");
 
   const { showErrorMessage } = useSnackbars();
   const { mutate } = useProjekti();
@@ -193,6 +199,122 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
 
   const useFormReturn = useForm<FormData>(formOptions(projekti.oid));
 
+  const { watch, control } = useFormReturn;
+  const { append: appendMuutOmistajat } = useFieldArray({ control, name: "muutOmistajat" });
+  const { append: appendSuomifiOmistajat } = useFieldArray({ control, name: "suomifiOmistajat" });
+
+  const updateSuomifiTiedotettavat = useCallback<
+    (query?: string, from?: number, size?: number, resetNaytettavatOmistajat?: boolean) => void
+  >(
+    (query?: string, from = suomifiNaytettavatOmistajat?.length ?? 0, size = PAGE_SIZE, resetNaytettavatOmistajat = false) => {
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const response = await api.haeKiinteistonOmistajat(projekti.oid, false, query, from, size);
+            setSuomifiQueryResettable(query !== undefined);
+            setSuomifiHakutulosMaara(response.hakutulosMaara);
+            const omistajatOnForm = watch("suomifiOmistajat");
+            const { lisattavat, omistajat } = response.omistajat.reduce<{ lisattavat: OmistajaRow[]; omistajat: OmistajaRow[] }>(
+              (acc, row) => {
+                const omistajaFromForm = omistajatOnForm.find((omistaja) => omistaja.id === row.id);
+
+                const omistajaRow: OmistajaRow = omistajaFromForm ?? {
+                  ...row,
+                  rowIndex: omistajatOnForm.length + acc.lisattavat.length,
+                  toBeDeleted: false,
+                };
+
+                if (!omistajaFromForm) {
+                  acc.lisattavat.push(omistajaRow);
+                }
+
+                acc.omistajat.push(omistajaRow);
+                return acc;
+              },
+              { lisattavat: [], omistajat: [] }
+            );
+            appendSuomifiOmistajat(lisattavat);
+            if (resetNaytettavatOmistajat) {
+              setSuomifiNaytettavatOmistajat(omistajat);
+            } else {
+              setSuomifiNaytettavatOmistajat((oldOmistajat) => [...(oldOmistajat ?? []), ...omistajat]);
+            }
+          } catch {}
+        })()
+      );
+    },
+    [suomifiNaytettavatOmistajat?.length, withLoadingSpinner, api, projekti.oid, watch, appendSuomifiOmistajat]
+  );
+  const updateMuutTiedotettavat = useCallback<(query?: string, from?: number, size?: number, resetNaytettavatOmistajat?: boolean) => void>(
+    (query?: string, from = muutNaytettavatOmistajat?.length ?? 0, size = PAGE_SIZE, resetNaytettavatOmistajat = false) => {
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const response = await api.haeKiinteistonOmistajat(projekti.oid, true, query, from, size);
+            setMuutQueryResettable(query !== undefined);
+            setMuutHakutulosMaara(response.hakutulosMaara);
+            const omistajatOnForm = watch("muutOmistajat");
+            const { lisattavat, omistajat } = response.omistajat.reduce<{ lisattavat: OmistajaRow[]; omistajat: OmistajaRow[] }>(
+              (acc, row) => {
+                const omistajaFromForm = omistajatOnForm.find((omistaja) => omistaja.id === row.id);
+
+                const omistajaRow: OmistajaRow = omistajaFromForm ?? {
+                  ...row,
+                  rowIndex: omistajatOnForm.length + acc.lisattavat.length,
+                  toBeDeleted: false,
+                };
+
+                if (!omistajaFromForm) {
+                  acc.lisattavat.push(omistajaRow);
+                }
+
+                acc.omistajat.push(omistajaRow);
+                return acc;
+              },
+              { lisattavat: [], omistajat: [] }
+            );
+            appendMuutOmistajat(lisattavat);
+            if (resetNaytettavatOmistajat) {
+              setMuutNaytettavatOmistajat(omistajat);
+            } else {
+              setMuutNaytettavatOmistajat((oldOmistajat) => [...(oldOmistajat ?? []), ...omistajat]);
+            }
+          } catch {}
+        })()
+      );
+    },
+    [muutNaytettavatOmistajat?.length, withLoadingSpinner, api, projekti.oid, watch, appendMuutOmistajat]
+  );
+
+  const handleSuomifiExpansionChange = useCallback(
+    (_event: React.SyntheticEvent, isExpanded: boolean) => {
+      if (isExpanded) {
+        updateSuomifiTiedotettavat();
+      } else {
+        setSuomifiNaytettavatOmistajat(null);
+        setSuomifiHakutulosMaara(null);
+        setSuomifiQuery("");
+        setSuomifiQueryResettable(false);
+      }
+      setSuomifiExpanded(isExpanded);
+    },
+    [updateSuomifiTiedotettavat]
+  );
+  const handleMuutExpansionChange = useCallback(
+    (_event: React.SyntheticEvent, isExpanded: boolean) => {
+      if (isExpanded) {
+        updateMuutTiedotettavat();
+      } else {
+        setMuutNaytettavatOmistajat(null);
+        setMuutHakutulosMaara(null);
+        setMuutQuery("");
+        setMuutQueryResettable(false);
+      }
+      setMuutExpanded(isExpanded);
+    },
+    [updateMuutTiedotettavat]
+  );
+
   const onSubmit = useCallback<SubmitHandler<FormData>>(
     (data) => {
       withLoadingSpinner(
@@ -206,11 +328,30 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           if (apiData) {
             await api.tallennaKiinteistonOmistajat(apiData);
             useFormReturn.reset();
+            if (suomifiExpanded) {
+              updateSuomifiTiedotettavat(suomifiQuery, 0, suomifiNaytettavatOmistajat?.length);
+            }
+            if (muutExpanded) {
+              updateMuutTiedotettavat(muutQuery, 0, muutNaytettavatOmistajat?.length);
+            }
           }
         })()
       );
     },
-    [api, showErrorMessage, useFormReturn, withLoadingSpinner]
+    [
+      api,
+      muutExpanded,
+      muutNaytettavatOmistajat?.length,
+      muutQuery,
+      showErrorMessage,
+      suomifiExpanded,
+      suomifiNaytettavatOmistajat?.length,
+      suomifiQuery,
+      updateMuutTiedotettavat,
+      updateSuomifiTiedotettavat,
+      useFormReturn,
+      withLoadingSpinner,
+    ]
   );
 
   return (
@@ -254,16 +395,21 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             <OmistajatLomakeOsio
               oid={projekti.oid}
               expanded={suomifiExpanded}
-              setExpanded={setSuomifiExpanded}
               title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
               instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
               fieldArrayName="suomifiOmistajat"
-              queryFieldName="suomifiOmistajatQuery"
+              query={suomifiQuery}
+              setQuery={setSuomifiQuery}
+              queryResettable={suomifiQueryResettable}
+              hakutulosMaara={suomifiHakutulosMaara}
+              naytettavatOmistajat={suomifiNaytettavatOmistajat}
+              setNaytettavatOmistajat={setSuomifiNaytettavatOmistajat}
+              updateTiedotettavat={updateSuomifiTiedotettavat}
+              handleExpansionChange={handleSuomifiExpansionChange}
             />
             <OmistajatLomakeOsio
               oid={projekti.oid}
               expanded={muutExpanded}
-              setExpanded={setMuutExpanded}
               title="Kiinteistönomistajien tiedotus muilla tavoin"
               instructionText={
                 <>
@@ -274,8 +420,14 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
                 </>
               }
               fieldArrayName="muutOmistajat"
-              queryFieldName="muutOmistajatQuery"
-              muutOmistajat
+              query={muutQuery}
+              setQuery={setMuutQuery}
+              queryResettable={muutQueryResettable}
+              hakutulosMaara={muutHakutulosMaara}
+              naytettavatOmistajat={muutNaytettavatOmistajat}
+              setNaytettavatOmistajat={setMuutNaytettavatOmistajat}
+              updateTiedotettavat={updateMuutTiedotettavat}
+              handleExpansionChange={handleMuutExpansionChange}
             />
             <TallennaButton primary type="button" onClick={useFormReturn.handleSubmit(onSubmit)}>
               Tallenna

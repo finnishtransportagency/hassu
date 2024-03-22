@@ -1,9 +1,7 @@
-import React, { useCallback, useRef, useState, VFC } from "react";
+import React, { useCallback, useRef, VFC } from "react";
 import TiedotettavaHaitari, { TiedotettavaHaitariProps } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
-import useApi from "src/hooks/useApi";
 import { Controller, useFieldArray, UseFieldArrayProps, UseFieldArrayReturn, useFormContext, UseFormReturn } from "react-hook-form";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { OmistajaRow, FormData, PAGE_SIZE } from "../../../pages/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat.dev";
+import { OmistajaRow, FormData } from "../../../pages/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat.dev";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { Checkbox, TextField } from "@mui/material";
@@ -31,12 +29,17 @@ type FieldArrayName = UseFieldArrayProps<FormData>["name"];
 type OmistajatLomakeOsioProps = {
   oid: string;
   expanded: boolean;
-  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-  muutOmistajat?: boolean;
   title: string;
   instructionText: string | JSX.Element;
   fieldArrayName: "suomifiOmistajat" | "muutOmistajat";
-  queryFieldName: "muutOmistajatQuery" | "suomifiOmistajatQuery";
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  queryResettable: boolean;
+  hakutulosMaara: number | null;
+  naytettavatOmistajat: OmistajaRow[] | null;
+  setNaytettavatOmistajat: React.Dispatch<React.SetStateAction<OmistajaRow[] | null>>;
+  updateTiedotettavat: (query?: string, from?: number, size?: number) => void;
+  handleExpansionChange: (_event: React.SyntheticEvent, isExpanded: boolean) => void;
 };
 
 type FormRef = React.MutableRefObject<UseFormReturn<FormData, object>>;
@@ -56,74 +59,19 @@ const createColumns: (fieldArrayName: FieldArrayName, useFormReturnRef: FormRef)
 export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
   oid,
   expanded,
-  setExpanded,
   instructionText,
-  muutOmistajat = false,
   title,
   fieldArrayName,
-  queryFieldName,
+  query,
+  setQuery,
+  queryResettable,
+  hakutulosMaara,
+  naytettavatOmistajat,
+  setNaytettavatOmistajat,
+  updateTiedotettavat,
+  handleExpansionChange,
 }) => {
-  const api = useApi();
-  const [queryResettable, setQueryResettable] = useState<boolean>(false);
-  const [hakutulosMaara, setHakutulosMaara] = useState<number | null>(null);
-  const [naytettavatOmistajat, setNaytettavatOmistajat] = useState<OmistajaRow[] | null>(null);
   const useFormReturn = useFormContext<FormData>();
-  const { watch, control, setValue } = useFormReturn;
-  const { append } = useFieldArray({ control, name: fieldArrayName });
-
-  const { withLoadingSpinner } = useLoadingSpinner();
-
-  const updateTiedotettavat = useCallback<(query?: string, from?: number, size?: number) => void>(
-    (query?: string, from = naytettavatOmistajat?.length ?? 0, size = PAGE_SIZE) => {
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, query, from, size);
-            setQueryResettable(query !== undefined);
-            setHakutulosMaara(response.hakutulosMaara);
-            const omistajatOnForm = watch(fieldArrayName);
-            const { lisattavat, omistajat } = response.omistajat.reduce<{ lisattavat: OmistajaRow[]; omistajat: OmistajaRow[] }>(
-              (acc, row) => {
-                const omistajaFromForm = omistajatOnForm.find((omistaja) => omistaja.id === row.id);
-
-                const omistajaRow: OmistajaRow = omistajaFromForm ?? {
-                  ...row,
-                  rowIndex: omistajatOnForm.length + acc.lisattavat.length,
-                  toBeDeleted: false,
-                };
-
-                if (!omistajaFromForm) {
-                  acc.lisattavat.push(omistajaRow);
-                }
-
-                acc.omistajat.push(omistajaRow);
-                return acc;
-              },
-              { lisattavat: [], omistajat: [] }
-            );
-            append(lisattavat);
-            setNaytettavatOmistajat((oldOmistajat) => [...(oldOmistajat ?? []), ...omistajat]);
-          } catch {}
-        })()
-      );
-    },
-    [naytettavatOmistajat?.length, withLoadingSpinner, api, oid, muutOmistajat, watch, fieldArrayName, append]
-  );
-
-  const handleExpansionChange = useCallback(
-    (_event: React.SyntheticEvent, isExpanded: boolean) => {
-      if (isExpanded) {
-        updateTiedotettavat();
-      } else {
-        setNaytettavatOmistajat(null);
-        setHakutulosMaara(null);
-        setValue(queryFieldName, "");
-        setQueryResettable(false);
-      }
-      setExpanded(isExpanded);
-    },
-    [queryFieldName, setExpanded, setValue, updateTiedotettavat]
-  );
 
   const useFormReturnRef = useRef(useFormReturn);
 
@@ -144,7 +92,8 @@ export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
         filterText="Suodata kiinteistönomistajia"
         title={title}
         instructionText={instructionText}
-        queryFieldName={queryFieldName}
+        query={query}
+        setQuery={setQuery}
       />
     );
   }
@@ -163,7 +112,8 @@ export const OmistajatLomakeOsio: VFC<OmistajatLomakeOsioProps> = ({
       filterText="Suodata kiinteistönomistajia"
       title={title}
       instructionText={instructionText}
-      queryFieldName={queryFieldName}
+      query={query}
+      setQuery={setQuery}
     />
   );
 };
@@ -280,7 +230,8 @@ const MuutOmistajatHaitari: VFC<TiedotettavaHaitariProps<OmistajaRow>> = ({
   filterText,
   title,
   instructionText,
-  queryFieldName,
+  query,
+  setQuery,
 }) => {
   const useFormReturn = useFormContext<FormData>();
   const { control } = useFormReturn;
@@ -307,7 +258,8 @@ const MuutOmistajatHaitari: VFC<TiedotettavaHaitariProps<OmistajaRow>> = ({
       filterText={filterText}
       title={title}
       instructionText={instructionText}
-      queryFieldName={queryFieldName}
+      query={query}
+      setQuery={setQuery}
       bottomContent={
         <>
           <H4>Lisää uusi kiinteistönomistaja</H4>
