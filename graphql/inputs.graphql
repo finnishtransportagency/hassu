@@ -252,9 +252,10 @@ input HyvaksymisEsitysInput {
 }
 
 input LaskutustiedotInput {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  yTunnus: String!
+  ovtTunnus: String!
+  verkkolaskuoperaattorinTunnus: String!
+  viitetieto: String!
 }
 
 input HyvaksymisPaatosVaiheInput {
