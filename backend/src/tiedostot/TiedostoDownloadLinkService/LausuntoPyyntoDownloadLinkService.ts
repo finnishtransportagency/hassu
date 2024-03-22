@@ -12,7 +12,6 @@ import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 
 class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
-  LausuntoPyynto,
   API.LausuntoPyyntoInput,
   API.ListaaLausuntoPyyntoTiedostotInput
 > {
