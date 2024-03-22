@@ -424,9 +424,10 @@ type HyvaksymisEsitys {
 }
 
 type Laskutustiedot {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  yTunnus: String
+  ovtTunnus: String
+  verkkolaskuoperaattorinTunnus: String
+  viitetieto: String
 }
 
 enum HyvaksymisTila {
@@ -1183,7 +1184,7 @@ interface ILadattavaTiedosto {
   jarjestys: Int
 }
 
-type LadattavaTiedosto implements ILadattavaTiedosto{
+type LadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!
@@ -1191,7 +1192,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto{
   jarjestys: Int
 }
 
-type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto{
+type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!
