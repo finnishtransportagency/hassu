@@ -643,8 +643,6 @@ describe("suomifiHandler", () => {
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
-      omistajat: ["1", "2", "3", "4", "5"],
-      muistuttajat: ["6", "7", "8"],
     };
     mockClient(DynamoDBDocumentClient)
       .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
@@ -660,9 +658,9 @@ describe("suomifiHandler", () => {
       .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({
         Items: [
-          { id: "6", henkilotunnus: "ABC" },
-          { id: "7", henkilotunnus: "ABC" },
-          { id: "8", henkilotunnus: "CAB" },
+          { id: "6", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "7", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "8", henkilotunnus: "CAB", suomifiLahetys: true },
         ],
       });
 
@@ -672,13 +670,13 @@ describe("suomifiHandler", () => {
     let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
     let ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4");
+    expect(ids.join(",")).to.equal("omistaja-1,omistaja-3,omistaja-4,muistuttaja-8");
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
     assert(input.Entries);
     ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4");
+    expect(ids.join(",")).to.equal("omistaja-1,omistaja-3,omistaja-4");
     sinon.restore();
   });
   it("test parse elyn laskutustunnisteet", async () => {
