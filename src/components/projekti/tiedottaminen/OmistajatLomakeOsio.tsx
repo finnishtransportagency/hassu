@@ -5,7 +5,7 @@ import { Controller, useFieldArray, UseFieldArrayProps, UseFieldArrayReturn, use
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { OmistajaRow, FormData, PAGE_SIZE } from "../../../pages/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat.dev";
 import { ColumnDef } from "@tanstack/react-table";
-import { formatKiinteistotunnus } from "common/util/formatKiinteistotunnus";
+import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { Checkbox, TextField } from "@mui/material";
 import { H4 } from "@components/Headings";
 import Button from "@components/button/Button";
@@ -194,7 +194,34 @@ type Column = {
 const ColumnTextFieldComponent: ColumnComponent = ({ fieldName, index }) => {
   const { register, formState } = useFormContext<FormData>();
   const error = formState.errors.uudetOmistajat?.[index]?.[fieldName];
-  return <TextField {...register(`uudetOmistajat.${index}.${fieldName}`)} error={!!error?.message} helperText={error?.message} fullWidth />;
+  return (
+    <TextField
+      {...register(`uudetOmistajat.${index}.${fieldName}`)}
+      inputProps={{ maxLength: 200 }}
+      error={!!error?.message}
+      helperText={error?.message}
+      fullWidth
+    />
+  );
+};
+
+const KiinteistotunnusTextFieldComponent: ColumnComponent = ({ fieldName, index }) => {
+  const { control } = useFormContext<FormData>();
+  return (
+    <Controller
+      control={control}
+      name={`uudetOmistajat.${index}.${fieldName}`}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <TextField
+          {...field}
+          inputProps={{ maxLength: 17, ref }}
+          error={!!fieldState.error?.message}
+          helperText={fieldState.error?.message}
+          fullWidth
+        />
+      )}
+    />
+  );
 };
 
 const DeleteColumnComponent: ColumnComponent = ({ index, fieldArray }) => {
@@ -210,7 +237,12 @@ const DeleteColumnComponent: ColumnComponent = ({ index, fieldArray }) => {
 };
 
 const uudetColumns: Column[] = [
-  { id: "kiinteistotunnus", header: "Kiinteistötunnus", fieldName: "kiinteistotunnus", columnComponent: ColumnTextFieldComponent },
+  {
+    id: "kiinteistotunnus",
+    header: "Kiinteistötunnus",
+    fieldName: "kiinteistotunnus",
+    columnComponent: KiinteistotunnusTextFieldComponent,
+  },
   { id: "nimi", header: "Omistajan nimi", fieldName: "nimi", columnComponent: ColumnTextFieldComponent },
   { id: "postiosoite", header: "Postiosoite", fieldName: "jakeluosoite", columnComponent: ColumnTextFieldComponent },
   { id: "postinumero", header: "Postinumero", fieldName: "postinumero", columnComponent: ColumnTextFieldComponent },
@@ -433,7 +465,7 @@ function createKiinteistotunnusColumn(): ColumnDef<OmistajaRow, unknown> {
   const column: ColumnDef<OmistajaRow, unknown> = {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
-    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnus(kiinteistotunnus),
+    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnusForDisplay(kiinteistotunnus),
     meta: {
       widthFractions: 2,
       minWidth: 160,
