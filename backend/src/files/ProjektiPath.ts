@@ -47,7 +47,8 @@ export class ProjektiPaths extends PathTuple {
   static PATH_NAHTAVILLAOLO = "nahtavillaolo";
   static PATH_LAUSUNTOPYYNTO = "lausuntopyynto";
   static PATH_LAUSUNTOPYYNNON_TAYDENNYS = "lausuntopyynnon_taydennys";
-  static PATH_HYVAKSYMISESITYS = "hyvaksymisesitys";
+  static PATH_MUOKATTAVA_HYVAKSYMISESITYS = "muokattava_hyvaksymisesitys";
+  static PATH_JULKAISTU_HYVAKSYMISESITYS = "hyvaksymisesitys";
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   static PATH_JATKOPAATOS1 = "jatkopaatos1";
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
@@ -96,8 +97,12 @@ export class ProjektiPaths extends PathTuple {
     return new LausuntoPyynnonTaydennysPaths(this, lausuntoPyynnonTaydennys);
   }
 
-  hyvaksymisEsitys(): PathTuple {
-    return new HyvaksymisEsitysPaths(this);
+  muokattavaHyvaksymisEsitys(): PathTuple {
+    return new MuokattavaHyvaksymisEsitysPaths(this);
+  }
+
+  julkaistuHyvaksymisEsitys(): PathTuple {
+    return new JulkaistuHyvaksymisEsitysPaths(this);
   }
 
   euLogot(): PathTuple {
@@ -343,13 +348,23 @@ class LausuntoPyynnonTaydennysPaths extends PathTuple {
   }
 }
 
-class HyvaksymisEsitysPaths extends PathTuple {
+class MuokattavaHyvaksymisEsitysPaths extends PathTuple {
   get yllapitoPath(): string {
-    return ProjektiPaths.PATH_HYVAKSYMISESITYS;
+    return ProjektiPaths.PATH_MUOKATTAVA_HYVAKSYMISESITYS;
   }
 
   get publicPath(): string {
-    return ProjektiPaths.PATH_HYVAKSYMISESITYS;
+    return ProjektiPaths.PATH_MUOKATTAVA_HYVAKSYMISESITYS;
+  }
+}
+
+class JulkaistuHyvaksymisEsitysPaths extends PathTuple {
+  get yllapitoPath(): string {
+    return ProjektiPaths.PATH_JULKAISTU_HYVAKSYMISESITYS;
+  }
+
+  get publicPath(): string {
+    return ProjektiPaths.PATH_JULKAISTU_HYVAKSYMISESITYS;
   }
 }
 

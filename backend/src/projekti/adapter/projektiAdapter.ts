@@ -21,7 +21,7 @@ import {
   adaptVelhoToAPI,
   adaptVuorovaikutusKierrosToAPI,
   adaptVuorovaikutusKierrosJulkaisutToAPI,
-  adaptHyvaksymisEsitysToAPI,
+  adaptHyvaksymisEsitysToApi,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
@@ -114,8 +114,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
       lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
-      muokattavaHyvaksymisEsitys: adaptHyvaksymisEsitysToAPI(dbProjekti, muokattavaHyvaksymisEsitys),
-      julkaistuHyvaksymisEsitys: adaptHyvaksymisEsitysToAPI(dbProjekti, julkaistuHyvaksymisEsitys),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToApi(dbProjekti, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
