@@ -99,7 +99,7 @@ function getViranomainen(options: Options): Viranomainen {
     SanomaVersio: "1.0",
     SanomaVarmenneNimi: process.env.ENVIRONMENT === "prod" ? "vayliensuunnittelu.fi" : "hassudev.testivaylapilvi.fi",
     SanomaTunniste: uuid.v4(),
-    Yhteyshenkilo: { attributes: { Sahkoposti: options.yhteysHenkilo, Nimi: "", Matkapuhelin: "" } },
+    Yhteyshenkilo: { attributes: { Sahkoposti: options.yhteysHenkilo } },
   };
 }
 
