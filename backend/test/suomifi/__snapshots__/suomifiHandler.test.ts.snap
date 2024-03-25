@@ -202,7 +202,7 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus suunnitelman hyväksymispäätöksestä",
+  "otsikko": "Ilmoitus suunnitelman hyväksymispäätöksestä / Meddelande om beslut om godkännande av planen",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
   "sisalto": "Hei,
@@ -210,7 +210,15 @@ Object {
 Olette saaneet kirjeen, jossa kerrotaan suunnitelmaa koskevasta hyväksymispäätöksestä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan tarkemmin päätökseen ja sen liitteenä oleviin suunnitelma-aineistoihin.
 
 Ystävällisin terveisin
-Pirkanmaan ELY-keskus",
+Pirkanmaan ELY-keskus
+
+Hej,
+
+Ni har fått ett brev med information om beslut om godkännande av planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med beslutet och det bifogade planeringsmaterialet.
+
+Med vänlig hälsning
+NTM-centralen i Birkaland
+",
   "suunnittelustaVastaavaViranomainen": "PIRKANMAAN_ELY",
   "tiedosto": Object {
     "kuvaus": "T431_4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
@@ -230,7 +238,7 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta / Meddelande om framläggande av planen",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
   "sisalto": "Hei,
@@ -238,7 +246,15 @@ Object {
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
-Uudenmaan ELY-keskus",
+Uudenmaan ELY-keskus
+
+Hej,
+
+Ni har fått ett brev med information om framläggandet av planen samt om möjligheten att göra en anmärkning på planen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
+
+Med vänlig hälsning
+NTM-centralen i Nyland
+",
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "tiedosto": Object {
     "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
