@@ -275,8 +275,8 @@
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
       "otsikko2": "Ilmoitus suunnitelman nähtäville asettamisesta",
-      "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{nimi}}.",
-      "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: {{nimi}}.",
+      "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: *{{nimi}}*.",
+      "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: *{{nimi}}*.",
       "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
       "kappale3": "Suunnitelma pidetään nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
       "kappale3_ui": "Suunnitelma pidetään nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong> osoitteessa {{nahtavillaoloUrl}}.",
@@ -339,10 +339,10 @@
       "otsikko": "Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,",
       "lain2_tie": "liikennejärjestelmästä ja maanteistä annetun lain (503/2005)",
       "lain2_rata": "ratalain (110/2007)",
-      "kappale5": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_paatos}} ({{paatoslaki}}).",
+      "kappale5": "\nPäätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_paatos}} ({{paatoslaki}}).",
       "paatoslaki_rata": "ratalaki 90 §",
       "paatoslaki_tie": "LjMTL 103 §",
-      "muistuttajille_kappale3": "{{viranomainenLyhyt}} ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
+      "muistuttajille_kappale3": "{{viranomainenLyhyt}} ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: *{{suunnitelman_nimi}}*.",
       "muistuttajille_kappale4": "Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).",
       "projektipaallikko": "Projektipäällikkö"
     },

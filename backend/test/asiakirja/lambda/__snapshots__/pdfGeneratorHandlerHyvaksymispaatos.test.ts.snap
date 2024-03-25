@@ -15,9 +15,11 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1
+Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
 
 
@@ -27,7 +29,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -49,19 +50,20 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1 på svenska
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) Trafikledsverket meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt järnvägsplanen enligt banlagen (110/2007): Projekti 1 på svenska.
+Meddelande om beslut om godkännande
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
-Teppo ProjektipäällikköProjektledareNTM-centralen i Nyland
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
@@ -83,9 +85,11 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1
+Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (ratalaki 90 §).
 
 
@@ -95,7 +99,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -117,19 +120,20 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf r
 
 
 
-Projekti 1 på svenska
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) Trafikledsverket meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt järnvägsplanen enligt banlagen (110/2007): Projekti 1 på svenska.
+Meddelande om beslut om godkännande
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en järnvägsplan gällande ABC/123 enligt banlagen (110/2007): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (90 § i banlagen).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
@@ -154,6 +158,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -163,7 +169,6 @@ Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia 
 
 
 
-Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -186,18 +191,19 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 
 
 Meddelande om beslut om godkännande
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) NTM-centralen i Nyland meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt vägplanen enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+NTM-centralen i Nyland meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en vägplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
-Teppo ProjektipäällikköProjektledareNTM-centralen i Nyland
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
@@ -212,6 +218,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -221,7 +229,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -246,6 +253,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -255,7 +264,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -280,6 +288,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -289,7 +299,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -312,18 +321,19 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf t
 
 
 Meddelande om beslut om godkännande
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) Trafikledsverket meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt vägplanen enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en vägplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
@@ -348,6 +358,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -357,7 +369,6 @@ Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia 
 
 
 
-Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -380,18 +391,19 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 
 
 Meddelande om beslut om godkännande
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) NTM-centralen i Nyland meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt utredningsplanen enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+NTM-centralen i Nyland meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en utredningsplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
-Teppo ProjektipäällikköProjektledareNTM-centralen i Nyland
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 
@@ -416,6 +428,8 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 Hyväksymispäätöksestä ilmoittaminen
 Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
 Väylävirasto ilmoittaa muistutuksen jättäneille ja kiinteistönomistajille, että Liikenne- ja viestintävirasto on 13.2.2024 hyväksynyt ABC/123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+
+
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 välisen ajan osoitteessa https://localhost:3000/s/lyhytOsoite/hyvaksymispaatos (LjMTL 103 §).
 
 
@@ -425,7 +439,6 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (Helsinki), 
 puh. 029, test(at)vayla.fi 
@@ -448,18 +461,19 @@ exports[`pdfGeneratorHandlerHyvaksymispaatos generate kiinteiston omistaja pdf y
 
 
 Meddelande om beslut om godkännande
-(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,
-(sv) Trafikledsverket meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket 13.2.2024 genom sitt beslut ABC/123 har godkänt utredningsplanen enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,
+Trafikledsverket meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den 13.2.2024 har godkänt en utredningsplan gällande ABC/123 enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+
+
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/hyvaksymispaatos (103 § i lagen om trafiksystem och landsvägar).
 
 
 
-(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 
 
-Teppo ProjektipäällikköProjektledareVäylävirasto
 Mer information om planen 
 Testi Teppo (Helsingfors), 
 tel. 029, test(at)vayla.fi 

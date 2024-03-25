@@ -273,9 +273,9 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kungörelse om framläggande av plan",
-      "otsikko2": "(sv) Ilmoitus suunnitelman nähtäville asettamisesta",
-      "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): {{nimi}}.",
-      "rata_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt banlagen (110/2007): {{nimi}}.",
+      "otsikko2": "Anmälan till fastighetsägare om framläggande av plan",
+      "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): *{{nimi}}*.",
+      "rata_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt banlagen (110/2007): *{{nimi}}*.",
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Planen hålls framlagd {{kuulutusNahtavillaAika}} på adressen {{nahtavillaoloUrl}}.",
       "kappale3_ui": "Planen hålls framlagd <strong>{{kuulutusNahtavillaAika}}</strong> på adressen {{nahtavillaoloUrl}}.",
@@ -303,13 +303,14 @@
       "lakiviite_omistajille_rata": "banlagen 22 § 3 mom.",
       "lakiviite_vahainen_menettely_tie": "lagen om trafiksystem och landsvägar 27 och 28 §",
       "lakiviite_vahainen_menettely_rata": "banlagen 22 och 23 §",
-      "maanomistaja": "(sv) Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-      "projektipaallikko": "Projektledare",
-      "jakelu1": "(sv) Jakelu",
-      "jakelu2": "(sv) Erillisen jakelun mukaan",
-      "jakelu3": "(sv) Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä",
-      "tiedoksi1": "(sv) Tiedoksi",
-      "tiedoksi2": "(sv) {{tilaajaGenetiivi}} kirjaamo"
+      "maanomistaja": "Enligt markägaruppgifterna äger ni en fastighet i planområdet. Om er fastighet är arrenderad önskar vi att ni informerar era arrendatorer om att planen finns framlagd.",
+      "projektipaallikko": "Projektchef",
+      "jakelu1": "Distribution",
+      "jakelu2": "Enligt separat sändlista",
+      "jakelu3": "Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och",
+      "jakelu4": "företagsdatasystemet",
+      "tiedoksi1": "För kännedom",
+      "tiedoksi2": "{{tilaajaGenetiivi}} registratorskontor"
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",
@@ -335,14 +336,14 @@
       "muistuttajille_kappale2": "{{viranomainenLyhyt}} skickar beslutet om godkännande för kännedom. ({{lakiviite_muistuttajille}}). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).",
       "lakiviite_muistuttajille_tie": "104 § i lagen om trafiksystem och landsvägar",
       "lakiviite_muistuttajille_rata": "91 § i banlagen",
-      "otsikko": "(sv) Hyvä muistuttaja ja/tai suunnittelualueen kiinteistönomistaja,",
+      "otsikko": "Till dig och/eller Bästa fastighetsägare som lämnat in en anmärkning för planeringsområdet,",
       "lain2_tie": "lagen om trafiksystem och landsvägar (503/2005)",
       "lain2_rata": "banlagen (110/2007)",
-      "kappale5": "Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden {{kuulutusNahtavillaAika}} på adressen {{linkki_paatos}} ({{paatoslaki}}).",
+      "kappale5": "\nBeslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden {{kuulutusNahtavillaAika}} på adressen {{linkki_paatos}} ({{paatoslaki}}).",
       "paatoslaki_rata": "90 § i banlagen",
       "paatoslaki_tie": "103 § i lagen om trafiksystem och landsvägar",
-      "muistuttajille_kappale3": "(sv) {{viranomainenLyhyt}} meddelar dem som lämnat in en anmärkning och kiinteistönomistajille att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
-      "muistuttajille_kappale4": "(sv) Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).",
+      "muistuttajille_kappale3": "{{viranomainenLyhyt}} meddelar de personer som lämnat in en anmärkning och fastighetsägare att Transport- och kommunikationsverket genom sitt beslut av den {{hyvaksymis_pvm}} har godkänt en {{suunnitelma}} gällande {{asianumero_traficom}} enligt {{lain}}: *{{suunnitelman_nimi}}*.",
+      "muistuttajille_kappale4": "Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).",
       "projektipaallikko": "Projektledare"
     },
     "kuulutus_hyvaksymispaatoksesta": {
@@ -392,7 +393,7 @@
       "lakiviite_muistuttajille_rata": "91 § i banlagen"
     },
     "ala_vastaa": "Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.",
-    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
+    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}.",
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {
