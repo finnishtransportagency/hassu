@@ -121,8 +121,8 @@ class Parameters {
     return this.getParameter("outputs/KiinteistoSQSUrl");
   }
 
-  async getSuomifiCognitoDomain() {
-    return this.getParamOrVariable("outputs/SuomifiCognitoDomain", "SUOMI_FI_COGNITO_DOMAIN");
+  async getKeycloakDomain() {
+    return this.getParameterForEnv("KeycloakDomain");
   }
 
   async isSuomiFiIntegrationEnabled(): Promise<boolean> {

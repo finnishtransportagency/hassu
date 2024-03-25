@@ -56,11 +56,9 @@ async function main() {
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
-      SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
-      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiUserPoolClientId,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
-      KEYCLOAK_LOGOUT_PATH: variables.KeycloakLogoutPath,
-      SUOMI_FI_USERPOOL_CLIENT_SECRET: variables.SuomifiUserPoolClientSecret,
+      KEYCLOAK_DOMAIN: variables.KeycloakDomain,
+      KEYCLOAK_CLIENT_SECRET: variables.KeycloakClientSecret,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

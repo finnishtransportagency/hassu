@@ -2,35 +2,22 @@ import useSWR from "swr";
 import { apiConfig } from "@services/api";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export function useSuomifiUser() {
   const api = useApi();
-  const interval5min = 1000 * 60 * 5;
-  const [refreshInterval, setRefreshInterval] = useState<number | undefined>();
-
   const userLoader = useMemo(() => getUserLoader(api), [api]);
+  return useSWR([apiConfig.nykyinenSuomifiKayttaja.graphql], userLoader);
+}
 
-  const swrResponse = useSWR([apiConfig.nykyinenSuomifiKayttaja.graphql], userLoader, {
-    refreshInterval: refreshInterval?.valueOf(),
-  });
+export type RefreshStatus = {
+  status: number;
+  updated: string;
+}
 
-  // Päivitetään tiedot joka latauksella jos suomi.fi-integraatio on käytössä.
-  // Muuten päivitetään 5 minuutin välein.
-  if (!swrResponse.isValidating) {
-    if (swrResponse.data?.suomifiEnabled) {
-      if (refreshInterval !== undefined) {
-        setRefreshInterval(undefined);
-        console.log("Suomi.fi-integraatio on käytössä. Päivitetään käyttäjätiedot joka latauksella.");
-      }
-    } else {
-      if (refreshInterval === undefined) {
-        setRefreshInterval(interval5min);
-        console.log("Suomi.fi-integraatio ei ole käytössä. Päivitetään käyttäjätiedot 5 minuutin välein.");
-      }
-    }
-  }
-  return swrResponse;
+export function useRefreshToken() {
+  const fetcher = (url: string): Promise<RefreshStatus> => fetch(url).then((r) => r.json());
+  return useSWR("/api/refreshtoken", fetcher, { refreshInterval: 60 * 1000 * 3 });
 }
 
 const getUserLoader = (api: API) => async (_: string) => {
