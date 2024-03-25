@@ -22,12 +22,7 @@ export class HassuDatabaseStack extends Stack {
   public lyhytOsoiteTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
   public feedbackTable!: ddb.Table;
-
-  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
-  public omistajaTable!: ddb.Table;
-
   public kiinteistonOmistajaTable!: ddb.Table;
-  public muistuttajaTable!: ddb.Table;
   public projektiMuistuttajaTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
@@ -54,9 +49,7 @@ export class HassuDatabaseStack extends Stack {
     this.lyhytOsoiteTable = lyhytOsoiteTable;
     this.projektiArchiveTable = this.createProjektiArchiveTable();
     this.feedbackTable = this.createFeedbackTable();
-    this.omistajaTable = this.createOmistajaTable();
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
-    this.muistuttajaTable = this.createMuistuttajaTable();
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     let oai;
     if (Config.isNotLocalStack()) {
@@ -140,23 +133,6 @@ export class HassuDatabaseStack extends Stack {
     return table;
   }
 
-  // TODO: Vanha KiinteistonomistajaTable, poista kun ei viittauksia
-  private createOmistajaTable() {
-    const table = new ddb.Table(this, "OmistajaTable", {
-      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      tableName: Config.omistajaTableName,
-      partitionKey: {
-        name: "id",
-        type: ddb.AttributeType.STRING,
-      },
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
-      timeToLiveAttribute: "expires",
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
-    HassuDatabaseStack.enableBackup(table);
-    return table;
-  }
-
   private createKiinteistonomistajaTable() {
     const table = new ddb.Table(this, "KiinteistonomistajaTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
@@ -178,22 +154,6 @@ export class HassuDatabaseStack extends Stack {
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
-    return table;
-  }
-
-  private createMuistuttajaTable() {
-    const table = new ddb.Table(this, "MuistuttajaTable", {
-      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      tableName: Config.muistuttajaTableName,
-      partitionKey: {
-        name: "id",
-        type: ddb.AttributeType.STRING,
-      },
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
-      timeToLiveAttribute: "expires",
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
-    HassuDatabaseStack.enableBackup(table);
     return table;
   }
 

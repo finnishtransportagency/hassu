@@ -12,6 +12,7 @@ import {
   PROJEKTIN_HENKILOT_ROUTE,
   PROJEKTIN_TIEDOT_ROUTE,
   Route,
+  TIEDOTTAMINEN_ROUTE,
 } from "src/util/routes";
 import ProjektiKortti from "./ProjektiKortti";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -62,13 +63,14 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
           <RouteButtonInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} topLevel />
           <RouteButtonInternal route={KASITTELYN_TILA_ROUTE} key={2} topLevel />
+          <RouteButtonInternal route={TIEDOTTAMINEN_ROUTE} key={3} topLevel />
           <ProjektiVaiheDropdownButton router={router} dropdownOpen={dropdownOpen} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
           {dropdownOpen &&
             projektinVaiheetNavigaatiossa
               .filter(
                 (route) => isVisible(projekti, route) && (projektiMeetsMinimumStatus(projekti, route.requiredStatus) || !route.isSubPath)
               )
-              .map((route, index) => <RouteButtonInternal route={route} key={index + 3} />)}
+              .map((route, index) => <RouteButtonInternal route={route} key={index + 4} />)}
         </ul>
       </div>
     </>
@@ -87,7 +89,8 @@ function RouteButton({
   topLevel?: boolean;
 }) {
   const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
-  const isSelected = route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!);
+  const pathnameForMatching = route.pathnameForMatching ?? route.pathname;
+  const isSelected = route.requireExactMatch ? pathnameForMatching === router.pathname : router.pathname.startsWith(pathnameForMatching);
   return (
     <li>
       <HassuLink

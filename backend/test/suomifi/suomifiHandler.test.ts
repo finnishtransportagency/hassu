@@ -4,7 +4,7 @@ import {
   SuomiFiSanoma,
   handleEvent,
   lahetaSuomiFiViestit,
-  parseLaskutusTunniste,
+  parseLaskutus,
   setMockSuomiFiClient,
 } from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
@@ -643,8 +643,6 @@ describe("suomifiHandler", () => {
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {
       oid: "1",
-      omistajat: ["1", "2", "3", "4", "5"],
-      muistuttajat: ["6", "7", "8"],
     };
     mockClient(DynamoDBDocumentClient)
       .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
@@ -660,9 +658,9 @@ describe("suomifiHandler", () => {
       .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({
         Items: [
-          { id: "6", henkilotunnus: "ABC" },
-          { id: "7", henkilotunnus: "ABC" },
-          { id: "8", henkilotunnus: "CAB" },
+          { id: "6", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "7", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "8", henkilotunnus: "CAB", suomifiLahetys: true },
         ],
       });
 
@@ -672,24 +670,24 @@ describe("suomifiHandler", () => {
     let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
     let ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4");
+    expect(ids.join(",")).to.equal("omistaja-1,omistaja-3,omistaja-4,muistuttaja-8");
     await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
     assert(input.Entries);
     ids = input.Entries.map((e) => e.Id);
-    expect(ids.join(",")).to.equal("1,3,4");
+    expect(ids.join(",")).to.equal("omistaja-1,omistaja-3,omistaja-4");
     sinon.restore();
   });
   it("test parse elyn laskutustunnisteet", async () => {
     const tunniste = `${SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY}: 1, ${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:2, ${SuunnittelustaVastaavaViranomainen.LAPIN_ELY}:1, ${SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY} :32 `;
-    const parsed = parseLaskutusTunniste(tunniste);
+    const parsed = parseLaskutus(tunniste);
     expect(parsed[SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY]).to.equal("1");
     expect(parsed[SuunnittelustaVastaavaViranomainen.LAPIN_ELY]).to.equal("1");
     expect(parsed[SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY]).to.equal("2");
     expect(parsed[SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY]).to.equal("32");
     expect(parsed[SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY]).to.equal(undefined);
-    expect(Object.keys(parseLaskutusTunniste("")).length).to.equal(0);
-    expect(Object.keys(parseLaskutusTunniste("blaah")).length).to.equal(0);
+    expect(Object.keys(parseLaskutus("")).length).to.equal(0);
+    expect(Object.keys(parseLaskutus("blaah")).length).to.equal(0);
   });
 });

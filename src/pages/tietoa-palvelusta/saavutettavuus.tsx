@@ -23,7 +23,6 @@ export default function SaavutettavuusSelosteSivu() {
         <p>{t("kappale2")}</p>
         <Lista>
           <li>{t("arvioimattomat.arvioimaton1")}</li>
-          <li>{t("arvioimattomat.arvioimaton2")}</li>
         </Lista>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("saavutettavuuden-tila.otsikko")}</h2>
@@ -46,18 +45,12 @@ export default function SaavutettavuusSelosteSivu() {
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite1")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite2")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite3")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite4")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite5")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite6")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite7")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite8")}</li>
           </Lista>
         </ContentSpacer>
         <ContentSpacer gap={4}>
           <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.otsikko")}</h4>
           <Lista>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.selite1")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.selite2")}</li>
           </Lista>
         </ContentSpacer>
         <ContentSpacer gap={4}>
@@ -72,7 +65,12 @@ export default function SaavutettavuusSelosteSivu() {
         </ContentSpacer>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("taman-saavutettavuusselosteen-laatiminen.otsikko")}</h2>
-          <p>{t("taman-saavutettavuusselosteen-laatiminen.kappale1")}</p>
+          <Trans
+            i18nKey="tietoa-palvelusta/saavutettavuus:taman-saavutettavuusselosteen-laatiminen.kappale1"
+            components={{
+              br: <br />,
+            }}
+          />
           <p>{t("taman-saavutettavuusselosteen-laatiminen.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>

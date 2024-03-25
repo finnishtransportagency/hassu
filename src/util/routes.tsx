@@ -7,7 +7,8 @@ type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => 
 export interface Route {
   title: string;
   requiredStatus: Status;
-  pathname?: string;
+  pathname: string;
+  pathnameForMatching?: string;
   visible?: VisibilityHandler | boolean;
   id: string;
   requireExactMatch?: boolean;
@@ -34,6 +35,14 @@ export const KASITTELYN_TILA_ROUTE: Route = {
   id: "kasittelyn_tila",
   requiredStatus: Status.ALOITUSKUULUTUS, //TODO: avataan nyt samaan aikaan kuin aloituskuulutus lahinna esteettisista syista, ei ole speksattu tarkasti avautumista? Muutettava myohemmin, ettei sotke automaattista ohjausta (ordinal) tietyn vaiheen tayttamisen
   pathname: `/yllapito/projekti/[oid]/kasittelyntila`,
+};
+
+export const TIEDOTTAMINEN_ROUTE: Route = {
+  title: "Tiedottaminen",
+  id: "tiedottaminen",
+  requiredStatus: Status.ALOITUSKUULUTUS, // Avataan samaa aikaa kuin KASITTELYN_TILA_ROUTE
+  pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`,
+  pathnameForMatching: "/yllapito/projekti/[oid]/tiedottaminen",
 };
 
 export const ALOITUSKUULUTUS_ROUTE: Route = {
@@ -174,6 +183,7 @@ const routes: Route[] = [
   PROJEKTIN_HENKILOT_ROUTE,
   PROJEKTIN_TIEDOT_ROUTE,
   KASITTELYN_TILA_ROUTE,
+  TIEDOTTAMINEN_ROUTE,
   ALOITUSKUULUTUS_ROUTE,
   SUUNNITTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
