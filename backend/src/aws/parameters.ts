@@ -175,6 +175,14 @@ class Parameters {
     return this.getRequiredAccountParameter("KtjBaseUrl");
   }
 
+  async getKeycloakUsername() {
+    return this.getRequiredAccountParameter("HassuKeycloakUser");
+  }
+
+  async getKeycloakPassword() {
+    return this.getRequiredAccountParameter("HassuKeycloakPassword");
+  }
+
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
     const value = await this.getParameterForEnv(paramName);
     if (!value) {
