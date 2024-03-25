@@ -4,8 +4,7 @@
   "kappale1-href": "https://www.finlex.fi/sv/laki/alkup/2019/20190306",
   "kappale2": "Detta tillgänglighetsutlåtande gäller webbplatsen Planering av statens trafikleder.fi. Följande delar ingår inte i beskrivningen och deras tillgänglighet har inte bedömts:",
   "arvioimattomat": {
-    "arvioimaton1": "Webbplatsens innehåll är inte begränsat till endast en viss skärmställning, såsom vertikalt eller horisontellt (WCAG 1.3.4)",
-    "arvioimaton2": "Kungörelse- och Inbjudan till interaktion-pdf-filer"
+    "arvioimaton1": "Webbplatsens innehåll är inte begränsat till endast en viss skärmställning, såsom vertikalt eller horisontellt (WCAG 1.3.4)"
   },
   "saavutettavuuden-tila": {
     "otsikko": "Tillgänglighetsstatus",
@@ -26,18 +25,11 @@
     "ei-saavutettava-asia2": {
       "otsikko": "Menyer och länkar:",
       "selite1": "Länkarna i brödtexten har separerats endast med färg (WCAG 1.4.1)",
-      "selite2": "En del av länkarna på webbplatsen är inte lätta att identifiera. (WCAG 1.4.1)",
-      "selite3": "En del av de externa länkarna utanför webbplatsen eller länkarna som öppnar en fil har markerats bristfälligt. (WCAG 1.3.1, 2.4.4)",
-      "selite4": "Trafikledverkets och NTM-centralens ikoner i sociala medier har inga tillgängliga namn. (WCAG 1.1.1)",
-      "selite5": "Överflödiga länkar i navigeringens platssökväg (synlig sökväg) som inte leder någonstans (WCAG 2.4.4)",
-      "selite6": "Överflödig länk i Information om planeringen-sidmenyn (WCAG 2.4.4)",
-      "selite7": "Den berörda personens rättigheter textens radhöjd underskrider minimivärdet. (WCAG 1.4.8.)",
-      "selite8": "ARIA-Attribut bör användas mer allmänt (WCAG 1.3.6)"
+      "selite2": "En del av länkarna på webbplatsen är inte lätta att identifiera. (WCAG 1.4.1)"
     },
     "ei-saavutettava-asia3": {
-      "otsikko": "Webbplatsstruktur:",
-      "selite1": "Det finns brister i den systematiska användningen av rubriknivåerna. (WCAG 1.3.1)",
-      "selite2": "Den svenskspråkiga Tillgänglighet-sidan har textinnehåll på finska. (WCAG 2.4.4)"
+      "otsikko": "Kartor:",
+      "selite1": "Det finns kartor på webbplatsen som inte har verifierats med avseende på tillgängligheten [VV2]."
     },
     "ei-saavutettava-asia4": {
       "otsikko": "Annat innehåll",
@@ -50,7 +42,7 @@
   },
   "taman-saavutettavuusselosteen-laatiminen": {
     "otsikko": "Upprättande av denna tillgänglighetsbeskrivning",
-    "kappale1": "Denna beskrivning upprättades den 28 februari 2023.",
+    "kappale1": "Denna beskrivning upprättades den 28 februari 2023.<br/>Utlåtandet uppdaterades senast den 1.3.2024.",
     "kappale2": "Beskrivningen baserar sig på en utvärdering av tredje part om ifall webbplatsen uppfyller kraven i direktivet (EU) 2016/2102."
   },
   "palaute-ja-yhteystiedot": {
@@ -75,6 +67,6 @@
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Åtgärdande av brister",
-    "kappale1": "Vi strävar efter att korrigera bristerna i webbplatsens tillgänglighet vad gäller det tekniska innan utgången av 2023."
+    "kappale1": "Vi strävar efter att korrigera bristerna i webbplatsens tillgänglighet vad gäller det tekniska innan utgången av 2025."
   }
 }

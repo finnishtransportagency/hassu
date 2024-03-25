@@ -4,8 +4,7 @@
   "kappale1-href": "https://www.finlex.fi/fi/laki/alkup/2019/20190306",
   "kappale2": "Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa. Selosteeseen eivät kuulu seuraavat osiot, joiden saavutettavuutta ei ole arvioitu:",
   "arvioimattomat": {
-    "arvioimaton1": "Sivuston sisältöä ei ole rajoitettu vain tiettyyn näyttölaitteen asentoon, kuten pysty- tai vaakasuuntaan (WCAG 1.3.4)",
-    "arvioimaton2": "Kuulutus- ja Kutsu vuorovaikutukseen -pdf -tiedostot"
+    "arvioimaton1": "Kuulutus- ja Kutsu vuorovaikutukseen -pdf -tiedostot"
   },
   "saavutettavuuden-tila": {
     "otsikko": "Saavutettavuuden tila",
@@ -27,17 +26,11 @@
       "otsikko": "Valikot ja linkit:",
       "selite1": "Leipätekstissä olevat linkit on erotettu pelkällä värillä (WCAG 1.4.1)",
       "selite2": "Osa sivustolla olevista linkeistä eivät ole selkeästi tunnistettavissa. (WCAG 1.4.1)",
-      "selite3": "Osa sivuston ulkopuolelle vievistä tai tiedoston avaavista linkeistä on merkitty puutteellisesti. (WCAG 1.3.1, 2.4.4)",
-      "selite4": "Väyläviraston ja Ely-keskuksen sosiaalisen median ikoneilla ei ole saavutettavia nimiä. (WCAG 1.1.1)",
-      "selite5": "Navigaation sivustopolussa (murupolussa) ylimääräisiä linkkejä, jotka eivät vie mihinkään (WCAG 2.4.4)",
-      "selite6": "Ylimääräinen linkki Tietoa suunnittelusta -sivuvalikossa. (WCAG 2.4.4)",
-      "selite7": "Asianomaisen oikeudet tekstin rivikorkeus on alle minimiarvon. (WCAG 1.4.8.)",
-      "selite8": "ARIA-Määritteitä tulee käyttää laajemmin (WCAG 1.3.6)"
+      "selite3": "Osa sivuston ulkopuolelle vievistä tai tiedoston avaavista linkeistä on merkitty puutteellisesti. (WCAG 1.3.1, 2.4.4)"
     },
     "ei-saavutettava-asia3": {
-      "otsikko": "Sivustorakenne",
-      "selite1": "Otsikkotasojen järjestelmällisessä käytössä on puutteita. (WCAG 1.3.1)",
-      "selite2": "Ruotsinkielisellä Saavutettavuus-sivulla on tekstisisältö suomeksi. (WCAG 2.4.4)"
+      "otsikko": "Kartat",
+      "selite1": "Sivustolla on karttoja, joiden saavutettavuutta ei ole varmistettu [VV2]."
     },
     "ei-saavutettava-asia4": {
       "otsikko": "Muu sisältö",
@@ -50,7 +43,7 @@
   },
   "taman-saavutettavuusselosteen-laatiminen": {
     "otsikko": "Tämän saavutettavuusselosteen laatiminen",
-    "kappale1": "Tämä seloste on laadittu 28.02.2023.",
+    "kappale1": "Tämä seloste on laadittu 28.02.2023.<br/>Selostetta on päivitetty viimeksi 1.3.2024.",
     "kappale2": "Seloste perustuu kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkosivusto direktiivin (EU) 2016/2102 vaatimukset."
   },
   "palaute-ja-yhteystiedot": {
@@ -75,6 +68,6 @@
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Puutteiden korjaaminen",
-    "kappale1": "Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden 2023 loppuun mennessä."
+    "kappale1": "Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden 2025 loppuun mennessä."
   }
 }

@@ -114,7 +114,7 @@ export abstract class AbstractPdf {
             this.doc.text("", { continued: true, baseline: this.baseline });
             first = false;
           }
-          this.doc.text(string, { continued: true, baseline: this.baseline });
+          this.doc.text(string, { continued: true, baseline: boldOn ? "hanging" : "top" });
           bold = !bold;
         }
         this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0));

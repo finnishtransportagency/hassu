@@ -124,10 +124,13 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {
     return () => {
       this.doc.text(this.kutsuAdapter.text("jakelu1")).moveUp();
-      this.doc.text(this.kutsuAdapter.text("jakelu2"), { indent: 60 });
-      this.doc.text(this.kutsuAdapter.text("jakelu3"), { indent: 60 });
+      this.doc.text(this.kutsuAdapter.text("jakelu2"), { indent: 70 });
+      this.doc.text(this.kutsuAdapter.text("jakelu3"), { indent: 70 });
+      if (this.kieli === Kieli.RUOTSI) {
+        this.doc.text(this.kutsuAdapter.text("jakelu4"), { indent: 70 });
+      }
       this.doc.text(this.kutsuAdapter.text("tiedoksi1")).moveUp();
-      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), { indent: 60 });
+      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), { indent: 70 });
     }
   }
 
