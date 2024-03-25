@@ -1,7 +1,7 @@
 export type YhteyshenkiloAttributes = {
-    Nimi: string;
+    Nimi?: string;
     Sahkoposti: string;
-    Matkapuhelin: string;
+    Matkapuhelin?: string;
 };
 
 /**
