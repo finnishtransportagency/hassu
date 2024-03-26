@@ -9,7 +9,7 @@ import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
 import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
-import { formatKiinteistotunnus } from "hassu-common/util/formatKiinteistotunnus";
+import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -63,7 +63,7 @@ function lisaaRivi(rivi: Rivi) {
   auditLog.info("Lisätään omistajan tiedot exceliin", { omistajaId: rivi.id });
   return [
     {
-      value: formatKiinteistotunnus(rivi.kiinteistotunnus!),
+      value: formatKiinteistotunnusForDisplay(rivi.kiinteistotunnus!),
     },
     {
       value: rivi.nimi,

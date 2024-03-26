@@ -329,10 +329,10 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             await api.tallennaKiinteistonOmistajat(apiData);
             useFormReturn.reset();
             if (suomifiExpanded) {
-              updateSuomifiTiedotettavat(suomifiQuery, 0, suomifiNaytettavatOmistajat?.length);
+              updateSuomifiTiedotettavat(suomifiQuery, 0, suomifiNaytettavatOmistajat?.length, true);
             }
             if (muutExpanded) {
-              updateMuutTiedotettavat(muutQuery, 0, muutNaytettavatOmistajat?.length);
+              updateMuutTiedotettavat(muutQuery, 0, muutNaytettavatOmistajat?.length, true);
             }
           }
         })()
