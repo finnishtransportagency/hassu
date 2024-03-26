@@ -6,14 +6,19 @@ async function callKeycloak(url: URL, path: string, token: string, method = "GET
   const response = await fetch(url.toString(), {
     headers: {
       Authorization: "Bearer " + token,
+      Accept: "application/json",
     },
     method,
   });
-  return response.json();
+  if (method === "GET") {
+    return await response.json();
+  } else {
+    return response.status;
+  }
 }
 
-export async function handler() {
-  const keycloakUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
+export async function handleEvent() {
+  const keycloakUrl = new URL(await parameters.getKeycloakDomain());
   keycloakUrl.pathname = "/keycloak/auth/realms/master/protocol/openid-connect/token";
   const details: Record<string, string> = {
     grant_type: "password",
@@ -37,8 +42,7 @@ export async function handler() {
     const client_id = process.env.KEYCLOAK_CLIENT_ID!;
     json = await callKeycloak(keycloakUrl, "/keycloak/auth/admin/realms/suomifi/clients", token);
     const id = json.find((client: { id: string; clientId: string }) => client.clientId === client_id).id;
-    log.info("Suomi.fi client id: " + id);
-    json = await callKeycloak(keycloakUrl, `/keycloak/auth/admin/realms/suomifi/clients/${id}/user-session`, token);
+    json = await callKeycloak(keycloakUrl, `/keycloak/auth/admin/realms/suomifi/clients/${id}/user-sessions`, token);
     const activeUsers: string[] = json.map((user: { userId: string }) => user.userId);
     log.info("Aktiiviset käyttäjät", { activeUsers });
     json = await callKeycloak(keycloakUrl, "/keycloak/auth/admin/realms/suomifi/users", token);
@@ -47,7 +51,10 @@ export async function handler() {
     for (const id of ids) {
       if (!activeUsers.includes(id)) {
         log.info("Poistetaan käyttäjä " + id);
-        await callKeycloak(keycloakUrl, `/keycloak/auth/admin/realms/suomifi/users/${id}`, token, "DELETE");
+        const status = await callKeycloak(keycloakUrl, `/keycloak/auth/admin/realms/suomifi/users/${id}`, token, "DELETE");
+        log.info("Käyttäjä poistettu", { id, status });
+      } else {
+        log.info("Aktiivista käyttäjää " + id + " ei poistettu");
       }
     }
   } else {

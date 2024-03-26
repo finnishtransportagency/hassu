@@ -313,6 +313,7 @@
     "log:asianhallinta": "aws logs tail --follow --since 1h /aws/lambda/hassu-asianhallinta-${ENVIRONMENT}",
     "log:kiinteistohandler": "aws logs tail --follow --since 1h /aws/lambda/hassu-kiinteisto-$ENVIRONMENT",
     "log:suomifi": "aws logs tail --follow --since 1h /aws/lambda/hassu-suomifi-$ENVIRONMENT",
+    "log:keycloak": "aws logs tail --follow --since 1h /aws/lambda/hassu-keycloak-$ENVIRONMENT",
     "sonar": "cross-env LATEST_VERSION=\"$(git describe --tags --abbrev=0 --contains test)\" node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local",
     "opensearch:getmapping": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getmapping projekti backend/src/projektiSearch/projekti-mapping.json",
     "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json",

@@ -122,7 +122,15 @@ class Parameters {
   }
 
   async getKeycloakDomain() {
-    return this.getParameterForEnv("KeycloakDomain");
+    return this.getRequiredAccountParameter("KeycloakDomain");
+  }
+
+  async getKeycloakUsername() {
+    return this.getRequiredAccountParameter("KeycloakUsername");
+  }
+
+  async getKeycloakPassword() {
+    return this.getRequiredAccountParameter("KeycloakPassword");
   }
 
   async isSuomiFiIntegrationEnabled(): Promise<boolean> {
@@ -173,14 +181,6 @@ class Parameters {
 
   async getKtjBaseUrl() {
     return this.getRequiredAccountParameter("KtjBaseUrl");
-  }
-
-  async getKeycloakUsername() {
-    return this.getRequiredAccountParameter("HassuKeycloakUser");
-  }
-
-  async getKeycloakPassword() {
-    return this.getRequiredAccountParameter("HassuKeycloakPassword");
   }
 
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
