@@ -174,17 +174,15 @@ const KiinteistotunnusTextFieldComponent: ColumnComponent = ({ fieldName, index 
   );
 };
 
-const DeleteColumnComponent: ColumnComponent = ({ index, fieldArray }) => {
-  return (
-    <IconButton
-      type="button"
-      onClick={() => {
-        fieldArray.remove(index);
-      }}
-      icon="trash"
-    />
-  );
-};
+const DeleteColumnComponent: ColumnComponent = ({ index, fieldArray }) => (
+  <IconButton
+    type="button"
+    onClick={() => {
+      fieldArray.remove(index);
+    }}
+    icon="trash"
+  />
+);
 
 const uudetColumns: Column[] = [
   {
