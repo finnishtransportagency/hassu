@@ -12,7 +12,6 @@ import { aineistoEiOdotaPoistoaTaiPoistettu, ladattuTiedostoEiOdotaPoistoaTaiPoi
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 
 class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
-  IHyvaksymisEsitys,
   API.HyvaksymisEsitysInput,
   API.ListaaHyvaksymisEsityksenTiedostotInput
 > {
@@ -34,10 +33,10 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
     aineistopaketti: string | null
   ): Promise<API.LadattavatTiedostot> {
     const oid = projekti.oid;
-    const hyvaksymisEsitysTiedostot: API.HyvaksymisEsitysLadattavaTiedosto[] = (
+    const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
       await Promise.all(
         (hyvaksymisEsitys.hyvaksymisEsitys?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu) ?? []).map((tiedosto) =>
-          this.adaptHyvaksymisEsitysLadattuTiedostoToLadattavaTiedosto(oid, tiedosto)
+          this.adaptLadattuTiedostoToLadattavaTiedosto(oid, tiedosto)
         )
       )
     ).sort(jarjestaTiedostot);
@@ -72,10 +71,10 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
           .map((aineisto) => this.adaptAineistoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
       )
     ).sort(jarjestaTiedostot);
-    const muistutukset: API.LadattavaTiedosto[] = (
+    const kuntaMuistutukset: API.KunnallinenLadattavaTiedosto[] = (
       await Promise.all(
         (hyvaksymisEsitys.muistutukset?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu) ?? []).map((tiedosto) =>
-          this.adaptLadattuTiedostoToLadattavaTiedosto(oid, tiedosto)
+          this.adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(oid, tiedosto)
         )
       )
     ).sort(jarjestaTiedostot);
@@ -84,7 +83,7 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
       __typename: "LadattavatTiedostot",
       hyvaksymisEsitys: hyvaksymisEsitysTiedostot,
       suunnitelma,
-      muistutukset,
+      kuntaMuistutukset,
       lausunnot,
       kuulutuksetJaKutsu,
       muutAineistot,
