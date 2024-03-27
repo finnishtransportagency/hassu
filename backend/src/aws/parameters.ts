@@ -125,6 +125,14 @@ class Parameters {
     return this.getRequiredAccountParameter("KeycloakDomain");
   }
 
+  async getKeycloakPrivateDomain() {
+    return this.getRequiredAccountParameter("KeycloakPrivateDomain");
+  }
+
+  async getKeycloakClientId() {
+    return this.getRequiredAccountParameter("KeycloakClientId");
+  }
+
   async getKeycloakUsername() {
     return this.getRequiredAccountParameter("KeycloakUsername");
   }

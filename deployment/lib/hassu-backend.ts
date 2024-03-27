@@ -119,7 +119,7 @@ export class HassuBackendStack extends Stack {
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
     const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
-    await this.createKeycloakLambda(commonEnvironmentVariables);
+    await this.createKeycloakLambda(commonEnvironmentVariables, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -724,7 +724,7 @@ export class HassuBackendStack extends Stack {
     return suomiFiLambda;
   }
 
-  private async createKeycloakLambda(commonEnvironmentVariables: Record<string, string>) {
+  private async createKeycloakLambda(commonEnvironmentVariables: Record<string, string>, vpc: IVpc) {
     const keycloak = new NodejsFunction(this, "KeycloakLambda", {
       functionName: "hassu-keycloak-" + Config.env,
       runtime: lambdaRuntime,
@@ -738,6 +738,7 @@ export class HassuBackendStack extends Stack {
         sourceMap: true,
         externalModules,
       },
+      vpc,
       environment: {
         ...commonEnvironmentVariables,
       },
