@@ -1,16 +1,17 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
-import { MuokattavaHyvaksymisEsitys } from "../../../database/model";
-import { adaptAineistotToSave, adaptTiedostotToSave } from "./common";
+import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
+import { DBProjekti, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { adaptAineistotToSave, adaptTiedostotToSave } from "../projekti/adapter/adaptToDB/common";
+import { assertIsDefined } from "../util/assertions";
 
 export function adaptHyvaksymisEsitysToSave(
-  dbHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | undefined | null,
-  hyvaksymisEsitysInput: API.HyvaksymisEsitysInput | undefined | null,
-  projektiAdaptationResult: ProjektiAdaptationResult
-): MuokattavaHyvaksymisEsitys | null | undefined {
-  if (!hyvaksymisEsitysInput) {
-    return hyvaksymisEsitysInput;
-  }
+  dbProjekti: DBProjekti,
+  hyvaksymisEsitysInput: API.TallennaHyvaksymisEsitysInput
+): ProjektiAdaptationResult {
+  const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(dbProjekti);
+  const { oid, versio, muokattavaHyvaksymisEsitys } = hyvaksymisEsitysInput;
+  const dbHyvaksymisEsitys = dbProjekti.muokattavaHyvaksymisEsitys;
+  assertIsDefined(muokattavaHyvaksymisEsitys, "input on validoitu, ja muokattavaHyvaksymisEsitys on olemassa");
   const {
     hyvaksymisEsitys,
     suunnitelma,
@@ -22,8 +23,8 @@ export function adaptHyvaksymisEsitysToSave(
     maanomistajaluettelo,
     vastaanottajat,
     ...rest
-  } = hyvaksymisEsitysInput;
-  const adapted: MuokattavaHyvaksymisEsitys = {
+  } = muokattavaHyvaksymisEsitys;
+  const newMuokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys = {
     hyvaksymisEsitys: adaptTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
     suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma, projektiAdaptationResult),
     muistutukset: adaptTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset, projektiAdaptationResult),
@@ -35,7 +36,13 @@ export function adaptHyvaksymisEsitysToSave(
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     ...rest,
   };
-  return adapted;
+  const newProjekti = {
+    oid,
+    versio,
+    muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
+  };
+  projektiAdaptationResult.setProjekti(newProjekti as DBProjekti);
+  return projektiAdaptationResult;
 }
 
 function adaptVastaanottajatToSave(vastaanottajat: string[] | null | undefined) {

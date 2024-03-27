@@ -5,7 +5,6 @@ import { hyvaksymisPaatosVaiheTilaManager } from "./hyvaksymisPaatosVaiheTilaMan
 import { jatkoPaatos1VaiheTilaManager } from "./jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "./jatkoPaatos2VaiheTilaManager";
 import { vuorovaikutusKierrosTilaManager } from "./vuorovaikutusKierrosTilaManager";
-
 class TilaHandler {
   async siirraTila(input: TilaSiirtymaInput | undefined | null): Promise<void> {
     if (!input) {

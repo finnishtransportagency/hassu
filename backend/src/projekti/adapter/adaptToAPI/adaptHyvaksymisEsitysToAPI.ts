@@ -35,7 +35,7 @@ export function adaptHyvaksymisEsitysToApi(
   return {
     __typename: "HyvaksymisEsitys",
     ...julkaistuHyvaksymisEsitys,
-    ...muokattavaHyvaksymisEsitys,
+    ...muokattavaHyvaksymisEsitys, // Järjestys on tärkeä; muokattava ylikirjoittaa julkaistun
     poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi(hyvaksymisEsitys.hyvaksymisEsitys, paths),

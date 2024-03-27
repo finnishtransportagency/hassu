@@ -3,7 +3,6 @@ import crypto from "crypto";
 import { IllegalAccessError } from "hassu-common/error";
 import { DBProjekti, IHyvaksymisEsitys, LadattuTiedosto } from "../../database/model";
 import { log } from "../../logger";
-import { ProjektiAdaptationResult } from "../../projekti/adapter/projektiAdaptationResult";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import { adaptHyvaksymisEsitysToSave, forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
@@ -15,16 +14,17 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
   API.HyvaksymisEsitysInput,
   API.ListaaHyvaksymisEsityksenTiedostotInput
 > {
-  async esikatseleTiedostot(projekti: DBProjekti, hyvaksymisEsitysInput: API.HyvaksymisEsitysInput): Promise<API.LadattavatTiedostot> {
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToSave(
-      projekti.muokattavaHyvaksymisEsitys,
-      hyvaksymisEsitysInput,
-      new ProjektiAdaptationResult(projekti)
-    );
-    assertIsDefined(hyvaksymisEsitys, "hyväksymisesityksen tulee olla määritelty");
+  async esikatseleTiedostot(dbProjekti: DBProjekti, hyvaksymisEsitysInput: API.HyvaksymisEsitysInput): Promise<API.LadattavatTiedostot> {
+    const { projekti } = adaptHyvaksymisEsitysToSave(dbProjekti, {
+      oid: dbProjekti.oid,
+      versio: dbProjekti.versio,
+      muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput,
+    });
 
     const aineistopaketti = "(esikatselu)";
-    return await this.getTiedostot(projekti, hyvaksymisEsitys, aineistopaketti);
+    const muokattavaHyvaksymisEsitys = projekti.muokattavaHyvaksymisEsitys;
+    assertIsDefined(muokattavaHyvaksymisEsitys, "muokattavaHyvaksymisesitys on adaptoitu juuri");
+    return await this.getTiedostot(projekti, muokattavaHyvaksymisEsitys, aineistopaketti);
   }
 
   private async getTiedostot(

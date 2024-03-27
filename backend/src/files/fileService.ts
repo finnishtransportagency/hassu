@@ -344,7 +344,7 @@ export class FileService {
     }
   }
 
-  private async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
+  async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
     const s3 = getS3Client();
     let ContinuationToken = undefined;
     do {

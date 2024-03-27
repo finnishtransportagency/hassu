@@ -34,6 +34,12 @@ import {
   LataaTiedotettavatExcelQueryVariables,
   HaeProjektinTiedottamistiedotQueryVariables,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  TallennaHyvaksymisesitysMutationVariables,
+  TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksiMutationVariables,
+  PalautaHyvaksymisEsitysMutationVariables,
+  HyvaksyHyvaksymisEsitysMutationVariables,
+  AvaaHyvaksymisEsityksenMuokkausMutationVariables,
+  SuljeHyvaksymisEsityksenMuokkausMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -69,6 +75,14 @@ import {
   tuoKarttarajaus,
 } from "../mml/kiinteistoHandler";
 import { generateExcelByQuery } from "../mml/tiedotettavatExcel";
+import {
+  avaaHyvaksymisEsityksenMuokkaus,
+  hyvaksyHyvaksymisEsitys,
+  palautaHyvaksymisEsitys,
+  suljeHyvaksymisEsityksenMuokkaus,
+  tallennaHyvaksymisEsitys,
+  tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi,
+} from "../HyvaksymisEsitys/hyvaksymisEsitysActions";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -101,6 +115,20 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.tallennaJaSiirraTilaa.name:
       return tallennaJaSiirraTilaa(event.arguments as TallennaJaSiirraTilaaMutationVariables);
+    case apiConfig.tallennaHyvaksymisesitys.name:
+      return tallennaHyvaksymisEsitys((event.arguments as TallennaHyvaksymisesitysMutationVariables).input);
+    case apiConfig.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi.name:
+      return tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(
+        (event.arguments as TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksiMutationVariables).input
+      );
+    case apiConfig.palautaHyvaksymisEsitys.name:
+      return palautaHyvaksymisEsitys((event.arguments as PalautaHyvaksymisEsitysMutationVariables).input);
+    case apiConfig.hyvaksyHyvaksymisEsitys.name:
+      return hyvaksyHyvaksymisEsitys((event.arguments as HyvaksyHyvaksymisEsitysMutationVariables).input);
+    case apiConfig.avaaHyvaksymisEsityksenMuokkaus.name:
+      return avaaHyvaksymisEsityksenMuokkaus((event.arguments as AvaaHyvaksymisEsityksenMuokkausMutationVariables).input);
+    case apiConfig.suljeHyvaksymisEsityksenMuokkaus.name:
+      return suljeHyvaksymisEsityksenMuokkaus((event.arguments as SuljeHyvaksymisEsityksenMuokkausMutationVariables).input);
     case apiConfig.esikatseleAsiakirjaPDF.name:
       return lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:

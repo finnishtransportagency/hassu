@@ -82,6 +82,15 @@ import {
   ListaaHyvaksymisEsityksenTiedostotQueryVariables,
   HyvaksymisEsitysInput,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
+  TallennaHyvaksymisEsitysInput,
+  TallennaHyvaksymisesitysMutationVariables,
+  TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksiMutationVariables,
+  PalautaHyvaksymisEsitysMutationVariables,
+  PalautaInput,
+  TilaMuutosInput,
+  HyvaksyHyvaksymisEsitysMutationVariables,
+  AvaaHyvaksymisEsityksenMuokkausMutationVariables,
+  SuljeHyvaksymisEsityksenMuokkausMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -115,6 +124,42 @@ export const apiConfig: ApiConfig = {
     name: "tallennaJaSiirraTilaa",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaJaSiirraTilaa,
+    isYllapitoOperation: true,
+  },
+  tallennaHyvaksymisesitys: {
+    name: "tallennaHyvaksymisesitys",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaHyvaksymisesitys,
+    isYllapitoOperation: true,
+  },
+  tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi: {
+    name: "tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi,
+    isYllapitoOperation: true,
+  },
+  palautaHyvaksymisEsitys: {
+    name: "palautaHyvaksymisEsitys",
+    operationType: OperationType.Mutation,
+    graphql: mutations.palautaHyvaksymisEsitys,
+    isYllapitoOperation: true,
+  },
+  hyvaksyHyvaksymisEsitys: {
+    name: "hyvaksyHyvaksymisEsitys",
+    operationType: OperationType.Mutation,
+    graphql: mutations.hyvaksyHyvaksymisEsitys,
+    isYllapitoOperation: true,
+  },
+  avaaHyvaksymisEsityksenMuokkaus: {
+    name: "avaaHyvaksymisEsityksenMuokkaus",
+    operationType: OperationType.Mutation,
+    graphql: mutations.avaaHyvaksymisEsityksenMuokkaus,
+    isYllapitoOperation: true,
+  },
+  suljeHyvaksymisEsityksenMuokkaus: {
+    name: "suljeHyvaksymisEsityksenMuokkaus",
+    operationType: OperationType.Mutation,
+    graphql: mutations.suljeHyvaksymisEsityksenMuokkaus,
     isYllapitoOperation: true,
   },
   lataaProjekti: {
@@ -409,6 +454,42 @@ export abstract class AbstractApi {
     } as TallennaJaSiirraTilaaMutationVariables);
   }
 
+  async tallennaHyvaksymisEsitys(input: TallennaHyvaksymisEsitysInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaHyvaksymisesitys, {
+      input,
+    } as TallennaHyvaksymisesitysMutationVariables);
+  }
+
+  async tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: TallennaHyvaksymisEsitysInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi, {
+      input,
+    } as TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksiMutationVariables);
+  }
+
+  async palautaHyvaksymisEsitys(input: PalautaInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.palautaHyvaksymisEsitys, {
+      input,
+    } as PalautaHyvaksymisEsitysMutationVariables);
+  }
+
+  async hyvaksyHyvaksymisEsitys(input: TilaMuutosInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.hyvaksyHyvaksymisEsitys, {
+      input,
+    } as HyvaksyHyvaksymisEsitysMutationVariables);
+  }
+
+  async avaaHyvaksymisEsityksenMuokkaus(input: TilaMuutosInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.avaaHyvaksymisEsityksenMuokkaus, {
+      input,
+    } as AvaaHyvaksymisEsityksenMuokkausMutationVariables);
+  }
+
+  async suljeHyvaksymisEsityksenMuokkaus(input: TilaMuutosInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.suljeHyvaksymisEsityksenMuokkaus, {
+      input,
+    } as SuljeHyvaksymisEsityksenMuokkausMutationVariables);
+  }
+
   async arkistoiProjekti(oid: string): Promise<Projekti> {
     return await this.callYllapitoAPI(apiConfig.arkistoiProjekti, {
       oid,
@@ -641,7 +722,12 @@ export abstract class AbstractApi {
     } as SuoritaTestiKomentoMutationVariables);
   }
 
-  async tuoKarttarajausJaTallennaKiinteistotunnukset(oid: string, geoJSON: string, kiinteistotunnukset: string[], status: Status| null | undefined): Promise<string> {
+  async tuoKarttarajausJaTallennaKiinteistotunnukset(
+    oid: string,
+    geoJSON: string,
+    kiinteistotunnukset: string[],
+    status: Status | null | undefined
+  ): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.tuoKarttarajausJaTallennaKiinteistotunnukset, {
       oid,
       geoJSON,
