@@ -119,7 +119,6 @@ export class HassuBackendStack extends Stack {
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
     const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
-    await this.createKeycloakLambda(commonEnvironmentVariables, vpc);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -722,44 +721,6 @@ export class HassuBackendStack extends Stack {
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
     return suomiFiLambda;
-  }
-
-  private async createKeycloakLambda(commonEnvironmentVariables: Record<string, string>, vpc: IVpc) {
-    const keycloak = new NodejsFunction(this, "KeycloakLambda", {
-      functionName: "hassu-keycloak-" + Config.env,
-      runtime: lambdaRuntime,
-      entry: `${__dirname}/../../backend/src/suomifi/keycloak.ts`,
-      handler: "handleEvent",
-      memorySize: 512,
-      reservedConcurrentExecutions: 1,
-      timeout: Duration.seconds(60),
-      bundling: {
-        minify: true,
-        sourceMap: true,
-        externalModules,
-      },
-      vpc,
-      environment: {
-        ...commonEnvironmentVariables,
-      },
-      tracing: Tracing.ACTIVE,
-      insightsVersion,
-      layers: this.layers,
-      logRetention: this.getLogRetention(),
-    });
-    this.addPermissionsForMonitoring(keycloak);
-    new events.Rule(this, "KeycloakRule", {
-      description: "Cleanup users",
-      schedule: events.Schedule.rate(Duration.hours(24)),
-      targets: [ new eventTargets.LambdaFunction(keycloak)],
-    });
-    keycloak.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["ssm:GetParameter"],
-        resources: ["*"],
-      })
-    );
   }
 
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {

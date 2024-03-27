@@ -2,12 +2,17 @@ import { Construct } from "constructs";
 import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
-import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
-import { BastionHostLinux, InstanceInitiatedShutdownBehavior, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { BastionHostLinux, InstanceInitiatedShutdownBehavior, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { Code, LambdaInsightsVersion, LayerVersion, Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
+import { Rule, Schedule } from "aws-cdk-lib/aws-events";
+import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -41,15 +46,61 @@ export class HassuAccountStack extends Stack {
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureSNSForAlarms();
-    if (Config.isDevAccount()) {
-      await this.createBastionHost(config);
-    }
-  }
-
-  private async createBastionHost(config: Config) {
-    // Bastion host that allows connection from systems manager
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
+    if (Config.isDevAccount()) {
+      await this.createBastionHost(config, vpc);
+    }
+    await this.createKeycloakLambda(vpc);
+  }
+
+  private async createKeycloakLambda(vpc: IVpc) {
+    const keycloak = new NodejsFunction(this, "KeycloakLambda", {
+      functionName: "hassu-keycloak-" + Config.env,
+      runtime: Runtime.NODEJS_18_X,
+      entry: `${__dirname}/../../backend/src/suomifi/keycloak.ts`,
+      handler: "handleEvent",
+      memorySize: 512,
+      reservedConcurrentExecutions: 1,
+      timeout: Duration.seconds(60),
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        externalModules: ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"],
+      },
+      vpc,
+      tracing: Tracing.ACTIVE,
+      insightsVersion: LambdaInsightsVersion.VERSION_1_0_143_0,
+      layers: [new LayerVersion(this, "BaseLayer-" + Config.env, {
+        code: Code.fromAsset("./layers/lambda-base"),
+        compatibleRuntimes: [Runtime.NODEJS_18_X],
+        description: "Lambda base layer",
+      }),
+      LayerVersion.fromLayerVersionArn(
+        this,
+        "paramLayer",
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+      )],
+      logRetention: RetentionDays.SEVEN_YEARS,
+    });
+    keycloak.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    keycloak.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSXRayDaemonWriteAccess"));
+    new Rule(this, "KeycloakRule", {
+      description: "Cleanup users",
+      schedule: Schedule.rate(Duration.hours(24)),
+      targets: [ new LambdaFunction(keycloak)],
+    });
+    keycloak.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+  }
+
+  private async createBastionHost(config: Config, vpc: IVpc) {
+    // Bastion host that allows connection from systems manager
     const bastionHost = new BastionHostLinux(this, "BastionHost", {
       vpc,
       subnetSelection: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
