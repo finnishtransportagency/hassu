@@ -189,13 +189,13 @@
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisEsitysLadattavaTiedosto",
+        "name": "KunnallinenLadattavaTiedosto",
         "possibleTypes": null,
         "__typename": "__Type"
       },
       {
         "kind": "OBJECT",
-        "name": "HyvaksymisEsitysLadattuTiedosto",
+        "name": "KunnallinenLadattuTiedosto",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -264,7 +264,7 @@
         "name": "ILadattavaTiedosto",
         "possibleTypes": [
           {
-            "name": "HyvaksymisEsitysLadattavaTiedosto",
+            "name": "KunnallinenLadattavaTiedosto",
             "__typename": "__Type"
           },
           {
@@ -279,7 +279,7 @@
         "name": "ILadattuTiedosto",
         "possibleTypes": [
           {
-            "name": "HyvaksymisEsitysLadattuTiedosto",
+            "name": "KunnallinenLadattuTiedosto",
             "__typename": "__Type"
           },
           {

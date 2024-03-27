@@ -147,7 +147,7 @@ export interface ILadattuTiedosto {
 
 export type LadattuTiedosto = ILadattuTiedosto;
 
-export type HyvaksymisEsitysLadattuTiedosto = {
+export type KunnallinenLadattuTiedosto = {
   kunta?: number;
 } & ILadattuTiedosto;
 

@@ -1,7 +1,13 @@
 import { DBProjekti, MuokattavaHyvaksymisEsitys, JulkaistuHyvaksymisEsitys } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
-import { adaptAineistotToAPI, adaptLadatutTiedostotToApi, adaptLaskutustiedotToAPI, adaptSahkopostiVastaanottajatToAPI } from ".";
+import {
+  adaptAineistotToAPI,
+  adaptKunnallisetLadatutTiedostotToApi,
+  adaptLadatutTiedostotToApi,
+  adaptLaskutustiedotToAPI,
+  adaptSahkopostiVastaanottajatToAPI,
+} from ".";
 import { assertIsDefined } from "../../../util/assertions";
 
 /*
@@ -34,7 +40,7 @@ export function adaptHyvaksymisEsitysToApi(
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi(hyvaksymisEsitys.hyvaksymisEsitys, paths),
     suunnitelma: adaptAineistotToAPI(hyvaksymisEsitys.suunnitelma, paths),
-    muistutukset: adaptLadatutTiedostotToApi(hyvaksymisEsitys.muistutukset, paths),
+    muistutukset: adaptKunnallisetLadatutTiedostotToApi(hyvaksymisEsitys.muistutukset, paths),
     lausunnot: adaptLadatutTiedostotToApi(hyvaksymisEsitys.lausunnot, paths),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi(hyvaksymisEsitys.kuulutuksetJaKutsu, paths),
     muuAineistoVelhosta: adaptAineistotToAPI(hyvaksymisEsitys.muuAineistoVelhosta, paths),

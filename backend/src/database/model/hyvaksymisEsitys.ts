@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { Aineisto, LadattuTiedosto, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
+import { Aineisto, KunnallinenLadattuTiedosto, LadattuTiedosto, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
 
 export interface IHyvaksymisEsitys {
   poistumisPaiva: string;
@@ -8,7 +8,7 @@ export interface IHyvaksymisEsitys {
   laskutustiedot?: Laskutustiedot | null;
   hyvaksymisEsitys?: Array<LadattuTiedosto> | null;
   suunnitelma?: Array<Aineisto> | null;
-  muistutukset?: Array<LadattuTiedosto> | null;
+  muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
   lausunnot?: Array<LadattuTiedosto> | null;
   maanomistajaluettelo?: Array<LadattuTiedosto> | null;
   kuulutuksetJaKutsu?: Array<LadattuTiedosto> | null;
