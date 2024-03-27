@@ -1,5 +1,5 @@
-import React, { useCallback, useState, VFC, useEffect } from "react";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
+import React, { useCallback, useState, VFC, useEffect, useMemo, useRef } from "react";
+import { Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled, TextField } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -16,12 +16,23 @@ import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackg
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UseFormProps, useForm, SubmitHandler, FormProvider, useFieldArray } from "react-hook-form";
+import {
+  UseFormProps,
+  useForm,
+  SubmitHandler,
+  FormProvider,
+  useFieldArray,
+  UseFormReturn,
+  Controller,
+  UseFieldArrayProps,
+} from "react-hook-form";
 import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
-import { OmistajatLomakeOsio } from "@components/projekti/tiedottaminen/OmistajatLomakeOsio";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
-import { formatKiinteistotunnusForDatabase } from "common/util/formatKiinteistotunnus";
+import { formatKiinteistotunnusForDatabase, formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
+import MuutOmistajatHaitari from "@components/projekti/tiedottaminen/MuutOmistajatHaitari";
+import { ColumnDef } from "@tanstack/react-table";
+import TiedotettavaHaitari from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -33,7 +44,7 @@ export default function Kiinteistonomistajat() {
 
 export type OmistajaRow = Omistaja & { toBeDeleted: boolean; rowIndex: number };
 
-export type FormData = {
+export type KiinteistonOmistajatFormFields = {
   oid: string;
   suomifiOmistajat: OmistajaRow[];
   muutOmistajat: OmistajaRow[];
@@ -102,16 +113,14 @@ const KarttaDialogi = styled(
 
 export const PAGE_SIZE = 25;
 
-const getFormDefaultValues: (oid: string) => FormData = (oid) => ({
+const getFormDefaultValues: (oid: string) => KiinteistonOmistajatFormFields = (oid) => ({
   oid,
   muutOmistajat: [],
   suomifiOmistajat: [],
   uudetOmistajat: [],
-  muutOmistajatQuery: "",
-  suomifiOmistajatQuery: "",
 });
 
-const formOptions: (oid: string) => UseFormProps<FormData> = (oid) => ({
+const formOptions: (oid: string) => UseFormProps<KiinteistonOmistajatFormFields> = (oid) => ({
   resolver: yupResolver(kiinteistonOmistajatSchema, { abortEarly: false, recursive: true }),
   mode: "onChange",
   reValidateMode: "onChange",
@@ -119,7 +128,7 @@ const formOptions: (oid: string) => UseFormProps<FormData> = (oid) => ({
   shouldUnregister: false,
 });
 
-const mapFormDataForApi: (data: FormData) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
+const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
   const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat]
     .filter((omistaja) => omistaja.toBeDeleted)
     .map(({ id }) => id);
@@ -148,6 +157,135 @@ const mapFormDataForApi: (data: FormData) => TallennaKiinteistonOmistajatMutatio
 
   return variables;
 };
+
+type FieldArrayName = UseFieldArrayProps<KiinteistonOmistajatFormFields>["name"];
+
+type FormRef = React.MutableRefObject<UseFormReturn<KiinteistonOmistajatFormFields, object>>;
+
+const createColumns: (fieldArrayName: FieldArrayName) => (useFormReturnRef: FormRef) => ColumnDef<OmistajaRow>[] =
+  (fieldArrayName) => (useFormReturn) =>
+    [
+      createKiinteistotunnusColumn(),
+      createNimiColumn(),
+      createPostiosoiteColumn(useFormReturn, fieldArrayName),
+      createPostinumeroColumn(useFormReturn, fieldArrayName),
+      createPostitoimipaikkaColumn(useFormReturn, fieldArrayName),
+      createPoistaColumn(fieldArrayName),
+    ];
+
+const getSuomifiColumns = createColumns("suomifiOmistajat");
+const getMuutColumns = createColumns("muutOmistajat");
+
+const defaultColumnMeta = {
+  widthFractions: 3,
+  minWidth: 200,
+};
+
+function createPoistaColumn(fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Poista",
+    id: "actions",
+    meta: {
+      widthFractions: 2,
+      minWidth: 120,
+    },
+    cell: (context) => {
+      const rowIndex = context.row.original.rowIndex;
+
+      return (
+        <Controller
+          name={`${fieldArrayName}.${rowIndex}.toBeDeleted`}
+          render={({ field: { value, onChange, ...field } }) => (
+            <Checkbox
+              checked={value}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                onChange(checked);
+              }}
+              {...field}
+              name={`${fieldArrayName}.${rowIndex}.toBeDeleted`}
+            />
+          )}
+        />
+      );
+    },
+  };
+  return column;
+}
+
+function createPostitoimipaikkaColumn(formRef: FormRef, fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Postitoimipaikka",
+    accessorKey: "paikkakunta",
+    id: "postitoimipaikka",
+    meta: defaultColumnMeta,
+  };
+  if (fieldArrayName !== "suomifiOmistajat") {
+    column.cell = (context) => {
+      const rowIndex = context.row.original.rowIndex;
+      return <TextField {...formRef.current.register(`${fieldArrayName}.${rowIndex}.paikkakunta`)} fullWidth />;
+    };
+  }
+  return column;
+}
+
+function createPostinumeroColumn(formRef: FormRef, fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Postinumero",
+    accessorKey: "postinumero",
+    id: "postinumero",
+    meta: defaultColumnMeta,
+  };
+  if (fieldArrayName !== "suomifiOmistajat") {
+    column.cell = (context) => {
+      const rowIndex = context.row.original.rowIndex;
+      return <TextField {...formRef.current.register(`${fieldArrayName}.${rowIndex}.postinumero`)} fullWidth />;
+    };
+  }
+  return column;
+}
+
+function createPostiosoiteColumn(formRef: FormRef, fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Postiosoite",
+    accessorKey: "jakeluosoite",
+    id: "postiosoite",
+    meta: defaultColumnMeta,
+  };
+  if (fieldArrayName !== "suomifiOmistajat") {
+    column.cell = (context) => {
+      const rowIndex = context.row.original.rowIndex;
+      return <TextField {...formRef.current.register(`${fieldArrayName}.${rowIndex}.jakeluosoite`)} fullWidth />;
+    };
+  }
+  return column;
+}
+
+function createNimiColumn(): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Omistajan nimi",
+    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    id: "omistajan_nimi",
+    meta: {
+      widthFractions: 3,
+      minWidth: 250,
+    },
+  };
+  return column;
+}
+
+function createKiinteistotunnusColumn(): ColumnDef<OmistajaRow, unknown> {
+  const column: ColumnDef<OmistajaRow, unknown> = {
+    header: "Kiinteistötunnus",
+    id: "kiinteistotunnus",
+    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnusForDisplay(kiinteistotunnus),
+    meta: {
+      widthFractions: 2,
+      minWidth: 160,
+    },
+  };
+  return column;
+}
 
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -197,7 +335,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     setHakuKaynnissa(newHakuKaynnissa);
   }, [hakuKaynnissa, mutate, projektinTiedottaminen?.omistajahakuTila, showErrorMessage]);
 
-  const useFormReturn = useForm<FormData>(formOptions(projekti.oid));
+  const useFormReturn = useForm<KiinteistonOmistajatFormFields>(formOptions(projekti.oid));
 
   const { watch, control } = useFormReturn;
   const { append: appendMuutOmistajat } = useFieldArray({ control, name: "muutOmistajat" });
@@ -315,7 +453,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     [updateMuutTiedotettavat]
   );
 
-  const onSubmit = useCallback<SubmitHandler<FormData>>(
+  const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
       withLoadingSpinner(
         (async () => {
@@ -353,6 +491,11 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
       withLoadingSpinner,
     ]
   );
+
+  const somsRef = useRef(useFormReturn);
+
+  const suomifiColumns = useMemo(() => getSuomifiColumns(somsRef), []);
+  const muutColumns = useMemo(() => getMuutColumns(somsRef), []);
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
@@ -392,22 +535,23 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
                 Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
               </p>
             </GrayBackgroundText>
-            <OmistajatLomakeOsio
+            <TiedotettavaHaitari<OmistajaRow>
               oid={projekti.oid}
               expanded={suomifiExpanded}
               title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
               instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
-              fieldArrayName="suomifiOmistajat"
               query={suomifiQuery}
               setQuery={setSuomifiQuery}
               queryResettable={suomifiQueryResettable}
               hakutulosMaara={suomifiHakutulosMaara}
-              naytettavatOmistajat={suomifiNaytettavatOmistajat}
-              setNaytettavatOmistajat={setSuomifiNaytettavatOmistajat}
+              tiedotettavat={suomifiNaytettavatOmistajat}
+              setTiedotettavat={setSuomifiNaytettavatOmistajat}
               updateTiedotettavat={updateSuomifiTiedotettavat}
-              handleExpansionChange={handleSuomifiExpansionChange}
+              onChange={handleSuomifiExpansionChange}
+              filterText="Suodata kiinteistönomistajia"
+              columns={suomifiColumns}
             />
-            <OmistajatLomakeOsio
+            <MuutOmistajatHaitari
               oid={projekti.oid}
               expanded={muutExpanded}
               title="Kiinteistönomistajien tiedotus muilla tavoin"
@@ -419,15 +563,16 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
                   postiosoitteisiin. Kiinteistönomistajista viedään vastaanottajalista asianhallintaan, kun kuulutus julkaistaan.
                 </>
               }
-              fieldArrayName="muutOmistajat"
               query={muutQuery}
               setQuery={setMuutQuery}
               queryResettable={muutQueryResettable}
               hakutulosMaara={muutHakutulosMaara}
-              naytettavatOmistajat={muutNaytettavatOmistajat}
-              setNaytettavatOmistajat={setMuutNaytettavatOmistajat}
+              tiedotettavat={muutNaytettavatOmistajat}
+              setTiedotettavat={setMuutNaytettavatOmistajat}
               updateTiedotettavat={updateMuutTiedotettavat}
-              handleExpansionChange={handleMuutExpansionChange}
+              onChange={handleMuutExpansionChange}
+              columns={muutColumns}
+              filterText="Suodata kiinteistönomistajia"
             />
             <TallennaButton primary type="button" onClick={useFormReturn.handleSubmit(onSubmit)}>
               Tallenna
