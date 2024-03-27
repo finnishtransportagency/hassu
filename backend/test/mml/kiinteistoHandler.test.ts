@@ -312,7 +312,7 @@ describe("kiinteistoHandler", () => {
         ],
         poistettavatOmistajat: ["77"],
       })
-    ).to.eventually.rejectedWith(IllegalArgumentError, "Poistettavaa omistajaa id:'77' ei löytynyt");
+    ).to.eventually.rejectedWith(IllegalArgumentError, "Poistettavaa omistajaa id: '77' ei löytynyt");
   });
 
   it("heittää virhettä jos muokattava omistaja ei ole muuOmistaja", async () => {
