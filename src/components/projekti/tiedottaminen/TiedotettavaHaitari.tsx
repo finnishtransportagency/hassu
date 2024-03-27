@@ -7,11 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionProps, AccordionSummary, TextField } from "@mui/material";
 import { Stack, styled } from "@mui/system";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import React, { ReactNode, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-
-const typedMemo: <T>(c: T) => T = React.memo;
-const MemoHassuTable = typedMemo(HassuTable);
 
 export type SearchTiedotettavatFunction<T> = (
   oid: string,
@@ -36,7 +33,6 @@ export type TiedotettavaHaitariProps<T> = {
   onChange: Exclude<AccordionProps["onChange"], undefined>;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  bottomContent?: ReactNode;
 };
 
 type Tiedotettava = Record<string, unknown>;
@@ -58,7 +54,6 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
   onChange,
   query,
   setQuery,
-  bottomContent,
 }: Readonly<TiedotettavaHaitariProps<T>>) {
   return (
     <TableAccordion expanded={expanded} onChange={onChange}>
@@ -75,7 +70,6 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
         queryResettable={queryResettable}
         query={query}
         setQuery={setQuery}
-        bottomContent={bottomContent}
       />
     </TableAccordion>
   );
@@ -121,12 +115,11 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   queryResettable,
   query,
   setQuery,
-  bottomContent,
   ...props
 }: Omit<AccordionDetailsProps, "children"> &
   Pick<
     TiedotettavaHaitariProps<T>,
-    "oid" | "instructionText" | "columns" | "filterText" | "tiedotettavat" | "setTiedotettavat" | "query" | "setQuery" | "bottomContent"
+    "oid" | "instructionText" | "columns" | "filterText" | "tiedotettavat" | "setTiedotettavat" | "query" | "setQuery"
   > & {
     updateTiedotettavat: (query?: string, from?: any, size?: any) => void;
     hakutulosMaara: number | null;
@@ -199,7 +192,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
         )}
         {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (
           <>
-            <MemoHassuTable table={table} />
+            <HassuTable table={table} />
             <Grid>
               <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
                 {tiedotettavat.length > PAGE_SIZE && (
@@ -226,7 +219,6 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
                 Vie Exceliin
               </Button>
             </Grid>
-            {bottomContent}
           </>
         )}
       </ContentSpacer>
