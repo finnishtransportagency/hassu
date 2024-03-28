@@ -387,13 +387,20 @@ export class FileService {
     if (filePath.startsWith(FILE_PATH_DELETED_PREFIX)) {
       return filePath;
     }
-    const result = filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
-    if (!result.includes("yllapito/")) {
+    if (paths.yllapitoPath.match("hyvaksymisesitys")) {
+      /*
+      Hyväksymisesitysten tiedostoista tallennetaan DynamoDB:hen vain tiedostonimi.
+      Tämä poikkeuskäsittely on epätyydyttävä ratkaisu. Pidemmällä aikavälillä voisi harkita sitä,
+      että kaikki tiedostot tallennettaisiin vain nimellään, ja polku, esim. nahtavillaolo/2/ pääteltäisiin kontekstista
+      */
+      return paths.yllapitoFullPath + "/" + filePath;
+    } else if (filePath.match(paths.yllapitoPath)) {
+      return filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
+    } else {
       throw new Error(
-        `Tiedoston ylläpitopolun luominen ei onnistunut. filePath:${filePath} yllapitoPath:${paths.yllapitoPath} yllapitoFullPath:${paths.yllapitoFullPath} result:${result}`
+        `Tiedoston ylläpitopolun luominen ei onnistunut. filePath:${filePath} yllapitoPath:${paths.yllapitoPath} yllapitoFullPath:${paths.yllapitoFullPath}`
       );
     }
-    return result;
   }
 
   getPublicPathForProjektiFile(paths: PathTuple, filePath: string): string {

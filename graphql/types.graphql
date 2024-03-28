@@ -409,7 +409,7 @@ type HyvaksymisEsitys {
   laskutustiedot: Laskutustiedot
   hyvaksymisEsitys: [LadattuTiedosto!]
   suunnitelma: [Aineisto!]
-  muistutukset: [LadattuTiedosto!]
+  muistutukset: [KunnallinenLadattuTiedosto!]
   lausunnot: [LadattuTiedosto!]
   kuulutuksetJaKutsu: [LadattuTiedosto!]
   muuAineistoVelhosta: [Aineisto!]
@@ -417,16 +417,17 @@ type HyvaksymisEsitys {
   maanomistajaluettelo: [LadattuTiedosto!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tila: HyvaksymisTila
-  hyvaksyja: String
-  hyvaksymisPaiva: String
   palautusSyy: String
   aineistopaketti: String
+  hyvaksyja: String
+  hyvaksymisPaiva: String
 }
 
 type Laskutustiedot {
-  OVTtunnus: String
-  verkkolaskuOperaattorinValittajaTunnus: String
-  viite: String
+  yTunnus: String
+  ovtTunnus: String
+  verkkolaskuoperaattorinTunnus: String
+  viitetieto: String
 }
 
 enum HyvaksymisTila {
@@ -849,7 +850,7 @@ type LadattuTiedosto implements ILadattuTiedosto {
   tila: LadattuTiedostoTila!
 }
 
-type HyvaksymisEsitysLadattuTiedosto implements ILadattuTiedosto {
+type KunnallinenLadattuTiedosto implements ILadattuTiedosto {
   tiedosto: String!
   nimi: String!
   uuid: String!
@@ -1154,8 +1155,9 @@ type LadattavatTiedostot {
   aineistot: [LadattavaTiedosto!]
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
-  hyvaksymisEsitys: [HyvaksymisEsitysLadattavaTiedosto!]
+  hyvaksymisEsitys: [LadattavaTiedosto!]
   suunnitelma: [LadattavaTiedosto!]
   lausunnot: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
@@ -1183,7 +1185,7 @@ interface ILadattavaTiedosto {
   jarjestys: Int
 }
 
-type LadattavaTiedosto implements ILadattavaTiedosto{
+type LadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!
@@ -1191,7 +1193,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto{
   jarjestys: Int
 }
 
-type HyvaksymisEsitysLadattavaTiedosto implements ILadattavaTiedosto{
+type KunnallinenLadattavaTiedosto implements ILadattavaTiedosto {
   kategoriaId: String
   linkki: String
   nimi: String!

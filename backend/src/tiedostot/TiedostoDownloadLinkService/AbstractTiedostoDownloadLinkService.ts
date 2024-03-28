@@ -1,10 +1,10 @@
-import { AineistoTila, HyvaksymisEsitysLadattavaTiedosto, LadattavaTiedosto, LadattavatTiedostot } from "hassu-common/graphql/apiModel";
+import { AineistoTila, KunnallinenLadattavaTiedosto, LadattavaTiedosto, LadattavatTiedostot } from "hassu-common/graphql/apiModel";
 import crypto from "crypto";
-import { Aineisto, DBProjekti, HyvaksymisEsitysLadattuTiedosto, LadattuTiedosto } from "../../database/model";
+import { Aineisto, DBProjekti, KunnallinenLadattuTiedosto, LadattuTiedosto } from "../../database/model";
 import { log } from "../../logger";
 import { fileService } from "../../files/fileService";
 
-export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, LISTAAINPUT> {
+export default abstract class TiedostoDownloadLinkService<TALLENNAINPUT, LISTAAINPUT> {
   protected async adaptAineistoToLadattavaTiedosto(oid: string, aineisto: Aineisto): Promise<LadattavaTiedosto> {
     const { jarjestys, kategoriaId } = aineisto;
     const nimi = aineisto.nimi;
@@ -34,10 +34,10 @@ export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, 
     return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
   }
 
-  protected async adaptHyvaksymisEsitysLadattuTiedostoToLadattavaTiedosto(
+  protected async adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(
     oid: string,
-    tiedosto: HyvaksymisEsitysLadattuTiedosto
-  ): Promise<HyvaksymisEsitysLadattavaTiedosto> {
+    tiedosto: KunnallinenLadattuTiedosto
+  ): Promise<KunnallinenLadattavaTiedosto> {
     const { jarjestys } = tiedosto;
     const nimi: string = tiedosto.nimi ?? "";
     let linkki;
@@ -46,7 +46,7 @@ export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, 
     } else {
       linkki = "";
     }
-    return { __typename: "HyvaksymisEsitysLadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu, kunta: tiedosto.kunta };
+    return { __typename: "KunnallinenLadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu, kunta: tiedosto.kunta };
   }
 
   protected async adaptTiedostoPathToLadattavaTiedosto(oid: string, tiedostoPath: string): Promise<LadattavaTiedosto> {
@@ -59,8 +59,6 @@ export default abstract class TiedostoDownloadLinkService<VAIHE, TALLENNAINPUT, 
     return crypto.randomBytes(16).toString("hex");
   }
 
-  abstract generateHash(oid: string, uuidOrSecret: string, salt: string | undefined): string;
-  abstract validateHash(oid: string, salt: string, givenHash: string, vaihe: VAIHE): void;
   abstract esikatseleTiedostot(projekti: DBProjekti, projektiInput: TALLENNAINPUT): Promise<LadattavatTiedostot>;
   abstract listaaTiedostot(projekti: DBProjekti, params: LISTAAINPUT): Promise<LadattavatTiedostot>;
 }
