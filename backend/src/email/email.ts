@@ -45,7 +45,7 @@ function getTransport(smtpConfig: SMTPConfig) {
   });
 }
 
-function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
+export function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
   return nodemailer.createTransport({
     port: 465,
     host: turvapostiConfig.SERVER,

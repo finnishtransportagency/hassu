@@ -291,6 +291,7 @@
     "db:tool": "ts-node --project=backend/tsconfig.json ./backend/bin/dbTool.ts",
     "suomifi:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/suomifiTest.ts",
     "pdf:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/pdfTest.ts",
+    "turvaposti:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/turvapostiTest.ts",
     "e2e:test:run": "cypress run -b chrome",
     "e2e:test:open": "cypress open",
     "e2e:test:open:dev": "cross-env-shell ENVIRONMENT=dev npm run setupenvironment && cypress open",
