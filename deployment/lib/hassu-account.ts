@@ -58,8 +58,8 @@ export class HassuAccountStack extends Stack {
     const keycloak = new NodejsFunction(this, "KeycloakLambda", {
       functionName: "hassu-keycloak-" + Config.env,
       runtime: Runtime.NODEJS_18_X,
-      entry: `${__dirname}/../../backend/src/suomifi/keycloak.ts`,
-      handler: "handleEvent",
+      entry: `${__dirname}/../../backend/src/suomifi/deleteExpiredKeycloakUsers.ts`,
+      handler: "handleScheduledEvent",
       memorySize: 512,
       reservedConcurrentExecutions: 1,
       timeout: Duration.seconds(60),

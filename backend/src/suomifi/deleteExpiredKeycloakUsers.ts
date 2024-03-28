@@ -20,7 +20,7 @@ async function callKeycloak(url: URL, path: string, token: string, method = "GET
 
 type User = { id: string; createdTimestamp: number };
 
-export async function handleEvent() {
+export async function handleScheduledEvent() {
   const keycloakUrl = new URL(await parameters.getKeycloakPrivateDomain());
   keycloakUrl.pathname = "/keycloak/auth/realms/master/protocol/openid-connect/token";
   const details: Record<string, string> = {
