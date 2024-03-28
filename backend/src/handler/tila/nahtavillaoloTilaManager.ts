@@ -264,13 +264,19 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
-    nahtavillaoloVaiheJulkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
-      projekti,
-      new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
-      this.vaihe,
-      nahtavillaoloVaiheJulkaisu.kuulutusPaiva,
-      nahtavillaoloVaiheJulkaisu.id
-    );
+    if (
+      !nahtavillaoloVaiheJulkaisu.uudelleenKuulutus ||
+      nahtavillaoloVaiheJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia === undefined ||
+      nahtavillaoloVaiheJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia
+    ) {
+      nahtavillaoloVaiheJulkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+        projekti,
+        new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
+        this.vaihe,
+        nahtavillaoloVaiheJulkaisu.kuulutusPaiva,
+        nahtavillaoloVaiheJulkaisu.id
+      );
+    }
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {

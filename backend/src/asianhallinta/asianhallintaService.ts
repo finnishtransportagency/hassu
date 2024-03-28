@@ -33,14 +33,14 @@ class AsianhallintaService {
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
-    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId);
+    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId, synkronointi.tiedotaAsianosaisia);
   }
 
   /**
    * Jonotus on erillisenä metodina, jotta sitä voidaan kutsua testiympäristössä haluttaessa. Lopullisessa toteutuksessa kutsu tulee aina
    * saveAndEnqueueSynchronization-metodin kautta.
    */
-  async enqueueSynchronization(oid: string, asianhallintaEventId: string) {
+  async enqueueSynchronization(oid: string, asianhallintaEventId: string, tiedotaAsianosaisia?: boolean) {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
@@ -57,6 +57,7 @@ class AsianhallintaService {
       hyvaksyja: getVaylaUser()?.uid ?? undefined,
       hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined,
       asianNimi: projekti.velho?.nimi,
+      tiedotaAsianosaisia,
     };
     const messageParams: SendMessageRequest = {
       MessageGroupId: oid,
