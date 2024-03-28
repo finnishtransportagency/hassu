@@ -252,10 +252,10 @@ input HyvaksymisEsitysInput {
 }
 
 input LaskutustiedotInput {
-  yTunnus: String!
-  ovtTunnus: String!
-  verkkolaskuoperaattorinTunnus: String!
-  viitetieto: String!
+  yTunnus: String
+  ovtTunnus: String
+  verkkolaskuoperaattorinTunnus: String
+  viitetieto: String
 }
 
 input HyvaksymisPaatosVaiheInput {
