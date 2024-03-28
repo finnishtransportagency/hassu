@@ -191,18 +191,18 @@ class HyvaksymisEsitysDownloadLinkService extends TiedostoDownloadLinkService<
       // @ts-ignore
       return;
     }
-    return HyvaksymisEsitysDownloadLinkService.createHyvaksyisEsitysHash(oid, salt);
+    return HyvaksymisEsitysDownloadLinkService.createHyvaksymisEsitysHash(oid, salt);
   }
 
   validateHash(oid: string, salt: string, givenHash: string) {
-    const hash = HyvaksymisEsitysDownloadLinkService.createHyvaksyisEsitysHash(oid, salt);
+    const hash = HyvaksymisEsitysDownloadLinkService.createHyvaksymisEsitysHash(oid, salt);
     if (hash != givenHash) {
       log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
       throw new IllegalAccessError("Lausuntopyynnon aineiston tarkistussumma ei täsmää");
     }
   }
 
-  private static createHyvaksyisEsitysHash(oid: string, salt: string | undefined): string {
+  private static createHyvaksymisEsitysHash(oid: string, salt: string | undefined): string {
     if (!salt) {
       throw new Error("Salt missing");
     }
