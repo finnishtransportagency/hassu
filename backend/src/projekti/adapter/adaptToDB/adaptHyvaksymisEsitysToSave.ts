@@ -1,13 +1,13 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
-import { HyvaksymisEsitys } from "../../../database/model";
+import { MuokattavaHyvaksymisEsitys } from "../../../database/model";
 import { adaptAineistotToSave, adaptTiedostotToSave } from "./common";
 
 export function adaptHyvaksymisEsitysToSave(
-  dbHyvaksymisEsitys: HyvaksymisEsitys | undefined | null,
+  dbHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | undefined | null,
   hyvaksymisEsitysInput: API.HyvaksymisEsitysInput | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
-): HyvaksymisEsitys | null | undefined {
+): MuokattavaHyvaksymisEsitys | null | undefined {
   if (!hyvaksymisEsitysInput) {
     return hyvaksymisEsitysInput;
   }
@@ -23,7 +23,7 @@ export function adaptHyvaksymisEsitysToSave(
     vastaanottajat,
     ...rest
   } = hyvaksymisEsitysInput;
-  const adapted: HyvaksymisEsitys = {
+  const adapted: MuokattavaHyvaksymisEsitys = {
     hyvaksymisEsitys: adaptTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
     suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma, projektiAdaptationResult),
     muistutukset: adaptTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset, projektiAdaptationResult),

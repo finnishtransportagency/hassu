@@ -1,30 +1,52 @@
-import { DBProjekti, HyvaksymisEsitys } from "../../../database/model";
+import { DBProjekti, MuokattavaHyvaksymisEsitys, JulkaistuHyvaksymisEsitys } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
-import { adaptAineistotToAPI, adaptLadatutTiedostotToApi, adaptLaskutustiedotToAPI, adaptSahkopostiVastaanottajatToAPI } from ".";
+import {
+  adaptAineistotToAPI,
+  adaptKunnallisetLadatutTiedostotToApi,
+  adaptLadatutTiedostotToApi,
+  adaptLaskutustiedotToAPI,
+  adaptSahkopostiVastaanottajatToAPI,
+} from ".";
+import { assertIsDefined } from "../../../util/assertions";
 
-export function adaptHyvaksymisEsitysToAPI(
-  dbProjekti: DBProjekti,
-  hyvaksymisEsitys?: HyvaksymisEsitys | null
+/*
+Tuodaan fronttiin joko muokkaustilaisen tai julkaistun hyväksymisesityksen tiedot,
+riippuen siitä, missä vaihessa hyväksymisesitys on.
+Kentät, jotka on vain toisella näistä, tuodaan aina, jolloin
+silloinkin kun hyväksymisesitys on avattu muokattavaksi,
+saadaan fronttiin tieto siitä, milloin julkaistu esitys on julkaistu.
+*/
+export function adaptHyvaksymisEsitysToApi(
+  projekti: DBProjekti,
+  muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | null | undefined,
+  julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys | null | undefined
 ): API.HyvaksymisEsitys | undefined {
-  if (!hyvaksymisEsitys) {
+  if (!(muokattavaHyvaksymisEsitys || julkaistuHyvaksymisEsitys)) {
     return undefined;
   }
-  const paths = new ProjektiPaths(dbProjekti.oid).hyvaksymisEsitys();
 
+  const paths = muokattavaHyvaksymisEsitys
+    ? new ProjektiPaths(projekti.oid).muokattavaHyvaksymisEsitys()
+    : new ProjektiPaths(projekti.oid).julkaistuHyvaksymisEsitys();
+
+  const hyvaksymisEsitys = muokattavaHyvaksymisEsitys ?? julkaistuHyvaksymisEsitys;
+  assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
   return {
     __typename: "HyvaksymisEsitys",
-    ...hyvaksymisEsitys,
+    ...julkaistuHyvaksymisEsitys,
+    ...muokattavaHyvaksymisEsitys,
+    poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi(hyvaksymisEsitys.hyvaksymisEsitys, paths),
     suunnitelma: adaptAineistotToAPI(hyvaksymisEsitys.suunnitelma, paths),
-    muistutukset: adaptLadatutTiedostotToApi(hyvaksymisEsitys.muistutukset, paths),
+    muistutukset: adaptKunnallisetLadatutTiedostotToApi(hyvaksymisEsitys.muistutukset, paths),
     lausunnot: adaptLadatutTiedostotToApi(hyvaksymisEsitys.lausunnot, paths),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi(hyvaksymisEsitys.kuulutuksetJaKutsu, paths),
     muuAineistoVelhosta: adaptAineistotToAPI(hyvaksymisEsitys.muuAineistoVelhosta, paths),
     muuAineistoKoneelta: adaptLadatutTiedostotToApi(hyvaksymisEsitys.muuAineistoKoneelta, paths),
     maanomistajaluettelo: adaptLadatutTiedostotToApi(hyvaksymisEsitys.maanomistajaluettelo, paths),
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(hyvaksymisEsitys.vastaanottajat),
-    tila: hyvaksymisEsitys.tila ?? API.HyvaksymisTila.MUOKKAUS,
+    tila: muokattavaHyvaksymisEsitys ? muokattavaHyvaksymisEsitys.tila ?? API.HyvaksymisTila.MUOKKAUS : API.HyvaksymisTila.HYVAKSYTTY,
   };
 }

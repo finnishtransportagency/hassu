@@ -11,6 +11,7 @@ import {
   KayttajaTyyppi,
   Kieli,
   KuulutusJulkaisuTila,
+  LadattuTiedostoTila,
   Projekti,
   TallennaProjektiInput,
   TilasiirtymaToiminto,
@@ -220,6 +221,8 @@ describe("apiHandler", () => {
               aloituskuulutusSaamePDFt: {
                 POHJOISSAAME: {
                   kuulutusPDF: {
+                    uuid: "jotain",
+                    tila: LadattuTiedostoTila.VALMIS,
                     tiedosto: "/Saame.pdf",
                   },
                 },
