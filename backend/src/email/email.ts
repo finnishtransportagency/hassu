@@ -18,6 +18,7 @@ type TurvapostiConfig = {
   LOGIN: string;
   PASSWORD: string;
   SERVER: string;
+  PORT: number;
 };
 
 async function getSMTPConfig() {
@@ -45,11 +46,11 @@ function getTransport(smtpConfig: SMTPConfig) {
   });
 }
 
-function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
+export function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
   return nodemailer.createTransport({
-    port: 465,
+    port: turvapostiConfig.PORT,
     host: turvapostiConfig.SERVER,
-    secure: true,
+    secure: false,
     auth: {
       user: turvapostiConfig.LOGIN,
       pass: turvapostiConfig.PASSWORD,
