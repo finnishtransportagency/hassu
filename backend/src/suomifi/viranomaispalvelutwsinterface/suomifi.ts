@@ -32,6 +32,7 @@ export type PdfViesti = Viesti & {
   maa: string;
   suunnittelustaVastaavaViranomainen?: string | null;
   tiedosto: Tiedosto;
+  kustannuspaikka?: string;
 };
 
 export type Options = {
@@ -175,6 +176,7 @@ function getLaskutus(viesti: PdfViesti, options: Options) {
       Laskutus: {
         Tunniste: laskutusTunniste,
         Salasana: laskutusSalasana,
+        Kustannuspaikka: viesti.kustannuspaikka,
       },
     };
   }
