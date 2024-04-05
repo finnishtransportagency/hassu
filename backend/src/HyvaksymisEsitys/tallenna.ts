@@ -5,24 +5,22 @@ import { requirePermissionMuokkaa } from "../user";
 import { IllegalArgumentError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
+import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 
 export async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
-  const { oid } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
-  await tallennaHyvaksymisEsitysHelper(input, projektiInDB);
-  return oid;
-}
-
-export async function tallennaHyvaksymisEsitysHelper(
-  hyvaksymisEsitysInput: API.TallennaHyvaksymisEsitysInput,
-  projektiInDB: DBProjekti
-): Promise<DBProjekti> {
+  const { oid, versio } = input;
+  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
   validate(projektiInDB);
-  auditLog.info("Tallenna hyväksymisesitys", { hyvaksymisEsitysInput });
-  const projektiAdaptationResult = adaptHyvaksymisEsitysToSave(projektiInDB, hyvaksymisEsitysInput);
-  // TODO: tallenna hyvaksymisesitys
-  // TODO: laita mahdollisia tiedosto-eventtejä sqs-jonoon
-  return projektiAdaptationResult.projekti;
+  // Adaptoi ja tallenna adaptaation tulos tietokantaan
+  const projektiAdaptationResult = adaptHyvaksymisEsitysToSave(projektiInDB, input);
+  auditLog.info("Tallenna hyväksymisesitys", { input });
+  await tallennaMuokattavaHyvaksymisEsitys({
+    oid,
+    versio,
+    muokattavaHyvaksymisEsitys: projektiAdaptationResult.projekti.muokattavaHyvaksymisEsitys!,
+  });
+  // TODO: reagoi mahdollisiin tiedostomuutoksiin
+  return oid;
 }
 
 function validate(projektiInDB: DBProjekti) {

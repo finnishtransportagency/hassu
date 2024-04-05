@@ -4,7 +4,11 @@ import * as API from "hassu-common/graphql/apiModel";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../../util/dateUtil";
 import { sendParamsToDynamoDB } from "./util";
 
-export default async function palautaHyvaksymisEsitysJaAsetaSyy(input: { oid: string; versio: number; syy: string }): Promise<number> {
+export default async function palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy(input: {
+  oid: string;
+  versio: number;
+  syy: string;
+}): Promise<number> {
   const { oid, versio, syy } = input;
   const nextVersion = versio + 1;
   const params = new UpdateCommand({

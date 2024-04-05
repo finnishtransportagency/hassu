@@ -1,19 +1,18 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti } from "../database/model";
+import { DBProjekti, JulkaistuHyvaksymisEsitys } from "../database/model";
 import { requireOmistaja } from "../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { fileService } from "../files/fileService";
-// import { omit } from "lodash";
-// import { nyt } from "../util/dateUtil";
 import { config } from "../config";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
-//import { varmistaLukuoikeusJaHaeProjekti } from "./util";
+import { omit } from "lodash";
+import { nyt } from "../util/dateUtil";
+import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "./dynamoDBCalls";
 
 export async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
-  const { oid } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
-  //const nykyinenKayttaja =
+  const { oid, versio } = input;
+  const { projektiInDB, nykyinenKayttaja } = await varmistaLukuoikeusJaHaeProjekti(oid);
   validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   const path = new ProjektiPaths(oid).julkaistuHyvaksymisEsitys().yllapitoFullPath;
@@ -24,14 +23,12 @@ export async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promi
   await fileService.copyYllapitoFolder(muokattavaHyvaksymisEsitysPath, julkaistuHyvaksymisEsitysPath);
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
-  // Päivitä muokattavan hyväksymisesityksen tila hyväksytyksi.
-  // const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
-  //   ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila"]),
-  //   hyvaksymisPaiva: nyt().format(),
-  //   hyvaksyja: nykyinenKayttaja.uid,
-  // };
-  // TODO: muuta muokattavan hyvaksymisesityksen tila
-  // TODO: ylikirjoita julkaistuHyvaksymisEsitys
+  const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
+    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila"]),
+    hyvaksymisPaiva: nyt().format(),
+    hyvaksyja: nykyinenKayttaja.uid,
+  };
+  await tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
   return oid;
 }
 

@@ -5,7 +5,7 @@ import { sendParamsToDynamoDB } from "./util";
 import { JulkaistuHyvaksymisEsitys } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
-export default async function hyvaksyHyvaksymisEsitys(input: {
+export default async function tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi(input: {
   oid: string;
   versio: number;
   julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys;

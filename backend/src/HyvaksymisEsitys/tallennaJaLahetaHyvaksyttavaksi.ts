@@ -5,14 +5,29 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { assertIsDefined } from "../util/assertions";
 import getTiedostotKeepReference from "./getTiedostotKeepReference";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
-import { tallennaHyvaksymisEsitysHelper } from "./tallenna";
+import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
+import { auditLog } from "../logger";
+import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 
 export async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
-  const { oid } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
-  validate(projektiInDB);
-  await tallennaHyvaksymisEsitysHelper(input, projektiInDB);
-  // TODO: päivitä muokattavaHyvaksymisEsityksen tila palautetuksi ja päivitä palautusSyy null:ksi
+  const { oid, versio } = input;
+  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
+  // Adaptoi input db:ssä olevaan dataan
+  const { projekti } = adaptHyvaksymisEsitysToSave(projektiInDB, input);
+  // Validoi, että tallennettavalla hyväksymisesityksellä on kaikki kentät kunnossa
+  validate(projekti);
+  // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
+  const muokattavaHyvaksymisEsitys = {
+    ...projekti.muokattavaHyvaksymisEsitys!,
+    tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+  };
+  auditLog.info("Tallenna hyväksymisesitys", { input });
+  await tallennaMuokattavaHyvaksymisEsitys({
+    oid,
+    versio,
+    muokattavaHyvaksymisEsitys,
+  });
+  // Aineistomuutoksia ei voi olla, koska validoimme, että tiedostot ovat valmiita
   return oid;
 }
 

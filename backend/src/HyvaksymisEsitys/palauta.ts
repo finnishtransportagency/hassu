@@ -3,13 +3,14 @@ import { DBProjekti } from "../database/model";
 import { IllegalArgumentError } from "hassu-common/error";
 import { requireOmistaja } from "../user/userService";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
+import { palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy } from "./dynamoDBCalls";
 
 export async function palautaHyvaksymisEsitys(input: API.PalautaInput): Promise<string> {
-  const { oid } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const { oid, versio, syy } = input;
+  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
   validate(projektiInDB);
   // Päivitä muokattavaHyvaksymisEsityksen tila palautetuksi ja päivitä hylkäyssyy
-  // TODO: aseta muokattavanHyvaksymisEsityksen tila ja palautussyy
+  await palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy({ oid, versio, syy });
   return oid;
 }
 

@@ -1,11 +1,11 @@
 import tallennaMuokattavaHyvaksymisEsitys from "./tallennaMuokattavaHyvaksymisEsitys";
 import muutaMuokattavanHyvaksymisEsityksenTilaa from "./muutaTilaa";
-import palautaHyvaksymisEsitysJaAsetaSyy from "./palautaJaAsetaSyy";
-import hyvaksyHyvaksymisEsitys from "./hyvaksy";
+import palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy from "./palautaJaAsetaSyy";
+import tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi from "./hyvaksy";
 
-module.exports = {
+export {
   tallennaMuokattavaHyvaksymisEsitys,
   muutaMuokattavanHyvaksymisEsityksenTilaa,
-  palautaHyvaksymisEsitysJaAsetaSyy,
-  hyvaksyHyvaksymisEsitys,
+  palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy,
+  tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi,
 };

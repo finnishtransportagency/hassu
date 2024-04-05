@@ -1,23 +1,23 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
 import { IllegalArgumentError } from "hassu-common/error";
-import { projektiDatabase } from "../database/projektiDatabase";
 import { assertIsDefined } from "../util/assertions";
 import { requirePermissionMuokkaa } from "../user";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
+import muutaMuokattavanHyvaksymisEsityksenTilaa from "./dynamoDBCalls/muutaTilaa";
 
 export async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   const { oid, versio } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
   validate(projektiInDB);
   // Aseta muokattavan hyväksymisesityksen tila
   assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys, "muokattavaHyvaksymisEsitys on oltava olemassa");
-  const muokattavaHyvaksymisEsitys = {
-    ...projektiInDB.muokattavaHyvaksymisEsitys,
-    tila: API.HyvaksymisTila.MUOKKAUS,
-  };
-  await projektiDatabase.saveProjekti({ oid, versio, muokattavaHyvaksymisEsitys });
-  // TODO: korvaa ylläoleva spesifillä tallennustoiminnolla, jossa tallennetaan vain tila-kenttä
+  await muutaMuokattavanHyvaksymisEsityksenTilaa({
+    oid,
+    versio,
+    uusiTila: API.HyvaksymisTila.MUOKKAUS,
+    vanhaTila: API.HyvaksymisTila.HYVAKSYTTY,
+  });
   return oid;
 }
 

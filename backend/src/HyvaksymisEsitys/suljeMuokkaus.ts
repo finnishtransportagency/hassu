@@ -6,10 +6,12 @@ import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { config } from "../config";
 import { varmistaLukuoikeusJaHaeProjekti } from "./util";
+import { omit } from "lodash";
+import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 
 export async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
-  const { oid } = input;
-  const projektiInDB = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const { oid, versio } = input;
+  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
   validate(projektiInDB);
   // Poista muokattavissa olevan hyväksymisesityksen tiedostot
   const path = new ProjektiPaths(oid).muokattavaHyvaksymisEsitys().yllapitoFullPath;
@@ -20,12 +22,11 @@ export async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInpu
   await fileService.copyYllapitoFolder(julkaistuHyvaksymisEsitysPath, muokattavaHyvaksymisEsitysPath);
   // Kopioi julkaisusta jutut muokattavaHyvaksymisEsitykseen ja aseta tila hyväksytyksi
   // – tiedostojen polkuja ei tarvitse päivittää
-  // const muokattavaHyvaksymisEsitys = {
-  //   ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti"]),
-  //   tila: API.HyvaksymisTila.HYVAKSYTTY,
-  // };
-  // TODO: tallenna tietokantaan
-
+  const muokattavaHyvaksymisEsitys = {
+    ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti"]),
+    tila: API.HyvaksymisTila.HYVAKSYTTY,
+  };
+  await tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys });
   return oid;
 }
 
