@@ -171,13 +171,19 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       PaatosTyyppi.HYVAKSYMISPAATOS
     );
 
-    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
-      projekti,
-      new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
-      this.vaihe,
-      julkaisu.kuulutusPaiva,
-      julkaisu.id
-    );
+    if (
+      !julkaisu.uudelleenKuulutus ||
+      julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia === undefined ||
+      julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia
+    ) {
+      julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+        projekti,
+        new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+        this.vaihe,
+        julkaisu.kuulutusPaiva,
+        julkaisu.id
+      );
+    }
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
