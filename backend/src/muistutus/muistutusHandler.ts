@@ -72,8 +72,6 @@ class MuistutusHandler {
     const liitteet = await this.persistLiitteet(muistutusInput.liitteet, oid, muistutusId);
     const muistutus: Muistutus = adaptMuistutusInput({ aikaleima, muistutusId, liitteet, loggedInUser, muistutusInput });
 
-    await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
-
     const henkilotunnus = loggedInUser?.["custom:hetu"];
 
     const muistuttaja: DBMuistuttaja = {
@@ -97,6 +95,7 @@ class MuistutusHandler {
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
     await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id], !henkilotunnus);
+    await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
     const msg: SuomiFiSanoma = {
       oid,
       muistuttajaId: muistuttaja.id,
