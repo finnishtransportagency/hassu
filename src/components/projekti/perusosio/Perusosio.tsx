@@ -43,7 +43,7 @@ export default function ProjektinPerusosio({ projekti, register, formState }: Re
             erikseen.
           </p>
           <TextInput
-            label="Projektin viitetieto *"
+            label="Projektin viitetieto"
             maxLength={15}
             {...register("kustannuspaikka")}
             error={formState.errors.kustannuspaikka}
