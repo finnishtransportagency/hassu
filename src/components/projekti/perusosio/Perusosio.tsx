@@ -16,11 +16,11 @@ export interface PerusosioProps {
 }
 
 interface ProjektinPerusosioProps extends PerusosioProps {
-  register: UseFormRegister<FormValues>;
-  formState: FormState<FormValues>;
+  register?: UseFormRegister<FormValues>;
+  formState?: FormState<FormValues>;
 }
 
-export default function ProjektinPerusosio({ projekti, register, formState }: ProjektinPerusosioProps) {
+export default function ProjektinPerusosio({ projekti, register, formState }: Readonly<ProjektinPerusosioProps>) {
   return (
     <>
       <Section>
@@ -34,19 +34,22 @@ export default function ProjektinPerusosio({ projekti, register, formState }: Pr
           <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
         </ContentSpacer>
       </Section>
-      <Section gap={4}>
-        <h4 className="vayla-small-title">Projektin viitetieto</h4>
-        <p>
-          Tämä tieto on Suomi.fi tulostus-, jakelu- ja kuoritus -palvelun laskutusta varten. Väylän projektissa projektikohtainen VSK-koodi.
-          ELYn projektissa oman ohjeistuksensa mukaisen viitetiedon. HUOM! Hyväksymisesityksen laskutustiedot annetaan erikseen.
-        </p>
-        <TextInput
-          label="Projektin viitetieto *"
-          maxLength={15}
-          {...register("kustannuspaikka")}
-          error={formState.errors.kustannuspaikka}
-        />
-      </Section>
+      {register && formState && (
+        <Section gap={4}>
+          <h4 className="vayla-small-title">Projektin viitetieto</h4>
+          <p>
+            Tämä tieto on Suomi.fi tulostus-, jakelu- ja kuoritus -palvelun laskutusta varten. Väylän projektissa projektikohtainen
+            VSK-koodi. ELYn projektissa oman ohjeistuksensa mukaisen viitetiedon. HUOM! Hyväksymisesityksen laskutustiedot annetaan
+            erikseen.
+          </p>
+          <TextInput
+            label="Projektin viitetieto *"
+            maxLength={15}
+            {...register("kustannuspaikka")}
+            error={formState.errors.kustannuspaikka}
+          />
+        </Section>
+      )}
     </>
   );
 }
