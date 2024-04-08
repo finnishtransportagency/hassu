@@ -8,6 +8,10 @@ export const maxNoteLength = 2000;
 
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
+  kustannuspaikka: Yup.string()
+    .matches(/[A-Z0-9]{1,15}/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
+    .default("")
+    .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
 
 export const perustiedotValidationSchema = Yup.object()
@@ -86,10 +90,6 @@ export const perustiedotValidationSchema = Yup.object()
         then: (schema) => schema.required("Asianhallinta integraatiotieto on pakollinen"),
       })
       .default(undefined),
-    kustannuspaikka: Yup.string()
-      .matches(/[A-Z0-9]{0,15}/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
-      .default("")
-      .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
   })
   .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
     const projekti = context.options.context?.projekti;
