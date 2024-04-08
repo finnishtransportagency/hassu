@@ -89,7 +89,7 @@ export const perustiedotValidationSchema = Yup.object()
     kustannuspaikka: Yup.string()
       .matches(/[A-Z0-9]{1,15}/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
       .default("")
-      .nullable(),
+      .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
   })
   .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
     const projekti = context.options.context?.projekti;
