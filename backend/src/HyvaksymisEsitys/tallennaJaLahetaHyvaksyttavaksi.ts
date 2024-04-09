@@ -1,18 +1,18 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
-import { requirePermissionMuokkaa } from "../user";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { IllegalArgumentError } from "hassu-common/error";
 import { assertIsDefined } from "../util/assertions";
 import getTiedostotKeepReference from "./getTiedostotKeepReference";
-import { varmistaLukuoikeusJaHaeProjekti } from "./util";
 import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
 import { auditLog } from "../logger";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
 export async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
+  requirePermissionLuku();
   const { oid, versio } = input;
-  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
-  // Adaptoi input db:ssä olevaan dataan
+  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid); // Adaptoi input db:ssä olevaan dataan
   const { projekti } = adaptHyvaksymisEsitysToSave(projektiInDB, input);
   // Validoi, että tallennettavalla hyväksymisesityksellä on kaikki kentät kunnossa
   validate(projekti);
@@ -31,7 +31,7 @@ export async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API
   return oid;
 }
 
-function validate(projektiInDB: DBProjekti) {
+function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
   const muokattavaHyvaksymisEsitys = projektiInDB.muokattavaHyvaksymisEsitys;

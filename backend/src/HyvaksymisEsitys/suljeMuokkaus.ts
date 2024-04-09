@@ -1,17 +1,17 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti } from "../database/model";
-import { requirePermissionMuokkaa } from "../user/userService";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { config } from "../config";
-import { varmistaLukuoikeusJaHaeProjekti } from "./util";
 import { omit } from "lodash";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
 export async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
+  requirePermissionLuku();
   const { oid, versio } = input;
-  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Poista muokattavissa olevan hyväksymisesityksen tiedostot
   const path = new ProjektiPaths(oid).muokattavaHyvaksymisEsitys().yllapitoFullPath;
@@ -30,7 +30,7 @@ export async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInpu
   return oid;
 }
 
-function validate(projektiInDB: DBProjekti) {
+function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   // Toiminnon tekijän on oltava projektikäyttäjä
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys

@@ -1,15 +1,15 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { auditLog } from "../logger";
-import { DBProjekti } from "../database/model";
-import { requirePermissionMuokkaa } from "../user";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { IllegalArgumentError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
-import { varmistaLukuoikeusJaHaeProjekti } from "./util";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
 export async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
+  requirePermissionLuku();
   const { oid, versio } = input;
-  const { projektiInDB } = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Adaptoi ja tallenna adaptaation tulos tietokantaan
   const projektiAdaptationResult = adaptHyvaksymisEsitysToSave(projektiInDB, input);
@@ -23,7 +23,7 @@ export async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsit
   return oid;
 }
 
-function validate(projektiInDB: DBProjekti) {
+function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys tai

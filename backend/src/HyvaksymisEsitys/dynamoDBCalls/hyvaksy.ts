@@ -1,7 +1,7 @@
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../config";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../../util/dateUtil";
-import { sendParamsToDynamoDB } from "./util";
+import { sendUpdateCommandToDynamoDB } from "./util";
 import { JulkaistuHyvaksymisEsitys } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
@@ -40,9 +40,9 @@ export default async function tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaks
     },
     ConditionExpression:
       "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-      "(attribute_not_exists(#muokattavaHyvaksymisEsitys) OR #muokattavaHyvaksymisEsitys.#tila = :odottaaHyvaksyntaa)",
+      "(attribute_exists(#muokattavaHyvaksymisEsitys) OR #muokattavaHyvaksymisEsitys.#tila = :odottaaHyvaksyntaa)",
   });
 
-  await sendParamsToDynamoDB(params);
+  await sendUpdateCommandToDynamoDB(params);
   return nextVersion;
 }

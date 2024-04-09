@@ -1,7 +1,7 @@
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../config";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../../util/dateUtil";
-import { sendParamsToDynamoDB } from "./util";
+import { sendUpdateCommandToDynamoDB } from "./util";
 import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
@@ -37,6 +37,6 @@ export default async function tallennaMuokattavaHyvaksymisEsitys(input: {
       "(attribute_not_exists(#muokattavaHyvaksymisEsitys) OR #muokattavaHyvaksymisEsitys.#tila = :muokkaus)",
   });
 
-  await sendParamsToDynamoDB(params);
+  await sendUpdateCommandToDynamoDB(params);
   return nextVersion;
 }

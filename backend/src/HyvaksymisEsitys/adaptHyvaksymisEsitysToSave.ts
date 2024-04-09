@@ -1,11 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
-import { DBProjekti, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { MuokattavaHyvaksymisEsitys } from "../database/model";
 import { adaptAineistotToSave, adaptTiedostotToSave } from "../projekti/adapter/adaptToDB/common";
 import { assertIsDefined } from "../util/assertions";
+import { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
 export function adaptHyvaksymisEsitysToSave(
-  dbProjekti: DBProjekti,
+  dbProjekti: HyvaksymisEsityksenTiedot,
   hyvaksymisEsitysInput: API.TallennaHyvaksymisEsitysInput
 ): ProjektiAdaptationResult {
   const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(dbProjekti);
@@ -41,7 +42,7 @@ export function adaptHyvaksymisEsitysToSave(
     versio,
     muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
   };
-  projektiAdaptationResult.setProjekti(newProjekti as DBProjekti);
+  projektiAdaptationResult.setProjekti(newProjekti as HyvaksymisEsityksenTiedot);
   return projektiAdaptationResult;
 }
 

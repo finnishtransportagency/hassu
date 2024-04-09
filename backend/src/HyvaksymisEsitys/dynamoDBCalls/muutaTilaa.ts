@@ -2,7 +2,7 @@ import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../config";
 import * as API from "hassu-common/graphql/apiModel";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../../util/dateUtil";
-import { sendParamsToDynamoDB } from "./util";
+import { sendUpdateCommandToDynamoDB } from "./util";
 
 export default async function muutaMuokattavanHyvaksymisEsityksenTilaa(input: {
   oid: string;
@@ -37,6 +37,6 @@ export default async function muutaMuokattavanHyvaksymisEsityksenTilaa(input: {
       "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
   });
 
-  await sendParamsToDynamoDB(params);
+  await sendUpdateCommandToDynamoDB(params);
   return nextVersion;
 }

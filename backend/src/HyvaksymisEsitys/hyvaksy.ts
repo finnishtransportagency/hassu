@@ -1,18 +1,19 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, JulkaistuHyvaksymisEsitys } from "../database/model";
-import { requireOmistaja } from "../user/userService";
+import { JulkaistuHyvaksymisEsitys } from "../database/model";
+import { requireOmistaja, requirePermissionLuku } from "../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { fileService } from "../files/fileService";
 import { config } from "../config";
-import { varmistaLukuoikeusJaHaeProjekti } from "./util";
 import { omit } from "lodash";
 import { nyt } from "../util/dateUtil";
 import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "./dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
 export async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
+  const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio } = input;
-  const { projektiInDB, nykyinenKayttaja } = await varmistaLukuoikeusJaHaeProjekti(oid);
+  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   const path = new ProjektiPaths(oid).julkaistuHyvaksymisEsitys().yllapitoFullPath;
@@ -32,7 +33,7 @@ export async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promi
   return oid;
 }
 
-function validate(projektiInDB: DBProjekti): API.NykyinenKayttaja {
+function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja {
   // Toiminnon tekijän on oltava projektipäällikkö
   const nykyinenKayttaja = requireOmistaja(projektiInDB, "Hyväksymisesityksen voi hyväksyä vain projektipäällikkö");
   // Projektilla on oltava hyväksymistä odottava hyväksymisesitys
