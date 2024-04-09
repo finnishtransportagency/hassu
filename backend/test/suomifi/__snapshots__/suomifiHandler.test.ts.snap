@@ -124,6 +124,80 @@ Muistutus 1
 ]
 `;
 
+exports[`suomifiHandler muistuttajan sähköposti annettu 4`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu / Anmärkningen har mottagits",
+    "text": "Muistutus on vastaanotettu
+Suunnitelman nimi: Projektin nimi4
+Suunnitelman asiatunnus: vayla123
+
+Väylävirasto käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+
+
+Anmärkningen har mottagits
+
+Planens namn: Projekts namn4
+Planens ärendekod: vayla123
+
+Trafikledsverket behandlar din anmärkning med en ärendekod. Om du vill kontakta oss i anslutning till planen, meddela ärendekoden i ditt meddelande.
+
+Du kommer till planens uppgifter via denna länk: https://localhost:3000/sv/suunnitelma/1/nahtavillaolo
+
+Anmärkning:
+Muistutus 1
+
+
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
+exports[`suomifiHandler muistuttajan sähköposti annettu 5`] = `
+Array [
+  Object {
+    "subject": "Muistutus on vastaanotettu / Anmärkningen har mottagits",
+    "text": "Muistutus on vastaanotettu
+Suunnitelman nimi: Projektin nimi5
+Suunnitelman asiatunnus: ely123
+
+ELY-keskus käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/1/nahtavillaolo
+
+Muistutus:
+Muistutus 1
+
+Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+test.txt
+
+Anmärkningen har mottagits
+
+Planens namn: Projekts namn5
+Planens ärendekod: ely123
+
+NTM-centralen behandlar din anmärkning med en ärendekod. Om du vill kontakta oss i anslutning till planen, meddela ärendekoden i ditt meddelande.
+
+Du kommer till planens uppgifter via denna länk: https://localhost:3000/sv/suunnitelma/1/nahtavillaolo
+
+Anmärkning:
+Muistutus 1
+
+Bilagor med följande namn som bifogats anmärkningen:
+test.txt
+",
+    "to": "test@test.fi",
+  },
+]
+`;
+
 exports[`suomifiHandler muistuttajan viesti suomi.fi 1`] = `
 Object {
   "hetu": "ABC",

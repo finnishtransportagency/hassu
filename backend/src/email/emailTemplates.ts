@@ -350,8 +350,8 @@ export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutu
   const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
 
   const muistutusLiiteTeksti = getMuistutusLiiteTeksti(muistutus);
-
-  const text = `Muistutus on vastaanotettu
+  let subject = "Muistutus on vastaanotettu";
+  let text = `Muistutus on vastaanotettu
 Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
 Suunnitelman asiatunnus: ${asiatunnus}
 
@@ -366,20 +366,40 @@ ${muistutus.muistutus ?? ""}
 
 ${muistutusLiiteTeksti}
 `;
+  if (projekti.kielitiedot?.ensisijainenKieli === Kieli.RUOTSI || projekti.kielitiedot?.toissijainenKieli === Kieli.RUOTSI) {
+    text += `
+Anmärkningen har mottagits
+
+Planens namn: ${projekti.kielitiedot.projektinNimiVieraskielella}
+Planens ärendekod: ${asiatunnus}
+
+${
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Trafikledsverket" : "NTM-centralen"
+} behandlar din anmärkning med en ärendekod. Om du vill kontakta oss i anslutning till planen, meddela ärendekoden i ditt meddelande.
+
+Du kommer till planens uppgifter via denna länk: ${linkNahtavillaOlo(projekti, Kieli.RUOTSI)}
+
+Anmärkning:
+${muistutus.muistutus ?? ""}
+
+${getMuistutusLiiteTeksti(muistutus, "Bilagor med följande namn som bifogats anmärkningen")}
+`;
+    subject += " / Anmärkningen har mottagits"
+  }
   const email = {
-    subject: "Muistutus on vastaanotettu",
+    subject,
     text,
     to: muistutus.sahkoposti ?? undefined,
   };
   return email;
 }
 
-function getMuistutusLiiteTeksti(muistutus: Muistutus) {
+function getMuistutusLiiteTeksti(muistutus: Muistutus, otsikko = "Muistutuksen mukana toimitettu seuraavannimiset liitteet") {
   if (!muistutus.liitteet?.length) {
     return "";
   }
 
-  return `Muistutuksen mukana toimitettu seuraavannimiset liitteet:
+  return `${otsikko}:
 ${muistutus.liitteet
   .map((liite) => {
     const idx = liite?.lastIndexOf("/") ?? -1;
