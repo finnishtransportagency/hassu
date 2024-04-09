@@ -59,6 +59,7 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
     muistutus: "",
     liitteet: [],
     sahkoposti: kayttaja?.email ?? "",
+    puhelinnumero: "",
   };
 };
 
@@ -244,6 +245,10 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               <TextFieldWithController
                 controllerProps={{ control, name: "sahkoposti", constructErrorMessage }}
                 label={t("common:sahkoposti")}
+              />
+              <TextFieldWithController
+                controllerProps={{ control, name: "puhelinnumero", constructErrorMessage }}
+                label={t("common:puhelinnumero")}
               />
             </HassuGrid>
           </HassuStack>

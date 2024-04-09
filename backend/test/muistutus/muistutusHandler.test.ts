@@ -23,6 +23,7 @@ import { parameters } from "../../src/aws/parameters";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
+import MockDate from "mockdate";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -31,6 +32,7 @@ describe("muistutusHandler", () => {
   afterEach(() => {
     sinon.restore();
     userFixture.logout();
+    MockDate.reset();
   });
 
   describe("handleEvent", () => {
@@ -94,23 +96,25 @@ describe("muistutusHandler", () => {
           postitoimipaikka: "Helsinki",
           postinumero: "00100",
           maa: "FI",
-          sahkoposti: undefined,
+          sahkoposti: "test@test.fi",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
           liitteet: [],
+          puhelinnumero: "0501234567"
         };
-
+        MockDate.set("2024-04-09");
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
         expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
         sinon.assert.calledOnce(sendTurvapostiEmailStub);
         const calls = sendTurvapostiEmailStub.getCalls();
-        expect(calls[0].args[0].to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
+        expect(calls[0].args[0]).toMatchSnapshot();
         expect(dbMockClient.commandCalls(UpdateCommand).length).to.equal(1);
         expect(dbMockClient.commandCalls(PutCommand).length).to.equal(1);
         const m = dbMockClient.commandCalls(PutCommand)[0].args[0].input.Item as DBMuistuttaja;
         expect(m.etunimi).to.equal("Mika");
         expect(m.sukunimi).to.equal("Muistuttaja");
-        expect(m.sahkoposti).to.equal(undefined);
+        expect(m.sahkoposti).to.equal("test@test.fi");
+        expect(m.puhelinnumero).to.equal("0501234567");
         expect(m.lahiosoite).to.equal("Muistojentie 1 a");
         expect(m.postinumero).to.equal("00100");
         expect(m.postitoimipaikka).to.equal("Helsinki");

@@ -335,6 +335,10 @@ Osoite
 ${muistutus.katuosoite}
 ${muistutus.postinumero} ${muistutus.postitoimipaikka}
 ${maaTeksti}
+Sähköposti
+${muistutus.sahkoposti ?? ""}
+Puhelinnumero
+${muistutus.puhelinnumero ?? ""}
 Muistutus
 ${muistutus.muistutus}
 ${muistutusLiiteTeksti ? muistutusLiiteTeksti + "\n" : ""}
