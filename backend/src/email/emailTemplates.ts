@@ -369,7 +369,6 @@ ${muistutusLiiteTeksti}
   if (projekti.kielitiedot?.ensisijainenKieli === Kieli.RUOTSI || projekti.kielitiedot?.toissijainenKieli === Kieli.RUOTSI) {
     text += `
 Anmärkningen har mottagits
-
 Planens namn: ${projekti.kielitiedot.projektinNimiVieraskielella}
 Planens ärendekod: ${asiatunnus}
 
