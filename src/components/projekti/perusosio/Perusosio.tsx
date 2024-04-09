@@ -39,8 +39,9 @@ export default function ProjektinPerusosio({ projekti, register, formState }: Re
           <h4 className="vayla-small-title">Projektin viitetieto</h4>
           <p>
             Tämä tieto on Suomi.fi tulostus-, jakelu- ja kuoritus -palvelun laskutusta varten. Väylän projektissa projektikohtainen
-            VSK-koodi. ELYn projektissa oman ohjeistuksensa mukaisen viitetiedon. HUOM! Hyväksymisesityksen laskutustiedot annetaan
-            erikseen.
+            VSK-koodi. ELYn projektissa oman ohjeistuksensa mukaisen viitetiedon. Viitetiedon maksimipituus on 15 merkkiä ja se voi sisältää
+            vain isoja kirjaimia ja numeroita. HUOM! Hyväksymisesityksen mukana Traficomiin toimitettavat laskutustiedot annetaan sivulla
+            Hyväksymisesityksen toimittaminen.
           </p>
           <TextInput
             label="Projektin viitetieto *"
