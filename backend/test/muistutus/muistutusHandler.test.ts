@@ -101,7 +101,7 @@ describe("muistutusHandler", () => {
           liitteet: [],
           puhelinnumero: "0501234567"
         };
-        MockDate.set("2024-04-09");
+        MockDate.set("2024-04-09T03:00");
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
         expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
