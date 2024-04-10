@@ -10,6 +10,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import TextInput from "@components/form/TextInput";
 import { FormState, UseFormRegister } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
+import SectionContent from "@components/layout/SectionContent";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -18,9 +19,10 @@ export interface PerusosioProps {
 interface ProjektinPerusosioProps extends PerusosioProps {
   register?: UseFormRegister<FormValues>;
   formState?: FormState<FormValues>;
+  lukutila?: boolean;
 }
 
-export default function ProjektinPerusosio({ projekti, register, formState }: Readonly<ProjektinPerusosioProps>) {
+export default function ProjektinPerusosio({ projekti, register, formState, lukutila }: Readonly<ProjektinPerusosioProps>) {
   return (
     <>
       <Section>
@@ -49,6 +51,14 @@ export default function ProjektinPerusosio({ projekti, register, formState }: Re
             {...register("kustannuspaikka")}
             error={formState.errors.kustannuspaikka}
           />
+        </Section>
+      )}
+      {lukutila && (
+        <Section gap={4}>
+          <h4 className="vayla-small-title">Projektin viitetieto</h4>
+          <SectionContent>
+            <p>{projekti.kustannuspaikka ?? ""}</p>
+          </SectionContent>
         </Section>
       )}
     </>
