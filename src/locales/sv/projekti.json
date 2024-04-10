@@ -174,8 +174,8 @@
   },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} behöver dina personuppgifter för att behandla anmärkningen. Vi får dina personuppgifter från Myndigheten för digitalisering och befolkningsdata. Vi lämnar ut dina uppgifter till Transport- och kommunikationsverket, vars uppgift är att godkänna planen.",
-    "saat_tekemastasi_muistutuksesta_suomifi": "Du får en kopia av anmärkningen som ett Suomi.fi-meddelande. När Transport- och kommunikationsverket har godkänt planen skickar vi beslutet om godkännande till dig som ett Suomi.fi-meddelande. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",
-    "saat_tekemastasi_muistutuksesta_email": "Du får en kopia av din anmärkning per e-post om du uppger din e-postadress. När Transport- och kommunikationsverket har godkänt planen skickar vi ett beslut om godkännande till dig. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",
+    "saat_tekemastasi_muistutuksesta_suomifi": "Du får en kopia av anmärkningen som ett Suomi.fi-meddelande. När Transport- och kommunikationsverket har godkänt planen skickar vi information om beslut om godkännande till dig som ett Suomi.fi-meddelande. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",
+    "saat_tekemastasi_muistutuksesta_email": "Du får en kopia av din anmärkning per e-post om du uppger din e-postadress. När Transport- och kommunikationsverket har godkänt planen skickar vi information om beslut om godkännande till dig. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",
     "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
     "muistutuksen_lahettajan_tiedot": "Uppgifter om avsändaren av anmärkningen",
     "kiitos_viestista": "Tack för meddelandet",
