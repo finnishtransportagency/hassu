@@ -10,7 +10,7 @@ import { adaptLausuntoPyynnonTaydennysToSave } from "../../projekti/adapter/adap
 import { ProjektiAdaptationResult } from "../../projekti/adapter/projektiAdaptationResult";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
-import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
+import TiedostoDownloadLinkService, { adaptLadattuTiedostoToLadattavaTiedosto } from "./AbstractTiedostoDownloadLinkService";
 
 class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkService<
   API.LausuntoPyynnonTaydennysInput,
@@ -31,7 +31,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
+            .map((aineisto) => adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
       ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
@@ -39,7 +39,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         await Promise.all(
           uusiLausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
+            .map((aineisto) => adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
@@ -67,7 +67,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         await Promise.all(
           lausuntoPyynnonTaydennys?.muuAineisto
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((aineisto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
+            .map((aineisto) => adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, aineisto)) ?? []
         )
       ).sort(jarjestaTiedostot) ?? [];
     const muistutukset =
@@ -75,7 +75,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         await Promise.all(
           lausuntoPyynnonTaydennys?.muistutukset
             ?.filter(ladattuTiedostoEiOdotaPoistoaTaiPoistettu)
-            .map((tiedosto) => this.adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) ?? []
+            .map((tiedosto) => adaptLadattuTiedostoToLadattavaTiedosto(projekti.oid, tiedosto)) ?? []
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
