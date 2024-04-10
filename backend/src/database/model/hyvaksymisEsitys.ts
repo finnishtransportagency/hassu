@@ -1,19 +1,19 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { Aineisto, KunnallinenLadattuTiedosto, LadattuTiedosto, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
+import { AineistoNew, KunnallinenLadattuTiedosto, LadattuTiedostoNew, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
 
 export interface IHyvaksymisEsitys {
   poistumisPaiva: string;
   kiireellinen?: boolean | null;
   lisatiedot?: string | null;
   laskutustiedot?: Laskutustiedot | null;
-  hyvaksymisEsitys?: Array<LadattuTiedosto> | null;
-  suunnitelma?: Array<Aineisto> | null;
+  hyvaksymisEsitys?: Array<LadattuTiedostoNew> | null;
+  suunnitelma?: Array<AineistoNew> | null;
   muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
-  lausunnot?: Array<LadattuTiedosto> | null;
-  maanomistajaluettelo?: Array<LadattuTiedosto> | null;
-  kuulutuksetJaKutsu?: Array<LadattuTiedosto> | null;
-  muuAineistoVelhosta?: Array<Aineisto> | null;
-  muuAineistoKoneelta?: Array<LadattuTiedosto> | null;
+  lausunnot?: Array<LadattuTiedostoNew> | null;
+  maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
+  kuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
+  muuAineistoVelhosta?: Array<AineistoNew> | null;
+  muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;
 }
@@ -21,6 +21,8 @@ export interface IHyvaksymisEsitys {
 export type MuokattavaHyvaksymisEsitys = {
   tila?: API.HyvaksymisTila | null;
   palautusSyy?: string | null;
+  aineistoHandledAt?: string | null;
+  lockedUntil?: string | null;
 } & IHyvaksymisEsitys;
 
 export type JulkaistuHyvaksymisEsitys = {

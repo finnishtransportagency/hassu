@@ -64,6 +64,21 @@ export type Aineisto = {
   kategoriaMuuttunut?: boolean;
 };
 
+export type AineistoNew = {
+  // Dokumentin oid Velhossa
+  dokumenttiOid: string;
+  // Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  kategoriaId?: string;
+  // Tiedostonimi naytettavaksi
+  nimi: string;
+  // Tunniste, joka on luotu FE:ssä, kun tiedosto on valittu. Ei muutu.
+  uuid: string;
+  // Aikaleima, milloin tiedosto on lisatty jarjestelmaan yyyy-MM-ddTHH:mm
+  lisatty: string;
+  // Numero jarjestamista varten
+  jarjestys?: number | null;
+};
+
 export type StandardiYhteystiedot = {
   yhteysTiedot?: Yhteystieto[];
   yhteysHenkilot?: string[];
@@ -132,8 +147,18 @@ export type Velho = {
   linkitetytProjektit?: LinkitettyVelhoProjekti[] | null;
   geoJSON?: string | null;
 };
-
 export interface ILadattuTiedosto {
+  // Kayttajalle esitettava tiedostonimi
+  nimi: string;
+  uuid: string;
+  lisatty: string;
+  //Numero jarjestamista varten
+  jarjestys?: number;
+}
+
+export type LadattuTiedostoNew = ILadattuTiedosto;
+
+export type LadattuTiedosto = {
   // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   tiedosto: string;
   // Kayttajalle esitettava tiedostonimi
@@ -143,12 +168,10 @@ export interface ILadattuTiedosto {
   //Numero jarjestamista varten
   jarjestys?: number;
   tila: LadattuTiedostoTila;
-}
-
-export type LadattuTiedosto = ILadattuTiedosto;
+};
 
 export type KunnallinenLadattuTiedosto = {
-  kunta?: number;
+  kunta: number;
 } & ILadattuTiedosto;
 
 export type Laskutustiedot = {
