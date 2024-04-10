@@ -3,6 +3,7 @@
 exports[`suomifiHandler muistuttajan pdf viesti suomi.fi 1`] = `
 Object {
   "hetu": "ABC",
+  "kustannuspaikka": undefined,
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
@@ -31,6 +32,7 @@ Väylävirasto",
 exports[`suomifiHandler muistuttajan pdf viesti suomi.fi ruotsi 1`] = `
 Object {
   "hetu": "ABC",
+  "kustannuspaikka": undefined,
   "lahiosoite": "Svart katten's gatan 13 c 13, B.O.X 1010",
   "maa": "SE",
   "nimi": "Minerva Marttila",
@@ -171,6 +173,7 @@ test.txt
 exports[`suomifiHandler omistajan pdf viesti suomi.fi 1`] = `
 Object {
   "hetu": "ABC",
+  "kustannuspaikka": undefined,
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
@@ -199,6 +202,7 @@ Väylävirasto",
 exports[`suomifiHandler omistajan pdf viesti suomi.fi hyväksymispäätös 1`] = `
 Object {
   "hetu": "ABC",
+  "kustannuspaikka": undefined,
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
@@ -235,6 +239,7 @@ NTM-centralen i Birkaland
 exports[`suomifiHandler omistajan pdf viesti suomi.fi nähtävilläolo 1`] = `
 Object {
   "hetu": "ABC",
+  "kustannuspaikka": undefined,
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",

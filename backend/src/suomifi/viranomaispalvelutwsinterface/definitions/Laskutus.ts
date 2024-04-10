@@ -5,4 +5,6 @@ export interface Laskutus {
     Tunniste?: string;
     /** xsd:string|minLength,maxLength */
     Salasana?: string;
+    /** xsd:string|minLength,maxLength */
+    Kustannuspaikka?: string;
 }

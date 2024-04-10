@@ -216,6 +216,7 @@ euWestSSMClient
                     sisalto: "VLS PDF viestin sisältö",
                     tiedosto: { kuvaus: "Tiedoston kuvaus", nimi: "tiedosto.pdf", sisalto: fs.readFileSync(process.argv[3]) },
                     suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+                    kustannuspaikka: "ABCDEF",
                   });
                 } else if (process.argv[2] === "hae") {
                   return client.haeAsiakas("010280-952L", "SSN");
