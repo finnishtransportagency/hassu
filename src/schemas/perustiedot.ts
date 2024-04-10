@@ -9,7 +9,7 @@ export const maxNoteLength = 2000;
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
   kustannuspaikka: Yup.string()
-    .matches(/[A-Z0-9]{1,15}/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
+    .matches(/^[A-Z0-9]{1,15}$/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
     .default("")
     .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
