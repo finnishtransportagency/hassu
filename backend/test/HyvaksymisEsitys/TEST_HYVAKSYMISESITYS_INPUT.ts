@@ -7,7 +7,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "hyvaksymiEsitys.png",
       nimi: "hyvaksymiEsitys.png",
       uuid: "hyvaksymis-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   suunnitelma: [
@@ -15,7 +14,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       dokumenttiOid: "suunnitelmaDokumenttiOid",
       nimi: "suunnitelma.png",
       uuid: "suunnitelma-uuid",
-      tila: API.AineistoTila.VALMIS,
     },
   ],
   kiireellinen: true,
@@ -31,7 +29,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "muistutukset.png",
       nimi: "muistutukset.png",
       uuid: "muistutukset-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   lausunnot: [
@@ -39,7 +36,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "lausunnot.png",
       nimi: "lausunnot.png",
       uuid: "lausunnot-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   maanomistajaluettelo: [
@@ -47,7 +43,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "maanomistajaluettelo.png",
       nimi: "maanomistajaluettelo.png",
       uuid: "maanomistajaluettelo-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   kuulutuksetJaKutsu: [
@@ -55,7 +50,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "kuulutuksetJaKutsu.png",
       nimi: "kuulutuksetJaKutsu.png",
       uuid: "kuulutuksetJaKutsu-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   muuAineistoVelhosta: [
@@ -63,7 +57,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       dokumenttiOid: "muuAineistoVelhostaDokumenttiOid",
       nimi: "muuAineistoVelhosta.png",
       uuid: "muuAineistoVelhosta-uuid",
-      tila: API.AineistoTila.VALMIS,
     },
   ],
   muuAineistoKoneelta: [
@@ -71,7 +64,6 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
       tiedosto: "muuAineistoKoneelta.png",
       nimi: "muuAineistoKoneelta.png",
       uuid: "muuAineistoKoneelta-esitys-uuid",
-      tila: API.LadattuTiedostoTila.VALMIS,
     },
   ],
   vastaanottajat: ["vastaanottaja@sahkoposti.fi"],

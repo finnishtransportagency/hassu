@@ -1,10 +1,10 @@
-import { IHyvaksymisEsitys, ILadattuTiedosto, Aineisto } from "../database/model";
+import { IHyvaksymisEsitys, ILadattuTiedosto, AineistoNew } from "../database/model";
 
 export default function getTiedostotKeepReference(hyvaksymisEsitys: IHyvaksymisEsitys): {
-  aineistot: Aineisto[];
+  aineistot: AineistoNew[];
   ladatutTiedostot: ILadattuTiedosto[];
 } {
-  const tiedostot: { aineistot: Aineisto[]; ladatutTiedostot: ILadattuTiedosto[] } = { aineistot: [], ladatutTiedostot: [] };
+  const tiedostot: { aineistot: AineistoNew[]; ladatutTiedostot: ILadattuTiedosto[] } = { aineistot: [], ladatutTiedostot: [] };
   hyvaksymisEsitys.hyvaksymisEsitys && tiedostot.ladatutTiedostot.push(...hyvaksymisEsitys.hyvaksymisEsitys);
   hyvaksymisEsitys.kuulutuksetJaKutsu && tiedostot.ladatutTiedostot.push(...hyvaksymisEsitys.kuulutuksetJaKutsu);
   hyvaksymisEsitys.lausunnot && tiedostot.ladatutTiedostot.push(...hyvaksymisEsitys.lausunnot);

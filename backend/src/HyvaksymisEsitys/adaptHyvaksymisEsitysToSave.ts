@@ -1,18 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { ProjektiAdaptationResult } from "../projekti/adapter/projektiAdaptationResult";
-import { MuokattavaHyvaksymisEsitys } from "../database/model";
-import { adaptAineistotToSave, adaptTiedostotToSave } from "../projekti/adapter/adaptToDB/common";
-import { assertIsDefined } from "../util/assertions";
-import { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import { KunnallinenLadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { saveLadattuTiedostot } from "./adaptToSave/saveLadattuTiedostot";
+import { saveAineistot } from "./adaptToSave/saveAineistot";
 
 export function adaptHyvaksymisEsitysToSave(
-  dbProjekti: HyvaksymisEsityksenTiedot,
-  hyvaksymisEsitysInput: API.TallennaHyvaksymisEsitysInput
-): ProjektiAdaptationResult {
-  const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(dbProjekti);
-  const { oid, versio, muokattavaHyvaksymisEsitys } = hyvaksymisEsitysInput;
-  const dbHyvaksymisEsitys = dbProjekti.muokattavaHyvaksymisEsitys;
-  assertIsDefined(muokattavaHyvaksymisEsitys, "input on validoitu, ja muokattavaHyvaksymisEsitys on olemassa");
+  dbHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | undefined | null,
+  hyvaksymisEsitysInput: API.HyvaksymisEsitysInput
+): MuokattavaHyvaksymisEsitys {
   const {
     hyvaksymisEsitys,
     suunnitelma,
@@ -24,26 +18,23 @@ export function adaptHyvaksymisEsitysToSave(
     maanomistajaluettelo,
     vastaanottajat,
     ...rest
-  } = muokattavaHyvaksymisEsitys;
+  } = hyvaksymisEsitysInput;
   const newMuokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys = {
-    hyvaksymisEsitys: adaptTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys, projektiAdaptationResult),
-    suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma, projektiAdaptationResult),
-    muistutukset: adaptTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset, projektiAdaptationResult),
-    lausunnot: adaptTiedostotToSave(dbHyvaksymisEsitys?.lausunnot, lausunnot, projektiAdaptationResult),
-    kuulutuksetJaKutsu: adaptTiedostotToSave(dbHyvaksymisEsitys?.kuulutuksetJaKutsu, kuulutuksetJaKutsu, projektiAdaptationResult),
-    muuAineistoVelhosta: adaptAineistotToSave(dbHyvaksymisEsitys?.muuAineistoVelhosta, muuAineistoVelhosta, projektiAdaptationResult),
-    muuAineistoKoneelta: adaptTiedostotToSave(dbHyvaksymisEsitys?.muuAineistoKoneelta, muuAineistoKoneelta, projektiAdaptationResult),
-    maanomistajaluettelo: adaptTiedostotToSave(dbHyvaksymisEsitys?.maanomistajaluettelo, maanomistajaluettelo, projektiAdaptationResult),
+    hyvaksymisEsitys: saveLadattuTiedostot(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys),
+    suunnitelma: saveAineistot(dbHyvaksymisEsitys?.suunnitelma, suunnitelma),
+    muistutukset: saveLadattuTiedostot<KunnallinenLadattuTiedosto, API.KunnallinenLadattuTiedostoInput>(
+      dbHyvaksymisEsitys?.muistutukset,
+      muistutukset
+    ),
+    lausunnot: saveLadattuTiedostot(dbHyvaksymisEsitys?.lausunnot, lausunnot),
+    kuulutuksetJaKutsu: saveLadattuTiedostot(dbHyvaksymisEsitys?.kuulutuksetJaKutsu, kuulutuksetJaKutsu),
+    muuAineistoVelhosta: saveAineistot(dbHyvaksymisEsitys?.muuAineistoVelhosta, muuAineistoVelhosta),
+    muuAineistoKoneelta: saveLadattuTiedostot(dbHyvaksymisEsitys?.muuAineistoKoneelta, muuAineistoKoneelta),
+    maanomistajaluettelo: saveLadattuTiedostot(dbHyvaksymisEsitys?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     ...rest,
   };
-  const newProjekti = {
-    oid,
-    versio,
-    muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
-  };
-  projektiAdaptationResult.setProjekti(newProjekti as HyvaksymisEsityksenTiedot);
-  return projektiAdaptationResult;
+  return newMuokattavaHyvaksymisEsitys;
 }
 
 function adaptVastaanottajatToSave(vastaanottajat: string[] | null | undefined) {

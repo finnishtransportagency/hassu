@@ -1,11 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
-import { Aineisto } from "../../database/model";
+import { AineistoNew } from "../../database/model";
+import { nyt } from "../../util/dateUtil";
 
 export function saveAineistot(
-  dbTiedostot: Aineisto[] | undefined | null,
-  tiedostotInput: API.AineistoInput[] | undefined | null
-): Aineisto[] | null | undefined {
+  dbTiedostot: AineistoNew[] | undefined | null,
+  tiedostotInput: API.AineistoInputNew[] | undefined | null
+): AineistoNew[] | null | undefined {
   const uudetTiedostot = tiedostotInput?.map((inputtiedosto) => {
     const vastaavaVanhaTiedosto = dbTiedostot?.find((dbtiedosto) => dbtiedosto.uuid == inputtiedosto.uuid);
     return saveAineisto(vastaavaVanhaTiedosto, inputtiedosto);
@@ -13,7 +14,6 @@ export function saveAineistot(
   return uudetTiedostot;
 }
 
-function saveAineisto(dbTiedosto: Aineisto | undefined, tiedostoInput: API.AineistoInput): Aineisto {
-  // TODO: generoi aikaleima
-  return mergeWith({}, dbTiedosto, { ...tiedostoInput });
+function saveAineisto(dbTiedosto: AineistoNew | undefined, tiedostoInput: API.AineistoInputNew): AineistoNew {
+  return mergeWith({}, dbTiedosto, { ...tiedostoInput, lisatty: dbTiedosto ? dbTiedosto.lisatty : nyt().format() });
 }

@@ -8,16 +8,16 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 
 export async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
-  const { oid, versio } = input;
+  const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
-  // Adaptoi ja tallenna adaptaation tulos tietokantaan
-  const projektiAdaptationResult = adaptHyvaksymisEsitysToSave(projektiInDB, input);
+  // Adaptoi muokattava hyvaksymisesitys ja tallenna se tietokantaan
+  const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   auditLog.info("Tallenna hyväksymisesitys", { input });
   await tallennaMuokattavaHyvaksymisEsitys({
     oid,
     versio,
-    muokattavaHyvaksymisEsitys: projektiAdaptationResult.projekti.muokattavaHyvaksymisEsitys!,
+    muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
   });
   // TODO: reagoi mahdollisiin tiedostomuutoksiin
   return oid;

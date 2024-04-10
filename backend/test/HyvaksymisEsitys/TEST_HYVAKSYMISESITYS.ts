@@ -1,25 +1,20 @@
 import { IHyvaksymisEsitys } from "../../src/database/model";
-import * as API from "hassu-common/graphql/apiModel";
 
 const TEST_HYVAKSYMISESITYS: IHyvaksymisEsitys = {
   poistumisPaiva: "2033-01-01",
   hyvaksymisEsitys: [
     {
-      tiedosto: "hyvaksymiEsitys.png",
       nimi: "hyvaksymiEsitys.png",
       uuid: "hyvaksymis-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   suunnitelma: [
     {
       dokumenttiOid: "suunnitelmaDokumenttiOid",
-      tiedosto: "suunnitelma.png",
       nimi: "suunnitelma.png",
       uuid: "suunnitelma-uuid",
-      tuotu: "2022-01-02",
-      tila: API.AineistoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   kiireellinen: true,
@@ -32,57 +27,46 @@ const TEST_HYVAKSYMISESITYS: IHyvaksymisEsitys = {
   },
   muistutukset: [
     {
-      tiedosto: "muistutukset.png",
       nimi: "muistutukset.png",
       uuid: "muistutukset-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
+      kunta: 1,
     },
   ],
   lausunnot: [
     {
-      tiedosto: "lausunnot.png",
       nimi: "lausunnot.png",
       uuid: "lausunnot-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   maanomistajaluettelo: [
     {
-      tiedosto: "maanomistajaluettelo.png",
       nimi: "maanomistajaluettelo.png",
       uuid: "maanomistajaluettelo-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   kuulutuksetJaKutsu: [
     {
-      tiedosto: "kuulutuksetJaKutsu.png",
       nimi: "kuulutuksetJaKutsu.png",
       uuid: "kuulutuksetJaKutsu-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   muuAineistoVelhosta: [
     {
       dokumenttiOid: "muuAineistoVelhostaDokumenttiOid",
-      tiedosto: "muuAineistoVelhosta.png",
       nimi: "muuAineistoVelhosta.png",
       uuid: "muuAineistoVelhosta-uuid",
-      tuotu: "2022-01-02",
-      tila: API.AineistoTila.VALMIS,
+      lisatty: "2022-01-02",
     },
   ],
   muuAineistoKoneelta: [
     {
-      tiedosto: "muuAineistoKoneelta.png",
       nimi: "muuAineistoKoneelta.png",
       uuid: "muuAineistoKoneelta-esitys-uuid",
-      tuotu: "2022-01-01",
-      tila: API.LadattuTiedostoTila.VALMIS,
+      lisatty: "2022-01-02T01:01:01:111",
     },
   ],
   vastaanottajat: [

@@ -12,31 +12,28 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         poistumisPaiva: "2033-01-01",
         hyvaksymisEsitys: [
           {
-            tiedosto: "tiedosto.png",
             nimi: "tiedosto.png",
             uuid: "test",
-            tuotu: "2022-01-01",
-            tila: API.LadattuTiedostoTila.VALMIS,
+            lisatty: "2022-01-02T01:01:01:111",
           },
         ],
         suunnitelma: [
           {
             dokumenttiOid: "jotain",
-            tiedosto: "aineisto.png",
             nimi: "aineisto.png",
             uuid: "test2",
-            tuotu: "2022-01-02",
-            tila: API.AineistoTila.VALMIS,
+            lisatty: "2022-01-02T01:01:01:111",
           },
         ],
       },
     };
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB as DBProjekti, projektiInDB.muokattavaHyvaksymisEsitys, undefined);
-    // Syystä tai toisesta ladatuille tiedostoille laitetaan adaptoinnissa täyden polun eteen kauttaviva, mutta aineistoille ei
     expect(hyvaksymisEsitys?.hyvaksymisEsitys?.[0].tiedosto).to.eql(
-      "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/tiedosto.png"
+      "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/tiedosto.png"
     );
-    expect(hyvaksymisEsitys?.suunnitelma?.[0].tiedosto).to.eql("yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/aineisto.png");
+    expect(hyvaksymisEsitys?.suunnitelma?.[0].tiedosto).to.eql(
+      "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/suunnitelma/aineisto.png"
+    );
   });
 
   it("adaptoi muistutukset oikein, niin että kuntatieto säilyy", () => {
@@ -47,18 +44,15 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         poistumisPaiva: "2033-01-01",
         muistutukset: [
           {
-            tiedosto: "muistutus.png",
             nimi: "muistutus.png",
             uuid: "muistutus",
-            tuotu: "2022-01-01",
-            tila: API.LadattuTiedostoTila.VALMIS,
+            lisatty: "2022-01-02T01:01:01:111",
             kunta: 1,
           },
         ],
       },
     };
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB as DBProjekti, projektiInDB.muokattavaHyvaksymisEsitys, undefined);
-    // Syystä tai toisesta ladatuille tiedostoille laitetaan adaptoinnissa täyden polun eteen kauttaviva, mutta aineistoille ei
     expect(hyvaksymisEsitys?.muistutukset?.[0]?.kunta).to.eql(1);
   });
 
