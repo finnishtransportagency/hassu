@@ -14,7 +14,7 @@ interface Props {
 export default function ProjektinTiedotLukutila({ projekti }: Props) {
   return (
     <>
-      <ProjektinPerusosio projekti={projekti} />
+      <ProjektinPerusosio projekti={projekti} lukutila={true} />
       <Section>
         <SectionContent>
           <p className="vayla-label">Projektin kuulutusten kielet</p>
