@@ -6,6 +6,7 @@ import { adaptLadatutTiedostotToApi } from "./adaptLadatutTiedostotToAPI";
 import { adaptLaskutustiedotToAPI } from "./adaptLaskutustiedotToAPI";
 import { adaptKunnallisetLadatutTiedostotToApi } from "./adaptKunnallisetLadatutTiedostotToAPI";
 import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanottajatToAPI";
+import { createHyvaksymisEsitysHash } from "../lautaslinkit/hash";
 
 export function adaptHyvaksymisEsitysToApi(
   projekti: DBProjekti,
@@ -51,5 +52,6 @@ export function adaptHyvaksymisEsitysToApi(
     }),
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(hyvaksymisEsitys.vastaanottajat),
     tila: muokattavaHyvaksymisEsitys ? muokattavaHyvaksymisEsitys.tila ?? API.HyvaksymisTila.MUOKKAUS : API.HyvaksymisTila.HYVAKSYTTY,
+    hash: createHyvaksymisEsitysHash(projekti.oid, projekti.salt),
   };
 }

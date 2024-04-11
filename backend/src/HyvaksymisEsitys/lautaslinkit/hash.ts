@@ -2,10 +2,6 @@ import crypto from "crypto";
 import { IllegalAccessError } from "hassu-common/error";
 import { log } from "../../logger";
 
-export function generateHash(oid: string, salt: string): string {
-  return createHyvaksymisEsitysHash(oid, salt);
-}
-
 export function validateHash(oid: string, salt: string, givenHash: string) {
   const hash = createHyvaksymisEsitysHash(oid, salt);
   if (hash != givenHash) {
@@ -14,7 +10,7 @@ export function validateHash(oid: string, salt: string, givenHash: string) {
   }
 }
 
-function createHyvaksymisEsitysHash(oid: string, salt: string | undefined): string {
+export function createHyvaksymisEsitysHash(oid: string, salt: string | undefined): string {
   if (!salt) {
     throw new Error("Salt missing");
   }
