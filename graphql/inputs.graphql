@@ -407,6 +407,7 @@ input MuistutusInput {
   muistutus: String!
   maa: String!
   liitteet: [String!]!
+  puhelinnumero: String
 }
 
 input ListaaLisaAineistoInput {
