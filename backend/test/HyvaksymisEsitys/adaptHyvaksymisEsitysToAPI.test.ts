@@ -25,6 +25,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
             lisatty: "2022-01-02T01:01:01:111",
           },
         ],
+        aineistoHandledAt: "2022-01-02T01:01:01:222",
       },
     };
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB as DBProjekti, projektiInDB.muokattavaHyvaksymisEsitys, undefined);

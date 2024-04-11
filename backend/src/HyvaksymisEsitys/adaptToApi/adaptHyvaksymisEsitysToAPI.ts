@@ -32,9 +32,7 @@ export function adaptHyvaksymisEsitysToApi(
     poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi({ tiedostot: hyvaksymisEsitys.hyvaksymisEsitys, path: path + "hyvaksymisEsitys/" }),
-
     suunnitelma: adaptAineistotToAPI({ aineistot: hyvaksymisEsitys.suunnitelma, aineistotHandledAt, path: path + "suunnitelma/" }),
-
     muistutukset: adaptKunnallisetLadatutTiedostotToApi({ tiedostot: hyvaksymisEsitys.muistutukset, path: path + "muistutukset/" }),
     lausunnot: adaptLadatutTiedostotToApi({ tiedostot: hyvaksymisEsitys.lausunnot, path: path + "lausunnot/" }),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({ tiedostot: hyvaksymisEsitys.kuulutuksetJaKutsu, path: path + "kuulutuksenJaKutsu/" }),
