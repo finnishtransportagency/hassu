@@ -5,6 +5,8 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import { AineistoNew } from "../database/model";
+import getHyvaksymisEsityksenAineistot from "./getAineistot";
 
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -19,7 +21,14 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     versio,
     muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
   });
-  // TODO: reagoi mahdollisiin tiedostomuutoksiin
+  if (
+    uusiaAineistoja(
+      getHyvaksymisEsityksenAineistot(projektiInDB.muokattavaHyvaksymisEsitys),
+      getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
+    )
+  ) {
+    // TODO: reagoi mahdollisiin tiedostomuutoksiin
+  }
   return oid;
 }
 
@@ -31,4 +40,8 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   if (projektiInDB.muokattavaHyvaksymisEsitys && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
     throw new IllegalArgumentError("Projektilla tulee olla muokkaustilainen hyväksymisesitys tai ei vielä lainkaan hyväksymisesitystä");
   }
+}
+
+function uusiaAineistoja(aineistotBefore: AineistoNew[], aineistotAfter: AineistoNew[]): boolean {
+  return aineistotAfter.some(({ uuid }) => !aineistotBefore.some(({ uuid: uuidBefore }) => uuidBefore == uuid));
 }

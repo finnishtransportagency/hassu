@@ -2,11 +2,11 @@ import * as API from "hassu-common/graphql/apiModel";
 import { MuokattavaHyvaksymisEsitys } from "../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { IllegalArgumentError } from "hassu-common/error";
-import getTiedostotKeepReference from "./getTiedostotKeepReference";
 import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
 import { auditLog } from "../logger";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import getHyvaksymisEsityksenAineistot from "./getAineistot";
 
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -70,7 +70,7 @@ function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys
     throw new IllegalArgumentError("Hyväksymisesityksellä ei ole vastaanottajia");
   }
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
-  const { aineistot } = getTiedostotKeepReference(muokattavaHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   if (!aineistotHandledAt || !aineistot.every((aineisto) => aineistotHandledAt.localeCompare(aineisto.lisatty) > 0)) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
