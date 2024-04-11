@@ -22,7 +22,6 @@ export type MuokattavaHyvaksymisEsitys = {
   tila?: API.HyvaksymisTila | null;
   palautusSyy?: string | null;
   aineistoHandledAt?: string | null;
-  lockedUntil?: string | null;
 } & IHyvaksymisEsitys;
 
 export type JulkaistuHyvaksymisEsitys = {
