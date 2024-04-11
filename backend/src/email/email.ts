@@ -14,7 +14,7 @@ type SMTPConfig = {
   EMAILS_FROM: string;
 };
 
-type TurvapostiConfig = {
+export type TurvapostiConfig = {
   LOGIN: string;
   PASSWORD: string;
   SERVER: string;

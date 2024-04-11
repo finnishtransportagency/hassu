@@ -196,6 +196,7 @@ type Projekti implements IProjekti {
   kasittelynTila: KasittelynTila
   asianhallinta: Asianhallinta!
   omistajahaku: OmistajaHaku
+  kustannuspaikka: String
 }
 
 type OmistajaHaku {
