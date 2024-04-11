@@ -1,48 +1,11 @@
-import { AineistoTila, LadattavaTiedosto, LadattavatTiedostot } from "hassu-common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import crypto from "crypto";
-import { Aineisto, DBProjekti, LadattuTiedosto } from "../../database/model";
-import { log } from "../../logger";
-import { fileService } from "../../files/fileService";
-
-export async function adaptLadattuTiedostoToLadattavaTiedosto(oid: string, tiedosto: LadattuTiedosto): Promise<LadattavaTiedosto> {
-  const { jarjestys } = tiedosto;
-  const nimi: string = tiedosto.nimi ?? "";
-  let linkki;
-  if (tiedosto.tuotu) {
-    linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedosto.tiedosto);
-  } else {
-    linkki = "";
-  }
-  return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.tuotu };
-}
-
-export async function adaptTiedostoPathToLadattavaTiedosto(oid: string, tiedostoPath: string): Promise<LadattavaTiedosto> {
-  const linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedostoPath);
-  const nimi = tiedostoPath.split("/").pop() ?? "Tiedosto";
-  return { __typename: "LadattavaTiedosto", nimi, linkki };
-}
-
-export async function adaptAineistoToLadattavaTiedosto(oid: string, aineisto: Aineisto): Promise<LadattavaTiedosto> {
-  const { jarjestys, kategoriaId } = aineisto;
-  const nimi = aineisto.nimi;
-  let linkki;
-  if (aineisto.tila == AineistoTila.VALMIS) {
-    if (!aineisto.tiedosto) {
-      const msg = `Virhe tiedostojen listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
-      log.error(msg, { aineisto });
-      throw new Error(msg);
-    }
-    linkki = await fileService.createYllapitoSignedDownloadLink(oid, aineisto.tiedosto);
-  } else {
-    linkki = "";
-  }
-  return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki, tuotu: aineisto.tuotu };
-}
+import { DBProjekti } from "../../database/model";
 export default abstract class TiedostoDownloadLinkService<TALLENNAINPUT, LISTAAINPUT> {
   generateSalt() {
     return crypto.randomBytes(16).toString("hex");
   }
 
-  abstract esikatseleTiedostot(projekti: DBProjekti, projektiInput: TALLENNAINPUT): Promise<LadattavatTiedostot>;
-  abstract listaaTiedostot(projekti: DBProjekti, params: LISTAAINPUT): Promise<LadattavatTiedostot>;
+  abstract esikatseleTiedostot(projekti: DBProjekti, projektiInput: TALLENNAINPUT): Promise<API.LadattavatTiedostot>;
+  abstract listaaTiedostot(projekti: DBProjekti, params: LISTAAINPUT): Promise<API.LadattavatTiedostot>;
 }

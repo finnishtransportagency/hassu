@@ -10,7 +10,7 @@ import { nyt } from "../util/dateUtil";
 import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "./dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
-export async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
+export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);

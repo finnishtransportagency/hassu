@@ -8,7 +8,7 @@ import { omit } from "lodash";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
-export async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
+export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);

@@ -9,10 +9,8 @@ import { adaptLausuntoPyyntoToSave } from "../../projekti/adapter/adaptToDB/adap
 import { ProjektiAdaptationResult } from "../../projekti/adapter/projektiAdaptationResult";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
-import TiedostoDownloadLinkService, {
-  adaptAineistoToLadattavaTiedosto,
-  adaptLadattuTiedostoToLadattavaTiedosto,
-} from "./AbstractTiedostoDownloadLinkService";
+import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
+import { adaptAineistoToLadattavaTiedosto, adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
 
 class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
   API.LausuntoPyyntoInput,

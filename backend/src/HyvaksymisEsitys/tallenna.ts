@@ -6,7 +6,7 @@ import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
 import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
-export async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
+export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);

@@ -4,7 +4,7 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import muutaMuokattavanHyvaksymisEsityksenTilaa from "./dynamoDBCalls/muutaTilaa";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
 
-export async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
+export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
