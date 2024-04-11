@@ -22,7 +22,7 @@ export function adaptHyvaksymisEsitysToApi(
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
 
-  const place = julkaistu ? "hyvaksymisesitys" : "muokattava_hyvaksymiseistys";
+  const place = julkaistu ? "hyvaksymisesitys" : "muokattava_hyvaksymisesitys";
   const path = `/yllapito/tiedostot/projekti/${projekti.oid}/${place}/`;
 
   return {
