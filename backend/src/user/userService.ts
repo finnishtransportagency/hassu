@@ -69,17 +69,17 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   if (!accessToken) {
     return;
   }
-  let userPoolUrlStr: any;
+  let keycloakUrl: string | undefined;
   try {
-    userPoolUrlStr = await parameters.getKeycloakDomain();
+    keycloakUrl = await parameters.getKeycloakPrivateDomain();
   } catch (e) {
     log.error(e);
   }
-  if (!userPoolUrlStr) {
-    log.error("Suomi.fi user pool url not found");
+  if (!keycloakUrl) {
+    log.error("Suomi.fi Keycloak url not found");
     return;
   }
-  const userPoolUrl = new URL(userPoolUrlStr);
+  const userPoolUrl = new URL(keycloakUrl);
   userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/userinfo";
   const response = await fetch(userPoolUrl.toString(), {
     headers: {

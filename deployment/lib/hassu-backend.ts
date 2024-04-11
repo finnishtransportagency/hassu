@@ -128,7 +128,8 @@ export class HassuBackendStack extends Stack {
       suomiFiSQS,
       pdfGeneratorLambda,
       true,
-      suomifiLambda
+      suomifiLambda,
+      vpc,
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -145,7 +146,8 @@ export class HassuBackendStack extends Stack {
       suomiFiSQS,
       pdfGeneratorLambda,
       false,
-      suomifiLambda
+      suomifiLambda,
+      vpc
     );
     this.attachDatabaseToLambda(julkinenBackendLambda, false);
     HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
@@ -431,7 +433,8 @@ export class HassuBackendStack extends Stack {
     suomifiSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean,
-    suomifiLambda: NodejsFunction
+    suomifiLambda: NodejsFunction,
+    vpc: IVpc
   ) {
     let define;
     if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
@@ -482,6 +485,7 @@ export class HassuBackendStack extends Stack {
       insightsVersion,
       layers: this.layers,
       logRetention: this.getLogRetention(),
+      vpc,
     });
     this.addPermissionsForMonitoring(backendLambda);
     if (isYllapitoBackend) {
