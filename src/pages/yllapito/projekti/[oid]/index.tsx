@@ -50,6 +50,7 @@ type PersitentFormValues = Pick<
   | "kielitiedot"
   | "vahainenMenettely"
   | "asianhallinta"
+  | "kustannuspaikka"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -132,6 +133,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
       vahainenMenettely: !!projekti.vahainenMenettely,
       suunnittelusopimusprojekti:
         projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
+      kustannuspaikka: projekti.kustannuspaikka,
     };
     if (projekti.kielitiedot) {
       const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
@@ -293,7 +295,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
             </OhjelistaNotification>
           </ContentSpacer>
 
-          <ProjektinPerusosio projekti={projekti} />
+          <ProjektinPerusosio projekti={projekti} register={register} formState={useFormReturn.formState} />
           <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiKuulutuskielet projekti={projekti} />
           <LinkitetytProjektit projekti={projekti} />

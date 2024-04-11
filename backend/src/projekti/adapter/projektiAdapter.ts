@@ -83,6 +83,7 @@ export class ProjektiAdapter {
       vahainenMenettely,
       vaihe,
       omistajahaku,
+      kustannuspaikka,
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
@@ -174,6 +175,7 @@ export class ProjektiAdapter {
             kiinteistotunnusMaara: omistajahaku.kiinteistotunnusMaara,
           }
         : undefined,
+      kustannuspaikka,
     });
 
     if (apiProjekti.tallennettu) {
@@ -218,6 +220,7 @@ export class ProjektiAdapter {
       jatkoPaatos1Vaihe,
       jatkoPaatos2Vaihe,
       asianhallinta,
+      kustannuspaikka,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
     const kayttoOikeudetManager = new KayttoOikeudetManager(
@@ -262,6 +265,7 @@ export class ProjektiAdapter {
       salt: projekti.salt ?? lisaAineistoService.generateSalt(),
       kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
       asianhallinta,
+      kustannuspaikka,
     } as DBProjekti);
 
     projektiAdaptationResult.setProjekti(dbProjekti);

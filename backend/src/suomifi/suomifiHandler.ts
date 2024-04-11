@@ -391,6 +391,7 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         sisalto: pdf.file,
       },
       suunnittelustaVastaavaViranomainen: projektiFromDB.velho?.suunnittelustaVastaavaViranomainen,
+      kustannuspaikka: projektiFromDB.kustannuspaikka ?? undefined,
     };
     const client = await getClient();
     const resp = await client.lahetaViesti(viesti);
