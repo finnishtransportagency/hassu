@@ -46,7 +46,7 @@ export default function Nahtavillaolo(): ReactElement {
   };
 
   const velho = projekti?.velho;
-  const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(true);
+  const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(false);
 
   const kieli = useKansalaiskieli();
   const { data: kayttaja } = useSuomifiUser();

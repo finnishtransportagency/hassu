@@ -32,5 +32,6 @@ export function adaptMuistutusInput({
     postinumero: muistutusInput.postinumero,
     postitoimipaikka: muistutusInput.postitoimipaikka,
     sahkoposti: muistutusInput.sahkoposti,
+    puhelinnumero: muistutusInput.puhelinnumero,
   };
 }

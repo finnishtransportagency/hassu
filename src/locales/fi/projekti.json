@@ -174,8 +174,8 @@
   },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} tarvitsee henkilötietojasi muistutuksen käsittelyä varten. Saamme henkilötietosi Digi- ja väestötietovirastolta.  Luovutamme tietosi Liikenne- ja viestintävirastolle, jonka tehtävä on hyväksyä suunnitelma.",
-    "saat_tekemastasi_muistutuksesta_suomifi": "Saat tekemästäsi muistutuksesta kopion Suomi.fi -viestinä.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle hyväksymispäätöksen Suomi.fi -viestinä. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
-    "saat_tekemastasi_muistutuksesta_email": "Saat tekemästäsi muistutuksesta kopion sähköpostiviestinä, mikäli jätät sähköpostiosoitteesi.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle hyväksymispäätöksen. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
+    "saat_tekemastasi_muistutuksesta_suomifi": "Saat tekemästäsi muistutuksesta kopion Suomi.fi -viestinä.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle tiedon hyväksymispäätöksestä Suomi.fi -viestinä. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
+    "saat_tekemastasi_muistutuksesta_email": "Saat tekemästäsi muistutuksesta kopion sähköpostiviestinä, mikäli jätät sähköpostiosoitteesi.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle tiedon hyväksymispäätöksestä. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
     "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
     "muistutuksen_lahettajan_tiedot": "Muistutuksen lähettäjän tiedot",
     "kiitos_viestista": "Kiitos viestistä",

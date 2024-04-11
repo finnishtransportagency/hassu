@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`muistutusHandler handleEvent lisaaMuistutus should send email only to kirjaamo 1`] = `
+Object {
+  "subject": "Muistutus (VLS) Mika Muistuttaja ELY/3/2022",
+  "text": "Muistutus (VLS) Mika Muistuttaja ELY/3/2022
+
+Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Muistutus on vastaanotettu
+09.04.2024 klo 03:00
+Suunnitelman nimi
+Testiprojekti 3
+Suunnitelman asiatunnus
+ELY/3/2022
+
+Muistutuksen lähettäjän tiedot
+Nimi
+Mika Muistuttaja
+
+Osoite
+Muistojentie 1 a
+00100 Helsinki
+
+Sähköposti
+test@test.fi
+Puhelinnumero
+0501234567
+Muistutus
+Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/3/nahtavillaolo",
+  "to": "kirjaamo.uusimaa@ely-keskus.fi",
+}
+`;

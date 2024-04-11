@@ -1,12 +1,6 @@
 import { SQSEvent } from "aws-lambda";
 import { setLogContextOid } from "../../src/logger";
-import {
-  SuomiFiSanoma,
-  handleEvent,
-  lahetaSuomiFiViestit,
-  parseLaskutus,
-  setMockSuomiFiClient,
-} from "../../src/suomifi/suomifiHandler";
+import { SuomiFiSanoma, handleEvent, lahetaSuomiFiViestit, parseLaskutus, setMockSuomiFiClient } from "../../src/suomifi/suomifiHandler";
 import { identifyMockUser } from "../../src/user/userService";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
@@ -168,6 +162,44 @@ describe("suomifiHandler", () => {
     await handleEvent(msg as SQSEvent);
     expect(emailStub.callCount).to.equal(3);
     expect(emailStub.args[2]).toMatchSnapshot();
+    mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({ Item: muistuttaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: {
+          oid: "1",
+          velho: {
+            nimi: "Projektin nimi4",
+            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+            asiatunnusVayla: "vayla123",
+            asiatunnusELY: "ely123",
+          },
+          kielitiedot: { ensisijainenKieli: Kieli.RUOTSI, projektinNimiVieraskielella: "Projekts namn4" },
+        },
+      });
+    await handleEvent(msg as SQSEvent);
+    expect(emailStub.callCount).to.equal(4);
+    expect(emailStub.args[3]).toMatchSnapshot();
+    mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({ Item: { ...muistuttaja, liitteet: ["test.txt"] } })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: {
+          oid: "1",
+          velho: {
+            nimi: "Projektin nimi5",
+            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+            asiatunnusVayla: "vayla123",
+            asiatunnusELY: "ely123",
+          },
+          kielitiedot: { toissijainenKieli: Kieli.RUOTSI, projektinNimiVieraskielella: "Projekts namn5" },
+        },
+      });
+    await handleEvent(msg as SQSEvent);
+    expect(emailStub.callCount).to.equal(5);
+    expect(emailStub.args[4]).toMatchSnapshot();
     parameterStub.restore();
     emailStub.restore();
   });

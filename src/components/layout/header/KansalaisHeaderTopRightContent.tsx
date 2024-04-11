@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useCallback, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -7,15 +7,27 @@ import useSnackbars from "src/hooks/useSnackbars";
 import setLanguage from "next-translate/setLanguage";
 import { Box, BoxProps, styled } from "@mui/system";
 import SuomiFiLogin from "./SuomiFiLogin";
+import HassuDialog from "@components/HassuDialog";
+import { DialogActions, DialogContent } from "@mui/material";
+import Button from "@components/button/Button";
 
 const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const { data: projekti } = useProjektiJulkinen();
   const { showInfoMessage } = useSnackbars();
-
+  const [kirjautunutOpen, setKirjautunutOpen] = useState(router.asPath.indexOf("#kirjautunut") !== -1);
+  const closeDialog = useCallback(() => setKirjautunutOpen(false), []);
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
+      <HassuDialog open={kirjautunutOpen} title={t("kirjautuminen_onnistui")} maxWidth="sm" onClose={closeDialog}>
+        <DialogContent>
+          <p>{t("kirjautuminen_ohje")}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog}>{t("sulje")}</Button>
+        </DialogActions>
+      </HassuDialog>
       <LanguageSelector activeLocale={router.locale} locale="fi" setAsActiveLocale={async () => await setLanguage("fi", false)}>
         Suomi
       </LanguageSelector>
