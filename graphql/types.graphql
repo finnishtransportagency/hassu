@@ -425,6 +425,13 @@ type HyvaksymisEsitys {
   hash: String!
 }
 
+type HyvaksymisEsityksenTiedot {
+  oid: String!
+  versio: Int!
+  hyvaksymisEsitys: HyvaksymisEsitys
+  hyvaksymisPaatosVaihe: Boolean!
+}
+
 type Laskutustiedot {
   yTunnus: String
   ovtTunnus: String

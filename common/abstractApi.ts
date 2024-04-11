@@ -91,6 +91,8 @@ import {
   HyvaksyHyvaksymisEsitysMutationVariables,
   AvaaHyvaksymisEsityksenMuokkausMutationVariables,
   SuljeHyvaksymisEsityksenMuokkausMutationVariables,
+  HyvaksymisEsityksenTiedot,
+  HaeHyvaksymisEsityksenTiedotQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -357,6 +359,12 @@ export const apiConfig: ApiConfig = {
     graphql: queries.esikatseleHyvaksymisEsityksenTiedostot,
     isYllapitoOperation: true,
   },
+  haeHyvaksymisEsityksenTiedot: {
+    name: "haeHyvaksymisEsityksenTiedot",
+    operationType: OperationType.Query,
+    graphql: queries.haeHyvaksymisEsityksenTiedot,
+    isYllapitoOperation: true,
+  },
   annaPalautettaPalvelusta: {
     name: "annaPalautettaPalvelusta",
     operationType: OperationType.Mutation,
@@ -488,6 +496,12 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.suljeHyvaksymisEsityksenMuokkaus, {
       input,
     } as SuljeHyvaksymisEsityksenMuokkausMutationVariables);
+  }
+
+  async haeHyvaksymisEsityksenTiedot(oid: string): Promise<HyvaksymisEsityksenTiedot> {
+    return await this.callYllapitoAPI(apiConfig.haeHyvaksymisEsityksenTiedot, {
+      oid,
+    } as HaeHyvaksymisEsityksenTiedotQueryVariables);
   }
 
   async arkistoiProjekti(oid: string): Promise<Projekti> {

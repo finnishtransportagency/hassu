@@ -32,6 +32,7 @@ type Query {
   esikatseleLausuntoPyynnonTiedostot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
   esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): LadattavatTiedostot!
+  haeHyvaksymisEsityksenTiedot(oid: String!): HyvaksymisEsityksenTiedot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
   haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat

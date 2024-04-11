@@ -6,6 +6,7 @@ import palautaHyvaksymisEsitys from "./palauta";
 import suljeHyvaksymisEsityksenMuokkaus from "./suljeMuokkaus";
 import listaaHyvaksymisEsityksenTiedostot from "./listaaTiedostot";
 import esikatseleHyvaksymisEsityksenTiedostot from "./esikatseleTiedostot";
+import haeHyvaksymisEsityksenTiedot from "./haeTiedot";
 
 export {
   tallennaHyvaksymisEsitys,
@@ -16,4 +17,5 @@ export {
   suljeHyvaksymisEsityksenMuokkaus,
   listaaHyvaksymisEsityksenTiedostot,
   esikatseleHyvaksymisEsityksenTiedostot,
+  haeHyvaksymisEsityksenTiedot,
 };

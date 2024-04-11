@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DBProjekti } from "../../src/database/model";
-import { adaptHyvaksymisEsitysToApi } from "../../src/projekti/adapter/adaptToAPI";
+import { adaptHyvaksymisEsitysToAPI } from "../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 
 describe("adaptHyvaksymisEsitysToApi", () => {
@@ -28,7 +28,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       },
       salt: "jotain",
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.hyvaksymisEsitys?.[0].tiedosto).to.eql(
       "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/tiedosto.png"
     );
@@ -53,7 +53,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         ],
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.muistutukset?.[0]?.kunta).to.eql(1);
   });
 
@@ -66,7 +66,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       },
       julkaistuHyvaksymisEsitys: undefined,
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.MUOKKAUS);
   });
@@ -85,7 +85,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
@@ -106,7 +106,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
@@ -127,7 +127,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToApi(projektiInDB);
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-01");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;

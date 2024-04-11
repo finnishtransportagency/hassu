@@ -9,7 +9,7 @@ import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanotta
 import { createHyvaksymisEsitysHash } from "../lautaslinkit/hash";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
 
-export function adaptHyvaksymisEsitysToApi(
+export function adaptHyvaksymisEsitysToAPI(
   projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">
 ): API.HyvaksymisEsitys | undefined {
   const { oid, salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys } = projekti;

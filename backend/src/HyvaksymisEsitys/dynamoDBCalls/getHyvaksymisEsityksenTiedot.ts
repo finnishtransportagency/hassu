@@ -6,7 +6,7 @@ import { log } from "../../logger";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
-  "oid" | "versio" | "kayttoOikeudet" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "hyvaksymisPaatosVaihe"
+  "oid" | "versio" | "salt" | "kayttoOikeudet" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "hyvaksymisPaatosVaihe"
 >;
 
 export default async function haeProjektinTiedotHyvaksymisEsityksesta(oid: string): Promise<HyvaksymisEsityksenTiedot> {
@@ -14,7 +14,7 @@ export default async function haeProjektinTiedotHyvaksymisEsityksesta(oid: strin
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
-    ProjectionExpression: "oid, versio, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe",
+    ProjectionExpression: "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe",
   });
 
   try {
