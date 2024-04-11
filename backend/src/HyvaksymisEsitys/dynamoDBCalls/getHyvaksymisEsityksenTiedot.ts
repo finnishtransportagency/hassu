@@ -9,6 +9,8 @@ export type HyvaksymisEsityksenTiedot = Pick<
   "oid" | "versio" | "salt" | "kayttoOikeudet" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "hyvaksymisPaatosVaihe"
 >;
 
+// TODO: hae hyväksymisPaatosVaiheesta vain id, koska meitä kiinnostaa vain, onko se olemassa vai ei
+
 export default async function haeProjektinTiedotHyvaksymisEsityksesta(oid: string): Promise<HyvaksymisEsityksenTiedot> {
   const params = new GetCommand({
     TableName: config.projektiTableName,
