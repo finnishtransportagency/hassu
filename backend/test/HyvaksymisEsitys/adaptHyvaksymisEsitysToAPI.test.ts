@@ -30,10 +30,10 @@ describe("adaptHyvaksymisEsitysToApi", () => {
     };
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.hyvaksymisEsitys?.[0].tiedosto).to.eql(
-      "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/tiedosto.png"
+      "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/tiedosto.png"
     );
     expect(hyvaksymisEsitys?.suunnitelma?.[0].tiedosto).to.eql(
-      "/yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/suunnitelma/aineisto.png"
+      "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/suunnitelma/aineisto.png"
     );
   });
 
