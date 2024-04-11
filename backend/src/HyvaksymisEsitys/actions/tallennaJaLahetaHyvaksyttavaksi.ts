@@ -1,12 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { MuokattavaHyvaksymisEsitys } from "../database/model";
-import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
+import { MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError } from "hassu-common/error";
-import { adaptHyvaksymisEsitysToSave } from "./adaptHyvaksymisEsitysToSave";
-import { auditLog } from "../logger";
-import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
-import getHyvaksymisEsityksenAineistot from "./getAineistot";
+import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
+import { auditLog } from "../../logger";
+import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import getHyvaksymisEsityksenAineistot from "../getAineistot";
 
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();

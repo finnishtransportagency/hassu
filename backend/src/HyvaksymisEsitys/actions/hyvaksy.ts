@@ -1,14 +1,14 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { JulkaistuHyvaksymisEsitys } from "../database/model";
-import { requireOmistaja, requirePermissionLuku } from "../user/userService";
+import { JulkaistuHyvaksymisEsitys } from "../../database/model";
+import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
-import { ProjektiPaths } from "../files/ProjektiPath";
-import { fileService } from "../files/fileService";
-import { config } from "../config";
+import { ProjektiPaths } from "../../files/ProjektiPath";
+import { fileService } from "../../files/fileService";
+import { config } from "../../config";
 import { omit } from "lodash";
-import { nyt } from "../util/dateUtil";
-import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "./dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import { nyt } from "../../util/dateUtil";
+import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "../dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();

@@ -22,7 +22,7 @@ import { palauteHandlerJulkinen } from "../palaute/palauteHandlerJulkinen";
 import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJulkinenHandler";
 import { getSuomiFiKayttaja } from "../user/userService";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
-import { listaaHyvaksymisEsityksenTiedostot } from "../HyvaksymisEsitys/hyvaksymisEsitysActions";
+import { listaaHyvaksymisEsityksenTiedostot } from "../HyvaksymisEsitys/actions";
 
 export async function executePublicOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {

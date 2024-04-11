@@ -1,8 +1,8 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
-import { requireOmistaja, requirePermissionLuku } from "../user/userService";
-import { palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy } from "./dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
+import { palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAsetaSyy } from "../dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
 export default async function palautaHyvaksymisEsitys(input: API.PalautaInput): Promise<string> {
   requirePermissionLuku();

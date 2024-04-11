@@ -1,13 +1,13 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { log } from "../logger";
-import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "./dynamoDBCalls/getProjektiTiedostoineen";
+import { log } from "../../logger";
+import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "../dynamoDBCalls/getProjektiTiedostoineen";
 import { NotFoundError } from "hassu-common/error";
-import { nyt, parseDate } from "../util/dateUtil";
-import { assertIsDefined } from "../util/assertions";
-import { adaptProjektiKayttajaJulkinen } from "../projekti/adapter/adaptToAPI";
-import { fileService } from "../files/fileService";
-import createLadattavatTiedostot from "./lautaslinkit/createLadattavatTiedostot";
-import { validateHash } from "./lautaslinkit/hash";
+import { nyt, parseDate } from "../../util/dateUtil";
+import { assertIsDefined } from "../../util/assertions";
+import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
+import { fileService } from "../../files/fileService";
+import createLadattavatTiedostot from "../lautaslinkit/createLadattavatTiedostot";
+import { validateHash } from "../lautaslinkit/hash";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,

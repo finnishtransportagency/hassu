@@ -83,7 +83,7 @@ import {
   tallennaHyvaksymisEsitys,
   tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi,
   esikatseleHyvaksymisEsityksenTiedostot,
-} from "../HyvaksymisEsitys/hyvaksymisEsitysActions";
+} from "../HyvaksymisEsitys/actions";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {

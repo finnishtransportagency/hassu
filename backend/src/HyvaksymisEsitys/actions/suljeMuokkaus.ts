@@ -1,12 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { requirePermissionLuku, requirePermissionMuokkaa } from "../user/userService";
+import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
-import { fileService } from "../files/fileService";
-import { ProjektiPaths } from "../files/ProjektiPath";
-import { config } from "../config";
+import { fileService } from "../../files/fileService";
+import { ProjektiPaths } from "../../files/ProjektiPath";
+import { config } from "../../config";
 import { omit } from "lodash";
-import { tallennaMuokattavaHyvaksymisEsitys } from "./dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "./dynamoDBCalls/get";
+import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
+import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
 export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
