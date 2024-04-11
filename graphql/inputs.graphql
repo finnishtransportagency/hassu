@@ -19,6 +19,7 @@ input TallennaProjektiInput {
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
   kasittelynTila: KasittelyntilaInput
   asianhallinta: AsianhallintaInput
+  kustannuspaikka: String
 }
 
 input AsianhallintaInput {

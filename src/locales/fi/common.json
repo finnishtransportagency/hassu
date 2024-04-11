@@ -194,5 +194,7 @@
   "takaisin_sivun_alkuun": "Takaisin sivun alkuun",
   "vayla_tietosuoja_url": "https://www.vayla.fi/tietosuoja",
   "valitse": "Valitse",
-  "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}"
+  "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}",
+  "kirjautuminen_onnistui": "Tunnistautuminen onnistui",
+  "kirjautuminen_ohje": "Tunnistautuneena voit jättää muistutuksen suunnitelmasta. Muistutuksen voi jättää vain suunnitelmaan, jonka kuulutus suunnitelman nähtäville asettamisesta on julkaistu."
 }

@@ -6,12 +6,12 @@ import useSuomifiUser, { useRefreshToken } from "../../../hooks/useSuomifiUser";
 import ButtonLink from "@components/button/ButtonLink";
 
 const SuomiFiLogin = styled((props) => {
-  const { t } = useTranslation("common");
+  const { t, lang } = useTranslation("common");
   const { data } = useSuomifiUser();
   const { data: refreshData } = useRefreshToken();
   if (data?.suomifiEnabled) {
     if (!data.tunnistautunut || refreshData?.status !== 200) {
-      const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL();
+      const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL(lang === "sv" ? "sv#kirjautunut" : "#kirjautunut");
       if (!suomiFiAuthenticationURL) {
         return <></>;
       }
