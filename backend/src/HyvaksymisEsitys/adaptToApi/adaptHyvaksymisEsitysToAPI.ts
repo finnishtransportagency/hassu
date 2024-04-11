@@ -1,4 +1,4 @@
-import { DBProjekti, MuokattavaHyvaksymisEsitys, JulkaistuHyvaksymisEsitys } from "../../database/model";
+import { DBProjekti } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptAineistotToAPI } from "./adaptAineistotToAPI";
@@ -10,10 +10,9 @@ import { createHyvaksymisEsitysHash } from "../lautaslinkit/hash";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
 
 export function adaptHyvaksymisEsitysToApi(
-  projekti: DBProjekti,
-  muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | null | undefined,
-  julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys | null | undefined
+  projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">
 ): API.HyvaksymisEsitys | undefined {
+  const { oid, salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys } = projekti;
   if (!(muokattavaHyvaksymisEsitys || julkaistuHyvaksymisEsitys)) {
     return undefined;
   }
@@ -52,6 +51,6 @@ export function adaptHyvaksymisEsitysToApi(
     }),
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(hyvaksymisEsitys.vastaanottajat),
     tila: muokattavaHyvaksymisEsitys ? muokattavaHyvaksymisEsitys.tila ?? API.HyvaksymisTila.MUOKKAUS : API.HyvaksymisTila.HYVAKSYTTY,
-    hash: createHyvaksymisEsitysHash(projekti.oid, projekti.salt),
+    hash: createHyvaksymisEsitysHash(oid, salt),
   };
 }

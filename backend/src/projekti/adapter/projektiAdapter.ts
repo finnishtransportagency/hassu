@@ -114,7 +114,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
       lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
-      hyvaksymisEsitys: adaptHyvaksymisEsitysToApi(dbProjekti, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToApi({ oid, salt: dbProjekti.salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys }),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
