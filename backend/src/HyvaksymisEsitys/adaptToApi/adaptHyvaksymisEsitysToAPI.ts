@@ -7,6 +7,7 @@ import { adaptLaskutustiedotToAPI } from "./adaptLaskutustiedotToAPI";
 import { adaptKunnallisetLadatutTiedostotToApi } from "./adaptKunnallisetLadatutTiedostotToAPI";
 import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanottajatToAPI";
 import { createHyvaksymisEsitysHash } from "../lautaslinkit/hash";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
 
 export function adaptHyvaksymisEsitysToApi(
   projekti: DBProjekti,
@@ -23,8 +24,7 @@ export function adaptHyvaksymisEsitysToApi(
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
 
-  const place = julkaistu ? "hyvaksymisesitys" : "muokattava_hyvaksymisesitys";
-  const path = `/yllapito/tiedostot/projekti/${projekti.oid}/${place}/`;
+  const path = getYllapitoPathForProjekti(projekti.oid) + (julkaistu ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH);
 
   return {
     __typename: "HyvaksymisEsitys",

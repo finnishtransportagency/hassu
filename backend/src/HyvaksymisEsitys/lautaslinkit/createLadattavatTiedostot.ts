@@ -11,6 +11,7 @@ import {
   adaptLadattuTiedostoToLadattavaTiedosto,
   adaptTiedostoPathToLadattavaTiedosto,
 } from "../../tiedostot/adaptToLadattavaTiedosto";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
@@ -19,27 +20,35 @@ export default async function createLadattavatTiedostot(
 ): Promise<API.LadattavatTiedostot> {
   const oid = projekti.oid;
   const aineistoHandledAt = (hyvaksymisEsitys as MuokattavaHyvaksymisEsitys).aineistoHandledAt || true;
+  const path =
+    getYllapitoPathForProjekti(oid) + (aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH);
   const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
     await Promise.all(
-      (hyvaksymisEsitys.hyvaksymisEsitys ?? []).map((tiedosto) => adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, "TODO"))
+      (hyvaksymisEsitys.hyvaksymisEsitys ?? []).map((tiedosto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "hyvaksymisEsitys/")
+      )
     )
   ).sort(jarjestaTiedostot);
   const kuulutuksetJaKutsutOmaltaKoneelta = (
     await Promise.all(
-      (hyvaksymisEsitys.kuulutuksetJaKutsu ?? []).map((tiedosto) => adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, "TODO"))
+      (hyvaksymisEsitys.kuulutuksetJaKutsu ?? []).map((tiedosto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "kuulutuksetJaKutsu/")
+      )
     )
   ).sort(jarjestaTiedostot);
   const kuulutuksetJaKutsutProjektista = await getKutsut(projekti);
   const kuulutuksetJaKutsu: API.LadattavaTiedosto[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
   const muuAineistoOmaltaKoneelta = (
     await Promise.all(
-      (hyvaksymisEsitys.muuAineistoKoneelta ?? []).map((tiedosto) => adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, "TODO"))
+      (hyvaksymisEsitys.muuAineistoKoneelta ?? []).map((tiedosto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "muuAineistoKoneelta/")
+      )
     )
   ).sort(jarjestaTiedostot);
   const muuAineistoVelhosta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoVelhosta ?? []).map((tiedosto) =>
-        adaptAineistoNewToLadattavaTiedosto(oid, tiedosto, aineistoHandledAt, "TODO")
+        adaptAineistoNewToLadattavaTiedosto(oid, tiedosto, aineistoHandledAt, path + "muuAineistoVelhosta/")
       )
     )
   ).sort(jarjestaTiedostot);
@@ -47,14 +56,14 @@ export default async function createLadattavatTiedostot(
   const suunnitelma: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.suunnitelma?.map((aineisto) =>
-        adaptAineistoNewToLadattavaTiedosto(projekti.oid, aineisto, aineistoHandledAt, "TODO")
+        adaptAineistoNewToLadattavaTiedosto(projekti.oid, aineisto, aineistoHandledAt, path + "suunnitelma/")
       ) ?? []
     )
   ).sort(jarjestaTiedostot);
   const kuntaMuistutukset: API.KunnallinenLadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.muistutukset ?? []).map((tiedosto) =>
-        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(oid, tiedosto, "TODO")
+        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(oid, tiedosto, path + "muistutukset/")
       )
     )
   ).sort(jarjestaTiedostot);
