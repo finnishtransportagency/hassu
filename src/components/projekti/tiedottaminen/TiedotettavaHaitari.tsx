@@ -170,14 +170,15 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
     getCoreRowModel: getCoreRowModel(),
     data: tiedotettavat ?? [],
     enableSorting: false,
-    defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
   });
 
   const resetSearch = useCallback(async () => {
     reset();
     setSubmittedQuery("");
-    updateTiedotettavat("", 0);
+    updateTiedotettavat("", 0, PAGE_SIZE, false);
+    setQueryResettable(false);
   }, [reset, updateTiedotettavat]);
 
   const showLess = useCallback(() => {
