@@ -1,5 +1,6 @@
 import Button from "@components/button/Button";
 import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
+import ButtonLink from "@components/button/ButtonLink";
 import { RectangleButton } from "@components/button/RectangleButton";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import HassuTable from "@components/table/HassuTable";
@@ -30,6 +31,7 @@ export type TiedotettavaHaitariProps<T> = {
   columns: ColumnDef<T>[];
   getTiedotettavatCallback: GetTiedotettavaFunc<T>;
   muutTiedotettavat: boolean;
+  excelDownloadHref: string;
 };
 
 type Tiedotettava = Record<string, unknown>;
@@ -44,6 +46,7 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
   filterText,
   getTiedotettavatCallback,
   muutTiedotettavat,
+  excelDownloadHref,
 }: Readonly<TiedotettavaHaitariProps<T>>) {
   const [expanded, setExpanded] = useState(false);
 
@@ -62,6 +65,7 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
         filterText={filterText}
         expanded={expanded}
         muutTiedotettavat={muutTiedotettavat}
+        excelDownloadHref={excelDownloadHref}
       />
     </TableAccordion>
   );
@@ -107,11 +111,12 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   getTiedotettavatCallback,
   expanded,
   muutTiedotettavat,
+  excelDownloadHref,
   ...props
 }: Omit<AccordionDetailsProps, "children"> &
   Pick<
     TiedotettavaHaitariProps<T>,
-    "oid" | "instructionText" | "columns" | "filterText" | "getTiedotettavatCallback" | "muutTiedotettavat"
+    "oid" | "instructionText" | "columns" | "filterText" | "getTiedotettavatCallback" | "muutTiedotettavat" | "excelDownloadHref"
   > & {
     expanded: boolean;
   }) => {
@@ -227,37 +232,35 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
               Suodatuksella {hakutulosMaara} tulos{hakutulosMaara !== 1 && "ta"}
             </p>
           )}
-          {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (
-            <>
-              <HassuTable table={table} />
-              <Grid>
-                <Stack sx={{ gridColumnStart: 2 }} alignItems="center">
-                  {tiedotettavat.length > PAGE_SIZE && (
-                    <RectangleButton type="button" onClick={showLess}>
-                      Näytä vähemmän kiinteistönomistajia
-                    </RectangleButton>
-                  )}
-                  {hakutulosMaara > tiedotettavat.length && (
-                    <RectangleButton type="button" onClick={getNextPage}>
-                      Näytä enemmän kiinteistönomistajia
-                    </RectangleButton>
-                  )}
-                  {hakutulosMaara > PAGE_SIZE && (
-                    <ButtonFlatWithIcon
-                      type="button"
-                      icon={hakutulosMaara <= tiedotettavat.length ? "chevron-up" : "chevron-down"}
-                      onClick={toggleShowHideAll}
-                    >
-                      {hakutulosMaara <= tiedotettavat.length ? "Piilota kaikki" : "Näytä kaikki"}
-                    </ButtonFlatWithIcon>
-                  )}
-                </Stack>
-                <Button className="ml-auto" disabled>
-                  Vie Exceliin
-                </Button>
-              </Grid>
-            </>
-          )}
+          {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && <HassuTable table={table} />}
+          <Grid>
+            <ButtonLink className="ml-auto" href={excelDownloadHref}>
+              Vie Exceliin
+            </ButtonLink>
+            {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (
+              <Stack alignItems="center">
+                {tiedotettavat.length > PAGE_SIZE && (
+                  <RectangleButton type="button" onClick={showLess}>
+                    Näytä vähemmän kiinteistönomistajia
+                  </RectangleButton>
+                )}
+                {hakutulosMaara > tiedotettavat.length && (
+                  <RectangleButton type="button" onClick={getNextPage}>
+                    Näytä enemmän kiinteistönomistajia
+                  </RectangleButton>
+                )}
+                {hakutulosMaara > PAGE_SIZE && (
+                  <ButtonFlatWithIcon
+                    type="button"
+                    icon={hakutulosMaara <= tiedotettavat.length ? "chevron-up" : "chevron-down"}
+                    onClick={toggleShowHideAll}
+                  >
+                    {hakutulosMaara <= tiedotettavat.length ? "Piilota kaikki" : "Näytä kaikki"}
+                  </ButtonFlatWithIcon>
+                )}
+              </Stack>
+            )}
+          </Grid>
         </ContentSpacer>
       </form>
     </AccordionDetails>
@@ -273,6 +276,7 @@ const TableAccordionDetails = styled(UnstyledTableAccordionDetails)({
 const Grid = styled("div")({
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
+  direction: "rtl",
   justifyItems: "center",
   alignItems: "start",
   gap: "1rem",

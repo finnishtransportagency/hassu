@@ -399,7 +399,7 @@ export const MuokkausDialog2: VFC<{
               <H3 variant="lead">{projektinimi}</H3>
               <GrayBackgroundText>
                 <p>
-                  Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistaja(a)</b>.
+                  Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? 0} henkilöä</b>.
                   Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
                 </p>
               </GrayBackgroundText>

@@ -20,6 +20,7 @@ import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotu
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import { MuokkausDialog } from "../../../../../components/projekti/tiedottaminen/MuokkausDialog";
+import ButtonLink from "@components/button/ButtonLink";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -169,63 +170,61 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     <TiedottaminenPageLayout projekti={projekti}>
       <Section>
         <ContentSpacer>
-          <H2>Kiinteistönomistajien tiedot</H2>
+          <H2>Kuulutusten tiedottaminen</H2>
+          <H3>Kiinteistönomistajien tiedot</H3>
           <p>
-            Kuulutus suunnitelman nähtäville asettamisesta ja kuulutus hyväksymispäätöksestä toimitetaan kiinteistönomistajille järjestelmän
-            kautta kun kiinteistönomistajat on tunnistettu. Tämän sivun kuulutuksen vastaanottajalista viedään automaattisesti
-            asianhallintaan kuulutuksen julkaisupäivänä. Tämä koskee muilla tavoin tiedotettavia kiinteistönomistajia.
+            Ilmoitus suunnitelman nähtäville asettamisesta ja ilmoitus hyväksymispäätöksestä toimitetaan kiinteistönomistajille järjestelmän
+            kautta, kun kiinteistönomistajat on tunnistettu. Tämän sivun ilmoituksen vastaanottajalista viedään automaattisesti
+            asianhallintaan kuulutuksen julkaisupäivänä. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
           </p>
         </ContentSpacer>
         <ContentSpacer>
-          <H3>Suunnitelman karttatiedosto ja karttarajaus</H3>
+          <H3>Suunnitelman karttarajaus</H3>
           <p>
             Aloita kiinteistönomistajatietojen haku tuomalla karttatiedosto tai piirtämällä suunnitelman karttarajaus. Tämän jälkeen
-            järjestelmä piirtää suunnitelman kartalle ja etsii kiinteistönomistajat tälle rajaukselle. Jos alueelle osuu paljon
-            kiinteistönomistajia, voi haussa kestää hetki.
+            järjestelmä piirtää suunnitelman kartalle ja hakee kiinteistönomistajat tälle rajaukselle Maanmittauslaitoksen
+            Kiinteistörekisteristä. Jos alueelle osuu paljon kiinteistönomistajia, voi haussa kestää hetki.
           </p>
-          <p>****KARTTA TÄHÄN****</p>
+          <p>Karttarajaustyökalu avautuu uuteen ikkunaan.</p>
           <Button onClick={open} type="button">
-            Luo karttarajaus
+            {projekti.omistajahaku?.status ? "Muokkaa karttarajausta" : "Luo karttarajaus"}
           </Button>
           <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} />
         </ContentSpacer>
       </Section>
       <Section noDivider>
         <ContentSpacer gap={7}>
-          <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
+          <Stack direction="row" flexWrap="wrap" alignItems="start" justifyContent="space-between">
             <H2>Kiinteistönomistajat</H2>
-            <Button disabled>Vie exceliin</Button>
+            <ButtonLink type="button" href={`/api/projekti/${projekti.oid}/excel?kiinteisto=true`}>
+              Vie exceliin
+            </ButtonLink>
           </Stack>
           <GrayBackgroundText>
             <p>
-              Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistaja(a)</b>.
+              Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? 0} henkilöä</b>.
               Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
             </p>
           </GrayBackgroundText>
           <TiedotettavaHaitari
             oid={projekti.oid}
             title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
-            instructionText="Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
+            instructionText="Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
             filterText="Suodata kiinteistönomistajia"
             columns={readColumns}
             getTiedotettavatCallback={getKiinteistonOmistajatCallback}
             muutTiedotettavat={false}
+            excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=true&suomifi=true`}
           />
           <TiedotettavaHaitari
             oid={projekti.oid}
             title="Kiinteistönomistajien tiedotus muilla tavoin"
-            instructionText={
-              <>
-                Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tälläisiä ovat{" "}
-                <span style={{ color: "#C73F01" }}>x, z, y</span> jolloin tieto kuulutuksesta toimitetaan kiinteistönomistajalle
-                järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteet muistiin ja lähettää heille kuulutuksen
-                postiosoitteisiin. Kiinteistönomistajista viedään vastaanottajalista asianhallintaan, kun kuulutus julkaistaan.
-              </>
-            }
+            instructionText="Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
             filterText="Suodata kiinteistönomistajia"
             columns={readColumns}
             getTiedotettavatCallback={getKiinteistonOmistajatCallback}
             muutTiedotettavat={true}
+            excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=true&suomifi=false`}
           />
           <MuokkaaButton primary type="button" onClick={openMuokkaaDialog}>
             Muokkaa
