@@ -43,8 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (json["access_token"] && json["refresh_token"]) {
       // set cookie as Secure AND SameSite=Strict
       const cookie = [
-        `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict`,
-        `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict`,
+        `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
+        `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
       ];
       res.setHeader("Set-Cookie", cookie);
       status = 200;

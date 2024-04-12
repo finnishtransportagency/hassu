@@ -140,7 +140,7 @@ export class HassuFrontendStack extends Stack {
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
-    const graphqlBehavior = this.createGraphqlDmzProxyBehavior(Config.isDeveloperEnvironment() ? new URL(AppSyncAPIURL).host : config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
+    const graphqlBehavior = this.createGraphqlDmzProxyBehavior(config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,
