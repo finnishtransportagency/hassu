@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC, useEffect, useMemo } from "react";
-import { Dialog, DialogActions, DialogContent, Stack, styled } from "@mui/material";
+import { Dialog, DialogContent, Stack, styled } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H2, H3, H4 } from "@components/Headings";
@@ -18,7 +18,7 @@ import HassuTable from "@components/table/HassuTable";
 import { GrayBackgroundText } from "../GrayBackgroundText";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSnackbars from "src/hooks/useSnackbars";
-import IconButton from "@components/button/IconButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export type OmistajaRow = OmistajaInput & { toBeDeleted: boolean; etunimet?: string | null; sukunimi?: string | null };
 
@@ -112,30 +112,54 @@ const createPoistaColumn = (
       <Controller
         name={`${fieldArrayName}.${context.row.id}.toBeDeleted`}
         shouldUnregister={false}
-        render={({ field: { value, onChange, ...field } }) =>
-          value ? (
-            <RectangleButton
-              onClick={() => {
-                onChange(false);
-              }}
-              {...field}
-            >
-              Kumoa poisto
-            </RectangleButton>
-          ) : (
-            <IconButton
-              icon="trash"
-              onClick={() => {
-                onChange(true);
-              }}
-              {...field}
-            />
-          )
-        }
+        render={({ field: { value, onChange, ...field } }) => (
+          <StyledIconButton
+            className={value ? "rectangle" : "icon"}
+            type="button"
+            onClick={() => {
+              onChange(!value);
+            }}
+            {...field}
+          >
+            {value ? "Kumoa poisto" : <FontAwesomeIcon icon={"trash"} size="lg" />}
+          </StyledIconButton>
+        )}
       />
     </PoistaCell>
   ),
 });
+
+const StyledIconButton = styled("button")(({ theme }) => ({
+  "&.rectangle": {
+    "button&": {
+      backgroundColor: "#0064AF",
+      color: "#FFFFFF",
+      fontWeight: 700,
+      padding: "4px 12px",
+      overflowWrap: "anywhere",
+      hyphens: "auto",
+    },
+  },
+  "&.icon": {
+    height: theme.spacing(11),
+    width: theme.spacing(11),
+    padding: "1px",
+    borderRadius: "50%",
+    color: "#0064af",
+    "&:not(:disabled)": {
+      "&:hover": {
+        backgroundColor: "rgba(0,0,0,.1)",
+      },
+      "&:active": {
+        backgroundColor: "rgba(0,0,0,.05)",
+      },
+    },
+    "&:disabled": {
+      opacity: 0.5,
+      cursor: "default",
+    },
+  },
+}));
 
 const PoistaCell = styled("span")({ minHeight: "44px", display: "flex", alignItems: "center" });
 
@@ -153,10 +177,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     header: "Omistajan nimi",
     accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
     id: "omistajan_nimi",
-    meta: {
-      widthFractions: 3,
-      minWidth: 250,
-    },
+    meta: getDefaultColumnMeta(),
   },
   { header: "Postiosoite", accessorKey: "jakeluosoite", id: "postiosoite", meta: getDefaultColumnMeta() },
   { header: "Postinumero", accessorKey: "postinumero", id: "postinumero", meta: getDefaultColumnMeta() },
@@ -178,10 +199,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     header: "Omistajan nimi",
     accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
     id: "omistajan_nimi",
-    meta: {
-      widthFractions: 3,
-      minWidth: 250,
-    },
+    meta: getDefaultColumnMeta(),
   },
   {
     header: "Postiosoite",
@@ -190,6 +208,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `muutOmistajat.${context.row.index}.jakeluosoite` }}
       />
     ),
@@ -201,6 +220,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `muutOmistajat.${context.row.index}.postinumero` }}
       />
     ),
@@ -212,6 +232,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `muutOmistajat.${context.row.index}.paikkakunta` }}
       />
     ),
@@ -226,6 +247,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.kiinteistotunnus` }}
       />
     ),
@@ -235,7 +257,10 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     id: "omistajan_nimi",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
-      <TextFieldWithController<KiinteistonOmistajatFormFields> controllerProps={{ name: `lisatytOmistajat.${context.row.index}.nimi` }} />
+      <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
+        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.nimi` }}
+      />
     ),
   },
   {
@@ -245,6 +270,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.jakeluosoite` }}
       />
     ),
@@ -256,6 +282,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.postinumero` }}
       />
     ),
@@ -267,6 +294,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
+        autoComplete="off"
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.paikkakunta` }}
       />
     ),
@@ -326,7 +354,7 @@ export const MuokkausDialog2: VFC<{
     })
   );
 
-  const { handleSubmit } = useFormReturn;
+  const { handleSubmit, reset, getValues } = useFormReturn;
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
@@ -356,12 +384,15 @@ export const MuokkausDialog2: VFC<{
     [api, close, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
   );
 
-  console.log("rendering parent");
+  const resetAndClose = useCallback(() => {
+    reset(getValues());
+    close();
+  }, [reset, getValues, close]);
 
   return (
-    <Dialog PaperProps={{ sx: { paddingX: 20, paddingY: 10 } }} fullScreen open={isOpen} onClose={close}>
+    <Dialog PaperProps={{ sx: { paddingX: 20, paddingTop: 10 } }} scroll="body" fullScreen open={isOpen} onClose={close}>
       <FormProvider {...useFormReturn}>
-        <DialogForm onSubmit={handleSubmit(onSubmit)}>
+        <DialogForm>
           <DialogContent>
             <Section noDivider>
               <H2 variant="h1">Muokkaa kiinteistönomistajatietoja</H2>
@@ -403,15 +434,17 @@ export const MuokkausDialog2: VFC<{
               <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
               <LisatytTaulukko />
             </Section>
+            <Section noDivider>
+              <Stack direction="row" justifyContent="end">
+                <Button type="button" onClick={resetAndClose}>
+                  Poistu tallentamatta
+                </Button>
+                <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+                  Tallenna
+                </Button>
+              </Stack>
+            </Section>
           </DialogContent>
-          <DialogActions>
-            <Button type="button" onClick={close}>
-              Poistu tallentamatta
-            </Button>
-            <Button type="submit" primary>
-              Tallenna
-            </Button>
-          </DialogActions>
         </DialogForm>
       </FormProvider>
     </Dialog>
@@ -481,7 +514,7 @@ const PaginatedTaulukko = ({
     getCoreRowModel: getCoreRowModel(),
     data: slicedFields,
     enableSorting: false,
-    defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
   });
 
@@ -522,7 +555,7 @@ const LisatytTaulukko = () => {
     getCoreRowModel: getCoreRowModel(),
     data: fields,
     enableSorting: false,
-    defaultColumn: { cell: (cell) => cell.getValue() ?? "-" },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
   });
 
