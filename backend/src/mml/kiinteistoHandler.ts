@@ -292,6 +292,10 @@ export async function tallennaKiinteistonOmistajat(
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
+    if (dbOmistaja.userCreated) {
+      dbOmistaja.nimi = omistaja.nimi;
+      dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
+    }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
   }
 
