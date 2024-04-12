@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC, useEffect } from "react";
-import { Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { StyledMap } from "@components/projekti/common/StyledMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -7,22 +7,19 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import Section from "@components/layout/Section2";
 import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/TiedottaminenPageLayout";
-import { H2, H3, H4 } from "@components/Headings";
+import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import { Omistaja, OmistajahakuTila, OmistajaInput, TallennaKiinteistonOmistajatMutationVariables } from "@services/api";
+import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { UseFormProps, useForm, SubmitHandler, FormProvider, Controller, UseFieldArrayProps } from "react-hook-form";
-import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
-import { formatKiinteistotunnusForDatabase, formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
+import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
+import { MuokkausDialog } from "../../../../../components/projekti/tiedottaminen/MuokkausDialog";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -31,15 +28,6 @@ export default function Kiinteistonomistajat() {
     </ProjektiConsumer>
   );
 }
-
-export type OmistajaRow = Omistaja & { toBeDeleted: boolean; rowIndex: number };
-
-export type KiinteistonOmistajatFormFields = {
-  oid: string;
-  suomifiOmistajat: OmistajaRow[];
-  muutOmistajat: OmistajaRow[];
-  uudetOmistajat: OmistajaRow[];
-};
 
 const KarttaDialogi = styled(
   ({
@@ -101,91 +89,10 @@ const KarttaDialogi = styled(
   }
 )({});
 
-export const PAGE_SIZE = 25;
-
-const getFormDefaultValues: (oid: string) => KiinteistonOmistajatFormFields = (oid) => ({
-  oid,
-  muutOmistajat: [],
-  suomifiOmistajat: [],
-  uudetOmistajat: [],
-});
-
-const formOptions: (oid: string) => UseFormProps<KiinteistonOmistajatFormFields> = (oid) => ({
-  resolver: yupResolver(kiinteistonOmistajatSchema, { abortEarly: false, recursive: true }),
-  mode: "onChange",
-  reValidateMode: "onChange",
-  defaultValues: getFormDefaultValues(oid),
-  shouldUnregister: false,
-});
-
-const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
-  const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat]
-    .filter((omistaja) => omistaja.toBeDeleted)
-    .map(({ id }) => id);
-  const muutOmistajatRows = [
-    ...data.muutOmistajat,
-    ...data.uudetOmistajat.map<OmistajaRow>(({ kiinteistotunnus, ...omistaja }) => ({
-      kiinteistotunnus: formatKiinteistotunnusForDatabase(kiinteistotunnus),
-      ...omistaja,
-    })),
-  ];
-  const muutOmistajat = muutOmistajatRows
-    .filter((omistaja) => !omistaja.toBeDeleted)
-    .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero }) => ({
-      id,
-      jakeluosoite,
-      kiinteistotunnus,
-      nimi,
-      paikkakunta,
-      postinumero,
-    }));
-  const variables: TallennaKiinteistonOmistajatMutationVariables = {
-    oid: data.oid,
-    muutOmistajat,
-    poistettavatOmistajat,
-  };
-
-  return variables;
-};
-
-type FieldArrayName = UseFieldArrayProps<KiinteistonOmistajatFormFields>["name"];
-
 const getDefaultColumnMeta = () => ({
   widthFractions: 3,
   minWidth: 200,
 });
-
-function createPoistaColumn(fieldArrayName: FieldArrayName): ColumnDef<OmistajaRow, unknown> {
-  const column: ColumnDef<OmistajaRow, unknown> = {
-    header: "Poista",
-    id: "actions",
-    meta: {
-      widthFractions: 2,
-      minWidth: 120,
-    },
-    cell: (context) => {
-      const rowIndex = context.row.original.rowIndex;
-
-      return (
-        <Controller
-          name={`${fieldArrayName}.${rowIndex}.toBeDeleted`}
-          render={({ field: { value, onChange, ...field } }) => (
-            <Checkbox
-              checked={value}
-              onChange={(event) => {
-                const checked = event.target.checked;
-                onChange(checked);
-              }}
-              {...field}
-              name={`${fieldArrayName}.${rowIndex}.toBeDeleted`}
-            />
-          )}
-        />
-      );
-    },
-  };
-  return column;
-}
 
 const readColumns: ColumnDef<Omistaja>[] = [
   {
@@ -323,7 +230,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <MuokkaaButton primary type="button" onClick={openMuokkaaDialog}>
             Muokkaa
           </MuokkaaButton>
-          <MuokkausDialog open={isMuokkaaDialogOpen} close={closeMuokkaaDialog} oid={projekti.oid} />
+          <MuokkausDialog isOpen={isMuokkaaDialogOpen} close={closeMuokkaaDialog} oid={projekti.oid} projektinimi={projekti.velho.nimi} />
         </ContentSpacer>
       </Section>
       <HassuDialog
@@ -343,58 +250,3 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
 };
 
 const MuokkaaButton = styled(Button)({ marginLeft: "auto" });
-
-const MuokkausDialog: VFC<DialogProps & { close: () => void; oid: string }> = ({ close, onClose, oid, ...props }) => {
-  const useFormReturn = useForm<KiinteistonOmistajatFormFields>(formOptions(oid));
-  const { withLoadingSpinner } = useLoadingSpinner();
-  const { showErrorMessage } = useSnackbars();
-  const api = useApi();
-
-  const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
-    (data) => {
-      withLoadingSpinner(
-        (async () => {
-          let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
-          try {
-            apiData = mapFormDataForApi(data);
-          } catch {
-            showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
-          }
-          if (apiData) {
-            await api.tallennaKiinteistonOmistajat(apiData);
-            useFormReturn.reset();
-          }
-        })()
-      );
-    },
-    [api, showErrorMessage, useFormReturn, withLoadingSpinner]
-  );
-  return (
-    <Dialog fullScreen onClose={close} {...props} open={true}>
-      <FormProvider {...useFormReturn}>
-        <DialogForm>
-          <DialogContent>
-            <Section>
-              <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
-              {/* <HassuTable colu /> */}
-            </Section>
-            <Section>
-              <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
-              <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
-            </Section>
-          </DialogContent>
-          <DialogActions>
-            <Button type="button" onClick={close}>
-              Sulje
-            </Button>
-            <Button type="button" primary onClick={close}>
-              Tallenna
-            </Button>
-          </DialogActions>
-        </DialogForm>
-      </FormProvider>
-    </Dialog>
-  );
-};
-
-const DialogForm = styled("form")({ display: "contents" });

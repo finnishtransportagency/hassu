@@ -40,7 +40,7 @@ export const createLocalizedTheme = (locale: Localization) =>
       typography: {
         fontFamily: '"Exo 2"',
         allVariants: { color: "#242222" },
-        h1: { fontSize: "2,4375rem", lineHeight: 1.231, fontWeight: 700, margin: undefined },
+        h1: { fontSize: "2.4375rem", lineHeight: 1.231, fontWeight: 700, margin: undefined },
         h2: { fontSize: "1.75rem", lineHeight: 1.143, fontWeight: 700, margin: undefined },
         h3: { fontSize: "1.4375rem", lineHeight: 1.174, fontWeight: 700, margin: undefined },
         h4: { fontSize: "1.25rem", lineHeight: 1.1, fontWeight: 700, margin: undefined },

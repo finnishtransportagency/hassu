@@ -760,7 +760,9 @@ export abstract class AbstractApi {
     muutOmistajat: boolean,
     query: string | null | undefined,
     from: number | null | undefined,
-    size: number | null | undefined
+    size: number | null | undefined,
+    onlyUserCreated?: boolean | null | undefined,
+    filterUserCreated?: boolean | null | undefined
   ): Promise<KiinteistonOmistajat> {
     return await this.callYllapitoAPI(apiConfig.haeKiinteistonOmistajat, {
       oid,
@@ -768,6 +770,8 @@ export abstract class AbstractApi {
       query,
       from,
       size,
+      filterUserCreated,
+      onlyUserCreated,
     } as HaeKiinteistonOmistajatQueryVariables);
   }
 

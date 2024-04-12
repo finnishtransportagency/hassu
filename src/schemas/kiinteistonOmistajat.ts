@@ -7,17 +7,21 @@ export const kiinteistonOmistajatSchema = Yup.object()
     oid: Yup.string().required(),
     suomifiOmistajat: Yup.array().of(omistajaInput).required(),
     muutOmistajat: Yup.array().of(omistajaInput).required(),
-    uudetOmistajat: Yup.array()
+    lisatytOmistajat: Yup.array()
       .of(
         Yup.object()
           .shape({
-            kiinteistotunnus: Yup.string()
-              .required("Kiinteistötunnus on pakollinen tieto")
-              .test(
-                "is-valid-kiinteistotunnus",
-                "Anna kiinteistötunnus esitysmuodossa",
-                (value) => !!value && /^\d{1,3}-\d{1,3}-\d{1,4}-\d{1,4}$/.test(value)
-              ),
+            kiinteistotunnus: Yup.string().when("toBeDeleted", {
+              is: false,
+              then: (schema) =>
+                schema
+                  .required("Kiinteistötunnus on pakollinen tieto")
+                  .test(
+                    "is-valid-kiinteistotunnus",
+                    "Anna kiinteistötunnus esitysmuodossa",
+                    (value) => !!value && /^\d{1,3}-\d{1,3}-\d{1,4}-\d{1,4}$/.test(value)
+                  ),
+            }),
           })
           .required()
       )

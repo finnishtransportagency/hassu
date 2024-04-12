@@ -283,6 +283,7 @@ export async function tallennaKiinteistonOmistajat(
         nimi: omistaja.nimi,
         suomifiLahetys: false,
         kaytossa: true,
+        userCreated: true,
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
