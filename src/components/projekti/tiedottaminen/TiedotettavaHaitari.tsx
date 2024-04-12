@@ -14,7 +14,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 export type GetTiedotettavaFunc<T> = (
   oid: string,
-  muutOmistajat: boolean,
+  muutTiedotettavat: boolean,
   query: string | null | undefined,
   from: number | null | undefined,
   size: number | null | undefined
@@ -25,8 +25,10 @@ export type GetTiedotettavaFunc<T> = (
 
 export type TiedotettavaHaitariProps<T> = {
   title: string;
-  instructionText: string | JSX.Element;
+  instructionText: string;
   filterText: string;
+  showMoreText: string;
+  showLessText: string;
   oid: string;
   columns: ColumnDef<T>[];
   getTiedotettavatCallback: GetTiedotettavaFunc<T>;
@@ -38,16 +40,7 @@ type Tiedotettava = Record<string, unknown>;
 
 const PAGE_SIZE = 25;
 
-export default function TiedotettavaHaitari<T extends Tiedotettava>({
-  instructionText,
-  title,
-  oid,
-  columns,
-  filterText,
-  getTiedotettavatCallback,
-  muutTiedotettavat,
-  excelDownloadHref,
-}: Readonly<TiedotettavaHaitariProps<T>>) {
+export default function TiedotettavaHaitari<T extends Tiedotettava>(props: Readonly<TiedotettavaHaitariProps<T>>) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpansionChange = useCallback((_event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -56,17 +49,8 @@ export default function TiedotettavaHaitari<T extends Tiedotettava>({
 
   return (
     <TableAccordion expanded={expanded} onChange={handleExpansionChange}>
-      <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{title}</TableAccordionSummary>
-      <TableAccordionDetails
-        oid={oid}
-        instructionText={instructionText}
-        columns={columns}
-        getTiedotettavatCallback={getTiedotettavatCallback}
-        filterText={filterText}
-        expanded={expanded}
-        muutTiedotettavat={muutTiedotettavat}
-        excelDownloadHref={excelDownloadHref}
-      />
+      <TableAccordionSummary expandIcon={<FontAwesomeIcon icon="angle-down" className="text-white" />}>{props.title}</TableAccordionSummary>
+      <TableAccordionDetails {...props} expanded={expanded} />
     </TableAccordion>
   );
 }
@@ -112,12 +96,12 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   expanded,
   muutTiedotettavat,
   excelDownloadHref,
+  showLessText,
+  showMoreText,
+  title,
   ...props
 }: Omit<AccordionDetailsProps, "children"> &
-  Pick<
-    TiedotettavaHaitariProps<T>,
-    "oid" | "instructionText" | "columns" | "filterText" | "getTiedotettavatCallback" | "muutTiedotettavat" | "excelDownloadHref"
-  > & {
+  TiedotettavaHaitariProps<T> & {
     expanded: boolean;
   }) => {
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -164,8 +148,8 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
     if ((tiedotettavat?.length ?? 0) < (hakutulosMaara ?? 0)) {
       updateTiedotettavat(submittedQuery, undefined, (hakutulosMaara ?? 0) - (tiedotettavat?.length ?? 0));
     } else {
-      setTiedotettavat((oldOmistajat) => {
-        return oldOmistajat?.slice(0, PAGE_SIZE) ?? [];
+      setTiedotettavat((oldTiedotettavat) => {
+        return oldTiedotettavat?.slice(0, PAGE_SIZE) ?? [];
       });
     }
   }, [tiedotettavat?.length, hakutulosMaara, updateTiedotettavat, submittedQuery]);
@@ -187,9 +171,9 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
   }, [reset, updateTiedotettavat]);
 
   const showLess = useCallback(() => {
-    setTiedotettavat((oldOmistajat) => {
-      const remainder = (oldOmistajat?.length ?? 0) % PAGE_SIZE || PAGE_SIZE;
-      return oldOmistajat?.slice(0, oldOmistajat.length - remainder) ?? [];
+    setTiedotettavat((oldTiedotettavat) => {
+      const remainder = (oldTiedotettavat?.length ?? 0) % PAGE_SIZE || PAGE_SIZE;
+      return oldTiedotettavat?.slice(0, oldTiedotettavat.length - remainder) ?? [];
     });
   }, [setTiedotettavat]);
 
@@ -241,12 +225,12 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
               <Stack alignItems="center">
                 {tiedotettavat.length > PAGE_SIZE && (
                   <RectangleButton type="button" onClick={showLess}>
-                    Näytä vähemmän kiinteistönomistajia
+                    {showLessText}
                   </RectangleButton>
                 )}
                 {hakutulosMaara > tiedotettavat.length && (
                   <RectangleButton type="button" onClick={getNextPage}>
-                    Näytä enemmän kiinteistönomistajia
+                    {showMoreText}
                   </RectangleButton>
                 )}
                 {hakutulosMaara > PAGE_SIZE && (
