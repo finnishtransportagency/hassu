@@ -91,7 +91,7 @@ export class HassuFrontendStack extends Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    const { AppSyncAPIKey, EventSqsUrl, AppSyncAPIURL } = await readBackendStackOutputs();
+    const { AppSyncAPIKey, EventSqsUrl } = await readBackendStackOutputs();
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
