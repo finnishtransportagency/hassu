@@ -140,14 +140,14 @@ export class HassuFrontendStack extends Stack {
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
-    const graphqlBehavior = this.createGraphqlDmzProxyBehavior(config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
+    const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,
       dmzProxyBehaviorWithLambda,
       dmzProxyBehavior,
       apiBehavior,
-      graphqlBehavior,
+      publicGraphqlBehavior,
       edgeFunctionRole,
       frontendRequestFunction
     );
@@ -395,7 +395,7 @@ export class HassuFrontendStack extends Stack {
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
     apiBehavior: BehaviorOptions,
-    graphqlBehavior: BehaviorOptions,
+    publicGraphqlBehavior: BehaviorOptions,
     edgeFunctionRole: Role,
     frontendRequestFunction?: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
@@ -408,7 +408,7 @@ export class HassuFrontendStack extends Stack {
     );
     const props: Record<string, BehaviorOptions> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
-      "/graphql": graphqlBehavior,
+      "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
       "/tiedostot/*": publicBucketBehaviour,
       "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
@@ -453,7 +453,7 @@ export class HassuFrontendStack extends Stack {
     return dmzBehavior;
   }
 
-  private createGraphqlDmzProxyBehavior(
+  private createPublicGraphqlDmzProxyBehavior(
     dmzProxyEndpoint: string,
     env: string,
     role: Role,
