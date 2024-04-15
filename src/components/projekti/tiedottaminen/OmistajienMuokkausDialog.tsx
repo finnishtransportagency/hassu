@@ -19,6 +19,7 @@ import { GrayBackgroundText } from "../GrayBackgroundText";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSnackbars from "src/hooks/useSnackbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import log from "loglevel";
 
 type OmistajaRow = OmistajaInput & { toBeDeleted: boolean; etunimet?: string | null; sukunimi?: string | null };
 
@@ -370,15 +371,19 @@ const MuokkausDialogContent: VFC<{
           let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
           try {
             apiData = mapFormDataForApi(data);
-          } catch (e) {
-            console.log(data, e);
+          } catch (error) {
+            log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
             showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
           }
           if (apiData) {
-            await api.tallennaKiinteistonOmistajat(apiData);
-            useFormReturn.reset(data);
-            close();
-            showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
+            try {
+              await api.tallennaKiinteistonOmistajat(apiData);
+              useFormReturn.reset(data);
+              close();
+              showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
+            } catch (error) {
+              log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
+            }
           }
         })()
       );
