@@ -218,7 +218,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
           )}
           {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && <HassuTable table={table} />}
           <Grid>
-            <ButtonLink className="ml-auto" href={excelDownloadHref}>
+            <ButtonLink className="ml-auto" target="_blank" download href={excelDownloadHref}>
               Vie Exceliin
             </ButtonLink>
             {typeof hakutulosMaara === "number" && !!tiedotettavat?.length && (

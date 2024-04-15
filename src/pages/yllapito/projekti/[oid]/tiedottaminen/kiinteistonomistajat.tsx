@@ -19,7 +19,7 @@ import useApi from "src/hooks/useApi";
 import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
-import { MuokkausDialog } from "../../../../../components/projekti/tiedottaminen/MuokkausDialog";
+import { OmistajienMuokkausDialog } from "../../../../../components/projekti/tiedottaminen/OmistajienMuokkausDialog";
 import ButtonLink from "@components/button/ButtonLink";
 
 export default function Kiinteistonomistajat() {
@@ -196,7 +196,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
         <ContentSpacer gap={7}>
           <Stack direction="row" flexWrap="wrap" alignItems="start" justifyContent="space-between">
             <H2>Kiinteistönomistajat</H2>
-            <ButtonLink type="button" href={`/api/projekti/${projekti.oid}/excel?kiinteisto=true`}>
+            <ButtonLink target="_blank" download href={`/api/projekti/${projekti.oid}/excel?kiinteisto=true`}>
               Vie exceliin
             </ButtonLink>
           </Stack>
@@ -233,7 +233,12 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <MuokkaaButton primary type="button" onClick={openMuokkaaDialog}>
             Muokkaa
           </MuokkaaButton>
-          <MuokkausDialog isOpen={isMuokkaaDialogOpen} close={closeMuokkaaDialog} oid={projekti.oid} projektinimi={projekti.velho.nimi} />
+          <OmistajienMuokkausDialog
+            isOpen={isMuokkaaDialogOpen}
+            close={closeMuokkaaDialog}
+            oid={projekti.oid}
+            projektinimi={projekti.velho.nimi}
+          />
         </ContentSpacer>
       </Section>
       <HassuDialog

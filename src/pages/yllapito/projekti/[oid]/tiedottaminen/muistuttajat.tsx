@@ -90,7 +90,9 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
         <ContentSpacer>
           <Stack direction="row" flexWrap="wrap" alignItems="start" justifyContent="space-between">
             <H2>Muistuttajien tiedottaminen</H2>
-            <ButtonLink href={`/api/projekti/${projekti.oid}/excel?kiinteisto=false`}>Vie Exceliin</ButtonLink>
+            <ButtonLink href={`/api/projekti/${projekti.oid}/excel?kiinteisto=false`} target="_blank" download>
+              Vie Exceliin
+            </ButtonLink>
           </Stack>
           <p>
             Tunnistautuneiden muistuttajien yhteystiedot kerätään järjestelmään ja heille lähetetään kuulutus hyväksymispäätöksestä

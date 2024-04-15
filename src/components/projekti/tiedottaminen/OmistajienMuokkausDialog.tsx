@@ -20,16 +20,16 @@ import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSnackbars from "src/hooks/useSnackbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export type OmistajaRow = OmistajaInput & { toBeDeleted: boolean; etunimet?: string | null; sukunimi?: string | null };
+type OmistajaRow = OmistajaInput & { toBeDeleted: boolean; etunimet?: string | null; sukunimi?: string | null };
 
-export type KiinteistonOmistajatFormFields = {
+type KiinteistonOmistajatFormFields = {
   oid: string;
   suomifiOmistajat: OmistajaRow[];
   muutOmistajat: OmistajaRow[];
   lisatytOmistajat: OmistajaRow[];
 };
 
-export const PAGE_SIZE = 25;
+const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
@@ -53,7 +53,7 @@ const mapOmistajaToOmistajaRow =
 
 type PoistettavaOmistaja = Omit<OmistajaRow, "id"> & { id: string };
 
-export const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
+const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiinteistonOmistajatMutationVariables = (data) => {
   const poistettavatOmistajat = [...data.muutOmistajat, ...data.suomifiOmistajat, ...data.lisatytOmistajat]
     .filter((omistaja): omistaja is PoistettavaOmistaja => !!omistaja.toBeDeleted && !!omistaja.id)
     .map(({ id }) => id);
@@ -308,7 +308,7 @@ type InitialSearchResponses = {
   lisatyt: KiinteistonOmistajat;
 };
 
-export const MuokkausDialog: VFC<{ isOpen: boolean; close: () => void; oid: string; projektinimi: string | null | undefined }> = (
+export const OmistajienMuokkausDialog: VFC<{ isOpen: boolean; close: () => void; oid: string; projektinimi: string | null | undefined }> = (
   props
 ) => {
   const [initialSearchResponses, setInitialSearchResponses] = useState<InitialSearchResponses | null>(null);
@@ -330,10 +330,12 @@ export const MuokkausDialog: VFC<{ isOpen: boolean; close: () => void; oid: stri
     }
   }, [api, props.isOpen, props.oid, withLoadingSpinner]);
 
-  return <>{props.isOpen && initialSearchResponses && <MuokkausDialog2 {...props} initialSearchResponses={initialSearchResponses} />}</>;
+  return (
+    <>{props.isOpen && initialSearchResponses && <MuokkausDialogContent {...props} initialSearchResponses={initialSearchResponses} />}</>
+  );
 };
 
-export const MuokkausDialog2: VFC<{
+const MuokkausDialogContent: VFC<{
   isOpen: boolean;
   close: () => void;
   oid: string;
