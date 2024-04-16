@@ -300,7 +300,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": null,
+      "geoJSON": undefined,
       "kunnat": Array [
         91,
         92,
