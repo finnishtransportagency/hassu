@@ -33,6 +33,7 @@ export function adaptHyvaksymisEsitysToSave(
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     ...rest,
+    versio: 1,
   };
   return newMuokattavaHyvaksymisEsitys;
 }

@@ -16,6 +16,7 @@ export interface IHyvaksymisEsitys {
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;
+  versio: number;
 }
 
 export type MuokattavaHyvaksymisEsitys = {

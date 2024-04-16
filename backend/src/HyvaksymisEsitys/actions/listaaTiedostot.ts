@@ -7,7 +7,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
 import { fileService } from "../../files/fileService";
 import createLadattavatTiedostot from "../lautaslinkit/createLadattavatTiedostot";
-import { validateHash } from "../lautaslinkit/hash";
+import { validateHyvaksymisEsitysHash } from "../lautaslinkit/hash";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -24,7 +24,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       throw new NotFoundError("Hyvaksymisesitystä ei löydy");
     }
     assertIsDefined(projekti.salt, "Projektin salt on määritelty tässä vaiheessa");
-    validateHash(oid, projekti.salt, params.hash);
+    validateHyvaksymisEsitysHash(oid, projekti.salt, hyvaksymisEsitys.versio, params.hash);
     const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
       const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
