@@ -11,25 +11,30 @@ import getHyvaksymisEsityksenAineistot from "../getAineistot";
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
-  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
-  validate(projektiInDB, input);
-  // Adaptoi muokattava hyvaksymisesitys ja tallenna se tietokantaan
-  const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-  auditLog.info("Tallenna hyväksymisesitys", { input });
-  await tallennaMuokattavaHyvaksymisEsitys({
-    oid,
-    versio,
-    muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
-  });
-  if (
-    uusiaAineistoja(
-      getHyvaksymisEsityksenAineistot(projektiInDB.muokattavaHyvaksymisEsitys),
-      getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
-    )
-  ) {
-    // TODO: reagoi mahdollisiin tiedostomuutoksiin
+  try {
+    // TODO lukitse dynamoDB
+    const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+    validate(projektiInDB, input);
+    // Adaptoi muokattava hyvaksymisesitys ja tallenna se tietokantaan
+    const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
+    auditLog.info("Tallenna hyväksymisesitys", { input });
+    await tallennaMuokattavaHyvaksymisEsitys({
+      oid,
+      versio,
+      muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
+    });
+    if (
+      uusiaAineistoja(
+        getHyvaksymisEsityksenAineistot(projektiInDB.muokattavaHyvaksymisEsitys),
+        getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
+      )
+    ) {
+      // TODO: reagoi mahdollisiin tiedostomuutoksiin
+    }
+    return oid;
+  } finally {
+    // TODO: poista lukitus
   }
-  return oid;
 }
 
 function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
