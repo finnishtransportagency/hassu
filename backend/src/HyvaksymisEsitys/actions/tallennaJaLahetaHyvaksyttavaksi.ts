@@ -15,10 +15,11 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   // Validoi ennen adaptointia
   validateCurrent(projektiInDB, input);
-  // Adaptoi input db:ssä olevaan dataan
+  // Adaptoi muokattava hyvaksymisesitys
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.muokattavaHyvaksymisEsitys?.aineistoHandledAt);
+  // TODO: persistoi uudet tiedostot
   // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
   const tallennettavaMuokattavaHyvaksymisEsitys = {
     ...newMuokattavaHyvaksymisEsitys,

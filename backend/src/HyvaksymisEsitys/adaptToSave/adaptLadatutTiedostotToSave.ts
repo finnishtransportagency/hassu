@@ -18,8 +18,5 @@ function adaptLadattuTiedostoToSave<
   A extends LadattuTiedostoNew | KunnallinenLadattuTiedosto,
   B extends API.LadattuTiedostoInput | API.KunnallinenLadattuTiedostoInput
 >(dbTiedosto: A | undefined, tiedostoInput: B): A {
-  if (!dbTiedosto) {
-    //TODO: persistoi tiedosto
-  }
   return mergeWith({}, dbTiedosto, { ...tiedostoInput, lisatty: dbTiedosto ? dbTiedosto.lisatty : nyt().format() });
 }

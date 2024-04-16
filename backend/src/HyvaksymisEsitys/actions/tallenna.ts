@@ -15,8 +15,10 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     // TODO lukitse dynamoDB
     const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
     validate(projektiInDB, input);
-    // Adaptoi muokattava hyvaksymisesitys ja tallenna se tietokantaan
+    // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
+    // TODO: Persistoi uudet tiedostot
+    // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { input });
     await tallennaMuokattavaHyvaksymisEsitys({
       oid,
