@@ -1,7 +1,7 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
-import { IllegalArgumentError } from "hassu-common/error";
+import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
 import { auditLog } from "../../logger";
 import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
@@ -14,7 +14,7 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
 
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   // Validoi ennen adaptointia
-  validateCurrent(projektiInDB);
+  validateCurrent(projektiInDB, input);
   // Adaptoi input db:ssä olevaan dataan
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
@@ -34,12 +34,15 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   return oid;
 }
 
-function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot) {
+function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
     throw new IllegalArgumentError("Projektilla ei ole muokkaustilaista hyväksymisesitystä");
+  }
+  if (input.versio !== projektiInDB.versio) {
+    throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
   }
 }
 
