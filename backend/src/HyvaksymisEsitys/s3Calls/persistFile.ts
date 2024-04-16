@@ -1,6 +1,4 @@
-import { KunnallinenLadattuTiedosto, LadattuTiedostoNew } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import { assertIsDefined } from "../../util/assertions";
 import {
   S3_METADATA_ASIAKIRJATYYPPI,
   S3_METADATA_KIELI,
@@ -12,9 +10,8 @@ import { getS3Client } from "../../aws/client";
 import { CopyObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
-import { localDateTimeString } from "../../util/dateUtil";
 
-export async function persistFile<A extends API.LadattuTiedostoInputNew | API.KunnallinenLadattuTiedostoInput>({
+export async function persistFile({
   oid,
   ladattuTiedosto,
   targetFilePathInProjekti,
@@ -22,12 +19,12 @@ export async function persistFile<A extends API.LadattuTiedostoInputNew | API.Ku
   kieli,
 }: {
   oid: string;
-  ladattuTiedosto: A;
+  ladattuTiedosto: API.LadattuTiedostoInputNew | API.KunnallinenLadattuTiedostoInput;
   targetFilePathInProjekti: string;
   asiakirjaTyyppi?: API.AsiakirjaTyyppi;
   kieli?: API.Kieli;
-}): Promise<A extends API.LadattuTiedostoInputNew ? LadattuTiedostoNew : KunnallinenLadattuTiedosto> {
-  const { tiedosto, uuid, jarjestys, ...kunta } = ladattuTiedosto as API.KunnallinenLadattuTiedostoInput;
+}): Promise<void> {
+  const { tiedosto } = ladattuTiedosto as API.KunnallinenLadattuTiedostoInput;
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
   const fileName = removeBucketFromPath(tiedosto);
   const targetPath = `/${targetFilePathInProjekti}/${fileName}`;
@@ -54,13 +51,4 @@ export async function persistFile<A extends API.LadattuTiedostoInputNew | API.Ku
     log.error(e);
     throw new Error("Error copying file to permanent storage");
   }
-
-  assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
-  const dbLadattuTiedosto = {
-    uuid,
-    jarjestys: jarjestys || undefined,
-    lisatty: localDateTimeString(),
-    ...kunta,
-  };
-  return dbLadattuTiedosto as A extends API.LadattuTiedostoInputNew ? LadattuTiedostoNew : KunnallinenLadattuTiedosto;
 }
