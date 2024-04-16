@@ -13,6 +13,6 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     oid,
     versio,
     hyvaksymisEsitys,
-    hyvaksymisPaatosVaihe: !!hyvaksymisPaatosVaihe,
+    muokkauksenVoiAvata: !!hyvaksymisPaatosVaihe && hyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY,
   };
 }
