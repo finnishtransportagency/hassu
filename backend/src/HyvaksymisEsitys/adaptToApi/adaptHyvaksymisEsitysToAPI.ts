@@ -24,9 +24,7 @@ export function adaptHyvaksymisEsitysToAPI(
   }
 
   const hyvaksymisEsitys =
-    muokattavaHyvaksymisEsitys && muokattavaHyvaksymisEsitys.tila == API.HyvaksymisTila.HYVAKSYTTY
-      ? julkaistuHyvaksymisEsitys
-      : muokattavaHyvaksymisEsitys;
+    muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY ? julkaistuHyvaksymisEsitys : muokattavaHyvaksymisEsitys;
   const julkaistu = muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY;
   const aineistotHandledAt = julkaistu || muokattavaHyvaksymisEsitys?.aineistoHandledAt;
 
@@ -39,8 +37,8 @@ export function adaptHyvaksymisEsitysToAPI(
 
   return {
     __typename: "HyvaksymisEsitys",
-    ...julkaistuHyvaksymisEsitys,
-    ...muokattavaHyvaksymisEsitys, // Järjestys on tärkeä; muokattava ylikirjoittaa julkaistun
+    hyvaksyja: julkaistuHyvaksymisEsitys?.hyvaksyja,
+    hyvaksymisPaiva: julkaistuHyvaksymisEsitys?.hyvaksymisPaiva,
     poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
     hyvaksymisEsitys: adaptLadatutTiedostotToApi({
@@ -68,7 +66,7 @@ export function adaptHyvaksymisEsitysToAPI(
       path: joinPath(path, "maanomistajaluettelo"),
     }),
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(hyvaksymisEsitys.vastaanottajat),
-    tila: muokattavaHyvaksymisEsitys ? muokattavaHyvaksymisEsitys.tila ?? API.HyvaksymisTila.MUOKKAUS : API.HyvaksymisTila.HYVAKSYTTY,
+    tila: muokattavaHyvaksymisEsitys?.tila ?? API.HyvaksymisTila.MUOKKAUS,
     hash: createHyvaksymisEsitysHash(oid, hyvaksymisEsitys.versio, salt),
   };
 }
