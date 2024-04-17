@@ -2,6 +2,7 @@ import { IHyvaksymisEsitys } from "../../src/database/model";
 
 const TEST_HYVAKSYMISESITYS: IHyvaksymisEsitys = {
   poistumisPaiva: "2033-01-01",
+  versio: 1,
   hyvaksymisEsitys: [
     {
       nimi: "hyvaksymiEsitys.png",

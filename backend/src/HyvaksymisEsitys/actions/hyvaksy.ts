@@ -25,7 +25,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
   const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
-    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila"]),
+    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "aineistoHandledAt"]),
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
   };

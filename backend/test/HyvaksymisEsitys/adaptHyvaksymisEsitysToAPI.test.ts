@@ -8,6 +8,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         hyvaksymisEsitys: [
           {
@@ -42,6 +43,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       oid: "1",
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         muistutukset: [
           {
@@ -62,6 +64,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       oid: "1",
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
       },
       julkaistuHyvaksymisEsitys: undefined,
@@ -76,10 +79,12 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       oid: "1",
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-02",
         tila: API.HyvaksymisTila.MUOKKAUS,
       },
       julkaistuHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         hyvaksyja: "oid",
         hyvaksymisPaiva: "2033-01-03",
@@ -97,10 +102,12 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       oid: "1",
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-02",
         tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       },
       julkaistuHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         hyvaksyja: "oid",
         hyvaksymisPaiva: "2033-01-03",
@@ -118,10 +125,12 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       oid: "1",
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         tila: API.HyvaksymisTila.HYVAKSYTTY,
       },
       julkaistuHyvaksymisEsitys: {
+        versio: 1,
         poistumisPaiva: "2033-01-01",
         hyvaksyja: "oid",
         hyvaksymisPaiva: "2033-01-03",
