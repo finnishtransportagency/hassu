@@ -53,12 +53,24 @@ async function deleteProjektiFilesFromYllapito(oid: string, paths: string[], rea
  * @param reason Syy poistolle
  */
 async function deleteFilesFromYllapito(paths: string[], reason?: string) {
-  // TODO: jaa 1000 paloihin, koska avaimia saa olla max 1000
-  await getS3Client().send(
-    new DeleteObjectsCommand({
-      Bucket: config.yllapitoBucketName,
-      Delete: { Objects: paths.map((path) => ({ Key: path })) },
-    })
+  await Promise.all(
+    // DeleteObjectsCommand takes at most 1000 items
+    getChunksOfThousand(paths).map((paths) =>
+      getS3Client().send(
+        new DeleteObjectsCommand({
+          Bucket: config.yllapitoBucketName,
+          Delete: { Objects: paths.map((path) => ({ Key: path })) },
+        })
+      )
+    )
   );
   log.info(`Deleted ylläpito files ${paths.join(", ")}.${reason ? ` Reason: ${reason}` : ""}`);
+}
+
+function getChunksOfThousand<T>(array: T[]): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += 1000) {
+    chunks.push(array.slice(i, i + 1000));
+  }
+  return chunks;
 }
