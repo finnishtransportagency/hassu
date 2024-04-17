@@ -1,17 +1,17 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { JulkaistuHyvaksymisEsitys } from "../../database/model";
+import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
-import { ProjektiPaths } from "../../files/ProjektiPath";
-import { fileService } from "../../files/fileService";
 import { omit } from "lodash";
 import { nyt } from "../../util/dateUtil";
 import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH } from "../paths";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
+import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
+import { assertIsDefined } from "../../util/assertions";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -21,9 +21,8 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi muokattavan hyväksymisesityksen tiedostot julkaistun hyväksymisesityksen tiedostojen sijaintiin
-  const muokattavaHyvaksymisEsitysPath = new ProjektiPaths(oid).muokattavaHyvaksymisEsitys();
-  const julkaistuHyvaksymisEsitysPath = new ProjektiPaths(oid).julkaistuHyvaksymisEsitys();
-  await fileService.copyYllapitoFolder(muokattavaHyvaksymisEsitysPath, julkaistuHyvaksymisEsitysPath);
+  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys, "muokattavan hyväksymisesityksen olemassaolo on validoitu");
+  await copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid, projektiInDB.muokattavaHyvaksymisEsitys);
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
   const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
@@ -60,4 +59,10 @@ async function poistaJulkaistunHyvaksymisEsityksenTiedostot(
     [...tiedostot, ...aineistot],
     "uusi hyväksymisesitys julkaistaan"
   );
+}
+
+async function copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid: string, muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys) {
+  const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(muokattavaHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
+  await copyFilesFromVaiheToAnother(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, JULKAISTU_HYVAKSYMISESITYS_PATH, [...tiedostot, ...aineistot]);
 }
