@@ -31,7 +31,8 @@ type Query {
   ): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTiedostot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
-  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput): LadattavatTiedostot!
+  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): LadattavatTiedostot!
+  haeHyvaksymisEsityksenTiedot(oid: String!): HyvaksymisEsityksenTiedot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
   haeKiinteistonOmistajat(oid: String!, muutOmistajat: Boolean!, query: String, from: Int, size: Int): KiinteistonOmistajat
@@ -43,6 +44,12 @@ type Query {
 type Mutation {
   tallennaProjekti(projekti: TallennaProjektiInput!): String
   tallennaJaSiirraTilaa(projekti: TallennaProjektiInput!, tilasiirtyma: TilaSiirtymaInput!): String
+  tallennaHyvaksymisesitys(input: TallennaHyvaksymisEsitysInput!): String
+  tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: TallennaHyvaksymisEsitysInput!): String
+  palautaHyvaksymisEsitys(input: PalautaInput!): String
+  hyvaksyHyvaksymisEsitys(input: TilaMuutosInput!): String
+  avaaHyvaksymisEsityksenMuokkaus(input: TilaMuutosInput!): String
+  suljeHyvaksymisEsityksenMuokkaus(input: TilaMuutosInput!): String
   siirraTila(tilasiirtyma: TilaSiirtymaInput): String
   paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): String
   paivitaPerustietoja(input: VuorovaikutusPerustiedotInput): String

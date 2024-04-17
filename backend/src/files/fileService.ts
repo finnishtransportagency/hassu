@@ -100,8 +100,8 @@ export enum FileType {
 const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 const S3_METADATA_FILE_TYPE = "filetype";
-const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
-const S3_METADATA_KIELI = "kieli";
+export const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
+export const S3_METADATA_KIELI = "kieli";
 
 export class FileService {
   /**
@@ -150,9 +150,9 @@ export class FileService {
    */
   async persistFileToProjekti(param: PersistFileProperties): Promise<string> {
     const filePath = FileService.removePrefixFromFile(param.uploadedFileSource);
-    const sourceFileProperties = await this.getUploadedSourceFileInformation(filePath);
+    const sourceFileProperties = await getUploadedSourceFileInformation(filePath);
 
-    const fileNameFromUpload = FileService.removeBucketFromPath(filePath);
+    const fileNameFromUpload = removeBucketFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
     try {
@@ -286,32 +286,6 @@ export class FileService {
     return new ProjektiPaths(oid).publicFullPath;
   }
 
-  async getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
-    if (!config.uploadBucketName) {
-      throw new Error("config.uploadBucketName määrittelemättä");
-    }
-    // Sometimes path starts with / and sometimes not(?!)
-    uploadedFileSource = uploadedFileSource.replace(/^\//, "");
-    try {
-      const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
-      if (!headObject) {
-        throw new Error(`headObject:ia ei saatu haettua`);
-      }
-      assertIsDefined(headObject.ContentType);
-      return {
-        ContentType: headObject.ContentType,
-        CopySource: encodeURIComponent(config.uploadBucketName + "/" + uploadedFileSource),
-      };
-    } catch (e) {
-      log.error(e);
-      throw new NotFoundError("Uploaded file " + uploadedFileSource + " not found.");
-    }
-  }
-
-  private static removeBucketFromPath(uploadedFilePath: string): string {
-    return uploadedFilePath.replace(/^\/?[.0-9a-z-]+\//, "");
-  }
-
   private static removePrefixFromFile(uploadedFileSource: string) {
     return uploadedFileSource;
   }
@@ -344,7 +318,7 @@ export class FileService {
     }
   }
 
-  private async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
+  async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
     const s3 = getS3Client();
     let ContinuationToken = undefined;
     do {
@@ -715,6 +689,32 @@ export class FileService {
 
     return Promise.resolve(undefined);
   }
+}
+
+export async function getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
+  if (!config.uploadBucketName) {
+    throw new Error("config.uploadBucketName määrittelemättä");
+  }
+  // Sometimes path starts with / and sometimes not(?!)
+  uploadedFileSource = uploadedFileSource.replace(/^\//, "");
+  try {
+    const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
+    if (!headObject) {
+      throw new Error(`headObject:ia ei saatu haettua`);
+    }
+    assertIsDefined(headObject.ContentType);
+    return {
+      ContentType: headObject.ContentType,
+      CopySource: encodeURIComponent(config.uploadBucketName + "/" + uploadedFileSource),
+    };
+  } catch (e) {
+    log.error(e);
+    throw new NotFoundError("Uploaded file " + uploadedFileSource + " not found.");
+  }
+}
+
+export function removeBucketFromPath(uploadedFilePath: string): string {
+  return uploadedFilePath.replace(/^\/?[.0-9a-z-]+\//, "");
 }
 
 export const fileService = new FileService();

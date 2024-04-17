@@ -185,6 +185,7 @@ export type DBProjekti = {
   muutMuistuttajat?: string[];
   omistajahaku?: OmistajaHaku | null;
   kustannuspaikka?: string | null;
+  lockedUntil?: string | null;
 };
 
 export type OmistajaHaku = {

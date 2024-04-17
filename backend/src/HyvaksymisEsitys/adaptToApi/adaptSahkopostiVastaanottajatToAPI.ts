@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { SahkopostiVastaanottaja } from "../../../../database/model";
+import { SahkopostiVastaanottaja } from "../../database/model";
 
 export function adaptSahkopostiVastaanottajatToAPI(
   vastaanottajat: SahkopostiVastaanottaja[] | undefined | null
