@@ -3,6 +3,15 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { AineistoNew } from "../../database/model";
 import { joinPath } from "../paths";
 
+/**
+ * Muokkaa aineistot db:ssä olevasta muodosta FE:n haluamaan muotoon, jossa on tiedossa myös tuontistatus ja polku tiedostoon
+ *
+ * @param {Object} parametrit
+ * @param {AineistotNew[] | undefined | null} parametrit.aineistot adaptoitavat aineistot
+ * @param {string | boolean | undefined | null} parametrit.aineistotHandledAt milloin projektin aineistot on viimeksi tuotu
+ * @param {string} parametrit.path polku S3:ssa tämän projektin tämän aineistokokonaisuuden aineistoihin
+ * @returns {API.AineistoNew[] | undefined} aineistot varustettuna tuotu-tiedolla ja täydellä polulla aineistoon
+ */
 export function adaptAineistotToAPI({
   aineistot,
   aineistotHandledAt,
