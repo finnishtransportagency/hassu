@@ -2,7 +2,7 @@ import { CopyObjectCommand, CopyObjectRequest } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
 import { getS3Client } from "../../aws/client";
-import { getYllapitoPathForProjekti } from "../paths";
+import { getYllapitoPathForProjekti, joinPath } from "../paths";
 
 async function copyYllapitoFile(sourceFile: string, targetFile: string): Promise<void> {
   const yllapitoBucketName = config.yllapitoBucketName;
@@ -29,7 +29,7 @@ export async function copyFilesFromVaiheToAnother(
   const yllapito = getYllapitoPathForProjekti(oid);
   await Promise.all(
     files.map(({ avain, nimi }) =>
-      copyYllapitoFile(yllapito + vaihePrefixFrom + avain + "/" + nimi, yllapito + vaihePrefixTo + avain + "/" + nimi)
+      copyYllapitoFile(joinPath(yllapito, vaihePrefixFrom, avain, nimi), joinPath(yllapito, vaihePrefixTo, avain, nimi))
     )
   );
 }
