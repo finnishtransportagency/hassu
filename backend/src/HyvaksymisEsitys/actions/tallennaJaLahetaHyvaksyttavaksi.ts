@@ -8,6 +8,8 @@ import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
+import { persistFile } from "../s3Calls/persistFile";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
 
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -21,12 +23,13 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.muokattavaHyvaksymisEsitys?.aineistoHandledAt);
   // Persistoi uudet tiedostot
-  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-    projektiInDB.muokattavaHyvaksymisEsitys,
-    newMuokattavaHyvaksymisEsitys
-  );
+  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   if (uudetTiedostot.length) {
-    // TODO: persistoi
+    await Promise.all(
+      uudetTiedostot.map((ladattuTiedosto) =>
+        persistFile({ oid, ladattuTiedosto, kansioProjektinAlla: joinPath(MUOKATTAVA_HYVAKSYMISESITYS_PATH, ladattuTiedosto.avain) })
+      )
+    );
   }
   // Poista poistetut tiedostot/aineistot
   const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(

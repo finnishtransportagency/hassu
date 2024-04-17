@@ -8,6 +8,8 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 import { AineistoNew } from "../../database/model";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
+import { persistFile } from "../s3Calls/persistFile";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
 
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -21,7 +23,11 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     // Persistoi uudet tiedostot
     const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     if (uudetTiedostot.length) {
-      // TODO: persistoi
+      await Promise.all(
+        uudetTiedostot.map((ladattuTiedosto) =>
+          persistFile({ oid, ladattuTiedosto, kansioProjektinAlla: joinPath(MUOKATTAVA_HYVAKSYMISESITYS_PATH, ladattuTiedosto.avain) })
+        )
+      );
     }
     // Poista poistetut tiedostot/aineistot
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
