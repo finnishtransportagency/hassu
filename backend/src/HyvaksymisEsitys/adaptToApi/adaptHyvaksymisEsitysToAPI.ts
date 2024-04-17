@@ -9,6 +9,12 @@ import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanotta
 import { createHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti, joinPath } from "../paths";
 
+/**
+ * Riippuen siitä, onko hyväksymisesitys hyväksytty vai muussa tilassa, palauttaa tietoja muokattavasta tai julkaistusta hyväksymisesityksestä.
+ *
+ * @param projekti Projekti tietokannassa
+ * @returns Tiedot hyväksymisesityksestä varustettuna aineistojen sijaintitiedolla ja tiedolla siitä, onko aineistot tuotu
+ */
 export function adaptHyvaksymisEsitysToAPI(
   projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">
 ): API.HyvaksymisEsitys | undefined {
