@@ -18,7 +18,7 @@ export function adaptHyvaksymisEsitysToAPI(
   }
 
   const hyvaksymisEsitys = muokattavaHyvaksymisEsitys ?? julkaistuHyvaksymisEsitys;
-  const julkaistu = muokattavaHyvaksymisEsitys ? false : true;
+  const julkaistu = !muokattavaHyvaksymisEsitys;
   const aineistotHandledAt = julkaistu || muokattavaHyvaksymisEsitys?.aineistoHandledAt;
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");

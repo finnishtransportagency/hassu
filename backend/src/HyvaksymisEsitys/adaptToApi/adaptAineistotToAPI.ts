@@ -22,7 +22,7 @@ export function adaptAineistotToAPI({
   path: string;
 }): API.AineistoNew[] | undefined {
   if (aineistot && aineistot.length > 0) {
-    return aineistot.sort(jarjestaTiedostot).map((aineisto) => {
+    return [...aineistot].sort(jarjestaTiedostot).map((aineisto) => {
       const { dokumenttiOid, jarjestys, kategoriaId, nimi, lisatty, uuid } = aineisto;
       const tuotu = aineistotHandledAt === true || !!(aineistotHandledAt && aineistotHandledAt.localeCompare(lisatty));
       const apiAineisto: API.AineistoNew = {
