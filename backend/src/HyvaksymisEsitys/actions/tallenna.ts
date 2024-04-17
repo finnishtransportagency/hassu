@@ -19,10 +19,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     // Persistoi uudet tiedostot
-    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-      projektiInDB.muokattavaHyvaksymisEsitys,
-      newMuokattavaHyvaksymisEsitys
-    );
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     if (uudetTiedostot.length) {
       // TODO: persistoi
     }

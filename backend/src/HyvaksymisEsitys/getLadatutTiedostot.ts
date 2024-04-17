@@ -1,15 +1,16 @@
 import { IHyvaksymisEsitys, ILadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../database/model";
+import * as API from "hassu-common/graphql/apiModel";
 
 /**
  *
  * @param vanha Hyväksymisesitys tietokannassa ennen tallennusoperaatiota
- * @param uusi Mitä ollaan tallentamassa hyväksymisesitykseksi
- * @returns Uudet ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
+ * @param uusi Inputissa annetut hyväksymisesityksen tiedot
+ * @returns Inputista poimitut uudet ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export function getHyvaksymisEsityksenUudetLadatutTiedostot(
   vanha: MuokattavaHyvaksymisEsitys | null | undefined,
-  uusi: MuokattavaHyvaksymisEsitys | null | undefined
-): (ILadattuTiedosto & { avain: string })[] {
+  uusi: API.HyvaksymisEsitysInput | null | undefined
+): (API.LadattuTiedostoInputNew & { avain: string })[] {
   const uudet = getHyvaksymisEsityksenLadatutTiedostot(uusi);
   const vanhat = getHyvaksymisEsityksenLadatutTiedostot(vanha);
   return uudet.filter((tiedosto) => !vanhat.find((vanhaTiedosto) => vanhaTiedosto.uuid == tiedosto.uuid));
@@ -30,13 +31,13 @@ export function getHyvaksymisEsityksenPoistetutTiedostot(
   return vanhat.filter((tiedosto) => !uudet.find((vanhaTiedosto) => vanhaTiedosto.uuid == tiedosto.uuid));
 }
 
-export function getHyvaksymisEsityksenLadatutTiedostot(
-  hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined
-): (ILadattuTiedosto & { avain: string })[] {
+export function getHyvaksymisEsityksenLadatutTiedostot<A extends IHyvaksymisEsitys | API.HyvaksymisEsitysInput>(
+  hyvaksymisEsitys: A | null | undefined
+): A extends IHyvaksymisEsitys ? (ILadattuTiedosto & { avain: string })[] : (API.LadattuTiedostoInputNew & { avain: string })[] {
   if (!hyvaksymisEsitys) {
-    return [] as (ILadattuTiedosto & { avain: string })[];
+    return [];
   }
-  const tiedostot: (ILadattuTiedosto & { avain: string })[] = [];
+  const tiedostot: ((ILadattuTiedosto | API.LadattuTiedostoInputNew) & { avain: string })[] = [];
   hyvaksymisEsitys.kuulutuksetJaKutsu &&
     tiedostot.push(
       ...hyvaksymisEsitys.kuulutuksetJaKutsu.map((tiedosto) => ({
@@ -85,5 +86,7 @@ export function getHyvaksymisEsityksenLadatutTiedostot(
       }))
     );
 
-  return tiedostot;
+  return tiedostot as A extends IHyvaksymisEsitys
+    ? (ILadattuTiedosto & { avain: string })[]
+    : (API.LadattuTiedostoInputNew & { avain: string })[];
 }
