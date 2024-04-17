@@ -1,6 +1,6 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
-import createLadattavatTiedostot from "../lautaslinkit/createLadattavatTiedostot";
+import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
 import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "../dynamoDBCalls/getProjektiTiedostoineen";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 

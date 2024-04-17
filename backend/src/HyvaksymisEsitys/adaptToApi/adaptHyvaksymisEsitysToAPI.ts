@@ -6,7 +6,7 @@ import { adaptLadatutTiedostotToApi } from "./adaptLadatutTiedostotToAPI";
 import { adaptLaskutustiedotToAPI } from "./adaptLaskutustiedotToAPI";
 import { adaptKunnallisetLadatutTiedostotToApi } from "./adaptKunnallisetLadatutTiedostotToAPI";
 import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanottajatToAPI";
-import { createHyvaksymisEsitysHash } from "../lautaslinkit/hash";
+import { createHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
 
 export function adaptHyvaksymisEsitysToAPI(

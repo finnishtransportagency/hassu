@@ -6,8 +6,8 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
 import { fileService } from "../../files/fileService";
-import createLadattavatTiedostot from "../lautaslinkit/createLadattavatTiedostot";
-import { validateHyvaksymisEsitysHash } from "../lautaslinkit/hash";
+import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
+import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
