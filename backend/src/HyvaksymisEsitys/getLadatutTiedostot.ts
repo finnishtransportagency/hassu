@@ -30,7 +30,7 @@ export function getHyvaksymisEsityksenPoistetutTiedostot(
   return vanhat.filter((tiedosto) => !uudet.find((vanhaTiedosto) => vanhaTiedosto.uuid == tiedosto.uuid));
 }
 
-function getHyvaksymisEsityksenLadatutTiedostot(
+export function getHyvaksymisEsityksenLadatutTiedostot(
   hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined
 ): (ILadattuTiedosto & { avain: string })[] {
   if (!hyvaksymisEsitys) {

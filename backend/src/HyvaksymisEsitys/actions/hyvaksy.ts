@@ -4,11 +4,14 @@ import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { fileService } from "../../files/fileService";
-import { config } from "../../config";
 import { omit } from "lodash";
 import { nyt } from "../../util/dateUtil";
 import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
+import getHyvaksymisEsityksenAineistot from "../getAineistot";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH } from "../paths";
+import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -16,8 +19,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
-  const path = new ProjektiPaths(oid).julkaistuHyvaksymisEsitys().yllapitoFullPath;
-  await fileService.deleteFilesRecursively(config.yllapitoBucketName, path);
+  await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi muokattavan hyväksymisesityksen tiedostot julkaistun hyväksymisesityksen tiedostojen sijaintiin
   const muokattavaHyvaksymisEsitysPath = new ProjektiPaths(oid).muokattavaHyvaksymisEsitys();
   const julkaistuHyvaksymisEsitysPath = new ProjektiPaths(oid).julkaistuHyvaksymisEsitys();
@@ -41,4 +43,21 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja
     throw new IllegalArgumentError("Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä");
   }
   return nykyinenKayttaja;
+}
+
+async function poistaJulkaistunHyvaksymisEsityksenTiedostot(
+  oid: string,
+  julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys | undefined | null
+) {
+  if (!julkaistuHyvaksymisEsitys) {
+    return;
+  }
+  const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(julkaistuHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(julkaistuHyvaksymisEsitys);
+  await deleteFilesUnderSpecifiedVaihe(
+    oid,
+    JULKAISTU_HYVAKSYMISESITYS_PATH,
+    [...tiedostot, ...aineistot],
+    "uusi hyväksymisesitys julkaistaan"
+  );
 }
