@@ -10,6 +10,7 @@ import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineist
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
+import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -39,7 +40,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
       newMuokattavaHyvaksymisEsitys
     );
     if (poistetutTiedostot.length || poistetutAineistot.length) {
-      // TODO: poista
+      await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
     }
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
