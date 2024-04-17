@@ -6,7 +6,8 @@ import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsity
 import { auditLog } from "../../logger";
 import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
-import getHyvaksymisEsityksenAineistot from "../getAineistot";
+import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
+import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -19,13 +20,32 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.muokattavaHyvaksymisEsitys?.aineistoHandledAt);
-  // TODO: persistoi uudet tiedostot
+  // Persistoi uudet tiedostot
+  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
+    projektiInDB.muokattavaHyvaksymisEsitys,
+    newMuokattavaHyvaksymisEsitys
+  );
+  if (uudetTiedostot.length) {
+    // TODO: persistoi
+  }
+  // Poista poistetut tiedostot/aineistot
+  const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
+    projektiInDB.muokattavaHyvaksymisEsitys,
+    newMuokattavaHyvaksymisEsitys
+  );
+  const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(
+    projektiInDB.muokattavaHyvaksymisEsitys,
+    newMuokattavaHyvaksymisEsitys
+  );
+  if (poistetutTiedostot.length || poistetutAineistot.length) {
+    // TODO: poista
+  }
   // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
   const tallennettavaMuokattavaHyvaksymisEsitys = {
     ...newMuokattavaHyvaksymisEsitys,
     tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
   };
-  auditLog.info("Tallenna hyväksymisesitys", { input });
+  auditLog.info("Tallenna hyväksymisesitys", { oid, versio, tallennettavaMuokattavaHyvaksymisEsitys });
   await tallennaMuokattavaHyvaksymisEsitys({
     oid,
     versio,

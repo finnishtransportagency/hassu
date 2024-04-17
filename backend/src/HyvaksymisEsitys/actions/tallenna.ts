@@ -6,7 +6,8 @@ import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsity
 import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import { AineistoNew } from "../../database/model";
-import getHyvaksymisEsityksenAineistot from "../getAineistot";
+import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
+import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
@@ -17,9 +18,28 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-    // TODO: Persistoi uudet tiedostot
+    // Persistoi uudet tiedostot
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
+      projektiInDB.muokattavaHyvaksymisEsitys,
+      newMuokattavaHyvaksymisEsitys
+    );
+    if (uudetTiedostot.length) {
+      // TODO: persistoi
+    }
+    // Poista poistetut tiedostot/aineistot
+    const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
+      projektiInDB.muokattavaHyvaksymisEsitys,
+      newMuokattavaHyvaksymisEsitys
+    );
+    const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(
+      projektiInDB.muokattavaHyvaksymisEsitys,
+      newMuokattavaHyvaksymisEsitys
+    );
+    if (poistetutTiedostot.length || poistetutAineistot.length) {
+      // TODO: poista
+    }
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
-    auditLog.info("Tallenna hyväksymisesitys", { input });
+    auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
     await tallennaMuokattavaHyvaksymisEsitys({
       oid,
       versio,
