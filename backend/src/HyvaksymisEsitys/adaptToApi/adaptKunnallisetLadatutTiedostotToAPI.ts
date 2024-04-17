@@ -1,6 +1,7 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { KunnallinenLadattuTiedosto } from "../../database/model";
+import { joinPath } from "../paths";
 
 export function adaptKunnallisetLadatutTiedostotToApi({
   tiedostot,
@@ -19,7 +20,7 @@ export function adaptKunnallisetLadatutTiedostotToApi({
         lisatty,
         uuid,
         kunta,
-        tiedosto: path + nimi,
+        tiedosto: joinPath(path, nimi),
       };
 
       return apiAineisto;

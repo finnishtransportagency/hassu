@@ -2,13 +2,13 @@ import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "../../aws/client";
 import { config } from "../../config";
 import { log } from "../../logger";
-import { getYllapitoPathForProjekti } from "../paths";
+import { getYllapitoPathForProjekti, joinPath } from "../paths";
 
 /**
  * Poistaa tiedostoja annetun projektin julkaistulta hyväksymisesitykseltä
  *
  * @param oid Projektin oid
- * @param pathToVaihe polku ylläpito-bucketissa vaiheen tiedostoihin, esim. muokattava_hyvaksymisesitys/
+ * @param pathToVaihe polku ylläpito-bucketissa vaiheen tiedostoihin, esim. muokattava_hyvaksymisesitys
  * @param tiedostot Lista tiedostoja, joilla on nimi (tiedoston nimi) ja avain (kansion nimi)
  * @param reason Syy poistolle
  */
@@ -18,13 +18,9 @@ export async function deleteFilesUnderSpecifiedVaihe(
   tiedostot: { nimi: string; avain: string }[],
   reason?: string
 ) {
-  if (tiedostot.some((tiedosto) => tiedosto.avain.match(/\//) || tiedosto.nimi.match(/\//))) {
-    throw new Error("Tiedoston avain tai nimi ei saa sisältää kauttaviivoja");
-  }
-  // TODO: varmista että pathToVaiheessa joko on tai ei ole kauttaviivaa
   return deleteProjektiFilesFromYllapito(
     oid,
-    tiedostot.map((tiedosto) => pathToVaihe + tiedosto.avain + "/" + tiedosto.nimi),
+    tiedostot.map((tiedosto) => joinPath(pathToVaihe, tiedosto.avain, tiedosto.nimi)),
     reason
   );
 }
@@ -33,15 +29,12 @@ export async function deleteFilesUnderSpecifiedVaihe(
  * Poistaa tiedostoja annetun projektin S3-ylläpito-bucketista
  *
  * @param oid Projektin oid
- * @param paths Lista tiedostopolkuja projektikohtaisen ylläpito-bucketin alla. Polun alussa ei kauttaviivaa.
+ * @param paths Lista tiedostopolkuja projektikohtaisen ylläpito-bucketin alla
  * @param reason Syy poistolle
  */
 async function deleteProjektiFilesFromYllapito(oid: string, paths: string[], reason?: string) {
-  if (paths.some((path) => path.match(/^\//))) {
-    throw new Error("Polun alussa ei saa olla kauttaviivaa");
-  }
   return deleteFilesFromYllapito(
-    paths.map((path) => getYllapitoPathForProjekti(oid) + path),
+    paths.map((path) => joinPath(getYllapitoPathForProjekti(oid), path)),
     reason
   );
 }
