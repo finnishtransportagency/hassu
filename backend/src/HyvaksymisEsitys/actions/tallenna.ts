@@ -12,6 +12,17 @@ import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 
+/**
+ * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
+ * Persistoi inputissa tulleet uudet ladatut tiedostot ja poistaa poistetut aineistot/tiedostot.
+ * Luo tapahtumia SQS-jonoon, jos inputissa on uusia aineistoja.
+ *
+ * @param input input
+ * @param input.oid Projektin oid
+ * @param input.versio Projetkin oletettu versio
+ * @param input.muokattavaHyvaksymisEsitys Halutut uudet tiedot muokattavalle hyväksymisesitykselle
+ * @returns Projetkin oid
+ */
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
