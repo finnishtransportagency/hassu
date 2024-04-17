@@ -5,7 +5,7 @@ import {
   getUploadedSourceFileInformation,
   removeBucketFromPath,
 } from "../../files/fileService";
-import { getYllapitoPathForProjekti } from "../paths";
+import { getYllapitoPathForProjekti, joinPath } from "../paths";
 import { getS3Client } from "../../aws/client";
 import { CopyObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../../config";
@@ -27,8 +27,8 @@ export async function persistFile({
   const { tiedosto } = ladattuTiedosto as API.KunnallinenLadattuTiedostoInput;
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
   const fileName = removeBucketFromPath(tiedosto);
-  const targetPath = `/${targetFilePathInProjekti}/${fileName}`;
-  const targetBucketPath = getYllapitoPathForProjekti(oid) + targetPath;
+  const targetPath = joinPath(targetFilePathInProjekti, fileName);
+  const targetBucketPath = joinPath(getYllapitoPathForProjekti(oid), targetPath);
   try {
     const metadata: { [key: string]: string } = {};
     if (asiakirjaTyyppi) {
