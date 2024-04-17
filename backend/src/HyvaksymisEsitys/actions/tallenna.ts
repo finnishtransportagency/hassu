@@ -11,6 +11,7 @@ import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLa
 import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
+import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -27,7 +28,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   try {
-    // TODO lukitse dynamoDB
+    await setLock(oid);
     const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
     validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
@@ -70,7 +71,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     }
     return oid;
   } finally {
-    // TODO: poista lukitus
+    await releaseLock(oid);
   }
 }
 
