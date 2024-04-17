@@ -23,8 +23,11 @@ export function adaptHyvaksymisEsitysToAPI(
     return undefined;
   }
 
-  const hyvaksymisEsitys = muokattavaHyvaksymisEsitys ?? julkaistuHyvaksymisEsitys;
-  const julkaistu = !muokattavaHyvaksymisEsitys;
+  const hyvaksymisEsitys =
+    muokattavaHyvaksymisEsitys && muokattavaHyvaksymisEsitys.tila == API.HyvaksymisTila.HYVAKSYTTY
+      ? julkaistuHyvaksymisEsitys
+      : muokattavaHyvaksymisEsitys;
+  const julkaistu = muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY;
   const aineistotHandledAt = julkaistu || muokattavaHyvaksymisEsitys?.aineistoHandledAt;
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
