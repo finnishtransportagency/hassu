@@ -31,6 +31,11 @@ export function getHyvaksymisEsityksenPoistetutTiedostot(
   return vanhat.filter((tiedosto) => !uudet.find((vanhaTiedosto) => vanhaTiedosto.uuid == tiedosto.uuid));
 }
 
+/**
+ *
+ * @param hyvaksymisEsitys DB- tai input-muotoinen hyväksymisesitys
+ * @returns Annetun hyväksymisesityksen ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
+ */
 export function getHyvaksymisEsityksenLadatutTiedostot<A extends IHyvaksymisEsitys | API.HyvaksymisEsitysInput>(
   hyvaksymisEsitys: A | null | undefined
 ): A extends IHyvaksymisEsitys ? (ILadattuTiedosto & { avain: string })[] : (API.LadattuTiedostoInputNew & { avain: string })[] {
