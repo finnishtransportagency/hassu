@@ -27,18 +27,17 @@ export async function persistFile({
 }): Promise<void> {
   const { tiedosto, nimi, avain } = ladattuTiedosto;
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
-  const targetPath = joinPath(vaihePrefix, avain, nimi);
-  const targetBucketPath = joinPath(getYllapitoPathForProjekti(oid), targetPath);
+  const targetPath = joinPath(getYllapitoPathForProjekti(oid), vaihePrefix, avain, nimi);
   try {
     await getS3Client().send(
       new CopyObjectCommand({
         ...sourceFileProperties,
         Bucket: config.yllapitoBucketName,
-        Key: targetBucketPath,
+        Key: targetPath,
         MetadataDirective: "REPLACE",
       })
     );
-    log.info(`Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`);
+    log.info(`Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetPath}`);
   } catch (e) {
     log.error(e);
     throw new Error("Error copying file to permanent storage");
