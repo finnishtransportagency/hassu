@@ -6,7 +6,7 @@ import { config } from "../../config";
 import { log } from "../../logger";
 
 /**
- * Persistoi yksittäisen tiedoston, joka on tallennettu uploads-kansioon, annettuun uuteen sijaintiin ylläpito-bucketissa
+ * Persistoi yksittäisen tiedoston, joka on tallennettu uploads-kansioon, annetun vaiheen alle ylläpito-bucketiin
  *
  * @param param
  * @param param.oid Projektin oid
