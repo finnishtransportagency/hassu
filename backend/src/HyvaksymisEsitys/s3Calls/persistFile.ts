@@ -13,7 +13,7 @@ import { log } from "../../logger";
  * @param param.ladattuTiedosto Persistoitavan tiedoston tiedot
  * @param param.ladattuTiedosto.tiedosto Persistoitavan tiedoston sijainti upload-kansiossa, esim. uploads/876-235-235/tiedosto.jpg
  * @param param.ladattuTiedosto.nimi Persistoitavan tiedoston nimi
- * @param param.ladattuTiedosto.avain Sijainti projektin alla, johon tiedosto halutaan tallentaa, esim. muuAineistoKoneelta
+ * @param param.ladattuTiedosto.avain Sijainti projektin vaiheen alla, johon tiedosto halutaan tallentaa, esim. muuAineistoKoneelta
  * @param param.vaihePrefix Prefix sille vaiheelle, jonka alle tiedosto persistoidaan, esim. muokattava_hyvaksymisesitys
  */
 export async function persistFile({
