@@ -42,7 +42,7 @@ async function deleteProjektiFilesFromYllapito(oid: string, paths: string[], rea
 /**
  * Poistaa tiedostoja ylläpito-bucketista
  *
- * @param paths Lista tiedostopolkuja yllpito-bucketin alla
+ * @param paths Lista tiedostopolkuja ylläpito-bucketin alla
  * @param reason Syy poistolle
  */
 async function deleteFilesFromYllapito(paths: string[], reason?: string) {
