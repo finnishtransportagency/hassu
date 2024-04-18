@@ -9,7 +9,7 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
-import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, joinPath } from "../paths";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 
 /**
@@ -19,9 +19,9 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
  *
  * @param input input
  * @param input.oid Projektin oid
- * @param input.versio Projetkin oletettu versio
+ * @param input.versio Projektin oletettu versio
  * @param input.muokattavaHyvaksymisEsitys Halutut uudet tiedot muokattavalle hyväksymisesitykselle
- * @returns Projetkin oid
+ * @returns Projektin oid
  */
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();

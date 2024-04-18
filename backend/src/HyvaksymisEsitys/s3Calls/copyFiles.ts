@@ -29,7 +29,7 @@ async function copyYllapitoFile(sourceFile: string, targetFile: string): Promise
 /**
  * Kopioi yhden vaiheen tiedostot toiselle vaiheelle
  *
- * @param oid Projetkin oid
+ * @param oid Projektin oid
  * @param vaihePrefixFrom from-vaiheen kansio s3:ssa
  * @param vaihePrefixTo to-vaiheen kansio s3:ssa
  * @param files kopioitavat tiedostot; tiedossa nimi ja avain, jonka alla ne ovat vaiheessa
