@@ -10,21 +10,24 @@ import { log } from "../../logger";
  *
  * @param param
  * @param param.oid Projektin oid
- * @param param.ladattuTiedosto Persistoitava tiedosto, jonka tiedosto-kentässä on sen sijainti upload-kansiossa
- * @param param.kansioProjektinAlla Sijainti projektin alla, johon tiedosto halutaan tallentaa, esim. muokattava_hyvaksymisesitys/suunnitelma
+ * @param param.ladattuTiedosto Persistoitavan tiedoston tiedot
+ * @param param.ladattuTiedosto.tiedosto Persistoitavan tiedoston sijainti upload-kansiossa, esim. uploads/876-235-235/tiedosto.jpg
+ * @param param.ladattuTiedosto.nimi Persistoitavan tiedoston nimi
+ * @param param.ladattuTiedosto.avain Sijainti projektin alla, johon tiedosto halutaan tallentaa, esim. muokattava_hyvaksymisesitys/suunnitelma
+ * @param param.vaihePrefix Prefix sille vaiheelle, jonka alle tiedosto persistoidaan, esim. muokattava_hyvaksymisesitys
  */
 export async function persistFile({
   oid,
   ladattuTiedosto,
-  kansioProjektinAlla,
+  vaihePrefix,
 }: {
   oid: string;
-  ladattuTiedosto: { tiedosto: string; nimi: string };
-  kansioProjektinAlla: string;
+  ladattuTiedosto: { tiedosto: string; nimi: string; avain: string };
+  vaihePrefix: string;
 }): Promise<void> {
-  const { tiedosto, nimi } = ladattuTiedosto;
+  const { tiedosto, nimi, avain } = ladattuTiedosto;
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
-  const targetPath = joinPath(kansioProjektinAlla, nimi);
+  const targetPath = joinPath(vaihePrefix, avain, nimi);
   const targetBucketPath = joinPath(getYllapitoPathForProjekti(oid), targetPath);
   try {
     await getS3Client().send(

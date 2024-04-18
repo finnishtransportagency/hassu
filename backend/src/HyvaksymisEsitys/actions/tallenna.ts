@@ -37,9 +37,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     if (uudetTiedostot.length) {
       await Promise.all(
-        uudetTiedostot.map((ladattuTiedosto) =>
-          persistFile({ oid, ladattuTiedosto, kansioProjektinAlla: joinPath(MUOKATTAVA_HYVAKSYMISESITYS_PATH, ladattuTiedosto.avain) })
-        )
+        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
       );
     }
     // Poista poistetut tiedostot/aineistot
