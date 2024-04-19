@@ -1,7 +1,17 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { AineistoNew } from "../../database/model";
+import { joinPath } from "../paths";
 
+/**
+ * Muokkaa aineistot db:ssä olevasta muodosta FE:n haluamaan muotoon, jossa on tiedossa myös tuontistatus ja polku tiedostoon
+ *
+ * @param {Object} parametrit
+ * @param {AineistotNew[] | undefined | null} parametrit.aineistot adaptoitavat aineistot
+ * @param {string | boolean | undefined | null} parametrit.aineistotHandledAt milloin projektin aineistot on viimeksi tuotu
+ * @param {string} parametrit.path polku S3:ssa tämän projektin tämän aineistokokonaisuuden aineistoihin
+ * @returns {API.AineistoNew[] | undefined} aineistot varustettuna tuotu-tiedolla ja täydellä polulla aineistoon
+ */
 export function adaptAineistotToAPI({
   aineistot,
   aineistotHandledAt,
@@ -12,7 +22,7 @@ export function adaptAineistotToAPI({
   path: string;
 }): API.AineistoNew[] | undefined {
   if (aineistot && aineistot.length > 0) {
-    return aineistot.sort(jarjestaTiedostot).map((aineisto) => {
+    return [...aineistot].sort(jarjestaTiedostot).map((aineisto) => {
       const { dokumenttiOid, jarjestys, kategoriaId, nimi, lisatty, uuid } = aineisto;
       const tuotu = aineistotHandledAt === true || !!(aineistotHandledAt && aineistotHandledAt.localeCompare(lisatty));
       const apiAineisto: API.AineistoNew = {
@@ -24,7 +34,7 @@ export function adaptAineistotToAPI({
         lisatty,
         uuid,
         tuotu,
-        tiedosto: tuotu ? path + aineisto.nimi : null,
+        tiedosto: tuotu ? joinPath(path, aineisto.nimi) : null,
       };
 
       return apiAineisto;

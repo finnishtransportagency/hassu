@@ -3,6 +3,13 @@ import { KunnallinenLadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../../da
 import { adaptLadatutTiedostotToSave } from "./adaptLadatutTiedostotToSave";
 import { adaptAineistotToSave } from "./adaptAineistotToSave";
 
+/**
+ * Antaa db:ssä olevan ja inputissa olevan tiedon perusteella hyväksymisesityksen muodon, joka halutaan tallentaa tietokantaan.
+ *
+ * @param dbHyvaksymisEsitys Hyväksymisesitys tietokannassa
+ * @param hyvaksymisEsitysInput Käyttäjän lomakkeella antama hyväksymisesitys-input
+ * @returns Hyväksymisesitys siinä muodossa kuin se halutaan tallentaa tietokantaan. Aineistot/tiedostot varustetaan lisätty-aikaleimalla.
+ */
 export function adaptHyvaksymisEsitysToSave(
   dbHyvaksymisEsitys: MuokattavaHyvaksymisEsitys | undefined | null,
   hyvaksymisEsitysInput: API.HyvaksymisEsitysInput

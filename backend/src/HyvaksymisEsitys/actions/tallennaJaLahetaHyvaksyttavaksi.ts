@@ -8,7 +8,21 @@ import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
+import { persistFile } from "../s3Calls/persistFile";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
+import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 
+/**
+ * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
+ * ja asettaa sen odottaa hyväksyntää -tilaan.
+ * Persistoi inputissa tulleet uudet ladatut tiedostot ja poistaa poistetut aineistot/tiedostot.
+ *
+ * @param input input
+ * @param input.oid Projektin oid
+ * @param input.versio Projektin oletettu versio
+ * @param input.muokattavaHyvaksymisEsitys Halutut uudet tiedot muokattavalle hyväksymisesitykselle
+ * @returns Projektin oid
+ */
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
@@ -21,12 +35,11 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.muokattavaHyvaksymisEsitys?.aineistoHandledAt);
   // Persistoi uudet tiedostot
-  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-    projektiInDB.muokattavaHyvaksymisEsitys,
-    newMuokattavaHyvaksymisEsitys
-  );
+  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   if (uudetTiedostot.length) {
-    // TODO: persistoi
+    await Promise.all(
+      uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
+    );
   }
   // Poista poistetut tiedostot/aineistot
   const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
@@ -38,7 +51,7 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
     newMuokattavaHyvaksymisEsitys
   );
   if (poistetutTiedostot.length || poistetutAineistot.length) {
-    // TODO: poista
+    await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
   }
   // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
   const tallennettavaMuokattavaHyvaksymisEsitys = {

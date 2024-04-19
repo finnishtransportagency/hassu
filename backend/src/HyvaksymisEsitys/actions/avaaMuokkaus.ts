@@ -4,6 +4,14 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import muutaMuokattavanHyvaksymisEsityksenTilaa from "../dynamoDBCalls/muutaTilaa";
 import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
+/**
+ * Asettaa muokattavan hyväksymisesityksen muokkaus-tilaan
+ *
+ * @param input input
+ * @param input.oid Projektin oid
+ * @param input.versio Projektin oletettu versio
+ * @returns annettu oid
+ */
 export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;

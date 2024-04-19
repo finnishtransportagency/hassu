@@ -8,23 +8,37 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 import { AineistoNew } from "../../database/model";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
+import { persistFile } from "../s3Calls/persistFile";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
+import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
+import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 
+/**
+ * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
+ * Persistoi inputissa tulleet uudet ladatut tiedostot ja poistaa poistetut aineistot/tiedostot.
+ * Luo tapahtumia SQS-jonoon, jos inputissa on uusia aineistoja.
+ *
+ * @param input input
+ * @param input.oid Projektin oid
+ * @param input.versio Projektin oletettu versio
+ * @param input.muokattavaHyvaksymisEsitys Halutut uudet tiedot muokattavalle hyväksymisesitykselle
+ * @returns Projektin oid
+ */
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   try {
-    // TODO lukitse dynamoDB
+    await setLock(oid);
     const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
     validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     // Persistoi uudet tiedostot
-    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-      projektiInDB.muokattavaHyvaksymisEsitys,
-      newMuokattavaHyvaksymisEsitys
-    );
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     if (uudetTiedostot.length) {
-      // TODO: persistoi
+      await Promise.all(
+        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
+      );
     }
     // Poista poistetut tiedostot/aineistot
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
@@ -36,7 +50,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
       newMuokattavaHyvaksymisEsitys
     );
     if (poistetutTiedostot.length || poistetutAineistot.length) {
-      // TODO: poista
+      await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
     }
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
@@ -55,7 +69,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     }
     return oid;
   } finally {
-    // TODO: poista lukitus
+    await releaseLock(oid);
   }
 }
 
