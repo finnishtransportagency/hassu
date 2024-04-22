@@ -130,6 +130,33 @@ class OmistajaSearchService {
       });
     }
 
+    if (params.onlyUserCreated) {
+      query.bool.must.push({
+        term: { userCreated: true },
+      });
+    } else if (params.filterUserCreated) {
+      query.bool.must.push({
+        bool: {
+          should: [
+            {
+              term: {
+                userCreated: false,
+              },
+            },
+            {
+              bool: {
+                must_not: {
+                  exists: {
+                    field: "userCreated",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+    }
+
     return query;
   }
 }

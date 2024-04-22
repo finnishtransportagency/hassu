@@ -283,6 +283,7 @@ export async function tallennaKiinteistonOmistajat(
         nimi: omistaja.nimi,
         suomifiLahetys: false,
         kaytossa: true,
+        userCreated: true,
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
@@ -291,6 +292,10 @@ export async function tallennaKiinteistonOmistajat(
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
+    if (dbOmistaja.userCreated) {
+      dbOmistaja.nimi = omistaja.nimi;
+      dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
+    }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
   }
 
@@ -324,7 +329,7 @@ export async function haeSailytettavatKiinteistonOmistajat(
   poistettavatOmistajat.forEach((poistettavaId) => {
     const idFound = initialOmistajat.some((omistaja) => omistaja.id === poistettavaId);
     if (!idFound) {
-      throw new IllegalArgumentError(`Poistettavaa omistajaa id:'${poistettavaId}' ei löytynyt`);
+      throw new IllegalArgumentError(`Poistettavaa omistajaa id: '${poistettavaId}' ei löytynyt`);
     }
   });
 
@@ -345,7 +350,7 @@ export async function haeSailytettavatKiinteistonOmistajat(
 
   await Promise.all(
     poistettavat.map(async (omistaja) => {
-      auditLog.info("Poistetaan Suomi.fi omistaja", { omistajaId: omistaja.id });
+      auditLog.info("Poistetaan omistaja", { omistajaId: omistaja.id });
       await omistajaDatabase.poistaOmistajaKaytosta(oid, omistaja.id);
     })
   );

@@ -38,6 +38,7 @@ export type DBOmistaja = {
   kaytossa: boolean;
   suomifiLahetys?: boolean;
   lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
+  userCreated?: boolean;
 };
 
 export type OmistajaScanResult = {

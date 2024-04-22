@@ -40,6 +40,12 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     errorMessage: () => "Projektin tallennus epäonnistui. ",
   },
   {
+    validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "TallennaKiinteistonOmistajat";
+    },
+    errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui. ",
+  },
+  {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
     errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
   },
