@@ -62,8 +62,20 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "AineistoInputNew",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "AineistoMuokkaus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AineistoNew",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -177,6 +189,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsityksenTiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "HyvaksymisEsitys",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -271,7 +289,7 @@
             "__typename": "__Type"
           },
           {
-            "name": "LadattuTiedosto",
+            "name": "LadattuTiedostoNew",
             "__typename": "__Type"
           }
         ],
@@ -404,6 +422,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "KunnallinenLadattuTiedostoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "KuntaVastaanottaja",
         "possibleTypes": null,
@@ -478,6 +502,18 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "LadattuTiedostoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LadattuTiedostoInputNew",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LadattuTiedostoNew",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -764,6 +800,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "PalautaInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "Palaute",
         "possibleTypes": null,
@@ -971,6 +1013,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "TallennaHyvaksymisEsitysInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "TallennaKiinteistonOmistajaResponse",
         "possibleTypes": null,
@@ -997,6 +1045,12 @@
       {
         "kind": "ENUM",
         "name": "TestiKomentoVaihe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TilaMuutosInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },
