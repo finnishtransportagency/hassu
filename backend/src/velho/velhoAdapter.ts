@@ -22,7 +22,7 @@ import difference from "lodash/difference";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
 import { assertIsDefined } from "../util/assertions";
-import { IllegalArgumentError } from "hassu-common/error";
+import { IllegalArgumentError, VelhoGeoJsonSizeExceededError } from "hassu-common/error";
 import { parseDate } from "../util/dateUtil";
 import isEqual from "lodash/isEqual";
 import { asianhallintaService } from "../asianhallinta/asianhallintaService";
@@ -252,6 +252,9 @@ async function haeAsiaId(projekti: DBProjekti) {
   }
 }
 
+// 100KB
+const MAX_GEOJSON_SIZE = 100 * 1000;
+
 function getGeoJSON(data: ProjektiProjekti) {
   const geometrycollection = data.geometrycollection?.geometries;
   const geometriaEiOleKeskipiste = (geometry: ProjektiProjektiLuontiMitattugeometriaGeometria): boolean =>
@@ -276,7 +279,13 @@ function getGeoJSON(data: ProjektiProjekti) {
     geometry,
   };
 
-  return JSON.stringify(geoJSON);
+  const geoJsonString = JSON.stringify(geoJSON);
+
+  if (new Blob([geoJsonString]).size > MAX_GEOJSON_SIZE) {
+    throw new VelhoGeoJsonSizeExceededError("Velhoon asetetut projektin geometriat ylittävät 100kB maksimikoon");
+  }
+
+  return geoJsonString;
 }
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {

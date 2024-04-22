@@ -11,10 +11,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
+          "nimi": "aineisto1.txt",
           "tila": "ODOTTAA_TUONTIA",
           "tuotu": undefined,
         },
@@ -25,10 +25,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
+          "nimi": "aineisto1.txt",
           "tila": "ODOTTAA_TUONTIA",
           "tuotu": undefined,
         },
@@ -117,14 +117,14 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 2`] = `
 Object {
   "yllapito S3 files jatkopäätös1 created": Object {
-    "/1/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+    "/1/aineisto1.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto1.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "/1/paatos/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+    "/1/paatos/aineisto1.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto1.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
@@ -144,11 +144,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -159,11 +159,11 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -233,11 +233,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -250,11 +250,11 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -347,7 +347,6 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "geoJSON": null,
         "kunnat": Array [
           91,
           92,
@@ -405,11 +404,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/aineisto3.txt",
+        "nimi": "aineisto1.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/aineisto1.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -419,11 +418,11 @@ Object {
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
         "jarjestys": 1,
         "kategoriaId": undefined,
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/paatos/aineisto3.txt",
+        "nimi": "aineisto1.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/paatos/aineisto1.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -458,7 +457,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": null,
+      "geoJSON": undefined,
       "kunnat": Array [
         91,
         92,
@@ -585,10 +584,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
+          "nimi": "aineisto1.txt",
           "tila": "ODOTTAA_TUONTIA",
           "tuotu": undefined,
         },
@@ -599,10 +598,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
+          "nimi": "aineisto1.txt",
           "tila": "ODOTTAA_TUONTIA",
           "tuotu": undefined,
         },
@@ -695,14 +694,14 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
 Object {
   "yllapito S3 files jatkopäätös2 created": Object {
-    "/1/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+    "/1/aineisto1.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto1.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "/1/paatos/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+    "/1/paatos/aineisto1.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto1.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
@@ -742,11 +741,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -757,11 +756,11 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/paatos/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -831,11 +830,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -848,11 +847,11 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
           "jarjestys": 1,
           "kategoriaId": undefined,
-          "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/paatos/aineisto3.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/paatos/aineisto1.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -945,7 +944,6 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "geoJSON": null,
         "kunnat": Array [
           91,
           92,
@@ -1003,11 +1001,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/aineisto3.txt",
+        "nimi": "aineisto1.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/aineisto1.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -1017,11 +1015,11 @@ Object {
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "dokumenttiOid": "1.2.246.578.5.100.2464452154.3727684655",
         "jarjestys": 1,
         "kategoriaId": undefined,
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/paatos/aineisto3.txt",
+        "nimi": "aineisto1.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/paatos/aineisto1.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -1056,7 +1054,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "geoJSON": null,
+      "geoJSON": undefined,
       "kunnat": Array [
         91,
         92,
