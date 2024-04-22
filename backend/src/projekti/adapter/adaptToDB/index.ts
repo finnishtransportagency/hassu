@@ -5,4 +5,4 @@ export * from "./adaptKayttajatunnusList";
 export * from "./adaptNahtavillaoloVaiheToSave";
 export * from "./adaptSuunnitteluSopimusToSave";
 export * from "./adaptVuorovaikutusKierrosToSave";
-export * from "./adaptHyvaksymisEsitysToSave";
+export * from "../../../HyvaksymisEsitys/adaptToSave/adaptHyvaksymisEsitysToSave";

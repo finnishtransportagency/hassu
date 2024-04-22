@@ -22,6 +22,7 @@ import { palauteHandlerJulkinen } from "../palaute/palauteHandlerJulkinen";
 import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJulkinenHandler";
 import { getSuomiFiKayttaja } from "../user/userService";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
+import { listaaHyvaksymisEsityksenTiedostot } from "../HyvaksymisEsitys/actions";
 
 export async function executePublicOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -53,9 +54,7 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
         event.arguments as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables
       );
     case apiConfig.listaaHyvaksymisEsityksenTiedostot.name:
-      return tiedostoDownloadLinkHandler.listaaHyvaksymisEsityksenTiedostot(
-        event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables
-      );
+      return listaaHyvaksymisEsityksenTiedostot(event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
     default:
       return null;
   }

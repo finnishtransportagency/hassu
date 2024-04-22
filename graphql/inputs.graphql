@@ -13,13 +13,29 @@ input TallennaProjektiInput {
   nahtavillaoloVaihe: NahtavillaoloVaiheInput
   lausuntoPyynnot: [LausuntoPyyntoInput!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennysInput!]
-  hyvaksymisEsitys: HyvaksymisEsitysInput
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
   kasittelynTila: KasittelyntilaInput
   asianhallinta: AsianhallintaInput
   kustannuspaikka: String
+}
+
+input TallennaHyvaksymisEsitysInput {
+  oid: String!
+  versio: Int!
+  muokattavaHyvaksymisEsitys: HyvaksymisEsitysInput!
+}
+
+input PalautaInput {
+  oid: String!
+  versio: Int!
+  syy: String!
+}
+
+input TilaMuutosInput {
+  oid: String!
+  versio: Int!
 }
 
 input AsianhallintaInput {
@@ -241,14 +257,14 @@ input HyvaksymisEsitysInput {
   kiireellinen: Boolean
   lisatiedot: String
   laskutustiedot: LaskutustiedotInput
-  hyvaksymisEsitys: [LadattuTiedostoInput!]
-  suunnitelma: [AineistoInput!]
-  muistutukset: [LadattuTiedostoInput!]
-  lausunnot: [LadattuTiedostoInput!]
-  kuulutuksetJaKutsu: [LadattuTiedostoInput!]
-  muuAineistoVelhosta: [AineistoInput!]
-  muuAineistoKoneelta: [LadattuTiedostoInput!]
-  maanomistajaluettelo: [LadattuTiedostoInput!]
+  hyvaksymisEsitys: [LadattuTiedostoInputNew!]
+  suunnitelma: [AineistoInputNew!]
+  muistutukset: [KunnallinenLadattuTiedostoInput!]
+  lausunnot: [LadattuTiedostoInputNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
+  muuAineistoVelhosta: [AineistoInputNew!]
+  muuAineistoKoneelta: [LadattuTiedostoInputNew!]
+  maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [String!]
 }
 
@@ -300,6 +316,23 @@ input AineistoInput {
   tila: AineistoTila!
 }
 
+input AineistoInputNew {
+  """
+  Dokumentin oid Velhossa
+  """
+  dokumenttiOid: String!
+  """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
+  nimi: String!
+  uuid: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+}
+
 input LadattuTiedostoInput {
   """
   Polku, jonka api.valmisteleTiedostonLataus palauttaa
@@ -315,6 +348,39 @@ input LadattuTiedostoInput {
   """
   jarjestys: Int
   tila: LadattuTiedostoTila!
+  kunta: Int
+}
+
+input LadattuTiedostoInputNew {
+  """
+  Polku, jonka api.valmisteleTiedostonLataus palauttaa
+  """
+  tiedosto: String!
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  uuid: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+}
+
+input KunnallinenLadattuTiedostoInput {
+  """
+  Polku, jonka api.valmisteleTiedostonLataus palauttaa
+  """
+  tiedosto: String!
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  uuid: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
   kunta: Int
 }
 

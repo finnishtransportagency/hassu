@@ -21,7 +21,7 @@ import {
   adaptVelhoToAPI,
   adaptVuorovaikutusKierrosToAPI,
   adaptVuorovaikutusKierrosJulkaisutToAPI,
-  adaptHyvaksymisEsitysToApi,
+  adaptHyvaksymisEsitysToAPI,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
@@ -41,7 +41,6 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
-import { adaptHyvaksymisEsitysToSave } from "./adaptToDB/adaptHyvaksymisEsitysToSave";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -115,7 +114,7 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
       lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
-      hyvaksymisEsitys: adaptHyvaksymisEsitysToApi(dbProjekti, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys),
+      hyvaksymisEsitys: adaptHyvaksymisEsitysToAPI({ oid, salt: dbProjekti.salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys }),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
@@ -214,7 +213,6 @@ export class ProjektiAdapter {
       nahtavillaoloVaihe,
       lausuntoPyynnot,
       lausuntoPyynnonTaydennykset,
-      hyvaksymisEsitys,
       kasittelynTila,
       hyvaksymisPaatosVaihe,
       jatkoPaatos1Vaihe,
@@ -244,11 +242,6 @@ export class ProjektiAdapter {
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToSave(
         projekti.lausuntoPyynnonTaydennykset,
         lausuntoPyynnonTaydennykset,
-        projektiAdaptationResult
-      ),
-      muokattavaHyvaksymisEsitys: adaptHyvaksymisEsitysToSave(
-        projekti.muokattavaHyvaksymisEsitys,
-        hyvaksymisEsitys,
         projektiAdaptationResult
       ),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToSave(

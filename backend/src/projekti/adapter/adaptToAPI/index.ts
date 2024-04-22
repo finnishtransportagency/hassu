@@ -7,4 +7,4 @@ export * from "./adaptNahtavillaoloVaiheToAPI";
 export * from "./adaptLausuntoPyynnotToAPI";
 export * from "./adaptSuunitteluSopimusToAPI";
 export * from "./adaptVuorovaikutusKierrosToAPI";
-export * from "./adaptHyvaksymisEsitysToAPI";
+export * from "../../../HyvaksymisEsitys/adaptToApi/adaptHyvaksymisEsitysToAPI";

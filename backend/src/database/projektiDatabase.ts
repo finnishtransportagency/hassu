@@ -33,6 +33,7 @@ const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
   "nahtavillaoloVaiheJulkaisut",
   "hyvaksymisPaatosVaiheJulkaisut",
+  "julkaistuHyvaksymisEsitys",
   "jatkoPaatos1VaiheJulkaisut",
   "jatkoPaatos2VaiheJulkaisut",
   "synkronoinnit",
@@ -517,14 +518,13 @@ export class ProjektiDatabase {
       kiinteistotunnusMaara,
       virhe: omistajahakuVirhe,
       status,
-    }
+    };
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
-      UpdateExpression:
-        "SET #omistajahaku = :omistajahaku",
+      UpdateExpression: "SET #omistajahaku = :omistajahaku",
       ExpressionAttributeNames: {
         ["#omistajahaku"]: "omistajahaku",
       },
