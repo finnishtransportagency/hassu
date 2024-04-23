@@ -140,13 +140,14 @@ export class HassuFrontendStack extends Stack {
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
-
+    const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,
       dmzProxyBehaviorWithLambda,
       dmzProxyBehavior,
       apiBehavior,
+      publicGraphqlBehavior,
       edgeFunctionRole,
       frontendRequestFunction
     );
@@ -341,6 +342,17 @@ export class HassuFrontendStack extends Stack {
     }
   }
 
+  private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
+    return new cloudfront.experimental.EdgeFunction(this, "suomifiRequestFunction", {
+      runtime: Runtime.NODEJS_18_X,
+      functionName: "suomifiRequestFunction" + env,
+      code: Code.fromInline(sourceCode),
+      handler: "index.handler",
+      role,
+    });
+  }
+
   private createEdgeFunctionRole() {
     return new Role(this, "edgeFunctionRole", {
       assumedBy: new CompositePrincipal(
@@ -383,6 +395,7 @@ export class HassuFrontendStack extends Stack {
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
     apiBehavior: BehaviorOptions,
+    publicGraphqlBehavior: BehaviorOptions,
     edgeFunctionRole: Role,
     frontendRequestFunction?: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
@@ -395,7 +408,7 @@ export class HassuFrontendStack extends Stack {
     );
     const props: Record<string, BehaviorOptions> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
-      "/graphql": dmzProxyBehaviorWithLambda,
+      "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
       "/tiedostot/*": publicBucketBehaviour,
       "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
@@ -438,6 +451,33 @@ export class HassuFrontendStack extends Stack {
     };
 
     return dmzBehavior;
+  }
+
+  private createPublicGraphqlDmzProxyBehavior(
+    dmzProxyEndpoint: string,
+    env: string,
+    role: Role,
+    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
+  ) {
+    const suomifiLambda = this.createSuomifiRequestFunction(env, role);
+    const edgeLambdas: cloudfront.EdgeLambda[] = [
+      { functionVersion: suomifiLambda.currentVersion, eventType: LambdaEdgeEventType.ORIGIN_REQUEST },
+    ];
+    if (frontendRequestFunction) {
+      edgeLambdas.push({ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST });
+    }
+    const graphqlBehavior: BehaviorOptions = {
+      compress: true,
+      origin: new HttpOrigin(dmzProxyEndpoint, {
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+      }),
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      allowedMethods: AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      edgeLambdas,
+    };
+    return graphqlBehavior;
   }
 
   private createApiBehavior(apiEndpoint: string, apiKey: string, env: string) {

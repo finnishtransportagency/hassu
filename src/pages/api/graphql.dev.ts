@@ -16,9 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     headers["x-hassudev-uid"] = getCookieOrDefault(req.cookies, "x-hassudev-uid", process.env["x-hassudev-uid"]) as string;
     headers["x-hassudev-roles"] = getCookieOrDefault(req.cookies, "x-hassudev-roles", process.env["x-hassudev-roles"]) as string;
   }
-  const accessToken = req.headers["x-vls-access-token"];
+  const accessToken = req.cookies["x-vls-access-token"];
   if (accessToken) {
-    headers["x-vls-access-token"] = accessToken as string;
+    headers["x-vls-access-token"] = accessToken;
   }
   const request = new HttpRequest({
     headers: headers,
