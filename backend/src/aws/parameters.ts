@@ -191,6 +191,14 @@ class Parameters {
     return this.getRequiredAccountParameter("KtjBaseUrl");
   }
 
+  async getOgcBaseUrl() {
+    return this.getRequiredAccountParameter("OgcBaseUrl");
+  }
+
+  async getOgcApiKey() {
+    return this.getRequiredAccountParameter("OgcApiKey");
+  }
+
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
     const value = await this.getParameterForEnv(paramName);
     if (!value) {

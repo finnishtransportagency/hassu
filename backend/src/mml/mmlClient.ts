@@ -3,6 +3,8 @@ import axios from "axios";
 // @ts-ignore
 import { parseStringPromise as parseString } from "xml2js";
 import { auditLog, log } from "../logger";
+import { chunkArray } from "../database/chunkArray";
+import { FeatureCollection } from "geojson";
 
 type Yhteystieto = {
   jakeluosoite?: string | null;
@@ -22,17 +24,22 @@ export type Omistaja = {
 
 export type MmlKiinteisto = {
   kiinteistotunnus: string;
+  kayttooikeusyksikkotunnus?: string;
   omistajat: Omistaja[];
 };
 
 export type MmlClient = {
-  haeLainhuutotiedot: (kiinteistotunnukset: string[], debug?: boolean) => Promise<MmlKiinteisto[]>;
-  haeYhteystiedot: (kiinteistotunnukset: string[], debug?: boolean) => Promise<MmlKiinteisto[]>;
+  haeLainhuutotiedot: (kiinteistotunnukset: string[], uid: string, debug?: boolean) => Promise<MmlKiinteisto[]>;
+  haeYhteystiedot: (kiinteistotunnukset: string[], uid: string, debug?: boolean) => Promise<MmlKiinteisto[]>;
+  haeTiekunnat: (kiinteistotunnukset: string[], uid: string, debug?: boolean) => Promise<MmlKiinteisto[]>;
+  haeYhteisalueet: (kiinteistotunnukset: string[], uid: string, debug?: boolean) => Promise<MmlKiinteisto[]>;
 };
 
 export type MmlOptions = {
+  ogcEndpoint: string;
   endpoint: string;
   apiKey: string;
+  ogcApiKey: string;
 };
 
 const TIMEOUT = 120000;
@@ -40,7 +47,7 @@ const MAX = 100;
 
 export function getMmlClient(options: MmlOptions): MmlClient {
   return {
-    haeLainhuutotiedot: async (kiinteistotunnukset: string[], debug = false) => {
+    haeLainhuutotiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
       const yhteystiedot: MmlKiinteisto[] = [];
       const tunneksetVastaus = [...kiinteistotunnukset];
       const tunnukset = [...kiinteistotunnukset];
@@ -49,8 +56,8 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         const url = options.endpoint + "/lainhuutotiedot/xml?kiinteistotunnus=" + kyselytunnukset.join(",");
         log.info("haeLainhuutotiedot url: " + url);
         auditLog.info("Lainhuutotietojen haku", { kiinteistotunnukset: kyselytunnukset });
-        const response = await axios.get(url, { headers: { "x-api-key": options.apiKey }, timeout: TIMEOUT });
-        if(debug) {
+        const response = await axios.get(url, { headers: { "x-api-key": options.apiKey, enduserid: uid }, timeout: TIMEOUT });
+        if (debug) {
           console.log("rawdata: %s", response.data.replaceAll("\n", ""));
         }
         const responseJson = await parseString(response.data);
@@ -91,7 +98,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
       }
       return yhteystiedot;
     },
-    haeYhteystiedot: async (kiinteistotunnukset: string[], debug = false) => {
+    haeYhteystiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
       const yhteystiedot: MmlKiinteisto[] = [];
       const tunneksetVastaus = [...kiinteistotunnukset];
       const tunnukset = [...kiinteistotunnukset];
@@ -100,8 +107,8 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         const url = options.endpoint + "/yhteystiedot/xml?kiinteistotunnus=" + kyselytunnukset.join(",");
         log.info("haeYhteystiedot url: " + url);
         auditLog.info("Yhteystietojen haku", { kiinteistotunnukset: kyselytunnukset });
-        const response = await axios.get(url, { headers: { "x-api-key": options.apiKey }, timeout: TIMEOUT });
-        if(debug) {
+        const response = await axios.get(url, { headers: { "x-api-key": options.apiKey, enduserid: uid }, timeout: TIMEOUT });
+        if (debug) {
           console.log("rawdata: %s", response.data.replaceAll("\n", ""));
         }
         const responseJson = await parseString(response.data);
@@ -137,6 +144,68 @@ export function getMmlClient(options: MmlOptions): MmlClient {
       // lisätään tyhjä entry tunnuksille joita ei jostain syystä löydy rajapinnasta
       for (const kiinteistotunnus of tunneksetVastaus) {
         yhteystiedot.push({ kiinteistotunnus, omistajat: [] });
+      }
+      return yhteystiedot;
+    },
+    haeTiekunnat: async (kiinteistotunnukset, uid, debug = false) => {
+      const yhteystiedot: MmlKiinteisto[] = [];
+      const chunks = chunkArray(kiinteistotunnukset, MAX);
+      for (const kyselytunnukset of chunks) {
+        const url =
+          options.ogcEndpoint +
+          "/collections/KayttooikeusyksikonPerustiedot/items?kiinteistotunnus=" +
+          kyselytunnukset.join(",") +
+          "&tiekunnallisuus=1";
+        log.info("haeTiekunnat url: " + url);
+        const response = await axios.get(url, {
+          // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
+          headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
+          timeout: TIMEOUT,
+        });
+        if (debug) {
+          console.log("rawdata: %s", JSON.stringify(response.data));
+        }
+        const geojson = response.data as FeatureCollection;
+        for (const feat of geojson.features) {
+          if (feat.properties?.tiekunta) {
+            yhteystiedot.push({
+              kiinteistotunnus: "",
+              kayttooikeusyksikkotunnus: feat.properties.kayttooikeusyksikkotunnus,
+              omistajat: [
+                feat.properties.tiekunta.map((t: { nimi: string }) => {
+                  return { nimi: t.nimi };
+                }),
+              ],
+            });
+          }
+        }
+      }
+      return yhteystiedot;
+    },
+    haeYhteisalueet: async (kiinteistotunnukset, uid, debug = false) => {
+      const yhteystiedot: MmlKiinteisto[] = [];
+      const chunks = chunkArray(kiinteistotunnukset, MAX);
+      for (const kyselytunnukset of chunks) {
+        const url =
+          options.ogcEndpoint + "/collections/RekisteriyksikonYhteisalueosuudet/items?kiinteistotunnus=" + kyselytunnukset.join(",");
+        log.info("haeYhteisalueet url: " + url);
+        const response = await axios.get(url, {
+          // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
+          headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
+          timeout: TIMEOUT,
+        });
+        if (debug) {
+          console.log("rawdata: %s", JSON.stringify(response.data));
+        }
+        const geojson = response.data as FeatureCollection;
+        for (const feat of geojson.features) {
+          for (const alue of feat.properties?.yhteisalueosuus ?? []) {
+            yhteystiedot.push({
+              kiinteistotunnus: alue.yhteisalueyksikko.kiinteistotunnus,
+              omistajat: [{ nimi: alue.yhteisalueyksikko.nimi }],
+            });
+          }
+        }
       }
       return yhteystiedot;
     },

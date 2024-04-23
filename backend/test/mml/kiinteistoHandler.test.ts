@@ -31,111 +31,113 @@ import MockDate from "mockdate";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
-    return new Promise((resolve) => {
-      resolve([
-        {
-          kiinteistotunnus: "1",
-          omistajat: [
-            {
-              henkilotunnus: "111111-111A",
-              etunimet: "Matti",
-              sukunimi: "Testaaja",
-            },
-            {
-              henkilotunnus: "111111-113B",
-              etunimet: "Teppo",
-              sukunimi: "Testaaja",
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "2",
-          omistajat: [
-            {
-              henkilotunnus: "222222-222A",
-              etunimet: "Lotta",
-              sukunimi: "Testaaja",
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "3",
-          omistajat: [
-            {
-              etunimet: "Jatta",
-              sukunimi: "Tuntematon",
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "4",
-          omistajat: [
-            {
-              nimi: "Yritys Oy Ab",
-              ytunnus: "123-456",
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "5",
-          omistajat: [],
-        },
-      ]);
-    });
+    return Promise.resolve([
+      {
+        kiinteistotunnus: "1",
+        omistajat: [
+          {
+            henkilotunnus: "111111-111A",
+            etunimet: "Matti",
+            sukunimi: "Testaaja",
+          },
+          {
+            henkilotunnus: "111111-113B",
+            etunimet: "Teppo",
+            sukunimi: "Testaaja",
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "2",
+        omistajat: [
+          {
+            henkilotunnus: "222222-222A",
+            etunimet: "Lotta",
+            sukunimi: "Testaaja",
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "3",
+        omistajat: [
+          {
+            etunimet: "Jatta",
+            sukunimi: "Tuntematon",
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "4",
+        omistajat: [
+          {
+            nimi: "Yritys Oy Ab",
+            ytunnus: "123-456",
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "5",
+        omistajat: [],
+      },
+    ]);
   },
   haeYhteystiedot: () => {
-    return new Promise((resolve) => {
-      resolve([
-        {
-          kiinteistotunnus: "1",
-          omistajat: [
-            {
-              etunimet: "Matti",
-              sukunimi: "Testaaja",
-              yhteystiedot: { jakeluosoite: "Katuosoite 1 A 100", postinumero: "00100", paikkakunta: "Helsinki", maakoodi: "FI" },
-            },
-            {
-              etunimet: "Teppo",
-              sukunimi: "Testaaja",
-              yhteystiedot: { jakeluosoite: "Katuosoite 2 B 32", postinumero: "01600", paikkakunta: "Vantaa" },
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "2",
-          omistajat: [
-            {
-              etunimet: "Lotta",
-              sukunimi: "Testaaja",
-              yhteystiedot: { jakeluosoite: "Katuosoite 3 A 123", postinumero: "00180", paikkakunta: "Helsinki" },
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "3",
-          omistajat: [
-            {
-              etunimet: "Jatta",
-              sukunimi: "Tuntematon",
-              yhteystiedot: { jakeluosoite: "Katuosoite 123", postinumero: "00180", paikkakunta: "Helsinki" },
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "4",
-          omistajat: [
-            {
-              nimi: "Yritys Oy Ab",
-              yhteystiedot: { jakeluosoite: "Yritysosoite 1", postinumero: "00001", paikkakunta: "Helsinki" },
-            },
-          ],
-        },
-        {
-          kiinteistotunnus: "5",
-          omistajat: [],
-        },
-      ]);
-    });
+    return Promise.resolve([
+      {
+        kiinteistotunnus: "1",
+        omistajat: [
+          {
+            etunimet: "Matti",
+            sukunimi: "Testaaja",
+            yhteystiedot: { jakeluosoite: "Katuosoite 1 A 100", postinumero: "00100", paikkakunta: "Helsinki", maakoodi: "FI" },
+          },
+          {
+            etunimet: "Teppo",
+            sukunimi: "Testaaja",
+            yhteystiedot: { jakeluosoite: "Katuosoite 2 B 32", postinumero: "01600", paikkakunta: "Vantaa" },
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "2",
+        omistajat: [
+          {
+            etunimet: "Lotta",
+            sukunimi: "Testaaja",
+            yhteystiedot: { jakeluosoite: "Katuosoite 3 A 123", postinumero: "00180", paikkakunta: "Helsinki" },
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "3",
+        omistajat: [
+          {
+            etunimet: "Jatta",
+            sukunimi: "Tuntematon",
+            yhteystiedot: { jakeluosoite: "Katuosoite 123", postinumero: "00180", paikkakunta: "Helsinki" },
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "4",
+        omistajat: [
+          {
+            nimi: "Yritys Oy Ab",
+            yhteystiedot: { jakeluosoite: "Yritysosoite 1", postinumero: "00001", paikkakunta: "Helsinki" },
+          },
+        ],
+      },
+      {
+        kiinteistotunnus: "5",
+        omistajat: [],
+      },
+    ]);
+  },
+  haeTiekunnat: () => {
+    return Promise.resolve([]);
+  },
+  haeYhteisalueet: () => {
+    return Promise.resolve([]);
   },
 };
 

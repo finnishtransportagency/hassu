@@ -44,7 +44,9 @@ async function getClient() {
   if (mmlClient === undefined) {
     const endpoint = await parameters.getKtjBaseUrl();
     const apiKey = await parameters.getMmlApiKey();
-    mmlClient = getMmlClient({ endpoint, apiKey });
+    const ogcEndpoint = await parameters.getOgcBaseUrl();
+    const ogcApiKey = await parameters.getOgcApiKey();
+    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey });
   }
   return mmlClient;
 }
@@ -88,8 +90,8 @@ const handlerFactory = (event: SQSEvent) => async () => {
           hakuEvent.kiinteistotunnukset.length
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset);
-        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset);
+        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
 
