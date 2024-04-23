@@ -2,7 +2,7 @@ import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "../../aws/client";
 import { config } from "../../config";
 import { log } from "../../logger";
-import { getYllapitoPathForProjekti, joinPath } from "../paths";
+import { getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 
 /**
  * Poistaa tiedostoja annetun projektin julkaistulta hyväksymisesitykseltä

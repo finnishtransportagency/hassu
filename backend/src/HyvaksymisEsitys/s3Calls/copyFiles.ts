@@ -2,28 +2,35 @@ import { CopyObjectCommand, CopyObjectRequest } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
 import { getS3Client } from "../../aws/client";
-import { getYllapitoPathForProjekti, joinPath } from "../paths";
+import { getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 
 /**
- * Kopioi tiedoston annetusta sourceFile-polusta targetFile-polkuun
+ * Kopioi ylläpitobucketissa olevan tiedoston annetusta sourceFile-polusta targetFile-polkuun
  *
- * @param sourceFile polku tiedostoon; polun alussa ylläpitobucketin nimi
- * @param targetFile polku tiedostoon; polun alussa ylläpitobucketin nimi
+ * @param sourceFile polku olemassaolevaan tiedostoon ylläpitobucketissa
+ * @param targetFile polku luotavaan tiedostoon ylläpitobucketissa
  */
 async function copyYllapitoFile(sourceFile: string, targetFile: string): Promise<void> {
   const yllapitoBucketName = config.yllapitoBucketName;
-  if (!sourceFile.includes(yllapitoBucketName) || !targetFile.includes(yllapitoBucketName)) {
-    throw new Error("Tiedostopolkujen pitää olla ylläpitobucketissa");
+  if (sourceFile.includes(yllapitoBucketName) || targetFile.includes(yllapitoBucketName)) {
+    throw new Error("Tiedostopoluissa ei saa olla ylläpito-buckettia mukana");
   }
   log.info(`Kopioidaan ${sourceFile} -> ${targetFile}`);
+
   const params: CopyObjectRequest = {
     Bucket: yllapitoBucketName,
-    CopySource: encodeURIComponent(sourceFile),
-    Key: encodeURIComponent(targetFile),
+    CopySource: joinPath(yllapitoBucketName, sourceFile),
+    Key: targetFile,
     ChecksumAlgorithm: "CRC32",
   };
   log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
-  await getS3Client().send(new CopyObjectCommand(params));
+  try {
+    await getS3Client().send(new CopyObjectCommand(params));
+  } catch (e) {
+    log.error("Yllapitotiedoston kopiointi epäonnistui:", (e as Error).message, "\nparams: ", params);
+    console.log(sourceFile);
+    throw new Error("Copy ylläpito files epäonnistui. " + (e as Error).message);
+  }
 }
 
 /**
@@ -43,7 +50,10 @@ export async function copyFilesFromVaiheToAnother(
   const yllapito = getYllapitoPathForProjekti(oid);
   await Promise.all(
     files.map(({ avain, nimi }) =>
-      copyYllapitoFile(joinPath(yllapito, vaihePrefixFrom, avain, nimi), joinPath(yllapito, vaihePrefixTo, avain, nimi))
+      copyYllapitoFile(
+        joinPath(yllapito, vaihePrefixFrom, avain, encodeURIComponent(nimi)),
+        joinPath(yllapito, vaihePrefixTo, avain, encodeURIComponent(nimi))
+      )
     )
   );
 }

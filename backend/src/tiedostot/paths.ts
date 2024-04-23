@@ -1,3 +1,7 @@
+/**
+ * Tässä tiedostossa on uudella tyylillä tehtyjen vaiheiden polkutietoja
+ */
+
 export const JULKAISTU_HYVAKSYMISESITYS_PATH = "hyvaksymisesitys";
 export const MUOKATTAVA_HYVAKSYMISESITYS_PATH = "muokattava_hyvaksymisesitys";
 export function getYllapitoPathForProjekti(oid: string) {
