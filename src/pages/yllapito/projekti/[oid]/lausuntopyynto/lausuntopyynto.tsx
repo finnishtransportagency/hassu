@@ -126,13 +126,13 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
               <>
                 <DownloadButtonLink
                   id="mallipohja-32T"
-                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/36e9a27e-46ea-42c0-812f-6de80d723274/32T_YSTS_Kunnan_l%c3%a4hetekirje_n%c3%a4ht%c3%a4ville_asettamisen_ilmoittamisesta_ja_lausuntopyynt%c3%b6.docx?a=true"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/139cb55f-1acb-4c5e-bc20-90fa0a9febe7/850_32T%20YSTS%20Lausuntopyynt%c3%b6%20kunnalle.dotx?a=true"
                 >
                   Mallipohja kunnalle 32T
                 </DownloadButtonLink>
                 <DownloadButtonLink
                   id="mallipohja-42T"
-                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0b4643d2-824e-41ed-9c6d-744f9e97d100/42T_YSTS_lausuntopyynto_muut_osapuolet.docx?a=true"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/b9423848-d6c1-4980-8081-2560591d2d98/852_42T%20YSTS%20lausuntopyynt%c3%b6%20muut%20osapuolet.dotx?a=true"
                 >
                   Mallipohja muille lausunnonantajille 42T
                 </DownloadButtonLink>

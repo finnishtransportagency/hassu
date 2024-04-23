@@ -22,6 +22,7 @@ import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/proj
 import { assertIsDefined } from "../util/assertions";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { uuid } from "hassu-common/util/uuid";
+import omit from "lodash/omit";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -176,7 +177,8 @@ export class AsiakirjaAdapter {
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {
   assertIsDefined(dbProjekti.velho);
-  return cloneDeep(dbProjekti.velho);
+  const velho = cloneDeep(dbProjekti.velho);
+  return omit(velho, "geoJSON");
 }
 
 export const asiakirjaAdapter = new AsiakirjaAdapter();
