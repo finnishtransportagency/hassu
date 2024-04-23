@@ -66,13 +66,14 @@ function getExpires() {
 
 type MapKeyInfo = {
   kiinteistotunnus: string;
+  kayttooikeusyksikkotunnus?: string | null;
   etunimet?: string | null;
   sukunimi?: string | null;
   nimi?: string | null;
 };
 
-function mapKey({ kiinteistotunnus, etunimet, sukunimi, nimi }: MapKeyInfo) {
-  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}`;
+function mapKey({ kiinteistotunnus, kayttooikeusyksikkotunnus, etunimet, sukunimi, nimi }: MapKeyInfo) {
+  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}${kayttooikeusyksikkotunnus ? "_" + kayttooikeusyksikkotunnus : ""}`;
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
@@ -92,8 +93,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const yhteisalueet = await client.haeYhteisalueet(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
+        log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a)");
+        log.info("Vastauksena saatiin " + yhteisalueet.length + " yhteisalue(atta)");
 
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
@@ -102,12 +107,13 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const omistajaMap = new Map<string, DBOmistaja>();
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
-
+        yhteystiedot.push(...tiekunnat, ...yhteisalueet);
         yhteystiedot.forEach((k) => {
           k.omistajat.forEach((o) => {
             const omistaja: DBOmistaja = {
               id: uuid.v4(),
               kiinteistotunnus: k.kiinteistotunnus,
+              kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus,
               oid: hakuEvent.oid,
               lisatty,
               etunimet: o.etunimet,
@@ -121,7 +127,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
               kaytossa: true,
               expires,
             };
-            omistajaMap.set(mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o }), omistaja);
+            omistajaMap.set(mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }), omistaja);
           });
           if (k.omistajat.length === 0) {
             const omistaja: DBOmistaja = {

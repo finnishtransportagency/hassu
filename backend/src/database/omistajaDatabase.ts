@@ -23,6 +23,7 @@ export type DBOmistaja = {
   id: string;
   oid: string;
   kiinteistotunnus: string;
+  kayttooikeusyksikkotunnus?: string | null;
   lisatty: string;
   paivitetty?: string | null;
   etunimet?: string | null;
