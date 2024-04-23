@@ -39,6 +39,14 @@
       "analyzer": "autocomplete",
       "search_analyzer": "standard"
     },
+    "maa": {
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "standard"
+    },
+    "maakoodi": {
+      "type": "keyword"
+    },
     "lisatty": {
       "type": "date"
     },

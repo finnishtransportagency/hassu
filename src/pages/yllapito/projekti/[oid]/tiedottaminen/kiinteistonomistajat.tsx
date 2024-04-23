@@ -16,11 +16,11 @@ import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackg
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useApi from "src/hooks/useApi";
-import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import { OmistajienMuokkausDialog } from "../../../../../components/projekti/tiedottaminen/OmistajienMuokkausDialog";
 import ButtonLink from "@components/button/ButtonLink";
+import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -90,16 +90,11 @@ const KarttaDialogi = styled(
   }
 )({});
 
-const getDefaultColumnMeta = () => ({
-  widthFractions: 3,
-  minWidth: 200,
-});
-
 const readColumns: ColumnDef<Omistaja>[] = [
   {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
-    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnusForDisplay(kiinteistotunnus),
+    accessorKey: "kiinteistotunnus",
     meta: {
       widthFractions: 2,
       minWidth: 160,
@@ -111,12 +106,42 @@ const readColumns: ColumnDef<Omistaja>[] = [
     id: "omistajan_nimi",
     meta: {
       widthFractions: 3,
-      minWidth: 250,
+      minWidth: 200,
     },
   },
-  { header: "Postiosoite", accessorKey: "jakeluosoite", id: "postiosoite", meta: getDefaultColumnMeta() },
-  { header: "Postinumero", accessorKey: "postinumero", id: "postinumero", meta: getDefaultColumnMeta() },
-  { header: "Postitoimipaikka", accessorFn: ({ paikkakunta }) => paikkakunta, id: "postitoimipaikka", meta: getDefaultColumnMeta() },
+  {
+    header: "Postiosoite",
+    accessorKey: "jakeluosoite",
+    id: "postiosoite",
+    meta: {
+      widthFractions: 3,
+      minWidth: 200,
+    },
+  },
+  {
+    header: "Postinumero",
+    accessorKey: "postinumero",
+    id: "postinumero",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
+  {
+    header: "Postitoimipaikka",
+    accessorFn: ({ paikkakunta, maakoodi }) => {
+      // If country code is of Finland then show only paikkakunta
+      if (!paikkakunta || !maakoodi || maakoodi === "FI") {
+        return paikkakunta;
+      }
+      return [paikkakunta, getLocalizedCountryName("fi", maakoodi)].join(", ");
+    },
+    id: "postitoimipaikka",
+    meta: {
+      widthFractions: 2,
+      minWidth: 180,
+    },
+  },
 ];
 
 const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
@@ -202,7 +227,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           </Stack>
           <GrayBackgroundText>
             <p>
-              Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? 0} henkilöä</b>.
+              Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} henkilöä</b>.
               Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
             </p>
           </GrayBackgroundText>

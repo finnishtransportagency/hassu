@@ -3,13 +3,14 @@ import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
 import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
-import { Columns, SheetData } from "write-excel-file";
+import { Columns, Row_, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
 import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
+import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -35,7 +36,15 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
   };
 }
 
-function lisaaMuistuttajaRivi(rivi: Rivi) {
+function getMuistuttajaColumns(): Columns {
+  return [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 10 }];
+}
+
+function getKiinteistonomistajaColumns(): Columns {
+  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 10 }];
+}
+
+function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
   auditLog.info("Lisätään muistuttajan tiedot exceliin", { muistuttajaId: rivi.id });
   return [
     {
@@ -51,6 +60,9 @@ function lisaaMuistuttajaRivi(rivi: Rivi) {
       value: rivi.postitoimipaikka,
     },
     {
+      value: rivi.maakoodi,
+    },
+    {
       value: formatDate(rivi.haettu),
     },
     {
@@ -59,7 +71,7 @@ function lisaaMuistuttajaRivi(rivi: Rivi) {
   ];
 }
 
-function lisaaRivi(rivi: Rivi) {
+function lisaaRivi(rivi: Rivi): Row_<ImageData> {
   auditLog.info("Lisätään omistajan tiedot exceliin", { omistajaId: rivi.id });
   return [
     {
@@ -76,6 +88,9 @@ function lisaaRivi(rivi: Rivi) {
     },
     {
       value: rivi.postitoimipaikka,
+    },
+    {
+      value: rivi.maakoodi,
     },
     {
       value: formatDate(rivi.haettu),
@@ -104,6 +119,9 @@ function lisaaOtsikko() {
       value: "Postitoimipaikka",
     },
     {
+      value: "Maa",
+    },
+    {
       value: "Tiedot haettu",
     },
     {
@@ -127,6 +145,9 @@ function lisaaMuistuttajanOtsikko() {
       value: "Postitoimipaikka",
     },
     {
+      value: "Maa",
+    },
+    {
       value: "Tiedot haettu",
     },
     {
@@ -142,6 +163,7 @@ type Rivi = {
   postiosoite: string;
   postinumero: string;
   postitoimipaikka: string;
+  maakoodi: string;
   haettu: string;
   tiedotustapa: string;
   suomifiLahetys: boolean | undefined;
@@ -157,6 +179,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
         postiosoite: o.jakeluosoite ?? "",
         postinumero: o.postinumero ?? "",
         postitoimipaikka: o.paikkakunta ?? "",
+        maakoodi: o.maakoodi ? getLocalizedCountryName("fi", o.maakoodi) : "",
         haettu: o.paivitetty ?? o.lisatty,
         tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
         suomifiLahetys: o.suomifiLahetys,
@@ -174,6 +197,7 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
         postiosoite: m.lahiosoite ?? "",
         postinumero: m.postinumero ?? "",
         postitoimipaikka: m.postitoimipaikka ?? "",
+        maakoodi: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
         tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
         suomifiLahetys: !!m.henkilotunnus,
@@ -254,23 +278,17 @@ export async function generateExcel(
   const columns: Columns[] = [];
   if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push("Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat");
-    columns.push(
-      [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }],
-      [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]
-    );
+    columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
       sheets.push("Suomi.fi muistuttajat", "Muut muistuttajat");
-      columns.push(
-        [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }],
-        [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]
-      );
+      columns.push(getMuistuttajaColumns(), getMuistuttajaColumns());
       await lisaaMuistuttajat(data, projekti.oid, vaihe, kuulutusPaiva);
     }
   } else if (suomifi) {
     if (kiinteisto) {
       sheets.push("Suomi.fi kiinteistönomistajat");
-      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getKiinteistonomistajaColumns());
       data[0].push(lisaaOtsikko());
       const rivit = await haeOmistajat(projekti.oid);
       for (const rivi of rivit.filter((o) => o.suomifiLahetys)) {
@@ -278,7 +296,7 @@ export async function generateExcel(
       }
     } else {
       sheets.push("Suomi.fi muistuttajat");
-      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getMuistuttajaColumns());
       data[0].push(lisaaMuistuttajanOtsikko());
       const rivit = await haeMuistuttajat(projekti.oid);
       for (const rivi of rivit.filter((o) => o.suomifiLahetys)) {
@@ -289,7 +307,7 @@ export async function generateExcel(
     if (kiinteisto) {
       sheets.push("Muut kiinteistönomistajat");
       data[0].push(lisaaOtsikko());
-      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getKiinteistonomistajaColumns());
       const rivit = await haeOmistajat(projekti.oid);
       for (const rivi of rivit.filter((o) => !o.suomifiLahetys)) {
         data[0].push(lisaaRivi(rivi));
@@ -297,7 +315,7 @@ export async function generateExcel(
     } else {
       sheets.push("Muut muistuttajat");
       data[0].push(lisaaMuistuttajanOtsikko());
-      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getMuistuttajaColumns());
       const rivit = await haeMuistuttajat(projekti.oid);
       for (const rivi of rivit.filter((o) => !o.suomifiLahetys)) {
         data[0].push(lisaaMuistuttajaRivi(rivi));
@@ -307,7 +325,7 @@ export async function generateExcel(
     if (kiinteisto) {
       sheets.push("Kiinteistönomistajat");
       data[0].push(lisaaOtsikko());
-      columns.push([{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getKiinteistonomistajaColumns());
       const rivit = await haeOmistajat(projekti.oid);
       for (const rivi of rivit) {
         data[0].push(lisaaRivi(rivi));
@@ -315,7 +333,7 @@ export async function generateExcel(
     } else {
       sheets.push("Muistuttajat");
       data[0].push(lisaaMuistuttajanOtsikko());
-      columns.push([{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 25 }, { width: 10 }]);
+      columns.push(getMuistuttajaColumns());
       const rivit = await haeMuistuttajat(projekti.oid);
       for (const rivi of rivit) {
         data[0].push(lisaaMuistuttajaRivi(rivi));

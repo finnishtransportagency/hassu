@@ -9,10 +9,8 @@ import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
-  Omistaja,
   OmistajahakuTila,
   Status,
-  TallennaKiinteistonOmistajaResponse,
   TallennaKiinteistonOmistajatMutationVariables,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   TuoKarttarajausMutationVariables,
@@ -51,7 +49,9 @@ async function getClient() {
   return mmlClient;
 }
 
-function suomifiLahetys(omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">): boolean {
+function isSuomifiLahetys(
+  omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
+): boolean {
   return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
@@ -127,7 +127,10 @@ const handlerFactory = (event: SQSEvent) => async () => {
               kaytossa: true,
               expires,
             };
-            omistajaMap.set(mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }), omistaja);
+            omistajaMap.set(
+              mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }),
+              omistaja
+            );
           });
           if (k.omistajat.length === 0) {
             const omistaja: DBOmistaja = {
@@ -152,7 +155,14 @@ const handlerFactory = (event: SQSEvent) => async () => {
                 henkilotunnus: o.henkilotunnus,
                 ytunnus: o.ytunnus,
               };
-              taydennettyOmistaja.suomifiLahetys = suomifiLahetys(taydennettyOmistaja);
+              const suomifiLahetys = isSuomifiLahetys(taydennettyOmistaja);
+              // Täydennetään Suomi.fi tiedotettaville maakoodi, jollei sitä jo ole
+              // Tämä tehdään, jotta exceliin ja käyttöliittymälle saadaan aina näkymään maatieto Suomi.fi-tiedotettaville.
+              // Muilla tavoilla tiedotettavilla maakoodi voi jäädä null / undefined:ksi
+              if (suomifiLahetys) {
+                taydennettyOmistaja.maakoodi = omistaja.maakoodi ?? "FI";
+              }
+              taydennettyOmistaja.suomifiLahetys = suomifiLahetys;
               omistajaMap.set(key, taydennettyOmistaja);
             } else {
               log.error(`Lainhuutotiedolle '${key}' ei löytynyt yhteystietoja`);
@@ -171,6 +181,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
               omistaja.jakeluosoite = oldOmistaja.jakeluosoite;
               omistaja.paikkakunta = oldOmistaja.paikkakunta;
               omistaja.postinumero = oldOmistaja.postinumero;
+              omistaja.maakoodi = oldOmistaja.maakoodi;
             }
           });
 
@@ -258,9 +269,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   auditLog.info("Omistajien haku event lisätty", { event });
 }
 
-export async function tallennaKiinteistonOmistajat(
-  input: TallennaKiinteistonOmistajatMutationVariables
-): Promise<TallennaKiinteistonOmistajaResponse> {
+export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables) {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const uudetOmistajat: DBOmistaja[] = [];
@@ -300,34 +309,14 @@ export async function tallennaKiinteistonOmistajat(
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
     dbOmistaja.paikkakunta = omistaja.paikkakunta;
+    dbOmistaja.maakoodi = omistaja.maakoodi;
+
     if (dbOmistaja.userCreated) {
       dbOmistaja.nimi = omistaja.nimi;
       dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
     }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
   }
-
-  const mapToApi = (o: DBOmistaja): Omistaja => ({
-    __typename: "Omistaja",
-    id: o.id,
-    oid: o.oid,
-    kiinteistotunnus: o.kiinteistotunnus,
-    kayttooikeusyksikkotunnus: o.kayttooikeusyksikkotunnus,
-    lisatty: o.lisatty,
-    paivitetty: o.paivitetty,
-    etunimet: o.etunimet,
-    sukunimi: o.sukunimi,
-    nimi: o.nimi,
-    jakeluosoite: o.jakeluosoite,
-    paikkakunta: o.paikkakunta,
-    postinumero: o.postinumero,
-  });
-
-  return {
-    omistajat: sailytettavatOmistajat.omistajat.map(mapToApi),
-    muutOmistajat: [...sailytettavatOmistajat.muutOmistajat, ...uudetOmistajat].map<Omistaja>(mapToApi),
-    __typename: "TallennaKiinteistonOmistajaResponse",
-  };
 }
 
 export async function haeSailytettavatKiinteistonOmistajat(

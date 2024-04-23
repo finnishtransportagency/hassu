@@ -123,7 +123,7 @@ class OmistajaSearchService {
       query.bool.must.push({
         multi_match: {
           query: params.query,
-          fields: ["nimi", "etunimet", "sukunimi", "kiinteistotunnus", "jakeluosoite", "postinumero", "paikkakunta"],
+          fields: ["nimi", "etunimet", "sukunimi", "kiinteistotunnus", "jakeluosoite", "postinumero", "paikkakunta", "maa"],
           type: "cross_fields",
           operator: "and",
         },

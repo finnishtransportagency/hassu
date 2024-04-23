@@ -5,6 +5,11 @@
         "type": "custom",
         "tokenizer": "standard",
         "filter": ["lowercase", "edge_ngram_filter"]
+      },
+      "kautocomplete": {
+        "type": "custom",
+        "tokenizer": "whitespace",
+        "filter": ["lowercase", "edge_ngram_filter"]
       }
     },
     "filter": {

@@ -70,7 +70,6 @@ import {
   TuoKarttarajausMutationVariables,
   HaeMuistuttajatQueryVariables,
   Muistuttaja,
-  Omistaja,
   KiinteistonOmistajat,
   Muistuttajat,
   Excel,
@@ -751,7 +750,7 @@ export abstract class AbstractApi {
     } as TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables);
   }
 
-  async tallennaKiinteistonOmistajat(mutationVariables: TallennaKiinteistonOmistajatMutationVariables): Promise<Omistaja[]> {
+  async tallennaKiinteistonOmistajat(mutationVariables: TallennaKiinteistonOmistajatMutationVariables) {
     return await this.callYllapitoAPI(apiConfig.tallennaKiinteistonOmistajat, mutationVariables);
   }
 

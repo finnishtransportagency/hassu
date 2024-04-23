@@ -5,7 +5,7 @@
     },
     "kiinteistotunnus": {
       "type": "text",
-      "analyzer": "autocomplete",
+      "analyzer": "kautocomplete",
       "search_analyzer": "standard",
       "fields": {
         "keyword": {
@@ -35,14 +35,20 @@
       "search_analyzer": "standard"
     },
     "postinumero": {
-      "type": "text",
-      "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "type": "keyword"
     },
     "paikkakunta": {
       "type": "text",
       "analyzer": "autocomplete",
       "search_analyzer": "standard"
+    },
+    "maa": {
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "standard"
+    },
+    "maakoodi": {
+      "type": "keyword"
     },
     "lisatty": {
       "type": "date"

@@ -50,6 +50,7 @@ const omistaja1: DBOmistaja = {
   jakeluosoite: "Osoite 1",
   postinumero: "00100",
   paikkakunta: "Helsinki",
+  maakoodi: "FI",
   suomifiLahetys: true,
 };
 const omistaja2: DBOmistaja = {
@@ -63,6 +64,7 @@ const omistaja2: DBOmistaja = {
   jakeluosoite: "Osoite 2",
   postinumero: "01600",
   paikkakunta: "Vantaa",
+  maakoodi: "FI",
   suomifiLahetys: true,
 };
 const omistaja3: DBOmistaja = {
@@ -76,6 +78,7 @@ const omistaja3: DBOmistaja = {
   jakeluosoite: "Osoite 3",
   postinumero: "02600",
   paikkakunta: "Espoo",
+  maakoodi: "FI",
   suomifiLahetys: false,
 };
 const omistaja4: DBOmistaja = {
@@ -88,6 +91,7 @@ const omistaja4: DBOmistaja = {
   jakeluosoite: "Osoite 4",
   postinumero: "96101",
   paikkakunta: "Rovaniemi",
+  maakoodi: "FI",
   suomifiLahetys: false,
 };
 const omistaja5: DBOmistaja = {
@@ -110,6 +114,7 @@ const muistuttaja1: DBMuistuttaja = {
   lahiosoite: "Osoite 456",
   postinumero: "02600",
   postitoimipaikka: "Espoo",
+  maakoodi: "FI",
 };
 const muistuttaja2: DBMuistuttaja = {
   id: "2",
@@ -122,6 +127,7 @@ const muistuttaja2: DBMuistuttaja = {
   lahiosoite: "Osoite 123",
   postinumero: "01600",
   postitoimipaikka: "Vantaa",
+  maakoodi: "FI",
 };
 const muistuttaja3: DBMuistuttaja = {
   id: "3",
@@ -134,6 +140,7 @@ const muistuttaja3: DBMuistuttaja = {
   lahiosoite: "Muistuttajan osoite",
   postinumero: "00100",
   postitoimipaikka: "Helsinki",
+  maakoodi: "FI",
 };
 describe("tiedotettavatExcel", () => {
   before(() => {

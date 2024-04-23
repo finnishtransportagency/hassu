@@ -1355,6 +1355,8 @@ type Omistaja {
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
+  maakoodi: String
+  maa: String
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1375,6 +1377,8 @@ type Muistuttaja {
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
+  maakoodi: String
+  maa: String
   nimi: String
   tiedotusosoite: String
   tiedotustapa: String
