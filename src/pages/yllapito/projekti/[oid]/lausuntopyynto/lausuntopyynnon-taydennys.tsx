@@ -128,7 +128,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
               <DownloadButtonLink
                 id="mallipohja-33T"
-                href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/fa3def9c-0aa9-45d8-8952-3e54c4563af8/33T_Lausuntopyynn%c3%b6n%20t%c3%a4ydent%c3%a4minen%20kunnalle.docx?a=true"
+                href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/4eed335c-f10c-4d3d-90f6-420edc0fd94d/851_33T%20Lausuntopyynn%c3%b6n%20t%c3%a4ydent%c3%a4minen%20kunnalle.dotx?a=true"
               >
                 Mallipohja kunnalle 33T
               </DownloadButtonLink>
