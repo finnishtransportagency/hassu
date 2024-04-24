@@ -60,7 +60,7 @@ function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
       value: rivi.postitoimipaikka,
     },
     {
-      value: rivi.maakoodi,
+      value: rivi.maa,
     },
     {
       value: formatDate(rivi.haettu),
@@ -90,7 +90,7 @@ function lisaaRivi(rivi: Rivi): Row_<ImageData> {
       value: rivi.postitoimipaikka,
     },
     {
-      value: rivi.maakoodi,
+      value: rivi.maa,
     },
     {
       value: formatDate(rivi.haettu),
@@ -163,7 +163,7 @@ type Rivi = {
   postiosoite: string;
   postinumero: string;
   postitoimipaikka: string;
-  maakoodi: string;
+  maa: string;
   haettu: string;
   tiedotustapa: string;
   suomifiLahetys: boolean | undefined;
@@ -179,7 +179,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
         postiosoite: o.jakeluosoite ?? "",
         postinumero: o.postinumero ?? "",
         postitoimipaikka: o.paikkakunta ?? "",
-        maakoodi: o.maakoodi ? getLocalizedCountryName("fi", o.maakoodi) : "",
+        maa: o.maakoodi ? getLocalizedCountryName("fi", o.maakoodi) : "",
         haettu: o.paivitetty ?? o.lisatty,
         tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
         suomifiLahetys: o.suomifiLahetys,
@@ -197,9 +197,9 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
         postiosoite: m.lahiosoite ?? "",
         postinumero: m.postinumero ?? "",
         postitoimipaikka: m.postitoimipaikka ?? "",
-        maakoodi: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
+        maa: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: m.henkilotunnus ? "Suomi.fi" : "Kirjeitse",
+        tiedotustapa: m.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
         suomifiLahetys: !!m.henkilotunnus,
       };
     })
