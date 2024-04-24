@@ -46,6 +46,15 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui. ",
   },
   {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoGeoJsonSizeExceededError"),
+    errorMessage: (props) =>
+      constructErrorClassSpecificErrorMessage(
+        props,
+        "VelhoGeoJsonSizeExceededError",
+        "Projektivelhoon asetetut Projektin geometriat ylittävät VLS-järjestelmän 100kB maksimikoon. Yksinkertaista geometriaa ja yritä uudelleen."
+      ),
+  },
+  {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
     errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
   },
