@@ -158,7 +158,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
           "/collections/KayttooikeusyksikonPerustiedot/items?kiinteistotunnus=" +
           kyselytunnukset.join(",") +
           "&tiekunnallisuus=1";
-        log.info("haeTiekunnat url: " + url);
+        auditLog.info("Tiekuntien haku", { kiinteistotunnukset: kyselytunnukset });
         let response = await axios.get(url, {
           // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
           headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
@@ -181,8 +181,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
             });
           }
         }
-        url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + [...tiekuntaMap.keys()].join(",");
-        log.info("haeTiekunnanYhteystiedot url: " + url);
+        const ids = [...tiekuntaMap.keys()];
+        url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
+        auditLog.info("Tiekuntien yhteystietojen haku", { ids });
         response = await axios.get(url, {
           // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
           headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
@@ -217,7 +218,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
       for (const kyselytunnukset of chunks) {
         const url =
           options.ogcEndpoint + "/collections/RekisteriyksikonYhteisalueosuudet/items?kiinteistotunnus=" + kyselytunnukset.join(",");
-        log.info("haeYhteisalueet url: " + url);
+        auditLog.info("Yhteisalueiden haku", { kiinteistotunnukset: kyselytunnukset });
         const response = await axios.get(url, {
           // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
           headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
