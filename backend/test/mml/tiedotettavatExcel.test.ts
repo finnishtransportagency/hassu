@@ -115,6 +115,7 @@ const muistuttaja1: DBMuistuttaja = {
   postinumero: "02600",
   postitoimipaikka: "Espoo",
   maakoodi: "FI",
+  suomifiLahetys: true,
 };
 const muistuttaja2: DBMuistuttaja = {
   id: "2",
@@ -128,6 +129,7 @@ const muistuttaja2: DBMuistuttaja = {
   postinumero: "01600",
   postitoimipaikka: "Vantaa",
   maakoodi: "FI",
+  suomifiLahetys: true,
 };
 const muistuttaja3: DBMuistuttaja = {
   id: "3",
