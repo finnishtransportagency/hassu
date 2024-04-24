@@ -1345,7 +1345,8 @@ type MmlYhteystieto {
 type Omistaja {
   id: String!
   oid: String!
-  kiinteistotunnus: String!
+  kiinteistotunnus: String
+  kayttooikeusyksikkotunnus: String
   lisatty: String!
   paivitetty: String
   etunimet: String

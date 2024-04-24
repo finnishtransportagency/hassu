@@ -5,6 +5,7 @@ import { parseStringPromise as parseString } from "xml2js";
 import { auditLog, log } from "../logger";
 import { chunkArray } from "../database/chunkArray";
 import { FeatureCollection } from "geojson";
+import lookup from "country-code-lookup";
 
 type Yhteystieto = {
   jakeluosoite?: string | null;
@@ -14,6 +15,7 @@ type Yhteystieto = {
 };
 
 export type Omistaja = {
+  id?: number;
   etunimet?: string;
   sukunimi?: string;
   nimi?: string;
@@ -23,7 +25,7 @@ export type Omistaja = {
 };
 
 export type MmlKiinteisto = {
-  kiinteistotunnus: string;
+  kiinteistotunnus?: string;
   kayttooikeusyksikkotunnus?: string;
   omistajat: Omistaja[];
 };
@@ -128,7 +130,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                     jakeluosoite: osoite && osoite["muti:jakeluosoite"] ? osoite["muti:jakeluosoite"][0] : undefined,
                     paikkakunta: osoite && osoite["muti:paikkakunta"] ? osoite["muti:paikkakunta"][0] : undefined,
                     postinumero: osoite && osoite["muti:postinumero"] ? osoite["muti:postinumero"][0] : undefined,
-                    maakoodi: osoite && osoite["muti:maakoodi"] ? osoite["muti:maakoodi"][0] : undefined,
+                    maakoodi: osoite && osoite["muti:maakoodi"] ? lookup.byIso(osoite["muti:maakoodi"][0])?.iso2 : undefined,
                   },
                 });
               }
@@ -151,13 +153,13 @@ export function getMmlClient(options: MmlOptions): MmlClient {
       const yhteystiedot: MmlKiinteisto[] = [];
       const chunks = chunkArray(kiinteistotunnukset, MAX);
       for (const kyselytunnukset of chunks) {
-        const url =
+        let url =
           options.ogcEndpoint +
           "/collections/KayttooikeusyksikonPerustiedot/items?kiinteistotunnus=" +
           kyselytunnukset.join(",") +
           "&tiekunnallisuus=1";
         log.info("haeTiekunnat url: " + url);
-        const response = await axios.get(url, {
+        let response = await axios.get(url, {
           // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
           headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
           timeout: TIMEOUT,
@@ -165,18 +167,45 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        const geojson = response.data as FeatureCollection;
+        let geojson = response.data as FeatureCollection;
+        const tiekuntaMap = new Map<number, Omistaja>();
         for (const feat of geojson.features) {
           if (feat.properties?.tiekunta) {
             yhteystiedot.push({
-              kiinteistotunnus: "",
               kayttooikeusyksikkotunnus: feat.properties.kayttooikeusyksikkotunnus,
-              omistajat: [
-                feat.properties.tiekunta.map((t: { nimi: string }) => {
-                  return { nimi: t.nimi };
-                }),
-              ],
+              omistajat: feat.properties.tiekunta.map((t: { nimi: string; id: number }) => {
+                const omistaja = { id: t.id, nimi: t.nimi };
+                tiekuntaMap.set(t.id, omistaja);
+                return omistaja;
+              }),
             });
+          }
+        }
+        url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + [...tiekuntaMap.keys()].join(",");
+        log.info("haeTiekunnanYhteystiedot url: " + url);
+        response = await axios.get(url, {
+          // TODO: Vaihda x-api-key:ksi kun rajapinta Väyläpilvessä
+          headers: { Authorization: "Basic " + Buffer.from(options.ogcApiKey).toString("base64"), enduserid: uid },
+          timeout: TIMEOUT,
+        });
+        if (debug) {
+          console.log("rawdata: %s", JSON.stringify(response.data));
+        }
+        geojson = response.data as FeatureCollection;
+        for (const feat of geojson.features) {
+          if (feat?.properties?.yhteyshenkilo[0]) {
+            const omistaja = tiekuntaMap.get(feat.id as number);
+            if (omistaja) {
+              omistaja.nimi = feat.properties.yhteyshenkilo[0].nimi;
+              omistaja.yhteystiedot = {
+                jakeluosoite: feat.properties.yhteyshenkilo[0].osoite[0]?.osoite,
+                postinumero: feat.properties.yhteyshenkilo[0].osoite[0]?.postinumero,
+                paikkakunta: feat.properties.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
+                maakoodi: feat.properties.yhteyshenkilo[0].osoite[0]?.valtio
+                  ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
+                  : undefined,
+              };
+            }
           }
         }
       }

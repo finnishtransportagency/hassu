@@ -65,7 +65,7 @@ function getExpires() {
 }
 
 type MapKeyInfo = {
-  kiinteistotunnus: string;
+  kiinteistotunnus?: string | null;
   kayttooikeusyksikkotunnus?: string | null;
   etunimet?: string | null;
   sukunimi?: string | null;
@@ -73,7 +73,7 @@ type MapKeyInfo = {
 };
 
 function mapKey({ kiinteistotunnus, kayttooikeusyksikkotunnus, etunimet, sukunimi, nimi }: MapKeyInfo) {
-  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}${kayttooikeusyksikkotunnus ? "_" + kayttooikeusyksikkotunnus : ""}`;
+  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}_${kayttooikeusyksikkotunnus}`;
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
@@ -312,6 +312,7 @@ export async function tallennaKiinteistonOmistajat(
     id: o.id,
     oid: o.oid,
     kiinteistotunnus: o.kiinteistotunnus,
+    kayttooikeusyksikkotunnus: o.kayttooikeusyksikkotunnus,
     lisatty: o.lisatty,
     paivitetty: o.paivitetty,
     etunimet: o.etunimet,

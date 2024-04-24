@@ -60,5 +60,5 @@ Promise.all([
       }
     }
   })
-  .then((response) => console.log("response: %o", response))
+  .then((response) => console.log("response: %s", JSON.stringify(response, null, "  ")))
   .catch((e) => console.error(e));
