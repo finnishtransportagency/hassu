@@ -3,11 +3,6 @@
     "analyzer": {
       "autocomplete": {
         "type": "custom",
-        "tokenizer": "standard",
-        "filter": ["lowercase", "edge_ngram_filter"]
-      },
-      "kautocomplete": {
-        "type": "custom",
         "tokenizer": "whitespace",
         "filter": ["lowercase", "edge_ngram_filter"]
       }
@@ -15,8 +10,8 @@
     "filter": {
       "edge_ngram_filter": {
         "type": "edge_ngram",
-        "min_gram": 2,
-        "max_gram": 15
+        "min_gram": 1,
+        "max_gram": 20
       }
     }
   }

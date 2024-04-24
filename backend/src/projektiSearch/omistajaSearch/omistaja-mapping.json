@@ -5,8 +5,8 @@
     },
     "kiinteistotunnus": {
       "type": "text",
-      "analyzer": "kautocomplete",
-      "search_analyzer": "standard",
+      "analyzer": "autocomplete",
+      "search_analyzer": "whitespace",
       "fields": {
         "keyword": {
           "type": "keyword",
@@ -17,35 +17,37 @@
     "etunimet": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "sukunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "nimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "jakeluosoite": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "postinumero": {
-      "type": "keyword"
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "whitespace"
     },
     "paikkakunta": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "maa": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "maakoodi": {
       "type": "keyword"
