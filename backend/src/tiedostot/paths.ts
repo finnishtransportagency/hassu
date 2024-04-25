@@ -18,7 +18,7 @@ export function joinPath(...args: string[]): string {
   return args
     .map((str) => str.replace(/^\//, ""))
     .join("/")
-    .replace("//", "/");
+    .replace(/\/\//g, "/");
 }
 /**
  *
