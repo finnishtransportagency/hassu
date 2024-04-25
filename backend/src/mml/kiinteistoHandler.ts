@@ -272,7 +272,6 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
 export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables) {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-  const uudetOmistajat: DBOmistaja[] = [];
   const expires = getExpires();
   const initialOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projekti.oid);
   const sailytettavatOmistajat = await haeSailytettavatKiinteistonOmistajat(projekti.oid, initialOmistajat, input.poistettavatOmistajat);
@@ -304,7 +303,6 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
         expires,
       };
       auditLog.info("Lisätään omistajan tiedot", { omistajaId: dbOmistaja.id });
-      uudetOmistajat.push(dbOmistaja);
     }
     dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
     dbOmistaja.postinumero = omistaja.postinumero;
