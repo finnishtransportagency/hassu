@@ -165,13 +165,6 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vuorovaikutusKierrosJulkaisu);
 
     const sentMessageInfo = await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
-    const aikaleima = localDateTimeString();
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
-      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
-    );
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-    );
     const oid = projekti.oid;
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
@@ -181,7 +174,13 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
-
+    const aikaleima = localDateTimeString();
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
+      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
+    );
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
     log.info("VuorovaikutusKierrosJulkaisu ennen lisäystä", { vuorovaikutusKierrosJulkaisu });
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
     await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva, PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS);

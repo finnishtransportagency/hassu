@@ -171,11 +171,11 @@ export class ProjektiDatabase {
    * @return tallennetun projektin versio
    */
   async saveProjekti(dbProjekti: PartialDBProjekti): Promise<number> {
-    return this.saveProjektiInternal(dbProjekti);
+    return await this.saveProjektiInternal(dbProjekti);
   }
 
   async saveProjektiWithoutLocking(dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">): Promise<number> {
-    return this.saveProjektiInternal(dbProjekti, false, true);
+    return await this.saveProjektiInternal(dbProjekti, false, true);
   }
 
   /**

@@ -46,8 +46,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.paragraphFromKey("asiakirja.tietosuoja");
   }
 
-  protected onKyseVahaisestaMenettelystaParagraph(): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
+  protected onKyseVahaisestaMenettelystaParagraph(prefix = ""): PDFStructureElement {
+    return this.paragraph(prefix + this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
   }
 
   isVaylaTilaaja(): boolean {
