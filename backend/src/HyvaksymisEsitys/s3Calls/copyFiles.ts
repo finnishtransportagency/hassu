@@ -29,7 +29,7 @@ async function copyYllapitoFile(sourceFile: string, targetFile: string): Promise
   } catch (e) {
     log.error("Yllapitotiedoston kopiointi epäonnistui:", (e as Error).message, "\nparams: ", params);
     console.log(sourceFile);
-    throw new Error("Copy ylläpito files epäonnistui. " + (e as Error).message);
+    throw new Error("Copy ylläpito files epäonnistui. " + (e as Error).message + " " + sourceFile);
   }
 }
 
