@@ -2,7 +2,7 @@ import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "../../aws/client";
 import { config } from "../../config";
 import { log } from "../../logger";
-import { getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
+import { adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 
 /**
  * Poistaa tiedostoja annetun projektin julkaistulta hyväksymisesitykseltä
@@ -20,7 +20,7 @@ export async function deleteFilesUnderSpecifiedVaihe(
 ) {
   return deleteProjektiFilesFromYllapito(
     oid,
-    tiedostot.map((tiedosto) => joinPath(pathToVaihe, tiedosto.avain, tiedosto.nimi)),
+    tiedostot.map((tiedosto) => joinPath(pathToVaihe, tiedosto.avain, adaptFileName(tiedosto.nimi))),
     reason
   );
 }

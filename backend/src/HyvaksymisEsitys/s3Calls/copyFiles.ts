@@ -2,7 +2,7 @@ import { CopyObjectCommand, CopyObjectRequest } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
 import { getS3Client } from "../../aws/client";
-import { getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
+import { adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 
 /**
  * Kopioi ylläpitobucketissa olevan tiedoston annetusta sourceFile-polusta targetFile-polkuun
@@ -51,8 +51,8 @@ export async function copyFilesFromVaiheToAnother(
   await Promise.all(
     files.map(({ avain, nimi }) =>
       copyYllapitoFile(
-        joinPath(yllapito, vaihePrefixFrom, avain, encodeURIComponent(nimi)),
-        joinPath(yllapito, vaihePrefixTo, avain, encodeURIComponent(nimi))
+        joinPath(yllapito, vaihePrefixFrom, avain, adaptFileName(nimi)),
+        joinPath(yllapito, vaihePrefixTo, avain, adaptFileName(nimi))
       )
     )
   );

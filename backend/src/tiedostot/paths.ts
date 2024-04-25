@@ -20,3 +20,16 @@ export function joinPath(...args: string[]): string {
     .join("/")
     .replace("//", "/");
 }
+/**
+ *
+ * @param name Tiedoston nimi; loppupääte voi sisältyä siihen
+ * @returns Tiedoston nimi, mutta muut kuin A-Z, a-z, 0-9, .-_ kovattuna systemaattisesti muilla merkeillä
+ */
+export function adaptFileName(name: string): string {
+  return name
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o")
+    .replace(/å/g, "a")
+    .replace(/\s/g, "_")
+    .replace(/[^a-zA-Z0-9.\-_]/g, "_");
+}

@@ -1,4 +1,5 @@
 import { IHyvaksymisEsitys } from "../../src/database/model";
+import { adaptFileName } from "../../src/tiedostot/paths";
 
 const TEST_HYVAKSYMISESITYS: IHyvaksymisEsitys = getTestHyvaksymisEsitys();
 
@@ -97,13 +98,13 @@ export const TEST_HYVAKSYMISESITYS_FILE_PATHS2 = getHyvaksymisEsitysFilePaths(2)
 function getHyvaksymisEsitysFilePaths(number?: number) {
   const nbr = number || "";
   return [
-    `hyvaksymisEsitys/${encodeURIComponent(`hyvaksymisEsitys äöå ${nbr}.png`)}`,
-    `suunnitelma/${encodeURIComponent(`suunnitelma äöå ${nbr}.png`)}`,
-    `muistutukset/${encodeURIComponent(`muistutukset äöå ${nbr}.png`)}`,
-    `lausunnot/${encodeURIComponent(`lausunnot äöå ${nbr}.png`)}`,
-    `maanomistajaluettelo/${encodeURIComponent(`maanomistajaluettelo äöå ${nbr}.png`)}`,
-    `kuulutuksetJaKutsu/${encodeURIComponent(`kuulutuksetJaKutsu äöå ${nbr}.png`)}`,
-    `muuAineistoVelhosta/${encodeURIComponent(`muuAineistoVelhosta äöå ${nbr}.png`)}`,
-    `muuAineistoKoneelta/${encodeURIComponent(`muuAineistoKoneelta äöå ${nbr}.png`)}`,
+    `hyvaksymisEsitys/${adaptFileName(`hyvaksymisEsitys äöå ${nbr}.png`)}`,
+    `suunnitelma/${adaptFileName(`suunnitelma äöå ${nbr}.png`)}`,
+    `muistutukset/${adaptFileName(`muistutukset äöå ${nbr}.png`)}`,
+    `lausunnot/${adaptFileName(`lausunnot äöå ${nbr}.png`)}`,
+    `maanomistajaluettelo/${adaptFileName(`maanomistajaluettelo äöå ${nbr}.png`)}`,
+    `kuulutuksetJaKutsu/${adaptFileName(`kuulutuksetJaKutsu äöå ${nbr}.png`)}`,
+    `muuAineistoVelhosta/${adaptFileName(`muuAineistoVelhosta äöå ${nbr}.png`)}`,
+    `muuAineistoKoneelta/${adaptFileName(`muuAineistoKoneelta äöå ${nbr}.png`)}`,
   ];
 }
