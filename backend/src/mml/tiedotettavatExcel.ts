@@ -152,7 +152,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
     .map((o) => {
       return {
         id: o.id,
-        kiinteistotunnus: o.kiinteistotunnus,
+        kiinteistotunnus: o.kiinteistotunnus ?? "",
         nimi: o.nimi ? o.nimi : `${o.etunimet ?? ""} ${o.sukunimi ?? ""}`,
         postiosoite: o.jakeluosoite ?? "",
         postinumero: o.postinumero ?? "",
