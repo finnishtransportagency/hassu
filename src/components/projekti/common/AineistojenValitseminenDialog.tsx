@@ -162,7 +162,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
     header: "Tiedosto",
     meta: {
       minWidth: 250,
-      widthFractions: 5,
+      widthFractions: 7,
     },
     accessorKey: "tiedosto",
     cell: (aineisto) => {
@@ -180,6 +180,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
     },
   },
   { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2 } },
+  { header: "Koko (kB)", accessorKey: "koko", meta: { widthFractions: 2 } },
   selectColumnDef(),
 ];
 
