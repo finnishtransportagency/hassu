@@ -109,19 +109,7 @@ export async function getYllapitoFilesUnderPath(pathInS3: string): Promise<strin
         ContinuationToken,
       })
     );
-    const sourceKeys = Contents.map(({ Key }) => Key);
-
-    await Promise.all(
-      new Array(10).fill(null).map(async () => {
-        while (sourceKeys.length) {
-          const key = sourceKeys.pop();
-          if (key) {
-            files.push(key);
-          }
-        }
-      })
-    );
-
+    files.push(...Contents.map(({ Key }) => Key as string));
     ContinuationToken = NextContinuationToken;
   } while (ContinuationToken);
   return files;
