@@ -9,7 +9,7 @@ function getTestHyvaksymisEsitys(number?: number) {
     versio: 1,
     hyvaksymisEsitys: [
       {
-        nimi: `hyvaksymisEsitys${nbr}.png`,
+        nimi: `hyvaksymisEsitys äöå ${nbr}.png`,
         uuid: `hyvaksymis-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
@@ -17,7 +17,7 @@ function getTestHyvaksymisEsitys(number?: number) {
     suunnitelma: [
       {
         dokumenttiOid: `suunnitelmaDokumenttiOid${nbr}`,
-        nimi: `suunnitelma${nbr}.png`,
+        nimi: `suunnitelma äöå ${nbr}.png`,
         uuid: `suunnitelma-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
@@ -32,7 +32,7 @@ function getTestHyvaksymisEsitys(number?: number) {
     },
     muistutukset: [
       {
-        nimi: `muistutukset${nbr}.png`,
+        nimi: `muistutukset äöå ${nbr}.png`,
         uuid: `muistutukset-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
         kunta: 1,
@@ -40,21 +40,21 @@ function getTestHyvaksymisEsitys(number?: number) {
     ],
     lausunnot: [
       {
-        nimi: `lausunnot${nbr}.png`,
+        nimi: `lausunnot äöå ${nbr}.png`,
         uuid: `lausunnot-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
     ],
     maanomistajaluettelo: [
       {
-        nimi: `maanomistajaluettelo${nbr}.png`,
+        nimi: `maanomistajaluettelo äöå ${nbr}.png`,
         uuid: `maanomistajaluettelo-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
     ],
     kuulutuksetJaKutsu: [
       {
-        nimi: `kuulutuksetJaKutsu${nbr}.png`,
+        nimi: `kuulutuksetJaKutsu äöå ${nbr}.png`,
         uuid: `kuulutuksetJaKutsu-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
@@ -62,14 +62,14 @@ function getTestHyvaksymisEsitys(number?: number) {
     muuAineistoVelhosta: [
       {
         dokumenttiOid: `muuAineistoVelhostaDokumenttiOid${nbr}`,
-        nimi: `muuAineistoVelhosta${nbr}.png`,
+        nimi: `muuAineistoVelhosta äöå ${nbr}.png`,
         uuid: `muuAineistoVelhosta-uuid${nbr}`,
         lisatty: "2022-01-02",
       },
     ],
     muuAineistoKoneelta: [
       {
-        nimi: `muuAineistoKoneelta${nbr}.png`,
+        nimi: `muuAineistoKoneelta äöå ${nbr}.png`,
         uuid: `muuAineistoKoneelta-esitys-uuid${nbr}`,
         lisatty: "2022-01-02T01:01:01:111",
       },
@@ -97,13 +97,13 @@ export const TEST_HYVAKSYMISESITYS_FILE_PATHS2 = getHyvaksymisEsitysFilePaths(2)
 function getHyvaksymisEsitysFilePaths(number?: number) {
   const nbr = number || "";
   return [
-    `hyvaksymisEsitys/hyvaksymisEsitys${nbr}.png`,
-    `suunnitelma/suunnitelma${nbr}.png`,
-    `muistutukset/muistutukset${nbr}.png`,
-    `lausunnot/lausunnot${nbr}.png`,
-    `maanomistajaluettelo/maanomistajaluettelo${nbr}.png`,
-    `kuulutuksetJaKutsu/kuulutuksetJaKutsu${nbr}.png`,
-    `muuAineistoVelhosta/muuAineistoVelhosta${nbr}.png`,
-    `muuAineistoKoneelta/muuAineistoKoneelta${nbr}.png`,
+    `hyvaksymisEsitys/${encodeURIComponent(`hyvaksymisEsitys äöå ${nbr}.png`)}`,
+    `suunnitelma/${encodeURIComponent(`suunnitelma äöå ${nbr}.png`)}`,
+    `muistutukset/${encodeURIComponent(`muistutukset äöå ${nbr}.png`)}`,
+    `lausunnot/${encodeURIComponent(`lausunnot äöå ${nbr}.png`)}`,
+    `maanomistajaluettelo/${encodeURIComponent(`maanomistajaluettelo äöå ${nbr}.png`)}`,
+    `kuulutuksetJaKutsu/${encodeURIComponent(`kuulutuksetJaKutsu äöå ${nbr}.png`)}`,
+    `muuAineistoVelhosta/${encodeURIComponent(`muuAineistoVelhosta äöå ${nbr}.png`)}`,
+    `muuAineistoKoneelta/${encodeURIComponent(`muuAineistoKoneelta äöå ${nbr}.png`)}`,
   ];
 }
