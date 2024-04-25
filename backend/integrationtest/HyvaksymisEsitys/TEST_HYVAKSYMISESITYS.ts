@@ -1,9 +1,10 @@
 import { IHyvaksymisEsitys } from "../../src/database/model";
 import { adaptFileName } from "../../src/tiedostot/paths";
+import { DeepReadonly } from "hassu-common/specialTypes";
 
-const TEST_HYVAKSYMISESITYS: IHyvaksymisEsitys = getTestHyvaksymisEsitys();
+const TEST_HYVAKSYMISESITYS: DeepReadonly<IHyvaksymisEsitys> = getTestHyvaksymisEsitys();
 
-function getTestHyvaksymisEsitys(number?: number) {
+function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsitys> {
   const nbr = number || "";
   return {
     poistumisPaiva: "2033-01-01",
@@ -89,13 +90,13 @@ function getTestHyvaksymisEsitys(number?: number) {
 
 export default TEST_HYVAKSYMISESITYS;
 
-export const TEST_HYVAKSYMISESITYS2 = getTestHyvaksymisEsitys(2);
+export const TEST_HYVAKSYMISESITYS2: DeepReadonly<IHyvaksymisEsitys> = getTestHyvaksymisEsitys(2);
 
-export const TEST_HYVAKSYMISESITYS_FILE_PATHS = getHyvaksymisEsitysFilePaths();
+export const TEST_HYVAKSYMISESITYS_FILE_PATHS: DeepReadonly<string[]> = getHyvaksymisEsitysFilePaths();
 
-export const TEST_HYVAKSYMISESITYS_FILE_PATHS2 = getHyvaksymisEsitysFilePaths(2);
+export const TEST_HYVAKSYMISESITYS_FILE_PATHS2: DeepReadonly<string[]> = getHyvaksymisEsitysFilePaths(2);
 
-function getHyvaksymisEsitysFilePaths(number?: number) {
+function getHyvaksymisEsitysFilePaths(number?: number): Readonly<string[]> {
   const nbr = number || "";
   return [
     `hyvaksymisEsitys/${adaptFileName(`hyvaksymisEsitys äöå ${nbr}.png`)}`,
