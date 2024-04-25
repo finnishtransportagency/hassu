@@ -3,13 +3,7 @@ import { config } from "../../src/config";
 import { DBProjekti } from "../../src/database/model";
 import { getDynamoDBDocumentClient, getS3Client } from "../../src/aws/client";
 import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
-import {
-  DeleteObjectCommand,
-  GetObjectCommand,
-  ListObjectsV2Command,
-  ListObjectsV2CommandOutput,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import { DeleteObjectsCommand, ListObjectsV2Command, ListObjectsV2CommandOutput, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export async function insertProjektiToDB<A extends Pick<DBProjekti, "oid">>(projekti: A) {
   const params = new PutCommand({
@@ -58,17 +52,8 @@ export async function insertYllapitoFileToS3(pathInS3: string) {
   );
 }
 
-export async function deleteYllapitoFileFromS3(pathInS3: string) {
-  await getS3Client().send(
-    new DeleteObjectCommand({
-      Bucket: config.yllapitoBucketName,
-      Key: pathInS3,
-    })
-  );
-}
-
-export async function deleteYllapitoFilesRecursively(sourcePrefix: string) {
-  if (sourcePrefix.includes(config.yllapitoBucketName)) {
+export async function deleteYllapitoFiles(sourcePrefix?: string) {
+  if (sourcePrefix && sourcePrefix.includes(config.yllapitoBucketName)) {
     throw new Error("sourcePrefix ei saa sisältää yllapitoBucketNamea");
   }
   const s3 = getS3Client();
@@ -81,30 +66,35 @@ export async function deleteYllapitoFilesRecursively(sourcePrefix: string) {
         ContinuationToken,
       })
     );
-    const sourceKeys = Contents.map(({ Key }) => Key);
-
-    await Promise.all(
-      new Array(10).fill(null).map(async () => {
-        while (sourceKeys.length) {
-          const key = sourceKeys.pop();
-          if (key) {
-            await deleteYllapitoFileFromS3(key);
-          }
-        }
-      })
-    );
+    await deleteFilesFromYllapito(Contents.map(({ Key }) => Key as string));
 
     ContinuationToken = NextContinuationToken;
   } while (ContinuationToken);
 }
 
-export async function getYllapitoFile(pathInS3: string) {
-  return await getS3Client().send(
-    new GetObjectCommand({
-      Bucket: config.yllapitoBucketName,
-      Key: pathInS3,
-    })
+async function deleteFilesFromYllapito(paths: string[]) {
+  if (paths.some((path) => path.includes(config.yllapitoBucketName))) {
+    throw new Error("path ei saa sisältää ylläpitoBucketNamea");
+  }
+  await Promise.all(
+    // DeleteObjectsCommand takes at most 1000 items
+    getChunksOfThousand(paths).map((paths) =>
+      getS3Client().send(
+        new DeleteObjectsCommand({
+          Bucket: config.yllapitoBucketName,
+          Delete: { Objects: paths.map((path) => ({ Key: path })) },
+        })
+      )
+    )
   );
+}
+
+function getChunksOfThousand<T>(array: T[]): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += 1000) {
+    chunks.push(array.slice(i, i + 1000));
+  }
+  return chunks;
 }
 
 export async function getYllapitoFilesUnderPath(pathInS3: string): Promise<string[]> {

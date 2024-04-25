@@ -8,7 +8,7 @@ import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS_FILE_PATHS2,
 } from "./TEST_HYVAKSYMISESITYS";
 import {
-  deleteYllapitoFilesRecursively,
+  deleteYllapitoFiles,
   getProjektiFromDB,
   getYllapitoFilesUnderPath,
   insertProjektiToDB,
@@ -28,7 +28,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
-    await deleteYllapitoFilesRecursively(`yllapito/tiedostot/projekti/${oid}/`);
+    await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
   });
 
   beforeEach(async () => {
@@ -43,7 +43,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   afterEach(async () => {
     // Poista projektin tiedostot joka testin päätteeksi
-    await deleteYllapitoFilesRecursively(`yllapito/tiedostot/projekti/${oid}`);
+    await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}`);
     // Poista projekti joka testin päätteeksi
     await removeProjektiFromDB(oid);
     userFixture.logout();
