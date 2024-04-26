@@ -177,7 +177,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   //   //   julkaistuHyvaksymisEsitys: undefined,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin hakeminen tietokannasta
   //   const kutsu = hyvaksyHyvaksymisEsitys({ oid: "1", versio: 2 }, );
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalAccessError);
   // });
@@ -203,12 +202,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   //   //   julkaistuHyvaksymisEsitys,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
   //   // } as DBProjekti
-  //   // TODO: Mockaa projektin hakeminen tietokannasta
   //   const kutsu = hyvaksyHyvaksymisEsitys({ oid: "1", versio: 2 }, );
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalArgumentError);
   //   // Ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa
   //   muokattavaHyvaksymisEsitys.tila == API.HyvaksymisTila.MUOKKAUS;
-  //   // TODO: Mockaa projektin hakeminen tietokannasta, mutta nyt palauttaa eri arvon
   //   const kutsu2 = hyvaksyHyvaksymisEsitys({ oid: "1", versio: 2 });
   //   expect(kutsu2).to.be.eventually.rejectedWith(IllegalArgumentError);
   // });
@@ -227,7 +224,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   //   //   julkaistuHyvaksymisEsitys: undefined,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin hakeminen tietokannasta
   //   const kutsu = hyvaksyHyvaksymisEsitys({ oid: "1", versio: 2 }, );
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalArgumentError);
   // });

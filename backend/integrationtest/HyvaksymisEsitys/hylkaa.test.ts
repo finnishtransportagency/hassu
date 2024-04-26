@@ -71,7 +71,6 @@ describe("Hyväksymisesityksen hylkääminen", () => {
   //   //   julkaistuHyvaksymisEsitys: undefined,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin haku tietokannasta
   //   const kutsu = palautaHyvaksymisEsitys({ oid: "1", versio: 2, syy: "Virheitä" });
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalAccessError);
   // });
@@ -93,7 +92,6 @@ describe("Hyväksymisesityksen hylkääminen", () => {
   //   //   julkaistuHyvaksymisEsitys,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin haku tietokannasta
   //   const kutsu = palautaHyvaksymisEsitys({ oid: "1", versio: 2, syy: "Virheitä" });
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalArgumentError);
   //   // Ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa
@@ -105,7 +103,6 @@ describe("Hyväksymisesityksen hylkääminen", () => {
   //   //   julkaistuHyvaksymisEsitys,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin haku tietokannasta
   //   const kutsu2 = palautaHyvaksymisEsitys({ oid: "1", versio: 2, syy: "Virheitä" });
   //   expect(kutsu2).to.be.eventually.rejectedWith(IllegalArgumentError);
   // });
@@ -124,7 +121,6 @@ describe("Hyväksymisesityksen hylkääminen", () => {
   //   //   julkaistuHyvaksymisEsitys: undefined,
   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
   //   // } as DBProjekti;
-  //   // TODO: Mockaa projektin haku tietokannasta
   //   const kutsu = palautaHyvaksymisEsitys({ oid: "1", versio: 2, syy: "Virheitä" });
   //   expect(kutsu).to.be.eventually.rejectedWith(IllegalArgumentError);
   // });
