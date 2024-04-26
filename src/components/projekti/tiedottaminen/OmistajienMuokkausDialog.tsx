@@ -1,16 +1,25 @@
 import React, { useCallback, useState, VFC, useEffect, useMemo } from "react";
-import { Dialog, DialogContent, Stack, styled } from "@mui/material";
+import { Autocomplete, Dialog, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H2, H3, H4 } from "@components/Headings";
 import { KiinteistonOmistajat, Omistaja, OmistajaInput, TallennaKiinteistonOmistajatMutationVariables } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UseFormProps, useForm, SubmitHandler, FormProvider, useFieldArray, useFormContext, Controller } from "react-hook-form";
+import {
+  UseFormProps,
+  useForm,
+  SubmitHandler,
+  FormProvider,
+  useFieldArray,
+  useFormContext,
+  Controller,
+  useController,
+} from "react-hook-form";
 import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { formatKiinteistotunnusForDatabase, formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
+import { formatKiinteistotunnusForDatabase } from "common/util/formatKiinteistotunnus";
 import { RectangleButton } from "@components/button/RectangleButton";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
@@ -20,8 +29,16 @@ import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSnackbars from "src/hooks/useSnackbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import log from "loglevel";
+import { getLocalizedCountryName } from "common/getLocalizedCountryName";
+import lookup from "country-code-lookup";
 
-type OmistajaRow = OmistajaInput & { toBeDeleted: boolean; etunimet?: string | null; sukunimi?: string | null };
+type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
+  toBeDeleted: boolean;
+  etunimet?: string | null;
+  sukunimi?: string | null;
+  maakoodi: string | null;
+  maa: string | null | undefined;
+};
 
 type KiinteistonOmistajatFormFields = {
   oid: string;
@@ -34,7 +51,7 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
-  ({ id, kiinteistotunnus, etunimet, sukunimi, jakeluosoite, nimi, paikkakunta, postinumero }: Omistaja): OmistajaRow => {
+  ({ id, kiinteistotunnus, etunimet, sukunimi, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi }: Omistaja): OmistajaRow => {
     const omistajaRow: OmistajaRow = {
       id,
       kiinteistotunnus,
@@ -45,6 +62,8 @@ const mapOmistajaToOmistajaRow =
       paikkakunta,
       postinumero,
       toBeDeleted: false,
+      maakoodi: maakoodi ?? null,
+      maa,
     };
     fieldsToSetDefaultsTo.forEach((key) => {
       omistajaRow[key] = omistajaRow[key] ?? "";
@@ -67,14 +86,17 @@ const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiint
         ...omistaja,
       })),
   ];
-  const muutOmistajat = muutOmistajatRows.map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero }) => ({
-    id,
-    jakeluosoite,
-    kiinteistotunnus,
-    nimi,
-    paikkakunta,
-    postinumero,
-  }));
+  const muutOmistajat = muutOmistajatRows.map<OmistajaInput>(
+    ({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero, maakoodi }) => ({
+      id,
+      jakeluosoite,
+      kiinteistotunnus,
+      nimi,
+      paikkakunta,
+      postinumero,
+      maakoodi,
+    })
+  );
   const variables: TallennaKiinteistonOmistajatMutationVariables = {
     oid: data.oid,
     muutOmistajat,
@@ -168,11 +190,8 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
   {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
-    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnusForDisplay(kiinteistotunnus),
-    meta: {
-      widthFractions: 2,
-      minWidth: 160,
-    },
+    accessorKey: "kiinteistotunnus",
+    meta: getDefaultColumnMeta(),
   },
   {
     header: "Omistajan nimi",
@@ -180,9 +199,31 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     id: "omistajan_nimi",
     meta: getDefaultColumnMeta(),
   },
-  { header: "Postiosoite", accessorKey: "jakeluosoite", id: "postiosoite", meta: getDefaultColumnMeta() },
-  { header: "Postinumero", accessorKey: "postinumero", id: "postinumero", meta: getDefaultColumnMeta() },
-  { header: "Postitoimipaikka", accessorFn: ({ paikkakunta }) => paikkakunta, id: "postitoimipaikka", meta: getDefaultColumnMeta() },
+  {
+    header: "Postiosoite",
+    accessorKey: "jakeluosoite",
+    id: "postiosoite",
+    meta: getDefaultColumnMeta(),
+  },
+  {
+    header: "Postinumero",
+    accessorKey: "postinumero",
+    id: "postinumero",
+    meta: getDefaultColumnMeta(),
+  },
+  {
+    header: "Postitoimipaikka",
+    accessorKey: "paikkakunta",
+    id: "postitoimipaikka",
+    meta: getDefaultColumnMeta(),
+  },
+  {
+    header: "Maa",
+    accessorFn: ({ maakoodi }) => getLocalizedCountryName("fi", maakoodi ?? "FI"),
+    id: "maakoodi",
+    meta: getDefaultColumnMeta(),
+  },
+
   createPoistaColumn("suomifiOmistajat"),
 ];
 
@@ -190,11 +231,8 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
   {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
-    accessorFn: ({ kiinteistotunnus }) => formatKiinteistotunnusForDisplay(kiinteistotunnus),
-    meta: {
-      widthFractions: 2,
-      minWidth: 160,
-    },
+    accessorKey: "kiinteistotunnus",
+    meta: getDefaultColumnMeta(),
   },
   {
     header: "Omistajan nimi",
@@ -210,6 +248,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `muutOmistajat.${context.row.index}.jakeluosoite` }}
       />
     ),
@@ -222,6 +261,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `muutOmistajat.${context.row.index}.postinumero` }}
       />
     ),
@@ -234,9 +274,17 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `muutOmistajat.${context.row.index}.paikkakunta` }}
       />
     ),
+  },
+  {
+    header: "Maa",
+    accessorFn: ({ paikkakunta }) => paikkakunta,
+    id: "maakoodi",
+    meta: getDefaultColumnMeta(),
+    cell: (context) => <Maa fieldArrayName="muutOmistajat" index={context.row.index} />,
   },
   createPoistaColumn("muutOmistajat"),
 ];
@@ -249,6 +297,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.kiinteistotunnus` }}
       />
     ),
@@ -260,6 +309,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.nimi` }}
       />
     ),
@@ -272,6 +322,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.jakeluosoite` }}
       />
     ),
@@ -284,6 +335,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.postinumero` }}
       />
     ),
@@ -296,12 +348,63 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     cell: (context) => (
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
+        fullWidth
         controllerProps={{ name: `lisatytOmistajat.${context.row.index}.paikkakunta` }}
       />
     ),
   },
+  {
+    header: "Maa",
+    accessorFn: ({ paikkakunta }) => paikkakunta,
+    id: "maakoodi",
+    meta: getDefaultColumnMeta(),
+    cell: (context) => <Maa fieldArrayName="lisatytOmistajat" index={context.row.index} />,
+  },
   createPoistaColumn("lisatytOmistajat"),
 ];
+
+const countryCodesSorted = lookup.countries
+  .map((country) => country.iso2)
+  .sort((codeA, codeB) => {
+    const nameA = getLocalizedCountryName("fi", codeA);
+    const nameB = getLocalizedCountryName("fi", codeB);
+    return nameA.localeCompare(nameB);
+  });
+
+const Maa = ({ fieldArrayName, index }: { fieldArrayName: "suomifiOmistajat" | "muutOmistajat" | "lisatytOmistajat"; index: number }) => {
+  const { control } = useFormContext<KiinteistonOmistajatFormFields>();
+
+  const {
+    field: { ref, onChange, onBlur, name, value },
+  } = useController({ name: `${fieldArrayName}.${index}.maakoodi`, control });
+
+  const [inputValue, setInputValue] = React.useState("");
+
+  return (
+    <Autocomplete
+      options={countryCodesSorted}
+      renderInput={({ inputProps = {}, ...params }) => <TextField {...params} name={name} inputProps={{ ref, ...inputProps }} required />}
+      getOptionLabel={(code) => getLocalizedCountryName("fi", code)}
+      value={value}
+      disablePortal={false}
+      inputValue={inputValue}
+      renderOption={(props, code) => {
+        return (
+          <li {...props} key={code}>
+            {getLocalizedCountryName("fi", code)}
+          </li>
+        );
+      }}
+      onInputChange={(_event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      onChange={(_event, newValue) => {
+        onChange(newValue);
+      }}
+      onBlur={onBlur}
+    />
+  );
+};
 
 type InitialSearchResponses = {
   suomifi: KiinteistonOmistajat;
@@ -348,12 +451,9 @@ const MuokkausDialogContent: VFC<{
       oid,
       suomifiOmistajat: initialSearchResponses.suomifi.omistajat.map(mapOmistajaToOmistajaRow()),
       muutOmistajat: initialSearchResponses.muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
-      lisatytOmistajat: initialSearchResponses.lisatyt.omistajat
-        .map(mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta"))
-        .map(({ kiinteistotunnus, ...omistaja }) => ({
-          ...omistaja,
-          kiinteistotunnus: formatKiinteistotunnusForDisplay(kiinteistotunnus),
-        })),
+      lisatytOmistajat: initialSearchResponses.lisatyt.omistajat.map(
+        mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
+      ),
     })
   );
 
@@ -406,13 +506,13 @@ const MuokkausDialogContent: VFC<{
               <H3 variant="lead">{projektinimi}</H3>
               <GrayBackgroundText>
                 <p>
-                  Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? 0} henkilöä</b>.
+                  Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} henkilöä</b>.
                   Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
                 </p>
               </GrayBackgroundText>
               <p>
                 Voit muokata, lisätä tai poistaa kiinteistönomistajatietoja. Huomaa, että muutokset tulevat voimaan vasta tallennettuasi
-                muutokset.Suomi.fi -palvelun kautta tiedotettavien kiinteistönomistajien tietoja ei voi muokata, mutta vastaanottajia voi
+                muutokset. Suomi.fi -palvelun kautta tiedotettavien kiinteistönomistajien tietoja ei voi muokata, mutta vastaanottajia voi
                 poistaa. Muulla tavalla tiedotettavien yhteystietoja on mahdollisuus muokata ja vastaanottajia poistaa, jonka lisäksi voit
                 lisätä uusia vastaanottajia.
               </p>
@@ -423,21 +523,33 @@ const MuokkausDialogContent: VFC<{
                 Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
                 Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
               </p>
-              <PaginatedTaulukko
-                oid={oid}
-                initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
-                columns={suomifiColumns}
-                fieldArrayName="suomifiOmistajat"
-              />
+              {initialSearchResponses.suomifi.hakutulosMaara ? (
+                <PaginatedTaulukko
+                  oid={oid}
+                  initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
+                  columns={suomifiColumns}
+                  fieldArrayName="suomifiOmistajat"
+                />
+              ) : (
+                <GrayBackgroundText>
+                  <p>Karttarajaukseen ei osunut ainuttakaan Suomi.fi-tiedotettavaa.</p>
+                </GrayBackgroundText>
+              )}
             </Section>
             <Section>
               <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
-              <PaginatedTaulukko
-                oid={oid}
-                initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
-                columns={muutColumns}
-                fieldArrayName="muutOmistajat"
-              />
+              {initialSearchResponses.muut.hakutulosMaara ? (
+                <PaginatedTaulukko
+                  oid={oid}
+                  initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
+                  columns={muutColumns}
+                  fieldArrayName="muutOmistajat"
+                />
+              ) : (
+                <GrayBackgroundText>
+                  <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
+                </GrayBackgroundText>
+              )}
               <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
               <LisatytTaulukko />
             </Section>
@@ -568,7 +680,7 @@ const LisatytTaulukko = () => {
 
   return (
     <>
-      <HassuTable table={table} />
+      {!!fields.length && <HassuTable table={table} />}
       <Button
         type="button"
         onClick={() => {
@@ -578,6 +690,7 @@ const LisatytTaulukko = () => {
             kiinteistotunnus: "",
             postinumero: "",
             paikkakunta: "",
+            maakoodi: null,
             toBeDeleted: false,
           });
         }}

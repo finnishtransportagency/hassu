@@ -1,3 +1,4 @@
+import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import * as API from "hassu-common/graphql/apiModel";
 import { DBMuistuttaja } from "../../database/muistuttajaDatabase";
 import { log } from "../../logger";
@@ -10,13 +11,14 @@ export type MuistuttajaDocument = Pick<
   | "nimi"
   | "postinumero"
   | "postitoimipaikka"
+  | "maakoodi"
   | "lisatty"
   | "tiedotustapa"
   | "oid"
   | "tiedotusosoite"
   | "paivitetty"
   | "suomifiLahetys"
->;
+> & { maa: string | null };
 
 export function adaptMuistuttajaToIndex({
   etunimi,
@@ -24,6 +26,7 @@ export function adaptMuistuttajaToIndex({
   nimi,
   postinumero,
   postitoimipaikka,
+  maakoodi,
   sukunimi,
   lisatty,
   tiedotustapa,
@@ -38,6 +41,8 @@ export function adaptMuistuttajaToIndex({
     nimi,
     postinumero,
     postitoimipaikka,
+    maa: maakoodi ? getLocalizedCountryName("fi", maakoodi) : null,
+    maakoodi,
     sukunimi,
     lisatty,
     tiedotustapa,
@@ -82,6 +87,8 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
     nimi: hit._source.nimi,
     postinumero: hit._source.postinumero,
     paikkakunta: hit._source.postitoimipaikka,
+    maa: hit._source.maa,
+    maakoodi: hit._source.maakoodi,
     lisatty: hit._source.lisatty,
     tiedotustapa: hit._source.tiedotustapa,
     paivitetty: hit._source.paivitetty,

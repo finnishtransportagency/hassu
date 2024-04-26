@@ -14,6 +14,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import ButtonLink from "@components/button/ButtonLink";
+import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 export default function Muistuttajat() {
   return (
@@ -23,14 +24,14 @@ export default function Muistuttajat() {
   );
 }
 
-const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
+const columns: ColumnDef<Muistuttaja>[] = [
   {
     header: "Nimi",
     accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
     id: "muistuttajan_nimi",
     meta: {
-      widthFractions: 5,
-      minWidth: 140,
+      widthFractions: 3,
+      minWidth: 200,
     },
   },
   {
@@ -39,7 +40,7 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     id: "postiosoite",
     meta: {
       widthFractions: 3,
-      minWidth: 120,
+      minWidth: 200,
     },
   },
   {
@@ -47,17 +48,23 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     accessorKey: "postinumero",
     id: "postinumero",
     meta: {
-      widthFractions: 1,
-      minWidth: 120,
+      widthFractions: 2,
+      minWidth: 140,
     },
   },
   {
     header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
+    accessorFn: ({ paikkakunta, maakoodi }) => {
+      // If country code is of Finland then show only paikkakunta
+      if (!paikkakunta || !maakoodi || maakoodi === "FI") {
+        return paikkakunta;
+      }
+      return [paikkakunta, getLocalizedCountryName("fi", maakoodi)].join(", ");
+    },
     id: "postitoimipaikka",
     meta: {
-      widthFractions: 2,
-      minWidth: 140,
+      widthFractions: 3,
+      minWidth: 200,
     },
   },
   {
@@ -112,7 +119,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           filterText="Suodata muistuttajia"
           showLessText="Näytä vähemmän muistuttajia"
           showMoreText="Näytä enemmän muistuttajia"
-          columns={columnsSuomifi}
+          columns={columns}
           getTiedotettavatCallback={getMuistuttajatCallback}
           muutTiedotettavat={false}
           excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=false&suomifi=true`}
@@ -124,7 +131,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           filterText="Suodata muistuttajia"
           showLessText="Näytä vähemmän muistuttajia"
           showMoreText="Näytä enemmän muistuttajia"
-          columns={columnsSuomifi}
+          columns={columns}
           getTiedotettavatCallback={getMuistuttajatCallback}
           muutTiedotettavat={true}
           excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=false&suomifi=false`}

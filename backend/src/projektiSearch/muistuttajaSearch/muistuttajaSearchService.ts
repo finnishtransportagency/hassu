@@ -100,7 +100,7 @@ class MuistuttajaSearchService {
       query.bool.must.push({
         multi_match: {
           query: params.query,
-          fields: ["etunimi", "sukunimi", "lahiosoite", "nimi", "postinumero", "postitoimipaikka", "tiedotusosoite"],
+          fields: ["etunimi", "sukunimi", "lahiosoite", "nimi", "postinumero", "postitoimipaikka", "tiedotusosoite", "maa"],
           type: "cross_fields",
           operator: "and",
         },
