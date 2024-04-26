@@ -4,6 +4,10 @@ import { DBProjekti } from "../../src/database/model";
 import { getDynamoDBDocumentClient, getS3Client } from "../../src/aws/client";
 import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 import { DeleteObjectsCommand, ListObjectsV2Command, ListObjectsV2CommandOutput, PutObjectCommand } from "@aws-sdk/client-s3";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { adaptFileName } from "../../src/tiedostot/paths";
+import { getAxios } from "../../src/aws/monitoring";
+import FormData from "form-data";
 
 export async function insertProjektiToDB<A extends Pick<DBProjekti, "oid">>(projekti: A) {
   const params = new PutCommand({
@@ -52,6 +56,30 @@ export async function insertYllapitoFileToS3(pathInS3: string) {
   );
 }
 
+export async function insertUploadFileToS3(uuid: string, filename: string) {
+  const fileNameWithPath = `${uuid}/${adaptFileName(filename)}`;
+  const presignedPost = await createPresignedPost(getS3Client(), {
+    Bucket: config.uploadBucketName,
+    Key: fileNameWithPath,
+    Expires: 600,
+  });
+  const fields = presignedPost.fields;
+  const form = new FormData();
+  Object.keys(fields).forEach((key) => {
+    form.append(key, fields[key]);
+  });
+  form.append("file", "Test");
+  const axios = getAxios();
+  const lengthSync = form.getLengthSync();
+
+  await axios.post(presignedPost.url, form, {
+    headers: {
+      "Content-Length": lengthSync,
+      ...form.getHeaders(),
+    },
+  });
+}
+
 export async function deleteYllapitoFiles(sourcePrefix?: string) {
   if (sourcePrefix && sourcePrefix.includes(config.yllapitoBucketName)) {
     throw new Error("sourcePrefix ei saa sisältää yllapitoBucketNamea");
@@ -66,13 +94,32 @@ export async function deleteYllapitoFiles(sourcePrefix?: string) {
         ContinuationToken,
       })
     );
-    await deleteFilesFromYllapito(Contents.map(({ Key }) => Key as string));
+    await deleteFiles(Contents.map(({ Key }) => Key as string));
 
     ContinuationToken = NextContinuationToken;
   } while (ContinuationToken);
 }
 
-async function deleteFilesFromYllapito(paths: string[]) {
+export async function emptyUploadFiles() {
+  const s3 = getS3Client();
+  let ContinuationToken = undefined;
+  do {
+    const { Contents = [], NextContinuationToken }: ListObjectsV2CommandOutput = await s3.send(
+      new ListObjectsV2Command({
+        Bucket: config.uploadBucketName,
+        ContinuationToken,
+      })
+    );
+    await deleteFiles(
+      Contents.map(({ Key }) => Key as string),
+      config.uploadBucketName
+    );
+
+    ContinuationToken = NextContinuationToken;
+  } while (ContinuationToken);
+}
+
+async function deleteFiles(paths: string[], bucket: string = config.yllapitoBucketName) {
   if (paths.some((path) => path.includes(config.yllapitoBucketName))) {
     throw new Error("path ei saa sisältää ylläpitoBucketNamea");
   }
@@ -81,7 +128,7 @@ async function deleteFilesFromYllapito(paths: string[]) {
     getChunksOfThousand(paths).map((paths) =>
       getS3Client().send(
         new DeleteObjectsCommand({
-          Bucket: config.yllapitoBucketName,
+          Bucket: bucket,
           Delete: { Objects: paths.map((path) => ({ Key: path })) },
         })
       )
