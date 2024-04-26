@@ -1,8 +1,8 @@
-import React, { useCallback, useState, VFC, useEffect, useMemo } from "react";
-import { Autocomplete, Dialog, DialogContent, Stack, styled, TextField } from "@mui/material";
+import React, { useCallback, useState, VFC, useMemo } from "react";
+import { Autocomplete, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
-import { H2, H3, H4 } from "@components/Headings";
+import { H3, H4 } from "@components/Headings";
 import { KiinteistonOmistajat, Omistaja, OmistajaInput, TallennaKiinteistonOmistajatMutationVariables } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -24,13 +24,14 @@ import { RectangleButton } from "@components/button/RectangleButton";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import HassuTable from "@components/table/HassuTable";
-import { GrayBackgroundText } from "../GrayBackgroundText";
-import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useSnackbars from "src/hooks/useSnackbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import log from "loglevel";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import lookup from "country-code-lookup";
+import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
+import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import { useRouter } from "next/router";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -406,49 +407,19 @@ const Maa = ({ fieldArrayName, index }: { fieldArrayName: "suomifiOmistajat" | "
   );
 };
 
-type InitialSearchResponses = {
+export type InitialSearchResponses = {
   suomifi: KiinteistonOmistajat;
   muut: KiinteistonOmistajat;
   lisatyt: KiinteistonOmistajat;
 };
 
-export const OmistajienMuokkausDialog: VFC<{ isOpen: boolean; close: () => void; oid: string; projektinimi: string | null | undefined }> = (
-  props
-) => {
-  const [initialSearchResponses, setInitialSearchResponses] = useState<InitialSearchResponses | null>(null);
-  const { withLoadingSpinner } = useLoadingSpinner();
-  const api = useApi();
-
-  useEffect(() => {
-    if (props.isOpen) {
-      withLoadingSpinner(
-        (async () => {
-          const suomifi = await api.haeKiinteistonOmistajat(props.oid, false, undefined, 0, PAGE_SIZE);
-          const muut = await api.haeKiinteistonOmistajat(props.oid, true, undefined, 0, PAGE_SIZE, false, true);
-          const lisatyt = await api.haeKiinteistonOmistajat(props.oid, true, undefined, 0, undefined, true);
-          setInitialSearchResponses({ muut, suomifi, lisatyt });
-        })()
-      );
-    } else {
-      setInitialSearchResponses(null);
-    }
-  }, [api, props.isOpen, props.oid, withLoadingSpinner]);
-
-  return (
-    <>{props.isOpen && initialSearchResponses && <MuokkausDialogContent {...props} initialSearchResponses={initialSearchResponses} />}</>
-  );
-};
-
-const MuokkausDialogContent: VFC<{
-  isOpen: boolean;
-  close: () => void;
-  oid: string;
+export const FormContents: VFC<{
+  projekti: ProjektiLisatiedolla;
   initialSearchResponses: InitialSearchResponses;
-  projektinimi: string | null | undefined;
-}> = ({ close, isOpen, oid, initialSearchResponses, projektinimi }) => {
+}> = ({ projekti, initialSearchResponses }) => {
   const useFormReturn = useForm<KiinteistonOmistajatFormFields>(
     getFormOptions({
-      oid,
+      oid: projekti.oid,
       suomifiOmistajat: initialSearchResponses.suomifi.omistajat.map(mapOmistajaToOmistajaRow()),
       muutOmistajat: initialSearchResponses.muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
       lisatytOmistajat: initialSearchResponses.lisatyt.omistajat.map(
@@ -457,12 +428,12 @@ const MuokkausDialogContent: VFC<{
     })
   );
 
-  const { handleSubmit, reset, getValues } = useFormReturn;
+  const { handleSubmit } = useFormReturn;
   const { withLoadingSpinner } = useLoadingSpinner();
 
-  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const router = useRouter();
 
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
@@ -488,85 +459,66 @@ const MuokkausDialogContent: VFC<{
         })()
       );
     },
-    [api, close, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
+    [api, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
   );
 
   const resetAndClose = useCallback(() => {
-    reset(getValues());
-    close();
-  }, [reset, getValues, close]);
+    router.back();
+  }, [router]);
 
   return (
-    <Dialog PaperProps={{ sx: { paddingX: 20, paddingTop: 10 } }} scroll="body" fullScreen open={isOpen} onClose={close}>
-      <FormProvider {...useFormReturn}>
-        <DialogForm>
-          <DialogContent>
-            <Section noDivider>
-              <H2 variant="h1">Muokkaa kiinteistönomistajatietoja</H2>
-              <H3 variant="lead">{projektinimi}</H3>
+    <FormProvider {...useFormReturn}>
+      <DialogForm>
+        <DialogContent>
+          <Section noDivider>
+            <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
+            <p>
+              Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
+              Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
+            </p>
+            {initialSearchResponses.suomifi.hakutulosMaara ? (
+              <PaginatedTaulukko
+                oid={projekti.oid}
+                initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
+                columns={suomifiColumns}
+                fieldArrayName="suomifiOmistajat"
+              />
+            ) : (
               <GrayBackgroundText>
-                <p>
-                  Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} henkilöä</b>.
-                  Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
-                </p>
+                <p>Karttarajaukseen ei osunut ainuttakaan Suomi.fi-tiedotettavaa.</p>
               </GrayBackgroundText>
-              <p>
-                Voit muokata, lisätä tai poistaa kiinteistönomistajatietoja. Huomaa, että muutokset tulevat voimaan vasta tallennettuasi
-                muutokset. Suomi.fi -palvelun kautta tiedotettavien kiinteistönomistajien tietoja ei voi muokata, mutta vastaanottajia voi
-                poistaa. Muulla tavalla tiedotettavien yhteystietoja on mahdollisuus muokata ja vastaanottajia poistaa, jonka lisäksi voit
-                lisätä uusia vastaanottajia.
-              </p>
-            </Section>
-            <Section noDivider>
-              <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
-              <p>
-                Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
-                Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
-              </p>
-              {initialSearchResponses.suomifi.hakutulosMaara ? (
-                <PaginatedTaulukko
-                  oid={oid}
-                  initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
-                  columns={suomifiColumns}
-                  fieldArrayName="suomifiOmistajat"
-                />
-              ) : (
-                <GrayBackgroundText>
-                  <p>Karttarajaukseen ei osunut ainuttakaan Suomi.fi-tiedotettavaa.</p>
-                </GrayBackgroundText>
-              )}
-            </Section>
-            <Section>
-              <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
-              {initialSearchResponses.muut.hakutulosMaara ? (
-                <PaginatedTaulukko
-                  oid={oid}
-                  initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
-                  columns={muutColumns}
-                  fieldArrayName="muutOmistajat"
-                />
-              ) : (
-                <GrayBackgroundText>
-                  <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
-                </GrayBackgroundText>
-              )}
-              <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
-              <LisatytTaulukko />
-            </Section>
-            <Section noDivider>
-              <Stack direction="row" justifyContent="end">
-                <Button type="button" onClick={resetAndClose}>
-                  Poistu tallentamatta
-                </Button>
-                <Button type="button" onClick={handleSubmit(onSubmit)} primary>
-                  Tallenna
-                </Button>
-              </Stack>
-            </Section>
-          </DialogContent>
-        </DialogForm>
-      </FormProvider>
-    </Dialog>
+            )}
+          </Section>
+          <Section>
+            <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
+            {initialSearchResponses.muut.hakutulosMaara ? (
+              <PaginatedTaulukko
+                oid={projekti.oid}
+                initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
+                columns={muutColumns}
+                fieldArrayName="muutOmistajat"
+              />
+            ) : (
+              <GrayBackgroundText>
+                <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
+              </GrayBackgroundText>
+            )}
+            <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
+            <LisatytTaulukko />
+          </Section>
+          <Section noDivider>
+            <Stack direction="row" justifyContent="end">
+              <Button type="button" onClick={resetAndClose}>
+                Poistu tallentamatta
+              </Button>
+              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+                Tallenna
+              </Button>
+            </Stack>
+          </Section>
+        </DialogContent>
+      </DialogForm>
+    </FormProvider>
   );
 };
 

@@ -12,13 +12,12 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
 import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
-import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
+import { GrayBackgroundText } from "../../../../../../components/projekti/GrayBackgroundText";
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
-import { OmistajienMuokkausDialog } from "../../../../../components/projekti/tiedottaminen/OmistajienMuokkausDialog";
 import ButtonLink from "@components/button/ButtonLink";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
@@ -174,15 +173,6 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     setHakuKaynnissa(newHakuKaynnissa);
   }, [hakuKaynnissa, mutate, projektinTiedottaminen?.omistajahakuTila, showErrorMessage]);
 
-  const [isMuokkaaDialogOpen, setIsMuokkaaDialogOpen] = useState(false);
-
-  const openMuokkaaDialog = useCallback(() => {
-    setIsMuokkaaDialogOpen(true);
-  }, []);
-  const closeMuokkaaDialog = useCallback(() => {
-    setIsMuokkaaDialogOpen(false);
-  }, []);
-
   const getKiinteistonOmistajatCallback = useCallback<GetTiedotettavaFunc<Omistaja>>(
     async (oid, muutOmistajat, query, from, size) => {
       const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, query, from, size);
@@ -255,15 +245,9 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             muutTiedotettavat={true}
             excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=true&suomifi=false`}
           />
-          <MuokkaaButton primary type="button" onClick={openMuokkaaDialog}>
+          <ButtonLink primary className="ml-auto" href={`/yllapito/projekti/${projekti.oid}/tiedottaminen/kiinteistonomistajat/muokkaa`}>
             Muokkaa
-          </MuokkaaButton>
-          <OmistajienMuokkausDialog
-            isOpen={isMuokkaaDialogOpen}
-            close={closeMuokkaaDialog}
-            oid={projekti.oid}
-            projektinimi={projekti.velho.nimi}
-          />
+          </ButtonLink>
         </ContentSpacer>
       </Section>
       <HassuDialog
@@ -281,5 +265,3 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     </TiedottaminenPageLayout>
   );
 };
-
-const MuokkaaButton = styled(Button)({ marginLeft: "auto" });
