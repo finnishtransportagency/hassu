@@ -6,6 +6,7 @@ const TEST_HYVAKSYMISESITYS: DeepReadonly<IHyvaksymisEsitys> = getTestHyvaksymis
 
 function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsitys> {
   const nbr = number || "";
+  const lisatty = "2022-01-02T02:00:00+02:00";
   return {
     poistumisPaiva: "2033-01-01",
     versio: 1,
@@ -13,7 +14,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
       {
         nimi: `hyvaksymisEsitys äöå ${nbr}.png`,
         uuid: `hyvaksymis-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     suunnitelma: [
@@ -21,7 +22,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
         dokumenttiOid: `suunnitelmaDokumenttiOid${nbr}`,
         nimi: `suunnitelma äöå ${nbr}.png`,
         uuid: `suunnitelma-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     kiireellinen: true,
@@ -36,7 +37,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
       {
         nimi: `muistutukset äöå ${nbr}.png`,
         uuid: `muistutukset-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
         kunta: 1,
       },
     ],
@@ -44,21 +45,21 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
       {
         nimi: `lausunnot äöå ${nbr}.png`,
         uuid: `lausunnot-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     maanomistajaluettelo: [
       {
         nimi: `maanomistajaluettelo äöå ${nbr}.png`,
         uuid: `maanomistajaluettelo-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     kuulutuksetJaKutsu: [
       {
         nimi: `kuulutuksetJaKutsu äöå ${nbr}.png`,
         uuid: `kuulutuksetJaKutsu-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     muuAineistoVelhosta: [
@@ -66,22 +67,19 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
         dokumenttiOid: `muuAineistoVelhostaDokumenttiOid${nbr}`,
         nimi: `muuAineistoVelhosta äöå ${nbr}.png`,
         uuid: `muuAineistoVelhosta-uuid${nbr}`,
-        lisatty: "2022-01-02",
+        lisatty,
       },
     ],
     muuAineistoKoneelta: [
       {
         nimi: `muuAineistoKoneelta äöå ${nbr}.png`,
         uuid: `muuAineistoKoneelta-esitys-uuid${nbr}`,
-        lisatty: "2022-01-02T01:01:01:111",
+        lisatty,
       },
     ],
     vastaanottajat: [
       {
         sahkoposti: `vastaanottaja${nbr}@sahkoposti.fi`,
-        messageId: `vastaanottajat-message-id${nbr}`,
-        lahetetty: null,
-        lahetysvirhe: null,
       },
     ],
     muokkaaja: `muokkaaja-oid${nbr}`,

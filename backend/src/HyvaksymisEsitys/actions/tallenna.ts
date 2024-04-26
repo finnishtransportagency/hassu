@@ -12,6 +12,7 @@ import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { releaseLock, setLock } from "../dynamoDBCalls/lock";
+import { assertIsDefined } from "../../util/assertions";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -25,7 +26,7 @@ import { releaseLock, setLock } from "../dynamoDBCalls/lock";
  * @returns Projektin oid
  */
 export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
-  requirePermissionLuku();
+  const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   try {
     await setLock(oid);
@@ -54,10 +55,12 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     }
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
+    assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
     await tallennaMuokattavaHyvaksymisEsitys({
       oid,
       versio,
       muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
+      muokkaaja: nykyinenKayttaja.uid,
     });
     if (
       uusiaAineistoja(

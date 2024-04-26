@@ -8,6 +8,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import {
   deleteYllapitoFiles,
   emptyUploadFiles,
+  getProjektiFromDB,
   getYllapitoFilesUnderPath,
   insertProjektiToDB,
   insertUploadFileToS3,
@@ -15,30 +16,70 @@ import {
 } from "./util";
 import { expect } from "chai";
 import { setupLocalDatabase } from "../util/databaseUtil";
+import { omit } from "lodash";
+import MockDate from "mockdate";
+import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 
 describe("Hyväksymisesityksen tallentaminen", () => {
   const userFixture = new UserFixture(userService);
   const oid = "Testi1";
+  const date = "2022-01-02"; // Sama aika kuin testidatassa
   setupLocalDatabase();
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     await emptyUploadFiles();
+    MockDate.set(date);
   });
 
   afterEach(async () => {
     // Poista projektin tiedostot joka testin päätteeksi
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}`);
-    //await emptyUploadFiles();
+    await emptyUploadFiles();
     // Poista projekti joka testin päätteeksi
     await removeProjektiFromDB(oid);
     userFixture.logout();
+    MockDate.reset();
   });
 
   after(() => {
     sinon.reset();
     sinon.restore();
+  });
+
+  it("onnistuu projektikäyttäjältä tallentaa annetut tiedot tietokantaan", async () => {
+    const projari = UserFixture.pekkaProjari;
+    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
+      kayttajatunnus: projari.uid!,
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    };
+    const muokkaaja = UserFixture.manuMuokkaaja;
+    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
+      kayttajatunnus: muokkaaja.uid!,
+    };
+    userFixture.loginAs(muokkaaja);
+
+    const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
+    const projektiAfter = await getProjektiFromDB(oid);
+    const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
+    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+      ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
+      muokkaaja: muokkaaja.uid,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+      vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
+    });
+    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
   it("persistoi inputissa annetut ladatut tiedostot", async () => {

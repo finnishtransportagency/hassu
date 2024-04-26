@@ -26,6 +26,7 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
   },
   muistutukset: [
     {
+      kunta: 1,
       tiedosto: "muistutukset/muistutukset_aoa_.png",
       nimi: "muistutukset äöå .png",
       uuid: "muistutukset-esitys-uuid",

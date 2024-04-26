@@ -39,6 +39,7 @@ export function adaptHyvaksymisEsitysToSave(
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
+    tila: API.HyvaksymisTila.MUOKKAUS,
     ...rest,
     versio: 1,
   };
