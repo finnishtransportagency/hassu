@@ -576,6 +576,7 @@ input OmistajaInput {
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
+  maakoodi: String
 }
 
 input MuistuttajaInput {

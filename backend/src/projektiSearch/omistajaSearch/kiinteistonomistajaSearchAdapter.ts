@@ -1,4 +1,6 @@
+import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import * as API from "hassu-common/graphql/apiModel";
+import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import { DBOmistaja } from "../../database/omistajaDatabase";
 import { log } from "../../logger";
 
@@ -11,13 +13,14 @@ export type OmistajaDocument = Pick<
   | "oid"
   | "paikkakunta"
   | "postinumero"
+  | "maakoodi"
   | "sukunimi"
   | "lisatty"
   | "paivitetty"
   | "suomifiLahetys"
   | "kaytossa"
   | "userCreated"
->;
+> & { maa: string | null };
 
 export function adaptOmistajaToIndex({
   etunimet,
@@ -27,6 +30,7 @@ export function adaptOmistajaToIndex({
   nimi,
   paikkakunta,
   postinumero,
+  maakoodi,
   sukunimi,
   lisatty,
   paivitetty,
@@ -37,11 +41,13 @@ export function adaptOmistajaToIndex({
   return {
     etunimet,
     jakeluosoite,
-    kiinteistotunnus,
+    kiinteistotunnus: kiinteistotunnus ? formatKiinteistotunnusForDisplay(kiinteistotunnus) : kiinteistotunnus,
     oid,
     nimi,
     paikkakunta,
     postinumero,
+    maa: maakoodi ? getLocalizedCountryName("fi", maakoodi) : null,
+    maakoodi,
     sukunimi,
     lisatty,
     paivitetty,
@@ -72,11 +78,12 @@ export function adaptSearchResultsToApiOmistaja(results: any): API.Omistaja[] {
 
 export type OmistajaDocumentHit = {
   _id: DBOmistaja["id"];
-  _source: Omit<DBOmistaja, "id">;
+  _source: Omit<OmistajaDocument, "id">;
 };
 
 function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
-  const { kiinteistotunnus, lisatty, oid, etunimet, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, sukunimi } = hit._source;
+  const { kiinteistotunnus, lisatty, oid, etunimet, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, sukunimi, maa, maakoodi } =
+    hit._source;
 
   const dokumentti: API.Omistaja = {
     id: hit._id,
@@ -88,6 +95,8 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     jakeluosoite,
     nimi,
     paikkakunta,
+    maa,
+    maakoodi,
     paivitetty,
     postinumero,
     sukunimi,

@@ -6,12 +6,12 @@
     "etunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "sukunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard",
+      "search_analyzer": "whitespace",
       "fields": {
         "keyword": {
           "type": "keyword",
@@ -22,22 +22,30 @@
     "nimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "lahiosoite": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "postinumero": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
     },
     "postitoimipaikka": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "standard"
+      "search_analyzer": "whitespace"
+    },
+    "maa": {
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "whitespace"
+    },
+    "maakoodi": {
+      "type": "keyword"
     },
     "lisatty": {
       "type": "date"
