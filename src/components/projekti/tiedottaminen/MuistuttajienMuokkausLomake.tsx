@@ -98,6 +98,11 @@ const getFormOptions: (defaultValues: MuistuttajatFormFields) => UseFormProps<Mu
   shouldUnregister: false,
 });
 
+const getSuomifiDefaultColumnMeta = () => ({
+  widthFractions: 4,
+  minWidth: 200,
+});
+
 const getDefaultColumnMeta = () => ({
   widthFractions: 3,
   minWidth: 200,
@@ -170,61 +175,53 @@ const PoistaCell = styled("span")({ minHeight: "44px", display: "flex", alignIte
 
 const suomifiColumns: ColumnDef<MuistuttajaRow>[] = [
   {
-    header: "Kiinteistötunnus",
-    id: "kiinteistotunnus",
-    accessorKey: "kiinteistotunnus",
-    meta: getDefaultColumnMeta(),
-  },
-  {
-    header: "Omistajan nimi",
+    header: "Muistuttajan nimi",
     accessorKey: "nimi",
-    id: "omistajan_nimi",
-    meta: getDefaultColumnMeta(),
+    id: "muistuttajan_nimi",
+    meta: { minWidth: 200, widthFractions: 5 },
   },
   {
     header: "Postiosoite",
     accessorKey: "jakeluosoite",
     id: "postiosoite",
-    meta: getDefaultColumnMeta(),
+    meta: getSuomifiDefaultColumnMeta(),
   },
   {
     header: "Postinumero",
     accessorKey: "postinumero",
     id: "postinumero",
-    meta: getDefaultColumnMeta(),
+    meta: getSuomifiDefaultColumnMeta(),
   },
   {
     header: "Postitoimipaikka",
     accessorKey: "paikkakunta",
     id: "postitoimipaikka",
-    meta: getDefaultColumnMeta(),
+    meta: getSuomifiDefaultColumnMeta(),
   },
   {
     header: "Maa",
     accessorFn: ({ maakoodi }) => getLocalizedCountryName("fi", maakoodi ?? "FI"),
     id: "maakoodi",
-    meta: getDefaultColumnMeta(),
+    meta: getSuomifiDefaultColumnMeta(),
   },
-
   createPoistaColumn("suomifiOmistajat"),
 ];
 
 const muutColumns: ColumnDef<MuistuttajaRow>[] = [
   {
-    header: "Kiinteistötunnus",
-    id: "kiinteistotunnus",
-    accessorKey: "kiinteistotunnus",
-    meta: getDefaultColumnMeta(),
-  },
-  {
     header: "Muistuttajan nimi",
-    accessorKey: "nimi",
     id: "muistuttajan_nimi",
     meta: getDefaultColumnMeta(),
+    cell: (context) => (
+      <TextFieldWithController<MuistuttajatFormFields>
+        autoComplete="off"
+        fullWidth
+        controllerProps={{ name: `muutMuistuttajat.${context.row.index}.nimi` }}
+      />
+    ),
   },
   {
     header: "Postiosoite",
-    accessorKey: "jakeluosoite",
     id: "postiosoite",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
@@ -237,7 +234,6 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
   },
   {
     header: "Postinumero",
-    accessorKey: "postinumero",
     id: "postinumero",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
@@ -250,7 +246,6 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
   },
   {
     header: "Postitoimipaikka",
-    accessorFn: ({ paikkakunta }) => paikkakunta,
     id: "postitoimipaikka",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
@@ -263,10 +258,33 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
   },
   {
     header: "Maa",
-    accessorFn: ({ paikkakunta }) => paikkakunta,
     id: "maakoodi",
     meta: getDefaultColumnMeta(),
     cell: (context) => <Maa fieldArrayName="muutMuistuttajat" index={context.row.index} />,
+  },
+  {
+    header: "Sähkoposti",
+    id: "sahkoposti",
+    meta: getDefaultColumnMeta(),
+    cell: (context) => (
+      <TextFieldWithController<MuistuttajatFormFields>
+        autoComplete="off"
+        fullWidth
+        controllerProps={{ name: `muutMuistuttajat.${context.row.index}.sahkoposti` }}
+      />
+    ),
+  },
+  {
+    header: "Tiedotustapa",
+    id: "tiedotustapa",
+    meta: getDefaultColumnMeta(),
+    cell: (context) => (
+      <TextFieldWithController<MuistuttajatFormFields>
+        autoComplete="off"
+        fullWidth
+        controllerProps={{ name: `muutMuistuttajat.${context.row.index}.tiedotustapa` }}
+      />
+    ),
   },
   createPoistaColumn("muutOmistajat"),
 ];
