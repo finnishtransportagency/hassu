@@ -11,7 +11,7 @@ import {
   adaptLadattuTiedostoToLadattavaTiedosto,
   adaptTiedostoPathToLadattavaTiedosto,
 } from "../../tiedostot/adaptToLadattavaTiedosto";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../../tiedostot/paths";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,

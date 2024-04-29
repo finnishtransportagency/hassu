@@ -29,7 +29,6 @@
 //   //     kayttajatunnus: muokkaaja.uid!,
 //   //   };
 //   //   userFixture.loginAs(muokkaaja);
-//   //   // TODO: stubbaa projektin tallennus
 //   //   const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
 //   //     ...TEST_HYVAKSYMISESITYS_INPUT,
 //   //   };
@@ -40,7 +39,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: {},
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta
 //   //   await tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys }, );
 //   //   // TODO: testaa, että projekti tallennetaan oikeilla arvoilla
 //   // });
@@ -56,7 +54,6 @@
 //   //     kayttajatunnus: muokkaaja.uid!,
 //   //   };
 //   //   userFixture.loginAs(muokkaaja);
-//   //   // TODO: Stubbaa projektin tallentaminen
 //   //   const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
 //   //     ...TEST_HYVAKSYMISESITYS_INPUT,
 //   //   };
@@ -67,7 +64,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: {},
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys }, );
 //   //   await expect(kutsu).to.eventually.to.be.fulfilled;
 //   // });
@@ -90,7 +86,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: {},
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys },);
 //   //   await expect(kutsu).to.eventually.to.be.rejectedWith(IllegalAccessError);
 //   // });
@@ -114,7 +109,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   // Ei onnistu, jos muokattava hyväksymisesitys on hyväksytty
 //   //   const kutsu = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput }, );
 //   //   await expect(kutsu).to.eventually.to.be.rejectedWith(IllegalArgumentError);
@@ -128,7 +122,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti
-//   //   // TODO: Päivitä, mitä mockattu projektihaku palauttaa
 //   //   const kutsu2 = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput }, );
 //   //   await expect(kutsu2).to.eventually.to.be.rejectedWith(IllegalArgumentError);
 //   // });
@@ -144,7 +137,6 @@
 //   //     kayttajatunnus: muokkaaja.uid!,
 //   //   };
 //   //   userFixture.loginAs(muokkaaja);
-//   //   // TODO: Mockaa projektin tallennus
 //   //   const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
 //   //     ...TEST_HYVAKSYMISESITYS_INPUT,
 //   //   };
@@ -155,7 +147,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys });
 //   //   await expect(kutsu).to.eventually.to.be.fulfilled;
 //   // });

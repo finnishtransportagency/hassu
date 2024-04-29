@@ -7,7 +7,12 @@ import { adaptLaskutustiedotToAPI } from "./adaptLaskutustiedotToAPI";
 import { adaptKunnallisetLadatutTiedostotToApi } from "./adaptKunnallisetLadatutTiedostotToAPI";
 import { adaptSahkopostiVastaanottajatToAPI } from "./adaptSahkopostiVastaanottajatToAPI";
 import { createHyvaksymisEsitysHash } from "../latauslinkit/hash";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti, joinPath } from "../paths";
+import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 
 /**
  * Riippuen siitä, onko hyväksymisesitys hyväksytty vai muussa tilassa, palauttaa tietoja muokattavasta tai julkaistusta hyväksymisesityksestä.
