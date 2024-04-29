@@ -189,7 +189,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
 }
 
 async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
-  return (await muistuttajaDatabase.haeProjektinMuistuttajat(oid))
+  return (await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(oid))
     .map((m) => {
       return {
         id: m.id,

@@ -583,5 +583,9 @@ input MuistuttajaInput {
   id: String
   nimi: String
   tiedotusosoite: String
+  paikkakunta: String
+  postinumero: String
+  maakoodi: String
+  sahkoposti: String
   tiedotustapa: String
 }

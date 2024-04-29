@@ -30,7 +30,6 @@ import {
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   HaeMuistuttajatQueryVariables,
   TallennaMuistuttajatMutationVariables,
-  PoistaMuistuttajaMutationVariables,
   LataaTiedotettavatExcelQueryVariables,
   HaeProjektinTiedottamistiedotQueryVariables,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
@@ -184,8 +183,6 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await muistutusHandler.haeMuistuttajat(event.arguments as HaeMuistuttajatQueryVariables);
     case apiConfig.tallennaMuistuttajat.name:
       return await muistutusHandler.tallennaMuistuttajat(event.arguments as TallennaMuistuttajatMutationVariables);
-    case apiConfig.poistaMuistuttaja.name:
-      return await muistutusHandler.poistaMuistuttaja(event.arguments as PoistaMuistuttajaMutationVariables);
     case apiConfig.lataaTiedotettavatExcel.name:
       return await generateExcelByQuery(event.arguments as LataaTiedotettavatExcelQueryVariables);
     case apiConfig.haeProjektinTiedottamistiedot.name:

@@ -15,15 +15,15 @@ import { S3Mock } from "../aws/awsMock";
 
 import { assert, expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../src/config";
 import { identifyMockUser } from "../../src/user/userService";
-import { fail } from "assert";
 import { parameters } from "../../src/aws/parameters";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
 import MockDate from "mockdate";
+import { IllegalArgumentError } from "hassu-common/error";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -99,7 +99,7 @@ describe("muistutusHandler", () => {
           sahkoposti: "test@test.fi",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
           liitteet: [],
-          puhelinnumero: "0501234567"
+          puhelinnumero: "0501234567",
         };
         MockDate.set("2024-04-09T03:00");
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
@@ -152,96 +152,162 @@ describe("muistutusHandler", () => {
         ).to.have.members(["kirjaamo.uusimaa@ely-keskus.fi"]);
       });
     });
+
     describe("tallennaMuistuttajat", () => {
+      const oid = "1.2.3";
+      const muistuttajaIdt = ["11", "22"];
+      const muutMuistuttajaIdt = ["33", "44"];
+
       beforeEach(() => {
-        loadProjektiByOidStub.restore();
         identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
+        loadProjektiByOidStub.restore();
       });
 
-      it("should save muistuttajat", async () => {
-        const dbMock = mockClient(DynamoDBDocumentClient);
-        dbMock
-          .on(GetCommand, { TableName: config.projektiTableName })
-          .resolves({ Item: { id: "1.2.3", muutMuistuttajat: ["1", "11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-        dbMock
-          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1.2.3" } })
-          .resolves({ Item: { id: "1", nimi: "Matti Teppo" } });
-        const muistuttajat = await muistutusHandler.tallennaMuistuttajat({
-          oid: "1.2.3",
-          muistuttajat: [
-            { id: "1", nimi: "Matti Teppo", tiedotusosoite: "matti@teppo.fi", tiedotustapa: "email" },
-            { nimi: "Teppo Testaaja", tiedotusosoite: "test@test.fi" },
+      it("should handle deleting and saving of muistuttajat", async () => {
+        const dbMock = initializeDbMockForTallennaTest(oid, muutMuistuttajaIdt, muistuttajaIdt);
+        await muistutusHandler.tallennaMuistuttajat({
+          oid,
+          muutMuistuttajat: [
+            {
+              id: muutMuistuttajaIdt[0],
+              nimi: "Jarkko Jankkinen",
+              maakoodi: "FI",
+              tiedotusosoite: "Lähitie 14",
+              paikkakunta: "Parikkala",
+              postinumero: "03300",
+              sahkoposti: "jarkko@jankkinen.fi",
+              tiedotustapa: "email",
+            },
+            {
+              // uusi käsin lisätty käyttäjä (id puuttuu)
+              nimi: "Jere Testinen",
+              maakoodi: "FI",
+              tiedotusosoite: "Lähitie 16",
+              paikkakunta: "Parikkala",
+              postinumero: "03300",
+              sahkoposti: "jere@testinen.fi",
+              tiedotustapa: "email",
+            },
           ],
+          poistettavatMuistuttajat: [muistuttajaIdt[1], muutMuistuttajaIdt[1]],
         });
+
         expect(dbMock.commandCalls(PutCommand).length).to.be.equal(2);
         const putCommand = dbMock.commandCalls(PutCommand)[0];
         const o1 = putCommand.args[0].input.Item as DBMuistuttaja;
-        expect(o1.nimi).to.be.equal("Matti Teppo");
-        expect(o1.tiedotusosoite).to.be.equal("matti@teppo.fi");
+        console.log(o1);
+        expect(o1.id).to.be.equal("33");
+        expect(o1.oid).to.be.equal(oid);
+        expect(o1.nimi).to.be.equal("Jarkko Jankkinen");
+        expect(o1.sahkoposti).to.be.equal("jarkko@jankkinen.fi");
         expect(o1.tiedotustapa).to.be.equal("email");
+        expect(o1.tiedotusosoite).to.be.equal("Lähitie 14");
+        expect(o1.postinumero).to.be.equal("03300");
+        expect(o1.postitoimipaikka).to.be.equal("Parikkala");
+        expect(o1.maakoodi).to.be.equal("FI");
         const putCommand2 = dbMock.commandCalls(PutCommand)[1];
         const o2 = putCommand2.args[0].input.Item as DBMuistuttaja;
-        expect(o2.nimi).to.be.equal("Teppo Testaaja");
-        expect(o2.tiedotusosoite).to.be.equal("test@test.fi");
-        expect(o2.tiedotustapa).to.be.equal(undefined);
-        expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
-        const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
-        assert(updateCommand.args[0].input.ExpressionAttributeValues);
-        expect(updateCommand.args[0].input.ExpressionAttributeValues[":id"].length).to.be.equal(1);
-        assert(updateCommand.args[0].input.ExpressionAttributeNames);
-        expect(updateCommand.args[0].input.ExpressionAttributeNames["#m"]).to.equal("muutMuistuttajat");
-        expect(muistuttajat.length).to.equal(2);
-        expect(muistuttajat[0].id).to.equal("1");
-        expect(muistuttajat[0].nimi).to.equal("Matti Teppo");
-        expect(muistuttajat[0].tiedotusosoite).to.equal("matti@teppo.fi");
-        expect(muistuttajat[0].tiedotustapa).to.equal("email");
-        expect(muistuttajat[1].id !== undefined).to.equal(true);
-        expect(muistuttajat[1].nimi).to.equal("Teppo Testaaja");
-        expect(muistuttajat[1].tiedotusosoite).to.equal("test@test.fi");
-        expect(muistuttajat[1].tiedotustapa).to.equal(undefined);
+        expect([...muistuttajaIdt, ...muutMuistuttajaIdt]).to.not.have.members([o2.id]);
+        expect(o2.oid).to.be.equal(oid);
+        expect(o2.nimi).to.be.equal("Jere Testinen");
+        expect(o2.sahkoposti).to.be.equal("jere@testinen.fi");
+        expect(o2.tiedotustapa).to.be.equal("email");
+        expect(o2.tiedotusosoite).to.be.equal("Lähitie 16");
+        expect(o2.postinumero).to.be.equal("03300");
+        expect(o2.postitoimipaikka).to.be.equal("Parikkala");
+        expect(o2.maakoodi).to.be.equal("FI");
+        expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(2);
+        const updateCommand1 = dbMock.commandCalls(UpdateCommand)[0];
+        assert(updateCommand1.args[0].input.ExpressionAttributeValues);
+        expect(updateCommand1.args[0].input.Key).to.eql({ oid, id: "22" });
+        expect(updateCommand1.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
+        const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
+        assert(updateCommand2.args[0].input.ExpressionAttributeValues);
+        expect(updateCommand2.args[0].input.Key).to.eql({ oid, id: "44" });
+        expect(updateCommand2.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
       });
 
-      it("should not save muistuttajat", async () => {
-        const dbMock = mockClient(DynamoDBDocumentClient);
-        dbMock.reset();
-        dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
-          Item: { oid: "1.2.3", muistuttajat: "1", muutMuistuttajat: ["11"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-        });
-        dbMock
-          .on(GetCommand, { TableName: config.projektiMuistuttajaTableName, Key: { id: "1", oid: "1.2.3" } })
-          .resolves({ Item: { id: "11", nimi: "Teppo Testaaja" } });
-        try {
-          await muistutusHandler.tallennaMuistuttajat({
-            oid: "1.2.3",
-            muistuttajat: [
-              { id: "1", nimi: "Matti Teppo", tiedotusosoite: "matti@teppo.fi", tiedotustapa: "email" },
-              { nimi: "Teppo Testaaja", tiedotusosoite: "test@test.fi" },
+      it("should throw when trying to save non existent muistuttaja", async () => {
+        initializeDbMockForTallennaTest(oid, muutMuistuttajaIdt, muistuttajaIdt);
+        await expect(
+          muistutusHandler.tallennaMuistuttajat({
+            oid,
+            muutMuistuttajat: [
+              {
+                id: "66",
+                nimi: "Jarkko Jankkinen",
+                maakoodi: "FI",
+                tiedotusosoite: "Lähitie 14",
+                paikkakunta: "Parikkala",
+                postinumero: "03300",
+                sahkoposti: "jarkko@jankkinen.fi",
+                tiedotustapa: "email",
+              },
             ],
-          });
-          fail("Muistuttajan tallennus ei saisi onnistua");
-        } catch (e) {
-          assert(e instanceof Error);
-          expect(e.message).to.be.equal("Muistuttajaa 1 ei löydy");
-        }
+            poistettavatMuistuttajat: [],
+          })
+        ).to.eventually.rejectedWith(IllegalArgumentError, "Tallennettava muistuttaja id:'66' ei ole muutMuistuttajat listalla");
       });
-    });
-    describe("poistaMuistuttaja", () => {
-      beforeEach(() => {
-        loadProjektiByOidStub.restore();
-        identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
+
+      it("should throw when trying to edit suomi.fi-tiedotettava muistuttaja", async () => {
+        initializeDbMockForTallennaTest(oid, muutMuistuttajaIdt, muistuttajaIdt);
+        await expect(
+          muistutusHandler.tallennaMuistuttajat({
+            oid,
+            muutMuistuttajat: [{ id: muistuttajaIdt[0] }],
+            poistettavatMuistuttajat: [],
+          })
+        ).to.eventually.rejectedWith(
+          IllegalArgumentError,
+          `Tallennettava muistuttaja id:'${muistuttajaIdt[0]}' ei ole muutMuistuttajat listalla`
+        );
       });
-      it("should delete muistuttaja", async () => {
-        const dbMock = mockClient(DynamoDBDocumentClient);
-        dbMock.on(GetCommand).resolves({
-          Item: { id: "1", muistuttajat: ["1"], muutMuistuttajat: ["2", "3"], kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-        });
-        await muistutusHandler.poistaMuistuttaja({ oid: "1", muistuttaja: "2" });
-        expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(1);
-        const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
-        assert(updateCommand.args[0].input.ExpressionAttributeValues);
-        expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutMuistuttajat"].length).to.be.equal(1);
-        expect(updateCommand.args[0].input.ExpressionAttributeValues[":muutMuistuttajat"][0]).to.be.equal("3");
+
+      it("should throw when trying to delete non existent muistuttaja", async () => {
+        initializeDbMockForTallennaTest(oid, muutMuistuttajaIdt, muistuttajaIdt);
+        await expect(
+          muistutusHandler.tallennaMuistuttajat({
+            oid,
+            muutMuistuttajat: [],
+            poistettavatMuistuttajat: ["66"],
+          })
+        ).to.eventually.rejectedWith(IllegalArgumentError, "Poistettavaa muistuttajaa id: '66' ei löytynyt");
       });
     });
   });
 });
+
+function initializeDbMockForTallennaTest(oid: string, muutMuistuttajaIdt: string[], muistuttajaIdt: string[]) {
+  const dbMock = mockClient(DynamoDBDocumentClient);
+  dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+    Item: {
+      oid,
+      muutMuistuttajat: muutMuistuttajaIdt,
+      muistuttajat: muistuttajaIdt,
+      kayttoOikeudet: [{ kayttajatunnus: "testuid" }],
+    },
+  });
+  dbMock
+    .on(QueryCommand, {
+      TableName: config.projektiMuistuttajaTableName,
+      KeyConditionExpression: "#oid = :oid",
+      ExpressionAttributeValues: {
+        ":oid": oid,
+        ":kaytossa": true,
+      },
+      ExpressionAttributeNames: {
+        "#oid": "oid",
+        "#kaytossa": "kaytossa",
+      },
+      FilterExpression: "#kaytossa = :kaytossa",
+    })
+    .resolves({
+      Items: [
+        { id: muistuttajaIdt[0], oid, etunimi: "Teppo", sukunimi: "Tepon sukunimi", suomifiLahetys: true },
+        { id: muistuttajaIdt[1], oid, etunimi: "Marko", sukunimi: "Markon sukunimi", suomifiLahetys: true },
+        { id: muutMuistuttajaIdt[0], oid, nimi: "Jarkko Jakkinen", suomifiLahetys: false },
+        { id: muutMuistuttajaIdt[1], oid, nimi: "Sini Sininen", suomifiLahetys: false },
+      ],
+    });
+  return dbMock;
+}

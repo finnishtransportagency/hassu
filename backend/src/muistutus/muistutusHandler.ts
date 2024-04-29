@@ -1,13 +1,11 @@
 import {
   HaeMuistuttajatQueryVariables,
   LisaaMuistutusMutationVariables,
-  Muistuttaja,
   Muistuttajat,
-  PoistaMuistuttajaMutationVariables,
   Status,
   TallennaMuistuttajatMutationVariables,
 } from "hassu-common/graphql/apiModel";
-import { NotFoundError } from "hassu-common/error";
+import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
@@ -15,7 +13,7 @@ import { muistutusEmailService } from "./muistutusEmailService";
 import { auditLog, log } from "../logger";
 import { getSuomiFiCognitoKayttaja, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { uuid } from "hassu-common/util/uuid";
 import { config } from "../config";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, localDateTimeString, nyt } from "../util/dateUtil";
@@ -24,7 +22,7 @@ import { getMuistuttajaTableName } from "../util/environment";
 import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SuomiFiSanoma } from "../suomifi/suomifiHandler";
-import { DBMuistuttaja } from "../database/muistuttajaDatabase";
+import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { adaptMuistutusInput } from "./muistutusAdapter";
 
@@ -92,6 +90,7 @@ class MuistutusHandler {
       suomifiLahetys: !!henkilotunnus,
       liitteet: muistutus.liitteet,
       puhelinnumero: muistutus.puhelinnumero,
+      kaytossa: true,
     };
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
@@ -138,71 +137,102 @@ class MuistutusHandler {
     return muistuttajatResponse;
   }
 
-  async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
+  async tallennaMuistuttajat(input: TallennaMuistuttajatMutationVariables) {
     const projekti = await getProjektiAndCheckPermissions(input.oid);
     const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     const expires = getExpires();
-    let dbmuistuttaja: DBMuistuttaja | undefined;
-    const muistuttajat: DBMuistuttaja[] = [];
-    const uudetMuistuttajat: string[] = [];
-    for (const muistuttaja of input.muistuttajat) {
+    const initialMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projekti.oid);
+    const sailytettavatMuistuttajat = await haeSailytettavatMuistuttajat(projekti.oid, initialMuistuttajat, input.poistettavatMuistuttajat);
+    const tallennettavatMuistuttajatInput = input.muutMuistuttajat.filter((muistuttaja) => {
+      if (!muistuttaja.id || sailytettavatMuistuttajat.muutMuistuttajat.some((m) => m.id === muistuttaja.id)) {
+        return true;
+      }
+      throw new IllegalArgumentError(`Tallennettava muistuttaja id:'${muistuttaja.id}' ei ole muutMuistuttajat listalla`);
+    });
+    for (const muistuttaja of tallennettavatMuistuttajatInput) {
+      let dbMuistuttaja: DBMuistuttaja | undefined;
       if (muistuttaja.id) {
-        const response = await getDynamoDBDocumentClient().send(
-          new GetCommand({ TableName: getMuistuttajaTableName(), Key: { id: muistuttaja.id, oid: input.oid } })
-        );
-        dbmuistuttaja = response.Item as DBMuistuttaja;
-        if (!dbmuistuttaja || !projekti.muutMuistuttajat?.includes(muistuttaja.id)) {
+        dbMuistuttaja = sailytettavatMuistuttajat.muutMuistuttajat.find((m) => m.id === muistuttaja.id);
+        if (!dbMuistuttaja) {
           throw new Error("Muistuttajaa " + muistuttaja.id + " ei löydy");
         }
-        dbmuistuttaja.paivitetty = now;
-        dbmuistuttaja.nimi = muistuttaja.nimi;
-        dbmuistuttaja.tiedotusosoite = muistuttaja.tiedotusosoite;
-        dbmuistuttaja.tiedotustapa = muistuttaja.tiedotustapa;
-        auditLog.info("Päivitetään muistuttajan tiedot", { muistuttajaId: dbmuistuttaja.id });
+        dbMuistuttaja.paivitetty = now;
+        auditLog.info("Päivitetään muistuttajan tiedot", { muistuttajaId: dbMuistuttaja.id });
       } else {
-        dbmuistuttaja = {
+        dbMuistuttaja = {
           id: uuid.v4(),
+          oid: input.oid,
           lisatty: now,
+          suomifiLahetys: false,
+          kaytossa: true,
           expires,
-          nimi: muistuttaja.nimi,
-          tiedotusosoite: muistuttaja.tiedotusosoite,
-          tiedotustapa: muistuttaja.tiedotustapa,
-          oid: projekti.oid,
         };
-        auditLog.info("Lisätään muistuttajan tiedot", { muistuttajaId: dbmuistuttaja.id });
-        uudetMuistuttajat.push(dbmuistuttaja.id);
+        auditLog.info("Lisätään muistuttajan tiedot", { muistuttajaId: dbMuistuttaja.id });
       }
-      await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: dbmuistuttaja }));
-      muistuttajat.push(dbmuistuttaja);
-    }
-    if (uudetMuistuttajat.length > 0) {
-      projektiDatabase.appendMuistuttajatList(input.oid, uudetMuistuttajat, true);
-    }
-    return muistuttajat.map((m) => {
-      return {
-        __typename: "Muistuttaja",
-        id: m.id,
-        lisatty: m.lisatty,
-        paivitetty: m.paivitetty,
-        nimi: m.nimi,
-        tiedotusosoite: m.tiedotusosoite,
-        tiedotustapa: m.tiedotustapa,
-      };
-    });
-  }
-  async poistaMuistuttaja(input: PoistaMuistuttajaMutationVariables) {
-    const projekti = await getProjektiAndCheckPermissions(input.oid);
-    const muutMuistuttajat = projekti.muutMuistuttajat ?? [];
-    const idx = muutMuistuttajat.indexOf(input.muistuttaja);
-    if (idx !== -1) {
-      muutMuistuttajat.splice(idx, 1);
-      auditLog.info("Poistetaan muu muistuttaja", { muistuttajaId: input.muistuttaja });
-      auditLog.info("Päivitetään muut muistuttajat projektille", { muutMuistuttajat });
-      projektiDatabase.setMuutMuistuttajat(input.oid, muutMuistuttajat);
-    } else {
-      throw new Error("Muistuttajaa " + input.muistuttaja + " ei löydy");
+      dbMuistuttaja.nimi = muistuttaja.nimi;
+      dbMuistuttaja.sahkoposti = muistuttaja.sahkoposti;
+      dbMuistuttaja.tiedotustapa = muistuttaja.tiedotustapa;
+      dbMuistuttaja.tiedotusosoite = muistuttaja.tiedotusosoite;
+      dbMuistuttaja.postinumero = muistuttaja.postinumero;
+      dbMuistuttaja.postitoimipaikka = muistuttaja.paikkakunta;
+      dbMuistuttaja.maakoodi = muistuttaja.maakoodi;
+
+      await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: dbMuistuttaja }));
     }
   }
+}
+
+export async function haeSailytettavatMuistuttajat(
+  oid: string,
+  initialMuistuttajat: DBMuistuttaja[],
+  poistettavatMuistuttajat: string[]
+): Promise<{
+  muistuttajat: DBMuistuttaja[];
+  muutMuistuttajat: DBMuistuttaja[];
+}> {
+  poistettavatMuistuttajat.forEach((poistettavaId) => {
+    const idFound = initialMuistuttajat.some((muistuttaja) => muistuttaja.id === poistettavaId);
+    if (!idFound) {
+      throw new IllegalArgumentError(`Poistettavaa muistuttajaa id: '${poistettavaId}' ei löytynyt`);
+    }
+  });
+
+  const { poistettavat, sailytettavat } = initialMuistuttajat.reduce<{
+    poistettavat: DBMuistuttaja[];
+    sailytettavat: DBMuistuttaja[];
+  }>(
+    (jaotellutMuistuttajat, muistuttaja) => {
+      if (poistettavatMuistuttajat.includes(muistuttaja.id)) {
+        jaotellutMuistuttajat.poistettavat.push(muistuttaja);
+      } else {
+        jaotellutMuistuttajat.sailytettavat.push(muistuttaja);
+      }
+      return jaotellutMuistuttajat;
+    },
+    { poistettavat: [], sailytettavat: [] }
+  );
+
+  await Promise.all(
+    poistettavat.map(async (muistuttaja) => {
+      auditLog.info("Poistetaan muistuttaja", { muistuttajaId: muistuttaja.id });
+      await muistuttajaDatabase.poistaMuistuttajaKaytosta(oid, muistuttaja.id);
+    })
+  );
+
+  return sailytettavat.reduce<{
+    muistuttajat: DBMuistuttaja[];
+    muutMuistuttajat: DBMuistuttaja[];
+  }>(
+    (jaotellutMuistuttajat, muistuttaja) => {
+      if (muistuttaja.suomifiLahetys) {
+        jaotellutMuistuttajat.muistuttajat.push(muistuttaja);
+      } else {
+        jaotellutMuistuttajat.muutMuistuttajat.push(muistuttaja);
+      }
+      return jaotellutMuistuttajat;
+    },
+    { muistuttajat: [], muutMuistuttajat: [] }
+  );
 }
 
 export const muistutusHandler = new MuistutusHandler();

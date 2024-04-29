@@ -66,7 +66,6 @@ import {
   VuorovaikutusPerustiedotInput,
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   HaeKiinteistonOmistajatQueryVariables,
-  OmistajaInput,
   TuoKarttarajausMutationVariables,
   HaeMuistuttajatQueryVariables,
   Muistuttaja,
@@ -93,6 +92,7 @@ import {
   HaeHyvaksymisEsityksenTiedotQueryVariables,
   HyvaksymisEsitysInput,
   ListaaHyvaksymisEsityksenTiedostotQueryVariables,
+  TallennaMuistuttajatMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -404,12 +404,6 @@ export const apiConfig: ApiConfig = {
     name: "tallennaMuistuttajat",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaMuistuttajat,
-    isYllapitoOperation: true,
-  },
-  poistaMuistuttaja: {
-    name: "poistaMuistuttaja",
-    operationType: OperationType.Mutation,
-    graphql: mutations.poistaMuistuttaja,
     isYllapitoOperation: true,
   },
   lataaTiedotettavatExcel: {
@@ -790,18 +784,8 @@ export abstract class AbstractApi {
     } as HaeMuistuttajatQueryVariables);
   }
 
-  async tallennaMuistuttajat(oid: string, omistajat: OmistajaInput[]): Promise<Muistuttaja[]> {
-    return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, {
-      oid,
-      omistajat,
-    });
-  }
-
-  async poistaMuistuttaja(oid: string, muistuttaja: string): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.poistaMuistuttaja, {
-      oid,
-      muistuttaja,
-    });
+  async tallennaMuistuttajat(mutationVariables: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
+    return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, mutationVariables);
   }
 
   async lataaTiedotettavatExcel(oid: string, suomifi: boolean | undefined | null, kiinteisto: boolean): Promise<Excel> {

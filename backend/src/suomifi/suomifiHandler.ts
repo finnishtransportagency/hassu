@@ -595,7 +595,7 @@ async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqu
 }
 
 async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinMuistuttajat(projektiFromDB.oid);
+  const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
   const newIds: string[] = [];
   for (const muistuttaja of dbMuistuttajat.filter((m) => m.suomifiLahetys)) {
     if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
@@ -627,9 +627,17 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
         const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestitChunk });
         response.Failed?.forEach((v) => {
           if (v.Id?.startsWith(OMISTAJA_PREFIX)) {
-            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { omistajaId: v.Id.substring(OMISTAJA_PREFIX.length), message: v.Message, code: v.Code });
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", {
+              omistajaId: v.Id.substring(OMISTAJA_PREFIX.length),
+              message: v.Message,
+              code: v.Code,
+            });
           } else {
-            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", { muistuttajaId: v.Id?.substring(MUISTUTTAJA_PREFIX.length), message: v.Message, code: v.Code });
+            auditLog.error("SuomiFi SQS sanoman lähetys epäonnistui", {
+              muistuttajaId: v.Id?.substring(MUISTUTTAJA_PREFIX.length),
+              message: v.Message,
+              code: v.Code,
+            });
           }
         });
         response.Successful?.forEach((v) => {
