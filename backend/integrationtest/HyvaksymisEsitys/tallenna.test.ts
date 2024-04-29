@@ -48,7 +48,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     sinon.restore();
   });
 
-  it("onnistuu projektikäyttäjältä tallentaa annetut tiedot tietokantaan", async () => {
+  it("onnistuu projektikäyttäjältä ja tallentaa annetut tiedot tietokantaan", async () => {
     const projari = UserFixture.pekkaProjari;
     const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
       kayttajatunnus: projari.uid!,
