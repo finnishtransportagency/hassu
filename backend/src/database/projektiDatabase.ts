@@ -70,7 +70,7 @@ export class JulkaisuFunctions<
   }
 
   async insert(oid: string, julkaisu: T): Promise<UpdateCommandOutput> {
-    return this.projektiDatabase.insertJulkaisuToList(oid, julkaisu, this.julkaisutFieldName, this.description);
+    return await this.projektiDatabase.insertJulkaisuToList(oid, julkaisu, this.julkaisutFieldName, this.description);
   }
 
   async update(projekti: DBProjekti, julkaisu: T): Promise<void> {
@@ -78,11 +78,11 @@ export class JulkaisuFunctions<
   }
 
   async delete(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
-    return this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
+    return await this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
   }
 
   async deleteAll(projekti: DBProjekti): Promise<void> {
-    return this.projektiDatabase.deleteAllJulkaisu(projekti, this.julkaisutFieldName, this.description);
+    return await this.projektiDatabase.deleteAllJulkaisu(projekti, this.julkaisutFieldName, this.description);
   }
 }
 
