@@ -105,7 +105,7 @@ const getSuomifiDefaultColumnMeta = () => ({
 
 const getDefaultColumnMeta = () => ({
   widthFractions: 3,
-  minWidth: 200,
+  minWidth: 140,
 });
 
 const createPoistaColumn = (
@@ -217,6 +217,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.nimi` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -229,6 +230,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.tiedotusosoite` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -241,6 +243,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.postinumero` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -253,6 +256,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.paikkakunta` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -271,6 +275,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.sahkoposti` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -283,6 +288,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
         autoComplete="off"
         fullWidth
         controllerProps={{ name: `muutMuistuttajat.${context.row.index}.tiedotustapa` }}
+        sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
   },
@@ -309,7 +315,15 @@ const Maa = ({ fieldArrayName, index }: { fieldArrayName: "suomifiMuistuttajat" 
   return (
     <Autocomplete
       options={countryCodesSorted}
-      renderInput={({ inputProps = {}, ...params }) => <TextField {...params} name={name} inputProps={{ ref, ...inputProps }} required />}
+      renderInput={({ inputProps = {}, ...params }) => (
+        <TextField
+          {...params}
+          sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
+          name={name}
+          inputProps={{ ref, ...inputProps }}
+          required
+        />
+      )}
       getOptionLabel={(code) => getLocalizedCountryName("fi", code)}
       value={value}
       disablePortal={false}
