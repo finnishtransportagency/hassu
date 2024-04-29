@@ -93,7 +93,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
 
   return (
     <TiedottaminenPageLayout projekti={projekti}>
-      <Section>
+      <Section noDivider>
         <ContentSpacer>
           <Stack direction="row" flexWrap="wrap" alignItems="start" justifyContent="space-between">
             <H2>Muistuttajien tiedottaminen</H2>
@@ -136,6 +136,9 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           muutTiedotettavat={true}
           excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=false&suomifi=false`}
         />
+        <ButtonLink primary className="ml-auto" href={`/yllapito/projekti/${projekti.oid}/tiedottaminen/muistuttajat/muokkaa`}>
+          Muokkaa
+        </ButtonLink>
       </Section>
     </TiedottaminenPageLayout>
   );
