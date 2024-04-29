@@ -28,7 +28,7 @@ export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMu
     ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti"]),
     tila: API.HyvaksymisTila.HYVAKSYTTY,
   };
-  assertIsDefined(kayttaja.uid, "Käyttäjällä on oltava uid");
+  assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
   await tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys, muokkaaja: kayttaja.uid });
   return oid;
 }

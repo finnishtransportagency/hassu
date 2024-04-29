@@ -20,6 +20,7 @@ import { suljeHyvaksymisEsityksenMuokkaus } from "../../src/HyvaksymisEsitys/act
 import { expect } from "chai";
 import { DBVaylaUser } from "../../src/database/model";
 import omit from "lodash/omit";
+import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 
 describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
   const userFixture = new UserFixture(userService);
@@ -131,84 +132,86 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
       versio: 3,
       muokattavaHyvaksymisEsitys: {
         ...omit(julkaistuHyvaksymisEsitys, ["hyvaksymisPaiva", "hyvaksyja"]),
+        muokkaaja: "theadminuid",
         tila: API.HyvaksymisTila.HYVAKSYTTY,
       },
     });
     expect(projektiAfter.paivitetty).to.exist;
   });
 
-  // it("ei onnistu ulkopuoliselta", async () => {
-  //   const projari = UserFixture.pekkaProjari;
-  //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: projari.uid!,
-  //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-  //   };
-  //   const muokkaaja = UserFixture.manuMuokkaaja;
-  //   userFixture.loginAs(muokkaaja);
-  //   const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
-  //   const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-  //   // const projektiInDB : DBProjekti = {
-  //   //   oid: "1",
-  //   //   versio: 2,
-  //   //   muokattavaHyvaksymisEsitys,
-  //   //   julkaistuHyvaksymisEsitys,
-  //   //   kayttoOikeudet: [projariAsVaylaDBUser],
-  //   // } as DBProjekti;
-  //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
-  //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalAccessError);
-  // });
+  it("ei onnistu ulkopuoliselta", async () => {
+    const projari = UserFixture.pekkaProjari;
+    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
+      kayttajatunnus: projari.uid!,
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    };
+    const muokkaaja = UserFixture.manuMuokkaaja;
+    userFixture.loginAs(muokkaaja);
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
+    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
+    const projektiInDB = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+      kayttoOikeudet: [projariAsVaylaDBUser],
+    };
+    await insertProjektiToDB(projektiInDB);
+    const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalAccessError);
+  });
 
-  // it("ei onnistu, jos ei ole muokkaustilaista hyväksymisesitystä", async () => {
-  //   const projari = UserFixture.pekkaProjari;
-  //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: projari.uid!,
-  //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-  //   };
-  //   userFixture.loginAs(projari);
-  //   // const projektiInDB : DBProjekti = {
-  //   //   oid: "1",
-  //   //   versio: 2,
-  //   //   muokattavaHyvaksymisEsitys: { poistumisPaiva: "2002-01-11", tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA },
-  //   //   julkaistuHyvaksymisEsitys: { poistumisPaiva: "2002-01-01", hyvaksyja: "oid", hyvaksymisPaiva: "2011-03-03" },
-  //   //   kayttoOikeudet: [projariAsVaylaDBUser],
-  //   // } as DBProjekti;
-  //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 }, );
-  //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
-  // });
+  it("ei onnistu jos hyväksymisesitys odottaa hyväksyntää", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA };
+    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
+    const projektiInDB = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiInDB);
+    const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
 
-  // it("ei onnistu, jos on muokkaustilainen hyväksymisesitys, mutta ei ole julkaistua hyväksymisesitystä", async () => {
-  //   const projari = UserFixture.pekkaProjari;
-  //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: projari.uid!,
-  //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-  //   };
-  //   userFixture.loginAs(projari);
-  //   // const projektiInDB : DBProjekti =  {
-  //   //   oid: "1",
-  //   //   versio: 2,
-  //   //   muokattavaHyvaksymisEsitys: { poistumisPaiva: "2002-01-11", tila: API.HyvaksymisTila.MUOKKAUS },
-  //   //   julkaistuHyvaksymisEsitys: undefined,
-  //   //   kayttoOikeudet: [projariAsVaylaDBUser],
-  //   // } as DBProjekti;
-  //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 },);
-  //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
-  // });
+  it("ei onnistu jos hyväksymisesitys on hyväksytty", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
+    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
+    const projektiInDB = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiInDB);
+    const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
 
-  // it("ei onnistu, jos ei ole muokkaustilaista eikä julkaistua hyväksymisesitystä", async () => {
-  //   const projari = UserFixture.pekkaProjari;
-  //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: projari.uid!,
-  //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-  //   };
-  //   userFixture.loginAs(projari);
-  //   // const projektiInDB: DBProjekti = {
-  //   //   oid: "1",
-  //   //   versio: 2,
-  //   //   muokattavaHyvaksymisEsitys: undefined,
-  //   //   julkaistuHyvaksymisEsitys: undefined,
-  //   //   kayttoOikeudet: [projariAsVaylaDBUser],
-  //   // } as DBProjekti;
-  //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
-  //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
-  // });
+  it("ei onnistu jos ei ole julkaistua hyväksymisesitystä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
+    const projektiInDB = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiInDB);
+    const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei onnistu jos ei ole muokkaustilaista eikä julkaistua hyväksymisesitystä", async () => {
+    userFixture.loginAsAdmin();
+    const projektiInDB = {
+      oid,
+      versio: 2,
+    };
+    await insertProjektiToDB(projektiInDB);
+    const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
 });
