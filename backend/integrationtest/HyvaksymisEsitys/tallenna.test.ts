@@ -113,32 +113,6 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     );
   });
 
-  // it("onnistuu projektihenkilöltä", async () => {
-  //   const projari = UserFixture.pekkaProjari;
-  //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: projari.uid!,
-  //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-  //   };
-  //   const muokkaaja = UserFixture.manuMuokkaaja;
-  //   const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-  //     kayttajatunnus: muokkaaja.uid!,
-  //   };
-  //   userFixture.loginAs(muokkaaja);
-  //   // TODO: Stubbaa projektin tallentaminen
-  //   const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
-  //     ...TEST_HYVAKSYMISESITYS_INPUT,
-  //   };
-  //   // const projektiInDB: DBProjekti = {
-  //   //   oid: "1",
-  //   //   versio: 2,
-  //   //   muokattavaHyvaksymisEsitys: { tila: API.HyvaksymisTila.MUOKKAUS },
-  //   //   julkaistuHyvaksymisEsitys: {},
-  //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
-  //   // } as DBProjekti;
-  //   const kutsu = tallennaHyvaksymisEsitys({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys }, );
-  //   await expect(kutsu).to.eventually.to.be.fulfilled;
-  // });
-
   // it("ei onnistu henkilöltä, joka ei ole projektissa", async () => {
   //   const projari = UserFixture.pekkaProjari;
   //   const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
