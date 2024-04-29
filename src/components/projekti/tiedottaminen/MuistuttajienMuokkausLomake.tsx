@@ -46,12 +46,13 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToMuistuttajaRow =
   (...fieldsToSetDefaultsTo: (keyof MuistuttajaInput)[]) =>
-  ({ id, sukunimi, nimi, paikkakunta, postinumero, maa, maakoodi, tiedotusosoite, etunimi, tiedotustapa }: Muistuttaja): MuistuttajaRow => {
+  ({ id, nimi, paikkakunta, jakeluosoite, postinumero, maa, maakoodi, sahkoposti, tiedotustapa }: Muistuttaja): MuistuttajaRow => {
     const omistajaRow: MuistuttajaRow = {
       id,
-      nimi: nimi ? nimi : [etunimi, sukunimi].filter((nimi) => !!nimi).join(" "),
-      tiedotusosoite,
+      nimi,
+      sahkoposti,
       postinumero,
+      jakeluosoite,
       maakoodi: maakoodi ?? null,
       paikkakunta,
       tiedotustapa,
@@ -72,10 +73,10 @@ const mapFormDataForApi: (data: MuistuttajatFormFields) => TallennaMuistuttajatM
     .map(({ id }) => id);
   const muutMuistuttajat = data.muutMuistuttajat
     .filter((omistaja) => !omistaja.toBeDeleted)
-    .map<MuistuttajaInput>(({ id, maakoodi, nimi, paikkakunta, postinumero, sahkoposti, tiedotusosoite, tiedotustapa }) => ({
+    .map<MuistuttajaInput>(({ id, maakoodi, nimi, paikkakunta, postinumero, sahkoposti, jakeluosoite, tiedotustapa }) => ({
       id,
       sahkoposti,
-      tiedotusosoite,
+      jakeluosoite,
       tiedotustapa,
       nimi,
       paikkakunta,
@@ -229,7 +230,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
       <TextFieldWithController<MuistuttajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `muutMuistuttajat.${context.row.index}.tiedotusosoite` }}
+        controllerProps={{ name: `muutMuistuttajat.${context.row.index}.jakeluosoite` }}
         sx={{ "& .MuiInputBase-root": { minWidth: "120px" } }}
       />
     ),
@@ -360,7 +361,7 @@ export const FormContents: VFC<{
       oid: projekti.oid,
       suomifiMuistuttajat: initialSearchResponses.suomifi.muistuttajat.map(mapOmistajaToMuistuttajaRow()),
       muutMuistuttajat: initialSearchResponses.muut.muistuttajat.map(
-        mapOmistajaToMuistuttajaRow("nimi", "tiedotusosoite", "postinumero", "paikkakunta", "sahkoposti", "tiedotustapa")
+        mapOmistajaToMuistuttajaRow("nimi", "jakeluosoite", "postinumero", "paikkakunta", "sahkoposti", "tiedotustapa")
       ),
     })
   );
@@ -451,13 +452,13 @@ const SuomifiTaulukko = ({ oid, initialHakutulosMaara }: { oid: string; initialH
   const { control } = useFormContext<MuistuttajatFormFields>();
   const [hakutulosMaara, setHakutulosMaara] = useState<number>(initialHakutulosMaara);
   const [sliceAt, setSliceAt] = useState(PAGE_SIZE);
-  const { append: appendMuut, fields } = useFieldArray({ control, name: "suomifiMuistuttajat", keyName: "fieldId" });
+  const { append, fields } = useFieldArray({ control, name: "suomifiMuistuttajat", keyName: "fieldId" });
   const slicedFields = useMemo(() => fields.slice(0, sliceAt), [fields, sliceAt]);
 
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
 
-  const updateMuut = useCallback<(from: number, size: number) => void>(
+  const updateSuomiMuistuttajat = useCallback<(from: number, size: number) => void>(
     (from, size) => {
       withLoadingSpinner(
         (async () => {
@@ -469,12 +470,12 @@ const SuomifiTaulukko = ({ oid, initialHakutulosMaara }: { oid: string; initialH
               .filter((omistaja) => !fields.some(({ id }) => id === omistaja.id))
               .map(mapOmistajaToMuistuttajaRow());
             setSliceAt(Math.ceil((from + size) / PAGE_SIZE) * PAGE_SIZE);
-            appendMuut(toBeAdded);
+            append(toBeAdded);
           } catch {}
         })()
       );
     },
-    [api, appendMuut, fields, oid, withLoadingSpinner]
+    [api, append, fields, oid, withLoadingSpinner]
   );
 
   const showLess = useCallback(() => {
@@ -482,16 +483,16 @@ const SuomifiTaulukko = ({ oid, initialHakutulosMaara }: { oid: string; initialH
   }, []);
 
   const getNextPage = useCallback(() => {
-    updateMuut(slicedFields.length, PAGE_SIZE);
-  }, [slicedFields.length, updateMuut]);
+    updateSuomiMuistuttajat(slicedFields.length, PAGE_SIZE);
+  }, [slicedFields.length, updateSuomiMuistuttajat]);
 
   const toggleShowHideAll = useCallback(() => {
     if (slicedFields.length < (hakutulosMaara ?? 0)) {
-      updateMuut(slicedFields.length, (hakutulosMaara ?? 0) - slicedFields.length);
+      updateSuomiMuistuttajat(slicedFields.length, (hakutulosMaara ?? 0) - slicedFields.length);
     } else {
       setSliceAt(PAGE_SIZE);
     }
-  }, [hakutulosMaara, slicedFields.length, updateMuut]);
+  }, [hakutulosMaara, slicedFields.length, updateSuomiMuistuttajat]);
 
   const table = useReactTable({
     columns: suomifiColumns,
@@ -557,7 +558,7 @@ const MuutTaulukko = () => {
         onClick={() => {
           append({
             nimi: "",
-            tiedotusosoite: "",
+            jakeluosoite: "",
             sahkoposti: "",
             tiedotustapa: "",
             postinumero: "",

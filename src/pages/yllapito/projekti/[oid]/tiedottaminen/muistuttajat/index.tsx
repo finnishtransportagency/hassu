@@ -14,7 +14,6 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import ButtonLink from "@components/button/ButtonLink";
-import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 export default function Muistuttajat() {
   return (
@@ -24,14 +23,14 @@ export default function Muistuttajat() {
   );
 }
 
-const columns: ColumnDef<Muistuttaja>[] = [
+const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
   {
     header: "Nimi",
-    accessorFn: ({ etunimi, sukunimi }) => (etunimi || sukunimi ? [etunimi, sukunimi].filter((nimi) => nimi).join(" ") : null),
+    accessorKey: "nimi",
     id: "muistuttajan_nimi",
     meta: {
       widthFractions: 3,
-      minWidth: 200,
+      minWidth: 160,
     },
   },
   {
@@ -40,7 +39,7 @@ const columns: ColumnDef<Muistuttaja>[] = [
     id: "postiosoite",
     meta: {
       widthFractions: 3,
-      minWidth: 200,
+      minWidth: 160,
     },
   },
   {
@@ -54,17 +53,11 @@ const columns: ColumnDef<Muistuttaja>[] = [
   },
   {
     header: "Postitoimipaikka",
-    accessorFn: ({ paikkakunta, maakoodi }) => {
-      // If country code is of Finland then show only paikkakunta
-      if (!paikkakunta || !maakoodi || maakoodi === "FI") {
-        return paikkakunta;
-      }
-      return [paikkakunta, getLocalizedCountryName("fi", maakoodi)].join(", ");
-    },
+    accessorKey: "paikkakunta",
     id: "postitoimipaikka",
     meta: {
       widthFractions: 3,
-      minWidth: 200,
+      minWidth: 160,
     },
   },
   {
@@ -72,8 +65,65 @@ const columns: ColumnDef<Muistuttaja>[] = [
     accessorFn: ({ lisatty }) => (lisatty ? formatDateTime(lisatty) : null),
     id: "muistutusaika",
     meta: {
+      widthFractions: 3,
+      minWidth: 140,
+    },
+  },
+];
+
+const columnsMuut: ColumnDef<Muistuttaja>[] = [
+  {
+    header: "Nimi",
+    accessorKey: "nimi",
+    id: "muistuttajan_nimi",
+    meta: {
+      widthFractions: 3,
+      minWidth: 160,
+    },
+  },
+  {
+    header: "Postiosoite",
+    accessorKey: "jakeluosoite",
+    id: "postiosoite",
+    meta: {
+      widthFractions: 3,
+      minWidth: 160,
+    },
+  },
+  {
+    header: "Postinumero",
+    accessorKey: "postinumero",
+    id: "postinumero",
+    meta: {
+      widthFractions: 2,
+      minWidth: 120,
+    },
+  },
+  {
+    header: "Postitoimipaikka",
+    accessorKey: "paikkakunta",
+    id: "postitoimipaikka",
+    meta: {
       widthFractions: 2,
       minWidth: 140,
+    },
+  },
+  {
+    header: "Sähköposti",
+    accessorKey: "sahkoposti",
+    id: "sahkoposti",
+    meta: {
+      widthFractions: 3,
+      minWidth: 160,
+    },
+  },
+  {
+    header: "Tiedotustapa",
+    accessorKey: "tiedotustapa",
+    id: "tiedotustapa",
+    meta: {
+      widthFractions: 2,
+      minWidth: 160,
     },
   },
 ];
@@ -119,7 +169,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           filterText="Suodata muistuttajia"
           showLessText="Näytä vähemmän muistuttajia"
           showMoreText="Näytä enemmän muistuttajia"
-          columns={columns}
+          columns={columnsSuomifi}
           getTiedotettavatCallback={getMuistuttajatCallback}
           muutTiedotettavat={false}
           excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=false&suomifi=true`}
@@ -131,7 +181,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           filterText="Suodata muistuttajia"
           showLessText="Näytä vähemmän muistuttajia"
           showMoreText="Näytä enemmän muistuttajia"
-          columns={columns}
+          columns={columnsMuut}
           getTiedotettavatCallback={getMuistuttajatCallback}
           muutTiedotettavat={true}
           excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=false&suomifi=false`}

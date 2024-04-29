@@ -35,8 +35,6 @@ import { useRouter } from "next/router";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
-  etunimet?: string | null;
-  sukunimi?: string | null;
   maakoodi: string | null;
   maa: string | null | undefined;
 };
@@ -52,12 +50,10 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
-  ({ id, kiinteistotunnus, etunimet, sukunimi, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi }: Omistaja): OmistajaRow => {
+  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi }: Omistaja): OmistajaRow => {
     const omistajaRow: OmistajaRow = {
       id,
       kiinteistotunnus,
-      etunimet,
-      sukunimi,
       jakeluosoite,
       nimi,
       paikkakunta,
@@ -196,7 +192,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
   },
   {
     header: "Omistajan nimi",
-    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    accessorKey: "nimi",
     id: "omistajan_nimi",
     meta: getDefaultColumnMeta(),
   },
@@ -237,7 +233,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
   },
   {
     header: "Omistajan nimi",
-    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    accessorKey: "nimi",
     id: "omistajan_nimi",
     meta: getDefaultColumnMeta(),
   },

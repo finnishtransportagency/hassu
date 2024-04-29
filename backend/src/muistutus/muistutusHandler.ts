@@ -172,7 +172,7 @@ class MuistutusHandler {
       dbMuistuttaja.nimi = muistuttaja.nimi;
       dbMuistuttaja.sahkoposti = muistuttaja.sahkoposti;
       dbMuistuttaja.tiedotustapa = muistuttaja.tiedotustapa;
-      dbMuistuttaja.tiedotusosoite = muistuttaja.tiedotusosoite;
+      dbMuistuttaja.lahiosoite = muistuttaja.jakeluosoite;
       dbMuistuttaja.postinumero = muistuttaja.postinumero;
       dbMuistuttaja.postitoimipaikka = muistuttaja.paikkakunta;
       dbMuistuttaja.maakoodi = muistuttaja.maakoodi;

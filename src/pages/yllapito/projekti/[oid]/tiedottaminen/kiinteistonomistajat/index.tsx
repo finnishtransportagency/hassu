@@ -19,7 +19,6 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import ButtonLink from "@components/button/ButtonLink";
-import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -101,7 +100,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
   },
   {
     header: "Omistajan nimi",
-    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    accessorKey: "nimi",
     id: "omistajan_nimi",
     meta: {
       widthFractions: 3,
@@ -128,13 +127,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
   },
   {
     header: "Postitoimipaikka",
-    accessorFn: ({ paikkakunta, maakoodi }) => {
-      // If country code is of Finland then show only paikkakunta
-      if (!paikkakunta || !maakoodi || maakoodi === "FI") {
-        return paikkakunta;
-      }
-      return [paikkakunta, getLocalizedCountryName("fi", maakoodi)].join(", ");
-    },
+    accessorKey: "paikkakunta",
     id: "postitoimipaikka",
     meta: {
       widthFractions: 2,
