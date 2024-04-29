@@ -22,8 +22,6 @@
 
 //   // it("poistaa ja luo oikeat tiedostot", async () => {
 //   //   userFixture.loginAsAdmin();
-//   //   // TODO: Stubbaa tiedostojen haku, poisto ja tallennus
-//   //   // TODO: Stubbaa projektin tallennus
 //   //   const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
 //   //   const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
 //   //   // const projektiInDB: DBProjekti = {
@@ -32,7 +30,6 @@
 //   //   //   muokattavaHyvaksymisEsitys,
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   await suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
 //   //   // TODO: testaa, että oikeat tiedostot poistetaan ja tallennetaan
 //   // });
@@ -48,8 +45,6 @@
 //   //     kayttajatunnus: muokkaaja.uid!,
 //   //   };
 //   //   userFixture.loginAs(muokkaaja);
-//   //   // Stubbaa tiedostojen haku, poisto ja tallennus
-//   //   // Stubbaa projektin tallennus
 //   //   const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
 //   //   const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
 //   //   // const projektiInDB: DBProjekti = {
@@ -59,7 +54,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
 //   //   await expect(kutsu).to.eventually.to.be.fulfilled;
 //   // });
@@ -81,7 +75,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
 //   //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalAccessError);
 //   // });
@@ -93,8 +86,6 @@
 //   //     tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
 //   //   };
 //   //   userFixture.loginAs(projari);
-//   //   // TODO: stubbaa tiedostojen poisto ja kopiointi
-//   //   // TODO: Stubbaa projetin tallennus
 //   //   // const projetkiInDB : DBProjekti = {
 //   //   //   oid: "1",
 //   //   //   versio: 2,
@@ -102,7 +93,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: { poistumisPaiva: "2002-01-01", hyvaksyja: "oid", hyvaksymisPaiva: "2011-03-03" },
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   await suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
 //   //   // TODO: testaa, että tietokantaan tallennetaan oikea asia
 //   // });
@@ -121,7 +111,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: { poistumisPaiva: "2002-01-01", hyvaksyja: "oid", hyvaksymisPaiva: "2011-03-03" },
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 }, );
 //   //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
 //   // });
@@ -140,7 +129,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 },);
 //   //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
 //   // });
@@ -159,7 +147,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin haku tietokannasta
 //   //   const kutsu = suljeHyvaksymisEsityksenMuokkaus({ oid: "1", versio: 2 });
 //   //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
 //   // });

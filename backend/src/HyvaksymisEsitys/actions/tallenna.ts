@@ -9,7 +9,7 @@ import { AineistoNew } from "../../database/model";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
-import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 

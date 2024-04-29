@@ -1,7 +1,7 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { AineistoNew } from "../../database/model";
-import { joinPath } from "../paths";
+import { adaptFileName, joinPath } from "../../tiedostot/paths";
 
 /**
  * Muokkaa aineistot db:ssä olevasta muodosta FE:n haluamaan muotoon, jossa on tiedossa myös tuontistatus ja polku tiedostoon
@@ -34,7 +34,7 @@ export function adaptAineistotToAPI({
         lisatty,
         uuid,
         tuotu,
-        tiedosto: tuotu ? joinPath(path, aineisto.nimi) : null,
+        tiedosto: tuotu ? joinPath(path, adaptFileName(aineisto.nimi)) : null,
       };
 
       return apiAineisto;

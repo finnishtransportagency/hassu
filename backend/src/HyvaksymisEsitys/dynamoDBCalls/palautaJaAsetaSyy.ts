@@ -28,6 +28,7 @@ export default async function palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAseta
       "#tila": "tila",
       "#paivitetty": "paivitetty",
       "#hyvaksymisPaatosVaihe": "hyvaksymisPaatosVaihe",
+      "#palautusSyy": "palautusSyy",
     },
     ExpressionAttributeValues: {
       ":versio": nextVersion,
@@ -35,6 +36,7 @@ export default async function palautaHyvaksymisEsityksenTilaMuokkaukseksiJaAseta
       ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
       ":odottaaHyvaksyntaa": API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       ":syy": syy,
+      ":versioFromInput": versio,
     },
     ConditionExpression:
       "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
