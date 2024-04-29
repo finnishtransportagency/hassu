@@ -4,8 +4,8 @@ const TEST_HYVAKSYMISESITYS_INPUT: API.HyvaksymisEsitysInput = {
   poistumisPaiva: "2033-01-01",
   hyvaksymisEsitys: [
     {
-      tiedosto: "hyvaksymiEsitys.png",
-      nimi: "hyvaksymiEsitys.png",
+      tiedosto: "hyvaksymisEsitys.png",
+      nimi: "hyvaksymisEsitys.png",
       uuid: "hyvaksymis-esitys-uuid",
     },
   ],
