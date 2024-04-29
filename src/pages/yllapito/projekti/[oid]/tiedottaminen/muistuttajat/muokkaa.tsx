@@ -26,7 +26,9 @@ const MuistuttajienMuokkaus: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projek
   useEffect(() => {
     withLoadingSpinner(
       (async () => {
+        // Hae ensimmäiset 25 suomi.fi tiedotettavaa
         const suomifi = await api.haeMuistuttajat(projekti.oid, false, undefined, 0, PAGE_SIZE);
+        // Hae ensimmäiset kaikki muulla tavoin tiedotettavat
         const muut = await api.haeMuistuttajat(projekti.oid, true, undefined, 0, undefined);
         setInitialSearchResponses({ muut, suomifi });
       })()
@@ -36,7 +38,7 @@ const MuistuttajienMuokkaus: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projek
   return (
     <>
       <Section noDivider>
-        <H2 variant="h1">Muokkaa kiinteistönomistajatietoja</H2>
+        <H2 variant="h1">Muokkaa muistuttajatietoja</H2>
         <H3 variant="lead">{projekti.velho.nimi}</H3>
         <GrayBackgroundText>
           <p>

@@ -4,7 +4,6 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H3 } from "@components/Headings";
 import { Muistuttaja, MuistuttajaInput, Muistuttajat, TallennaMuistuttajatMutationVariables } from "@services/api";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   UseFormProps,
   useForm,
@@ -15,7 +14,6 @@ import {
   Controller,
   useController,
 } from "react-hook-form";
-import { kiinteistonOmistajatSchema } from "src/schemas/kiinteistonOmistajat";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -94,7 +92,6 @@ const mapFormDataForApi: (data: MuistuttajatFormFields) => TallennaMuistuttajatM
 };
 
 const getFormOptions: (defaultValues: MuistuttajatFormFields) => UseFormProps<MuistuttajatFormFields> = (defaultValues) => ({
-  resolver: yupResolver(kiinteistonOmistajatSchema, { abortEarly: false, recursive: true }),
   mode: "onChange",
   reValidateMode: "onChange",
   defaultValues,
@@ -351,7 +348,7 @@ export const FormContents: VFC<{
           try {
             apiData = mapFormDataForApi(data);
           } catch (error) {
-            log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
+            log.error("Virhe muistuttajatietojen muuttamisessa tallennettavaan muotoon \n", error, data);
             showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
           }
           if (apiData) {
@@ -359,9 +356,9 @@ export const FormContents: VFC<{
               await api.tallennaMuistuttajat(apiData);
               useFormReturn.reset(data);
               close();
-              showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
+              showSuccessMessage("Muistuttajatiedot tallennettu");
             } catch (error) {
-              log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
+              log.error("Virhe muistuttajatietojen tallennuksessa: \n", error, apiData);
             }
           }
         })()
@@ -393,7 +390,7 @@ export const FormContents: VFC<{
             )}
           </Section>
           <Section>
-            <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
+            <H3>Muistuttajien tiedotus muilla tavoin</H3>
             <p>
               Muistutuksen suunnitelmaan on mahdollista jättää myös kirjaamon sähköpostiin, joten on mahdollista, etteivät kaikki
               muistuttajat ole tunnistautuneet. Voit listata alle nämä muistuttajat ja tiedottaa heitä hyväksymispäätöksestä järjestelmän
