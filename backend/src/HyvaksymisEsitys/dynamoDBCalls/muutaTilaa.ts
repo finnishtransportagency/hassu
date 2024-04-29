@@ -30,6 +30,7 @@ export default async function muutaMuokattavanHyvaksymisEsityksenTilaa(input: {
       ":uusiTila": uusiTila,
       ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
       ":vanhaTila": vanhaTila,
+      ":versioFromInput": versio,
     },
     ConditionExpression:
       "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
