@@ -143,6 +143,7 @@ const muistuttaja3: DBMuistuttaja = {
   postinumero: "00100",
   postitoimipaikka: "Helsinki",
   maakoodi: "FI",
+  tiedotustapa: "Eikös se sähköpostilla",
 };
 describe("tiedotettavatExcel", () => {
   before(() => {
