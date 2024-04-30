@@ -420,8 +420,9 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
         tilaKoodi: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodi,
+        tilaKoodiKuvaus: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus,
       });
-      throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui");
+      throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui: " + resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
     }
   } catch (e) {
     await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, false, tyyppi);
