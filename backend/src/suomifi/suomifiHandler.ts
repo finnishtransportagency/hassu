@@ -164,7 +164,7 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
   }
 }
 
-async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, success: boolean, approvalType: PublishOrExpireEventType) {
+async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, success: boolean, approvalType: PublishOrExpireEventType, traceId?: string) {
   const params = new UpdateCommand({
     TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
@@ -174,7 +174,7 @@ async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, 
     UpdateExpression: "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
     ExpressionAttributeNames: { "#l": "lahetykset" },
     ExpressionAttributeValues: {
-      ":status": [{ tila: success ? "OK" : "VIRHE", lahetysaika: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ), tyyppi: approvalType }],
+      ":status": [{ tila: success ? "OK" : "VIRHE", lahetysaika: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ), tyyppi: approvalType, traceId }],
       ":tyhjalista": [],
     },
   });
@@ -368,6 +368,15 @@ ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaVirano
   }
 }
 
+export function parseTraceId(text: string | undefined) {
+  if (!text) {
+    return undefined;
+  }
+  const traceId = "Trace ID: ";
+  const idx = text.indexOf(traceId);
+  return text.substring(idx + traceId.length);
+}
+
 async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaja: boolean, tyyppi: PublishOrExpireEventType) {
   try {
     const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
@@ -397,20 +406,23 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
     const resp = await client.lahetaViesti(viesti);
     const success = resp.LahetaViestiResult?.TilaKoodi?.TilaKoodi === 202;
     if (success) {
+      const traceId = parseTraceId(resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
       auditLog.info("Suomi.fi pdf-viesti lähetetty", {
         omistajaId: omistaja ? kohde.id : undefined,
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
+        traceId,
       });
-      await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, true, tyyppi);
+      await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, true, tyyppi, traceId);
     } else {
       auditLog.info("Suomi.fi pdf-viestin lähetys epäonnistui", {
         omistajaId: omistaja ? kohde.id : undefined,
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
         tilaKoodi: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodi,
+        tilaKoodiKuvaus: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus,
       });
-      throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui");
+      throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui: " + resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
     }
   } catch (e) {
     await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, false, tyyppi);
