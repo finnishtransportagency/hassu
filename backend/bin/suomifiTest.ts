@@ -4,7 +4,7 @@ import express from "express";
 import fs from "fs";
 import { LisaaKohteitaResponse, HaeAsiakkaitaResponse } from "../src/suomifi/viranomaispalvelutwsinterface";
 import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { parseLaskutus } from "../src/suomifi/suomifiHandler";
+import { parseLaskutus, parseTraceId } from "../src/suomifi/suomifiHandler";
 
 const app = express();
 const port = 8081;
@@ -230,10 +230,11 @@ euWestSSMClient
           });
       });
   })
-  .then((response) => {
+  .then((response: any) => {
     if (process.argv.includes("--debug")) {
       console.log("XML Request: " + soapClient?.getSoapClient().lastRequest);
       console.log("XML Response: " + soapClient?.getSoapClient().lastResponse);
+      console.log("TraceId: " + parseTraceId(response.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus))
     }
     if (isHaeAsiakkaitaResponse(response)) {
       console.log(response.HaeAsiakkaitaResult?.TilaKoodi);

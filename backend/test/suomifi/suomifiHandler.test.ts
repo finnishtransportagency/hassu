@@ -74,7 +74,7 @@ function mockSuomiFiClient(request: SuomiFiRequest, asiakasTila: number, pdfTila
     lahetaViesti(viesti) {
       request.pdfViesti = viesti;
       return new Promise((resolve) => {
-        resolve({ LahetaViestiResult: { TilaKoodi: { TilaKoodi: pdfTilakoodi } } });
+        resolve({ LahetaViestiResult: { TilaKoodi: { TilaKoodi: pdfTilakoodi, TilaKoodiKuvaus: "Laskutustunniste puuttuu tai on väärän mittainen" } } });
       });
     },
   };
@@ -657,7 +657,7 @@ describe("suomifiHandler", () => {
       fail("Pitäisi heittää poikkeus");
     } catch (e) {
       assert(e instanceof Error);
-      expect(e.message).to.equal("Suomi.fi pdf-viestin lähetys epäonnistui");
+      expect(e.message).to.equal("Suomi.fi pdf-viestin lähetys epäonnistui: Laskutustunniste puuttuu tai on väärän mittainen");
     }
     expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
     const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
