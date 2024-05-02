@@ -67,7 +67,20 @@ export default async function createLadattavatTiedostot(
       )
     )
   ).sort(jarjestaTiedostot);
-  const lausunnot: API.LadattavaTiedosto[] = [];
+  const maanomistajaluettelo: API.LadattavaTiedosto[] = (
+    await Promise.all(
+      hyvaksymisEsitys?.maanomistajaluettelo?.map((aineisto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(projekti.oid, aineisto, path + "maanomistajaluettelo/")
+      ) ?? []
+    )
+  ).sort(jarjestaTiedostot);
+  const lausunnot: API.LadattavaTiedosto[] = (
+    await Promise.all(
+      hyvaksymisEsitys?.lausunnot?.map((aineisto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(projekti.oid, aineisto, path + "lausunnot/")
+      ) ?? []
+    )
+  ).sort(jarjestaTiedostot);
   return {
     __typename: "LadattavatTiedostot",
     hyvaksymisEsitys: hyvaksymisEsitysTiedostot,
@@ -78,6 +91,7 @@ export default async function createLadattavatTiedostot(
     muutAineistot,
     poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     aineistopaketti,
+    maanomistajaluettelo,
   };
 }
 
