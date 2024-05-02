@@ -387,8 +387,12 @@ export const FormContents: VFC<{
           if (apiData) {
             try {
               await api.tallennaMuistuttajat(apiData);
-              useFormReturn.reset(data);
-              close();
+              const newData: MuistuttajatFormFields = {
+                oid: data.oid,
+                suomifiMuistuttajat: data.suomifiMuistuttajat.filter((m) => !apiData.poistettavatMuistuttajat.includes(m.id ?? "")),
+                muutMuistuttajat: data.muutMuistuttajat.filter((m) => !apiData.poistettavatMuistuttajat.includes(m.id ?? "")),
+              };
+              useFormReturn.reset(newData);
               showSuccessMessage("Muistuttajatiedot tallennettu");
             } catch (error) {
               log.error("Virhe muistuttajatietojen tallennuksessa: \n", error, apiData);
