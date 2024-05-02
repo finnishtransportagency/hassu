@@ -20,7 +20,7 @@ exports[`UploadService should upload file successfully 1`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-upload",
-    "Key": "1-2-3-4/logo ääkkösillä.png",
+    "Key": "1-2-3-4/logo_aakkosilla.png",
   },
   "stub": "HeadObjectCommand",
 }
@@ -31,8 +31,8 @@ Object {
   "args": Object {
     "Bucket": "hassu-localstack-yllapito",
     "ContentType": "image/png",
-    "CopySource": "hassu-localstack-upload%2F1-2-3-4%2Flogo%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.png",
-    "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo ääkkösillä.png",
+    "CopySource": "hassu-localstack-upload%2F1-2-3-4%2Flogo_aakkosilla.png",
+    "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo_aakkosilla.png",
     "Metadata": Object {},
     "MetadataDirective": "REPLACE",
   },
