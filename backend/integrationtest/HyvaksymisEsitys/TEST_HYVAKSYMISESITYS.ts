@@ -90,20 +90,20 @@ export default TEST_HYVAKSYMISESITYS;
 
 export const TEST_HYVAKSYMISESITYS2: DeepReadonly<IHyvaksymisEsitys> = getTestHyvaksymisEsitys(2);
 
-export const TEST_HYVAKSYMISESITYS_FILE_PATHS: DeepReadonly<string[]> = getHyvaksymisEsitysFilePaths();
+export const TEST_HYVAKSYMISESITYS_FILES: DeepReadonly<{ path: string; nimi: string }[]> = getHyvaksymisEsitysFiles();
 
-export const TEST_HYVAKSYMISESITYS_FILE_PATHS2: DeepReadonly<string[]> = getHyvaksymisEsitysFilePaths(2);
+export const TEST_HYVAKSYMISESITYS_FILES2: DeepReadonly<{ path: string; nimi: string }[]> = getHyvaksymisEsitysFiles(2);
 
-function getHyvaksymisEsitysFilePaths(number?: number): Readonly<string[]> {
+function getHyvaksymisEsitysFiles(number?: number): DeepReadonly<{ path: string; nimi: string }[]> {
   const nbr = number || "";
   return [
-    `hyvaksymisEsitys/${adaptFileName(`hyvaksymisEsitys äöå ${nbr}.png`)}`,
-    `suunnitelma/${adaptFileName(`suunnitelma äöå ${nbr}.png`)}`,
-    `muistutukset/${adaptFileName(`muistutukset äöå ${nbr}.png`)}`,
-    `lausunnot/${adaptFileName(`lausunnot äöå ${nbr}.png`)}`,
-    `maanomistajaluettelo/${adaptFileName(`maanomistajaluettelo äöå ${nbr}.png`)}`,
-    `kuulutuksetJaKutsu/${adaptFileName(`kuulutuksetJaKutsu äöå ${nbr}.png`)}`,
-    `muuAineistoVelhosta/${adaptFileName(`muuAineistoVelhosta äöå ${nbr}.png`)}`,
-    `muuAineistoKoneelta/${adaptFileName(`muuAineistoKoneelta äöå ${nbr}.png`)}`,
+    { path: `hyvaksymisEsitys/${adaptFileName(`hyvaksymisEsitys äöå ${nbr}.png`)}`, nimi: `hyvaksymisEsitys äöå ${nbr}.png` },
+    { path: `suunnitelma/${adaptFileName(`suunnitelma äöå ${nbr}.png`)}`, nimi: `suunnitelma äöå ${nbr}.png` },
+    { path: `muistutukset/${adaptFileName(`muistutukset äöå ${nbr}.png`)}`, nimi: `muistutukset äöå ${nbr}.png` },
+    { path: `lausunnot/${adaptFileName(`lausunnot äöå ${nbr}.png`)}`, nimi: `lausunnot äöå ${nbr}.png` },
+    { path: `maanomistajaluettelo/${adaptFileName(`maanomistajaluettelo äöå ${nbr}.png`)}`, nimi: `maanomistajaluettelo äöå ${nbr}.png` },
+    { path: `kuulutuksetJaKutsu/${adaptFileName(`kuulutuksetJaKutsu äöå ${nbr}.png`)}`, nimi: `kuulutuksetJaKutsu äöå ${nbr}.png` },
+    { path: `muuAineistoVelhosta/${adaptFileName(`muuAineistoVelhosta äöå ${nbr}.png`)}`, nimi: `muuAineistoVelhosta äöå ${nbr}.png` },
+    { path: `muuAineistoKoneelta/${adaptFileName(`muuAineistoKoneelta äöå ${nbr}.png`)}`, nimi: `muuAineistoKoneelta äöå ${nbr}.png` },
   ];
 }

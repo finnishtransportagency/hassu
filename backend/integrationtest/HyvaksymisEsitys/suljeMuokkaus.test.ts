@@ -3,8 +3,8 @@ import { userService } from "../../src/user";
 import * as API from "hassu-common/graphql/apiModel";
 import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS2,
-  TEST_HYVAKSYMISESITYS_FILE_PATHS,
-  TEST_HYVAKSYMISESITYS_FILE_PATHS2,
+  TEST_HYVAKSYMISESITYS_FILES,
+  TEST_HYVAKSYMISESITYS_FILES2,
 } from "./TEST_HYVAKSYMISESITYS";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import {
@@ -35,15 +35,15 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
   beforeEach(async () => {
     // Aseta julkaistulle ja muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS.map(async (file: string) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS2.map(async (file: string) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES2.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
   });
@@ -77,8 +77,8 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
     // Testaa että muokattavalle hyväksymisesitykselle on annettu samat tiedostot kuin julkaistulle ja että sen alkuperäiset tiedostot on poistettu
     expect(files.sort()).to.eql(
       [
-        ...TEST_HYVAKSYMISESITYS_FILE_PATHS.map((file: string) => `yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/${file}`),
-        ...TEST_HYVAKSYMISESITYS_FILE_PATHS.map((file: string) => `yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/${file}`),
+        ...TEST_HYVAKSYMISESITYS_FILES.map(({ path }) => `yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/${path}`),
+        ...TEST_HYVAKSYMISESITYS_FILES.map(({ path }) => `yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/${path}`),
       ].sort()
     );
   });
