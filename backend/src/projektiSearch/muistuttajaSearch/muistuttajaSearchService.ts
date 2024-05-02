@@ -54,10 +54,21 @@ class MuistuttajaSearchService {
   }
 
   async getMuistuttajaMaara(oid: string): Promise<number> {
-    const response = await muistuttajaOpenSearchClient.count({
-      term: { oid },
+    const response = await muistuttajaOpenSearchClient.query({
+      query: {
+        bool: {
+          must: [
+            {
+              term: { oid },
+            },
+            {
+              term: { kaytossa: true },
+            },
+          ],
+        },
+      },
     });
-    return response.count;
+    return response?.hits?.total?.value;
   }
 
   async searchMuistuttajat(params: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
@@ -91,6 +102,9 @@ class MuistuttajaSearchService {
           },
           {
             term: { suomifiLahetys: !params.muutMuistuttajat },
+          },
+          {
+            term: { kaytossa: true },
           },
         ],
       },

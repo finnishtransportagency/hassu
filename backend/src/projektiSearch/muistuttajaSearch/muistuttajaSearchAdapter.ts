@@ -17,6 +17,7 @@ export type MuistuttajaDocument = Pick<
   | "paivitetty"
   | "suomifiLahetys"
   | "sahkoposti"
+  | "kaytossa"
 > & { maa: string | null };
 
 export function adaptMuistuttajaToIndex({
@@ -33,6 +34,7 @@ export function adaptMuistuttajaToIndex({
   paivitetty,
   sahkoposti,
   suomifiLahetys,
+  kaytossa,
 }: DBMuistuttaja): MuistuttajaDocument {
   return {
     lahiosoite,
@@ -47,6 +49,7 @@ export function adaptMuistuttajaToIndex({
     paivitetty,
     sahkoposti,
     suomifiLahetys,
+    kaytossa,
   };
 }
 

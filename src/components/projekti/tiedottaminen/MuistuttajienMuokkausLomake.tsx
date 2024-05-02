@@ -65,11 +65,11 @@ const mapOmistajaToMuistuttajaRow =
     return omistajaRow;
   };
 
-type PoistettavaOmistaja = Omit<MuistuttajaRow, "id"> & { id: string };
+type PoistettavaMuistuttaja = Omit<MuistuttajaRow, "id"> & { id: string };
 
 const mapFormDataForApi: (data: MuistuttajatFormFields) => TallennaMuistuttajatMutationVariables = (data) => {
   const poistettavatMuistuttajat = [...data.muutMuistuttajat, ...data.suomifiMuistuttajat]
-    .filter((omistaja): omistaja is PoistettavaOmistaja => !!omistaja.toBeDeleted && !!omistaja.id)
+    .filter((omistaja): omistaja is PoistettavaMuistuttaja => !!omistaja.toBeDeleted && !!omistaja.id)
     .map(({ id }) => id);
   const muutMuistuttajat = data.muutMuistuttajat
     .filter((omistaja) => !omistaja.toBeDeleted)
@@ -110,7 +110,7 @@ const getDefaultColumnMeta = () => ({
 });
 
 const createPoistaColumn = (
-  fieldArrayName: "suomifiOmistajat" | "muutOmistajat" | "lisatytOmistajat"
+  fieldArrayName: "suomifiMuistuttajat" | "muutMuistuttajat" | "lisatytMuistuttajat"
 ): ColumnDef<MuistuttajaRow, unknown> => ({
   header: "Poista",
   id: "actions",
@@ -205,7 +205,7 @@ const suomifiColumns: ColumnDef<MuistuttajaRow>[] = [
     id: "maakoodi",
     meta: getSuomifiDefaultColumnMeta(),
   },
-  createPoistaColumn("suomifiOmistajat"),
+  createPoistaColumn("suomifiMuistuttajat"),
 ];
 
 const muutColumns: ColumnDef<MuistuttajaRow>[] = [
@@ -293,7 +293,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
       />
     ),
   },
-  createPoistaColumn("muutOmistajat"),
+  createPoistaColumn("muutMuistuttajat"),
 ];
 
 const countryCodesSorted = lookup.countries
