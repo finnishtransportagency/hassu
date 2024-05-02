@@ -100,7 +100,7 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   }
   const aloituskuulutusSaamePDFt = aloituskuulutusJulkaisu?.aloituskuulutusSaamePDFt;
   if (aloituskuulutusSaamePDFt) {
-    forEverySaameDoAsync(async (kieli) => {
+    await forEverySaameDoAsync(async (kieli) => {
       const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
       assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
@@ -124,7 +124,7 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
     }
     const vuorovaikutusSaamePDFt = julkaisu.vuorovaikutusSaamePDFt;
     if (vuorovaikutusSaamePDFt) {
-      forEverySaameDoAsync(async (kieli) => {
+      await forEverySaameDoAsync(async (kieli) => {
         const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
         assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
         kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kutsu));
@@ -153,12 +153,12 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   }
   const nahtavillaoloSaamePDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloSaamePDFt;
   if (nahtavillaoloSaamePDFt) {
-    forEverySaameDoAsync(async (kieli) => {
+    await forEverySaameDoAsync(async (kieli) => {
       const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
-      assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
+      assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
       const ilmoitus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-      assertIsDefined(ilmoitus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
+      assertIsDefined(ilmoitus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusIlmoitusPDF on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
     });
   }
