@@ -172,7 +172,7 @@ describe("muistutusHandler", () => {
               id: muutMuistuttajaIdt[0],
               nimi: "Jarkko Jankkinen",
               maakoodi: "FI",
-              tiedotusosoite: "Lähitie 14",
+              jakeluosoite: "Lähitie 14",
               paikkakunta: "Parikkala",
               postinumero: "03300",
               sahkoposti: "jarkko@jankkinen.fi",
@@ -182,7 +182,7 @@ describe("muistutusHandler", () => {
               // uusi käsin lisätty käyttäjä (id puuttuu)
               nimi: "Jere Testinen",
               maakoodi: "FI",
-              tiedotusosoite: "Lähitie 16",
+              jakeluosoite: "Lähitie 16",
               paikkakunta: "Parikkala",
               postinumero: "03300",
               sahkoposti: "jere@testinen.fi",
@@ -201,7 +201,7 @@ describe("muistutusHandler", () => {
         expect(o1.nimi).to.be.equal("Jarkko Jankkinen");
         expect(o1.sahkoposti).to.be.equal("jarkko@jankkinen.fi");
         expect(o1.tiedotustapa).to.be.equal("email");
-        expect(o1.tiedotusosoite).to.be.equal("Lähitie 14");
+        expect(o1.lahiosoite).to.be.equal("Lähitie 14");
         expect(o1.postinumero).to.be.equal("03300");
         expect(o1.postitoimipaikka).to.be.equal("Parikkala");
         expect(o1.maakoodi).to.be.equal("FI");
@@ -212,7 +212,7 @@ describe("muistutusHandler", () => {
         expect(o2.nimi).to.be.equal("Jere Testinen");
         expect(o2.sahkoposti).to.be.equal("jere@testinen.fi");
         expect(o2.tiedotustapa).to.be.equal("email");
-        expect(o2.tiedotusosoite).to.be.equal("Lähitie 16");
+        expect(o2.lahiosoite).to.be.equal("Lähitie 16");
         expect(o2.postinumero).to.be.equal("03300");
         expect(o2.postitoimipaikka).to.be.equal("Parikkala");
         expect(o2.maakoodi).to.be.equal("FI");
@@ -237,7 +237,7 @@ describe("muistutusHandler", () => {
                 id: "66",
                 nimi: "Jarkko Jankkinen",
                 maakoodi: "FI",
-                tiedotusosoite: "Lähitie 14",
+                jakeluosoite: "Lähitie 14",
                 paikkakunta: "Parikkala",
                 postinumero: "03300",
                 sahkoposti: "jarkko@jankkinen.fi",
