@@ -1,8 +1,9 @@
 import { api } from "../api/apiClient";
 import assert from "assert";
 import { TallennaProjektiInput, UudelleenKuulutusInput } from "hassu-common/graphql/apiModel";
+import { tallennaEULogo } from "../api/testUtil/tests";
 
-export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string): Promise<void> {
+export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string, saame?: boolean): Promise<void> {
   const projekti = await api.lataaProjekti(oid);
   assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
   const uudelleenKuulutusInput: UudelleenKuulutusInput = {
@@ -25,5 +26,16 @@ export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuul
       uudelleenKuulutus: uudelleenKuulutusInput,
     },
   };
+  if (saame) {
+    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
+    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    input.aloitusKuulutus = {
+      ...input.aloitusKuulutus,
+      aloituskuulutusSaamePDFt: {
+        POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+      },
+    };
+  }
+
   await api.tallennaProjekti(input);
 }

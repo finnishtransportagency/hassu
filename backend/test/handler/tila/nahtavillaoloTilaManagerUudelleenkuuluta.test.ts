@@ -2,7 +2,7 @@
 
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, LadattuTiedostoTila, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
@@ -16,10 +16,12 @@ import { fileService } from "../../../src/files/fileService";
 import { expect } from "chai";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 import { emailClient } from "../../../src/email/email";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
+  let saveProjektiStub: sinon.SinonStub;
 
   afterEach(() => {
     userFixture.logout();
@@ -35,6 +37,7 @@ describe("nahtavillaoloTilaManager", () => {
     userFixture.loginAs(UserFixture.hassuAdmin);
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
   });
 
   afterEach(() => {
@@ -46,7 +49,6 @@ describe("nahtavillaoloTilaManager", () => {
   it("should set old julkaisu tila to PERUUTETTU when making uudelleenkuuluta, if old julkaisu's kuulutusPaiva has not passed", async function () {
     MockDate.set("2020-01-01");
     const nahtavillaoloJulkaisuUpdateStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
-    sinon.stub(projektiDatabase, "saveProjekti");
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(0).args[1]).to.eql({
       ...(projekti.nahtavillaoloVaiheJulkaisut as NahtavillaoloVaiheJulkaisu[])[0],
@@ -57,7 +59,6 @@ describe("nahtavillaoloTilaManager", () => {
   it("should not set old julkaisu tila to PERUUTETTU when making uudelleenkuuluta, if old julkaisu's kuulutusPaiva has passed", async function () {
     MockDate.set("2023-01-01");
     const nahtavillaoloJulkaisuUpdateStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
-    sinon.stub(projektiDatabase, "saveProjekti");
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
     expect(nahtavillaoloJulkaisuUpdateStub.callCount).to.eql(0);
   });
@@ -76,7 +77,6 @@ describe("nahtavillaoloTilaManager", () => {
     loadProjektiStub.resolves(projekti);
     const nahtavillaoloJulkaisuUpdateStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "update");
     const nahtavillaoloJulkaisuInsertStub = sinon.stub(projektiDatabase.nahtavillaoloVaiheJulkaisut, "insert");
-    const saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     // Uudelleenkuuluta
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
     projekti = { ...projekti, ...saveProjektiStub.getCall(0).args[0] };
@@ -112,5 +112,54 @@ describe("nahtavillaoloTilaManager", () => {
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].kuulutusPaiva).to.eql(originalKuulutusPaiva);
     expect(addZipEventStub.callCount).to.eql(1);
+  });
+
+  it("should remove saamePDFs from old kuulutus when making uudelleenkuulutus", async function () {
+    projekti.nahtavillaoloVaihe = {
+      ...projekti.nahtavillaoloVaihe,
+      id: 1,
+      nahtavillaoloSaamePDFt: {
+        POHJOISSAAME: {
+          kuulutusPDF: {
+            tiedosto: "/nahtavillaolo/1/kuulutus.pdf",
+            nimi: "Saamenkielinen kuulutus",
+            tuotu: "2023-01-01",
+            tila: LadattuTiedostoTila.VALMIS,
+          },
+          kuulutusIlmoitusPDF: {
+            tiedosto: "/nahtavillaolo/1/kuulutusilmoitus.pdf",
+            nimi: "Saamenkielinen kuulutus ilmoitus",
+            tuotu: "2023-01-01",
+            tila: LadattuTiedostoTila.VALMIS,
+          },
+        },
+      },
+    };
+    assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
+    projekti.nahtavillaoloVaiheJulkaisut = [
+      {
+        ...projekti.nahtavillaoloVaiheJulkaisut?.[0],
+        id: 1,
+        nahtavillaoloSaamePDFt: {
+          POHJOISSAAME: {
+            kuulutusPDF: {
+              tiedosto: "/nahtavillaolo/1/kuulutus.pdf",
+              nimi: "Saamenkielinen kuulutus",
+              tuotu: "2023-01-01",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+            kuulutusIlmoitusPDF: {
+              tiedosto: "/nahtavillaolo/1/kuulutusilmoitus.pdf",
+              nimi: "Saamenkielinen kuulutus ilmoitus",
+              tuotu: "2023-01-01",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+          },
+        },
+      },
+    ];
+    await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
+    const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
+    expect(savedProjekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt).to.eql(undefined);
   });
 });

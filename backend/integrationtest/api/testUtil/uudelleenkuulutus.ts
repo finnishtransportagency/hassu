@@ -1,17 +1,23 @@
 import { api } from "../apiClient";
 import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisu,
   KuulutusJulkaisuTila,
+  NahtavillaoloVaiheJulkaisu,
   NykyinenKayttaja,
   Projekti,
   ProjektiJulkinen,
   ProjektiKayttaja,
   Status,
+  TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
+  VuorovaikutusKierrosJulkaisu,
 } from "hassu-common/graphql/apiModel";
 
 import { expectToMatchSnapshot } from "./util";
-import { asetaAika, loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
+import { asetaAika, loadProjektiFromDatabase, tallennaEULogo, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
   cleanupAloituskuulutusTimestamps,
@@ -45,6 +51,12 @@ type LuonnosKey = keyof Pick<
   Projekti,
   "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
 >;
+
+type SaamePDFKey =
+  | keyof Pick<AloitusKuulutusJulkaisu, "aloituskuulutusSaamePDFt">
+  | keyof Pick<NahtavillaoloVaiheJulkaisu, "nahtavillaoloSaamePDFt">
+  | keyof Pick<VuorovaikutusKierrosJulkaisu, "vuorovaikutusSaamePDFt">
+  | keyof Pick<HyvaksymisPaatosVaiheJulkaisu, "hyvaksymisPaatosVaiheSaamePDFt">;
 
 export type UudelleelleenkuulutettavaVaiheenTiedot = {
   initialStatus: Status;
@@ -154,7 +166,8 @@ export async function testUudelleenkuulutus(
   projektiPaallikko: ProjektiKayttaja,
   muokkaaja: NykyinenKayttaja,
   userFixture: UserFixture,
-  kuulutusPaiva: string
+  kuulutusPaiva: string,
+  saame?: SaamePDFKey
 ): Promise<void> {
   const {
     status,
@@ -187,7 +200,8 @@ export async function testUudelleenkuulutus(
     tilasiirtymaTyyppi,
     luonnosKey,
     luonnoksenSiivoaja,
-    kuulutusPaiva
+    kuulutusPaiva,
+    saame
   );
   userFixture.logout();
 
@@ -227,26 +241,35 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
   tilasiirtymaTyyppi: TilasiirtymaTyyppi,
   luonnosKey: LuonnosKey,
   luonnoksenSiivoaja: ProjektinSiivoaja,
-  kuulutusPaiva: string
+  kuulutusPaiva: string,
+  saamePdfKey?: SaamePDFKey
 ) {
   const projekti = await loadProjektiFromDatabase(oid, status);
   expectToMatchSnapshot("testVaiheAfterSiirraUudelleenkuulutettavaksi", luonnoksenSiivoaja(projekti));
 
-  await api.tallennaJaSiirraTilaa(
-    {
-      oid,
-      versio: projekti.versio,
-      [luonnosKey]: {
-        kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
-        uudelleenKuulutus: {
-          selosteKuulutukselle: { SUOMI: "Kuulutetaan uudelleen kuulutusteksti ..." },
-          selosteLahetekirjeeseen: { SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ..." },
-        },
+  const input: TallennaProjektiInput = {
+    oid,
+    versio: projekti.versio,
+    [luonnosKey]: {
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
+      uudelleenKuulutus: {
+        selosteKuulutukselle: { SUOMI: "Kuulutetaan uudelleen kuulutusteksti ..." },
+        selosteLahetekirjeeseen: { SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ..." },
       },
     },
-    { oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, tyyppi: tilasiirtymaTyyppi }
-  );
+  };
+  if (saamePdfKey) {
+    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
+    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    input[luonnosKey] = {
+      ...input[luonnosKey],
+      [saamePdfKey]: {
+        POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+      },
+    };
+  }
+  await api.tallennaJaSiirraTilaa(input, { oid, toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, tyyppi: tilasiirtymaTyyppi });
 }
 
 async function hyvaksyUudelleenkuulutus(

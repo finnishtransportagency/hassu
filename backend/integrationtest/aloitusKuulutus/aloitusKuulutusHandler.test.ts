@@ -183,7 +183,7 @@ describe("AloitusKuulutus", () => {
     });
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     // Lisätään uudelleenkuulutukseen selitystekstit
-    await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-23");
+    await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-23", true);
     await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
