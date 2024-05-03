@@ -1,6 +1,10 @@
 import sinon from "sinon";
 import { userService } from "../../src/user";
-import TEST_HYVAKSYMISESITYS, { TEST_HYVAKSYMISESITYS_FILES } from "./TEST_HYVAKSYMISESITYS";
+import TEST_HYVAKSYMISESITYS, {
+  TEST_HYVAKSYMISESITYS2,
+  TEST_HYVAKSYMISESITYS_FILES,
+  TEST_HYVAKSYMISESITYS_FILES2,
+} from "./TEST_HYVAKSYMISESITYS";
 import { deleteYllapitoFiles, insertProjektiToDB, insertYllapitoFileToS3, removeProjektiFromDB } from "./util";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { setupLocalDatabase } from "../util/databaseUtil";
@@ -30,7 +34,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     );
     // Aseta muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+      TEST_HYVAKSYMISESITYS_FILES2.map(async ({ path }) => {
         const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
         await insertYllapitoFileToS3(fullpath);
       })
@@ -61,7 +65,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     const projektiInDB = {
       ...TEST_PROJEKTI,
       muokattavaHyvaksymisEsitys: {
-        ...TEST_HYVAKSYMISESITYS,
+        ...TEST_HYVAKSYMISESITYS2,
         tila: API.HyvaksymisTila.HYVAKSYTTY,
       },
       julkaistuHyvaksymisEsitys: {
