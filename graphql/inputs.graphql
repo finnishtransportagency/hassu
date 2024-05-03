@@ -371,7 +371,7 @@ input KunnallinenLadattuTiedostoInput {
   """
   Polku, jonka api.valmisteleTiedostonLataus palauttaa
   """
-  tiedosto: String!
+  tiedosto: String
   """
   Kayttajalle esitettava tiedostonimi
   """
