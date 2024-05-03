@@ -55,7 +55,7 @@ export default async function createLadattavatTiedostot(
   const muuAineistoVelhosta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoVelhosta ?? []).map((tiedosto) =>
-        adaptAineistoNewToLadattavaTiedosto(oid, tiedosto, aineistoHandledAt, joinPath(path, "muuAineistoVelhosta"))
+        adaptAineistoNewToLadattavaTiedosto(tiedosto, aineistoHandledAt, joinPath(path, "muuAineistoVelhosta"))
       )
     )
   ).sort(jarjestaTiedostot);
@@ -63,7 +63,7 @@ export default async function createLadattavatTiedostot(
   const suunnitelma: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.suunnitelma?.map((aineisto) =>
-        adaptAineistoNewToLadattavaTiedosto(projekti.oid, aineisto, aineistoHandledAt, joinPath(path, "suunnitelma"))
+        adaptAineistoNewToLadattavaTiedosto(aineisto, aineistoHandledAt, joinPath(path, "suunnitelma"))
       ) ?? []
     )
   ).sort(jarjestaTiedostot);

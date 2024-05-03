@@ -4,7 +4,6 @@ import { adaptFileName, joinPath } from "../paths";
 import { getYllapitoSignedDownloadLink } from "./util";
 
 export default async function adaptAineistoNewToLadattavaTiedosto(
-  oid: string,
   aineisto: AineistoNew,
   aineistoHandletAt: string | true | undefined | null,
   path: string
