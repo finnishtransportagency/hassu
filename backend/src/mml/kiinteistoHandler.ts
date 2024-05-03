@@ -274,7 +274,8 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const expires = getExpires();
   const initialOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projekti.oid);
-  const sailytettavatOmistajat = await haeSailytettavatKiinteistonOmistajat(projekti.oid, initialOmistajat, input.poistettavatOmistajat);
+  await poistaKiinteistonOmistajat(projekti.oid, initialOmistajat, input.poistettavatOmistajat);
+  const sailytettavatOmistajat = await haeSailytettavatKiinteistonOmistajat(initialOmistajat, input.poistettavatOmistajat);
   const tallennettavatOmistajatInput = input.muutOmistajat.filter((omistaja) => {
     if (!omistaja.id || sailytettavatOmistajat.muutOmistajat.some((o) => o.id === omistaja.id)) {
       return true;
@@ -320,39 +321,30 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
   return ids;
 }
 
-export async function haeSailytettavatKiinteistonOmistajat(
+async function poistaKiinteistonOmistajat(
   oid: string,
   initialOmistajat: DBOmistaja[],
   poistettavatOmistajat: string[]
-): Promise<{ omistajat: DBOmistaja[]; muutOmistajat: DBOmistaja[] }> {
+) {
   poistettavatOmistajat.forEach((poistettavaId) => {
     const idFound = initialOmistajat.some((omistaja) => omistaja.id === poistettavaId);
     if (!idFound) {
       throw new IllegalArgumentError(`Poistettavaa omistajaa id: '${poistettavaId}' ei löytynyt`);
     }
   });
-
-  const { poistettavat, sailytettavat } = initialOmistajat.reduce<{
-    poistettavat: DBOmistaja[];
-    sailytettavat: DBOmistaja[];
-  }>(
-    (jaotellutOmistajat, omistaja) => {
-      if (poistettavatOmistajat.includes(omistaja.id)) {
-        jaotellutOmistajat.poistettavat.push(omistaja);
-      } else {
-        jaotellutOmistajat.sailytettavat.push(omistaja);
-      }
-      return jaotellutOmistajat;
-    },
-    { poistettavat: [], sailytettavat: [] }
-  );
-
   await Promise.all(
-    poistettavat.map(async (omistaja) => {
-      auditLog.info("Poistetaan omistaja", { omistajaId: omistaja.id });
-      await omistajaDatabase.poistaOmistajaKaytosta(oid, omistaja.id);
+    poistettavatOmistajat.map(async (id) => {
+      auditLog.info("Poistetaan omistaja", { omistajaId: id });
+      await omistajaDatabase.poistaOmistajaKaytosta(oid, id);
     })
   );
+}
+
+async function haeSailytettavatKiinteistonOmistajat(
+  initialOmistajat: DBOmistaja[],
+  poistettavatOmistajat: string[]
+): Promise<{ omistajat: DBOmistaja[]; muutOmistajat: DBOmistaja[] }> {
+  const sailytettavat = initialOmistajat.filter((omistaja) => !poistettavatOmistajat.includes(omistaja.id));
 
   return sailytettavat.reduce<{
     omistajat: DBOmistaja[];

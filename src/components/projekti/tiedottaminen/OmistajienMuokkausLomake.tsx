@@ -498,6 +498,12 @@ export const FormContents: VFC<{
           </Section>
           <Section>
             <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
+            <p>
+              Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto
+              kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen
+              muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse.
+              Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
+            </p>
             {initialSearchResponses.muut.hakutulosMaara ? (
               <PaginatedTaulukko
                 oid={projekti.oid}
@@ -511,6 +517,10 @@ export const FormContents: VFC<{
               </GrayBackgroundText>
             )}
             <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
+            <p>
+              Tässä voit lisätä muulla tavalla tiedotettavia kiinteistönomistajia. Huomaathan, että ne lisätään
+              kiinteistönomistajalistaukseen vasta tallennuksen jälkeen.
+            </p>
             <LisatytTaulukko />
           </Section>
           <Section noDivider>
