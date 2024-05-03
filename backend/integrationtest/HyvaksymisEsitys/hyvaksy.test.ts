@@ -4,8 +4,8 @@ import { DBVaylaUser } from "../../src/database/model";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS2,
-  TEST_HYVAKSYMISESITYS_FILE_PATHS,
-  TEST_HYVAKSYMISESITYS_FILE_PATHS2,
+  TEST_HYVAKSYMISESITYS_FILES,
+  TEST_HYVAKSYMISESITYS_FILES2,
 } from "./TEST_HYVAKSYMISESITYS";
 import {
   deleteYllapitoFiles,
@@ -35,9 +35,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   beforeEach(async () => {
     // Aseta muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS.map(async (file) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
   });
@@ -146,9 +146,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     // Aseta julkaistulle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS2.map(async (file) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES2.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
     await hyvaksyHyvaksymisEsitys({ oid, versio });

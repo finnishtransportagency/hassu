@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import { userService } from "../../src/user";
 import * as API from "hassu-common/graphql/apiModel";
-import TEST_HYVAKSYMISESITYS, { TEST_HYVAKSYMISESITYS2, TEST_HYVAKSYMISESITYS_FILE_PATHS } from "./TEST_HYVAKSYMISESITYS";
+import TEST_HYVAKSYMISESITYS, { TEST_HYVAKSYMISESITYS2, TEST_HYVAKSYMISESITYS_FILES } from "./TEST_HYVAKSYMISESITYS";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import {
   deleteYllapitoFiles,
@@ -30,15 +30,15 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   beforeEach(async () => {
     // Aseta julkaistulle ja muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS.map(async (file: string) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
     await Promise.all(
-      TEST_HYVAKSYMISESITYS_FILE_PATHS.map(async (file: string) => {
-        const path = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${file}`;
-        await insertYllapitoFileToS3(path);
+      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
     );
   });
