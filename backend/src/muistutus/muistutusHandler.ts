@@ -149,11 +149,7 @@ class MuistutusHandler {
       }
       throw new IllegalArgumentError(`Tallennettava muistuttaja id:'${muistuttaja.id}' ei ole muutMuistuttajat listalla`);
     });
-    const muistuttajat: Muistuttajat = {
-      __typename: "Muistuttajat",
-      hakutulosMaara: tallennettavatMuistuttajatInput.length,
-      muistuttajat: [],
-    };
+    const ids: string[] = [];
     for (const muistuttaja of tallennettavatMuistuttajatInput) {
       let dbMuistuttaja: DBMuistuttaja | undefined;
       if (muistuttaja.id) {
@@ -182,22 +178,10 @@ class MuistutusHandler {
       dbMuistuttaja.postitoimipaikka = muistuttaja.paikkakunta;
       dbMuistuttaja.maakoodi = muistuttaja.maakoodi;
       await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: dbMuistuttaja }));
-      muistuttajat.muistuttajat.push({
-        __typename: "Muistuttaja",
-        id: dbMuistuttaja.id,
-        lisatty: dbMuistuttaja.lisatty,
-        jakeluosoite: dbMuistuttaja.lahiosoite,
-        maakoodi: dbMuistuttaja.maakoodi,
-        nimi: dbMuistuttaja.nimi,
-        paikkakunta: dbMuistuttaja.postitoimipaikka,
-        postinumero: dbMuistuttaja.postinumero,
-        paivitetty: dbMuistuttaja.paivitetty,
-        sahkoposti: dbMuistuttaja.sahkoposti,
-        tiedotustapa: dbMuistuttaja.tiedotustapa,
-      });
+      ids.push(dbMuistuttaja.id);
     }
 
-    return muistuttajat;
+    return ids;
   }
 }
 

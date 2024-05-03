@@ -314,9 +314,10 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     if (dbOmistaja.userCreated) {
       dbOmistaja.nimi = omistaja.nimi;
       dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
+      ids.push(dbOmistaja.id);
     }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
-    ids.push(dbOmistaja.id);
+    
   }
   return ids;
 }

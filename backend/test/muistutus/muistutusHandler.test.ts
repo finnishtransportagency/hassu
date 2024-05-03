@@ -195,7 +195,6 @@ describe("muistutusHandler", () => {
         expect(dbMock.commandCalls(PutCommand).length).to.be.equal(2);
         const putCommand = dbMock.commandCalls(PutCommand)[0];
         const o1 = putCommand.args[0].input.Item as DBMuistuttaja;
-        console.log(o1);
         expect(o1.id).to.be.equal("33");
         expect(o1.oid).to.be.equal(oid);
         expect(o1.nimi).to.be.equal("Jarkko Jankkinen");
