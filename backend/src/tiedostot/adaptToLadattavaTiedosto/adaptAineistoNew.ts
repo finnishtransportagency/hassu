@@ -1,7 +1,7 @@
 import { AineistoNew } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import { fileService } from "../../files/fileService";
 import { adaptFileName, joinPath } from "../paths";
+import { getYllapitoSignedDownloadLink } from "./util";
 
 export default async function adaptAineistoNewToLadattavaTiedosto(
   oid: string,
@@ -13,7 +13,7 @@ export default async function adaptAineistoNewToLadattavaTiedosto(
   const nimi = aineisto.nimi;
   let linkki;
   if (aineistoHandletAt === true || (aineistoHandletAt && aineistoHandletAt.localeCompare(aineisto.lisatty))) {
-    linkki = await fileService.createYllapitoSignedDownloadLink(oid, joinPath(path, adaptFileName(aineisto.nimi)));
+    linkki = await await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(aineisto.nimi)));
   } else {
     linkki = "";
   }

@@ -1,7 +1,7 @@
 import { LadattuTiedostoNew } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
-import { fileService } from "../../files/fileService";
 import { adaptFileName, joinPath } from "../paths";
+import { getYllapitoSignedDownloadLink } from "./util";
 
 export default async function adaptLadattuTiedostoNewToLadattavaTiedosto(
   oid: string,
@@ -9,6 +9,6 @@ export default async function adaptLadattuTiedostoNewToLadattavaTiedosto(
   path: string
 ): Promise<API.LadattavaTiedosto> {
   const { jarjestys, nimi } = tiedosto;
-  const linkki = await fileService.createYllapitoSignedDownloadLink(oid, joinPath(path, adaptFileName(tiedosto.nimi)));
+  const linkki = await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(tiedosto.nimi)));
   return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.lisatty };
 }
