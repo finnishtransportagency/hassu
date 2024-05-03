@@ -13,6 +13,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { haeHyvaksymisEsityksenTiedot, listaaHyvaksymisEsityksenTiedostot } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";
+import axios from "axios";
 
 describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)", () => {
   const userFixture = new UserFixture(userService);
@@ -94,5 +95,38 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
       .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
     expect(nimet.sort()).to.eql(expectedFileNames.sort());
+  });
+
+  it("antaa tiedostoille toimivat latauslinkit", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS2,
+        tila: API.HyvaksymisTila.HYVAKSYTTY,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const { hyvaksymisEsitys } = await haeHyvaksymisEsityksenTiedot(oid);
+    userFixture.logout(); // Halutaan testata tiedostojen listaaminen kirjautumattomana käyttäjänä!
+    expect(hyvaksymisEsitys).to.exist;
+    assertIsDefined(hyvaksymisEsitys, "On juuri testattu, että hyväksymisesitys on olemassa");
+    const { hash } = hyvaksymisEsitys;
+    const ladattavatTiedostot = await listaaHyvaksymisEsityksenTiedostot({ oid, listaaHyvaksymisEsityksenTiedostotInput: { hash } });
+    const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
+      if (Array.isArray(value)) {
+        acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
+      }
+      return acc;
+    }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
+    const linkit = ladattavatTiedostotList.map(({ linkki }) => linkki);
+    expect(linkit.length).to.eql(linkit.filter((linkki) => !!linkki).length);
+    const files = Promise.all(linkit.map((linkki) => axios.get(linkki as string)));
+    await expect(files).to.eventually.be.fulfilled;
   });
 });
