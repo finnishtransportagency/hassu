@@ -32,14 +32,14 @@ export default async function createLadattavatTiedostot(
   const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.hyvaksymisEsitys ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, joinPath(path, "hyvaksymisEsitys"))
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "hyvaksymisEsitys"))
       )
     )
   ).sort(jarjestaTiedostot);
   const kuulutuksetJaKutsutOmaltaKoneelta = (
     await Promise.all(
       (hyvaksymisEsitys.kuulutuksetJaKutsu ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, joinPath(path, "kuulutuksetJaKutsu"))
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "kuulutuksetJaKutsu"))
       )
     )
   ).sort(jarjestaTiedostot);
@@ -48,7 +48,7 @@ export default async function createLadattavatTiedostot(
   const muuAineistoOmaltaKoneelta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoKoneelta ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, joinPath(path, "muuAineistoKoneelta"))
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "muuAineistoKoneelta"))
       )
     )
   ).sort(jarjestaTiedostot);
@@ -77,15 +77,14 @@ export default async function createLadattavatTiedostot(
   const maanomistajaluettelo: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.maanomistajaluettelo?.map((aineisto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(projekti.oid, aineisto, joinPath(path, "maanomistajaluettelo"))
+        adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "maanomistajaluettelo"))
       ) ?? []
     )
   ).sort(jarjestaTiedostot);
   const lausunnot: API.LadattavaTiedosto[] = (
     await Promise.all(
-      hyvaksymisEsitys?.lausunnot?.map((aineisto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(projekti.oid, aineisto, joinPath(path, "lausunnot"))
-      ) ?? []
+      hyvaksymisEsitys?.lausunnot?.map((aineisto) => adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "lausunnot"))) ??
+        []
     )
   ).sort(jarjestaTiedostot);
   return {

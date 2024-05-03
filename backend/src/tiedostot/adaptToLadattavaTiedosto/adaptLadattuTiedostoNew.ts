@@ -4,7 +4,6 @@ import { adaptFileName, joinPath } from "../paths";
 import { getYllapitoSignedDownloadLink } from "./util";
 
 export default async function adaptLadattuTiedostoNewToLadattavaTiedosto(
-  oid: string,
   tiedosto: LadattuTiedostoNew,
   path: string
 ): Promise<API.LadattavaTiedosto> {
