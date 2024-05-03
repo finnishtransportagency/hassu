@@ -38,7 +38,7 @@ const MuistuttajienMuokkaus: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projek
   return (
     <>
       <Section noDivider>
-        <H2 variant="h1">Muokkaa muistuttajatietoja</H2>
+        <H2 variant="h1">Muokkaa muistuttajia</H2>
         <H3 variant="lead">{projekti.velho.nimi}</H3>
         <GrayBackgroundText>
           <p>
@@ -46,9 +46,9 @@ const MuistuttajienMuokkaus: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projek
           </p>
         </GrayBackgroundText>
         <p>
-          Tunnistautuneiden muistuttajien yhteystiedot kerätään järjestelmään ja heille lähetetään kuulutus hyväksymispäätöksestä
-          järjestelmän kautta automaattisesti. Tämän sivun kuulutuksen vastaanottajalista viedään automaattisesti asianhallintaan, kun
-          kuulutus hyväksytään julkaistavaksi. Myös muilla tavoin tiedotettavien muistuttajien lista viedään samalla asianhallintaan.
+          Voit muokata, lisätä tai poistaa muistuttajatietoja. Huomaa, että muutokset tulevat voimaan vasta tallennettuasi muutokset.
+          Suomi.fi -palvelun kautta tiedotettavien muistuttajien tietoja ei voi muokata, mutta vastaanottajia voi poistaa. Muulla tavalla
+          tiedotettavien yhteystietoja on mahdollisuus muokata ja vastaanottajia poistaa, jonka lisäksi voit lisätä uusia vastaanottajia.
         </p>
       </Section>
       {initialSearchResponses && <FormContents projekti={projekti} initialSearchResponses={initialSearchResponses} />}

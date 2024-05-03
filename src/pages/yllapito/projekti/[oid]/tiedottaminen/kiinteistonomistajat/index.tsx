@@ -183,7 +183,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <p>
             Ilmoitus suunnitelman nähtäville asettamisesta ja ilmoitus hyväksymispäätöksestä toimitetaan kiinteistönomistajille järjestelmän
             kautta, kun kiinteistönomistajat on tunnistettu. Tämän sivun ilmoituksen vastaanottajalista viedään automaattisesti
-            asianhallintaan kuulutuksen julkaisupäivänä. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
+            asianhallintaan, kun kuulutus hyväksytään julkaistavaksi. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
           </p>
         </ContentSpacer>
         <ContentSpacer>
@@ -217,7 +217,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <TiedotettavaHaitari
             oid={projekti.oid}
             title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
-            instructionText="Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
+            instructionText="Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
             filterText="Suodata kiinteistönomistajia"
             showLessText="Näytä vähemmän kiinteistönomistajia"
             showMoreText="Näytä enemmän kiinteistönomistajia"
