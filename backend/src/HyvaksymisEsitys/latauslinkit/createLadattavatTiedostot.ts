@@ -70,7 +70,7 @@ export default async function createLadattavatTiedostot(
   const kuntaMuistutukset: API.KunnallinenLadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.muistutukset ?? []).map((tiedosto) =>
-        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(oid, tiedosto, joinPath(path, "muistutukset"))
+        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(tiedosto, joinPath(path, "muistutukset"))
       )
     )
   ).sort(jarjestaTiedostot);
