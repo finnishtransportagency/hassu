@@ -13,7 +13,7 @@ import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
 
 export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
-  requirePermissionLuku();
+  const kayttaja = requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
@@ -28,7 +28,8 @@ export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMu
     ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti"]),
     tila: API.HyvaksymisTila.HYVAKSYTTY,
   };
-  await tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys });
+  assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
+  await tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys, muokkaaja: kayttaja.uid });
   return oid;
 }
 
