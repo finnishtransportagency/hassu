@@ -444,8 +444,20 @@ export const FormContents: VFC<{
           }
           if (apiData) {
             try {
-              await api.tallennaKiinteistonOmistajat(apiData);
-              useFormReturn.reset(data);
+              const ids = await api.tallennaKiinteistonOmistajat(apiData);
+              const newData: KiinteistonOmistajatFormFields = {
+                oid: data.oid,
+                suomifiOmistajat: data.suomifiOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
+                muutOmistajat: data.muutOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
+                lisatytOmistajat: data.lisatytOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
+              };
+              ids.splice(0, newData.muutOmistajat.length);
+              for (let i = 0; i < ids.length; i++) {
+                if (!newData.lisatytOmistajat[i].id) {
+                  newData.lisatytOmistajat[i].id = ids[i];
+                }
+              }
+              useFormReturn.reset(newData);
               close();
               showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
             } catch (error) {

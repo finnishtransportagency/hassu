@@ -269,7 +269,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   auditLog.info("Omistajien haku event lisätty", { event });
 }
 
-export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables) {
+export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmistajatMutationVariables): Promise<string[]> {
   const projekti = await getProjektiAndCheckPermissions(input.oid);
   const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
   const expires = getExpires();
@@ -281,6 +281,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     }
     throw new IllegalArgumentError(`Tallennettava omistaja id:'${omistaja.id}' ei ole muutOmistajat listalla`);
   });
+  const ids = [];
   for (const omistaja of tallennettavatOmistajatInput) {
     let dbOmistaja: DBOmistaja | undefined;
     if (omistaja.id) {
@@ -314,7 +315,9 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
     }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
+    ids.push(dbOmistaja.id);
   }
+  return ids;
 }
 
 export async function haeSailytettavatKiinteistonOmistajat(
