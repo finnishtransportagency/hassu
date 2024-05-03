@@ -784,7 +784,7 @@ export abstract class AbstractApi {
     } as HaeMuistuttajatQueryVariables);
   }
 
-  async tallennaMuistuttajat(mutationVariables: TallennaMuistuttajatMutationVariables): Promise<Muistuttaja[]> {
+  async tallennaMuistuttajat(mutationVariables: TallennaMuistuttajatMutationVariables): Promise<Muistuttajat> {
     return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, mutationVariables);
   }
 

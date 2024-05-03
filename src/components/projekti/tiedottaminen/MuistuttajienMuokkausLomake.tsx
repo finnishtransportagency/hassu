@@ -386,12 +386,17 @@ export const FormContents: VFC<{
           }
           if (apiData) {
             try {
-              await api.tallennaMuistuttajat(apiData);
+              const muistuttajat = await api.tallennaMuistuttajat(apiData);
               const newData: MuistuttajatFormFields = {
                 oid: data.oid,
                 suomifiMuistuttajat: data.suomifiMuistuttajat.filter((m) => !apiData?.poistettavatMuistuttajat.includes(m.id ?? "")),
                 muutMuistuttajat: data.muutMuistuttajat.filter((m) => !apiData?.poistettavatMuistuttajat.includes(m.id ?? "")),
               };
+              for (let i = 0; i < muistuttajat.muistuttajat.length; i++) {
+                if (!newData.muutMuistuttajat[i].id) {
+                  newData.muutMuistuttajat[i].id = muistuttajat.muistuttajat[i].id;
+                }
+              }
               useFormReturn.reset(newData);
               showSuccessMessage("Muistuttajatiedot tallennettu");
             } catch (error) {
