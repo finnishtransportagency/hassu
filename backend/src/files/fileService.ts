@@ -33,7 +33,7 @@ import { Aineisto } from "../database/model";
 import Mail from "nodemailer/lib/mailer";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import fileValidation from "hassu-common/fileValidationSettings";
-import { adaptFileName } from "../tiedostot/paths";
+import { adaptFileName, joinPath } from "../tiedostot/paths";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -581,7 +581,7 @@ export class FileService {
     const s3client = getS3Client();
     const getObjectCommand = new GetObjectCommand({
       Bucket: config.yllapitoBucketName,
-      Key: new ProjektiPaths(oid).yllapitoFullPath + tiedosto,
+      Key: joinPath(new ProjektiPaths(oid).yllapitoFullPath, tiedosto),
     });
     return getSignedUrl(s3client, getObjectCommand, {
       expiresIn: 60 * 60, // One hour
