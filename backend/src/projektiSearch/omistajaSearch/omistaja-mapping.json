@@ -17,37 +17,37 @@
     "etunimet": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "sukunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "nimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "jakeluosoite": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "postinumero": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "paikkakunta": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "maa": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "maakoodi": {
       "type": "keyword"
