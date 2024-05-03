@@ -458,7 +458,6 @@ export const FormContents: VFC<{
                 }
               }
               useFormReturn.reset(newData);
-              close();
               showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
             } catch (error) {
               log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
