@@ -420,7 +420,7 @@ export const FormContents: VFC<{
           <Section noDivider>
             <H3>Muistuttajien tiedotus Suomi.fi -palvelulla</H3>
             <p>
-              Tällä listalla oleville henkilöille lähetetään automaattisesti tieto hyväksymispäätöksen kuulutuksesta Suomi.fi-palvelun
+              Tällä listalla oleville henkilöille lähetetään automaattisesti ilmoitus hyväksymispäätöksen kuulutuksesta Suomi.fi-palvelun
               kautta. Muistuttajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
             </p>
             {initialSearchResponses.suomifi.hakutulosMaara ? (

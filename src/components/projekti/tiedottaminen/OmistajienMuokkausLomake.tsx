@@ -479,7 +479,7 @@ export const FormContents: VFC<{
           <Section noDivider>
             <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
             <p>
-              Kuulutus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
+              Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
               Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
             </p>
             {initialSearchResponses.suomifi.hakutulosMaara ? (

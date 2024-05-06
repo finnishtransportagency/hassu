@@ -152,9 +152,9 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
             </ButtonLink>
           </Stack>
           <p>
-            Tunnistautuneiden muistuttajien yhteystiedot kerätään järjestelmään ja heille lähetetään kuulutus hyväksymispäätöksestä
-            järjestelmän kautta automaattisesti. Tämän sivun kuulutuksen vastaanottajalista viedään automaattisesti asianhallintaan, kun
-            kuulutus hyväksytään julkaistavaksi. Myös muilla tavoin tiedotettavien muistuttajien lista viedään samalla asianhallintaan.
+            Tunnistautuneiden muistuttajien yhteystiedot kerätään järjestelmään ja heille lähetetään ilmoitus hyväksymispäätöksestä
+            järjestelmän kautta automaattisesti. Tämän sivun vastaanottajalista viedään automaattisesti asianhallintaan, kun
+            kuulutus hyväksytään julkaistavaksi. Tämä koskee myös tälle sivulle kerättyjen tunnistautumattomien muistuttajien tietoja.
           </p>
           <GrayBackgroundText>
             <p>
@@ -165,7 +165,7 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
         <TiedotettavaHaitari
           oid={projekti.oid}
           title="Muistuttajien tiedotus Suomi.fi -palvelulla"
-          instructionText="Tällä listalla oleville henkilöille lähetetään automaattisesti tieto hyväksymispäätöksen kuulutuksesta Suomi.fi-palvelun kautta. Muistuttajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
+          instructionText="Tällä listalla oleville henkilöille lähetetään automaattisesti ilmoitus hyväksymispäätöksen kuulutuksesta Suomi.fi-palvelun kautta. Muistuttajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
           filterText="Suodata muistuttajia"
           showLessText="Näytä vähemmän muistuttajia"
           showMoreText="Näytä enemmän muistuttajia"
