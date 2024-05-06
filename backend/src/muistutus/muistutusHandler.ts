@@ -142,7 +142,9 @@ class MuistutusHandler {
     const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     const expires = getExpires();
     const initialMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projekti.oid);
-    await poistaMuistuttajat(projekti.oid, initialMuistuttajat, input.poistettavatMuistuttajat);
+    if (input.poistettavatMuistuttajat.length > 0) {
+      await poistaMuistuttajat(projekti.oid, initialMuistuttajat, input.poistettavatMuistuttajat);
+    }
     const sailytettavatMuistuttajat = await haeSailytettavatMuistuttajat(initialMuistuttajat, input.poistettavatMuistuttajat);
     const tallennettavatMuistuttajatInput = input.muutMuistuttajat.filter((muistuttaja) => {
       if (!muistuttaja.id || sailytettavatMuistuttajat.muutMuistuttajat.some((m) => m.id === muistuttaja.id)) {
@@ -170,6 +172,10 @@ class MuistutusHandler {
           expires,
         };
         auditLog.info("Lisätään muistuttajan tiedot", { muistuttajaId: dbMuistuttaja.id });
+        if (!projekti.muutMuistuttajat) {
+          projekti.muutMuistuttajat = [];
+        }
+        projekti.muutMuistuttajat.push(dbMuistuttaja.id);
       }
       dbMuistuttaja.nimi = muistuttaja.nimi;
       dbMuistuttaja.sahkoposti = muistuttaja.sahkoposti;
@@ -181,7 +187,9 @@ class MuistutusHandler {
       await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: dbMuistuttaja }));
       ids.push(dbMuistuttaja.id);
     }
-
+    const muistuttajat = projekti.muistuttajat?.filter((id) => !input.poistettavatMuistuttajat.includes(id)) ?? [];
+    const muutMuistuttajat = projekti.muutMuistuttajat?.filter((id) => !input.poistettavatMuistuttajat.includes(id)) ?? [];
+    await projektiDatabase.updateMuistuttajat(projekti.oid, muistuttajat, muutMuistuttajat);
     return ids;
   }
 }

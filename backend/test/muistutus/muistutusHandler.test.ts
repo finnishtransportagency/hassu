@@ -24,6 +24,7 @@ import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
 import MockDate from "mockdate";
 import { IllegalArgumentError } from "hassu-common/error";
+import { mockUUID } from "../../integrationtest/shared/sharedMock";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -157,7 +158,8 @@ describe("muistutusHandler", () => {
       const oid = "1.2.3";
       const muistuttajaIdt = ["11", "22"];
       const muutMuistuttajaIdt = ["33", "44"];
-
+      mockUUID();
+  
       beforeEach(() => {
         identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
         loadProjektiByOidStub.restore();
@@ -215,7 +217,7 @@ describe("muistutusHandler", () => {
         expect(o2.postinumero).to.be.equal("03300");
         expect(o2.postitoimipaikka).to.be.equal("Parikkala");
         expect(o2.maakoodi).to.be.equal("FI");
-        expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(2);
+        expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(3);
         const updateCommand1 = dbMock.commandCalls(UpdateCommand)[0];
         assert(updateCommand1.args[0].input.ExpressionAttributeValues);
         expect(updateCommand1.args[0].input.Key).to.eql({ oid, id: "22" });
@@ -224,6 +226,11 @@ describe("muistutusHandler", () => {
         assert(updateCommand2.args[0].input.ExpressionAttributeValues);
         expect(updateCommand2.args[0].input.Key).to.eql({ oid, id: "44" });
         expect(updateCommand2.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
+        const updateCommand3 = dbMock.commandCalls(UpdateCommand)[2];
+        assert(updateCommand3.args[0].input.ExpressionAttributeValues);
+        expect(updateCommand3.args[0].input.Key).to.eql({ oid });
+        expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muistuttajat"]).to.eql(["11"]);
+        expect(updateCommand3.args[0].input.ExpressionAttributeValues[":muutMuistuttajat"]).to.eql(["33", "00000001-3975-4151-abec-71a3dd8d0da0"]);
       });
 
       it("should throw when trying to save non existent muistuttaja", async () => {
