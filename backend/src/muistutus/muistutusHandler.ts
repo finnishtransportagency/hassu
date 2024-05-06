@@ -142,7 +142,8 @@ class MuistutusHandler {
     const now = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     const expires = getExpires();
     const initialMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projekti.oid);
-    const sailytettavatMuistuttajat = await haeSailytettavatMuistuttajat(projekti.oid, initialMuistuttajat, input.poistettavatMuistuttajat);
+    await poistaMuistuttajat(projekti.oid, initialMuistuttajat, input.poistettavatMuistuttajat);
+    const sailytettavatMuistuttajat = await haeSailytettavatMuistuttajat(initialMuistuttajat, input.poistettavatMuistuttajat);
     const tallennettavatMuistuttajatInput = input.muutMuistuttajat.filter((muistuttaja) => {
       if (!muistuttaja.id || sailytettavatMuistuttajat.muutMuistuttajat.some((m) => m.id === muistuttaja.id)) {
         return true;
@@ -185,43 +186,33 @@ class MuistutusHandler {
   }
 }
 
-export async function haeSailytettavatMuistuttajat(
+export async function poistaMuistuttajat(
   oid: string,
   initialMuistuttajat: DBMuistuttaja[],
   poistettavatMuistuttajat: string[]
-): Promise<{
-  muistuttajat: DBMuistuttaja[];
-  muutMuistuttajat: DBMuistuttaja[];
-}> {
+) {
   poistettavatMuistuttajat.forEach((poistettavaId) => {
     const idFound = initialMuistuttajat.some((muistuttaja) => muistuttaja.id === poistettavaId);
     if (!idFound) {
       throw new IllegalArgumentError(`Poistettavaa muistuttajaa id: '${poistettavaId}' ei löytynyt`);
     }
   });
-
-  const { poistettavat, sailytettavat } = initialMuistuttajat.reduce<{
-    poistettavat: DBMuistuttaja[];
-    sailytettavat: DBMuistuttaja[];
-  }>(
-    (jaotellutMuistuttajat, muistuttaja) => {
-      if (poistettavatMuistuttajat.includes(muistuttaja.id)) {
-        jaotellutMuistuttajat.poistettavat.push(muistuttaja);
-      } else {
-        jaotellutMuistuttajat.sailytettavat.push(muistuttaja);
-      }
-      return jaotellutMuistuttajat;
-    },
-    { poistettavat: [], sailytettavat: [] }
-  );
-
   await Promise.all(
-    poistettavat.map(async (muistuttaja) => {
-      auditLog.info("Poistetaan muistuttaja", { muistuttajaId: muistuttaja.id });
-      await muistuttajaDatabase.poistaMuistuttajaKaytosta(oid, muistuttaja.id);
+    poistettavatMuistuttajat.map(async (id) => {
+      auditLog.info("Poistetaan muistuttaja", { muistuttajaId: id });
+      await muistuttajaDatabase.poistaMuistuttajaKaytosta(oid, id);
     })
   );
+}
 
+export async function haeSailytettavatMuistuttajat(
+  initialMuistuttajat: DBMuistuttaja[],
+  poistettavatMuistuttajat: string[]
+): Promise<{
+  muistuttajat: DBMuistuttaja[];
+  muutMuistuttajat: DBMuistuttaja[];
+}> {
+  const sailytettavat = initialMuistuttajat.filter((muistuttaja) => !poistettavatMuistuttajat.includes(muistuttaja.id));
   return sailytettavat.reduce<{
     muistuttajat: DBMuistuttaja[];
     muutMuistuttajat: DBMuistuttaja[];
