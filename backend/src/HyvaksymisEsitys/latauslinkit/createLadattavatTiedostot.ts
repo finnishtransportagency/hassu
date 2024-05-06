@@ -11,7 +11,12 @@ import {
   adaptLadattuTiedostoToLadattavaTiedosto,
   adaptTiedostoPathToLadattavaTiedosto,
 } from "../../tiedostot/adaptToLadattavaTiedosto";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../../tiedostot/paths";
+import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
@@ -20,8 +25,10 @@ export default async function createLadattavatTiedostot(
 ): Promise<API.LadattavatTiedostot> {
   const oid = projekti.oid;
   const aineistoHandledAt = (hyvaksymisEsitys as MuokattavaHyvaksymisEsitys).aineistoHandledAt || true;
-  const path =
-    getYllapitoPathForProjekti(oid) + (aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH);
+  // Vain muokattavalla hyväksymisesityksellä on aineistoHandledAt
+  const path = joinPath(
+    getYllapitoPathForProjekti(oid) + (aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH)
+  );
   const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.hyvaksymisEsitys ?? []).map((tiedosto) =>

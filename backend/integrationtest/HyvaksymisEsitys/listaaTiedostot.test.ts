@@ -35,6 +35,13 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         await insertYllapitoFileToS3(fullpath);
       })
     );
+    // Aseta julkaistulle hyväksymisesitykselle tiedostoja S3:een
+    await Promise.all(
+      TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
+      })
+    );
   });
 
   afterEach(async () => {
