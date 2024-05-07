@@ -52,9 +52,10 @@ const CONCURRENT_MAX = 10;
 export function getMmlClient(options: MmlOptions): MmlClient {
   return {
     haeLainhuutotiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
+      const all: MmlKiinteisto[] = [];
       const chunks = chunkArray(kiinteistotunnukset, MAX);
-      const responses: Promise<MmlKiinteisto[]>[] = [];
       for (const chunk of chunks) {
+        const responses: Promise<MmlKiinteisto[]>[] = [];
         for (const kyselytunnukset of chunkArray(chunk, CONCURRENT_MAX)) {
           responses.push(
             new Promise((resolve: (yhteystiedot: MmlKiinteisto[]) => void) => {
@@ -100,14 +101,15 @@ export function getMmlClient(options: MmlOptions): MmlClient {
             })
           );
         }
+        all.push(...(await Promise.all(responses)).flat());
       }
-      const yhteystiedot = await Promise.all(responses);
-      return yhteystiedot.flat();
+      return all;
     },
     haeYhteystiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
+      const all: MmlKiinteisto[] = [];
       const chunks = chunkArray(kiinteistotunnukset, MAX);
-      const responses: Promise<MmlKiinteisto[]>[] = [];
       for (const chunk of chunks) {
+        const responses: Promise<MmlKiinteisto[]>[] = [];
         for (const kyselytunnukset of chunkArray(chunk, CONCURRENT_MAX)) {
           responses.push(
             new Promise((resolve: (yhteystiedot: MmlKiinteisto[]) => void) => {
@@ -151,9 +153,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
             })
           );
         }
+        all.push(...(await Promise.all(responses)).flat());
       }
-      const yhteystiedot = await Promise.all(responses);
-      return yhteystiedot.flat();
+      return all;
     },
     haeTiekunnat: async (kiinteistotunnukset, uid, debug = false) => {
       const yhteystiedot: MmlKiinteisto[] = [];
