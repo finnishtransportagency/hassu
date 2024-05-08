@@ -20,6 +20,7 @@ import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -140,13 +141,13 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     },
     [setFormContext]
   );
-  const [kayttooikeusOhjeetOpen, kayttooikeusOhjeetSetOpen] = useState(() => {
+  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
     const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
     const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
     return isOpen;
   });
-  const kayttooikeusOhjeetOnClose = useCallback(() => {
-    kayttooikeusOhjeetSetOpen(false);
+  const ohjeetOnClose = useCallback(() => {
+    setOhjeetOpen(false);
     localStorage.setItem("kayttoOikeusOhjeet", "false");
   }, []);
 
@@ -162,15 +163,16 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
             )}
             <input type="hidden" {...register("oid")} />
             <ProjektinPerusosio projekti={projekti} />
-            <KayttoOikeusHallinta
-              disableFields={disableFormEdit}
-              projektiKayttajat={projekti.kayttoOikeudet || []}
-              onKayttajatUpdate={onKayttajatUpdate}
-              projekti={projekti}
-              includeTitle={true}
-              ohjeetOpen={kayttooikeusOhjeetOpen}
-              ohjeetOnClose={kayttooikeusOhjeetOnClose}
-            />
+            <ProjektiPageLayoutContext.Provider {...context} value={{ ohjeetOpen, ohjeetOnClose }}>
+              <KayttoOikeusHallinta
+                disableFields={disableFormEdit}
+                projektiKayttajat={projekti.kayttoOikeudet || []}
+                onKayttajatUpdate={onKayttajatUpdate}
+                projekti={projekti}
+                includeTitle={true}
+              />
+            </ProjektiPageLayoutContext.Provider>
+
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">
                 <Button

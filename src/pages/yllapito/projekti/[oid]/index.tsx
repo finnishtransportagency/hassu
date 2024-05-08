@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
-import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
+import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
@@ -64,22 +64,6 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
-  const [ohjeetOpen, ohjeetSetOpen] = useState(false);
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("perustietojenOhjeet", "false");
-  }, []);
-  const ohjeetOnOpen = useCallback(() => {
-    ohjeetSetOpen(true);
-    localStorage.setItem("perustietojenOhjeet", "true");
-  }, []);
-
-  // useeffectissa vasta ohjeetOpen "alustus" koska muuten ongelmia nextjs ssr takia tms, eli ReferenceError: localStorage is not defined
-  useEffect(() => {
-    const savedValue = localStorage.getItem("perustietojenOhjeet");
-    ohjeetSetOpen(savedValue ? savedValue.toLowerCase() !== "false" : true);
-  }, []);
-
   if (!projekti) {
     return <></>;
   }
@@ -88,15 +72,14 @@ export default function ProjektiSivu() {
   return (
     <ProjektiPageLayout
       title={"Projektin tiedot"}
-      showInfo={!epaaktiivinen && !ohjeetOpen}
-      onOpenInfo={ohjeetOnOpen}
+      showInfo={!epaaktiivinen}
       contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
       {projekti &&
         (epaaktiivinen ? (
           <ProjektinTiedotLukutila projekti={projekti} />
         ) : (
-          <ProjektiSivuLomake ohjeetOpen={ohjeetOpen} ohjeetOnClose={ohjeetOnClose} {...{ projekti, projektiLoadError, reloadProjekti }} />
+          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
         ))}
     </ProjektiPageLayout>
   );
@@ -106,11 +89,9 @@ interface ProjektiSivuLomakeProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
-  ohjeetOpen: boolean;
-  ohjeetOnClose: () => void;
 }
 
-function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjeetOpen, ohjeetOnClose }: ProjektiSivuLomakeProps) {
+function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
   const { data: nykyinenKayttaja } = useCurrentUser();
   const router = useRouter();
 
@@ -280,19 +261,25 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti, ohjee
                 Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
               </Notification>
             )}
-            <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
-              <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
-              <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-              <li>
-                Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
-                vaiheisiin.
-              </li>
-              <li>
-                Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa kunnan
-                edustajaa on mahdollista vaihtaa prosessin aikana.
-              </li>
-            </OhjelistaNotification>
+            <ProjektiPageLayoutContext.Consumer>
+              {({ ohjeetOpen, ohjeetOnClose }) => (
+                <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+                  <li>
+                    Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
+                  </li>
+                  <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                  <li>
+                    Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                    vaiheisiin.
+                  </li>
+                  <li>
+                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                    aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                    kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                  </li>
+                </OhjelistaNotification>
+              )}
+            </ProjektiPageLayoutContext.Consumer>
           </ContentSpacer>
 
           <ProjektinPerusosio projekti={projekti} register={register} formState={useFormReturn.formState} />

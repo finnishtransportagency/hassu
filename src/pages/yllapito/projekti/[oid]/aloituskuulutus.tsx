@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
-import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
+import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -255,20 +255,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const { handleDraftSubmit } = useHandleSubmit(useFormReturn);
 
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("aloituskuulutuksenOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("aloituskuulutuksenOhjeet", "false");
-  }, []);
-  const ohjeetOnOpen = useCallback(() => {
-    ohjeetSetOpen(true);
-    localStorage.setItem("aloituskuulutuksenOhjeet", "true");
-  }, []);
-
   if (!projekti || isLoadingProjekti) {
     return <></>;
   }
@@ -296,8 +282,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     <ProjektiPageLayout
       title="Aloituskuulutus"
       vaihe={Vaihe.ALOITUSKUULUTUS}
-      showInfo={voiMuokata && !ohjeetOpen}
-      onOpenInfo={ohjeetOnOpen}
+      showInfo={voiMuokata}
       contentAsideTitle={
         showUudelleenkuulutaButton && (
           <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS} reloadProjekti={reloadProjekti} />
@@ -329,31 +314,35 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
-                  <OhjelistaNotification
-                    asianhallintaTiedot={{ vaihe: Vaihe.ALOITUSKUULUTUS, projekti }}
-                    open={ohjeetOpen}
-                    onClose={ohjeetOnClose}
-                  >
-                    <li>
-                      Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan samana
-                      päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
-                    </li>
-                    <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
-                    <li>
-                      Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
-                      (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla tasolla.
-                      Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella kielellä, eikä
-                      tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
-                      aloituskuulutukseen.
-                    </li>
-                    <li>
-                      Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
-                      julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
-                    </li>
-                    <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
-                    <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
-                    <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
-                  </OhjelistaNotification>
+                  <ProjektiPageLayoutContext.Consumer>
+                    {({ ohjeetOpen, ohjeetOnClose }) => (
+                      <OhjelistaNotification
+                        asianhallintaTiedot={{ vaihe: Vaihe.ALOITUSKUULUTUS, projekti }}
+                        open={ohjeetOpen}
+                        onClose={ohjeetOnClose}
+                      >
+                        <li>
+                          Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan
+                          samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
+                        </li>
+                        <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
+                        <li>
+                          Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
+                          (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
+                          tasolla. Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella
+                          kielellä, eikä tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
+                          aloituskuulutukseen.
+                        </li>
+                        <li>
+                          Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
+                          julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                        </li>
+                        <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+                        <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
+                        <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
+                      </OhjelistaNotification>
+                    )}
+                  </ProjektiPageLayoutContext.Consumer>
 
                   <ContentSpacer>
                     <h5 className="vayla-small-title">Kuulutus- ja julkaisupäivä</h5>
