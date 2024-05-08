@@ -1,8 +1,22 @@
 import { SSM } from "@aws-sdk/client-ssm";
 import { STS } from "@aws-sdk/client-sts";
-import { getMmlClient } from "../src/mml/mmlClient";
+import { MmlKiinteisto, getMmlClient } from "../src/mml/mmlClient";
 const euWestSSMClient = new SSM({ region: "eu-west-1" });
 const stsClient = new STS({ region: "eu-west-1" });
+
+function sort(kiinteistot: MmlKiinteisto[] | undefined) {
+  kiinteistot?.sort((a, b) => {
+    if (a.kiinteistotunnus && b.kiinteistotunnus) {
+      return a.kiinteistotunnus.localeCompare(b.kiinteistotunnus);
+    } else if (a.kayttooikeusyksikkotunnus && b.kayttooikeusyksikkotunnus) {
+      return a.kayttooikeusyksikkotunnus.localeCompare(b.kayttooikeusyksikkotunnus);
+    } else {
+      return 0;
+    }
+  });
+  return kiinteistot;
+}
+
 Promise.all([
   euWestSSMClient
     .getParameter({
@@ -22,7 +36,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcBaseUrl",
+      Name: "OgcBaseUrl2", // TODO: poista 2 ennen mergausta
       WithDecryption: true,
     })
     .then((param) => {
@@ -30,7 +44,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcApiKey",
+      Name: "OgcApiKey2", // TODO: poista 2 ennen mergausta
       WithDecryption: true,
     })
     .then((param) => {
@@ -43,8 +57,8 @@ Promise.all([
   .then((params) => {
     const ktjBaseUrl = params.find((p) => p.name === "KtjBaseUrl")?.value;
     const mmlApiKey = params.find((p) => p.name === "MmlApiKey")?.value;
-    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl")?.value;
-    const ogcApiKey = params.find((p) => p.name === "OgcApiKey")?.value;
+    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl2")?.value;
+    const ogcApiKey = params.find((p) => p.name === "OgcApiKey2")?.value;
     const uid = params.find((p) => p.name === "UserId")?.value;
     if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid) {
       const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey });
@@ -60,5 +74,5 @@ Promise.all([
       }
     }
   })
-  .then((response) => console.log("response: %s", JSON.stringify(response, null, "  ")))
+  .then((response) => console.log("response: %s", JSON.stringify(sort(response), null, "  ")))
   .catch((e) => console.error(e));
