@@ -192,11 +192,11 @@ class Parameters {
   }
 
   async getOgcBaseUrl() {
-    return this.getRequiredAccountParameter("OgcBaseUrl");
+    return this.getRequiredAccountParameter("OgcBaseUrl2"); // TODO: poista 2 ennen mergausta
   }
 
   async getOgcApiKey() {
-    return this.getRequiredAccountParameter("OgcApiKey");
+    return this.getRequiredAccountParameter("OgcApiKey2"); // TODO: poista 2 ennen mergausta
   }
 
   private async getRequiredAccountParameter(paramName: string): Promise<string> {

@@ -91,10 +91,16 @@ const handlerFactory = (event: SQSEvent) => async () => {
           hakuEvent.kiinteistotunnukset.length
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
-        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
-        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
-        const yhteisalueet = await client.haeYhteisalueet(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const responses = await Promise.all([
+          client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
+          client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
+          client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
+          client.haeYhteisalueet(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
+        ]);
+        const kiinteistot = responses[0];
+        const yhteystiedot = responses[1];
+        const tiekunnat = responses[2];
+        const yhteisalueet = responses[3];
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a)");
