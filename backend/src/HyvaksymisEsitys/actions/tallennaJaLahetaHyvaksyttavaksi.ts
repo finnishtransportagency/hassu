@@ -9,8 +9,9 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
-import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../paths";
+import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
+import { assertIsDefined } from "../../util/assertions";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -24,7 +25,7 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
  * @returns Projektin oid
  */
 export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: API.TallennaHyvaksymisEsitysInput): Promise<string> {
-  requirePermissionLuku();
+  const kayttaja = requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
 
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
@@ -59,10 +60,12 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
     tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
   };
   auditLog.info("Tallenna hyväksymisesitys", { oid, versio, tallennettavaMuokattavaHyvaksymisEsitys });
+  assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
   await tallennaMuokattavaHyvaksymisEsitys({
     oid,
     versio,
     muokattavaHyvaksymisEsitys: tallennettavaMuokattavaHyvaksymisEsitys,
+    muokkaaja: kayttaja.uid,
   });
   // Aineistomuutoksia ei voi olla, koska validoimme, että tiedostot ovat valmiita
   return oid;

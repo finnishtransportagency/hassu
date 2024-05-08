@@ -29,7 +29,6 @@
 //   //     kayttajatunnus: muokkaaja.uid!,
 //   //   };
 //   //   userFixture.loginAs(muokkaaja);
-//   //   // TODO: Stubbaa projektin tallennsu
 //   //   const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, palautusSyy: "virheitä", tila: API.HyvaksymisTila.MUOKKAUS };
 //   //   const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT };
 //   //   // const projektiInDB : DBProjekti = {
@@ -39,7 +38,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta
 //   //   await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput },);
 //   //   // TODO: testaa, että projekti tallennetaan oikeilla arvoilla
 //   // });
@@ -61,7 +59,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser], // muokkaaja ei ole projektihenkilöissä
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid: "1", versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput }, );
 //   //   await expect(kutsu).to.eventually.be.rejectedWith(IllegalAccessError);
 //   // });
@@ -88,7 +85,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
 //   //     oid: "1",
 //   //     versio: 2,
@@ -104,7 +100,6 @@
 //   //   //   julkaistuHyvaksymisEsitys,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Projektin tietokantahaku-mock palauttaa nyt ylläolevan
 //   //   const kutsu2 = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
 //   //     oid: "1",
 //   //     versio: 2,
@@ -132,7 +127,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta;
 //   //   const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
 //   //     oid: "1",
 //   //     versio: 2,
@@ -174,7 +168,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta;
 //   //   const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
 //   //     oid: "1",
 //   //     versio: 2,
@@ -207,7 +200,6 @@
 //   //   //   julkaistuHyvaksymisEsitys: undefined,
 //   //   //   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
 //   //   // } as DBProjekti;
-//   //   // TODO: Mockaa projektin hakeminen tietokannasta
 //   //   const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
 //   //     oid: "1",
 //   //     versio: 2,

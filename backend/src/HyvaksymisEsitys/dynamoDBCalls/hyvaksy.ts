@@ -21,7 +21,8 @@ export default async function tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaks
       "SET " +
       "#versio = :versio, " +
       "#julkaistuHyvaksymisEsitys = :julkaistuHyvaksymisEsitys, " +
-      "#muokattavaHyvaksymisEsitys.#tila = :hyvaksytty " +
+      "#muokattavaHyvaksymisEsitys.#tila = :hyvaksytty, " +
+      "#muokattavaHyvaksymisEsitys.#palautusSyy = :palautusSyy, " +
       "#paivitetty = :paivitetty",
     ExpressionAttributeNames: {
       "#versio": "versio",
@@ -29,6 +30,7 @@ export default async function tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaks
       "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
       "#tila": "tila",
       "#paivitetty": "paivitetty",
+      "#palautusSyy": "palautusSyy",
     },
     ExpressionAttributeValues: {
       ":versio": nextVersion,
@@ -37,6 +39,7 @@ export default async function tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaks
       ":versioFromInput": versio,
       ":hyvaksytty": API.HyvaksymisTila.HYVAKSYTTY,
       ":odottaaHyvaksyntaa": API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      ":palautusSyy": null,
     },
     ConditionExpression:
       "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +

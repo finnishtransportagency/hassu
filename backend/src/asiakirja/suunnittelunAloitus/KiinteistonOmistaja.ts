@@ -96,8 +96,8 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
-      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
-      this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
+      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph("\n") : null,
+      this.paragraph((this.vahainenMenettely ? "" : "\n") + this.kutsuAdapter.hankkeenKuvaus()),
       this.paragraphFromKey("kiinteistonomistaja_kappale6"),
       this.vahainenMenettely
         ? this.paragraphFromKey("kiinteistonomistaja_kappale7_vahainen_menettely")

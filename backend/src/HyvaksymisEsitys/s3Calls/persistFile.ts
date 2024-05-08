@@ -1,5 +1,5 @@
 import { getUploadedSourceFileInformation } from "../../files/fileService";
-import { getYllapitoPathForProjekti, joinPath } from "../paths";
+import { adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 import { getS3Client } from "../../aws/client";
 import { CopyObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../../config";
@@ -27,7 +27,7 @@ export async function persistFile({
 }): Promise<void> {
   const { tiedosto, nimi, avain } = ladattuTiedosto;
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
-  const targetPath = joinPath(getYllapitoPathForProjekti(oid), vaihePrefix, avain, nimi);
+  const targetPath = joinPath(getYllapitoPathForProjekti(oid), vaihePrefix, avain, adaptFileName(nimi));
   try {
     await getS3Client().send(
       new CopyObjectCommand({

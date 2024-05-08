@@ -9,8 +9,9 @@ export default async function tallennaMuokattavaHyvaksymisEsitys(input: {
   oid: string;
   versio: number;
   muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys;
+  muokkaaja: string;
 }): Promise<number> {
-  const { oid, versio, muokattavaHyvaksymisEsitys } = input;
+  const { oid, versio, muokattavaHyvaksymisEsitys, muokkaaja } = input;
   const nextVersion = versio + 1;
   const params = new UpdateCommand({
     TableName: config.projektiTableName,
@@ -27,7 +28,7 @@ export default async function tallennaMuokattavaHyvaksymisEsitys(input: {
     },
     ExpressionAttributeValues: {
       ":versio": nextVersion,
-      ":muokattavaHyvaksymisEsitys": muokattavaHyvaksymisEsitys,
+      ":muokattavaHyvaksymisEsitys": { ...muokattavaHyvaksymisEsitys, muokkaaja },
       ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
       ":versioFromInput": versio,
       ":muokkaus": API.HyvaksymisTila.MUOKKAUS,

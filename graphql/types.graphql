@@ -1226,6 +1226,7 @@ type LadattavatTiedostot {
   suunnitelma: [LadattavaTiedosto!]
   lausunnot: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  maanomistajaluettelo: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
 }

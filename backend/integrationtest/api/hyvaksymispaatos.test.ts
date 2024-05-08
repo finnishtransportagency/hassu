@@ -110,7 +110,8 @@ describe("Hyväksymispäätös", () => {
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
       userFixture,
-      "2039-01-02"
+      "2039-01-02",
+      "hyvaksymisPaatosVaiheSaamePDFt"
     );
     await eventSqsClientMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

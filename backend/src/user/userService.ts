@@ -102,7 +102,7 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
       given_name: body.given_name,
       sub: body.sub,
       username: body.preferred_username,
-    }
+    };
     setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {

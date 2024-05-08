@@ -143,7 +143,8 @@ describe("Nähtävilläolovaihe", () => {
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
       userFixture,
-      "2040-06-01"
+      "2040-06-01",
+      "nahtavillaoloSaamePDFt"
     );
     await eventSqsClientMock.processQueue();
   });

@@ -11,7 +11,12 @@ import {
   adaptLadattuTiedostoToLadattavaTiedosto,
   adaptTiedostoPathToLadattavaTiedosto,
 } from "../../tiedostot/adaptToLadattavaTiedosto";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, getYllapitoPathForProjekti } from "../paths";
+import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
@@ -20,19 +25,21 @@ export default async function createLadattavatTiedostot(
 ): Promise<API.LadattavatTiedostot> {
   const oid = projekti.oid;
   const aineistoHandledAt = (hyvaksymisEsitys as MuokattavaHyvaksymisEsitys).aineistoHandledAt || true;
-  const path =
-    getYllapitoPathForProjekti(oid) + (aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH);
+  const path = joinPath(
+    getYllapitoPathForProjekti(oid),
+    aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
+  );
   const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.hyvaksymisEsitys ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "hyvaksymisEsitys/")
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "hyvaksymisEsitys"))
       )
     )
   ).sort(jarjestaTiedostot);
   const kuulutuksetJaKutsutOmaltaKoneelta = (
     await Promise.all(
       (hyvaksymisEsitys.kuulutuksetJaKutsu ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "kuulutuksetJaKutsu/")
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "kuulutuksetJaKutsu"))
       )
     )
   ).sort(jarjestaTiedostot);
@@ -41,14 +48,14 @@ export default async function createLadattavatTiedostot(
   const muuAineistoOmaltaKoneelta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoKoneelta ?? []).map((tiedosto) =>
-        adaptLadattuTiedostoNewToLadattavaTiedosto(oid, tiedosto, path + "muuAineistoKoneelta/")
+        adaptLadattuTiedostoNewToLadattavaTiedosto(tiedosto, joinPath(path, "muuAineistoKoneelta"))
       )
     )
   ).sort(jarjestaTiedostot);
   const muuAineistoVelhosta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoVelhosta ?? []).map((tiedosto) =>
-        adaptAineistoNewToLadattavaTiedosto(oid, tiedosto, aineistoHandledAt, path + "muuAineistoVelhosta/")
+        adaptAineistoNewToLadattavaTiedosto(tiedosto, aineistoHandledAt, joinPath(path, "muuAineistoVelhosta"))
       )
     )
   ).sort(jarjestaTiedostot);
@@ -56,18 +63,30 @@ export default async function createLadattavatTiedostot(
   const suunnitelma: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.suunnitelma?.map((aineisto) =>
-        adaptAineistoNewToLadattavaTiedosto(projekti.oid, aineisto, aineistoHandledAt, path + "suunnitelma/")
+        adaptAineistoNewToLadattavaTiedosto(aineisto, aineistoHandledAt, joinPath(path, "suunnitelma"))
       ) ?? []
     )
   ).sort(jarjestaTiedostot);
   const kuntaMuistutukset: API.KunnallinenLadattavaTiedosto[] = (
     await Promise.all(
       (hyvaksymisEsitys.muistutukset ?? []).map((tiedosto) =>
-        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(oid, tiedosto, path + "muistutukset/")
+        adaptKunnallinenLadattuTiedostoToKunnallinenLadattavaTiedosto(tiedosto, joinPath(path, "muistutukset"))
       )
     )
   ).sort(jarjestaTiedostot);
-  const lausunnot: API.LadattavaTiedosto[] = [];
+  const maanomistajaluettelo: API.LadattavaTiedosto[] = (
+    await Promise.all(
+      hyvaksymisEsitys?.maanomistajaluettelo?.map((aineisto) =>
+        adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "maanomistajaluettelo"))
+      ) ?? []
+    )
+  ).sort(jarjestaTiedostot);
+  const lausunnot: API.LadattavaTiedosto[] = (
+    await Promise.all(
+      hyvaksymisEsitys?.lausunnot?.map((aineisto) => adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "lausunnot"))) ??
+        []
+    )
+  ).sort(jarjestaTiedostot);
   return {
     __typename: "LadattavatTiedostot",
     hyvaksymisEsitys: hyvaksymisEsitysTiedostot,
@@ -78,6 +97,7 @@ export default async function createLadattavatTiedostot(
     muutAineistot,
     poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
     aineistopaketti,
+    maanomistajaluettelo,
   };
 }
 
@@ -90,15 +110,17 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   assertIsDefined(aloituskuulutusJulkaisuPDFt, "aloituskuulutusJulkaisuPDFt on määritelty tässä vaiheessa");
   for (const kieli in API.Kieli) {
     const kuulutus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusPDFPath;
-    assertIsDefined(kuulutus, `aloituskuulutusJulkaisuPDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
-    kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+    if (kuulutus) {
+      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+    }
     const ilmoitus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusIlmoitusPDFPath;
-    assertIsDefined(ilmoitus, `aloituskuulutusJulkaisuPDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
-    kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+    if (ilmoitus) {
+      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+    }
   }
   const aloituskuulutusSaamePDFt = aloituskuulutusJulkaisu?.aloituskuulutusSaamePDFt;
   if (aloituskuulutusSaamePDFt) {
-    forEverySaameDoAsync(async (kieli) => {
+    await forEverySaameDoAsync(async (kieli) => {
       const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
       assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
@@ -116,12 +138,13 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
     assertIsDefined(vuorovaikutusPDFt, "vuorovaikutusPDFt on määritelty tässä vaiheessa");
     for (const kieli in API.Kieli) {
       const kutsu: string | undefined = vuorovaikutusPDFt[kieli as API.Kieli]?.kutsuPDFPath;
-      assertIsDefined(kutsu, `(vuorovaikutusKierrosJulkaisu)[${kieli}].kutsuPDFPath on oltava olemassa`);
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kutsu));
+      if (kutsu) {
+        kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kutsu));
+      }
     }
     const vuorovaikutusSaamePDFt = julkaisu.vuorovaikutusSaamePDFt;
     if (vuorovaikutusSaamePDFt) {
-      forEverySaameDoAsync(async (kieli) => {
+      await forEverySaameDoAsync(async (kieli) => {
         const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
         assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
         kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kutsu));
@@ -135,27 +158,27 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   assertIsDefined(nahtavillaoloVaiheJulkaisuPDFt, "nahtavillaoloVaiheJulkaisuPDFt on määritelty tässä vaiheessa");
   for (const kieli in API.Kieli) {
     const kuulutus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloPDFPath;
-    assertIsDefined(kuulutus, `nahtavillaoloVaiheJulkaisuPDFt[${kieli}].nahtavillaoloPDFPath on oltava olemassa`);
-    kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+    if (kuulutus) {
+      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+    }
     const ilmoitus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusPDFPath;
-    assertIsDefined(ilmoitus, `nahtavillaoloVaiheJulkaisuPDFt[${kieli}].nahtavillaoloIlmoitusPDFPath on oltava olemassa`);
-    kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+    if (ilmoitus) {
+      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+    }
     const ilmoitusKiinteistonomistajille: string | undefined =
       nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
-    assertIsDefined(
-      ilmoitusKiinteistonomistajille,
-      `nahtavillaoloVaiheJulkaisuPDFt[${kieli}].nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath on oltava olemassa`
-    );
-    kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitusKiinteistonomistajille));
+    if (ilmoitusKiinteistonomistajille) {
+      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitusKiinteistonomistajille));
+    }
   }
   const nahtavillaoloSaamePDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloSaamePDFt;
   if (nahtavillaoloSaamePDFt) {
-    forEverySaameDoAsync(async (kieli) => {
+    await forEverySaameDoAsync(async (kieli) => {
       const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
-      assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
+      assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
       const ilmoitus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-      assertIsDefined(ilmoitus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
+      assertIsDefined(ilmoitus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusIlmoitusPDF on oltava olemassa`);
       kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
     });
   }

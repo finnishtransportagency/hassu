@@ -46,8 +46,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.paragraphFromKey("asiakirja.tietosuoja");
   }
 
-  protected onKyseVahaisestaMenettelystaParagraph(): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
+  protected onKyseVahaisestaMenettelystaParagraph(prefix = ""): PDFStructureElement {
+    return this.paragraph(prefix + this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
   }
 
   isVaylaTilaaja(): boolean {
@@ -154,13 +154,18 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     if (this.osoite) {
       const x = toPdfPoints(21);
       const lahettaja = this.getLahettaja();
-      this.doc.text(lahettaja.nimi, x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
-      this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
-      this.doc.text(`${lahettaja.postinumero} ${lahettaja.postitoimipaikka}`, undefined, undefined, { width: toPdfPoints(72) });
-
-      const iPostX = this.isVaylaTilaaja() ? toPdfPoints(75) : toPdfPoints(70);
-      const iPostY = this.isVaylaTilaaja() ? toPdfPoints(18) : toPdfPoints(24);
-      this.doc.image(this.iPostLogo(), iPostX, iPostY, { fit: this.isVaylaTilaaja() ? [50, 43.48] : [63, 22.09], valign: "bottom" });
+      this.doc.fontSize(11);
+      if (this.isVaylaTilaaja()) {
+        this.doc.text(lahettaja.nimi, x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
+        this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
+        this.doc.text(`${lahettaja.postinumero} ${lahettaja.postitoimipaikka}`, undefined, undefined, { width: toPdfPoints(72) });
+        this.doc.image(this.iPostLogo(), toPdfPoints(60), toPdfPoints(18), { fit: [50, 43.48], valign: "bottom" });
+      } else {
+        this.doc.image(this.iPostLogo(), x, toPdfPoints(20), { fit: [63, 22.09], valign: "bottom" });
+        this.doc.text(lahettaja.nimi, x, toPdfPoints(30), { width: toPdfPoints(72), baseline: "top" });
+        this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
+        this.doc.text(`${lahettaja.postinumero} ${lahettaja.postitoimipaikka}`, undefined, undefined, { width: toPdfPoints(72) });
+      }
 
       this.doc.text(this.osoite?.nimi, x, toPdfPoints(55), { width: toPdfPoints(62), baseline: "top" });
       this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: toPdfPoints(72) });

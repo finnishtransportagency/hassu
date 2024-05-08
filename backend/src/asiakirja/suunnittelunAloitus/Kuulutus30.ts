@@ -76,7 +76,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected addDocumentElements(): PDFStructureElement[] {
     return [
       this.startOfPlanningPhrase,
-      this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
+      this.paragraph("\n" + this.kutsuAdapter.hankkeenKuvaus()),
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
