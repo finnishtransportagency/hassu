@@ -94,7 +94,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                         }
                       }
                       const idx = vastaustunnukset.indexOf(kiinteistotunnus);
-                      vastaustunnukset.splice(idx, 1);
+                      if (idx !== -1) {
+                        vastaustunnukset.splice(idx, 1);
+                      }
                       yhteystiedot.push({ kiinteistotunnus, omistajat });
                     }
                   }
@@ -152,7 +154,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                         }
                       }
                       const idx = vastaustunnukset.indexOf(kiinteistotunnus);
-                      vastaustunnukset.splice(idx, 1);
+                      if (idx !== -1) {
+                        vastaustunnukset.splice(idx, 1);
+                      }
                       yhteystiedot.push({ kiinteistotunnus, omistajat });
                     }
                     for (const kiinteistotunnus of vastaustunnukset) {
