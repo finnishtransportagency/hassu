@@ -15,9 +15,11 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;
+  console.log("versio", versio);
   const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Aseta muokattavan hyväksymisesityksen tila
+  console.log("projektiInDB versio", projektiInDB.versio);
   await muutaMuokattavanHyvaksymisEsityksenTilaa({
     oid,
     versio,
@@ -37,5 +39,8 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   // Projektin tulee olla lukutilassa, jotta muokkauksen voi avata
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.HYVAKSYTTY) {
     throw new IllegalArgumentError("Projektin tulee olla lukutilassa, jotta muokkauksen voi avata.");
+  }
+  if (projektiInDB.hyvaksymisPaatosVaihe) {
+    throw new IllegalArgumentError("Projekti on jo hyväksymisvaiheessa, joten et voi avata hyväksymiseistyksen muokkausta.");
   }
 }

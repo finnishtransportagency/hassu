@@ -207,4 +207,23 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
     await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
+
+  it("ei onnistu, jos ollaan jo hyväksymisvaiheessa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.HYVAKSYTTY };
+    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
+    const hyvaksymisPaatosVaihe = {
+      id: 1,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+      hyvaksymisPaatosVaihe,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    await expect(kutsu).to.be.rejectedWith(IllegalArgumentError);
+  });
 });
