@@ -6,7 +6,6 @@ import { log } from "../../logger";
 
 export type OmistajaDocument = Pick<
   DBOmistaja,
-  | "etunimet"
   | "jakeluosoite"
   | "kiinteistotunnus"
   | "nimi"
@@ -14,7 +13,6 @@ export type OmistajaDocument = Pick<
   | "paikkakunta"
   | "postinumero"
   | "maakoodi"
-  | "sukunimi"
   | "lisatty"
   | "paivitetty"
   | "suomifiLahetys"
@@ -39,16 +37,14 @@ export function adaptOmistajaToIndex({
   userCreated,
 }: DBOmistaja): OmistajaDocument {
   return {
-    etunimet,
     jakeluosoite,
     kiinteistotunnus: kiinteistotunnus ? formatKiinteistotunnusForDisplay(kiinteistotunnus) : kiinteistotunnus,
     oid,
-    nimi,
+    nimi: nimi ? nimi : [etunimet, sukunimi].filter((n) => !!n).join(" "),
     paikkakunta,
     postinumero,
     maa: maakoodi ? getLocalizedCountryName("fi", maakoodi) : null,
     maakoodi,
-    sukunimi,
     lisatty,
     paivitetty,
     suomifiLahetys,
@@ -82,8 +78,7 @@ export type OmistajaDocumentHit = {
 };
 
 function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
-  const { kiinteistotunnus, lisatty, oid, etunimet, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, sukunimi, maa, maakoodi } =
-    hit._source;
+  const { kiinteistotunnus, lisatty, oid, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, maa, maakoodi } = hit._source;
 
   const dokumentti: API.Omistaja = {
     id: hit._id,
@@ -91,7 +86,6 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     oid,
     kiinteistotunnus,
     lisatty,
-    etunimet,
     jakeluosoite,
     nimi,
     paikkakunta,
@@ -99,7 +93,6 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     maakoodi,
     paivitetty,
     postinumero,
-    sukunimi,
   };
   return dokumentti;
 }

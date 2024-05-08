@@ -1350,8 +1350,6 @@ type Omistaja {
   kayttooikeusyksikkotunnus: String
   lisatty: String!
   paivitetty: String
-  etunimet: String
-  sukunimi: String
   nimi: String
   jakeluosoite: String
   postinumero: String
@@ -1373,16 +1371,14 @@ type KiinteistonOmistajat {
 type Muistuttaja {
   id: String!
   lisatty: String!
-  etunimi: String
-  sukunimi: String
   jakeluosoite: String
   postinumero: String
   paikkakunta: String
   maakoodi: String
   maa: String
   nimi: String
-  tiedotusosoite: String
   tiedotustapa: String
+  sahkoposti: String
   paivitetty: String
 }
 

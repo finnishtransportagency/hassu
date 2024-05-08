@@ -1,5 +1,5 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchWriteCommand, QueryCommand, ScanCommand, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { BatchWriteCommand, QueryCommand, ScanCommand, ScanCommandOutput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName } from "../util/environment";
 import { log } from "../logger";
 import { config } from "../config";
@@ -28,6 +28,7 @@ export type DBMuistuttaja = {
   liitteet?: string[] | null;
   maakoodi?: string | null;
   suomifiLahetys?: boolean;
+  kaytossa?: boolean;
 };
 
 export type MuistuttajaKey = {
@@ -46,19 +47,40 @@ class MuistuttajaDatabase {
     this.tableName = tableName;
   }
 
-  async haeProjektinMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
+  async haeProjektinKaytossaolevatMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
     const command = new QueryCommand({
       TableName: this.tableName,
       KeyConditionExpression: "#oid = :oid",
       ExpressionAttributeValues: {
         ":oid": oid,
+        ":kaytossa": true,
       },
       ExpressionAttributeNames: {
         "#oid": "oid",
+        "#kaytossa": "kaytossa",
       },
+      FilterExpression: "#kaytossa = :kaytossa",
     });
     const data = await getDynamoDBDocumentClient().send(command);
     return (data?.Items ?? []) as DBMuistuttaja[];
+  }
+
+  async poistaMuistuttajaKaytosta(oid: string, id: string): Promise<void> {
+    const params = new UpdateCommand({
+      TableName: this.tableName,
+      Key: {
+        oid,
+        id,
+      },
+      UpdateExpression: "SET #kaytossa = :kaytossa",
+      ExpressionAttributeNames: {
+        "#kaytossa": "kaytossa",
+      },
+      ExpressionAttributeValues: {
+        ":kaytossa": false,
+      },
+    });
+    await getDynamoDBDocumentClient().send(params);
   }
 
   async scanMuistuttajat(startKey?: MuistuttajaKey): Promise<MuistuttajaScanResult> {
@@ -81,7 +103,7 @@ class MuistuttajaDatabase {
 
   async deleteMuistuttajatByOid(oid: string) {
     if (config.env !== "prod") {
-      for (const chunk of chunkArray(await this.haeProjektinMuistuttajat(oid), 25)) {
+      for (const chunk of chunkArray(await this.haeProjektinKaytossaolevatMuistuttajat(oid), 25)) {
         const deleteRequests = chunk.map((muistuttaja) => ({
           DeleteRequest: {
             Key: { oid, id: muistuttaja.id },

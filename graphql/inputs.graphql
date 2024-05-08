@@ -582,6 +582,10 @@ input OmistajaInput {
 input MuistuttajaInput {
   id: String
   nimi: String
-  tiedotusosoite: String
+  jakeluosoite: String
+  paikkakunta: String
+  postinumero: String
+  maakoodi: String
+  sahkoposti: String
   tiedotustapa: String
 }
