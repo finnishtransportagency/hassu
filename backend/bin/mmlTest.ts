@@ -36,7 +36,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcBaseUrl2", // TODO: poista 2 ennen mergausta
+      Name: "OgcBaseUrl",
       WithDecryption: true,
     })
     .then((param) => {
@@ -44,7 +44,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcApiKey2", // TODO: poista 2 ennen mergausta
+      Name: "OgcApiKey",
       WithDecryption: true,
     })
     .then((param) => {
@@ -57,8 +57,8 @@ Promise.all([
   .then((params) => {
     const ktjBaseUrl = params.find((p) => p.name === "KtjBaseUrl")?.value;
     const mmlApiKey = params.find((p) => p.name === "MmlApiKey")?.value;
-    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl2")?.value;
-    const ogcApiKey = params.find((p) => p.name === "OgcApiKey2")?.value;
+    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl")?.value;
+    const ogcApiKey = params.find((p) => p.name === "OgcApiKey")?.value;
     const uid = params.find((p) => p.name === "UserId")?.value;
     if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid) {
       const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey });
