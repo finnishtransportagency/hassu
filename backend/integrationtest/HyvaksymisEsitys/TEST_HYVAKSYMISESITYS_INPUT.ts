@@ -33,28 +33,28 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
         kunta: 1,
         tiedosto: includeTiedosto ? "muistutukset/muistutukset_aoa_.png" : undefined,
         nimi: "muistutukset äöå .png",
-        uuid: "muistutukset-esitys-uuid",
+        uuid: "muistutukset-uuid",
       },
     ],
     lausunnot: [
       {
         tiedosto: includeTiedosto ? "lausunnot/lausunnot_aoa_.png" : undefined,
         nimi: "lausunnot äöå .png",
-        uuid: "lausunnot-esitys-uuid",
+        uuid: "lausunnot-uuid",
       },
     ],
     maanomistajaluettelo: [
       {
         tiedosto: includeTiedosto ? "maanomistajaluettelo/maanomistajaluettelo_aoa_.png" : undefined,
         nimi: "maanomistajaluettelo äöå .png",
-        uuid: "maanomistajaluettelo-esitys-uuid",
+        uuid: "maanomistajaluettelo-uuid",
       },
     ],
     kuulutuksetJaKutsu: [
       {
         tiedosto: includeTiedosto ? "kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png" : undefined,
         nimi: "kuulutuksetJaKutsu äöå .png",
-        uuid: "kuulutuksetJaKutsu-esitys-uuid",
+        uuid: "kuulutuksetJaKutsu-uuid",
       },
     ],
     muuAineistoVelhosta: [
@@ -68,7 +68,7 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
       {
         tiedosto: includeTiedosto ? "muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png" : undefined,
         nimi: "muuAineistoKoneelta äöå .png",
-        uuid: "muuAineistoKoneelta-esitys-uuid",
+        uuid: "muuAineistoKoneelta-uuid",
       },
     ],
     vastaanottajat: ["vastaanottaja@sahkoposti.fi"],
