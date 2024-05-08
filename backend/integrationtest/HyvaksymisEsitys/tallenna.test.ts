@@ -56,25 +56,42 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     sinon.restore();
   });
 
-  it("onnistuu projektikäyttäjältä ja tallentaa annetut tiedot tietokantaan", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+  it("tallentaa annetut tiedot tietokantaan", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
     };
-    const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: muokkaaja.uid!,
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
     };
-    userFixture.loginAs(muokkaaja);
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+    };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    const projektiAfter = await getProjektiFromDB(oid);
+    const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
+    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+      ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
+      muokkaaja: "theadminuid",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+      vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
+    });
+    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+  });
 
+  it("onnistuu, jos ei ole muokattavaa eikä julkaistua hyväksymisesitystä", async () => {
+    userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
     const projektiBefore = {
       oid,
       versio: 2,
-      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
     };
     await insertProjektiToDB(projektiBefore);
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
@@ -83,7 +100,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
     expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
       ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
-      muokkaaja: muokkaaja.uid,
+      muokkaaja: "theadminuid",
       tila: API.HyvaksymisTila.MUOKKAUS,
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
@@ -118,6 +135,30 @@ describe("Hyväksymisesityksen tallentaminen", () => {
       tila: API.HyvaksymisTila.MUOKKAUS,
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
+  it("onnistuu projektikäyttäjältä", async () => {
+    const projari = UserFixture.pekkaProjari;
+    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
+      kayttajatunnus: projari.uid!,
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    };
+    const muokkaaja = UserFixture.manuMuokkaaja;
+    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
+      kayttajatunnus: muokkaaja.uid!,
+    };
+    userFixture.loginAs(muokkaaja);
+
+    const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
+    await expect(kutsu).to.be.eventually.fulfilled;
   });
 
   it("persistoi inputissa annetut ladatut tiedostot", async () => {
@@ -159,23 +200,19 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     };
     const muokkaaja = UserFixture.manuMuokkaaja;
     userFixture.loginAs(muokkaaja);
-    const muokattavaHyvaksymisEsitys = {
-      ...TEST_HYVAKSYMISESITYS,
-      palautusSyy: "virheitä",
-      tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+
+    const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
     };
     const projektiBefore = {
       oid,
       versio: 2,
-      muokattavaHyvaksymisEsitys,
-      julkaistuHyvaksymisEsitys: undefined,
       kayttoOikeudet: [projariAsVaylaDBUser],
     };
     await insertProjektiToDB(projektiBefore);
-    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
-    await expect(kutsu).to.eventually.be.rejectedWith(IllegalAccessError);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
+    await expect(kutsu).to.be.eventually.rejectedWith(IllegalAccessError);
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on hyväksytty", async () => {
