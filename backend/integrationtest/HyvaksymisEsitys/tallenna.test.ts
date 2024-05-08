@@ -84,6 +84,37 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
+  it("poistaa tiedostot, jotka tiputettiin muokattavasta hyväksymisesityksestä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(
+      TEST_HYVAKSYMISESITYS_FILES2.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
+      })
+    );
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+    };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
+    expect(files.sort()).to.eql(
+      INPUTIN_LADATUT_TIEDOSTOT.map(
+        ({ filename, uuid: avain }) => `yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/${avain}/${filename}`
+      ).sort()
+    );
+  });
+
   it("onnistuu, jos ei ole muokattavaa eikä julkaistua hyväksymisesitystä", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
@@ -162,24 +193,13 @@ describe("Hyväksymisesityksen tallentaminen", () => {
   });
 
   it("persistoi inputissa annetut ladatut tiedostot", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: muokkaaja.uid!,
-    };
-    userFixture.loginAs(muokkaaja);
-
+    userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
     const projektiBefore = {
       oid,
       versio: 2,
-      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
     };
     await insertProjektiToDB(projektiBefore);
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
