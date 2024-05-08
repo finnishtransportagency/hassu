@@ -408,46 +408,6 @@ describe("kiinteistoHandler", () => {
       })
     ).to.eventually.rejectedWith(IllegalArgumentError, "Tallennettava omistaja id:'33' ei ole muutOmistajat listalla");
   });
-
-  it.skip("hae kiinteistön omistajat", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock
-      .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-    dbMock.on(BatchGetCommand).resolves({
-      Responses: {
-        [config.kiinteistonomistajaTableName]: [
-          { id: "1", etunimet: "Matti", jakeluosoite: "Osoite 1", postinumero: "00100", paikkakunta: "Helsinki" },
-          { id: "2", etunimet: "Teppo" },
-        ],
-      },
-    });
-    const omistajat = await haeKiinteistonOmistajat({ oid: "1", muutOmistajat: false, from: 0, size: 2 });
-    expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(1);
-    let batchCommand = dbMock.commandCalls(BatchGetCommand)[0];
-    assert(batchCommand.args[0].input.RequestItems);
-    let keys = batchCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].Keys;
-    assert(keys);
-    expect(keys.length).to.be.equal(2);
-    expect(keys[0].id).to.be.equal("1");
-    expect(keys[1].id).to.be.equal("2");
-    expect(omistajat.hakutulosMaara).to.be.equal(3);
-    expect(omistajat.omistajat[0]?.id).to.be.equal("1");
-    expect(omistajat.omistajat[0]?.etunimet).to.be.equal("Matti");
-    expect(omistajat.omistajat[0]?.jakeluosoite).to.be.equal("Osoite 1");
-    expect(omistajat.omistajat[0]?.postinumero).to.be.equal("00100");
-    expect(omistajat.omistajat[0]?.paikkakunta).to.be.equal("Helsinki");
-    expect(omistajat.omistajat[1]?.id).to.be.equal("2");
-    expect(omistajat.omistajat[1]?.etunimet).to.be.equal("Teppo");
-    await haeKiinteistonOmistajat({ oid: "1", muutOmistajat: false, from: 2, size: 2 });
-    expect(dbMock.commandCalls(BatchGetCommand).length).to.be.equal(2);
-    batchCommand = dbMock.commandCalls(BatchGetCommand)[1];
-    assert(batchCommand.args[0].input.RequestItems);
-    keys = batchCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].Keys;
-    assert(keys);
-    expect(keys.length).to.be.equal(1);
-    expect(keys[0].id).to.be.equal("3");
-  });
   it("tuoKarttarajausJaTallennaKiinteistotunnukset testiympäristö", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
     sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");

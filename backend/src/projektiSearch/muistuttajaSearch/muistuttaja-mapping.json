@@ -6,12 +6,12 @@
     "etunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "sukunimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace",
+      "search_analyzer": "standard",
       "fields": {
         "keyword": {
           "type": "keyword",
@@ -22,27 +22,27 @@
     "nimi": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "lahiosoite": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "postinumero": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "postitoimipaikka": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "maa": {
       "type": "text",
       "analyzer": "autocomplete",
-      "search_analyzer": "whitespace"
+      "search_analyzer": "standard"
     },
     "maakoodi": {
       "type": "keyword"
@@ -60,6 +60,9 @@
       "type": "text"
     },
     "suomifiLahetys": {
+      "type": "boolean"
+    },
+    "kaytossa": {
       "type": "boolean"
     }
   }

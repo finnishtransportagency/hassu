@@ -5,8 +5,6 @@ import { log } from "../../logger";
 
 export type MuistuttajaDocument = Pick<
   DBMuistuttaja,
-  | "etunimi"
-  | "sukunimi"
   | "lahiosoite"
   | "nimi"
   | "postinumero"
@@ -18,6 +16,8 @@ export type MuistuttajaDocument = Pick<
   | "tiedotusosoite"
   | "paivitetty"
   | "suomifiLahetys"
+  | "sahkoposti"
+  | "kaytossa"
 > & { maa: string | null };
 
 export function adaptMuistuttajaToIndex({
@@ -32,24 +32,24 @@ export function adaptMuistuttajaToIndex({
   tiedotustapa,
   oid,
   paivitetty,
-  tiedotusosoite,
+  sahkoposti,
   suomifiLahetys,
+  kaytossa,
 }: DBMuistuttaja): MuistuttajaDocument {
   return {
-    etunimi,
     lahiosoite,
-    nimi,
+    nimi: nimi ? nimi : [etunimi, sukunimi].filter((n) => !!n).join(" "),
     postinumero,
     postitoimipaikka,
     maa: maakoodi ? getLocalizedCountryName("fi", maakoodi) : null,
     maakoodi,
-    sukunimi,
     lisatty,
     tiedotustapa,
     oid,
     paivitetty,
-    tiedotusosoite,
+    sahkoposti,
     suomifiLahetys,
+    kaytossa,
   };
 }
 
@@ -81,8 +81,6 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
   const dokumentti: API.Muistuttaja = {
     __typename: "Muistuttaja",
     id: hit._id,
-    etunimi: hit._source.etunimi,
-    sukunimi: hit._source.sukunimi,
     jakeluosoite: hit._source.lahiosoite,
     nimi: hit._source.nimi,
     postinumero: hit._source.postinumero,
@@ -92,7 +90,7 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
     lisatty: hit._source.lisatty,
     tiedotustapa: hit._source.tiedotustapa,
     paivitetty: hit._source.paivitetty,
-    tiedotusosoite: hit._source.tiedotusosoite,
+    sahkoposti: hit._source.sahkoposti,
   };
   return dokumentti;
 }

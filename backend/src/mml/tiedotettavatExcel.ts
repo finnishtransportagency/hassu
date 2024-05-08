@@ -189,17 +189,17 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
 }
 
 async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
-  return (await muistuttajaDatabase.haeProjektinMuistuttajat(oid))
+  return (await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(oid))
     .map((m) => {
       return {
         id: m.id,
-        nimi: `${m.etunimi} ${m.sukunimi}`,
+        nimi: m.nimi ? m.nimi : [m.etunimi, m.sukunimi].filter((n) => !!n).join(" "),
         postiosoite: m.lahiosoite ?? "",
         postinumero: m.postinumero ?? "",
         postitoimipaikka: m.postitoimipaikka ?? "",
         maa: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: m.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
+        tiedotustapa: (m.suomifiLahetys ? "Suomi.fi" : m.tiedotustapa) ?? "",
         suomifiLahetys: !!m.henkilotunnus,
       };
     })

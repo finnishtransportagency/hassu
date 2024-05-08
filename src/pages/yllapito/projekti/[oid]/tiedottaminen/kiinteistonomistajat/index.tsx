@@ -12,15 +12,13 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
 import { Omistaja, OmistajahakuTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
-import { GrayBackgroundText } from "../../../../../components/projekti/GrayBackgroundText";
+import { GrayBackgroundText } from "../../../../../../components/projekti/GrayBackgroundText";
 import { useProjekti } from "src/hooks/useProjekti";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
-import { OmistajienMuokkausDialog } from "../../../../../components/projekti/tiedottaminen/OmistajienMuokkausDialog";
 import ButtonLink from "@components/button/ButtonLink";
-import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -102,7 +100,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
   },
   {
     header: "Omistajan nimi",
-    accessorFn: ({ etunimet, sukunimi, nimi }) => nimi ?? (etunimet && sukunimi ? `${etunimet} ${sukunimi}` : null),
+    accessorKey: "nimi",
     id: "omistajan_nimi",
     meta: {
       widthFractions: 3,
@@ -129,13 +127,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
   },
   {
     header: "Postitoimipaikka",
-    accessorFn: ({ paikkakunta, maakoodi }) => {
-      // If country code is of Finland then show only paikkakunta
-      if (!paikkakunta || !maakoodi || maakoodi === "FI") {
-        return paikkakunta;
-      }
-      return [paikkakunta, getLocalizedCountryName("fi", maakoodi)].join(", ");
-    },
+    accessorKey: "paikkakunta",
     id: "postitoimipaikka",
     meta: {
       widthFractions: 2,
@@ -174,15 +166,6 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     setHakuKaynnissa(newHakuKaynnissa);
   }, [hakuKaynnissa, mutate, projektinTiedottaminen?.omistajahakuTila, showErrorMessage]);
 
-  const [isMuokkaaDialogOpen, setIsMuokkaaDialogOpen] = useState(false);
-
-  const openMuokkaaDialog = useCallback(() => {
-    setIsMuokkaaDialogOpen(true);
-  }, []);
-  const closeMuokkaaDialog = useCallback(() => {
-    setIsMuokkaaDialogOpen(false);
-  }, []);
-
   const getKiinteistonOmistajatCallback = useCallback<GetTiedotettavaFunc<Omistaja>>(
     async (oid, muutOmistajat, query, from, size) => {
       const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, query, from, size);
@@ -200,7 +183,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <p>
             Ilmoitus suunnitelman nähtäville asettamisesta ja ilmoitus hyväksymispäätöksestä toimitetaan kiinteistönomistajille järjestelmän
             kautta, kun kiinteistönomistajat on tunnistettu. Tämän sivun ilmoituksen vastaanottajalista viedään automaattisesti
-            asianhallintaan kuulutuksen julkaisupäivänä. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
+            asianhallintaan, kun kuulutus hyväksytään julkaistavaksi. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
           </p>
         </ContentSpacer>
         <ContentSpacer>
@@ -234,7 +217,7 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
           <TiedotettavaHaitari
             oid={projekti.oid}
             title="Kiinteistönomistajien tiedotus Suomi.fi -palvelulla"
-            instructionText="Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus julkaistaan."
+            instructionText="Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
             filterText="Suodata kiinteistönomistajia"
             showLessText="Näytä vähemmän kiinteistönomistajia"
             showMoreText="Näytä enemmän kiinteistönomistajia"
@@ -255,15 +238,9 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
             muutTiedotettavat={true}
             excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=true&suomifi=false`}
           />
-          <MuokkaaButton primary type="button" onClick={openMuokkaaDialog}>
+          <ButtonLink primary className="ml-auto" href={`/yllapito/projekti/${projekti.oid}/tiedottaminen/kiinteistonomistajat/muokkaa`}>
             Muokkaa
-          </MuokkaaButton>
-          <OmistajienMuokkausDialog
-            isOpen={isMuokkaaDialogOpen}
-            close={closeMuokkaaDialog}
-            oid={projekti.oid}
-            projektinimi={projekti.velho.nimi}
-          />
+          </ButtonLink>
         </ContentSpacer>
       </Section>
       <HassuDialog
@@ -281,5 +258,3 @@ const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ pro
     </TiedottaminenPageLayout>
   );
 };
-
-const MuokkaaButton = styled(Button)({ marginLeft: "auto" });
