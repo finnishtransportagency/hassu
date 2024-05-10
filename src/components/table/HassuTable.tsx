@@ -48,7 +48,7 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
     <Span
       sx={{
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "left",
         position: { xs: "absolute", md: "unset" },
         top: { xs: "7px", md: "unset" },
         right: { xs: "7px", md: "unset" },
@@ -71,9 +71,9 @@ function SelectHeader<T>(props: HeaderContext<T, unknown>) {
     <Span
       sx={{
         display: { xs: "none", md: "flex" },
-        justifyContent: "center",
+        justifyContent: "left",
         flexDirection: "column",
-        alignItems: "center",
+        alignItems: "left",
         width: "100%",
         margin: "auto",
       }}
