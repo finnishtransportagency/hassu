@@ -50,7 +50,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
   if (!projekti || !velho || !kuulutus) {
-    return <></>;
+    return <>{t("common:ladataan")}</>;
   }
 
   let sijainti = "";

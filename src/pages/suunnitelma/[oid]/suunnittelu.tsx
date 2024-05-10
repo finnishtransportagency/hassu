@@ -71,7 +71,7 @@ export default function Suunnittelu(): ReactElement {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
   if (!(projekti?.vuorovaikutukset && projekti.velho)) {
-    return <></>;
+    return <>{t("common:ladataan")}</>;
   }
 
   return (

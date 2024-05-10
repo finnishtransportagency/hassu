@@ -32,7 +32,7 @@ export default function Hyvaksymispaatos(): ReactElement {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
   if (!projekti || !kuulutus) {
-    return <></>;
+    return <>{t("common:ladataan")}</>;
   }
   return (
     <PaatosPageLayout
