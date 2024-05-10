@@ -21,6 +21,7 @@ import assert from "assert";
 
 import chai from "chai";
 import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
+import { log } from "../../src/logger";
 
 const { expect } = chai;
 
@@ -76,6 +77,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     // * Projekti on jatkopäätösvaiheessa
     const jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1_AINEISTOT);
     jatkopaatosProjekti.paivitetty = "***unit test***";
+    log.error("Jatkopäätöksen käyttöoikeudet", { kayttoOikeudet: jatkopaatosProjekti.kayttoOikeudet });
     expectToMatchSnapshot("jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen", jatkopaatosProjekti.kayttoOikeudet);
     await expectJulkinenNotFound(oid, userFixture);
 
