@@ -67,8 +67,11 @@ export default function Suunnittelu(): ReactElement {
     }
   }, [projekti, router]);
 
-  if (!(projekti?.vuorovaikutukset && projekti.velho) || error) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
+  }
+  if (!(projekti?.vuorovaikutukset && projekti.velho)) {
+    return <></>;
   }
 
   return (

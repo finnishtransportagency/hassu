@@ -28,10 +28,12 @@ export default function Hyvaksymispaatos(): ReactElement {
     }
   }, [projekti, router]);
 
-  if (!projekti || !kuulutus || error) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
-
+  if (!projekti || !kuulutus) {
+    return <></>;
+  }
   return (
     <PaatosPageLayout
       pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}

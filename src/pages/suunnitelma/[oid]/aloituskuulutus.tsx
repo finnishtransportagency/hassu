@@ -46,8 +46,11 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
   }, [projekti, router]);
 
-  if (!projekti || !velho || !kuulutus || error) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
+  }
+  if (!projekti || !velho || !kuulutus) {
+    return <></>;
   }
 
   let sijainti = "";

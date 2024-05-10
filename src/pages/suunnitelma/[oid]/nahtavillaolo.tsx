@@ -55,7 +55,7 @@ export default function Nahtavillaolo(): ReactElement {
     return <></>;
   }
 
-  if (error || !projekti) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
