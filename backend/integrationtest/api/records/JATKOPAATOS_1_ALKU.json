@@ -697,28 +697,6 @@
     },
     "kayttoOikeudet": [
       {
-        "email": "mikko.haapamki@cgi.com",
-        "etunimi": "A-tunnus1",
-        "kayttajatunnus": "A000112",
-        "muokattavissa": false,
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sukunimi": "Hassu",
-        "tyyppi": "PROJEKTIPAALLIKKO",
-        "yleinenYhteystieto": true
-      },
-      {
-        "email": "mikko.haapamaki02@cgi.com",
-        "etunimi": "A-tunnus3",
-        "kayttajatunnus": "A000114",
-        "muokattavissa": false,
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sukunimi": "Hassu",
-        "tyyppi": "VARAHENKILO",
-        "yleinenYhteystieto": false
-      },
-      {
         "email": "mikko.haapamaki1@cgi.com",
         "etunimi": "Testi1",
         "kayttajatunnus": "LX581241",
@@ -1515,8 +1493,8 @@
       "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
       "tyyppi": "TIE",
-      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "varahenkilonEmail": null,
+      "vastuuhenkilonEmail": "valhe.kouneli@cgi.com",
       "vaylamuoto": [
         "tie"
       ]
