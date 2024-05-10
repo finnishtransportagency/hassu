@@ -1096,6 +1096,7 @@ type VelhoAineisto {
   dokumenttiTyyppi: String!
   muokattu: String!
   kuvaus: String!
+  koko: Int
 }
 
 type NykyinenKayttaja {
