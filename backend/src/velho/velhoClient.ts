@@ -152,6 +152,7 @@ export class VelhoClient {
               const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
               const tiedostoNimi = aineisto["tuorein-versio"].nimi;
               const muokattu = aineisto["tuorein-versio"].muokattu;
+              const koko = aineisto["tuorein-versio"].koko;
               return {
                 __typename: "VelhoAineisto",
                 oid: aineisto.oid,
@@ -159,6 +160,7 @@ export class VelhoClient {
                 kuvaus: aineisto.metatiedot.kuvaus ?? "",
                 dokumenttiTyyppi,
                 muokattu: dayjs(muokattu).format(),
+                koko,
               };
             });
           return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
