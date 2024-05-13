@@ -141,66 +141,53 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     },
     [setFormContext]
   );
-  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    setOhjeetOpen(false);
-    localStorage.setItem("kayttoOikeusOhjeet", "false");
-  }, []);
 
   return (
-    <>
-      <FormProvider {...useFormReturn}>
-        <form>
-          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            {!formIsSubmitting && !isLoadingProjekti && (
-              <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
-                <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
-              </ContentSpacer>
-            )}
-            <input type="hidden" {...register("oid")} />
-            <ProjektinPerusosio projekti={projekti} />
-            <ProjektiPageLayoutContext.Provider {...context} value={{ ohjeetOpen, ohjeetOnClose }}>
-              <KayttoOikeusHallinta
-                disableFields={disableFormEdit}
-                projektiKayttajat={projekti.kayttoOikeudet || []}
-                onKayttajatUpdate={onKayttajatUpdate}
-                projekti={projekti}
-                includeTitle={true}
-              />
-            </ProjektiPageLayoutContext.Provider>
+    <FormProvider {...useFormReturn}>
+      <form>
+        <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+          {!formIsSubmitting && !isLoadingProjekti && (
+            <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
+              <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+            </ContentSpacer>
+          )}
+          <input type="hidden" {...register("oid")} />
+          <ProjektinPerusosio projekti={projekti} />
+          <KayttoOikeusHallinta
+            disableFields={disableFormEdit}
+            projektiKayttajat={projekti.kayttoOikeudet || []}
+            onKayttajatUpdate={onKayttajatUpdate}
+            projekti={projekti}
+            includeTitle={true}
+          />
 
-            <Section noDivider>
-              <div className="flex gap-6 flex-col md:flex-row">
-                <Button
-                  className="mr-auto"
-                  onClick={(e) => {
-                    router.back();
-                    e.preventDefault();
-                  }}
-                >
-                  Takaisin
-                </Button>
-                <Button
-                  id="save_and_open_projekti"
-                  type="button"
-                  primary
-                  onClick={handleSubmit(submitMoveToProject)}
-                  disabled={disableFormEdit}
-                >
-                  Tallenna ja siirry projektiin
-                </Button>
-                <Button type="button" onClick={handleSubmit(submitCreateAnotherOne)} disabled={disableFormEdit}>
-                  Tallenna ja lisää toinen projekti
-                </Button>
-              </div>
-            </Section>
-          </fieldset>
-        </form>
-      </FormProvider>
-    </>
+          <Section noDivider>
+            <div className="flex gap-6 flex-col md:flex-row">
+              <Button
+                className="mr-auto"
+                onClick={(e) => {
+                  router.back();
+                  e.preventDefault();
+                }}
+              >
+                Takaisin
+              </Button>
+              <Button
+                id="save_and_open_projekti"
+                type="button"
+                primary
+                onClick={handleSubmit(submitMoveToProject)}
+                disabled={disableFormEdit}
+              >
+                Tallenna ja siirry projektiin
+              </Button>
+              <Button type="button" onClick={handleSubmit(submitCreateAnotherOne)} disabled={disableFormEdit}>
+                Tallenna ja lisää toinen projekti
+              </Button>
+            </div>
+          </Section>
+        </fieldset>
+      </form>
+    </FormProvider>
   );
 };

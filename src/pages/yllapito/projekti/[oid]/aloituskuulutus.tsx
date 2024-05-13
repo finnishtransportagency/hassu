@@ -314,6 +314,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${odottaaJulkaisua}`}.
                     </Notification>
                   )}
+
                   <ProjektiPageLayoutContext.Consumer>
                     {({ ohjeetOpen, ohjeetOnClose }) => (
                       <OhjelistaNotification

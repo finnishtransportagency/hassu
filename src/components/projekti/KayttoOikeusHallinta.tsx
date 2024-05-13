@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
 import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
@@ -133,37 +133,44 @@ function KayttoOikeusHallintaFormElements({
     onKayttajatUpdate(kayttoOikeudet || []);
   }, [kayttoOikeudet, onKayttajatUpdate]);
 
+  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
+    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+  const ohjeetOnClose = useCallback(() => {
+    setOhjeetOpen(false);
+    localStorage.setItem("kayttoOikeusOhjeet", "false");
+  }, []);
+
   return (
     <Section gap={8}>
       {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
-      <ProjektiPageLayoutContext.Consumer>
-        {({ ohjeetOpen, ohjeetOnClose }) => (
-          <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
-            <li>
-              Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
-              roskakoripainikkeella.
-            </li>
-            <li>
-              Valitse ‘Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa’, jos haluat henkilön yhteystiedot
-              julkaistavan. Kuulutuksissa esitettävät yhteystiedot valitaan erikseen kuulutuksien yhteydessä. Projektipäällikön yhteystiedot
-              näytetään aina.
-            </li>
-            {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
-              <li>
-                Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva
-                (tunnus muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja
-                muokkausoikeudet. Jos et saa asetettua haluamaasi henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
-              </li>
-            ) : (
-              <li>
-                Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet.
-                Projektipäälliköllä ja varahenkilöllä on oikeus käsitellä varahenkilöoikeuksia. Ota tarvittaessa yhteys projektipäällikköön
-                tai varahenkilöön.
-              </li>
-            )}
-          </OhjelistaNotification>
+
+      <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+        <li>
+          Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
+          roskakoripainikkeella.
+        </li>
+        <li>
+          Valitse ‘Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa’, jos haluat henkilön yhteystiedot
+          julkaistavan. Kuulutuksissa esitettävät yhteystiedot valitaan erikseen kuulutuksien yhteydessä. Projektipäällikön yhteystiedot
+          näytetään aina.
+        </li>
+        {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
+          <li>
+            Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva (tunnus
+            muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja
+            muokkausoikeudet. Jos et saa asetettua haluamaasi henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
+          </li>
+        ) : (
+          <li>
+            Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet.
+            Projektipäälliköllä ja varahenkilöllä on oikeus käsitellä varahenkilöoikeuksia. Ota tarvittaessa yhteys projektipäällikköön tai
+            varahenkilöön.
+          </li>
         )}
-      </ProjektiPageLayoutContext.Consumer>
+      </OhjelistaNotification>
 
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>

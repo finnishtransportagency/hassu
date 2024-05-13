@@ -220,17 +220,15 @@ function SuunnitteluPageLayout({
               )}
             </ProjektiPageLayoutContext.Consumer>
           ) : (
-            <>
-              <p>
-                Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
-                tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-                suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
-                puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
-                <br />
-                <br />
-                Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
-              </p>
-            </>
+            <p>
+              Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+              tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+              suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
+              puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
+              <br />
+              <br />
+              Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
+            </p>
           ))}
         <AiemmatVuorovaikutuksetOsio projekti={projekti} />
         {!migroitu && (

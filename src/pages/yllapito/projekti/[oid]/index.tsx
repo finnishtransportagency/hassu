@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -249,6 +249,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     }
   }, [projekti, router, statusBeforeSave]);
 
+  const { ohjeetOpen, ohjeetOnClose } = useContext(ProjektiPageLayoutContext);
+
   return (
     <FormProvider {...useFormReturn}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -261,25 +263,20 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                 Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
               </Notification>
             )}
-            <ProjektiPageLayoutContext.Consumer>
-              {({ ohjeetOpen, ohjeetOnClose }) => (
-                <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
-                  <li>
-                    Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
-                  </li>
-                  <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-                  <li>
-                    Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
-                    vaiheisiin.
-                  </li>
-                  <li>
-                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                    aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
-                    kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
-                  </li>
-                </OhjelistaNotification>
-              )}
-            </ProjektiPageLayoutContext.Consumer>
+
+            <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+              <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+              <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+              <li>
+                Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                vaiheisiin.
+              </li>
+              <li>
+                Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa kunnan
+                edustajaa on mahdollista vaihtaa prosessin aikana.
+              </li>
+            </OhjelistaNotification>
           </ContentSpacer>
 
           <ProjektinPerusosio projekti={projekti} register={register} formState={useFormReturn.formState} />
