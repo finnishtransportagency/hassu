@@ -36,7 +36,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
     muistutukset: [
       {
         nimi: `muistutukset äöå ${nbr}.png`,
-        uuid: `muistutukset-esitys-uuid${nbr}`,
+        uuid: `muistutukset-uuid${nbr}`,
         lisatty,
         kunta: 1,
       },
@@ -44,21 +44,21 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
     lausunnot: [
       {
         nimi: `lausunnot äöå ${nbr}.png`,
-        uuid: `lausunnot-esitys-uuid${nbr}`,
+        uuid: `lausunnot-uuid${nbr}`,
         lisatty,
       },
     ],
     maanomistajaluettelo: [
       {
         nimi: `maanomistajaluettelo äöå ${nbr}.png`,
-        uuid: `maanomistajaluettelo-esitys-uuid${nbr}`,
+        uuid: `maanomistajaluettelo-uuid${nbr}`,
         lisatty,
       },
     ],
     kuulutuksetJaKutsu: [
       {
         nimi: `kuulutuksetJaKutsu äöå ${nbr}.png`,
-        uuid: `kuulutuksetJaKutsu-esitys-uuid${nbr}`,
+        uuid: `kuulutuksetJaKutsu-uuid${nbr}`,
         lisatty,
       },
     ],
@@ -73,7 +73,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
     muuAineistoKoneelta: [
       {
         nimi: `muuAineistoKoneelta äöå ${nbr}.png`,
-        uuid: `muuAineistoKoneelta-esitys-uuid${nbr}`,
+        uuid: `muuAineistoKoneelta-uuid${nbr}`,
         lisatty,
       },
     ],

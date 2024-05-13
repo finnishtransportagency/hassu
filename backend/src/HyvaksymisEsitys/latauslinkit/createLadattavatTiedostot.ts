@@ -132,23 +132,25 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
 
   //Suunnitteluvaihe
   const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
-  assertIsDefined(vuorovaikutusKierrosJulkaisut, "vuorovaikutusKierrosJulkaisut on määritelty tässä vaiheessa");
-  for (const julkaisu of vuorovaikutusKierrosJulkaisut) {
-    const vuorovaikutusPDFt = julkaisu.vuorovaikutusPDFt;
-    assertIsDefined(vuorovaikutusPDFt, "vuorovaikutusPDFt on määritelty tässä vaiheessa");
-    for (const kieli in API.Kieli) {
-      const kutsu: string | undefined = vuorovaikutusPDFt[kieli as API.Kieli]?.kutsuPDFPath;
-      if (kutsu) {
-        kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kutsu));
+  if (vuorovaikutusKierrosJulkaisut) {
+    // Lyhyen mennettelyn projekteissa ei ole suunnitteluvaihetta
+    for (const julkaisu of vuorovaikutusKierrosJulkaisut) {
+      const vuorovaikutusPDFt = julkaisu.vuorovaikutusPDFt;
+      assertIsDefined(vuorovaikutusPDFt, "vuorovaikutusPDFt on määritelty tässä vaiheessa");
+      for (const kieli in API.Kieli) {
+        const kutsu: string | undefined = vuorovaikutusPDFt[kieli as API.Kieli]?.kutsuPDFPath;
+        if (kutsu) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kutsu));
+        }
       }
-    }
-    const vuorovaikutusSaamePDFt = julkaisu.vuorovaikutusSaamePDFt;
-    if (vuorovaikutusSaamePDFt) {
-      await forEverySaameDoAsync(async (kieli) => {
-        const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
-        assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
-        kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kutsu));
-      });
+      const vuorovaikutusSaamePDFt = julkaisu.vuorovaikutusSaamePDFt;
+      if (vuorovaikutusSaamePDFt) {
+        await forEverySaameDoAsync(async (kieli) => {
+          const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
+          assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
+          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kutsu));
+        });
+      }
     }
   }
 

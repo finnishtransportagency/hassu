@@ -52,10 +52,10 @@ export default function Nahtavillaolo(): ReactElement {
   const { data: kayttaja } = useSuomifiUser();
 
   if (!projekti || !kuulutus || !velho) {
-    return <></>;
+    return <>{t("common:ladataan")}</>;
   }
 
-  if (error || !projekti) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 

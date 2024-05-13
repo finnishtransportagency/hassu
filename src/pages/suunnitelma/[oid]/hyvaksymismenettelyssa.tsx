@@ -25,8 +25,11 @@ export default function Hyvaksymismenettelyssa(): ReactElement {
     }
   }, [projekti, router]);
 
-  if (error || !projekti) {
+  if (error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
+  }
+  if(!projekti) {
+    return <>{t("common:ladataan")}</>;
   }
 
   return (
