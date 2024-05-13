@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    LOG_LEVEL: info
+    LOG_LEVEL: error
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
     ROCKET_CHAT_TOKEN: /RocketChatToken
@@ -40,6 +40,10 @@ phases:
       - npm run release
       - npm run opensearch:delete-index
       - npm run opensearch:index
+      - npm run opensearch:delete-omistajaindex
+      - npm run opensearch:omistajaindex
+      - npm run opensearch:delete-muistuttajaindex
+      - npm run opensearch:muistuttajaindex
   post_build:
     on-failure: ABORT
     commands:

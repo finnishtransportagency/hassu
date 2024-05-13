@@ -1,6 +1,8 @@
 version: 0.2
 
 env:
+  variables:
+    LOG_LEVEL: error
   parameter-store:
     ROCKET_CHAT_TOKEN: /RocketChatToken
     ROCKET_CHAT_USER_ID: /RocketChatUserId
@@ -27,6 +29,8 @@ phases:
       - npm run deploy:stackpolicies
       - npm run release
       - npm run opensearch:index
+      - npm run opensearch:omistajaindex
+      - npm run opensearch:muistuttajaindex
   post_build:
     on-failure: ABORT
     commands:

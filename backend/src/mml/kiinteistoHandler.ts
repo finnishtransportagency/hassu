@@ -190,6 +190,8 @@ const handlerFactory = (event: SQSEvent) => async () => {
               omistaja.maakoodi = oldOmistaja.maakoodi;
             }
           });
+        const oldUserCreated = [...oldOmistajaMap.values()].filter((o) => o.userCreated === true);
+        dbOmistajat.push(...oldUserCreated);
 
         await omistajaDatabase.vaihdaProjektinKaytossaolevatOmistajat(hakuEvent.oid, dbOmistajat);
 
