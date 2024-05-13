@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useMemo, VFC } from "react";
+import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
