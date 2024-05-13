@@ -16,7 +16,6 @@ interface Props {
   vaihe?: Vaihe;
   contentAsideTitle?: ReactNode;
   showInfo?: boolean;
-  onOpenInfo?: () => void;
 }
 
 type ContextProps = {
