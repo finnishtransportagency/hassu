@@ -1,5 +1,5 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, createContext, useCallback, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
 import { IconButton, Stack, SvgIcon } from "@mui/material";
@@ -8,6 +8,7 @@ import AsianhallintaStatusNotification from "./AsianhallintaStatusNotification";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import deburr from "lodash/deburr";
 
 interface Props {
   children: ReactNode;
@@ -15,18 +16,39 @@ interface Props {
   vaihe?: Vaihe;
   contentAsideTitle?: ReactNode;
   showInfo?: boolean;
-  onOpenInfo?: () => void;
 }
 
-export default function ProjektiPageLayout({
-  children,
-  title,
-  contentAsideTitle,
-  showInfo = false,
-  onOpenInfo,
-  vaihe,
-}: Props): ReactElement {
+type ContextProps = {
+  ohjeetOpen?: boolean;
+  ohjeetOnClose?: () => void;
+};
+
+export const ProjektiPageLayoutContext = createContext<ContextProps>({});
+
+export default function ProjektiPageLayout({ children, title, contentAsideTitle, showInfo = false, vaihe }: Readonly<Props>): ReactElement {
   const { data: projekti } = useProjekti();
+
+  const localStorageKey = useMemo(() => {
+    return `${deburr(title).replace(/[^a-zA-Z]/g, "_")}Ohjeet`;
+  }, [title]);
+
+  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
+    const savedValue = localStorage.getItem(localStorageKey);
+    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
+    return isOpen;
+  });
+
+  const ohjeetOnClose = useCallback(() => {
+    setOhjeetOpen(false);
+    localStorage.setItem(localStorageKey, "false");
+  }, [localStorageKey]);
+
+  const ohjeetOnOpen = useCallback(() => {
+    setOhjeetOpen(true);
+    localStorage.setItem(localStorageKey, "true");
+  }, [localStorageKey]);
+
+  const contextValue = useMemo(() => ({ ohjeetOpen, ohjeetOnClose }), [ohjeetOnClose, ohjeetOpen]);
 
   if (!projekti) {
     return <></>;
@@ -49,7 +71,7 @@ export default function ProjektiPageLayout({
             <h1>
               {title}{" "}
               {showInfo && (
-                <IconButton onClick={onOpenInfo}>
+                <IconButton onClick={ohjeetOnOpen}>
                   <SvgIcon>
                     <FontAwesomeIcon icon="info-circle" />
                   </SvgIcon>
@@ -60,7 +82,7 @@ export default function ProjektiPageLayout({
             {contentAsideTitle}
           </Stack>
           <ContentSpacer gap={7}>
-            <h2>{projekti?.velho?.nimi || "-"}</h2>
+            <h2>{projekti?.velho?.nimi ?? "-"}</h2>
             {projekti && projektiOnEpaaktiivinen(projekti) ? (
               <Notification type={NotificationType.INFO_GRAY}>
                 Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut
@@ -89,7 +111,7 @@ export default function ProjektiPageLayout({
               </>
             )}
           </ContentSpacer>
-          {children}
+          <ProjektiPageLayoutContext.Provider value={contextValue}>{children}</ProjektiPageLayoutContext.Provider>
         </div>
       </div>
     </section>

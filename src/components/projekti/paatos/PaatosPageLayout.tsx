@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode, useCallback, useMemo, useState, VFC } from "react";
-import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
+import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
+import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
@@ -169,20 +169,6 @@ function PaatosPageLayoutContent({
     !nextPaatosData?.julkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("paatoskuulutuksenOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("paatoskuulutuksenOhjeet", "false");
-  }, []);
-  const ohjeetOnOpen = useCallback(() => {
-    ohjeetSetOpen(true);
-    localStorage.setItem("paatoskuulutuksenOhjeet", "true");
-  }, []);
-
   return (
     <ProjektiPageLayout
       title={pageTitle}
@@ -196,8 +182,7 @@ function PaatosPageLayoutContent({
           />
         )
       }
-      showInfo={!ohjeetOpen}
-      onOpenInfo={ohjeetOnOpen}
+      showInfo={true}
     >
       {!migroitu ? (
         <>
@@ -211,15 +196,17 @@ function PaatosPageLayoutContent({
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-              <>
-                <OhjelistaNotification
-                  asianhallintaTiedot={{ vaihe: paatosSpecificVaihe[paatosTyyppi], projekti }}
-                  open={ohjeetOpen}
-                  onClose={ohjeetOnClose}
-                >
-                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-                </OhjelistaNotification>
-              </>
+              <ProjektiPageLayoutContext.Consumer>
+                {({ ohjeetOpen, ohjeetOnClose }) => (
+                  <OhjelistaNotification
+                    asianhallintaTiedot={{ vaihe: paatosSpecificVaihe[paatosTyyppi], projekti }}
+                    open={ohjeetOpen}
+                    onClose={ohjeetOnClose}
+                  >
+                    <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                  </OhjelistaNotification>
+                )}
+              </ProjektiPageLayoutContext.Consumer>
             )}
             <Tabs value={value}>
               {tabProps.map((tProps, index) => (
