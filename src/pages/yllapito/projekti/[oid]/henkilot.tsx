@@ -47,22 +47,6 @@ export default function HenkilotPage(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
-    let isOpen = false;
-    if (typeof window !== "undefined") {
-      const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
-      isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    }
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
-    localStorage.setItem("kayttoOikeusOhjeet", "false");
-  }, []);
-  const ohjeetOnOpen = useCallback(() => {
-    ohjeetSetOpen(true);
-    localStorage.setItem("kayttoOikeusOhjeet", "true");
-  }, []);
 
   if (!projekti) {
     return <></>;
@@ -71,15 +55,14 @@ export default function HenkilotPage(): ReactElement {
   return (
     <ProjektiPageLayout
       title="Projektin henkilöt"
-      showInfo={!epaaktiivinen && !ohjeetOpen}
-      onOpenInfo={ohjeetOnOpen}
+      showInfo={!epaaktiivinen}
       contentAsideTitle={<PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
       {projekti &&
         (epaaktiivinen && projekti.kayttoOikeudet ? (
           <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
         ) : (
-          <Henkilot ohjeetOpen={ohjeetOpen} ohjeetOnClose={ohjeetOnClose} {...{ projekti, projektiLoadError, reloadProjekti }} />
+          <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />
         ))}
     </ProjektiPageLayout>
   );
@@ -89,11 +72,9 @@ interface HenkilotFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
-  ohjeetOpen: boolean;
-  ohjeetOnClose: () => void;
 }
 
-function Henkilot({ projekti, projektiLoadError, reloadProjekti, ohjeetOpen, ohjeetOnClose }: HenkilotFormProps): ReactElement {
+function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
@@ -183,8 +164,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, ohjeetOpen, ohj
               suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
               projekti={projekti}
               includeTitle={false}
-              ohjeetOpen={ohjeetOpen}
-              ohjeetOnClose={ohjeetOnClose}
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">

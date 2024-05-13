@@ -38,4 +38,7 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.HYVAKSYTTY) {
     throw new IllegalArgumentError("Projektin tulee olla lukutilassa, jotta muokkauksen voi avata.");
   }
+  if (projektiInDB.hyvaksymisPaatosVaihe) {
+    throw new IllegalArgumentError("Projekti on jo hyväksymisvaiheessa, joten et voi avata hyväksymiseistyksen muokkausta.");
+  }
 }
