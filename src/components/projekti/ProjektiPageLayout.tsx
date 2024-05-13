@@ -19,7 +19,12 @@ interface Props {
   onOpenInfo?: () => void;
 }
 
-export const ProjektiPageLayoutContext = createContext<any>("ProjektiPageLayout");
+type ContextProps = {
+  ohjeetOpen?: boolean;
+  ohjeetOnClose?: () => void;
+};
+
+export const ProjektiPageLayoutContext = createContext<ContextProps>({});
 
 export default function ProjektiPageLayout({ children, title, contentAsideTitle, showInfo = false, vaihe }: Props): ReactElement {
   const { data: projekti } = useProjekti();
