@@ -20,7 +20,6 @@ import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
