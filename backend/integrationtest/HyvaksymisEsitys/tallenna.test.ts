@@ -313,6 +313,8 @@ describe("Hyväksymisesityksen tallentaminen", () => {
       tila: API.HyvaksymisTila.MUOKKAUS,
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
+  });
+
   it("onnistuu projektikäyttäjältä", async () => {
     const projari = UserFixture.pekkaProjari;
     const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
