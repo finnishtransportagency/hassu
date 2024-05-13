@@ -28,19 +28,19 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
     return `${deburr(title).replace(/[^a-zA-Z]/g, "_")}Ohjeet`;
   }, [title]);
 
-  const [ohjeetOpen, ohjeetSetOpen] = useState(() => {
+  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
     const savedValue = localStorage.getItem(localStorageKey);
     const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
     return isOpen;
   });
 
   const ohjeetOnClose = useCallback(() => {
-    ohjeetSetOpen(false);
+    setOhjeetOpen(false);
     localStorage.setItem(localStorageKey, "false");
   }, [localStorageKey]);
 
   const ohjeetOnOpen = useCallback(() => {
-    ohjeetSetOpen(true);
+    setOhjeetOpen(true);
     localStorage.setItem(localStorageKey, "true");
   }, [localStorageKey]);
 
