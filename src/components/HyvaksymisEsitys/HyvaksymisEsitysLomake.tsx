@@ -2,6 +2,7 @@ import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@servi
 import { useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
+import MuuTekninenAineisto from "./MuuTekninenAineisto";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -33,7 +34,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <h3 className="vayla-subtitle">Hyväksymisesitys</h3>
           <h3 className="vayla-subtitle">Suunnitelma</h3>
           <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-          <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
+          <MuuTekninenAineisto />
         </div>
         <div>
           <h3 className="vayla-subtitle">Hyväksymisesityksen vastaanottajat</h3>
