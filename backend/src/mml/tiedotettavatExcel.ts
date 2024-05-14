@@ -75,7 +75,7 @@ function lisaaRivi(rivi: Rivi): Row_<ImageData> {
   auditLog.info("Lisätään omistajan tiedot exceliin", { omistajaId: rivi.id });
   return [
     {
-      value: formatKiinteistotunnusForDisplay(rivi.kiinteistotunnus!),
+      value: formatKiinteistotunnusForDisplay(rivi.kiinteistotunnus),
     },
     {
       value: rivi.nimi,
