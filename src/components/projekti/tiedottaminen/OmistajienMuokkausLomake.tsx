@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC, useMemo } from "react";
-import { Autocomplete, DialogContent, Stack, styled, TextField } from "@mui/material";
+import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H3, H4 } from "@components/Headings";
@@ -33,6 +33,7 @@ import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import HassuDialog from "@components/HassuDialog";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -428,6 +429,7 @@ export const FormContents: VFC<{
   const {
     handleSubmit,
     formState: { isDirty },
+    getValues,
   } = useFormReturn;
   useLeaveConfirm(isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -436,10 +438,15 @@ export const FormContents: VFC<{
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const router = useRouter();
 
+  function getRemoveCount() {
+    return getValues().muutOmistajat.filter((o) => o.toBeDeleted).length + getValues().suomifiOmistajat.filter((o) => o.toBeDeleted).length;
+  }
+  const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
       withLoadingSpinner(
         (async () => {
+          setPoistaDialogOpen(false);
           let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
           try {
             apiData = mapFormDataForApi(data);
@@ -532,13 +539,26 @@ export const FormContents: VFC<{
               <Button type="button" onClick={resetAndClose}>
                 Palaa listaukseen
               </Button>
-              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+              <Button type="button" onClick={getRemoveCount() > 0 ? () => setPoistaDialogOpen(true) : handleSubmit(onSubmit)} primary>
                 Tallenna
               </Button>
             </Stack>
           </Section>
         </DialogContent>
       </DialogForm>
+      <HassuDialog open={poistaDialogOpen} title="Kiinteistönomistajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
+        <DialogContent>
+          <p>{`Olet poistamassa ${getRemoveCount()} määrä kiinteistönomistajia. Tallenna vahvistaaksesi.`}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
+            Peruuta
+          </Button>
+          <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+            Tallenna
+          </Button>
+        </DialogActions>
+      </HassuDialog>
     </FormProvider>
   );
 };

@@ -465,10 +465,7 @@ export const FormContents: VFC<{
       </DialogForm>
       <HassuDialog open={poistaDialogOpen} title="Muistuttajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
         <DialogContent>
-          <p>
-            {`Olet poistamassa ${getRemoveCount()} määrä muistuttajia. Tallenna
-            vahvistaaksesi.`}
-          </p>
+          <p>{`Olet poistamassa ${getRemoveCount()} määrä muistuttajia. Tallenna vahvistaaksesi.`}</p>
         </DialogContent>
         <DialogActions>
           <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
