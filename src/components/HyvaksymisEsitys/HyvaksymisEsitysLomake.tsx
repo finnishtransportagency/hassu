@@ -6,11 +6,9 @@ import MuuTekninenAineisto from "./MuuTekninenAineisto";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
-import useSnackbars from "src/hooks/useSnackbars";
-import log from "loglevel";
+import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -27,25 +25,13 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
   };
 
   const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
-  const { withLoadingSpinner } = useLoadingSpinner();
   const api = useApi();
   const { mutate: reloadData } = useHyvaksymisEsitys();
-  const { showSuccessMessage } = useSnackbars();
 
-  const save = (formData: TallennaHyvaksymisEsitysInput) =>
-    withLoadingSpinner(
-      (async () => {
-        try {
-          await api.tallennaHyvaksymisEsitys(formData);
-
-          await reloadData();
-
-          showSuccessMessage("Tallennus onnistui");
-        } catch (e) {
-          log.error("OnSubmit Error", e);
-        }
-      })()
-    );
+  const save = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
+    await api.tallennaHyvaksymisEsitys(formData);
+    await reloadData();
+  }, "Tallennus onnistui");
 
   return (
     <FormProvider {...useFormReturn}>
