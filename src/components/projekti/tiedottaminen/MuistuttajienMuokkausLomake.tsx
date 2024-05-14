@@ -205,7 +205,6 @@ const suomifiColumns: ColumnDef<MuistuttajaRow>[] = [
     id: "maakoodi",
     meta: getSuomifiDefaultColumnMeta(),
   },
-  createPoistaColumn("suomifiMuistuttajat"),
 ];
 
 const muutColumns: ColumnDef<MuistuttajaRow>[] = [
