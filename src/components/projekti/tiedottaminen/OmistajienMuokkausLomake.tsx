@@ -32,6 +32,7 @@ import lookup from "country-code-lookup";
 import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -424,7 +425,11 @@ export const FormContents: VFC<{
     })
   );
 
-  const { handleSubmit } = useFormReturn;
+  const {
+    handleSubmit,
+    formState: { isDirty },
+  } = useFormReturn;
+  useLeaveConfirm(isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const api = useApi();
@@ -469,8 +474,8 @@ export const FormContents: VFC<{
   );
 
   const resetAndClose = useCallback(() => {
-    router.back();
-  }, [router]);
+    router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
+  }, [router, projekti.oid]);
 
   return (
     <FormProvider {...useFormReturn}>
@@ -525,7 +530,7 @@ export const FormContents: VFC<{
           <Section noDivider>
             <Stack direction="row" justifyContent="end">
               <Button type="button" onClick={resetAndClose}>
-                Poistu tallentamatta
+                Palaa listaukseen
               </Button>
               <Button type="button" onClick={handleSubmit(onSubmit)} primary>
                 Tallenna
