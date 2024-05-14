@@ -322,21 +322,34 @@ export async function generateExcel(
       }
     }
   } else {
+    data[1] = [];
     if (kiinteisto) {
-      sheets.push("Kiinteistönomistajat");
+      sheets.push("Suomi.fi kiinteistönomistajat");
+      sheets.push("Muut kiinteistönomistajat");
       data[0].push(lisaaOtsikko());
-      columns.push(getKiinteistonomistajaColumns());
+      data[1].push(lisaaOtsikko());
+      columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
       const rivit = await haeOmistajat(projekti.oid);
       for (const rivi of rivit) {
-        data[0].push(lisaaRivi(rivi));
+        if (rivi.suomifiLahetys) {
+          data[0].push(lisaaRivi(rivi));
+        } else {
+          data[1].push(lisaaRivi(rivi));
+        }
       }
     } else {
-      sheets.push("Muistuttajat");
+      sheets.push("Suomi.fi muistuttajat");
+      sheets.push("Muut muistuttajat");
       data[0].push(lisaaMuistuttajanOtsikko());
-      columns.push(getMuistuttajaColumns());
+      data[1].push(lisaaMuistuttajanOtsikko());
+      columns.push(getMuistuttajaColumns(), getMuistuttajaColumns());
       const rivit = await haeMuistuttajat(projekti.oid);
       for (const rivi of rivit) {
-        data[0].push(lisaaMuistuttajaRivi(rivi));
+        if (rivi.suomifiLahetys) {
+          data[0].push(lisaaMuistuttajaRivi(rivi));
+        } else {
+          data[1].push(lisaaMuistuttajaRivi(rivi));
+        }
       }
     }
   }
