@@ -3,6 +3,14 @@ import { useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
 import MuuTekninenAineisto from "./MuuTekninenAineisto";
+import Section from "@components/layout/Section2";
+import { Stack } from "@mui/material";
+import Button from "@components/button/Button";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import useApi from "src/hooks/useApi";
+import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
+import useSnackbars from "src/hooks/useSnackbars";
+import log from "loglevel";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -19,6 +27,26 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
   };
 
   const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
+  const { withLoadingSpinner } = useLoadingSpinner();
+  const api = useApi();
+  const { mutate: reloadData } = useHyvaksymisEsitys();
+  const { showSuccessMessage } = useSnackbars();
+
+  const save = (formData: TallennaHyvaksymisEsitysInput) =>
+    withLoadingSpinner(
+      (async () => {
+        try {
+          await api.tallennaHyvaksymisEsitys(formData);
+
+          await reloadData();
+
+          showSuccessMessage("Tallennus onnistui");
+        } catch (e) {
+          log.error("OnSubmit Error", e);
+        }
+      })()
+    );
+
   return (
     <FormProvider {...useFormReturn}>
       <form>
@@ -40,6 +68,13 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <h3 className="vayla-subtitle">Hyväksymisesityksen vastaanottajat</h3>
           <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
         </div>
+        <Section noDivider>
+          <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+            <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
+              Tallenna
+            </Button>
+          </Stack>
+        </Section>
       </form>
     </FormProvider>
   );
