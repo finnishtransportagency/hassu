@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC, useMemo } from "react";
-import { Autocomplete, DialogContent, Stack, styled, TextField } from "@mui/material";
+import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H3 } from "@components/Headings";
@@ -30,6 +30,7 @@ import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import HassuDialog from "@components/HassuDialog";
 
 type MuistuttajaRow = Omit<MuistuttajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -368,19 +369,24 @@ export const FormContents: VFC<{
 
   const {
     handleSubmit,
+    getValues,
     formState: { isDirty },
   } = useFormReturn;
   useLeaveConfirm(isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
+  function getRemoveCount() {
+    return getValues().muutMuistuttajat.filter((m) => m.toBeDeleted).length;
+  }
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const router = useRouter();
-
+  const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
   const onSubmit = useCallback<SubmitHandler<MuistuttajatFormFields>>(
     (data) => {
       withLoadingSpinner(
         (async () => {
+          setPoistaDialogOpen(false);
           let apiData: TallennaMuistuttajatMutationVariables | undefined = undefined;
           try {
             apiData = mapFormDataForApi(data);
@@ -450,13 +456,29 @@ export const FormContents: VFC<{
               <Button type="button" onClick={resetAndClose}>
                 Palaa listaukseen
               </Button>
-              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+              <Button type="button" onClick={getRemoveCount() > 0 ? () => setPoistaDialogOpen(true) : handleSubmit(onSubmit)} primary>
                 Tallenna
               </Button>
             </Stack>
           </Section>
         </DialogContent>
       </DialogForm>
+      <HassuDialog open={poistaDialogOpen} title="Muistuttajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
+        <DialogContent>
+          <p>
+            {`Olet poistamassa ${getRemoveCount()} määrä muistuttajia. Tallenna
+            vahvistaaksesi.`}
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
+            Peruuta
+          </Button>
+          <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+            Tallenna
+          </Button>
+        </DialogActions>
+      </HassuDialog>
     </FormProvider>
   );
 };
