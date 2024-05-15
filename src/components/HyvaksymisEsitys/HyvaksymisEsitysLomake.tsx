@@ -10,6 +10,7 @@ import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 import LinkinVoimassaoloaika from "./LinkinVoimassaoloaika";
+import ViestiVastaanottajalle from "./ViestiVastaanottajalle";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -40,7 +41,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
         <div>
           <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
           <LinkinVoimassaoloaika />
-          <h3 className="vayla-subtitle">Viesti vastaanottajille</h3>
+          <ViestiVastaanottajalle />
           <h3 className="vayla-subtitle">Laskutustiedot hyväksymismaksua varten</h3>
         </div>
         <div>
