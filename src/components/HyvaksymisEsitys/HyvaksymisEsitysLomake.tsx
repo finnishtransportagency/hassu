@@ -2,18 +2,18 @@ import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@servi
 import { useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
-import MuuTekninenAineisto from "./MuuTekninenAineisto";
+import MuuTekninenAineisto from "./LomakeComponents/MuuTekninenAineisto";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
-import LinkinVoimassaoloaika from "./LinkinVoimassaoloaika";
-import ViestiVastaanottajalle from "./ViestiVastaanottajalle";
-import Laskutustiedot from "./Laskutustiedot";
-import LinkkiHyvEsAineistoon from "./LinkkiHyvEsAineistoon";
-import HyvaksymisEsitysTiedosto from "./HyvaksymisEsitysTiedosto";
+import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
+import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
+import Laskutustiedot from "./LomakeComponents/Laskutustiedot";
+import LinkkiHyvEsAineistoon from "./LomakeComponents/LinkkiHyvEsAineistoon";
+import HyvaksymisEsitysTiedosto from "./LomakeComponents/HyvaksymisEsitysTiedosto";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
