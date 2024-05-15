@@ -332,20 +332,6 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
-  async updateMuistuttajat(oid: string, muistuttajat: string[], muutMuistuttajat: string[]) {
-    log.info("updateMuistuttajat", { oid, muistuttajat, muutMuistuttajat });
-    const params = new UpdateCommand({
-      TableName: this.projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: "SET #muistuttajat = :muistuttajat, #muutMuistuttajat = :muutMuistuttajat",
-      ExpressionAttributeNames: { "#muistuttajat": "muistuttajat", "#muutMuistuttajat": "muutMuistuttajat" },
-      ExpressionAttributeValues: { ":muistuttajat": muistuttajat, ":muutMuistuttajat": muutMuistuttajat },
-    });
-    await getDynamoDBDocumentClient().send(params);
-  }
-
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 

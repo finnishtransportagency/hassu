@@ -439,7 +439,11 @@ export const FormContents: VFC<{
   const router = useRouter();
 
   function getRemoveCount() {
-    return getValues().muutOmistajat.filter((o) => o.toBeDeleted).length + getValues().suomifiOmistajat.filter((o) => o.toBeDeleted).length;
+    return (
+      getValues().muutOmistajat.filter((o) => o.toBeDeleted).length +
+      getValues().suomifiOmistajat.filter((o) => o.toBeDeleted).length +
+      getValues().lisatytOmistajat.filter((o) => o.toBeDeleted && o.id).length
+    );
   }
   const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
@@ -468,6 +472,8 @@ export const FormContents: VFC<{
                   newData.lisatytOmistajat[i].id = ids[i];
                 }
               }
+              // poistetaan uusi lisätty mutta merkitty poistetuksi
+              newData.lisatytOmistajat = newData.lisatytOmistajat.filter((o) => !(!o.id && o.toBeDeleted));
               useFormReturn.reset(newData);
               showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
             } catch (error) {

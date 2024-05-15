@@ -376,7 +376,7 @@ export const FormContents: VFC<{
   const { withLoadingSpinner } = useLoadingSpinner();
 
   function getRemoveCount() {
-    return getValues().muutMuistuttajat.filter((m) => m.toBeDeleted).length;
+    return getValues().muutMuistuttajat.filter((m) => m.toBeDeleted && m.id).length;
   }
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
@@ -407,6 +407,8 @@ export const FormContents: VFC<{
                   newData.muutMuistuttajat[i].id = ids[i];
                 }
               }
+              // poistetaan uusi lisätty mutta merkitty poistetuksi
+              newData.muutMuistuttajat = newData.muutMuistuttajat.filter((m) => !(!m.id && m.toBeDeleted));
               useFormReturn.reset(newData);
               showSuccessMessage("Muistuttajatiedot tallennettu");
             } catch (error) {
