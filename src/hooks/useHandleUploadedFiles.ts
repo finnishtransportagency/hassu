@@ -13,7 +13,10 @@ import { useCallback } from "react";
  * @param keyToLadatutTiedostot avain FielValueseissa, jonka takana on LadattuTiedostoNew[]-tyyppistä dataa
  * @returns funktio, jonka voi antaa monivalinta-tiedosto-inputin onChange-kohtaan
  */
-export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadatutTiedostot: Path<F>) {
+export default function useHandleUploadedFiles<F extends FieldValues>(
+  keyToLadatutTiedostot: Path<F>,
+  settings?: { allowOnlyOne: boolean }
+) {
   const { setValue, watch } = useFormContext<F>();
   const ladatutTiedostot = watch(keyToLadatutTiedostot);
 
@@ -49,7 +52,8 @@ export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadat
               uuid: uuid.v4(),
             }));
 
-            const newValue = ((ladatutTiedostot ?? []) as LadattuTiedostoInputNew[]).concat(tiedostoInputs);
+            const oldFiles = (ladatutTiedostot ?? []) as LadattuTiedostoInputNew[];
+            const newValue = settings?.allowOnlyOne ? tiedostoInputs : oldFiles.concat(tiedostoInputs);
             setValue(keyToLadatutTiedostot, newValue as UnpackNestedValue<PathValue<F, Path<F>>>, {
               shouldDirty: true,
             });
@@ -61,6 +65,6 @@ export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadat
           }
         })()
       ),
-    [api, keyToLadatutTiedostot, ladatutTiedostot, setValue, showErrorMessage, withLoadingSpinner]
+    [api, keyToLadatutTiedostot, ladatutTiedostot, setValue, showErrorMessage, withLoadingSpinner, settings]
   );
 }
