@@ -23,22 +23,6 @@ const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
 };
 
-const UspaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe; enabled: boolean }> = ({ vaihe, enabled }) => {
-  if (!enabled) {
-    return (
-      <>
-        Vie lopuksi sähköpostilla saamasi {vaihe === Vaihe.SUUNNITTELU ? "kutsu ja lähetekirje" : "kuulutus ja ilmoitus"} asianhallintaan.
-      </>
-    );
-  }
-  return (
-    <>
-      {vaihe === Vaihe.SUUNNITTELU ? "Kutsu ja lähetekirje" : "Kuulutus ja ilmoitus kuulutuksesta"} siirtyvät automaattisesti
-      asianhallintaan integraatioyhteyden ollessa päällä.
-    </>
-  );
-};
-
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   <>
     Ennen {vaihe === Vaihe.SUUNNITTELU ? "kutsun" : "kuulutuksen"} täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä
@@ -51,7 +35,6 @@ export const OhjelistaNotification: VFC<Props> = ({ children, asianhallintaTiedo
   const { data: nykyinenKayttaja } = useCurrentUser();
 
   const vaylaAsianhallinta = asianhallintaTiedot?.projekti && isVaylaAsianhallinta(asianhallintaTiedot.projekti);
-  const elyAsianhallinta = asianhallintaTiedot?.projekti && !isVaylaAsianhallinta(asianhallintaTiedot.projekti);
 
   return (
     <Notification closable type={NotificationType.INFO} hideIcon open={open} onClose={onClose}>
@@ -64,11 +47,6 @@ export const OhjelistaNotification: VFC<Props> = ({ children, asianhallintaTiedo
             </li>
           )}
           {children}
-          {elyAsianhallinta && nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
-            <li>
-              <UspaKuulutusToimenpideTeksti vaihe={asianhallintaTiedot.vaihe} enabled={nykyinenKayttaja.features.uspaIntegraatio} />
-            </li>
-          )}
         </ul>
       </div>
     </Notification>

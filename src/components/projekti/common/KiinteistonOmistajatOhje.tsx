@@ -16,7 +16,7 @@ interface KiinteistonomistajatOhjeProps {
   julkaisunTila?: KuulutusJulkaisuTila | null;
 }
 
-function KiinteistojaEiLisatty({ oid }: KiinteistonomistajatOhjeProps) {
+function KiinteistojaEiLisatty({ oid }: Readonly<KiinteistonomistajatOhjeProps>) {
   return (
     <>
       <p>
@@ -33,33 +33,51 @@ function KiinteistojaEiLisatty({ oid }: KiinteistonomistajatOhjeProps) {
   );
 }
 
-function KiinteistotLisatty({ oid, vaihe }: KiinteistonomistajatOhjeProps) {
+function KiinteistotLisatty({ oid, vaihe }: Readonly<KiinteistonomistajatOhjeProps>) {
   if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
-      <p>
-        Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen-sivun{" "}
-        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
-          Kiinteistönomistajat
-        </StyledLink>{" "}
-        -välilehdeltä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään
-        julkaistavaksi.
-      </p>
+      <>
+        <p>
+          Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen-sivun{" "}
+          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+            Kiinteistönomistajat
+          </StyledLink>{" "}
+          -välilehdeltä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään
+          julkaistavaksi.
+        </p>
+        <p>
+          Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
+          tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
+        </p>
+      </>
     );
   } else {
     return (
-      <p>
-        Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
-        <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
-          Tiedottaminen
-        </StyledLink>
-        -sivulta Kiinteistönomistajat- ja Muistuttajat -välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan, kun
-        kuulutus hyväksytään julkaistavaksi.
-      </p>
+      <>
+        <p>
+          Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
+          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+            Tiedottaminen
+          </StyledLink>
+          -sivulta Kiinteistönomistajat- ja Muistuttajat -välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan, kun
+          kuulutus hyväksytään julkaistavaksi.
+        </p>
+        <p>
+          Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.
+          Kirjeitse tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus
+          muilla tavoin -listoista.
+        </p>
+      </>
     );
   }
 }
 
-export default function KiinteistonomistajatOhje({ vaihe, oid, omistajahakuStatus, uudelleenKuulutus }: KiinteistonomistajatOhjeProps) {
+export default function KiinteistonomistajatOhje({
+  vaihe,
+  oid,
+  omistajahakuStatus,
+  uudelleenKuulutus,
+}: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
   if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
     return (
@@ -83,7 +101,7 @@ export function KiinteistonOmistajatOhjeLukutila({
   uudelleenKuulutus,
   kuulutusPaiva,
   julkaisunTila,
-}: KiinteistonomistajatOhjeProps) {
+}: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
   const pvm = dayjs(kuulutusPaiva, "DD.MM.YYYY").startOf("date");
   const inPast = pvm.isBefore(nyt()) && julkaisunTila !== KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;

@@ -133,8 +133,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                       open={ohjeetOpen}
                     >
                       <li>
-                        Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot, esim. johtokartat, ensimmäiseltä
-                        välilehdeltä.
+                        Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
                         {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
                       </li>
                       <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
@@ -154,16 +153,17 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                       </li>
                       <li>
-                        Kun projektipäällikkö on hyväksynyt kuulutuksen, lähetä kiinteistönomistajille ilmoitus suunnitelman nähtäville
-                        asettamisesta. Hyväksynnän jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen. Huomioithan, että järjestelmä ei
-                        lähetä ilmoitusta kiinteistöomistajille, vaan se tulee lähettää järjestelmän ulkopuolella.
+                        Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista lähetetään automaattisesti ilmoitus suunnitelman
+                        nähtävilläolosta Suomi.fi viestit -palvelun kautta.
                       </li>
                       <li>
-                        Lausuntopyyntö tehdään ja lähetetään lausunnonantajille järjestelmän ulkopuolella käyttäen toimintajärjestelmästä
-                        löytyvää mallipohjaa 32T/32R.
+                        Huomioithan, että osaa kiinteistönomistajista tulee tiedottaa järjestelmän ulkopuolella. Hyväksynnän jälkeen löydät
+                        tältä sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
                       </li>
+                      <li>Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista Tiedottaminen -sivulta.</li>
                       <li>
-                        Lausuntopyyntöön lisättävä linkki suunnitelma-aineistoon löytyy Nähtäville asetettavat aineistot -välilehdeltä.
+                        Lausuntopyyntöihin lisättävä linkki suunnitelma-aineistoon tehdään Lausuntopyyntöjen aineistolinkit -sivulla
+                        kohdassa Lausuntopyyntö.
                       </li>
                       <li>
                         Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
@@ -172,10 +172,18 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta. Vähäisessä
                         menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
                       </li>
-                      <li>
-                        Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
-                        asianhallintaan.
-                      </li>
+                      {projekti.asianhallinta.inaktiivinen && (
+                        <li>
+                          Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
+                          asianhallintaan.
+                        </li>
+                      )}
+                      {!projekti.asianhallinta.inaktiivinen && (
+                        <li>
+                          Kuulutus, ilmoitus kuulutuksesta, kiinteistönomistajille lähetettävä ilmoitus sekä kiinteistönomistajalistaus
+                          siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
+                        </li>
+                      )}
                     </OhjelistaNotification>
                   )}
                 </ProjektiPageLayoutContext.Consumer>

@@ -40,6 +40,11 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
     <>
       {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? (
         <>
+          <li>
+            Ennen kuulutuksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide, joka on nimeltään
+            Kuulutus päätöksen nähtäville asettamisesta. Kuulutuksen julkaisu ei ole mahdollista, jos asianhallintajärjestelmässä on väärä
+            toimenpide auki. Katso tarkemmat ohjeet asianhallinnan ohjeistuksesta.
+          </li>
           <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
           <li>
             Huomioithan, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa. Traficom toimittaa tarvittaessa
@@ -63,11 +68,26 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
             Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle. Hyväksyntä on hyvä tehdä noin viikko
             ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
           </li>
-          <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
           <li>
-            Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. Huomioithan, että järjestelmä ei lähetä
-            ilmoitusta muistutuksen jättäneille, eikä lausunnonantajille, vaan se tulee lähettää järjestelmän ulkopuolella.
+            Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista ja muistuttajista lähtee automaattisesti ilmoitus
+            hyväksymispäätöksestä Suomi.fi viestit -palvelun kautta.
           </li>
+          <li>
+            Huomioithan, että osaa kiinteistönomistajista ja muistuttajista sekä lausunnonantajia ja maakuntaliittoja tulee tiedottaa
+            järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoiset ilmoitukset, jotka heille
+            lähetetään.
+          </li>
+          <li>Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista ja muistuttajista Tiedottaminen -sivulta.</li>
+          <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+          {projekti.asianhallinta.inaktiivinen && (
+            <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>
+          )}
+          {!projekti.asianhallinta.inaktiivinen && (
+            <li>
+              Kuulutus, ilmoitus kuulutuksesta, kiinteistönomistajille ja muistuttajille lähetettävä ilmoitus sekä
+              kiinteistönomistajalistaus siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
+            </li>
+          )}
         </>
       ) : (
         <>
