@@ -11,6 +11,8 @@ import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 import LinkinVoimassaoloaika from "./LinkinVoimassaoloaika";
 import ViestiVastaanottajalle from "./ViestiVastaanottajalle";
+import Laskutustiedot from "./Laskutustiedot";
+import LinkkiHyvEsAineistoon from "./LinkkiHyvEsAineistoon";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -42,11 +44,11 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
           <LinkinVoimassaoloaika />
           <ViestiVastaanottajalle />
-          <h3 className="vayla-subtitle">Laskutustiedot hyväksymismaksua varten</h3>
+          <Laskutustiedot />
         </div>
         <div>
           <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
-          <h3 className="vayla-subtitle">Linkki hyväksymisesityksen aineistoon</h3>
+          <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
           <h3 className="vayla-subtitle">Hyväksymisesitys</h3>
           <h3 className="vayla-subtitle">Suunnitelma</h3>
           <h3 className="vayla-subtitle">Vuorovaikutus</h3>
