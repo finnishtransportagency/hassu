@@ -19,6 +19,7 @@ import ToiminnotButton from "../ToiminnotButton";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
+import StyledLink from "@components/StyledLink";
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -160,7 +161,15 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         Huomioithan, että osaa kiinteistönomistajista tulee tiedottaa järjestelmän ulkopuolella. Hyväksynnän jälkeen löydät
                         tältä sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
                       </li>
-                      <li>Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista Tiedottaminen -sivulta.</li>
+                      <li>
+                        Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista{" "}
+                        <StyledLink
+                          href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                        >
+                          Tiedottaminen
+                        </StyledLink>{" "}
+                        -sivulta.
+                      </li>
                       <li>
                         Lausuntopyyntöihin lisättävä linkki suunnitelma-aineistoon tehdään Lausuntopyyntöjen aineistolinkit -sivulla
                         kohdassa Lausuntopyyntö.

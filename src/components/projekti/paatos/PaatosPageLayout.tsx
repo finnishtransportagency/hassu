@@ -22,6 +22,7 @@ import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
+import StyledLink from "@components/StyledLink";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -40,11 +41,6 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
     <>
       {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? (
         <>
-          <li>
-            Ennen kuulutuksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide, joka on nimeltään
-            Kuulutus päätöksen nähtäville asettamisesta. Kuulutuksen julkaisu ei ole mahdollista, jos asianhallintajärjestelmässä on väärä
-            toimenpide auki. Katso tarkemmat ohjeet asianhallinnan ohjeistuksesta.
-          </li>
           <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
           <li>
             Huomioithan, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa. Traficom toimittaa tarvittaessa
@@ -77,7 +73,13 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
             järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoiset ilmoitukset, jotka heille
             lähetetään.
           </li>
-          <li>Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista ja muistuttajista Tiedottaminen -sivulta.</li>
+          <li>
+            Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista ja muistuttajista{" "}
+            <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}>
+              Tiedottaminen
+            </StyledLink>{" "}
+            -sivulta.
+          </li>
           <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>
