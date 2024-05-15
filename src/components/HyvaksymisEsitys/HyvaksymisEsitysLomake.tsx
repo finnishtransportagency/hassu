@@ -9,6 +9,7 @@ import Button from "@components/button/Button";
 import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
+import LinkinVoimassaoloaika from "./LinkinVoimassaoloaika";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -38,7 +39,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
       <form>
         <div>
           <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
-          <h3 className="vayla-subtitle">Linkin voimassaoloaika</h3>
+          <LinkinVoimassaoloaika />
           <h3 className="vayla-subtitle">Viesti vastaanottajille</h3>
           <h3 className="vayla-subtitle">Laskutustiedot hyväksymismaksua varten</h3>
         </div>
