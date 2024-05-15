@@ -172,10 +172,6 @@ class MuistutusHandler {
           expires,
         };
         auditLog.info("Lisätään muistuttajan tiedot", { muistuttajaId: dbMuistuttaja.id });
-        if (!projekti.muutMuistuttajat) {
-          projekti.muutMuistuttajat = [];
-        }
-        projekti.muutMuistuttajat.push(dbMuistuttaja.id);
       }
       dbMuistuttaja.nimi = muistuttaja.nimi;
       dbMuistuttaja.sahkoposti = muistuttaja.sahkoposti;
@@ -187,9 +183,6 @@ class MuistutusHandler {
       await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: dbMuistuttaja }));
       ids.push(dbMuistuttaja.id);
     }
-    const muistuttajat = projekti.muistuttajat?.filter((id) => !input.poistettavatMuistuttajat.includes(id)) ?? [];
-    const muutMuistuttajat = projekti.muutMuistuttajat?.filter((id) => !input.poistettavatMuistuttajat.includes(id)) ?? [];
-    await projektiDatabase.updateMuistuttajat(projekti.oid, muistuttajat, muutMuistuttajat);
     return ids;
   }
 }

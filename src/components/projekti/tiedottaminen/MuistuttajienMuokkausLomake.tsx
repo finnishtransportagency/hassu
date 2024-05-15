@@ -1,5 +1,5 @@
 import React, { useCallback, useState, VFC, useMemo } from "react";
-import { Autocomplete, DialogContent, Stack, styled, TextField } from "@mui/material";
+import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { H3 } from "@components/Headings";
@@ -29,6 +29,8 @@ import lookup from "country-code-lookup";
 import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import HassuDialog from "@components/HassuDialog";
 
 type MuistuttajaRow = Omit<MuistuttajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -365,17 +367,26 @@ export const FormContents: VFC<{
     })
   );
 
-  const { handleSubmit } = useFormReturn;
+  const {
+    handleSubmit,
+    getValues,
+    formState: { isDirty },
+  } = useFormReturn;
+  useLeaveConfirm(isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
+  function getRemoveCount() {
+    return getValues().muutMuistuttajat.filter((m) => m.toBeDeleted && m.id).length;
+  }
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const router = useRouter();
-
+  const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
   const onSubmit = useCallback<SubmitHandler<MuistuttajatFormFields>>(
     (data) => {
       withLoadingSpinner(
         (async () => {
+          setPoistaDialogOpen(false);
           let apiData: TallennaMuistuttajatMutationVariables | undefined = undefined;
           try {
             apiData = mapFormDataForApi(data);
@@ -396,6 +407,8 @@ export const FormContents: VFC<{
                   newData.muutMuistuttajat[i].id = ids[i];
                 }
               }
+              // poistetaan uusi lisätty mutta merkitty poistetuksi
+              newData.muutMuistuttajat = newData.muutMuistuttajat.filter((m) => !(!m.id && m.toBeDeleted));
               useFormReturn.reset(newData);
               showSuccessMessage("Muistuttajatiedot tallennettu");
             } catch (error) {
@@ -409,8 +422,8 @@ export const FormContents: VFC<{
   );
 
   const resetAndClose = useCallback(() => {
-    router.back();
-  }, [router]);
+    router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/muistuttajat", query: { oid: projekti.oid } });
+  }, [router, projekti.oid]);
 
   return (
     <FormProvider {...useFormReturn}>
@@ -443,15 +456,28 @@ export const FormContents: VFC<{
           <Section noDivider>
             <Stack direction="row" justifyContent="end">
               <Button type="button" onClick={resetAndClose}>
-                Poistu tallentamatta
+                Palaa listaukseen
               </Button>
-              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+              <Button type="button" onClick={getRemoveCount() > 0 ? () => setPoistaDialogOpen(true) : handleSubmit(onSubmit)} primary>
                 Tallenna
               </Button>
             </Stack>
           </Section>
         </DialogContent>
       </DialogForm>
+      <HassuDialog open={poistaDialogOpen} title="Muistuttajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
+        <DialogContent>
+          <p>{`Olet poistamassa ${getRemoveCount()} määrä muistuttajia. Tallenna vahvistaaksesi.`}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
+            Peruuta
+          </Button>
+          <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+            Tallenna
+          </Button>
+        </DialogActions>
+      </HassuDialog>
     </FormProvider>
   );
 };
