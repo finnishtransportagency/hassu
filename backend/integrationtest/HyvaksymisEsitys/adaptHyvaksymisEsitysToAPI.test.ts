@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { DBProjekti } from "../../src/database/model";
 import { adaptHyvaksymisEsitysToAPI } from "../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
+import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 
 describe("adaptHyvaksymisEsitysToApi", () => {
   it("adaptoi tiedostopolut oikein", () => {
@@ -141,5 +142,133 @@ describe("adaptHyvaksymisEsitysToApi", () => {
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.HYVAKSYTTY);
+  });
+
+  it("sisällyttää adaptoidessa kaikki tiedot adaptoinnin tulokseen", () => {
+    const projektiInDB = {
+      oid: "1",
+      salt: "jotain",
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.HYVAKSYTTY,
+        aineistoHandledAt: "2022-01-02T02:01:00+02:00",
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "oid",
+        hyvaksymisPaiva: "2033-01-03",
+      },
+    } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    expect(hyvaksymisEsitys).to.eql({
+      __typename: "HyvaksymisEsitys",
+      hyvaksyja: "oid",
+      hyvaksymisPaiva: "2033-01-03",
+      poistumisPaiva: "2033-01-01",
+      kiireellinen: true,
+      lisatiedot: "Lisätietoja",
+      laskutustiedot: {
+        __typename: "Laskutustiedot",
+        yTunnus: "yTunnus",
+        ovtTunnus: "ovtTunnus",
+        verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus",
+        viitetieto: "viitetieto",
+      },
+      hyvaksymisEsitys: [
+        {
+          __typename: "LadattuTiedostoNew",
+          jarjestys: undefined,
+          nimi: "hyvaksymisEsitys äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "hyvaksymis-esitys-uuid",
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
+        },
+      ],
+      suunnitelma: [
+        {
+          __typename: "AineistoNew",
+          dokumenttiOid: "suunnitelmaDokumenttiOid",
+          jarjestys: undefined,
+          kategoriaId: undefined,
+          nimi: "suunnitelma äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "suunnitelma-uuid",
+          tuotu: true,
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/suunnitelma/suunnitelma_aoa_.png",
+        },
+      ],
+      muistutukset: [
+        {
+          __typename: "KunnallinenLadattuTiedosto",
+          jarjestys: undefined,
+          nimi: "muistutukset äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "muistutukset-uuid",
+          kunta: 1,
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muistutukset/muistutukset äöå .png",
+        },
+      ],
+      lausunnot: [
+        {
+          __typename: "LadattuTiedostoNew",
+          jarjestys: undefined,
+          nimi: "lausunnot äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "lausunnot-uuid",
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
+        },
+      ],
+      kuulutuksetJaKutsu: [
+        {
+          __typename: "LadattuTiedostoNew",
+          jarjestys: undefined,
+          nimi: "kuulutuksetJaKutsu äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "kuulutuksetJaKutsu-uuid",
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/kuulutuksenJaKutsu/kuulutuksetJaKutsu_aoa_.png",
+        },
+      ],
+      muuAineistoVelhosta: [
+        {
+          __typename: "AineistoNew",
+          dokumenttiOid: "muuAineistoVelhostaDokumenttiOid",
+          jarjestys: undefined,
+          kategoriaId: undefined,
+          nimi: "muuAineistoVelhosta äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "muuAineistoVelhosta-uuid",
+          tuotu: true,
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muuAineistoVelhosta/muuAineistoVelhosta_aoa_.png",
+        },
+      ],
+      muuAineistoKoneelta: [
+        {
+          __typename: "LadattuTiedostoNew",
+          jarjestys: undefined,
+          nimi: "muuAineistoKoneelta äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "muuAineistoKoneelta-uuid",
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png",
+        },
+      ],
+      maanomistajaluettelo: [
+        {
+          __typename: "LadattuTiedostoNew",
+          jarjestys: undefined,
+          nimi: "maanomistajaluettelo äöå .png",
+          lisatty: "2022-01-02T02:00:00+02:00",
+          uuid: "maanomistajaluettelo-uuid",
+          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_.png",
+        },
+      ],
+      vastaanottajat: [
+        {
+          __typename: "SahkopostiVastaanottaja",
+          sahkoposti: "vastaanottaja@sahkoposti.fi",
+        },
+      ],
+      tila: "HYVAKSYTTY",
+      hash: "f67cde5bf0977767e610740d0196732784a101160024d848d8c0a894d267d2c276c08b06e5076972480e98cf12a431676b36bf30b7a221415f91f14a9e1186a8",
+    });
   });
 });
