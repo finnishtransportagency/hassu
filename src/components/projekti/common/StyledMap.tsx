@@ -190,7 +190,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
     );
     const interactions = [modify, ...drawInteractions, drawToolInteractions.SELECT, drawToolInteractions.SNAP];
 
-    return new Map({
+    const map = new Map({
       controls: getControls({
         t,
         view,
@@ -247,6 +247,12 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
       view,
       interactions: defaultInteractions().extend(interactions),
     });
+    map.on("pointermove", function (e) {
+      const pixel = map.getEventPixel(e.originalEvent);
+      const hit = map.hasFeatureAtPixel(pixel, { layerFilter: (layer) => layer === selectionLayer, hitTolerance: 10 });
+      map.getViewport().style.cursor = hit ? "pointer" : "";
+    });
+    return map;
   }, [
     api,
     clearMapEditedByUser,
@@ -259,6 +265,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
     triggerMapEditedByUser,
     vectorSource,
     withLoadingSpinner,
+    projekti.status,
   ]);
 
   useEffect(() => {
@@ -713,7 +720,11 @@ export function getControls({
         tipLabel: "Piirrä suorakulmio",
       },
       undo: { label: createElement(<KumoaIkoni fontSize="small" />, "span"), tipLabel: "Kumoa" },
-      removeFeature: { label: createIconSpan("trash"), tipLabel: "Poista valittu rajaus" },
+      removeFeature: {
+        label: createIconSpan("trash"),
+        tipLabel: "Poista valittu rajaus",
+        tipLabelDisabled: "Valitse ensin karttarajaus jonka haluat poistaa",
+      },
     }),
     new InfoControl({ geoJsonSource }),
     new SaveGeoJsonControl({
