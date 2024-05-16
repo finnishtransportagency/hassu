@@ -16,8 +16,6 @@ export type ReadFeaturesFromGeoJsonFileInputControlOptions = Options & {
   onReadFeaturesFailure: (e: unknown) => void;
 };
 
-const GEOJSON_MIME = "application/geo+json";
-
 class ReadFeaturesFromGeoJsonFileInputControl extends Control {
   private input: HTMLInputElement;
   private reader: FileReader;
@@ -74,7 +72,7 @@ class ReadFeaturesFromGeoJsonFileInputControl extends Control {
 
     if (!file) {
       return;
-    } else if (file instanceof Blob && file.type === GEOJSON_MIME) {
+    } else if (file instanceof Blob) {
       this.readFile(file);
     } else {
       this.onInvalidFileType(file);
