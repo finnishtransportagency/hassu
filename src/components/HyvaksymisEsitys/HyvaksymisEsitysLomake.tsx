@@ -2,7 +2,6 @@ import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@servi
 import { useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
-import MuuTekninenAineisto from "./LomakeComponents/MuuTekninenAineisto";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
@@ -17,6 +16,7 @@ import HyvaksymisEsitysTiedosto from "./LomakeComponents/HyvaksymisEsitysTiedost
 import SectionContent from "@components/layout/SectionContent";
 import Muistutukset from "./LomakeComponents/Muistutukset";
 import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
+import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -55,12 +55,19 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
           <HyvaksymisEsitysTiedosto />
           <h3 className="vayla-subtitle">Suunnitelma</h3>
-          <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-          <SectionContent>
-            <Muistutukset kunnat={[50, 43]} />
-            <h4 className="vayla-small-title">Lausunnot</h4>
-          </SectionContent>
-          <MuuTekninenAineisto />
+          <Section>
+            <h3 className="vayla-subtitle">Vuorovaikutus</h3>
+            <SectionContent>
+              <Muistutukset kunnat={[50, 43]} />
+              <h4 className="vayla-small-title">Lausunnot</h4>
+            </SectionContent>
+          </Section>
+          <Section>
+            <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
+            <p>Voit halutessasi liittää...</p>
+            <h4 className="vayla-small-title">Projektivelho</h4>
+            <MuuAineistoKoneelta />
+          </Section>
         </div>
         <div>
           <Vastaanottajat />
