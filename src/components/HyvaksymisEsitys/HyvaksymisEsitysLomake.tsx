@@ -1,5 +1,5 @@
 import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
 import Section from "@components/layout/Section2";
@@ -42,6 +42,10 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
     await api.tallennaHyvaksymisEsitys(formData);
     await reloadData();
   }, "Tallennus onnistui");
+
+  useEffect(() => {
+    useFormReturn.reset(defaultValues);
+  }, [useFormReturn, defaultValues]);
 
   return (
     <FormProvider {...useFormReturn}>
