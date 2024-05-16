@@ -17,6 +17,7 @@ import SectionContent from "@components/layout/SectionContent";
 import Muistutukset from "./LomakeComponents/Muistutukset";
 import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
 import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
+import MuuAineistoVelhosta from "./LomakeComponents/MuuAineistoVelhosta";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -65,7 +66,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <Section>
             <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
             <p>Voit halutessasi liittää...</p>
-            <h4 className="vayla-small-title">Projektivelho</h4>
+            <MuuAineistoVelhosta />
             <MuuAineistoKoneelta />
           </Section>
         </div>
