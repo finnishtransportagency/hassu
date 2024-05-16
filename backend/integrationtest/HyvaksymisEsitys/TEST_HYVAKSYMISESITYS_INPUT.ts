@@ -71,7 +71,7 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
         uuid: "muuAineistoKoneelta-uuid",
       },
     ],
-    vastaanottajat: ["vastaanottaja@sahkoposti.fi"],
+    vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
   };
 }
 
