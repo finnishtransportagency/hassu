@@ -21,7 +21,7 @@ export default function Lausunnot(): ReactElement {
   return (
     <Section>
       <h4 className="vayla-small-title">Lausunnot</h4>
-      {!!lausunnot?.length && lausunnot.map((aineisto) => <div key={aineisto.nimi}>{aineisto.nimi}</div>)}
+      {!!lausunnot?.length && lausunnot.map((aineisto) => <div key={aineisto.uuid}>{aineisto.nimi}</div>)}
       <input
         type="file"
         multiple

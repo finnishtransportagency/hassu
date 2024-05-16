@@ -22,7 +22,7 @@ export default function HyvaksymisEsitysTiedosto(): ReactElement {
     <Section>
       <h3 className="vayla-subtitle">Hyväksymisesitys</h3>
       <p>Tuo omalta koneeltasi...</p>
-      {!!hyvaksymisEsitys?.length && hyvaksymisEsitys.map((aineisto) => <div key={aineisto.nimi}>{aineisto.nimi}</div>)}
+      {!!hyvaksymisEsitys?.length && hyvaksymisEsitys.map((aineisto) => <div key={aineisto.uuid}>{aineisto.nimi}</div>)}
       <input
         type="file"
         multiple

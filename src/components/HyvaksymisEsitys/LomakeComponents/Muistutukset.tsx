@@ -34,7 +34,7 @@ function KunnanMuistutukset({ kunta }: Readonly<{ kunta: number }>): ReactElemen
   return (
     <SectionContent>
       <h5 className="vayla-smallest-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h5>
-      {!!kunnanMuistutukset?.length && kunnanMuistutukset.map((aineisto) => <div key={aineisto.nimi}>{aineisto.nimi}</div>)}
+      {!!kunnanMuistutukset?.length && kunnanMuistutukset.map((aineisto) => <div key={aineisto.uuid}>{aineisto.nimi}</div>)}
       <input
         type="file"
         multiple
