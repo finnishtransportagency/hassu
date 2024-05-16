@@ -66,7 +66,7 @@ import { KumoaIkoni } from "src/svg/KumoaIkoni";
 import { OmistajahakuTila } from "@services/api";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 
-const EPSG_3067 = "EPSG:3067";
+export const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
 const VIEW_PROJ = EPSG_3067;
 const DATA_CRS = "http://www.opengis.net/def/crs/EPSG/0/3067";
