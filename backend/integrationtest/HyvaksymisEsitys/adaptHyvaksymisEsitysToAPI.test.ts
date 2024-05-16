@@ -271,4 +271,23 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       hash: "f67cde5bf0977767e610740d0196732784a101160024d848d8c0a894d267d2c276c08b06e5076972480e98cf12a431676b36bf30b7a221415f91f14a9e1186a8",
     });
   });
+
+  it("antaa oikeat tuontitiedot, jos aineistoja ei ole koskaan tuotu", () => {
+    const projektiInDB = {
+      oid: "1",
+      salt: "jotain",
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+        // aineistoHandledAt ei määritelty
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "oid",
+        hyvaksymisPaiva: "2033-01-03",
+      },
+    } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
+    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    expect(hyvaksymisEsitys?.muuAineistoVelhosta?.[0]?.tuotu).to.eql(false);
+  });
 });
