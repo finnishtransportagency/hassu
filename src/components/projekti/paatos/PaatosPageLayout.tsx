@@ -86,7 +86,7 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
           )}
           {!projekti.asianhallinta.inaktiivinen && (
             <li>
-              Kuulutus, ilmoitus kuulutuksesta, kiinteistönomistajille ja muistuttajille lähetettävä ilmoitus sekä
+              Kuulutus, ilmoitus kuulutuksesta, lausunnonantajille, kiinteistönomistajille ja muistuttajille lähetettävät ilmoitukset sekä
               kiinteistönomistajalistaus siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
             </li>
           )}

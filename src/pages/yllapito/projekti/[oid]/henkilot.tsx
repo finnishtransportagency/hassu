@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
 import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
-import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
+import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
@@ -148,41 +148,41 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     },
     [setFormContext]
   );
-
+  const context = useContext(ProjektiPageLayoutContext);
   return (
-    <>
-      <FormProvider {...useFormReturn}>
-        <form>
-          <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            {!formIsSubmitting && !isLoadingProjekti && (
-              <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
-            )}
-            <KayttoOikeusHallinta
-              disableFields={disableFormEdit}
-              projektiKayttajat={projekti.kayttoOikeudet || []}
-              onKayttajatUpdate={onKayttajatUpdate}
-              suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
-              projekti={projekti}
-              includeTitle={false}
-            />
-            <Section noDivider>
-              <HassuStack alignItems="flex-end">
-                <Button
-                  onClick={handleSubmit(onSubmit)}
-                  id="save_projekti"
-                  className="ml-auto"
-                  type="button"
-                  primary
-                  disabled={disableFormEdit}
-                >
-                  Tallenna
-                </Button>
-              </HassuStack>
-            </Section>
-            <input type="hidden" {...register("oid")} />
-          </fieldset>
-        </form>
-      </FormProvider>
-    </>
+    <FormProvider {...useFormReturn}>
+      <form>
+        <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
+          {!formIsSubmitting && !isLoadingProjekti && (
+            <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+          )}
+          <KayttoOikeusHallinta
+            disableFields={disableFormEdit}
+            projektiKayttajat={projekti.kayttoOikeudet || []}
+            onKayttajatUpdate={onKayttajatUpdate}
+            suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
+            projekti={projekti}
+            includeTitle={false}
+            ohjeetOpen={context.ohjeetOpen}
+            ohjeetOnClose={context.ohjeetOnClose}
+          />
+          <Section noDivider>
+            <HassuStack alignItems="flex-end">
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                id="save_projekti"
+                className="ml-auto"
+                type="button"
+                primary
+                disabled={disableFormEdit}
+              >
+                Tallenna
+              </Button>
+            </HassuStack>
+          </Section>
+          <input type="hidden" {...register("oid")} />
+        </fieldset>
+      </form>
+    </FormProvider>
   );
 }

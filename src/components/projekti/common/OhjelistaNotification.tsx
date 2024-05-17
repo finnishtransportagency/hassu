@@ -17,10 +17,10 @@ type Props = { children: ReactNode; asianhallintaTiedot?: AsianhallintaTiedot; o
 const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   ALOITUSKUULUTUS: "Kuuluttaminen  suunnittelun ja maastotöiden aloittamisesta",
   SUUNNITTELU: "Suunnittelun aikainen vuorovaikutus",
-  NAHTAVILLAOLO: "Valmiin suunnittelman nähtävillä olo ja lausuntojen pyytäminen",
+  NAHTAVILLAOLO: "Valmiin suunnitelman nähtävillä olo ja lausuntojen pyytäminen",
   HYVAKSYMISPAATOS: "Kuulutus päätöksen nähtäville asettamisesta",
-  JATKOPAATOS: "Kuulutus suunnitelman voimassaolon jatkamisesta",
-  JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
+  JATKOPAATOS: "Suunnitelman voimassaolon jatkaminen",
+  JATKOPAATOS2: "Suunnitelman voimassaolon jatkaminen",
 };
 
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
