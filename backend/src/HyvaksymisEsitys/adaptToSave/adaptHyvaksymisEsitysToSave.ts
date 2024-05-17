@@ -46,10 +46,10 @@ export function adaptHyvaksymisEsitysToSave(
   return newMuokattavaHyvaksymisEsitys;
 }
 
-function adaptVastaanottajatToSave(vastaanottajat: string[] | null | undefined) {
+function adaptVastaanottajatToSave(vastaanottajat: API.SahkopostiVastaanottajaInput[] | null | undefined) {
   if (!vastaanottajat) {
     return vastaanottajat;
   }
 
-  return vastaanottajat.map((vo) => ({ sahkoposti: vo }));
+  return vastaanottajat.map((vo) => ({ sahkoposti: vo.sahkoposti }));
 }

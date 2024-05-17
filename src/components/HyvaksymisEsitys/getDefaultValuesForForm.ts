@@ -58,7 +58,7 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
-      vastaanottajat: vastaanottajat?.map(({ sahkoposti }) => sahkoposti) ?? [],
+      vastaanottajat: vastaanottajat?.map(({ sahkoposti }) => ({ sahkoposti })) ?? [],
     },
   };
 }

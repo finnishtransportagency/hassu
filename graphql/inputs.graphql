@@ -265,7 +265,11 @@ input HyvaksymisEsitysInput {
   muuAineistoVelhosta: [AineistoInputNew!]
   muuAineistoKoneelta: [LadattuTiedostoInputNew!]
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
-  vastaanottajat: [String!]
+  vastaanottajat: [SahkopostiVastaanottajaInput!]
+}
+
+input SahkopostiVastaanottajaInput {
+  sahkoposti: String!
 }
 
 input LaskutustiedotInput {
