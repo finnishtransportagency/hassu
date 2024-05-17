@@ -183,24 +183,32 @@ class Parameters {
     return this.getParameter("outputs/SuomiFiSQSUrl");
   }
 
-  async getMmlApiKey() {
-    return this.getRequiredAccountParameter("MmlApiKey");
+  getMmlApiKey() {
+    return this.getRequiredParameter("MmlApiKey");
   }
 
-  async getKtjBaseUrl() {
-    return this.getRequiredAccountParameter("KtjBaseUrl");
+  getKtjBaseUrl() {
+    return this.getRequiredParameter("KtjBaseUrl");
   }
 
-  async getOgcBaseUrl() {
-    return this.getRequiredAccountParameter("OgcBaseUrl");
+  getOgcBaseUrl() {
+    return this.getRequiredParameter("OgcBaseUrl");
   }
 
-  async getOgcApiKey() {
-    return this.getRequiredAccountParameter("OgcApiKey");
+  getOgcApiKey() {
+    return this.getRequiredParameter("OgcApiKey");
   }
 
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
     const value = await this.getParameterForEnv(paramName);
+    if (!value) {
+      throw new Error(paramName + " ei löytynyt SSM:stä");
+    }
+    return value;
+  }
+
+  private async getRequiredParameter(paramName: string): Promise<string> {
+    const value = await this.getParameter(paramName);
     if (!value) {
       throw new Error(paramName + " ei löytynyt SSM:stä");
     }
