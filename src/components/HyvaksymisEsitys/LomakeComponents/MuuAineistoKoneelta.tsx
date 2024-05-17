@@ -10,8 +10,9 @@ import IconButton from "@components/button/IconButton";
 export default function MuuAineistoKoneelta(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta`);
   const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muuAineistoKoneelta`, control });
+
+  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta`);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
