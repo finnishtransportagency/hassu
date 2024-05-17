@@ -4,12 +4,13 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import IconButton from "@components/button/IconButton";
 
 export default function Lausunnot(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { watch } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const lausunnot = watch(`muokattavaHyvaksymisEsitys.lausunnot`);
+  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.lausunnot`, control });
   const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.lausunnot`);
 
   const onButtonClick = () => {
@@ -21,7 +22,18 @@ export default function Lausunnot(): ReactElement {
   return (
     <Section>
       <h4 className="vayla-small-title">Lausunnot</h4>
-      {!!lausunnot?.length && lausunnot.map((aineisto) => <div key={aineisto.uuid}>{aineisto.nimi}</div>)}
+      {fields.map((aineisto) => (
+        <div key={aineisto.id}>
+          {aineisto.nimi}
+          <IconButton
+            type="button"
+            onClick={() => {
+              remove(fields.indexOf(aineisto));
+            }}
+            icon="trash"
+          />
+        </div>
+      ))}
       <input
         type="file"
         multiple
