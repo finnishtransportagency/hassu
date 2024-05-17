@@ -341,11 +341,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                         <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
                         <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                         {projekti.asianhallinta.inaktiivinen && (
-                          <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
+                          <li>Muistathan viedä kuulutuksen sekä ilmoituksen kuulutuksesta asianhallintaan.</li>
                         )}
                         {!projekti.asianhallinta.inaktiivinen && (
                           <li>
-                            Kuulutus ja ilmoitus kuulutuksesta siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen
+                            Kuulutus sekä ilmoitus kuulutuksesta siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen
                             yhteydessä.
                           </li>
                         )}

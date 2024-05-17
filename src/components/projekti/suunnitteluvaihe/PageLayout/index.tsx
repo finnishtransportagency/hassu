@@ -215,10 +215,10 @@ function SuunnitteluPageLayout({
                     Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
                     julkaisuun asti.
                   </li>
-                  {projekti.asianhallinta.inaktiivinen && <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>}
+                  {projekti.asianhallinta.inaktiivinen && <li>Muistathan viedä kutsun asianhallintaan.</li>}
                   {!projekti.asianhallinta.inaktiivinen && (
                     <li>
-                      Kutsu ja lähetekirje siirtyvät automaattisesti asianhallintaan.
+                      Kutsu siirtyy automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
                     </li>
                   )}
                 </OhjelistaNotification>

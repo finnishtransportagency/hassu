@@ -70,7 +70,7 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
           </li>
           <li>
             Huomioithan, että osaa kiinteistönomistajista ja muistuttajista sekä lausunnonantajia ja maakuntaliittoja tulee tiedottaa
-            järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoiset ilmoitukset, jotka heille
+            järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen, joka heille
             lähetetään.
           </li>
           <li>
@@ -93,16 +93,29 @@ const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyp
         </>
       ) : (
         <>
-          <li>Aloita lisäämällä päätökset ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
+          <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
           <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla “Tallenna ja siirry kuulutukselle”.</li>
           <li>
             Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
             liikenneväylien suunnittelu -palvelun kansalaispuolella.
           </li>
           <li>Päätöksen päivän ja asiatunnus tulee Käsittelyn tila -sivulta.</li>
-          <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea</li>
+          <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea.</li>
           <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
           <li>Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle.</li>
+          <li>
+            Huomioithan, että maakuntaliittoja tulee tiedottaa järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä
+            sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
+          </li>
+          {projekti.asianhallinta.inaktiivinen && (
+            <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. </li>
+          )}
+          {!projekti.asianhallinta.inaktiivinen && (
+            <li>
+              Kuulutus, ilmoitus kuulutuksesta sekä maakuntaliitolle lähetettävä ilmoitus siirtyvät automaattisesti asianhallintaan
+              kuulutuksen hyväksymisen yhteydessä.
+            </li>
+          )}
         </>
       )}
     </>
