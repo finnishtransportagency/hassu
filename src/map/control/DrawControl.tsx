@@ -9,6 +9,7 @@ import { Vector as VectorLayer } from "ol/layer";
 type ButtonProps = {
   label: string | HTMLElement;
   tipLabel: string;
+  tipLabelDisabled?: string;
   className: string;
 };
 
@@ -83,9 +84,24 @@ class DrawControl extends Control {
       const label = buttonOptions?.label ?? defaultOptions.label;
 
       button.appendChild(typeof label === "string" ? document.createTextNode(label) : label);
-      button.title = buttonOptions?.tipLabel ?? defaultOptions.tipLabel;
+      button.title =
+        (disabled ? buttonOptions?.tipLabelDisabled ?? buttonOptions?.tipLabel : buttonOptions?.tipLabel) ?? defaultOptions.tipLabel;
       button.disabled = !!disabled;
       button.addEventListener("click", clickListener, false);
+      if (buttonOptions?.tipLabelDisabled) {
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.type === "attributes" && mutation.attributeName === "disabled") {
+              const targetButton = mutation.target as HTMLButtonElement;
+              targetButton.title =
+                (targetButton.disabled ? buttonOptions.tipLabelDisabled : buttonOptions.tipLabel) ?? defaultOptions.tipLabel;
+            }
+          });
+        });
+        observer.observe(button, {
+          attributes: true,
+        });
+      }
       element.appendChild(button);
       return button;
     }
@@ -124,7 +140,7 @@ class DrawControl extends Control {
     this.select = options.interactions.SELECT;
     this.drawToolButtons = { Box: boxButton, Polygon: polygonButton };
 
-    Object.values(this.drawTools).forEach((draw) => {
+    Object.entries(this.drawTools).forEach(([drawType, draw]) => {
       draw.on("drawstart", () => {
         undoButton.disabled = false;
         removeFeatureButton.disabled = false;
@@ -132,6 +148,7 @@ class DrawControl extends Control {
       draw.on("drawend", () => {
         undoButton.disabled = true;
         removeFeatureButton.disabled = true;
+        this.toggleDrawOfType(drawType as DrawType);
       });
       draw.on("drawabort", () => {
         undoButton.disabled = true;
