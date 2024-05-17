@@ -3,14 +3,15 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
+import IconButton from "@components/button/IconButton";
 
 export default function MuuAineistoKoneelta(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { watch } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const muuAineistoKoneelta = watch(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta`);
+  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
   const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta`);
+  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muuAineistoKoneelta`, control });
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -22,7 +23,18 @@ export default function MuuAineistoKoneelta(): ReactElement {
     <SectionContent>
       <h4 className="vayla-small-title">Omalta koneelta</h4>
       <p>Voit halutessasi liittää...</p>
-      {!!muuAineistoKoneelta?.length && muuAineistoKoneelta.map((aineisto, index) => <div key={index}>{aineisto.nimi}</div>)}
+      {fields.map((aineisto) => (
+        <div key={aineisto.id}>
+          {aineisto.nimi}
+          <IconButton
+            type="button"
+            onClick={() => {
+              remove(fields.indexOf(aineisto));
+            }}
+            icon="trash"
+          />
+        </div>
+      ))}
       <input
         type="file"
         multiple
