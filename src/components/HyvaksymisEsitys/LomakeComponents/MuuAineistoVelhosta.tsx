@@ -16,7 +16,7 @@ export default function MuuAineistoVelhosta(): ReactElement {
       <h4 className="vayla-small-title">Projektivelho</h4>
       <p>Voit halutessasi liittää...</p>
       {!!muuAineistoVelhosta?.length && muuAineistoVelhosta.map((aineisto, index) => <div key={index}>{aineisto.nimi}</div>)}
-      <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" id={"muu_aineisto_velhosta_import_button"} onClick={() => setAineistoDialogOpen(true)}>
         Tuo aineistot
       </Button>
       <AineistojenValitseminenDialog
