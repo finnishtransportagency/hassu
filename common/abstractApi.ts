@@ -92,8 +92,8 @@ import {
   HyvaksymisEsitysInput,
   ListaaHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaMuistuttajatMutationVariables,
-  ProjektiKayttaja,
   HaeKayttoOikeudetQueryVariables,
+  KayttoOikeusTiedot,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -791,7 +791,7 @@ export abstract class AbstractApi {
     } as HaeMuistuttajatQueryVariables);
   }
 
-  async haeKayttoOikeudet(oid: string): Promise<ProjektiKayttaja[]> {
+  async haeKayttoOikeudet(oid: string): Promise<KayttoOikeusTiedot> {
     return await this.callYllapitoAPI(apiConfig.haeKayttoOikeudet, {
       oid,
     } as HaeKayttoOikeudetQueryVariables);

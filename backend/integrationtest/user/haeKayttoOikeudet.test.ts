@@ -12,10 +12,13 @@ describe("HaeKayttoOikeudet", () => {
   setupLocalDatabase();
   const oid = "Testi1";
   const versio = 2;
+  const projariKayttajatunnus = "A123";
+  const varahenkiloKayttajatunnus = "A000111";
+  const projektiHenkiloKayttajatunnus = "A000112";
 
   const kayttoOikeudet = [
     {
-      kayttajatunnus: "A123",
+      kayttajatunnus: projariKayttajatunnus,
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
       muokattavissa: false,
       etunimi: "Pekka",
@@ -25,7 +28,7 @@ describe("HaeKayttoOikeudet", () => {
       puhelinnumero: "123456789",
     },
     {
-      kayttajatunnus: "A000111",
+      kayttajatunnus: varahenkiloKayttajatunnus,
       tyyppi: API.KayttajaTyyppi.VARAHENKILO,
       muokattavissa: true,
       etunimi: "Matti",
@@ -35,7 +38,7 @@ describe("HaeKayttoOikeudet", () => {
       puhelinnumero: "123456789",
     },
     {
-      kayttajatunnus: "A000112",
+      kayttajatunnus: projektiHenkiloKayttajatunnus,
       muokattavissa: true,
       etunimi: "A-tunnus1",
       sukunimi: "Hassu",
@@ -56,7 +59,7 @@ describe("HaeKayttoOikeudet", () => {
     sinon.restore();
   });
 
-  it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn", async () => {
+  it("antaa oikeat tiedot adminille", async () => {
     userFixture.loginAsAdmin();
     const projektiBefore = {
       oid,
@@ -65,40 +68,12 @@ describe("HaeKayttoOikeudet", () => {
     };
     await insertProjektiToDB(projektiBefore);
     const fetchedKayttoOikeudet = await haeKayttoOikeudet(oid);
-    expect(fetchedKayttoOikeudet).to.eql([
-      {
-        __typename: "ProjektiKayttaja",
-        kayttajatunnus: "A123",
-        organisaatio: "Väylävirasto",
-        tyyppi: "PROJEKTIPAALLIKKO",
-        etunimi: "Pekka",
-        sukunimi: "Projari",
-        puhelinnumero: "123456789",
-        email: "pekka.projari@vayla.fi",
-        muokattavissa: false,
-      },
-      {
-        __typename: "ProjektiKayttaja",
-        kayttajatunnus: "A000111",
-        organisaatio: "Väylävirasto",
-        tyyppi: "VARAHENKILO",
-        etunimi: "Matti",
-        sukunimi: "Meikalainen",
-        puhelinnumero: "123456789",
-        email: "Matti.Meikalainen@vayla.fi",
-        muokattavissa: true,
-      },
-      {
-        __typename: "ProjektiKayttaja",
-        kayttajatunnus: "A000112",
-        organisaatio: "CGI Suomi Oy",
-        etunimi: "A-tunnus1",
-        sukunimi: "Hassu",
-        puhelinnumero: "123456789",
-        email: "mikko.haapamki@cgi.com",
-        muokattavissa: true,
-      },
-    ]);
+    expect(fetchedKayttoOikeudet).to.eql({
+      __typename: "KayttoOikeusTiedot",
+      omaaMuokkausOikeuden: true,
+      onProjektipaallikkoTaiVarahenkilo: true,
+      onYllapitaja: true,
+    });
   });
 
   it("ei onnistu kirjautumatta", async () => {
@@ -113,7 +88,7 @@ describe("HaeKayttoOikeudet", () => {
     await expect(kutsu).to.be.eventually.rejectedWith(NoVaylaAuthenticationError);
   });
 
-  it("onnistuu tavalliselta käyttäjältä", async () => {
+  it("antaa oikeat tiedot tavalliselle ei-projektihenkilö-käyttäjälle", async () => {
     const muokkaaja = UserFixture.manuMuokkaaja;
     userFixture.loginAs(muokkaaja);
     const projektiBefore = {
@@ -122,8 +97,13 @@ describe("HaeKayttoOikeudet", () => {
       kayttoOikeudet,
     };
     await insertProjektiToDB(projektiBefore);
-    const kutsu = haeKayttoOikeudet(oid);
-    await expect(kutsu).to.be.eventually.fulfilled;
+    const fetchedKayttoOikeudet = await haeKayttoOikeudet(oid);
+    expect(fetchedKayttoOikeudet).to.eql({
+      __typename: "KayttoOikeusTiedot",
+      omaaMuokkausOikeuden: false,
+      onProjektipaallikkoTaiVarahenkilo: false,
+      onYllapitaja: false,
+    });
   });
 
   it("ei mene sekaisin tyhjästä kayttöoikeuslistasta", async () => {
@@ -136,5 +116,59 @@ describe("HaeKayttoOikeudet", () => {
     await insertProjektiToDB(projektiBefore);
     const kutsu = haeKayttoOikeudet(oid);
     await expect(kutsu).to.be.eventually.fulfilled;
+  });
+
+  it("antaa oikeat tiedot projektipäällikkölle", async () => {
+    const projariAsProjektiKayttaja = { kayttajatunnus: projariKayttajatunnus };
+    userFixture.loginAsProjektiKayttaja(projariAsProjektiKayttaja);
+    const projektiBefore = {
+      oid,
+      versio,
+      kayttoOikeudet,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const fetchedKayttoOikeudet = await haeKayttoOikeudet(oid);
+    expect(fetchedKayttoOikeudet).to.eql({
+      __typename: "KayttoOikeusTiedot",
+      omaaMuokkausOikeuden: true,
+      onProjektipaallikkoTaiVarahenkilo: true,
+      onYllapitaja: false,
+    });
+  });
+
+  it("antaa oikeat tiedot varahenkilölle", async () => {
+    const varahenkiloAsProjektikayttaja = { kayttajatunnus: varahenkiloKayttajatunnus };
+    userFixture.loginAsProjektiKayttaja(varahenkiloAsProjektikayttaja);
+    const projektiBefore = {
+      oid,
+      versio,
+      kayttoOikeudet,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const fetchedKayttoOikeudet = await haeKayttoOikeudet(oid);
+    expect(fetchedKayttoOikeudet).to.eql({
+      __typename: "KayttoOikeusTiedot",
+      omaaMuokkausOikeuden: true,
+      onProjektipaallikkoTaiVarahenkilo: true,
+      onYllapitaja: false,
+    });
+  });
+
+  it("antaa oikeat tiedot projektihenkilölle", async () => {
+    const prokjektihloAsProjektikayttaja = { kayttajatunnus: projektiHenkiloKayttajatunnus };
+    userFixture.loginAsProjektiKayttaja(prokjektihloAsProjektikayttaja);
+    const projektiBefore = {
+      oid,
+      versio,
+      kayttoOikeudet,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const fetchedKayttoOikeudet = await haeKayttoOikeudet(oid);
+    expect(fetchedKayttoOikeudet).to.eql({
+      __typename: "KayttoOikeusTiedot",
+      omaaMuokkausOikeuden: true,
+      onProjektipaallikkoTaiVarahenkilo: false,
+      onYllapitaja: false,
+    });
   });
 });

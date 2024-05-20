@@ -1399,3 +1399,9 @@ type Excel {
   sisalto: String!
   tyyppi: String!
 }
+
+type KayttoOikeusTiedot {
+  omaaMuokkausOikeuden: Boolean!
+  onProjektipaallikkoTaiVarahenkilo: Boolean!
+  onYllapitaja: Boolean!
+}

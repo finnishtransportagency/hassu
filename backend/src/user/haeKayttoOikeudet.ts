@@ -3,21 +3,19 @@ import { config } from "../config";
 import { DBProjekti } from "../database/model";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
-import { adaptDBVaylaUsertoAPIProjektiKayttaja } from "../projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import { requirePermissionLuku } from "./userService";
+import { userHasAccessToProjekti, userIsAdmin, userIsProjectManagerOrSubstitute } from "hassu-common/util/userRights";
 
-/**
- * Hakee projektin käyttöoikeudet
- *
- * @param oid projektin oid
- * @returns Lista ProjektiKayttaja-objekteja edustaen projektin käyttöoikeuksia
- */
-export default async function haeKayttoOikeudet(oid: string): Promise<API.ProjektiKayttaja[]> {
-  requirePermissionLuku();
+export default async function haeKayttoOikeudet(oid: string): Promise<API.KayttoOikeusTiedot> {
+  const kayttaja = requirePermissionLuku();
   const projekti = await dynamoCall(oid);
-  const kayttoOikeudet = projekti.kayttoOikeudet;
-  return adaptDBVaylaUsertoAPIProjektiKayttaja(kayttoOikeudet);
+  return {
+    __typename: "KayttoOikeusTiedot",
+    omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
+    onProjektipaallikkoTaiVarahenkilo: userIsAdmin(kayttaja) || userIsProjectManagerOrSubstitute({ kayttaja, projekti }),
+    onYllapitaja: userIsAdmin(kayttaja),
+  };
 }
 
 async function dynamoCall(oid: string): Promise<Pick<DBProjekti, "kayttoOikeudet">> {
