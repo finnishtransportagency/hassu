@@ -1,6 +1,6 @@
 import { allowedFileTypes } from "common/fileValidationSettings";
 import { lataaTiedosto } from "../util/fileUtil";
-import { LadattuTiedostoInputNew } from "@services/api";
+import { KunnallinenLadattuTiedostoInput } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { FieldValues, Path, PathValue, UnpackNestedValue, useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
@@ -13,7 +13,10 @@ import { useCallback } from "react";
  * @param keyToLadatutTiedostot avain FielValueseissa, jonka takana on LadattuTiedostoNew[]-tyyppistä dataa
  * @returns funktio, jonka voi antaa monivalinta-tiedosto-inputin onChange-kohtaan
  */
-export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadatutTiedostot: Path<F>) {
+export default function useHandleUploadedFiles<F extends FieldValues>(
+  keyToLadatutTiedostot: Path<F>,
+  settings?: { allowOnlyOne?: boolean; kunta?: number }
+) {
   const { setValue, watch } = useFormContext<F>();
   const ladatutTiedostot = watch(keyToLadatutTiedostot);
 
@@ -43,13 +46,21 @@ export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadat
 
             const uploadedFileNames: string[] = await Promise.all(uploadedFileNamesPromises);
 
-            const tiedostoInputs: LadattuTiedostoInputNew[] = uploadedFileNames.map((filename, index) => ({
-              nimi: allowedTypeFiles[index].name,
-              tiedosto: filename,
-              uuid: uuid.v4(),
-            }));
+            const tiedostoInputs = uploadedFileNames.map((filename, index) => {
+              const input: KunnallinenLadattuTiedostoInput = {
+                nimi: allowedTypeFiles[index].name,
+                tiedosto: filename,
+                uuid: uuid.v4(),
+              };
+              if (settings?.kunta) {
+                input.kunta = settings.kunta;
+                return input;
+              }
+              return input;
+            });
 
-            const newValue = ((ladatutTiedostot ?? []) as LadattuTiedostoInputNew[]).concat(tiedostoInputs);
+            const oldFiles = (ladatutTiedostot ?? []) as KunnallinenLadattuTiedostoInput[];
+            const newValue = settings?.allowOnlyOne ? tiedostoInputs : oldFiles.concat(tiedostoInputs);
             setValue(keyToLadatutTiedostot, newValue as UnpackNestedValue<PathValue<F, Path<F>>>, {
               shouldDirty: true,
             });
@@ -61,6 +72,6 @@ export default function useHandleUploadedFiles<F extends FieldValues>(keyToLadat
           }
         })()
       ),
-    [api, keyToLadatutTiedostot, ladatutTiedostot, setValue, showErrorMessage, withLoadingSpinner]
+    [api, keyToLadatutTiedostot, ladatutTiedostot, setValue, showErrorMessage, withLoadingSpinner, settings]
   );
 }

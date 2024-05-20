@@ -1010,20 +1010,26 @@ type KirjaamoOsoite {
   sahkoposti: String!
 }
 
-interface SahkopostiVastaanottaja {
+interface ISahkopostiVastaanottaja {
   sahkoposti: String!
   lahetetty: String
   lahetysvirhe: Boolean
 }
 
-type ViranomaisVastaanottaja implements SahkopostiVastaanottaja {
+type SahkopostiVastaanottaja {
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
+}
+
+type ViranomaisVastaanottaja implements ISahkopostiVastaanottaja {
   nimi: IlmoitettavaViranomainen!
   sahkoposti: String!
   lahetetty: String
   lahetysvirhe: Boolean
 }
 
-type KuntaVastaanottaja implements SahkopostiVastaanottaja {
+type KuntaVastaanottaja implements ISahkopostiVastaanottaja {
   id: Int!
   sahkoposti: String!
   lahetetty: String

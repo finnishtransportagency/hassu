@@ -89,12 +89,12 @@ export type IlmoituksenVastaanottajat = {
   viranomaiset?: Array<ViranomaisVastaanottaja> | null;
 };
 
-export interface SahkopostiVastaanottaja {
+export type SahkopostiVastaanottaja = {
   sahkoposti: string;
   messageId?: string;
   lahetetty?: string | null;
   lahetysvirhe?: boolean | null;
-}
+};
 
 export type KuntaVastaanottaja = {
   id: number;

@@ -1,14 +1,24 @@
 import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
-import MuuTekninenAineisto from "./MuuTekninenAineisto";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
+import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
+import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
+import Laskutustiedot from "./LomakeComponents/Laskutustiedot";
+import LinkkiHyvEsAineistoon from "./LomakeComponents/LinkkiHyvEsAineistoon";
+import HyvaksymisEsitysTiedosto from "./LomakeComponents/HyvaksymisEsitysTiedosto";
+import SectionContent from "@components/layout/SectionContent";
+import Muistutukset from "./LomakeComponents/Muistutukset";
+import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
+import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
+import MuuAineistoVelhosta from "./LomakeComponents/MuuAineistoVelhosta";
+import Lausunnot from "./LomakeComponents/Lausunnot";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -33,25 +43,40 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
     await reloadData();
   }, "Tallennus onnistui");
 
+  useEffect(() => {
+    useFormReturn.reset(defaultValues);
+  }, [useFormReturn, defaultValues]);
+
   return (
     <FormProvider {...useFormReturn}>
       <form>
         <div>
           <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
-          <h3 className="vayla-subtitle">Linkin voimassaoloaika</h3>
-          <h3 className="vayla-subtitle">Viesti vastaanottajille</h3>
-          <h3 className="vayla-subtitle">Laskutustiedot hyväksymismaksua varten</h3>
+          <LinkinVoimassaoloaika />
+          <ViestiVastaanottajalle />
+          <Laskutustiedot />
         </div>
         <div>
           <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
-          <h3 className="vayla-subtitle">Linkki hyväksymisesityksen aineistoon</h3>
-          <h3 className="vayla-subtitle">Hyväksymisesitys</h3>
+          <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
+          <HyvaksymisEsitysTiedosto />
           <h3 className="vayla-subtitle">Suunnitelma</h3>
-          <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-          <MuuTekninenAineisto />
+          <Section>
+            <h3 className="vayla-subtitle">Vuorovaikutus</h3>
+            <SectionContent>
+              <Muistutukset kunnat={[50, 43]} />
+              <Lausunnot />
+            </SectionContent>
+          </Section>
+          <Section>
+            <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
+            <p>Voit halutessasi liittää...</p>
+            <MuuAineistoVelhosta />
+            <MuuAineistoKoneelta />
+          </Section>
         </div>
         <div>
-          <h3 className="vayla-subtitle">Hyväksymisesityksen vastaanottajat</h3>
+          <Vastaanottajat />
           <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
         </div>
         <Section noDivider>
