@@ -230,7 +230,7 @@ function PaatosPageLayoutContent({
                 vaihe={julkaisematonPaatos}
               />
             )}
-            {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
+            {!epaaktiivinen && (julkaisematonPaatos === null || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS) && (
               <ProjektiPageLayoutContext.Consumer>
                 {({ ohjeetOpen, ohjeetOnClose }) => (
                   <OhjelistaNotification
