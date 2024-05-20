@@ -21,6 +21,7 @@ import MuuAineistoVelhosta from "./LomakeComponents/MuuAineistoVelhosta";
 import Lausunnot from "./LomakeComponents/Lausunnot";
 import Maanomistajaluettelo from "./LomakeComponents/MaanomistajaLuettelo";
 import KuulutuksetJaKutsu from "./LomakeComponents/KuulutuksetJaKutsu";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -61,6 +62,13 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
       <form>
         <div>
           <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
+          {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
+            <Section noDivider>
+              <Notification type={NotificationType.WARN}>
+                {"Hyväksymisesitys on palautettu korjattavaksi. Palautuksen syy: " + hyvaksymisEsityksenTiedot.hyvaksymisEsitys.palautusSyy}
+              </Notification>
+            </Section>
+          )}
           <LinkinVoimassaoloaika />
           <ViestiVastaanottajalle />
           <Laskutustiedot />
