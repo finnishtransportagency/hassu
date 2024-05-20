@@ -1,11 +1,12 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { apiConfig, KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
+import { apiConfig, NykyinenKayttaja } from "@services/api";
 import { ProjektiLisatiedolla, ProjektiLisatiedot } from "hassu-common/ProjektiValidationContext";
 import useCurrentUser from "./useCurrentUser";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
+import { userHasAccessToProjekti, userIsAdmin, userIsProjectManagerOrSubstitute } from "src/util/userRights";
 
 export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
 
@@ -43,13 +44,3 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
     ...lisatiedot,
   } as ProjektiLisatiedolla;
 };
-
-const userIsAdmin = (kayttaja?: NykyinenKayttaja) => !!kayttaja?.roolit?.includes("hassu_admin");
-const userHasAccessToProjekti = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
-  !!kayttaja?.uid && !!projekti?.kayttoOikeudet?.some(({ kayttajatunnus }) => kayttaja.uid === kayttajatunnus);
-const userIsProjectManagerOrSubstitute = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
-  !!kayttaja?.uid &&
-  !!projekti?.kayttoOikeudet?.find(
-    ({ kayttajatunnus, tyyppi }) =>
-      kayttaja.uid === kayttajatunnus && (tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || tyyppi === KayttajaTyyppi.VARAHENKILO)
-  );
