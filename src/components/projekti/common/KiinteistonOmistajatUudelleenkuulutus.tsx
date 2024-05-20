@@ -105,7 +105,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                     id="tiedotaKiinteistonomistajiaKylla"
                     label={"Kiinteistönomistajille ja muistuttajille lähetetään tieto uudesta kuulutuksesta"}
                     onChange={(value) => {
-                      field.onChange(value.target.value === "on" ? true : false);
+                      field.onChange(value.target.value === "on");
                     }}
                     checked={field.value === true}
                   />
@@ -113,21 +113,28 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                     id="tiedotaKiinteistonomistajiaEi"
                     label="Kiinteistönomistajille ja muistuttajille ei lähetetä tietoa uudesta kuulutuksesta"
                     onChange={(value) => {
-                      field.onChange(value.target.value === "off" ? true : false);
+                      field.onChange(value.target.value === "off");
                     }}
                     checked={field.value === false}
                   />
                 </FormGroupWithBoldLabel>
               )}
               {field.value === true && (
-                <p>
-                  Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
-                  <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
-                    Tiedottaminen
-                  </StyledLink>{" "}
-                  -sivulta Kiinteistönomistajat- ja Muistuttajat-välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan,
-                  kun kuulutus hyväksytään julkaistavaksi.
-                </p>
+                <>
+                  <p>
+                    Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
+                    <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                      Tiedottaminen
+                    </StyledLink>{" "}
+                    -sivulta Kiinteistönomistajat- ja Muistuttajat-välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan,
+                    kun kuulutus hyväksytään julkaistavaksi.
+                  </p>
+                  <p>
+                    Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa
+                    kirjeitse. Kirjeitse tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja
+                    Muistuttajien tiedotus muilla tavoin -listoista.
+                  </p>
+                </>
               )}
               {field.value === false && <p>Kiinteistönomistajille ja muistuttajille ei lähetetä tietoa uudelleenkuulutuksesta.</p>}
             </>

@@ -17,26 +17,10 @@ type Props = { children: ReactNode; asianhallintaTiedot?: AsianhallintaTiedot; o
 const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   ALOITUSKUULUTUS: "Kuuluttaminen  suunnittelun ja maastotöiden aloittamisesta",
   SUUNNITTELU: "Suunnittelun aikainen vuorovaikutus",
-  NAHTAVILLAOLO: "Valmiin suunnittelman nähtävillä olo ja lausuntojen pyytäminen",
+  NAHTAVILLAOLO: "Valmiin suunnitelman nähtävillä olo ja lausuntojen pyytäminen",
   HYVAKSYMISPAATOS: "Kuulutus päätöksen nähtäville asettamisesta",
-  JATKOPAATOS: "Kuulutus suunnitelman voimassaolon jatkamisesta",
-  JATKOPAATOS2: "Kuulutus suunnitelman voimassaolon jatkamisesta",
-};
-
-const UspaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe; enabled: boolean }> = ({ vaihe, enabled }) => {
-  if (!enabled) {
-    return (
-      <>
-        Vie lopuksi sähköpostilla saamasi {vaihe === Vaihe.SUUNNITTELU ? "kutsu ja lähetekirje" : "kuulutus ja ilmoitus"} asianhallintaan.
-      </>
-    );
-  }
-  return (
-    <>
-      {vaihe === Vaihe.SUUNNITTELU ? "Kutsu ja lähetekirje" : "Kuulutus ja ilmoitus kuulutuksesta"} siirtyvät automaattisesti
-      asianhallintaan integraatioyhteyden ollessa päällä.
-    </>
-  );
+  JATKOPAATOS: "Suunnitelman voimassaolon jatkaminen",
+  JATKOPAATOS2: "Suunnitelman voimassaolon jatkaminen",
 };
 
 const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
@@ -51,7 +35,6 @@ export const OhjelistaNotification: VFC<Props> = ({ children, asianhallintaTiedo
   const { data: nykyinenKayttaja } = useCurrentUser();
 
   const vaylaAsianhallinta = asianhallintaTiedot?.projekti && isVaylaAsianhallinta(asianhallintaTiedot.projekti);
-  const elyAsianhallinta = asianhallintaTiedot?.projekti && !isVaylaAsianhallinta(asianhallintaTiedot.projekti);
 
   return (
     <Notification closable type={NotificationType.INFO} hideIcon open={open} onClose={onClose}>
@@ -64,11 +47,6 @@ export const OhjelistaNotification: VFC<Props> = ({ children, asianhallintaTiedo
             </li>
           )}
           {children}
-          {elyAsianhallinta && nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
-            <li>
-              <UspaKuulutusToimenpideTeksti vaihe={asianhallintaTiedot.vaihe} enabled={nykyinenKayttaja.features.uspaIntegraatio} />
-            </li>
-          )}
         </ul>
       </div>
     </Notification>

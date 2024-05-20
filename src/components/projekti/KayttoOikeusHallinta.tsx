@@ -46,6 +46,9 @@ interface Props {
   suunnitteluSopimusYhteysHenkilo?: string | undefined;
   projekti: ProjektiLisatiedolla;
   includeTitle: boolean;
+  ohjeetOpen: boolean;
+  ohjeetOnClose: () => void;
+  ohjeetOnOpen: () => void;
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
@@ -95,6 +98,9 @@ function KayttoOikeusHallintaFormElements({
   suunnitteluSopimusYhteysHenkilo,
   projekti,
   includeTitle,
+  ohjeetOpen,
+  ohjeetOnClose,
+  ohjeetOnOpen,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -132,19 +138,20 @@ function KayttoOikeusHallintaFormElements({
     onKayttajatUpdate(kayttoOikeudet || []);
   }, [kayttoOikeudet, onKayttajatUpdate]);
 
-  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
-    const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
-    const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
-  const ohjeetOnClose = useCallback(() => {
-    setOhjeetOpen(false);
-    localStorage.setItem("kayttoOikeusOhjeet", "false");
-  }, []);
-
   return (
     <Section gap={8}>
-      {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
+      {includeTitle && (
+        <h3 className="vayla-subtitle">
+          Projektin henkilöt{" "}
+          {!ohjeetOpen && (
+            <IconButton onClick={ohjeetOnOpen}>
+              <SvgIcon>
+                <FontAwesomeIcon icon="info-circle" />
+              </SvgIcon>
+            </IconButton>
+          )}
+        </h3>
+      )}
 
       <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
         <li>

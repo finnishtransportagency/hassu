@@ -100,7 +100,13 @@ export default function KuulutuksenHyvaksyminenDialog({
             </div>
             <p>
               Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä sekä
-              ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.{" "}
+              ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
+            </p>
+            <p>
+              Suunnitelman nähtäville asettamisen sekä hyväksymispäätöksen kuuluttamisen yhteydessä järjestelmä lähettää ilmoituksen osalle
+              asianosaisista Tiedottaminen -sivun mukaan. Viestit lähetetään vastaanottajille kuulutuksen julkaisupäivänä.
+            </p>
+            <p>
               {projekti.asianhallinta.inaktiivinen
                 ? "Huomaathan viedä asianhallintaan tarvittavat tiedostot itse."
                 : "Järjestelmä vie tarvittavat asiakirjat automaattisesti asianhallintaan."}
