@@ -252,11 +252,13 @@ export class VelhoClient {
       throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
     }
     const projektiApi = await this.createProjektiRekisteriApi();
+    let projekti;
     try {
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      const projekti = projektiDataUpdater(loadProjektiResponse.data);
+      projekti = projektiDataUpdater(loadProjektiResponse.data);
       await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
+      log.error("Velhoprojektin tallennus epäonnistui", { projekti });
       throw this.checkVelhoError(e);
     }
   }

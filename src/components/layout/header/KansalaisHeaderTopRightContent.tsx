@@ -18,6 +18,11 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { showInfoMessage } = useSnackbars();
   const [kirjautunutOpen, setKirjautunutOpen] = useState(router.asPath.indexOf("#kirjautunut") !== -1);
   const closeDialog = useCallback(() => setKirjautunutOpen(false), []);
+  const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
+  const closeSessioDialog = useCallback(() => {
+    setSessioVanhentunut(false);
+    router.reload();
+  }, [router]);
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
       <HassuDialog open={kirjautunutOpen} title={t("kirjautuminen_onnistui")} maxWidth="sm" onClose={closeDialog}>
@@ -26,6 +31,14 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>{t("sulje")}</Button>
+        </DialogActions>
+      </HassuDialog>
+      <HassuDialog open={sessioVanhentunut} title={t("istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
+        <DialogContent>
+          <p>{t("istunto_vanhentunut_teksti")}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSessioDialog}>{t("sulje")}</Button>
         </DialogActions>
       </HassuDialog>
       <LanguageSelector activeLocale={router.locale} locale="fi" setAsActiveLocale={async () => await setLanguage("fi", false)}>
@@ -48,7 +61,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
       >
         Svenska
       </LanguageSelector>
-      <SuomiFiLogin />
+      <SuomiFiLogin setSessioVanhentunut={setSessioVanhentunut} />
     </div>
   );
 };

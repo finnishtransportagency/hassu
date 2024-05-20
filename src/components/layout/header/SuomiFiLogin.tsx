@@ -4,12 +4,17 @@ import { styled } from "@mui/system";
 import { getSuomiFiAuthenticationURL, getSuomiFiLogoutURL } from "@services/userService";
 import useSuomifiUser, { useRefreshToken } from "../../../hooks/useSuomifiUser";
 import ButtonLink from "@components/button/ButtonLink";
-
-const SuomiFiLogin = styled((props) => {
+type SuomiFiLoginProps = {
+  setSessioVanhentunut: (state: boolean) => void;
+};
+const SuomiFiLogin = styled((props: SuomiFiLoginProps) => {
   const { t, lang } = useTranslation("common");
   const { data } = useSuomifiUser();
   const { data: refreshData } = useRefreshToken();
   if (data?.suomifiEnabled) {
+    if (refreshData?.status === 401) {
+      props.setSessioVanhentunut(true);
+    }
     if (!data.tunnistautunut || refreshData?.status !== 200) {
       const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL(lang === "sv" ? "sv#kirjautunut" : "#kirjautunut");
       if (!suomiFiAuthenticationURL) {
