@@ -19,6 +19,8 @@ import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
 import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
 import MuuAineistoVelhosta from "./LomakeComponents/MuuAineistoVelhosta";
 import Lausunnot from "./LomakeComponents/Lausunnot";
+import Maanomistajaluettelo from "./LomakeComponents/MaanomistajaLuettelo";
+import KuulutuksetJaKutsu from "./LomakeComponents/KuulutuksetJaKutsu";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -66,6 +68,8 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
             <SectionContent>
               <Muistutukset kunnat={[50, 43]} />
               <Lausunnot />
+              <Maanomistajaluettelo />
+              <KuulutuksetJaKutsu />
             </SectionContent>
           </Section>
           <Section>
