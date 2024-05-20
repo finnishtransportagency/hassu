@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
-import { userHasAccessToProjekti, userIsAdmin, userIsProjectManagerOrSubstitute } from "src/util/userRights";
+import { userHasAccessToProjekti, userIsAdmin, userIsProjectManagerOrSubstitute } from "hassu-common/util/userRights";
 
 export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
 

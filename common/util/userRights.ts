@@ -1,4 +1,5 @@
-import { KayttajaTyyppi, NykyinenKayttaja, Projekti } from "@services/api";
+import { DBProjekti } from "../../backend/src/database/model";
+import { KayttajaTyyppi, NykyinenKayttaja, Projekti } from "../graphql/apiModel";
 
 export function userIsAdmin(kayttaja?: NykyinenKayttaja) {
   return !!kayttaja?.roolit?.includes("hassu_admin");
@@ -18,7 +19,7 @@ export function userIsProjectManagerOrSubstitute({
   projekti,
 }: {
   kayttaja?: NykyinenKayttaja;
-  projekti?: Pick<Projekti, "kayttoOikeudet">;
+  projekti?: Pick<Projekti, "kayttoOikeudet"> | Pick<DBProjekti, "kayttoOikeudet">;
 }) {
   return (
     !!kayttaja?.uid &&
