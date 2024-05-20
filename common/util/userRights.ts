@@ -9,7 +9,7 @@ export function userHasAccessToProjekti({
   projekti,
 }: {
   kayttaja?: NykyinenKayttaja;
-  projekti?: Pick<Projekti, "kayttoOikeudet">;
+  projekti?: Pick<Projekti, "kayttoOikeudet"> | Pick<DBProjekti, "kayttoOikeudet">;
 }) {
   return !!kayttaja?.uid && !!projekti?.kayttoOikeudet?.some(({ kayttajatunnus }) => kayttaja.uid === kayttajatunnus);
 }
