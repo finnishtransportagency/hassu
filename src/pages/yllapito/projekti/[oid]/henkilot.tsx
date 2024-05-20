@@ -165,6 +165,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             includeTitle={false}
             ohjeetOpen={context.ohjeetOpen}
             ohjeetOnClose={context.ohjeetOnClose}
+            ohjeetOnOpen={context.ohjeetOnOpen}
           />
           <Section noDivider>
             <HassuStack alignItems="flex-end">
