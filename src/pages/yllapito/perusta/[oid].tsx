@@ -149,6 +149,10 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     setKayttooikeusOhjeetOpen(false);
     localStorage.setItem("kayttoOikeusOhjeet", "false");
   }, []);
+  const kayttooikeusOhjeetOnOpen = useCallback(() => {
+    setKayttooikeusOhjeetOpen(true);
+    localStorage.setItem("kayttoOikeusOhjeet", "true");
+  }, []);
   return (
     <FormProvider {...useFormReturn}>
       <form>
@@ -168,6 +172,7 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
             includeTitle={true}
             ohjeetOpen={kayttooikeusOhjeetOpen}
             ohjeetOnClose={kayttooikeusOhjeetOnClose}
+            ohjeetOnOpen={kayttooikeusOhjeetOnOpen}
           />
 
           <Section noDivider>

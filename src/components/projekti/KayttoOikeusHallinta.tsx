@@ -48,6 +48,7 @@ interface Props {
   includeTitle: boolean;
   ohjeetOpen: boolean;
   ohjeetOnClose: () => void;
+  ohjeetOnOpen: () => void;
 }
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
@@ -99,6 +100,7 @@ function KayttoOikeusHallintaFormElements({
   includeTitle,
   ohjeetOpen,
   ohjeetOnClose,
+  ohjeetOnOpen,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -138,7 +140,18 @@ function KayttoOikeusHallintaFormElements({
 
   return (
     <Section gap={8}>
-      {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
+      {includeTitle && (
+        <h3 className="vayla-subtitle">
+          Projektin henkilöt{" "}
+          {!ohjeetOpen && (
+            <IconButton onClick={ohjeetOnOpen}>
+              <SvgIcon>
+                <FontAwesomeIcon icon="info-circle" />
+              </SvgIcon>
+            </IconButton>
+          )}
+        </h3>
+      )}
 
       <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
         <li>
