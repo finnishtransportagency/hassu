@@ -60,7 +60,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     const projektiBefore = {
@@ -68,6 +67,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
@@ -82,13 +82,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = {
@@ -111,13 +111,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -144,13 +144,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -209,7 +209,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
@@ -217,6 +216,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -236,7 +236,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
@@ -244,6 +243,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       kayttoOikeudet: [projariAsVaylaDBUser],
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -256,7 +256,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -268,6 +267,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -280,7 +280,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
@@ -292,6 +291,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -311,6 +311,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -332,7 +333,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ],
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     const projektiBefore = {
@@ -340,6 +340,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
