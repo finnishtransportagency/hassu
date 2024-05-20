@@ -427,5 +427,24 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
+  it("ei ylikirjoita aineistoHandledAt-tietoa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
+    const projektiAfter = await getProjektiFromDB(oid);
+    await expect(projektiAfter.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
+  });
+
   // TODO: "laukaisee oikeanlaisia tapahtumia, jos on uusia tiedostoja tai aineistoja"
 });
