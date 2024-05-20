@@ -20,7 +20,7 @@ export class UserFixture {
     this.userService.identifyMockUser(vaylaUser);
   }
 
-  loginAsProjektiKayttaja(projektiKayttaja: ProjektiKayttaja): void {
+  loginAsProjektiKayttaja(projektiKayttaja: Pick<ProjektiKayttaja, "kayttajatunnus">): void {
     this.userService.identifyMockUser({
       __typename: "NykyinenKayttaja",
       uid: projektiKayttaja.kayttajatunnus,
