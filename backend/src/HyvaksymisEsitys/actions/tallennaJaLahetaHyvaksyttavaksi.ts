@@ -92,7 +92,7 @@ function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys
     throw new IllegalArgumentError("Hyväksymisesityksellä ei ole hyväksymisesitys-tiedostoa");
   }
   if (!muokattavaHyvaksymisEsitys.suunnitelma?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole hyväksymisesitys-tiedostoa");
+    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole suunnitelmaa");
   }
   if (!muokattavaHyvaksymisEsitys.muistutukset?.length) {
     throw new IllegalArgumentError("Hyväksymisesityksellä ei ole muistutuksia");
