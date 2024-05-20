@@ -36,6 +36,7 @@ import { allowedFileTypes } from "common/fileValidationSettings";
 import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
+import { useRouter } from "next/router";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -65,9 +66,13 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
-
+  const router = useRouter();
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
-
+  const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
+  const closeSessioDialog = useCallback(() => {
+    setSessioVanhentunut(false);
+    router.reload();
+  }, [router]);
   const { data: suomifiUser } = useSuomifiUser();
 
   const formOptions: UseFormProps<MuistutusInputForm> = {
@@ -116,6 +121,11 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 }
               })
             );
+            const suomiFiUser = await api.getCurrentSuomifiUser();
+            if (suomiFiUser?.suomifiEnabled && !suomiFiUser?.tunnistautunut) {
+              setSessioVanhentunut(true);
+              return;
+            }
             await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
             showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
             setKiitosDialogiOpen(true);
@@ -355,6 +365,14 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         </ContentSpacer>
       </ContentSpacer>
       <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} />
+      <HassuDialog open={sessioVanhentunut} title={t("istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
+        <DialogContent>
+          <p>{t("istunto_vanhentunut_teksti")}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSessioDialog}>{t("sulje")}</Button>
+        </DialogActions>
+      </HassuDialog>
     </Section>
   );
 }
