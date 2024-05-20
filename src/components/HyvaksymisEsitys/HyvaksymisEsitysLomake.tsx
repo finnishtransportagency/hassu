@@ -45,6 +45,13 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
     await reloadData();
   }, "Tallennus onnistui");
 
+  const sendForApproval = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
+    await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(formData);
+    await reloadData();
+  }, "Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+
+  const tallennaHyvaksyttavaksiDisabled = false; // TODO: muuta
+
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
@@ -83,10 +90,19 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           <Vastaanottajat />
           <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
         </div>
-        <Section noDivider>
+        <Section>
           <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
             <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
-              Tallenna
+              Tallenna luonnos
+            </Button>
+            <Button
+              type="button"
+              disabled={tallennaHyvaksyttavaksiDisabled}
+              id="save_and_send_for_acceptance"
+              primary
+              onClick={useFormReturn.handleSubmit(sendForApproval)}
+            >
+              Lähetä Hyväksyttäväksi
             </Button>
           </Stack>
         </Section>
