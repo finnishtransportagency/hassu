@@ -26,7 +26,7 @@ type ContextProps = {
 
 export const ProjektiPageLayoutContext = createContext<ContextProps>({ ohjeetOnClose: () => {}, ohjeetOnOpen: () => {}, ohjeetOpen: true});
 
-export default function ProjektiPageLayout({ children, title, contentAsideTitle, vaihe }: Readonly<Props>): ReactElement {
+export default function ProjektiPageLayout({ children, title, contentAsideTitle, vaihe, showInfo }: Readonly<Props>): ReactElement {
   const { data: projekti } = useProjekti();
 
   const localStorageKey = useMemo(() => {
@@ -72,7 +72,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
             >
               <h1>
                 {title}{" "}
-                {!ohjeetOpen && (
+                {!ohjeetOpen && showInfo && (
                   <IconButton onClick={ohjeetOnOpen}>
                     <SvgIcon>
                       <FontAwesomeIcon icon="info-circle" />

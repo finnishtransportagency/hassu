@@ -111,7 +111,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
       vaihe={Vaihe.NAHTAVILLAOLO}
       title="Kuulutus nähtäville asettamisesta"
       contentAsideTitle={contentAsideTitle}
-      showInfo={true}
+      showInfo={julkaisematonPaatos === null || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS}
     >
       {!migroitu ? (
         <>

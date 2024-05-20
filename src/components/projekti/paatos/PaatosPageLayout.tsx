@@ -217,7 +217,7 @@ function PaatosPageLayoutContent({
           />
         )
       }
-      showInfo={true}
+      showInfo={julkaisematonPaatos === null || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS}
     >
       {!migroitu ? (
         <>
