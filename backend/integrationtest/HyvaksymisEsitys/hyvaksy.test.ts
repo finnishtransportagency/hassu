@@ -7,19 +7,12 @@ import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS_FILES,
   TEST_HYVAKSYMISESITYS_FILES2,
 } from "./TEST_HYVAKSYMISESITYS";
-import {
-  deleteYllapitoFiles,
-  getProjektiFromDB,
-  getYllapitoFilesUnderPath,
-  insertProjektiToDB,
-  insertYllapitoFileToS3,
-  removeProjektiFromDB,
-} from "./util";
+import { deleteYllapitoFiles, getYllapitoFilesUnderPath, insertYllapitoFileToS3 } from "./util";
 import { hyvaksyHyvaksymisEsitys } from "../../src/HyvaksymisEsitys/actions";
 import { omit } from "lodash";
 import { expect } from "chai";
 import { UserFixture } from "../../test/fixture/userFixture";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 
 describe("Hyväksymisesityksen hyväksyminen", () => {

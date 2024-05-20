@@ -1,46 +1,10 @@
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../src/config";
-import { DBProjekti } from "../../src/database/model";
-import { getDynamoDBDocumentClient, getS3Client } from "../../src/aws/client";
-import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+import { getS3Client } from "../../src/aws/client";
 import { DeleteObjectsCommand, ListObjectsV2Command, ListObjectsV2CommandOutput, PutObjectCommand } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { getAxios } from "../../src/aws/monitoring";
 import FormData from "form-data";
-
-export async function insertProjektiToDB<A extends Pick<DBProjekti, "oid">>(projekti: A) {
-  const params = new PutCommand({
-    TableName: config.projektiTableName,
-    Item: projekti,
-  });
-  await getDynamoDBDocumentClient().send(params);
-}
-
-export async function removeProjektiFromDB(oid: string) {
-  const params = new DeleteItemCommand({
-    TableName: config.projektiTableName,
-    Key: {
-      oid: {
-        S: oid,
-      },
-    },
-  });
-  await getDynamoDBDocumentClient().send(params);
-}
-
-export async function getProjektiFromDB(oid: string): Promise<any> {
-  const params = new GetCommand({
-    TableName: config.projektiTableName,
-    Key: { oid },
-    ConsistentRead: true,
-  });
-  const data = await getDynamoDBDocumentClient().send(params);
-  if (!data.Item) {
-    return;
-  }
-  return data.Item as any;
-}
 
 export async function insertYllapitoFileToS3(pathInS3: string) {
   if (pathInS3.includes(config.yllapitoBucketName)) {

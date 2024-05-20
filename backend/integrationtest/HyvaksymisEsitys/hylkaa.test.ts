@@ -4,11 +4,10 @@ import { DBVaylaUser } from "../../src/database/model";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
-import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB } from "./util";
 import { palautaHyvaksymisEsitys } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
 import { omit } from "lodash";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 
 describe("Hyväksymisesityksen hylkääminen", () => {

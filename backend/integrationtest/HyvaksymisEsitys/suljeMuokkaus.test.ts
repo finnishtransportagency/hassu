@@ -6,15 +6,8 @@ import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS_FILES,
   TEST_HYVAKSYMISESITYS_FILES2,
 } from "./TEST_HYVAKSYMISESITYS";
-import { setupLocalDatabase } from "../util/databaseUtil";
-import {
-  deleteYllapitoFiles,
-  getProjektiFromDB,
-  getYllapitoFilesUnderPath,
-  insertProjektiToDB,
-  insertYllapitoFileToS3,
-  removeProjektiFromDB,
-} from "./util";
+import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
+import { deleteYllapitoFiles, getYllapitoFilesUnderPath, insertYllapitoFileToS3 } from "./util";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { suljeHyvaksymisEsityksenMuokkaus } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
