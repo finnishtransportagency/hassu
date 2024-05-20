@@ -75,5 +75,6 @@ export function adaptHyvaksymisEsitysToAPI(
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(hyvaksymisEsitys.vastaanottajat),
     tila: muokattavaHyvaksymisEsitys?.tila ?? API.HyvaksymisTila.MUOKKAUS,
     hash: createHyvaksymisEsitysHash(oid, hyvaksymisEsitys.versio, salt),
+    palautusSyy: muokattavaHyvaksymisEsitys?.palautusSyy,
   };
 }
