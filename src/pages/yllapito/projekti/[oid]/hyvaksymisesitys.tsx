@@ -4,12 +4,15 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { HyvaksymisTila, Vaihe } from "@services/api";
 import { ReactElement } from "react";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
+import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 
 export default function HyvaksymisEsitysPage(): ReactElement {
   const { data: hyvaksymisEsityksenTiedot } = useHyvaksymisEsitys();
+  const { data: nykyinenKayttaja } = useKayttoOikeudet();
 
   const muokkaustila =
-    !hyvaksymisEsityksenTiedot?.hyvaksymisEsitys || hyvaksymisEsityksenTiedot?.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS;
+    nykyinenKayttaja?.omaaMuokkausOikeuden &&
+    (!hyvaksymisEsityksenTiedot?.hyvaksymisEsitys || hyvaksymisEsityksenTiedot?.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS);
 
   return (
     <>
