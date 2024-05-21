@@ -37,6 +37,7 @@ import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
 import { useRouter } from "next/router";
+import { getSuomiFiLogoutURL } from "@services/userService";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -65,13 +66,13 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
 };
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
-  const { t, lang } = useTranslation();
   const router = useRouter();
+  const { t, lang } = useTranslation();
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
   const closeSessioDialog = useCallback(() => {
     setSessioVanhentunut(false);
-    router.reload();
+    router.push(getSuomiFiLogoutURL());
   }, [router]);
   const { data: suomifiUser } = useSuomifiUser();
 
@@ -365,9 +366,9 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         </ContentSpacer>
       </ContentSpacer>
       <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} />
-      <HassuDialog open={sessioVanhentunut} title={t("istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
+      <HassuDialog open={sessioVanhentunut} title={t("common:istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
         <DialogContent>
-          <p>{t("istunto_vanhentunut_teksti")}</p>
+          <p>{t("common:istunto_vanhentunut_teksti")}</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeSessioDialog}>{t("sulje")}</Button>

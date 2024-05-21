@@ -6,10 +6,11 @@ import { Kieli } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import setLanguage from "next-translate/setLanguage";
 import { Box, BoxProps, styled } from "@mui/system";
-import SuomiFiLogin from "./SuomiFiLogin";
+import { SuomiFiLoginComponent } from "./SuomiFiLogin";
 import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent } from "@mui/material";
 import Button from "@components/button/Button";
+import { getSuomiFiLogoutURL } from "@services/userService";
 
 const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -21,7 +22,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
   const closeSessioDialog = useCallback(() => {
     setSessioVanhentunut(false);
-    router.reload();
+    router.push(getSuomiFiLogoutURL());
   }, [router]);
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
@@ -61,7 +62,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
       >
         Svenska
       </LanguageSelector>
-      <SuomiFiLogin setSessioVanhentunut={setSessioVanhentunut} />
+      <SuomiFiLoginComponent setSessioVanhentunut={setSessioVanhentunut} />
     </div>
   );
 };

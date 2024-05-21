@@ -1,21 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { styled } from "@mui/system";
 import { getSuomiFiAuthenticationURL, getSuomiFiLogoutURL } from "@services/userService";
 import useSuomifiUser, { useRefreshToken } from "../../../hooks/useSuomifiUser";
 import ButtonLink from "@components/button/ButtonLink";
-type SuomiFiLoginProps = {
+type SuomiFiLoginComponentProps = {
   setSessioVanhentunut: (state: boolean) => void;
+};
+
+export function SuomiFiLoginComponent({ setSessioVanhentunut }: Readonly<SuomiFiLoginComponentProps>) {
+  const { data } = useRefreshToken();
+  useEffect(() => {
+    if (data?.status === 401) {
+      setSessioVanhentunut(true);
+    }
+  }, [data?.status, setSessioVanhentunut]);
+  return <SuomiFiLogin status={data?.status} />;
+}
+
+type SuomiFiLoginProps = {
+  status?: number;
 };
 const SuomiFiLogin = styled((props: SuomiFiLoginProps) => {
   const { t, lang } = useTranslation("common");
   const { data } = useSuomifiUser();
-  const { data: refreshData } = useRefreshToken();
   if (data?.suomifiEnabled) {
-    if (refreshData?.status === 401) {
-      props.setSessioVanhentunut(true);
-    }
-    if (!data.tunnistautunut || refreshData?.status !== 200) {
+    if (!data.tunnistautunut || props?.status !== 200) {
       const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL(lang === "sv" ? "sv#kirjautunut" : "#kirjautunut");
       if (!suomiFiAuthenticationURL) {
         return <></>;

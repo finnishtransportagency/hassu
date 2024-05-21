@@ -21,6 +21,6 @@ export function getSuomiFiAuthenticationURL(state?: string): string | undefined 
   }
 }
 
-export function getSuomiFiLogoutURL(): string | undefined {
+export function getSuomiFiLogoutURL(): string {
   return getAppDomainUri() + "api/slo";
 }
