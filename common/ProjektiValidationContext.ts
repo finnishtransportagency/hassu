@@ -1,12 +1,8 @@
 import { MutableRefObject } from "react";
-import { HyvaksymisPaatosVaihe, Projekti, ProjektiKayttajaInput } from "./graphql/apiModel";
+import { HyvaksymisPaatosVaihe, KayttoOikeusTiedot, Projekti, ProjektiKayttajaInput } from "./graphql/apiModel";
 
 export interface ProjektiLisatiedot {
-  nykyinenKayttaja: {
-    omaaMuokkausOikeuden: boolean;
-    onProjektipaallikkoTaiVarahenkilo: boolean;
-    onYllapitaja: boolean;
-  };
+  nykyinenKayttaja: Omit<KayttoOikeusTiedot, "__typename">;
 }
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;

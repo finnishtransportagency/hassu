@@ -5,9 +5,9 @@ import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS_FILES,
   TEST_HYVAKSYMISESITYS_FILES2,
 } from "./TEST_HYVAKSYMISESITYS";
-import { deleteYllapitoFiles, insertProjektiToDB, insertYllapitoFileToS3, removeProjektiFromDB } from "./util";
+import { deleteYllapitoFiles, insertYllapitoFileToS3 } from "./util";
 import { UserFixture } from "../../test/fixture/userFixture";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
 import { TEST_PROJEKTI, TEST_PROJEKTI_FILES } from "./TEST_PROJEKTI";
 import * as API from "hassu-common/graphql/apiModel";
 import { haeHyvaksymisEsityksenTiedot, listaaHyvaksymisEsityksenTiedostot } from "../../src/HyvaksymisEsitys/actions";

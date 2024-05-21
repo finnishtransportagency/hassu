@@ -8,18 +8,9 @@ import TEST_HYVAKSYMISESITYS_INPUT, {
 } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import { tallennaHyvaksymisEsitys } from "../../src/HyvaksymisEsitys/actions";
 import { UserFixture } from "../../test/fixture/userFixture";
-import {
-  deleteYllapitoFiles,
-  emptyUploadFiles,
-  getProjektiFromDB,
-  getYllapitoFilesUnderPath,
-  insertProjektiToDB,
-  insertUploadFileToS3,
-  insertYllapitoFileToS3,
-  removeProjektiFromDB,
-} from "./util";
+import { deleteYllapitoFiles, emptyUploadFiles, getYllapitoFilesUnderPath, insertUploadFileToS3, insertYllapitoFileToS3 } from "./util";
 import { expect } from "chai";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
 import { omit } from "lodash";
 import MockDate from "mockdate";
 import TEST_HYVAKSYMISESITYS, {

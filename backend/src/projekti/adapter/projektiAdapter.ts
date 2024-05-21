@@ -22,6 +22,7 @@ import {
   adaptVuorovaikutusKierrosToAPI,
   adaptVuorovaikutusKierrosJulkaisutToAPI,
   adaptHyvaksymisEsitysToAPI,
+  adaptDBVaylaUsertoAPIProjektiKayttaja,
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
@@ -90,7 +91,7 @@ export class ProjektiAdapter {
       __typename: "Projekti",
       lyhytOsoite: dbProjekti.lyhytOsoite,
       tallennettu: !!dbProjekti.tallennettu,
-      kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
+      kayttoOikeudet: adaptDBVaylaUsertoAPIProjektiKayttaja(kayttoOikeudet),
       tyyppi: velho?.tyyppi ?? dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
       aloitusKuulutus: adaptAloitusKuulutusToAPI(
         projektiPath.aloituskuulutus(aloitusKuulutus ?? undefined),

@@ -1,16 +1,9 @@
 import sinon from "sinon";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS, { TEST_HYVAKSYMISESITYS2, TEST_HYVAKSYMISESITYS_FILES } from "./TEST_HYVAKSYMISESITYS";
-import {
-  deleteYllapitoFiles,
-  getProjektiFromDB,
-  insertProjektiToDB,
-  insertUploadFileToS3,
-  insertYllapitoFileToS3,
-  removeProjektiFromDB,
-} from "./util";
+import { deleteYllapitoFiles, insertUploadFileToS3, insertYllapitoFileToS3 } from "./util";
 import { UserFixture } from "../../test/fixture/userFixture";
-import { setupLocalDatabase } from "../util/databaseUtil";
+import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
 import { tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi } from "../../src/HyvaksymisEsitys/actions";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import * as API from "hassu-common/graphql/apiModel";

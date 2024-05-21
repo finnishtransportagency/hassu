@@ -40,6 +40,7 @@ import {
   AvaaHyvaksymisEsityksenMuokkausMutationVariables,
   SuljeHyvaksymisEsityksenMuokkausMutationVariables,
   HaeHyvaksymisEsityksenTiedotQueryVariables,
+  HaeKayttoOikeudetQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -85,6 +86,7 @@ import {
   esikatseleHyvaksymisEsityksenTiedostot,
   haeHyvaksymisEsityksenTiedot,
 } from "../HyvaksymisEsitys/actions";
+import haeKayttoOikeudet from "../user/haeKayttoOikeudet";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -187,6 +189,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await generateExcelByQuery(event.arguments as LataaTiedotettavatExcelQueryVariables);
     case apiConfig.haeProjektinTiedottamistiedot.name:
       return await haeProjektinTiedottamistiedot((event.arguments as HaeProjektinTiedottamistiedotQueryVariables).oid);
+    case apiConfig.haeKayttoOikeudet.name:
+      return await haeKayttoOikeudet((event.arguments as HaeKayttoOikeudetQueryVariables).oid);
     default:
       return null;
   }
