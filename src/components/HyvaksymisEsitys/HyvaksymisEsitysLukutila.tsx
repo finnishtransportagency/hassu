@@ -1,10 +1,11 @@
 import { HyvaksymisEsityksenTiedot, HyvaksymisTila } from "@services/api";
 import HyvaksyTaiPalautaPainikkeet from "./LomakeComponents/HyvaksyTaiPalautaPainikkeet";
+import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { oid, versio, hyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
-  const kayttajaOnProjari = true; // TODO: muuta
+  const { data: nykyinenKayttaja } = useKayttoOikeudet();
 
   if (!hyvaksymisEsitys) {
     return null;
@@ -12,7 +13,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
   return (
     <div>
       {JSON.stringify(hyvaksymisEsityksenTiedot)}
-      {odottaaHyvaksyntaa && kayttajaOnProjari && (
+      {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
         <HyvaksyTaiPalautaPainikkeet oid={oid} versio={versio} vastaanottajat={hyvaksymisEsitys.vastaanottajat!} />
       )}
     </div>
