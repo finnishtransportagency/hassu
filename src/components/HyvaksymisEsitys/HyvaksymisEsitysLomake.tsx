@@ -19,6 +19,7 @@ import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
 import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
 import MuuAineistoVelhosta from "./LomakeComponents/MuuAineistoVelhosta";
 import Lausunnot from "./LomakeComponents/Lausunnot";
+import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -77,7 +78,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
         </div>
         <div>
           <Vastaanottajat />
-          <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
+          <AineistonEsikatselu />
         </div>
         <Section noDivider>
           <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
