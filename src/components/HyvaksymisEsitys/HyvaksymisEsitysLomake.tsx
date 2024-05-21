@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput, Vaihe } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
@@ -22,6 +22,7 @@ import Lausunnot from "./LomakeComponents/Lausunnot";
 import Maanomistajaluettelo from "./LomakeComponents/MaanomistajaLuettelo";
 import KuulutuksetJaKutsu from "./LomakeComponents/KuulutuksetJaKutsu";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -58,63 +59,66 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
   }, [useFormReturn, defaultValues]);
 
   return (
-    <FormProvider {...useFormReturn}>
-      <form>
-        <div>
-          <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
-          {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
-            <Section noDivider>
-              <Notification type={NotificationType.WARN}>
-                {"Hyväksymisesitys on palautettu korjattavaksi. Palautuksen syy: " + hyvaksymisEsityksenTiedot.hyvaksymisEsitys.palautusSyy}
-              </Notification>
+    <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo={true}>
+      <FormProvider {...useFormReturn}>
+        <form>
+          <div>
+            <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
+            {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
+              <Section noDivider>
+                <Notification type={NotificationType.WARN}>
+                  {"Hyväksymisesitys on palautettu korjattavaksi. Palautuksen syy: " +
+                    hyvaksymisEsityksenTiedot.hyvaksymisEsitys.palautusSyy}
+                </Notification>
+              </Section>
+            )}
+            <LinkinVoimassaoloaika />
+            <ViestiVastaanottajalle />
+            <Laskutustiedot />
+          </div>
+          <div>
+            <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
+            <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
+            <HyvaksymisEsitysTiedosto />
+            <h3 className="vayla-subtitle">Suunnitelma</h3>
+            <Section>
+              <h3 className="vayla-subtitle">Vuorovaikutus</h3>
+              <SectionContent>
+                <Muistutukset kunnat={[50, 43]} />
+                <Lausunnot />
+                <Maanomistajaluettelo />
+                <KuulutuksetJaKutsu />
+              </SectionContent>
             </Section>
-          )}
-          <LinkinVoimassaoloaika />
-          <ViestiVastaanottajalle />
-          <Laskutustiedot />
-        </div>
-        <div>
-          <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
-          <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
-          <HyvaksymisEsitysTiedosto />
-          <h3 className="vayla-subtitle">Suunnitelma</h3>
+            <Section>
+              <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
+              <p>Voit halutessasi liittää...</p>
+              <MuuAineistoVelhosta />
+              <MuuAineistoKoneelta />
+            </Section>
+          </div>
+          <div>
+            <Vastaanottajat />
+            <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
+          </div>
           <Section>
-            <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-            <SectionContent>
-              <Muistutukset kunnat={[50, 43]} />
-              <Lausunnot />
-              <Maanomistajaluettelo />
-              <KuulutuksetJaKutsu />
-            </SectionContent>
+            <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+              <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
+                Tallenna luonnos
+              </Button>
+              <Button
+                type="button"
+                disabled={tallennaHyvaksyttavaksiDisabled}
+                id="save_and_send_for_acceptance"
+                primary
+                onClick={useFormReturn.handleSubmit(sendForApproval)}
+              >
+                Lähetä Hyväksyttäväksi
+              </Button>
+            </Stack>
           </Section>
-          <Section>
-            <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
-            <p>Voit halutessasi liittää...</p>
-            <MuuAineistoVelhosta />
-            <MuuAineistoKoneelta />
-          </Section>
-        </div>
-        <div>
-          <Vastaanottajat />
-          <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
-        </div>
-        <Section>
-          <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-            <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
-              Tallenna luonnos
-            </Button>
-            <Button
-              type="button"
-              disabled={tallennaHyvaksyttavaksiDisabled}
-              id="save_and_send_for_acceptance"
-              primary
-              onClick={useFormReturn.handleSubmit(sendForApproval)}
-            >
-              Lähetä Hyväksyttäväksi
-            </Button>
-          </Stack>
-        </Section>
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+    </ProjektiPageLayout>
   );
 }
