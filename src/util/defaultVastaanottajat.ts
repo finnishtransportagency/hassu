@@ -7,9 +7,37 @@ import {
   KuntaVastaanottajaInput,
   Projekti,
   ViranomaisVastaanottajaInput,
+  Status,
 } from "@services/api";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import uniqBy from "lodash/uniqBy";
+
+function findOutEdellisenVaiheenIlmoituksenVastaanottajat(
+  projekti: Projekti | null | undefined
+): IlmoituksenVastaanottajat | null | undefined {
+  switch (projekti?.status) {
+    case Status.SUUNNITTELU: {
+      if (projekti.vuorovaikutusKierrosJulkaisut && projekti.vuorovaikutusKierrosJulkaisut.length) {
+        const maxKierrosId = Math.max(...projekti.vuorovaikutusKierrosJulkaisut.map((julkaisu) => julkaisu.id));
+        const maxIdJulkaisu = projekti.vuorovaikutusKierrosJulkaisut.find((julkaisu) => julkaisu.id == maxKierrosId);
+        if (projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.vuorovaikutusNumero > maxKierrosId) {
+          return maxIdJulkaisu?.ilmoituksenVastaanottajat;
+        }
+      }
+      return projekti.aloitusKuulutus?.ilmoituksenVastaanottajat;
+    }
+    case Status.NAHTAVILLAOLO:
+      return projekti.vuorovaikutusKierros?.ilmoituksenVastaanottajat;
+    case Status.HYVAKSYTTY:
+      return projekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat;
+    case Status.JATKOPAATOS_1:
+      return projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat;
+    case Status.JATKOPAATOS_2:
+      return projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat;
+  }
+
+  return null;
+}
 
 export default function defaultVastaanottajat(
   projekti: Projekti | null | undefined,
@@ -18,6 +46,10 @@ export default function defaultVastaanottajat(
 ): IlmoituksenVastaanottajatInput {
   let kunnat: KuntaVastaanottajaInput[];
   let viranomaiset: ViranomaisVastaanottajaInput[];
+
+  const edellisenVaiheenilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined =
+    findOutEdellisenVaiheenIlmoituksenVastaanottajat(projekti);
+
   if (ilmoituksenVastaanottajat?.kunnat) {
     // tapaus, jossa lomake on jo kerran tallennettu
     kunnat = ilmoituksenVastaanottajat?.kunnat.map((kunta) => ({
@@ -38,8 +70,14 @@ export default function defaultVastaanottajat(
       nimi: viranomainen.nimi,
       sahkoposti: viranomainen.sahkoposti,
     }));
+  } else if (edellisenVaiheenilmoituksenVastaanottajat?.viranomaiset) {
+    //tapaus, jossa edellisessä vaiheessa on syötetty viranomaiset; ne halutaan nykyisen vaiheen default-arvoksi
+    viranomaiset = edellisenVaiheenilmoituksenVastaanottajat?.viranomaiset.map((viranomainen) => ({
+      nimi: viranomainen.nimi,
+      sahkoposti: viranomainen.sahkoposti,
+    }));
   } else {
-    // tapaus, jossa lomake alustetaan ensimmäistä kertaa
+    // tapaus, jossa lomake alustetaan ensimmäistä kertaa. Ei taideta tähän käytännössä nykytoteutuksessa ikinä mennä?
     const vaylavirastoKirjaamo = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO");
     if (projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO") {
       viranomaiset =
