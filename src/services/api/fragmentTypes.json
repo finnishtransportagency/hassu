@@ -350,6 +350,21 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INTERFACE",
+        "name": "ISahkopostiVastaanottaja",
+        "possibleTypes": [
+          {
+            "name": "KuntaVastaanottaja",
+            "__typename": "__Type"
+          },
+          {
+            "name": "ViranomaisVastaanottaja",
+            "__typename": "__Type"
+          }
+        ],
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "KasittelynTila",
         "possibleTypes": null,
@@ -376,6 +391,12 @@
       {
         "kind": "ENUM",
         "name": "KayttajaTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "KayttoOikeusTiedot",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -932,18 +953,15 @@
         "__typename": "__Type"
       },
       {
-        "kind": "INTERFACE",
+        "kind": "OBJECT",
         "name": "SahkopostiVastaanottaja",
-        "possibleTypes": [
-          {
-            "name": "KuntaVastaanottaja",
-            "__typename": "__Type"
-          },
-          {
-            "name": "ViranomaisVastaanottaja",
-            "__typename": "__Type"
-          }
-        ],
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SahkopostiVastaanottajaInput",
+        "possibleTypes": null,
         "__typename": "__Type"
       },
       {
