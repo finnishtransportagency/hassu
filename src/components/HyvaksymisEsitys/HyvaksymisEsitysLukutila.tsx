@@ -6,12 +6,20 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import useApi from "src/hooks/useApi";
 import Button from "@components/button/Button";
+import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
+import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
+  const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const api = useApi();
+
+  const avaaMuokkaus = useSpinnerAndSuccessMessage(async () => {
+    await api.avaaHyvaksymisEsityksenMuokkaus({ oid, versio });
+    await reloadData();
+  }, "Muokkauksen avaaminen onnistui");
 
   if (!hyvaksymisEsitys) {
     return null;
@@ -22,7 +30,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
       vaihe={Vaihe.HYVAKSYMISPAATOS}
       contentAsideTitle={
         muokkauksenVoiAvata ? (
-          <Button onClick={() => api.avaaHyvaksymisEsityksenMuokkaus({ oid, versio })} id="avaa_hyvaksymisesityksen_muokkaus_button">
+          <Button onClick={avaaMuokkaus} id="avaa_hyvaksymisesityksen_muokkaus_button">
             Muokkaa
           </Button>
         ) : (
