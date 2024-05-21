@@ -1,13 +1,11 @@
 import HassuDialog from "@components/HassuDialog";
 import Button from "@components/button/Button";
 import { DialogActions, DialogContent } from "@mui/material";
-import log from "loglevel";
-import React, { useCallback } from "react";
+import React from "react";
 import useApi from "src/hooks/useApi";
-import useSnackbars from "src/hooks/useSnackbars";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import { SahkopostiVastaanottaja } from "@services/api";
+import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 
 type Props = {
   open: boolean;
@@ -19,28 +17,13 @@ type Props = {
 
 export default function HyvaksyDialog({ open, onClose, oid, versio, vastaanottajat }: Props) {
   const api = useApi();
-  const { mutate: reloadProjekti } = useHyvaksymisEsitys();
-  const { showSuccessMessage } = useSnackbars();
+  const { mutate: reloadData } = useHyvaksymisEsitys();
 
-  const { withLoadingSpinner } = useLoadingSpinner();
-
-  const hyvaksyKuulutus = useCallback(
-    () =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await api.hyvaksyHyvaksymisEsitys({ oid, versio });
-            await reloadProjekti();
-            showSuccessMessage(`Hyväksyminen onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-          onClose();
-          log.debug("hyväksy kuulutus");
-        })()
-      ),
-    [api, oid, onClose, reloadProjekti, showSuccessMessage, versio, withLoadingSpinner]
-  );
+  const hyvaksyKuulutus = useSpinnerAndSuccessMessage(async () => {
+    await api.hyvaksyHyvaksymisEsitys({ oid, versio });
+    onClose();
+    await reloadData();
+  }, "Hyväksyminen onnistui");
 
   return (
     <HassuDialog title={"Hyväksymisesityksen hyväksyminen"} hideCloseButton open={open} onClose={onClose} maxWidth={"sm"}>
