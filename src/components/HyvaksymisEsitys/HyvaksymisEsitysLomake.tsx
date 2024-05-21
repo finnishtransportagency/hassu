@@ -23,6 +23,7 @@ import Maanomistajaluettelo from "./LomakeComponents/MaanomistajaLuettelo";
 import KuulutuksetJaKutsu from "./LomakeComponents/KuulutuksetJaKutsu";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
+import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
@@ -99,7 +100,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
           </div>
           <div>
             <Vastaanottajat />
-            <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
+            <AineistonEsikatselu />
           </div>
           <Section>
             <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>

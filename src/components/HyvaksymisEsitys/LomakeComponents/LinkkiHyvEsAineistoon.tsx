@@ -4,8 +4,6 @@ import { Stack } from "@mui/material";
 import { useMemo, useRef } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
 import Button from "@components/button/Button";
-import { useFormContext } from "react-hook-form";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 
 export default function LinkkiHyvEsAineistoon({
   oid,
@@ -14,9 +12,6 @@ export default function LinkkiHyvEsAineistoon({
   oid: string;
   hash: string | undefined;
 }>) {
-  const { watch } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const formData = watch();
-
   const linkRef = useRef<HTMLInputElement>(null);
 
   const linkHref = useMemo(() => {
@@ -27,8 +22,6 @@ export default function LinkkiHyvEsAineistoon({
   }, [oid, hash]);
 
   const { showInfoMessage, showErrorMessage } = useSnackbars();
-
-  const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
 
   return (
     <SectionContent className="mt-16">
@@ -43,33 +36,6 @@ export default function LinkkiHyvEsAineistoon({
           value={linkHref ?? "-"}
           ref={linkRef}
         />
-        <a
-          className="hidden"
-          id={`esikatsele-hyvaksymisesitys-link`}
-          target="_blank"
-          rel="noreferrer"
-          href={`/yllapito/projekti/${oid}/hyvaksymisesitys/esikatsele`}
-          ref={(e) => {
-            if (hiddenLinkRef) {
-              hiddenLinkRef.current = e;
-            }
-          }}
-        >
-          Hidden link
-        </a>
-        <Button
-          endIcon="external-link-alt"
-          style={{ borderRadius: 0, textTransform: "none" }}
-          type="button"
-          onClick={() => {
-            localStorage.setItem(`tallennaHyvaksymisEsitysInput`, JSON.stringify(formData));
-            if (hiddenLinkRef.current) {
-              hiddenLinkRef.current.click();
-            }
-          }}
-        >
-          Esikatsele
-        </Button>
         <Button
           primary
           style={{ borderRadius: 0, textTransform: "none" }}
