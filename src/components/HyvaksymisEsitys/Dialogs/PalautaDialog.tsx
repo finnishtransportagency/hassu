@@ -2,14 +2,12 @@ import HassuDialog from "@components/HassuDialog";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import HassuStack from "@components/layout/HassuStack";
-import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import useApi from "src/hooks/useApi";
-import useSnackbars from "src/hooks/useSnackbars";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
+import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 
 type PalautusValues = {
   syy: string;
@@ -25,7 +23,6 @@ type Props = {
 export default function PalautaDialog({ open, onClose, oid, versio }: Props) {
   const api = useApi();
   const { mutate: reloadData } = useHyvaksymisEsitys();
-  const { showSuccessMessage } = useSnackbars();
   const router = useRouter();
 
   const {
@@ -34,40 +31,23 @@ export default function PalautaDialog({ open, onClose, oid, versio }: Props) {
     formState: { errors },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
-  const { withLoadingSpinner } = useLoadingSpinner();
+  const palautaMuokattavaksi = useSpinnerAndSuccessMessage(async (data: PalautusValues) => {
+    await api.palautaHyvaksymisEsitys({ oid, versio, syy: data.syy });
+    onClose();
+    await reloadData();
+  }, "Kuulutuksen palautus onnistui");
 
-  const palautaMuokattavaksi = useCallback(
-    (data: PalautusValues) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await api.palautaHyvaksymisEsitys({ oid, versio, syy: data.syy });
-            await reloadData();
-            showSuccessMessage(`Kuulutuksen palautus onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-          onClose();
-        })()
-      ),
-    [withLoadingSpinner, onClose, api, oid, versio, reloadData, showSuccessMessage]
-  );
-
-  const palautaMuokattavaksiJaPoistu = useCallback(
-    (data: PalautusValues) =>
-      withLoadingSpinner(
-        (async () => {
-          await palautaMuokattavaksi(data);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${oid}`);
-          }, 1000);
-          return () => {
-            clearTimeout(siirtymaTimer);
-          };
-        })()
-      ),
-    [withLoadingSpinner, palautaMuokattavaksi, router, oid]
-  );
+  const palautaMuokattavaksiJaPoistu = useSpinnerAndSuccessMessage(async (data: PalautusValues) => {
+    await api.palautaHyvaksymisEsitys({ oid, versio, syy: data.syy });
+    onClose();
+    await reloadData();
+    const siirtymaTimer = setTimeout(() => {
+      router.push(`/yllapito/projekti/${oid}`);
+    }, 1000);
+    return () => {
+      clearTimeout(siirtymaTimer);
+    };
+  }, "Kuulutuksen palautus onnistui");
 
   return (
     <div>
