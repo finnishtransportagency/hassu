@@ -15,6 +15,7 @@ export type ProjektiTiedostoineen = Pick<
   | "nahtavillaoloVaiheJulkaisut"
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
+  | "aineistoHandledAt"
 >;
 
 export default async function haeHyvaksymisEsityksenTiedostoTiedot(oid: string): Promise<ProjektiTiedostoineen> {
@@ -31,7 +32,8 @@ export default async function haeHyvaksymisEsityksenTiedostoTiedot(oid: string):
       "vuorovaikutusKierrosJulkaisut, " +
       "nahtavillaoloVaiheJulkaisut, " +
       "muokattavaHyvaksymisEsitys, " +
-      "julkaistuHyvaksymisEsitys",
+      "julkaistuHyvaksymisEsitys, " +
+      "aineistoHandledAt",
   });
 
   try {

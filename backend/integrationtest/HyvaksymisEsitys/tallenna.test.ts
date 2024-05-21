@@ -389,7 +389,6 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -401,6 +400,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -413,18 +413,37 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     const projektiBefore = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei ylikirjoita aineistoHandledAt-tietoa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
+    const projektiAfter = await getProjektiFromDB(oid);
+    await expect(projektiAfter.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
   });
 
   // TODO: "laukaisee oikeanlaisia tapahtumia, jos on uusia tiedostoja tai aineistoja"

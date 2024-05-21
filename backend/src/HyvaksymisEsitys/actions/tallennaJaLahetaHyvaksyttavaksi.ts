@@ -34,7 +34,7 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   // Adaptoi muokattava hyvaksymisesitys
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
-  validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.muokattavaHyvaksymisEsitys?.aineistoHandledAt);
+  validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.aineistoHandledAt);
   // Persistoi uudet tiedostot
   const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   if (uudetTiedostot.length) {

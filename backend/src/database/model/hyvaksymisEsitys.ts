@@ -22,7 +22,6 @@ export interface IHyvaksymisEsitys {
 export type MuokattavaHyvaksymisEsitys = {
   tila?: API.HyvaksymisTila | null;
   palautusSyy?: string | null;
-  aineistoHandledAt?: string | null;
 } & IHyvaksymisEsitys;
 
 export type JulkaistuHyvaksymisEsitys = {

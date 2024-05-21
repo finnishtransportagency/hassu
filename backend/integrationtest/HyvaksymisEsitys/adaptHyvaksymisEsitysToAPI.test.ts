@@ -6,7 +6,10 @@ import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 
 describe("adaptHyvaksymisEsitysToApi", () => {
   it("adaptoi tiedostopolut oikein", () => {
-    const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
+    const projektiInDB: Pick<
+      DBProjekti,
+      "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt"
+    > = {
       oid: "1",
       muokattavaHyvaksymisEsitys: {
         versio: 1,
@@ -26,9 +29,9 @@ describe("adaptHyvaksymisEsitysToApi", () => {
             lisatty: "2022-01-02T01:01:01:111",
           },
         ],
-        aineistoHandledAt: "2022-01-02T01:01:01:222",
       },
       salt: "jotain",
+      aineistoHandledAt: "2022-01-02T01:01:01:222",
     };
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.hyvaksymisEsitys?.[0].tiedosto).to.eql(
@@ -151,13 +154,13 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       muokattavaHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
         tila: API.HyvaksymisTila.HYVAKSYTTY,
-        aineistoHandledAt: "2022-01-02T02:01:00+02:00",
       },
       julkaistuHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
         hyvaksyja: "oid",
         hyvaksymisPaiva: "2033-01-03",
       },
+      aineistoHandledAt: "2022-01-02T02:01:00+02:00",
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys).to.eql({
@@ -279,13 +282,13 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       muokattavaHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
         tila: API.HyvaksymisTila.MUOKKAUS,
-        // aineistoHandledAt ei määritelty
       },
       julkaistuHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
         hyvaksyja: "oid",
         hyvaksymisPaiva: "2033-01-03",
       },
+      // aineistoHandledAt ei määritelty
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.muuAineistoVelhosta?.[0]?.tuotu).to.eql(false);

@@ -21,7 +21,7 @@ import {
  * @returns Tiedot hyväksymisesityksestä varustettuna aineistojen sijaintitiedolla ja tiedolla siitä, onko aineistot tuotu
  */
 export function adaptHyvaksymisEsitysToAPI(
-  projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">
+  projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt">
 ): API.HyvaksymisEsitys | undefined {
   const { oid, salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys } = projekti;
   if (!(muokattavaHyvaksymisEsitys || julkaistuHyvaksymisEsitys)) {
@@ -31,7 +31,7 @@ export function adaptHyvaksymisEsitysToAPI(
   const hyvaksymisEsitys =
     muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY ? julkaistuHyvaksymisEsitys : muokattavaHyvaksymisEsitys;
   const julkaistu = muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY;
-  const aineistotHandledAt = julkaistu || muokattavaHyvaksymisEsitys?.aineistoHandledAt;
+  const aineistotHandledAt = julkaistu || projekti.aineistoHandledAt;
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
 

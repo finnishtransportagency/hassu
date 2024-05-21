@@ -38,13 +38,13 @@ export function getHyvaksymisEsityksenPoistetutAineistot(
 /**
  *
  * @param hyvaksymisEsitys Muokattava hyväksymisesitys tietokannassa
+ * @param aineistoHandledAt Aikaleima, jolloin aineistot on käsitelty
  * @returns Hyväksymisesityksen aineistot, joiden aikaleima on aineistoHandledAt jälkeen, varustettuna tiedolla siitä, minkä avaimen takana ne ovat
  */
 export function getHyvaksymisEsityksenTuomattomatAineistot(
-  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys,
+  aineistoHandledAt: string | null | undefined
 ): (AineistoNew & { avain: string })[] {
   const aineistot = getHyvaksymisEsityksenAineistot(hyvaksymisEsitys);
-  return aineistot.filter(
-    (aineisto) => !hyvaksymisEsitys.aineistoHandledAt || parseDate(aineisto.lisatty).isAfter(parseDate(hyvaksymisEsitys.aineistoHandledAt))
-  );
+  return aineistot.filter((aineisto) => !aineistoHandledAt || parseDate(aineisto.lisatty).isAfter(parseDate(aineistoHandledAt)));
 }

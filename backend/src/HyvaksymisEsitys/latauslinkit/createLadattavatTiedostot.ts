@@ -24,7 +24,7 @@ export default async function createLadattavatTiedostot(
   aineistopaketti: string | null
 ): Promise<API.LadattavatTiedostot> {
   const oid = projekti.oid;
-  const aineistoHandledAt = (hyvaksymisEsitys as MuokattavaHyvaksymisEsitys).aineistoHandledAt || true;
+  const aineistoHandledAt = projekti.aineistoHandledAt || true;
   const path = joinPath(
     getYllapitoPathForProjekti(oid),
     aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH

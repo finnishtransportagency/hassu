@@ -6,7 +6,14 @@ import { log } from "../../logger";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
-  "oid" | "versio" | "salt" | "kayttoOikeudet" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "hyvaksymisPaatosVaihe"
+  | "oid"
+  | "versio"
+  | "salt"
+  | "kayttoOikeudet"
+  | "muokattavaHyvaksymisEsitys"
+  | "julkaistuHyvaksymisEsitys"
+  | "hyvaksymisPaatosVaihe"
+  | "aineistoHandledAt"
 >;
 
 // TODO: hae hyväksymisPaatosVaiheesta vain id, koska meitä kiinnostaa vain, onko se olemassa vai ei
@@ -16,7 +23,8 @@ export default async function haeProjektinTiedotHyvaksymisEsityksesta(oid: strin
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
-    ProjectionExpression: "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe",
+    ProjectionExpression:
+      "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt",
   });
 
   try {
