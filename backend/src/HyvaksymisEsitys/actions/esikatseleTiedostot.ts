@@ -25,7 +25,7 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
     ...ladattavatTiedostot,
     suunnitelmanNimi: dbProjekti.velho!.nimi,
     asiatunnus: dbProjekti.velho!.asiatunnusVayla,
-    vastuuorganisaatio: dbProjekti.velho!.toteuttavaOrganisaatio,
+    vastuuorganisaatio: dbProjekti.velho!.suunnittelustaVastaavaViranomainen,
     laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),

@@ -48,7 +48,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       aineistopaketti,
       suunnitelmanNimi: projekti.velho!.nimi,
       asiatunnus: projekti.velho!.asiatunnusVayla,
-      vastuuorganisaatio: projekti.velho!.toteuttavaOrganisaatio,
+      vastuuorganisaatio: projekti.velho!.suunnittelustaVastaavaViranomainen,
       laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
