@@ -20,9 +20,13 @@ import {
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
-  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys,
-  aineistopaketti: string | null
-): Promise<API.LadattavatTiedostot> {
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys
+): Promise<
+  Pick<
+    API.HyvaksymisEsityksenAineistot,
+    "hyvaksymisEsitys" | "suunnitelma" | "kuntaMuistutukset" | "lausunnot" | "kuulutuksetJaKutsu" | "muutAineistot" | "maanomistajaluettelo"
+  >
+> {
   const oid = projekti.oid;
   const aineistoHandledAt = projekti.aineistoHandledAt || true;
   const path = joinPath(
@@ -88,15 +92,12 @@ export default async function createLadattavatTiedostot(
     )
   ).sort(jarjestaTiedostot);
   return {
-    __typename: "LadattavatTiedostot",
     hyvaksymisEsitys: hyvaksymisEsitysTiedostot,
     suunnitelma,
     kuntaMuistutukset,
     lausunnot,
     kuulutuksetJaKutsu,
     muutAineistot,
-    poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
-    aineistopaketti,
     maanomistajaluettelo,
   };
 }

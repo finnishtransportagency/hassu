@@ -1227,15 +1227,29 @@ type LadattavatTiedostot {
   aineistot: [LadattavaTiedosto!]
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
-  kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
   muistutukset: [LadattavaTiedosto!]
-  hyvaksymisEsitys: [LadattavaTiedosto!]
-  suunnitelma: [LadattavaTiedosto!]
-  lausunnot: [LadattavaTiedosto!]
-  kuulutuksetJaKutsu: [LadattavaTiedosto!]
-  maanomistajaluettelo: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+}
+
+type HyvaksymisEsityksenAineistot {
+  suunnitelmanNimi: String!
+  asiatunnus: String
+  vastuuorganisaatio: String
+  poistumisPaiva: String!
+  pyydetaanKiireellistaKasittelya: Boolean
+  linkkiVanhentunut: Boolean
+  lisatiedot: String
+  laskutustiedot: Laskutustiedot
+  projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  hyvaksymisEsitys: [LadattavaTiedosto!]
+  suunnitelma: [LadattavaTiedosto!]
+  kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
+  lausunnot: [LadattavaTiedosto!]
+  maanomistajaluettelo: [LadattavaTiedosto!]
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  muutAineistot: [LadattavaTiedosto!]
+  aineistopaketti: String
 }
 
 interface ILadattavaTiedosto {

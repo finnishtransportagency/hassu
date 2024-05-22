@@ -12,7 +12,7 @@ import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
   listaaHyvaksymisEsityksenTiedostotInput: params,
-}: API.ListaaHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.LadattavatTiedostot> {
+}: API.ListaaHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.HyvaksymisEsityksenAineistot> {
   log.info("Loading projekti", { oid });
   if (!params) {
     throw new Error("params ei annettu (listaaHyvaksymisEsityksenTiedostot)");
@@ -26,32 +26,35 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
     assertIsDefined(projekti.salt, "Projektin salt on määritelty tässä vaiheessa");
     validateHyvaksymisEsitysHash(oid, projekti.salt, hyvaksymisEsitys.versio, params.hash);
     const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
+    const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+    assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-      const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
-      assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
       return Promise.resolve({
-        __typename: "LadattavatTiedostot",
+        __typename: "HyvaksymisEsityksenAineistot",
+        suunnitelmanNimi: "TODO", //TODO
         poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
         linkkiVanhentunut: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
       });
     }
-    return listaaTiedostot(projekti, params);
+    const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, hyvaksymisEsitys?.aineistopaketti)
+      : null;
+    const ladattavatTiedostot = await createLadattavatTiedostot(projekti, hyvaksymisEsitys);
+    return {
+      __typename: "HyvaksymisEsityksenAineistot",
+      ...ladattavatTiedostot,
+      aineistopaketti,
+      suunnitelmanNimi: "TODO",
+      asiatunnus: "TODO",
+      laskutustiedot: {
+        //TODO
+        __typename: "Laskutustiedot",
+      },
+      poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
+      projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+    };
   } else {
     throw new NotFoundError(`Projektia ${oid} ei löydy`);
   }
-}
-
-async function listaaTiedostot(
-  projekti: ProjektiTiedostoineen,
-  _params: API.ListaaHyvaksymisEsityksenTiedostotInput
-): Promise<API.LadattavatTiedostot> {
-  const hyvaksymisEsitys = projekti.julkaistuHyvaksymisEsitys;
-  if (!hyvaksymisEsitys) {
-    throw new Error("Hyvaksymisesitystä ei löytynyt");
-  }
-  const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
-    ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, hyvaksymisEsitys?.aineistopaketti)
-    : null;
-  return await createLadattavatTiedostot(projekti, hyvaksymisEsitys, aineistopaketti);
 }
