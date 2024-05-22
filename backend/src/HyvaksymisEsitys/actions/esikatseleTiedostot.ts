@@ -29,5 +29,6 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
     laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+    lisatiedot: muokattavaHyvaksymisEsitys.lisatiedot,
   };
 }

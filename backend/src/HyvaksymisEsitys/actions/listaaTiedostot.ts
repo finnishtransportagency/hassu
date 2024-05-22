@@ -52,6 +52,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+      lisatiedot: hyvaksymisEsitys.lisatiedot,
     };
   } else {
     throw new NotFoundError(`Projektia ${oid} ei löydy`);
