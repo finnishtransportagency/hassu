@@ -1,4 +1,4 @@
-import { log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
+import { auditLog, log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
@@ -255,6 +255,7 @@ export class VelhoClient {
     try {
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
       const projekti = projektiDataUpdater(loadProjektiResponse.data);
+      auditLog.info("Päivitetään velhoprojekti", { velho: { oid, projekti } });
       await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
