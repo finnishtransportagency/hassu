@@ -32,7 +32,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
       return Promise.resolve({
         __typename: "HyvaksymisEsityksenAineistot",
-        suunnitelmanNimi: "TODO", //TODO
+        suunnitelmanNimi: projekti.velho!.nimi,
         poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
         linkkiVanhentunut: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
