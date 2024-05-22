@@ -123,11 +123,13 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
     const nimet = ladattavatTiedostotList.map(({ nimi }) => nimi);
     const expectedFileNames = [
-      ...TEST_PROJEKTI_FILES.map((file) => file.nimi)
+      ...TEST_PROJEKTI_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)) // ei saametiedostoja
+        .map((file) => file.nimi)
         .filter((nimi) => !nimi.includes("lähetekirje"))
         .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
         .filter((nimi) => !nimi.includes("nähtävilläoloaineisto")),
-      ...TEST_HYVAKSYMISESITYS_FILES.map((file) => file.nimi)
+      ...TEST_HYVAKSYMISESITYS_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)) // ei saametiedostoja
+        .map((file) => file.nimi)
         .filter((nimi) => !nimi.includes("hyvaksymisEsitys"))
         .filter((nimi) => !nimi.includes("muistutukset"))
         .filter((nimi) => !nimi.includes("muuAineistoVelhosta")),

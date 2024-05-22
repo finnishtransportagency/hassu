@@ -253,7 +253,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       listaaHyvaksymisEsityksenTiedostotInput: { hash },
     });
     expect(response).to.eql({
-      __typename: "LadattavatTiedostot",
+      __typename: "HyvaksymisEsityksenAineistot",
       poistumisPaiva: "2033-01-01",
       linkkiVanhentunut: true,
       projektipaallikonYhteystiedot: {

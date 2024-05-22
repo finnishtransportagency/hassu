@@ -128,11 +128,27 @@ const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> 
 
 export const TEST_PROJEKTI: Pick<DBProjekti, "oid"> & DeepPartial<DBProjekti> = {
   oid: "Testi1",
+  velho: {
+    nimi: "Projektin nimi",
+    asiatunnusVayla: "asiatunnusVayla",
+    suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+  },
+  kielitiedot: {
+    ensisijainenKieli: API.Kieli.SUOMI,
+    toissijainenKieli: API.Kieli.RUOTSI,
+    projektinNimiVieraskielella: "Ruotsinkielinen nimi",
+  },
   versio: 1,
   aloitusKuulutusJulkaisut: [TEST_ALOITUSKUULUTUS_JULKAISU],
   vuorovaikutusKierrosJulkaisut: [TEST_VUOROVAIKUTUS_KIERROS_JULKAISU, TEST_VUOROVAIKUTUS_KIERROS_JULKAISU2],
   nahtavillaoloVaiheJulkaisut: [TEST_NAHTAVILLAOLOVAIHE_JULKAISU],
   salt: "salt",
+  kayttoOikeudet: [
+    {
+      kayttajatunnus: "theadminuid",
+      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    },
+  ],
 };
 
 export const TEST_PROJEKTI_FILES: { tiedosto: string; nimi: string }[] = [
