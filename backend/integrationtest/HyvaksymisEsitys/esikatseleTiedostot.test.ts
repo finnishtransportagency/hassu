@@ -15,8 +15,7 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
   const oid = "Testi1";
-  const alternativeHyvaksymisEsitysName = `hyvaksymisEsitys äöå ALTERNATIVE.png`;
-  const alternativeHyvaksymisEsitysUuid = `hyvaksymis-esitys-uuid-ALT`;
+
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
@@ -31,17 +30,11 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       })
     );
     // Aseta muokattavalle hyväksymisesitykselle tiedostoja S3:een.
-    // Yksi tiedostoista on eri kuin hyväksytyllä hyväksymisesityksellä.
     await Promise.all(
       TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
-        if (!path.includes("hyvaksymisEsitys")) {
-          const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
-          await insertYllapitoFileToS3(fullpath);
-        }
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
       })
-    );
-    await insertYllapitoFileToS3(
-      `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(alternativeHyvaksymisEsitysName)}`
     );
     // Aseta julkaistulle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
@@ -66,6 +59,16 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   });
 
   it("antaa oikeat tiedostot", async () => {
+    /**
+     * Testataan, että esikatselussa tulee oikea tiedosto esille.
+     * Laitetaan siksi db:n muokattavan hyväksymiseistyksen yksi tiedosto
+     * eriksi kuin julkaistun hyväksymisesityksen.
+     */
+    const alternativeHyvaksymisEsitysName = `hyvaksymisEsitys äöå ALTERNATIVE.png`;
+    const alternativeHyvaksymisEsitysUuid = `hyvaksymis-esitys-uuid-ALT`;
+    await insertYllapitoFileToS3(
+      `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(alternativeHyvaksymisEsitysName)}`
+    );
     const projektiInDB = {
       ...TEST_PROJEKTI,
       muokattavaHyvaksymisEsitys: {
@@ -87,6 +90,10 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     };
     await insertProjektiToDB(projektiInDB);
     userFixture.loginAsAdmin();
+    /**
+     * Laitetaan inputiin dataa, joka ei ole vielä DB:ssä.
+     * Sen pitäisi tulla esikatseluun näkyviin.
+     */
     const alternativeMuistutuksetName = "muistutukset äöå 2.png";
     const alternativeMuuAineistoVelhostaName = "muuAineistoVelhosta äöå 2.png";
     const input: API.HyvaksymisEsitysInput = {
@@ -115,6 +122,9 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       ],
     };
     const ladattavatTiedostot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    /**
+     * Kerätään saadut tiedostot kasaan.
+     */
     const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
       if (Array.isArray(value)) {
         acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
@@ -122,6 +132,11 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
     const nimet = ladattavatTiedostotList.map(({ nimi }) => nimi);
+    /**
+     * Tiedostojen joukossa ei pitäisi olla tässä poisfiltteröityjä tiedostoja,
+     * mutta kaikki muu pitäisi olla. Lisäksi pitäisi olla lopussa mainitut kolme tiedostoa,
+     * jotka asetimme testissä.
+     */
     const expectedFileNames = [
       ...TEST_PROJEKTI_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)) // ei saametiedostoja
         .map((file) => file.nimi)
@@ -146,6 +161,10 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       aloitusKuulutuJulkaisut: [
         {
           ...TEST_PROJEKTI.aloitusKuulutusJulkaisut?.[0],
+          /**
+           * Tämänmuotoista dataa on oikeasti DB:ssä projektille,
+           * joka EI ole saamenkielinen
+           */
           aloituskuulutusSaamePDFt: {
             POHJOISSAAME: {},
           },
