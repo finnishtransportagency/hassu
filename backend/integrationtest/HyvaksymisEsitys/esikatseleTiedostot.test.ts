@@ -137,4 +137,34 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     ];
     expect(nimet.sort()).to.eql(expectedFileNames.sort());
   });
+
+  it("ei mene sekaisin siitä, että aloituskuulutuksella on tyhjä objekti pohjoissaame-pdf:ssä", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      aloitusKuulutuJulkaisut: [
+        {
+          ...TEST_PROJEKTI.aloitusKuulutusJulkaisut?.[0],
+          aloituskuulutusSaamePDFt: {
+            POHJOISSAAME: {},
+          },
+        },
+      ],
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const input: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+    };
+    const kutsu = esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    await expect(kutsu).to.be.eventually.fulfilled;
+  });
 });
