@@ -145,6 +145,9 @@ export const TEST_PROJEKTI: Pick<DBProjekti, "oid"> & DeepPartial<DBProjekti> = 
   salt: "salt",
   kayttoOikeudet: [
     {
+      etunimi: "Etunimi",
+      sukunimi: "Sukunimi",
+      email: "email@email.com",
       kayttajatunnus: "theadminuid",
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
     },
