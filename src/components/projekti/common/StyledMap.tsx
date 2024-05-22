@@ -47,8 +47,8 @@ import debounce from "lodash/debounce";
 import { getUid } from "ol/util";
 import InfoControl from "src/map/control/KiinteistoInfoControl";
 import intersect from "@turf/intersect";
-import { multiPolygon, polygon } from "@turf/turf";
-import { MultiPolygon, Polygon } from "ol/geom";
+import { lineString, lineStringToPolygon, multiPolygon, polygon } from "@turf/turf";
+import { MultiPolygon, Polygon, LineString } from "ol/geom";
 import Feature from "ol/Feature";
 import uniqBy from "lodash/uniqBy";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -465,7 +465,7 @@ function getAddFeatureHandler(
             }
           } catch (e) {
             if (e instanceof UnsupportedGeometryTypeError) {
-              showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon ja MultiPolygon");
+              showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
             } else if (e instanceof GeometryExceedsAreaLimitError) {
               showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
             } else {
@@ -480,7 +480,7 @@ function getAddFeatureHandler(
   };
 }
 
-async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polygon | MultiPolygon): Promise<void> {
+async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polygon | MultiPolygon | LineString): Promise<void> {
   const geomUid = getUid(geom);
 
   const chunkSquareSideLength = 1400;
@@ -515,8 +515,10 @@ async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polyg
     }
     if (geom instanceof MultiPolygon) {
       return intersect(multiPolygon(geom.getCoordinates()), polygon(g.getCoordinates()));
-    } else {
+    } else if (geom instanceof Polygon) {
       return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
+    } else {
+      return intersect(lineStringToPolygon(lineString(geom.getCoordinates())), polygon(g.getCoordinates()));
     }
   });
 
@@ -615,8 +617,8 @@ export function createVectorLayer(source: VectorSource<Geometry>): VectorLayer<V
 
 const MAXIMUM_AREA = 9999999;
 const validateSelection = (geom: Geometry | undefined): geom is Polygon => {
-  if (!(geom instanceof Polygon || geom instanceof MultiPolygon)) {
-    throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon ja MultiPolygon");
+  if (!(geom instanceof Polygon || geom instanceof MultiPolygon || geom instanceof LineString)) {
+    throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
   }
   if (getArea(geom, { projection }) > MAXIMUM_AREA) {
     throw new GeometryExceedsAreaLimitError("Rajaus on liian suuri. Tee pienempi rajaus.");
@@ -688,7 +690,7 @@ export function getControls({
         showErrorMessage(
           `${suodatetut.length ? "Osa karttarajauksen geometrioista" : "Karttarajauksen geometriat"} suodatettiin pois.` +
             (unsupportedGeometryError
-              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-tyyppisiä geometrioita."
+              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-, MultiPolygon- ja LineString-tyyppisiä geometrioita."
               : "") +
             (areaLimitError ? " Karttarajaus on liian suuri. Tee karttarajauksesta pienempi." : "")
         );
