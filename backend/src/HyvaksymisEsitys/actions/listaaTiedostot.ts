@@ -8,6 +8,7 @@ import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI
 import { fileService } from "../../files/fileService";
 import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
 import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
+import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -45,12 +46,10 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       __typename: "HyvaksymisEsityksenAineistot",
       ...ladattavatTiedostot,
       aineistopaketti,
-      suunnitelmanNimi: "TODO",
-      asiatunnus: "TODO",
-      laskutustiedot: {
-        //TODO
-        __typename: "Laskutustiedot",
-      },
+      suunnitelmanNimi: projekti.velho!.nimi,
+      asiatunnus: projekti.velho!.asiatunnusVayla,
+      vastuuorganisaatio: projekti.velho!.toteuttavaOrganisaatio,
+      laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
     };
