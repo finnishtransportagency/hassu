@@ -11,6 +11,7 @@ export type ProjektiTiedostoineen = Pick<
   | "salt"
   | "kielitiedot"
   | "kayttoOikeudet"
+  | "velho"
   | "aloitusKuulutusJulkaisut"
   | "vuorovaikutusKierrosJulkaisut"
   | "nahtavillaoloVaiheJulkaisut"
@@ -30,6 +31,7 @@ export default async function haeHyvaksymisEsityksenTiedostoTiedot(oid: string):
       "salt, " +
       "kielitiedot, " +
       "kayttoOikeudet, " +
+      "velho, " +
       "aloitusKuulutusJulkaisut, " +
       "vuorovaikutusKierrosJulkaisut, " +
       "nahtavillaoloVaiheJulkaisut, " +

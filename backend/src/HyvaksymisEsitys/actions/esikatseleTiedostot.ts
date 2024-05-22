@@ -5,6 +5,7 @@ import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "../
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../../util/assertions";
+import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 
 export default async function esikatseleHyvaksymisEsityksenTiedostot({
   oid,
@@ -21,12 +22,11 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
     __typename: "HyvaksymisEsityksenAineistot",
     ...ladattavatTiedostot,
     aineistopaketti: "(esikatselu)",
-    suunnitelmanNimi: "TODO",
-    asiatunnus: "TODO",
-    laskutustiedot: {
-      //TODO
-      __typename: "Laskutustiedot",
-    },
+    ...ladattavatTiedostot,
+    suunnitelmanNimi: dbProjekti.velho!.nimi,
+    asiatunnus: dbProjekti.velho!.asiatunnusVayla,
+    vastuuorganisaatio: dbProjekti.velho!.toteuttavaOrganisaatio,
+    laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
   };
