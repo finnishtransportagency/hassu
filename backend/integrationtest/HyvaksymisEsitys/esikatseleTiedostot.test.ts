@@ -10,6 +10,7 @@ import { esikatseleHyvaksymisEsityksenTiedostot } from "../../src/HyvaksymisEsit
 import { expect } from "chai";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
+import omit from "lodash/omit";
 
 describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   const userFixture = new UserFixture(userService);
@@ -187,5 +188,42 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     };
     const kutsu = esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
     await expect(kutsu).to.be.eventually.fulfilled;
+  });
+
+  it("antaa oikeat lisätiedot projektille", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const input: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+    };
+    const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    expect(tiedot.suunnitelmanNimi).to.eql("Projektin nimi");
+    expect(tiedot.poistumisPaiva).to.eq("2033-01-01");
+    expect(tiedot.asiatunnus).to.eql("asiatunnusVayla");
+    expect(tiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
+    expect(tiedot.lisatiedot).to.eql("Lisätietoja");
+    expect(omit(tiedot.laskutustiedot, "__typename")).to.eql(TEST_HYVAKSYMISESITYS.laskutustiedot);
+    expect(tiedot.projektipaallikonYhteystiedot).to.eql({
+      __typename: "ProjektiKayttajaJulkinen",
+      elyOrganisaatio: undefined,
+      email: "email@email.com",
+      etunimi: "Etunimi",
+      organisaatio: undefined,
+      projektiPaallikko: true,
+      puhelinnumero: undefined,
+      sukunimi: "Sukunimi",
+    });
   });
 });
