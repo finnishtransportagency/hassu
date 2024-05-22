@@ -116,7 +116,10 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
     const nimet = ladattavatTiedostotList.map(({ nimi }) => nimi);
-    const expectedFileNames = [...TEST_PROJEKTI_FILES.map((file) => file.nimi), ...TEST_HYVAKSYMISESITYS_FILES.map((file) => file.nimi)]
+    const expectedFileNames = [
+      ...TEST_PROJEKTI_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)).map((file) => file.nimi), // ei saametiedostoja
+      ...TEST_HYVAKSYMISESITYS_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)).map((file) => file.nimi), // ei saametiedostoja
+    ]
       .filter((nimi) => !nimi.includes("lähetekirje"))
       .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
       .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
