@@ -210,11 +210,8 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     };
     const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
     expect(tiedot.suunnitelmanNimi).to.eql("Projektin nimi");
-    expect(tiedot.poistumisPaiva).to.eq("2033-01-01");
     expect(tiedot.asiatunnus).to.eql("asiatunnusVayla");
     expect(tiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
-    expect(tiedot.lisatiedot).to.eql("Lisätietoja");
-    expect(omit(tiedot.laskutustiedot, "__typename")).to.eql(TEST_HYVAKSYMISESITYS.laskutustiedot);
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
       elyOrganisaatio: undefined,
@@ -225,5 +222,37 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       puhelinnumero: undefined,
       sukunimi: "Sukunimi",
     });
+  });
+
+  it("antaa oikeat lisätiedot hyväksymisesitykselle", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        /**
+         * Laitetaan eri poistumospäivä julkaistulle kuin muokattavalle
+         */
+        poistumisPaiva: "2099-01-01",
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const input: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+      /**
+       * Laitetaan inputiin eri lisätieto kuin DB:ssä
+       */
+      lisatiedot: "Kissa",
+    };
+    const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    expect(tiedot.poistumisPaiva).to.eq("2033-01-01"); // Sama kuin muokattavalla ja inputissa
+    expect(tiedot.lisatiedot).to.eql("Kissa"); // Sama kuin inputissa
+    expect(omit(tiedot.laskutustiedot, "__typename")).to.eql(TEST_HYVAKSYMISESITYS.laskutustiedot);
   });
 });
