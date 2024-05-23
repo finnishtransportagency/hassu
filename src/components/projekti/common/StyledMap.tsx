@@ -467,6 +467,7 @@ function getAddFeatureHandler(
             if (e instanceof UnsupportedGeometryTypeError) {
               showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
             } else if (e instanceof GeometryExceedsAreaLimitError) {
+              console.log(e);
               showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
             } else {
               showErrorMessage("Kiinteistötietojen hakeminen epäonnistui.");
@@ -666,7 +667,11 @@ export function getControls({
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
       const featuresWithoutLines = features.filter((feat) => !(feat.getGeometry() instanceof LineString));
-      const suodatetut = featuresWithoutLines.filter((feat) => {
+      const linePolygons = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
+        const geom = feat.getGeometry() as LineString;
+        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
+      });
+      const suodatetut = featuresWithoutLines.concat(linePolygons).filter((feat) => {
         try {
           validateSelection(feat.getGeometry());
           return true;
@@ -677,11 +682,6 @@ export function getControls({
         }
         return false;
       });
-      const lines = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
-        const geom = feat.getGeometry() as LineString;
-        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
-      });
-      suodatetut.push(...lines);
       source.clear();
       source.addFeatures(suodatetut);
       zoomToExtent(view, source.getExtent());
