@@ -47,8 +47,8 @@ import debounce from "lodash/debounce";
 import { getUid } from "ol/util";
 import InfoControl from "src/map/control/KiinteistoInfoControl";
 import intersect from "@turf/intersect";
-import { multiPolygon, polygon } from "@turf/turf";
-import { MultiPolygon, Polygon } from "ol/geom";
+import { lineString, lineStringToPolygon, multiPolygon, polygon } from "@turf/turf";
+import { MultiPolygon, Polygon, LineString } from "ol/geom";
 import Feature from "ol/Feature";
 import uniqBy from "lodash/uniqBy";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -465,7 +465,7 @@ function getAddFeatureHandler(
             }
           } catch (e) {
             if (e instanceof UnsupportedGeometryTypeError) {
-              showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon ja MultiPolygon");
+              showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
             } else if (e instanceof GeometryExceedsAreaLimitError) {
               showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
             } else {
@@ -665,7 +665,12 @@ export function getControls({
     button: createElement(<Button title="Tuo karttatiedosto">Tuo karttatiedosto</Button>, "div").firstElementChild as HTMLButtonElement,
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
-      const suodatetut = features.filter((feat) => {
+      const featuresWithoutLines = features.filter((feat) => !(feat.getGeometry() instanceof LineString));
+      const linePolygons = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
+        const geom = feat.getGeometry() as LineString;
+        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
+      });
+      const suodatetut = featuresWithoutLines.concat(linePolygons).filter((feat) => {
         try {
           validateSelection(feat.getGeometry());
           return true;
@@ -676,7 +681,6 @@ export function getControls({
         }
         return false;
       });
-
       source.clear();
       source.addFeatures(suodatetut);
       zoomToExtent(view, source.getExtent());
@@ -688,7 +692,7 @@ export function getControls({
         showErrorMessage(
           `${suodatetut.length ? "Osa karttarajauksen geometrioista" : "Karttarajauksen geometriat"} suodatettiin pois.` +
             (unsupportedGeometryError
-              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-tyyppisiä geometrioita."
+              ? " Karttarajaus sisältää ei tuettuja geometriatyyppejä. Tällä hetkellä järjestelmä tukee vain Polygon-, MultiPolygon- ja LineString-tyyppisiä geometrioita."
               : "") +
             (areaLimitError ? " Karttarajaus on liian suuri. Tee karttarajauksesta pienempi." : "")
         );
