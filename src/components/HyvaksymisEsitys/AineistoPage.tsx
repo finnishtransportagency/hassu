@@ -1,17 +1,20 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
 import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { HyvaksymisEsityksenAineistot } from "@services/api";
+import { HyvaksymisEsityksenAineistot, LadattavaTiedosto } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
-import { H1, H2, H3, H4 } from "@components/Headings";
+import { H1, H2, H3, H4, H5 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
 import useTranslation from "next-translate/useTranslation";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import HassuAccordion from "@components/HassuAccordion";
+import { kuntametadata } from "common/kuntametadata";
 
 export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: boolean }): ReactElement {
   const {
@@ -25,8 +28,25 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     vastuuorganisaatio,
     laskutustiedot,
     projektipaallikonYhteystiedot,
+    hyvaksymisEsitys,
+    kuntaMuistutukset,
+    lausunnot,
+    maanomistajaluettelo,
+    kuulutuksetJaKutsu,
+    muutAineistot,
   } = props;
 
+  const muistutukset = useMemo(() => {
+    const ret: Record<string, LadattavaTiedosto[]> = {};
+    kuntaMuistutukset?.forEach(({ kunta, __typename, ...ladattavaTiedosto }) => {
+      if (kunta) {
+        const muistutukset = ret[kunta] ?? [];
+        muistutukset.push({ __typename: "LadattavaTiedosto", ...ladattavaTiedosto });
+        ret[kunta] = muistutukset;
+      }
+    });
+    return ret;
+  }, [kuntaMuistutukset]);
   const { t } = useTranslation();
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
@@ -109,7 +129,13 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
         <H3>Hyväksymisesitys</H3>
-        <div>TODO</div>
+        <ul style={{ listStyle: "none" }}>
+          {hyvaksymisEsitys?.map((tiedosto, index) => (
+            <li key={index}>
+              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+            </li>
+          ))}
+        </ul>
         <H3>Suunnitelma</H3>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
@@ -119,13 +145,88 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       </Section>
       <Section>
         <H2>Vuorovaikutus</H2>
-        <H3>TODO Muistutukset</H3>
-        <H3>TODO Lausunnot</H3>
-        <H3>TODO Maanomistajaluettelo</H3>
-        <H3>TODO Kuulutukset ja kutsu vuorovaikutukseen</H3>
+        <HassuAccordion
+          items={[
+            {
+              id: "1",
+              title: <H3 sx={{ margin: 0 }}>Muistutukset</H3>,
+              content: (
+                <div>
+                  {Object.keys(muistutukset).map((kunta) => (
+                    <div key={kunta} style={{ marginTop: "1em" }}>
+                      <H5>{kuntametadata.nameForKuntaId(parseInt(kunta), "fi")}</H5>
+                      <ul style={{ listStyle: "none" }}>
+                        {muistutukset[kunta]?.map((tiedosto, index) => (
+                          <li key={index}>
+                            <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ),
+            },
+            {
+              id: "2",
+              title: <H3 sx={{ margin: 0 }}>Lausunnot</H3>,
+              content: (
+                <ul style={{ listStyle: "none" }}>
+                  {lausunnot?.map((tiedosto, index) => (
+                    <li key={index}>
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                    </li>
+                  ))}
+                </ul>
+              ),
+            },
+            {
+              id: "3",
+              title: <H3 sx={{ margin: 0 }}>Maanomistajaluettelo</H3>,
+              content: (
+                <ul style={{ listStyle: "none" }}>
+                  {maanomistajaluettelo?.map((tiedosto, index) => (
+                    <li key={index}>
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                    </li>
+                  ))}
+                </ul>
+              ),
+            },
+            {
+              id: "4",
+              title: <H3 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H3>,
+              content: (
+                <ul style={{ listStyle: "none" }}>
+                  {kuulutuksetJaKutsu?.map((tiedosto, index) => (
+                    <li key={index}>
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                    </li>
+                  ))}
+                </ul>
+              ),
+            },
+          ]}
+        />
       </Section>
-      <Section>
-        <H2>TODO Muu tekninen aineisto</H2>
+      <Section noDivider>
+        <HassuAccordion
+          items={[
+            {
+              id: "3",
+              title: <H2 sx={{ margin: 0 }}>Muu tekninen aineisto</H2>,
+              content: (
+                <ul style={{ listStyle: "none" }}>
+                  {muutAineistot?.map((tiedosto, index) => (
+                    <li key={index}>
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                    </li>
+                  ))}
+                </ul>
+              ),
+            },
+          ]}
+        />
       </Section>
       {aineistopaketti && (
         <Section noDivider>
