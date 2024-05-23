@@ -31,7 +31,6 @@ import { Status } from "hassu-common/graphql/apiModel";
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
-  "vuorovaikutusKierrosJulkaisut",
   "nahtavillaoloVaiheJulkaisut",
   "hyvaksymisPaatosVaiheJulkaisut",
   "julkaistuHyvaksymisEsitys",
