@@ -617,8 +617,8 @@ export function createVectorLayer(source: VectorSource<Geometry>): VectorLayer<V
 
 const MAXIMUM_AREA = 9999999;
 const validateSelection = (geom: Geometry | undefined): geom is Polygon => {
-  if (!(geom instanceof Polygon || geom instanceof MultiPolygon || geom instanceof LineString)) {
-    throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
+  if (!(geom instanceof Polygon || geom instanceof MultiPolygon)) {
+    throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon ja MultiPolygon");
   }
   if (getArea(geom, { projection }) > MAXIMUM_AREA) {
     throw new GeometryExceedsAreaLimitError("Rajaus on liian suuri. Tee pienempi rajaus.");
@@ -667,7 +667,8 @@ export function getControls({
     button: createElement(<Button title="Tuo karttatiedosto">Tuo karttatiedosto</Button>, "div").firstElementChild as HTMLButtonElement,
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
-      const suodatetut = features.filter((feat) => {
+      const featuresWithoutLines = features.filter((feat) => !(feat.getGeometry() instanceof LineString));
+      const suodatetut = featuresWithoutLines.filter((feat) => {
         try {
           validateSelection(feat.getGeometry());
           return true;
@@ -678,7 +679,11 @@ export function getControls({
         }
         return false;
       });
-
+      const lines = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
+        const geom = feat.getGeometry() as LineString;
+        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
+      });
+      suodatetut.push(...lines);
       source.clear();
       source.addFeatures(suodatetut);
       zoomToExtent(view, source.getExtent());
