@@ -9,7 +9,7 @@ export default function LadattavaTiedostoComponent({ tiedosto, esikatselu }: { t
   if (!tiedosto.linkki || esikatselu) {
     return (
       <>
-        {tiedosto.nimi} ({fileType} {tuotu}) {!tiedosto.linkki && "(ODOTTAA TUONTIA)"}
+        {tiedosto.nimi} ({fileType}) {tuotu} {!tiedosto.linkki && "(ODOTTAA TUONTIA)"}
       </>
     );
   } else {
@@ -17,7 +17,7 @@ export default function LadattavaTiedostoComponent({ tiedosto, esikatselu }: { t
       <ExtLink className="file_download" href={tiedosto.linkki} sx={{ mr: 3 }}>
         {tiedosto.nimi}{" "}
         <span className="text-black ml-2">
-          ({fileType} {tuotu})
+          ({fileType}) {tuotu}
         </span>
       </ExtLink>
     );
