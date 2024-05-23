@@ -480,7 +480,7 @@ function getAddFeatureHandler(
   };
 }
 
-async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polygon | MultiPolygon | LineString): Promise<void> {
+async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polygon | MultiPolygon): Promise<void> {
   const geomUid = getUid(geom);
 
   const chunkSquareSideLength = 1400;
@@ -515,10 +515,8 @@ async function loadGeometries(geoJsonSource: VectorSource<Geometry>, geom: Polyg
     }
     if (geom instanceof MultiPolygon) {
       return intersect(multiPolygon(geom.getCoordinates()), polygon(g.getCoordinates()));
-    } else if (geom instanceof Polygon) {
-      return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
     } else {
-      return intersect(lineStringToPolygon(lineString(geom.getCoordinates())), polygon(g.getCoordinates()));
+      return intersect(polygon(geom.getCoordinates()), polygon(g.getCoordinates()));
     }
   });
 
