@@ -36,6 +36,8 @@ import { allowedFileTypes } from "common/fileValidationSettings";
 import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
+import { useRouter } from "next/router";
+import { getSuomiFiLogoutURL } from "@services/userService";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -64,10 +66,14 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
 };
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
+  const router = useRouter();
   const { t, lang } = useTranslation();
-
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
-
+  const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
+  const closeSessioDialog = useCallback(() => {
+    setSessioVanhentunut(false);
+    router.push(getSuomiFiLogoutURL());
+  }, [router]);
   const { data: suomifiUser } = useSuomifiUser();
 
   const formOptions: UseFormProps<MuistutusInputForm> = {
@@ -116,6 +122,11 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 }
               })
             );
+            const suomiFiUser = await api.getCurrentSuomifiUser();
+            if (suomiFiUser?.suomifiEnabled && !suomiFiUser?.tunnistautunut) {
+              setSessioVanhentunut(true);
+              return;
+            }
             await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
             showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
             setKiitosDialogiOpen(true);
@@ -355,6 +366,14 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         </ContentSpacer>
       </ContentSpacer>
       <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} />
+      <HassuDialog open={sessioVanhentunut} title={t("common:istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
+        <DialogContent>
+          <p>{t("common:istunto_vanhentunut_teksti")}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSessioDialog}>{t("sulje")}</Button>
+        </DialogActions>
+      </HassuDialog>
     </Section>
   );
 }

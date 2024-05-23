@@ -196,5 +196,7 @@
   "valitse": "Valitse",
   "pdf_saavutettava_label": "Linkki PDF-tiedostoon {{tiedostoNimi}} {{pvm}}",
   "kirjautuminen_onnistui": "Tunnistautuminen onnistui",
-  "kirjautuminen_ohje": "Tunnistautuneena voit jättää muistutuksen suunnitelmasta. Muistutuksen voi jättää vain suunnitelmaan, jonka kuulutus suunnitelman nähtäville asettamisesta on julkaistu."
+  "kirjautuminen_ohje": "Tunnistautuneena voit jättää muistutuksen suunnitelmasta. Muistutuksen voi jättää vain suunnitelmaan, jonka kuulutus suunnitelman nähtäville asettamisesta on julkaistu.",
+  "istunto_vanhentunut": "Istunto vanhentunut",
+  "istunto_vanhentunut_teksti": "Et ole käyttänyt palvelua 30 minuuttiin ja sinut on kirjattu automaattisesti ulos."
 }
