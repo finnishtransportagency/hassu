@@ -4,6 +4,7 @@ import { getS3Client } from "../../aws/client";
 import { CopyObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
+import { assertIsDefined } from "../../util/assertions";
 
 /**
  * Persistoi yksittäisen tiedoston, joka on tallennettu uploads-kansioon, annetun vaiheen alle ylläpito-bucketiin
@@ -22,10 +23,11 @@ export async function persistFile({
   vaihePrefix,
 }: {
   oid: string;
-  ladattuTiedosto: { tiedosto: string; nimi: string; avain: string };
+  ladattuTiedosto: { tiedosto?: string | null; nimi: string; avain: string };
   vaihePrefix: string;
 }): Promise<void> {
   const { tiedosto, nimi, avain } = ladattuTiedosto;
+  assertIsDefined(tiedosto, "Tiedoston on oltava  määritelty");
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
   const targetPath = joinPath(getYllapitoPathForProjekti(oid), vaihePrefix, avain, adaptFileName(nimi));
   try {
