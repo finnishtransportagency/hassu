@@ -15,9 +15,5 @@ export default function EsikatseleHyvaksymisEsitys(): ReactElement {
     return <></>;
   }
 
-  const { suunnitelma, poistumisPaiva, aineistopaketti } = data;
-
-  return (
-    <HyvaksymisEsitysAineistoPage aineistopaketti={aineistopaketti} suunnitelma={suunnitelma} poistumisPaiva={poistumisPaiva} esikatselu />
-  );
+  return <HyvaksymisEsitysAineistoPage {...data} esikatselu />;
 }
