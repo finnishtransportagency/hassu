@@ -24,7 +24,7 @@ type ContextProps = {
   ohjeetOnOpen: () => void;
 };
 
-export const ProjektiPageLayoutContext = createContext<ContextProps>({ ohjeetOnClose: () => {}, ohjeetOnOpen: () => {}, ohjeetOpen: true});
+export const ProjektiPageLayoutContext = createContext<ContextProps>({ ohjeetOnClose: () => {}, ohjeetOnOpen: () => {}, ohjeetOpen: true });
 
 export default function ProjektiPageLayout({ children, title, contentAsideTitle, vaihe, showInfo }: Readonly<Props>): ReactElement {
   const { data: projekti } = useProjekti();

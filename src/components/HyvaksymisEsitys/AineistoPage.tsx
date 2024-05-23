@@ -1,40 +1,43 @@
 import React, { ReactElement } from "react";
 import Section from "@components/layout/Section2";
 import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { KunnallinenLadattavaTiedosto, LadattavaTiedosto, ProjektiKayttajaJulkinen } from "@services/api";
+import { HyvaksymisEsityksenAineistot } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import { H1, H2, H3, H4 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
-import { Stack } from "@mui/material";
 import SectionContent from "@components/layout/SectionContent";
+import HassuGrid from "@components/HassuGrid";
+import HassuGridItem from "@components/HassuGridItem";
+import useTranslation from "next-translate/useTranslation";
 
-type Props = {
-  projektinNimi?: string | null;
-  esikatselu?: boolean;
-  aineistopaketti: string | null | undefined;
-  poistumisPaiva: string;
-  linkkiVanhentunut?: boolean | null;
-  hyvaksymisEsitys?: Array<LadattavaTiedosto> | null;
-  suunnitelma?: Array<LadattavaTiedosto> | null;
-  kuntaMuistutukset?: Array<KunnallinenLadattavaTiedosto> | null;
-  lausunnot?: Array<LadattavaTiedosto> | null;
-  kuulutuksetJaKutsu?: Array<LadattavaTiedosto> | null;
-  muutAineistot?: Array<LadattavaTiedosto> | null;
-  maanomistajaluettelo?: Array<LadattavaTiedosto> | null;
-  projektipaallikonYhteystiedot?: ProjektiKayttajaJulkinen | null;
-};
+export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: boolean }): ReactElement {
+  const {
+    aineistopaketti,
+    suunnitelmanNimi,
+    suunnitelma,
+    poistumisPaiva,
+    pyydetaanKiireellistaKasittelya,
+    lisatiedot,
+    asiatunnus,
+    vastuuorganisaatio,
+    laskutustiedot,
+    projektipaallikonYhteystiedot,
+  } = props;
 
-export default function HyvaksymisEsitysAineistoPage(props: Props): ReactElement {
-  const { aineistopaketti, projektinNimi, suunnitelma, poistumisPaiva } = props;
+  const { t } = useTranslation();
+
+  const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
+    ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
+    : projektipaallikonYhteystiedot?.organisaatio;
 
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
       <H2 variant="lead" sx={{ mt: 8, mb: 8 }}>
-        {projektinNimi}
+        {suunnitelmanNimi}
       </H2>
       {props.esikatselu && (
         <Notification type={NotificationType.INFO_GRAY}>
@@ -42,24 +45,64 @@ export default function HyvaksymisEsitysAineistoPage(props: Props): ReactElement
           välilehteen yksi kerrallaan.
         </Notification>
       )}
-      <Section>
+      <Section noDivider>
         <p>
           Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
         </p>
         <SectionContent>
-          <H4>Pyydetään kiireellistä käsittelyä: //TODO</H4>
+          <H4>Pyydetään kiireellistä käsittelyä: {pyydetaanKiireellistaKasittelya ? "KYLLÄ" : "EI"}</H4>
         </SectionContent>
         <SectionContent>
           <H4>Lisätietoa vastaanottajalle</H4>
-          <p>TODO</p>
+          <p>{lisatiedot}</p>
         </SectionContent>
+      </Section>
+      <Section noDivider>
         <SectionContent>
-          <H4>Laskutustiedot hyväksymismaksua varten</H4>
-          <Stack>TODO</Stack>
+          <H2>Laskutustiedot hyväksymismaksua varten</H2>
+          <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
+            <HassuGridItem colSpan={1}>
+              <H4>Suunnitelman nimi</H4>
+              <p>{suunnitelmanNimi}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={2}>
+              <H4>Asiatunnus</H4>
+              <p>{asiatunnus}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={1}>
+              <H4>Vastuuorganisaatio</H4>
+              <p>{vastuuorganisaatio}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={2}>
+              <H4>Y-tunnus</H4>
+              <p>{laskutustiedot?.yTunnus ? laskutustiedot.yTunnus : "-"}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={1}>
+              <H4>OVT-tunnus</H4>
+              <p>{laskutustiedot?.ovtTunnus ? laskutustiedot.ovtTunnus : "-"}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={2}>
+              <H4>Verkkolaskuoperaattorin välittäjätunnus</H4>
+              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus}</p>
+            </HassuGridItem>
+            <HassuGridItem colSpan={3}>
+              <H4>Viite</H4>
+              <p>{laskutustiedot?.viitetieto}</p>
+            </HassuGridItem>
+          </HassuGrid>
         </SectionContent>
-        <SectionContent>
-          <H4>Yhteystiedot</H4>
-          <p>TODO</p>
+      </Section>
+      <Section>
+        <SectionContent sx={{ "> p": { marginTop: 0 } }}>
+          <H2 style={{ marginBottom: "0.5em" }}>Yhteystiedot</H2>
+          <p>Lisätietoja antavat</p>
+          <p>
+            {projektipaallikonYhteystiedot?.etunimi} {projektipaallikonYhteystiedot?.sukunimi}, projektipäällikkö
+          </p>
+          <p>puh. {projektipaallikonYhteystiedot?.puhelinnumero}</p>
+          <p>
+            {projektipaallikonYhteystiedot?.email} ({projarinOrganisaatio})
+          </p>
         </SectionContent>
       </Section>
 
