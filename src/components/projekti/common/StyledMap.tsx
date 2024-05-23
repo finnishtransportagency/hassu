@@ -467,7 +467,6 @@ function getAddFeatureHandler(
             if (e instanceof UnsupportedGeometryTypeError) {
               showErrorMessage("Lisätty ei tuettu geometriatyyppi. Tuetut geometriatyypit: Polygon, MultiPolygon ja LineString");
             } else if (e instanceof GeometryExceedsAreaLimitError) {
-              console.log(e);
               showErrorMessage("Rajaus on liian suuri. Tee pienempi rajaus.");
             } else {
               showErrorMessage("Kiinteistötietojen hakeminen epäonnistui.");
