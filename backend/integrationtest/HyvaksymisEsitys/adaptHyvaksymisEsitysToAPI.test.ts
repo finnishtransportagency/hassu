@@ -153,7 +153,8 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       salt: "jotain",
       muokattavaHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
-        tila: API.HyvaksymisTila.HYVAKSYTTY,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+        palautusSyy: "Huono",
       },
       julkaistuHyvaksymisEsitys: {
         ...TEST_HYVAKSYMISESITYS,
@@ -184,7 +185,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "hyvaksymisEsitys äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "hyvaksymis-esitys-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
         },
       ],
       suunnitelma: [
@@ -197,7 +198,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "suunnitelma-uuid",
           tuotu: true,
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/suunnitelma/suunnitelma_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/suunnitelma/suunnitelma_aoa_.png",
         },
       ],
       muistutukset: [
@@ -208,7 +209,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muistutukset-uuid",
           kunta: 1,
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muistutukset/muistutukset äöå .png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muistutukset/muistutukset äöå .png",
         },
       ],
       lausunnot: [
@@ -218,7 +219,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "lausunnot äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "lausunnot-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
         },
       ],
       kuulutuksetJaKutsu: [
@@ -228,7 +229,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "kuulutuksetJaKutsu äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "kuulutuksetJaKutsu-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/kuulutuksenJaKutsu/kuulutuksetJaKutsu_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/kuulutuksenJaKutsu/kuulutuksetJaKutsu_aoa_.png",
         },
       ],
       muuAineistoVelhosta: [
@@ -241,7 +242,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muuAineistoVelhosta-uuid",
           tuotu: true,
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muuAineistoVelhosta/muuAineistoVelhosta_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muuAineistoVelhosta/muuAineistoVelhosta_aoa_.png",
         },
       ],
       muuAineistoKoneelta: [
@@ -251,7 +252,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "muuAineistoKoneelta äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muuAineistoKoneelta-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png",
         },
       ],
       maanomistajaluettelo: [
@@ -261,7 +262,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "maanomistajaluettelo äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "maanomistajaluettelo-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_.png",
         },
       ],
       vastaanottajat: [
@@ -270,7 +271,8 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           sahkoposti: "vastaanottaja@sahkoposti.fi",
         },
       ],
-      tila: "HYVAKSYTTY",
+      tila: "MUOKKAUS",
+      palautusSyy: "Huono",
       hash: "f67cde5bf0977767e610740d0196732784a101160024d848d8c0a894d267d2c276c08b06e5076972480e98cf12a431676b36bf30b7a221415f91f14a9e1186a8",
     });
   });
