@@ -22,6 +22,7 @@ export type Omistaja = {
   nimi?: string;
   henkilotunnus?: string;
   ytunnus?: string;
+  kuolinpvm?: string;
   yhteystiedot?: Yhteystieto;
 };
 
@@ -87,6 +88,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                                   sukunimi: tiedot["y:sukunimi"] ? tiedot["y:sukunimi"][0] : undefined,
                                   ytunnus: tiedot["y:ytunnus"] ? tiedot["y:ytunnus"][0] : undefined,
                                   nimi: tiedot["y:nimi"] ? tiedot["y:nimi"][0] : undefined,
+                                  kuolinpvm: tiedot["y:kuolinpvm"] ? tiedot["y:kuolinpvm"][0] : undefined,
                                 });
                               }
                             }
@@ -218,7 +220,8 @@ export function getMmlClient(options: MmlOptions): MmlClient {
           if (feat?.properties?.yhteyshenkilo[0]) {
             const omistaja = tiekuntaMap.get(feat.id as number);
             if (omistaja && !omistaja.yhteystiedot) {
-              omistaja.nimi = feat.properties.yhteyshenkilo[0].nimi;
+              // tiekunnan nimi sulkuihin
+              omistaja.nimi = feat.properties.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
               omistaja.yhteystiedot = {
                 jakeluosoite: feat.properties.yhteyshenkilo[0].osoite[0]?.osoite,
                 postinumero: feat.properties.yhteyshenkilo[0].osoite[0]?.postinumero,
@@ -261,7 +264,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
               alueMap.set(alue.yhteisalueyksikko.kiinteistotunnus, {
                 kiinteistotunnus: alue.yhteisalueyksikko.kiinteistotunnus,
                 omistajat: [{ nimi: alue.yhteisalueyksikko.nimi }],
-              })
+              });
             }
           }
         }

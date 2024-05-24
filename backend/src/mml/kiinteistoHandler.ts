@@ -142,7 +142,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
               mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }),
               omistaja
             );
-            const key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o, sukunimi: undefined });
+            const key = mapKey({
+              kiinteistotunnus: k.kiinteistotunnus,
+              kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus,
+              ...o,
+              sukunimi: undefined,
+            });
             if (keys.includes(key)) {
               omistajaMapNoLastName.delete(key);
             } else {
@@ -176,6 +181,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
                 henkilotunnus: o.henkilotunnus,
                 ytunnus: o.ytunnus,
               };
+              // lisätään vain kerran sillä lainhuudoissa sama henkilö voi olla monta kertaa
+              if (o.kuolinpvm && !taydennettyOmistaja.sukunimi?.endsWith(" (KP)")) {
+                // KP = Kuolinpesä
+                taydennettyOmistaja.sukunimi = (taydennettyOmistaja.sukunimi ?? "") + " (KP)";
+              }
               const suomifiLahetys = isSuomifiLahetys(taydennettyOmistaja);
               // Täydennetään Suomi.fi tiedotettaville maakoodi, jollei sitä jo ole
               // Tämä tehdään, jotta exceliin ja käyttöliittymälle saadaan aina näkymään maatieto Suomi.fi-tiedotettaville.
@@ -340,16 +350,11 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       ids.push(dbOmistaja.id);
     }
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
-    
   }
   return ids;
 }
 
-async function poistaKiinteistonOmistajat(
-  oid: string,
-  initialOmistajat: DBOmistaja[],
-  poistettavatOmistajat: string[]
-) {
+async function poistaKiinteistonOmistajat(oid: string, initialOmistajat: DBOmistaja[], poistettavatOmistajat: string[]) {
   poistettavatOmistajat.forEach((poistettavaId) => {
     const idFound = initialOmistajat.some((omistaja) => omistaja.id === poistettavaId);
     if (!idFound) {
