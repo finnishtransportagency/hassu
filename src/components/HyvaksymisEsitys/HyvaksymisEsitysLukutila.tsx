@@ -18,6 +18,9 @@ import HassuAccordion from "@components/HassuAccordion";
 import { useMemo } from "react";
 import { kuntametadata } from "common/kuntametadata";
 import SectionContent from "@components/layout/SectionContent";
+import React from "react";
+import dayjs from "dayjs";
+import { lahetysTila } from "src/util/aloitusKuulutusUtil";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
@@ -264,7 +267,23 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
       </Section>
       <Section>
         <H2>Hyväksymisesityksen vastaanottajat</H2>
-        <p>TODO</p>
+        <SectionContent>
+          <div className="grid grid-cols-4 gap-x-6 mb-4">
+            <p className="col-span-2" style={{ color: "#7A7A7A" }}>
+              Sähköpostiosoite
+            </p>
+            <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
+            <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
+
+            {hyvaksymisEsitys.vastaanottajat?.map((vo, index) => (
+              <React.Fragment key={index}>
+                <p className="odd:bg-white even:bg-grey col-span-2">{vo.sahkoposti}</p>
+                <p className="odd:bg-white even:bg-grey">{lahetysTila(vo)}</p>
+                <p className="odd:bg-white even:bg-grey">{vo.lahetetty ? dayjs(vo.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
+              </React.Fragment>
+            ))}
+          </div>
+        </SectionContent>
       </Section>
       {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
         <HyvaksyTaiPalautaPainikkeet oid={oid} versio={versio} vastaanottajat={hyvaksymisEsitys.vastaanottajat!} />
