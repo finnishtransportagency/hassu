@@ -22,10 +22,16 @@ import Lausunnot from "./LomakeComponents/Lausunnot";
 import Maanomistajaluettelo from "./LomakeComponents/MaanomistajaLuettelo";
 import KuulutuksetJaKutsu from "./LomakeComponents/KuulutuksetJaKutsu";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
+import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
+import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
+import { H3 } from "@components/Headings";
 
-export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
+type Props = {
+  hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
+};
+
+export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Readonly<Props>) {
   const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
     () => getDefaultValuesForForm(hyvaksymisEsityksenTiedot),
     [hyvaksymisEsityksenTiedot]
@@ -60,66 +66,100 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: { 
   }, [useFormReturn, defaultValues]);
 
   return (
-    <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo={true}>
-      <FormProvider {...useFormReturn}>
-        <form>
-          <div>
-            <h2 className="vayla-title">Hyväksymisesityksen sisältö</h2>
-            {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
-              <Section noDivider>
-                <Notification type={NotificationType.WARN}>
-                  {"Hyväksymisesitys on palautettu korjattavaksi. Palautuksen syy: " +
-                    hyvaksymisEsityksenTiedot.hyvaksymisEsitys.palautusSyy}
-                </Notification>
+    <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
+      <ProjektiPageLayoutContext.Consumer>
+        {({ ohjeetOnClose, ohjeetOpen }) => (
+          <FormProvider {...useFormReturn}>
+            <form>
+              <Section>
+                <OhjelistaNotification onClose={ohjeetOnClose} open={ohjeetOpen}>
+                  <li>
+                    Tällä sivulla luodaan hyväksymisesityksenä lähetettävän suunnitelman aineiston sisältö ja määritellään sen
+                    vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee
+                    tarkastelemaan ja lataamaan hyväksymisesityksen sisällön.
+                  </li>
+                  <li>
+                    Anna hyväksymisesitykseen toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että
+                    vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
+                    voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
+                  </li>
+                  <li>Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”.</li>
+                  <li>Halutessasi voit kirjata lisätietoa hyväksymisesityksestä vastaanottajalle.</li>
+                  <li>
+                    Tuo omalta koneelta allekirjoitettu hyväksymisesitys. Sisällytä Hyväksymisesitys-tiedostoon linkki hyväksymisesityksen
+                    aineistosta.
+                  </li>
+                  <li>
+                    Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
+                    kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon hyväksymisesitykseen. Voit haluessasi tuoda myös
+                    muuta aineistoa.
+                  </li>
+                  <li>Lisää hyväksymisesitykselle vastaanottajat.</li>
+                  <li>
+                    Esikatsele hyväksymisesityksen sisältä ennen sen lähettämistä projektipäällikön hyväksyttäväksi. Projektipäällikön
+                    hyväksyntä lähettää hyväksymisesityksen automaattisesti sen vastaanottajille.
+                  </li>
+                  <li>Hyväksymisesityksen sisältöä on mahdollista päivittää jälkikäteen.</li>
+                </OhjelistaNotification>
+                {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
+                  <Notification type={NotificationType.WARN}>
+                    {"Hyväksymisesitys on palautettu korjattavaksi. Palautuksen syy: " +
+                      hyvaksymisEsityksenTiedot.hyvaksymisEsitys.palautusSyy}
+                  </Notification>
+                )}
+                <H3 variant="h2">Hyväksymisesityksen sisältö</H3>
+                <LinkinVoimassaoloaika />
               </Section>
-            )}
-            <LinkinVoimassaoloaika />
-            <ViestiVastaanottajalle />
-            <Laskutustiedot />
-          </div>
-          <div>
-            <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
-            <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
-            <HyvaksymisEsitysTiedosto />
-            <h3 className="vayla-subtitle">Suunnitelma</h3>
-            <Section>
-              <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-              <SectionContent>
-                <Muistutukset kunnat={[50, 43]} />
-                <Lausunnot />
-                <Maanomistajaluettelo />
-                <KuulutuksetJaKutsu />
-              </SectionContent>
-            </Section>
-            <Section>
-              <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
-              <p>Voit halutessasi liittää...</p>
-              <MuuAineistoVelhosta />
-              <MuuAineistoKoneelta />
-            </Section>
-          </div>
-          <div>
-            <Vastaanottajat />
-            <AineistonEsikatselu />
-          </div>
-          <Section>
-            <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-              <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
-                Tallenna luonnos
-              </Button>
-              <Button
-                type="button"
-                disabled={tallennaHyvaksyttavaksiDisabled}
-                id="save_and_send_for_acceptance"
-                primary
-                onClick={useFormReturn.handleSubmit(sendForApproval)}
-              >
-                Lähetä Hyväksyttäväksi
-              </Button>
-            </Stack>
-          </Section>
-        </form>
-      </FormProvider>
+              <Section>
+                <ViestiVastaanottajalle />
+                <Laskutustiedot />
+              </Section>
+
+              <Section>
+                <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
+                <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
+                <HyvaksymisEsitysTiedosto />
+                <h3 className="vayla-subtitle">Suunnitelma</h3>
+                <Section>
+                  <h3 className="vayla-subtitle">Vuorovaikutus</h3>
+                  <SectionContent>
+                    <Muistutukset kunnat={[50, 43]} />
+                    <Lausunnot />
+                    <Maanomistajaluettelo />
+                    <KuulutuksetJaKutsu />
+                  </SectionContent>
+                </Section>
+                <Section>
+                  <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
+                  <p>Voit halutessasi liittää...</p>
+                  <MuuAineistoVelhosta />
+                  <MuuAineistoKoneelta />
+                </Section>
+              </Section>
+              <Section>
+                <Vastaanottajat />
+                <AineistonEsikatselu />
+              </Section>
+              <Section>
+                <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+                  <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
+                    Tallenna luonnos
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={tallennaHyvaksyttavaksiDisabled}
+                    id="save_and_send_for_acceptance"
+                    primary
+                    onClick={useFormReturn.handleSubmit(sendForApproval)}
+                  >
+                    Lähetä Hyväksyttäväksi
+                  </Button>
+                </Stack>
+              </Section>
+            </form>
+          </FormProvider>
+        )}
+      </ProjektiPageLayoutContext.Consumer>
     </ProjektiPageLayout>
   );
 }
