@@ -20,7 +20,6 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
   assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
   return {
     __typename: "HyvaksymisEsityksenAineistot",
-    ...ladattavatTiedostot,
     aineistopaketti: "(esikatselu)",
     ...ladattavatTiedostot,
     suunnitelmanNimi: dbProjekti.velho!.nimi,
