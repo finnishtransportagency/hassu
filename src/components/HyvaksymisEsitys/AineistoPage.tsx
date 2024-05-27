@@ -129,13 +129,17 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
         <H3>Hyväksymisesitys</H3>
-        <ul style={{ listStyle: "none" }}>
-          {hyvaksymisEsitys?.map((tiedosto, index) => (
-            <li key={index}>
-              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
-            </li>
-          ))}
-        </ul>
+        {!!hyvaksymisEsitys?.length ? (
+          <ul style={{ listStyle: "none" }}>
+            {hyvaksymisEsitys?.map((tiedosto, index) => (
+              <li key={index}>
+                <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>Ei aineistoja</div>
+        )}
         <H3>Suunnitelma</H3>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
@@ -155,13 +159,17 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                   {Object.keys(muistutukset).map((kunta) => (
                     <div key={kunta} style={{ marginTop: "1em" }}>
                       <H5>{kuntametadata.nameForKuntaId(parseInt(kunta), "fi")}</H5>
-                      <ul style={{ listStyle: "none" }}>
-                        {muistutukset[kunta]?.map((tiedosto, index) => (
-                          <li key={index}>
-                            <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
-                          </li>
-                        ))}
-                      </ul>
+                      {!!muistutukset[kunta]?.length ? (
+                        <ul style={{ listStyle: "none" }}>
+                          {muistutukset[kunta]?.map((tiedosto, index) => (
+                            <li key={index}>
+                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div>Ei muistutuksia</div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -170,7 +178,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "2",
               title: <H3 sx={{ margin: 0 }}>Lausunnot</H3>,
-              content: (
+              content: !!lausunnot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {lausunnot?.map((tiedosto, index) => (
                     <li key={index}>
@@ -178,12 +186,14 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <div>Ei aineistoja</div>
               ),
             },
             {
               id: "3",
               title: <H3 sx={{ margin: 0 }}>Maanomistajaluettelo</H3>,
-              content: (
+              content: !!maanomistajaluettelo?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {maanomistajaluettelo?.map((tiedosto, index) => (
                     <li key={index}>
@@ -191,12 +201,14 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <div>Ei aineistoja</div>
               ),
             },
             {
               id: "4",
               title: <H3 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H3>,
-              content: (
+              content: !!kuulutuksetJaKutsu?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {kuulutuksetJaKutsu?.map((tiedosto, index) => (
                     <li key={index}>
@@ -204,6 +216,8 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <div>Ei aineistoja</div>
               ),
             },
           ]}
@@ -215,7 +229,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "3",
               title: <H2 sx={{ margin: 0 }}>Muu tekninen aineisto</H2>,
-              content: (
+              content: !!muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
                     <li key={index}>
@@ -223,6 +237,8 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <div>Ei aineistoja</div>
               ),
             },
           ]}
