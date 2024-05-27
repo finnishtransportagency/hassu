@@ -1,18 +1,16 @@
-import React, { FunctionComponent, ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 import Section from "@components/layout/Section2";
-import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "hassu-common/aineistoKategoriat";
-import useTranslation from "next-translate/useTranslation";
+import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { LadattavaTiedosto, ProjektiJulkinen } from "@services/api";
-import { Stack } from "@mui/material";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import LadattavaTiedostoComponent from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
-import { H1, H2, H3, H4 } from "@components/Headings";
+import { H1, H2 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
 
 type Props = {
   esikatselu?: boolean;
@@ -43,7 +41,7 @@ export default function LausuntopyyntoAineistoPage(props: Props): ReactElement {
           </Notification>
         )}
         {aineistot?.length && <H2>Suunnitelma</H2>}
-        <AineistoNahtavillaAccordion
+        <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
           aineistot={aineistot}
           esikatselu={!!props.esikatselu}
@@ -72,57 +70,3 @@ export default function LausuntopyyntoAineistoPage(props: Props): ReactElement {
     </>
   );
 }
-
-interface AineistoNahtavillaAccordionProps {
-  kategoriat: AineistoKategoria[];
-  aineistot: LadattavaTiedosto[] | null | undefined;
-  esikatselu: boolean;
-}
-
-const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = ({ aineistot, kategoriat, esikatselu }) => {
-  const { t } = useTranslation("aineisto");
-
-  const accordionItems: AccordionItem[] = useMemo(
-    () =>
-      kategoriat
-        .filter((kategoria) =>
-          aineistot?.some(
-            (aineisto) =>
-              aineisto.kategoriaId === kategoria.id ||
-              (aineisto.kategoriaId &&
-                kategoria.alaKategoriat?.map((kategoria: AineistoKategoria) => kategoria.id)?.includes(aineisto.kategoriaId))
-          )
-        )
-        .map((kategoria) => ({ kategoria, Heading: kategoria.alaKategoriat ? H3 : H4 }))
-        .map<AccordionItem>(({ kategoria, Heading }) => ({
-          id: kategoria.id,
-          title: (
-            <Heading sx={{ margin: 0 }}>
-              {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
-              {" (" + getNestedAineistoMaaraForCategory(aineistot, kategoria) + ")"}
-            </Heading>
-          ),
-          content: (
-            <>
-              {aineistot && (
-                <Stack direction="column" rowGap={2}>
-                  {aineistot
-                    .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
-                    .map((aineisto, index) => (
-                      <span key={index}>
-                        <LadattavaTiedostoComponent tiedosto={aineisto} esikatselu={esikatselu} />
-                      </span>
-                    ))}
-                </Stack>
-              )}
-              {kategoria.alaKategoriat && (
-                <AineistoNahtavillaAccordion kategoriat={kategoria.alaKategoriat} aineistot={aineistot} esikatselu={esikatselu} />
-              )}
-            </>
-          ),
-        })),
-    [kategoriat, aineistot, t, esikatselu]
-  );
-
-  return <HassuAccordion items={accordionItems} />;
-};

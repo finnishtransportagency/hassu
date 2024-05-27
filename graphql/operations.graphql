@@ -28,10 +28,10 @@ type Query {
   listaaHyvaksymisEsityksenTiedostot(
     oid: String!
     listaaHyvaksymisEsityksenTiedostotInput: ListaaHyvaksymisEsityksenTiedostotInput
-  ): LadattavatTiedostot!
+  ): HyvaksymisEsityksenAineistot!
   esikatseleLausuntoPyynnonTiedostot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
-  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): LadattavatTiedostot!
+  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): HyvaksymisEsityksenAineistot!
   haeHyvaksymisEsityksenTiedot(oid: String!): HyvaksymisEsityksenTiedot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF

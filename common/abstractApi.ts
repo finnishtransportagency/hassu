@@ -94,6 +94,7 @@ import {
   TallennaMuistuttajatMutationVariables,
   HaeKayttoOikeudetQueryVariables,
   KayttoOikeusTiedot,
+  HyvaksymisEsityksenAineistot,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -700,7 +701,7 @@ export abstract class AbstractApi {
   async listaaHyvaksymisEsityksenTiedostot(
     oid: string,
     listaaHyvaksymisEsityksenTiedostot: ListaaHyvaksymisEsityksenTiedostotInput
-  ): Promise<LadattavatTiedostot> {
+  ): Promise<HyvaksymisEsityksenAineistot> {
     return await this.callAPI(apiConfig.listaaHyvaksymisEsityksenTiedostot, {
       oid,
       listaaHyvaksymisEsityksenTiedostot,
@@ -724,7 +725,10 @@ export abstract class AbstractApi {
     } as EsikatseleLausuntoPyynnonTaydennysTiedostotQueryVariables);
   }
 
-  async esikatseleHyvaksymisEsityksenTiedostot(oid: string, hyvaksymisEsitys: HyvaksymisEsitysInput): Promise<LadattavatTiedostot> {
+  async esikatseleHyvaksymisEsityksenTiedostot(
+    oid: string,
+    hyvaksymisEsitys: HyvaksymisEsitysInput
+  ): Promise<HyvaksymisEsityksenAineistot> {
     return await this.callYllapitoAPI(apiConfig.esikatseleHyvaksymisEsityksenTiedostot, {
       oid,
       hyvaksymisEsitys,

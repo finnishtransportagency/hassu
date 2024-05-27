@@ -116,7 +116,10 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
     const nimet = ladattavatTiedostotList.map(({ nimi }) => nimi);
-    const expectedFileNames = [...TEST_PROJEKTI_FILES.map((file) => file.nimi), ...TEST_HYVAKSYMISESITYS_FILES.map((file) => file.nimi)]
+    const expectedFileNames = [
+      ...TEST_PROJEKTI_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)).map((file) => file.nimi), // ei saametiedostoja
+      ...TEST_HYVAKSYMISESITYS_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)).map((file) => file.nimi), // ei saametiedostoja
+    ]
       .filter((nimi) => !nimi.includes("lähetekirje"))
       .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
       .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
@@ -211,22 +214,6 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     await expect(lataus2).to.eventually.be.fulfilled;
   });
 
-  it("antaa oikeat tiedostot", async () => {
-    const ladattavatTiedostot = await listaaHyvaksymisEsityksenTiedostot({ oid, listaaHyvaksymisEsityksenTiedostotInput: { hash } });
-    const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
-      if (Array.isArray(value)) {
-        acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
-      }
-      return acc;
-    }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
-    const nimet = ladattavatTiedostotList.map(({ nimi }) => nimi);
-    const expectedFileNames = [...TEST_PROJEKTI_FILES.map((file) => file.nimi), ...TEST_HYVAKSYMISESITYS_FILES.map((file) => file.nimi)]
-      .filter((nimi) => !nimi.includes("lähetekirje"))
-      .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
-      .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
-    expect(nimet.sort()).to.eql(expectedFileNames.sort());
-  });
-
   it("ei toimi väärällä hashillä", async () => {
     const kutsu = listaaHyvaksymisEsityksenTiedostot({
       oid,
@@ -250,9 +237,10 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       listaaHyvaksymisEsityksenTiedostotInput: { hash },
     });
     expect(response).to.eql({
-      __typename: "LadattavatTiedostot",
+      __typename: "HyvaksymisEsityksenAineistot",
       poistumisPaiva: "2033-01-01",
       linkkiVanhentunut: true,
+      suunnitelmanNimi: "Projektin nimi",
       projektipaallikonYhteystiedot: {
         __typename: "ProjektiKayttajaJulkinen",
         etunimi: "Pekka",

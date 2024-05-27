@@ -5,11 +5,11 @@ import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import LadattavaTiedostoComponent from "@components/projekti/lausuntopyynnot/LadattavaTiedosto";
 import { kuntametadata } from "common/kuntametadata";
 import { H1, H2, H3 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 
 type Props = {
   esikatselu?: boolean;

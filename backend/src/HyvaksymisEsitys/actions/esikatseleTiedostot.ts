@@ -3,15 +3,31 @@ import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsity
 import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
 import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "../dynamoDBCalls/getProjektiTiedostoineen";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
+import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
+import { assertIsDefined } from "../../util/assertions";
+import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 
 export default async function esikatseleHyvaksymisEsityksenTiedostot({
   oid,
-  hyvaksymisEsitys,
-}: API.EsikatseleHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.LadattavatTiedostot> {
+  hyvaksymisEsitys: hyvaksymisEsitysInput,
+}: API.EsikatseleHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.HyvaksymisEsityksenAineistot> {
   requirePermissionLuku();
   const dbProjekti: ProjektiTiedostoineen = await haeHyvaksymisEsityksenTiedostoTiedot(oid);
   requirePermissionMuokkaa(dbProjekti);
-  const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitys);
-  const aineistopaketti = "(esikatselu)";
-  return await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys, aineistopaketti);
+  const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitysInput);
+  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
+  const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+  assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+  return {
+    __typename: "HyvaksymisEsityksenAineistot",
+    aineistopaketti: "(esikatselu)",
+    ...ladattavatTiedostot,
+    suunnitelmanNimi: dbProjekti.velho!.nimi,
+    asiatunnus: dbProjekti.velho!.asiatunnusVayla,
+    vastuuorganisaatio: dbProjekti.velho!.suunnittelustaVastaavaViranomainen,
+    laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
+    poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
+    projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+    lisatiedot: muokattavaHyvaksymisEsitys.lisatiedot,
+  };
 }

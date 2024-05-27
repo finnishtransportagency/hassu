@@ -189,6 +189,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsityksenAineistot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "HyvaksymisEsityksenTiedot",
         "possibleTypes": null,
         "__typename": "__Type"
