@@ -72,10 +72,12 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
         <SectionContent>
           <H4>Pyydetään kiireellistä käsittelyä: {pyydetaanKiireellistaKasittelya ? "KYLLÄ" : "EI"}</H4>
         </SectionContent>
-        <SectionContent>
-          <H4>Lisätietoa vastaanottajalle</H4>
-          <p>{lisatiedot}</p>
-        </SectionContent>
+        {!!lisatiedot && (
+          <SectionContent>
+            <H4>Lisätietoa vastaanottajalle</H4>
+            <p>{lisatiedot}</p>
+          </SectionContent>
+        )}
       </Section>
       <Section noDivider>
         <SectionContent>
