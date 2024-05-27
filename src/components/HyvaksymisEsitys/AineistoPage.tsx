@@ -93,7 +93,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             </HassuGridItem>
             <HassuGridItem colSpan={1}>
               <H4>Vastuuorganisaatio</H4>
-              <p>{vastuuorganisaatio ?? "-"}</p>
+              <p>{t(`viranomainen.${vastuuorganisaatio}`) ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Y-tunnus</H4>
