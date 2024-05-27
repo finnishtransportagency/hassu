@@ -83,15 +83,15 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
             <HassuGridItem colSpan={1}>
               <H4>Suunnitelman nimi</H4>
-              <p>{suunnitelmanNimi}</p>
+              <p>{suunnitelmanNimi ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Asiatunnus</H4>
-              <p>{asiatunnus}</p>
+              <p>{asiatunnus ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={1}>
               <H4>Vastuuorganisaatio</H4>
-              <p>{vastuuorganisaatio}</p>
+              <p>{vastuuorganisaatio ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Y-tunnus</H4>
@@ -103,11 +103,11 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Verkkolaskuoperaattorin välittäjätunnus</H4>
-              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus}</p>
+              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={3}>
               <H4>Viite</H4>
-              <p>{laskutustiedot?.viitetieto}</p>
+              <p>{laskutustiedot?.viitetieto ?? "-"}</p>
             </HassuGridItem>
           </HassuGrid>
         </SectionContent>
