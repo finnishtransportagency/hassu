@@ -47,7 +47,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     });
     return ret;
   }, [kuntaMuistutukset]);
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
