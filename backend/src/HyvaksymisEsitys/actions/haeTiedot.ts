@@ -14,5 +14,11 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     versio,
     hyvaksymisEsitys,
     muokkauksenVoiAvata: !hyvaksymisPaatosVaihe && hyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY,
+    perustiedot: {
+      __typename: "ProjektinPerustiedot",
+      suunnitelmanNimi: projekti.velho!.nimi,
+      asiatunnus: projekti.velho!.asiatunnusVayla,
+      vastuuorganisaatio: projekti.velho!.suunnittelustaVastaavaViranomainen,
+    },
   };
 }

@@ -14,6 +14,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "julkaistuHyvaksymisEsitys"
   | "hyvaksymisPaatosVaihe"
   | "aineistoHandledAt"
+  | "velho"
 >;
 
 // TODO: hae hyväksymisPaatosVaiheesta vain id, koska meitä kiinnostaa vain, onko se olemassa vai ei
@@ -24,7 +25,7 @@ export default async function haeProjektinTiedotHyvaksymisEsityksesta(oid: strin
     Key: { oid },
     ConsistentRead: true,
     ProjectionExpression:
-      "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt",
+      "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho",
   });
 
   try {
