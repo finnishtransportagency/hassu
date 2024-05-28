@@ -73,7 +73,8 @@ type MapKeyInfo = {
 };
 
 function mapKey({ kiinteistotunnus, kayttooikeusyksikkotunnus, etunimet, sukunimi, nimi }: MapKeyInfo) {
-  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi}_${kayttooikeusyksikkotunnus}`;
+  // Lainhuudossa yrityksen nimi saattaa olla kirjoitettu eri tavalla kuin yhteystiedoissa (esim. Raision Kaupunki vs. Raision kaupunki)
+  return `${kiinteistotunnus}_${etunimet}_${sukunimi}_${nimi?.toLocaleLowerCase()}_${kayttooikeusyksikkotunnus}`;
 }
 
 const handlerFactory = (event: SQSEvent) => async () => {
@@ -115,7 +116,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         // Jos kiinteistöllä ei ole muita omistajia samoilla etunimillä, niin lisätään hetu yhteystietoihin tästä mäpistä
         // Jos kiinteistöllä on monta omistajaa samoilla etunimillä niin silloin ei lisätä hetua yhteystietoihin
         const omistajaMapNoLastName = new Map<string, DBOmistaja>();
-        const keys: string[] = [];
+        let keys: string[] = [];
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
         yhteystiedot.push(...tiekunnat, ...yhteisalueet);
@@ -168,12 +169,16 @@ const handlerFactory = (event: SQSEvent) => async () => {
             omistajaMap.set(mapKey(k), omistaja);
           }
         });
+        keys = [];
         kiinteistot.forEach((k) => {
           k.omistajat.forEach((o) => {
-            const key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o });
+            let key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o });
             let omistaja = omistajaMap.get(key);
             if (!omistaja) {
               omistaja = omistajaMapNoLastName.get(mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o, sukunimi: undefined }));
+              if (omistaja) {
+                key = mapKey({ ...omistaja });
+              }
             }
             if (omistaja) {
               const taydennettyOmistaja: DBOmistaja = {
@@ -196,10 +201,13 @@ const handlerFactory = (event: SQSEvent) => async () => {
               taydennettyOmistaja.suomifiLahetys = suomifiLahetys;
               omistajaMap.set(key, taydennettyOmistaja);
             } else {
-              log.error(`Lainhuutotiedolle '${key}' ei löytynyt yhteystietoja`);
+              keys.push(key);
             }
           });
         });
+        if (keys) {
+          log.error("Lainhuutotiedolle ei löytynyt yhteystietoja", { keys });
+        }
         const dbOmistajat = [...omistajaMap.values()];
 
         // Päivitä muille omistajille aiemmin tallennetut osoitetiedot
