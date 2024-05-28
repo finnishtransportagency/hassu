@@ -28,7 +28,7 @@ import { AccordionToggleButton } from "@components/projekti/common/Aineistot/Acc
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
-  const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata } = hyvaksymisEsityksenTiedot;
+  const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
@@ -58,9 +58,6 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
   }
 
   const laskutustiedot = hyvaksymisEsitys.laskutustiedot;
-  const suunnitelmanNimi = "TODO";
-  const asiatunnus = "TODO";
-  const vastuuorganisaatio = "TODO";
 
   return (
     <ProjektiPageLayout
@@ -111,15 +108,15 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
         <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
           <HassuGridItem colSpan={1}>
             <H5>Suunnitelman nimi</H5>
-            <p>{suunnitelmanNimi ?? "-"}</p>
+            <p>{perustiedot.suunnitelmanNimi ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Asiatunnus</H5>
-            <p>{asiatunnus ?? "-"}</p>
+            <p>{perustiedot.asiatunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>Vastuuorganisaatio</H5>
-            <p>{vastuuorganisaatio ? t(`viranomainen.${vastuuorganisaatio}`) : "-"}</p>
+            <p>{perustiedot.vastuuorganisaatio ? t(`viranomainen.${perustiedot.vastuuorganisaatio}`) : "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>

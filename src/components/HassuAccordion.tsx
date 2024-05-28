@@ -50,14 +50,14 @@ export interface AccordionItem {
 type Props = {
   items: AccordionItem[];
   singular?: boolean;
-  expandedState?: [Key[], Dispatch<Key[]>];
+  expandedstate?: [Key[], Dispatch<Key[]>];
 } & ComponentProps<"div">;
 
 export default function CustomizedAccordions(props: Props) {
   const { items, singular, ...rest } = props;
   const uncontrolledExpanded = useState<Key[]>([]);
 
-  const [expanded, setExpanded] = props.expandedState ?? uncontrolledExpanded;
+  const [expanded, setExpanded] = props.expandedstate ?? uncontrolledExpanded;
 
   const handleChange = (panel: Key) => (_: React.SyntheticEvent, newExpanded: boolean) => {
     if (singular) {

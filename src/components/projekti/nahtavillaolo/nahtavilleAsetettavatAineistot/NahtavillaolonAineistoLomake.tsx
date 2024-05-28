@@ -45,7 +45,7 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
       <AineistotSaavutettavuusOhje />
       <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
       <HassuAccordion
-        expandedState={[expandedAineisto, setExpandedAineisto]}
+        expandedstate={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
             <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(

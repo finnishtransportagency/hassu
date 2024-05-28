@@ -72,7 +72,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
           {areAineistoKategoriesExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
         </ButtonFlatWithIcon>
         <HassuAccordion
-          expandedState={[expandedEsittelyAineisto, setExpandedEsittelyAineisto]}
+          expandedstate={[expandedEsittelyAineisto, setExpandedEsittelyAineisto]}
           items={[
             {
               title: `Esittelyaineisto (${esittelyaineistot?.length || 0})`,
@@ -99,7 +99,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
           Tuo Aineistoja
         </Button>
         <HassuAccordion
-          expandedState={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
+          expandedstate={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
           items={[
             {
               title: `Suunnitelmaluonnokset (${suunnitelmaluonnokset?.length || 0})`,

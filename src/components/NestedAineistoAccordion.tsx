@@ -58,7 +58,7 @@ export const NestedAineistoAccordion: FunctionComponent<NestedAineistoAccordionP
     [kategoriat, aineisto, paakategoria, t, expandedState]
   );
   return !!accordionItems.length ? (
-    <HassuAccordion items={accordionItems} expandedState={expandedState} style={{ position: "relative", top: "-1em" }} />
+    <HassuAccordion items={accordionItems} expandedstate={expandedState} style={{ position: "relative", top: "-1em" }} />
   ) : null;
 };
 
