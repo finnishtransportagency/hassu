@@ -25,11 +25,13 @@ import HassuTable from "@components/table/HassuTable";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
+import ExtLink from "@components/ExtLink";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
+  const hyvaksytty = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.HYVAKSYTTY;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
@@ -57,6 +59,8 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
     return null;
   }
 
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitys?hash=${hyvaksymisEsitys.hash}`;
+
   const laskutustiedot = hyvaksymisEsitys.laskutustiedot;
 
   return (
@@ -73,6 +77,14 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
         )
       }
     >
+      {hyvaksytty && (
+        <Section noDivider>
+          <Notification type={NotificationType.INFO_GREEN}>
+            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
+            <ExtLink href={url}>{url}</ExtLink>
+          </Notification>
+        </Section>
+      )}
       {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
         <Section noDivider>
           <Notification type={NotificationType.WARN}>
@@ -139,7 +151,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
       <Section className="mb-4">
         <H2>Hyväksymisesitykseen liitettävä aineisto</H2>
         <H5 style={{ marginBottom: "0.5em" }}>Linkki hyväksymisesityksen aineistoon</H5>
-        {`${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitys?hash=${hyvaksymisEsitys.hash}`}
+        {url}
         <H3>Hyväksymisesitys</H3>
         <ul style={{ listStyle: "none" }}>
           {hyvaksymisEsitys.hyvaksymisEsitys?.map((tiedosto, index) => (
