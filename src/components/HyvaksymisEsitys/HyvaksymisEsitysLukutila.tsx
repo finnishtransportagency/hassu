@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, Vaihe } from "@services/api";
+import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja, Vaihe } from "@services/api";
 import HyvaksyTaiPalautaPainikkeet from "./LomakeComponents/HyvaksyTaiPalautaPainikkeet";
 import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 import Section from "@components/layout/Section2";
@@ -9,7 +9,7 @@ import Button from "@components/button/Button";
 import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import { H2, H3, H4, H5 } from "@components/Headings";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate, formatDateTimeIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
 import HassuGrid from "@components/HassuGrid";
 import HassuGridItem from "@components/HassuGridItem";
 import useTranslation from "next-translate/useTranslation";
@@ -21,6 +21,8 @@ import SectionContent from "@components/layout/SectionContent";
 import React from "react";
 import dayjs from "dayjs";
 import { lahetysTila } from "src/util/aloitusKuulutusUtil";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import HassuTable from "@components/table/HassuTable";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
@@ -267,27 +269,60 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
       </Section>
       <Section>
         <H2>Hyväksymisesityksen vastaanottajat</H2>
-        <SectionContent>
-          <div className="grid grid-cols-4 gap-x-6 mb-4">
-            <p className="col-span-2" style={{ color: "#7A7A7A" }}>
-              Sähköpostiosoite
-            </p>
-            <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
-            <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
-
-            {hyvaksymisEsitys.vastaanottajat?.map((vo, index) => (
-              <React.Fragment key={index}>
-                <p className="odd:bg-white even:bg-grey col-span-2">{vo.sahkoposti}</p>
-                <p className="odd:bg-white even:bg-grey">{lahetysTila(vo)}</p>
-                <p className="odd:bg-white even:bg-grey">{vo.lahetetty ? dayjs(vo.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
-              </React.Fragment>
-            ))}
-          </div>
-        </SectionContent>
+        {hyvaksymisEsitys.vastaanottajat && (
+          <SectionContent>
+            <IlmoituksenVastaanottajatTable vastaanottajat={hyvaksymisEsitys.vastaanottajat} />
+          </SectionContent>
+        )}
       </Section>
       {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
         <HyvaksyTaiPalautaPainikkeet oid={oid} versio={versio} vastaanottajat={hyvaksymisEsitys.vastaanottajat!} />
       )}
     </ProjektiPageLayout>
   );
+}
+
+const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
+  { accessorKey: "sahkoposti", id: "sahkoposti", header: "Sähköpostiosoite" },
+  {
+    accessorFn: (vo) => lahetysTila(vo),
+    id: "ilmoituksenTila",
+    header: "Ilmoituksen tila",
+    cell: (info) => {
+      return (
+        <div
+          style={{
+            borderStyle: "solid",
+            borderWidth: 1,
+            width: "fit-content",
+            padding: 3,
+            paddingLeft: "2em",
+            paddingRight: "2em",
+            borderRadius: 5,
+            backgroundColor: info.getValue() == "Ei lähetetty" ? "lightgrey" : "#F5FFEF",
+          }}
+        >
+          {info.getValue()}
+        </div>
+      );
+    },
+  },
+  {
+    accessorFn: (vo) => formatDateTimeIfExistsAndValidOtherwiseDash(vo.lahetetty),
+    id: "lahetysAika",
+    header: "Lähetysaika",
+  },
+];
+
+function IlmoituksenVastaanottajatTable(props: { vastaanottajat: SahkopostiVastaanottaja[] }) {
+  const table = useReactTable({
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    data: props.vastaanottajat,
+    enableSorting: false,
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    state: { pagination: undefined },
+  });
+
+  return <HassuTable table={table} />;
 }
