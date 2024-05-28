@@ -3,7 +3,7 @@ import { experimental_sx as sx, Stack, styled } from "@mui/system";
 import { AineistoKategoria, getNestedAineistoMaaraForCategory, kategorianAllaOlevienAineistojenMaara } from "common/aineistoKategoriat";
 import { formatDateTime } from "common/util/dateUtils";
 import useTranslation from "next-translate/useTranslation";
-import { FunctionComponent, useMemo } from "react";
+import { Dispatch, FunctionComponent, Key, useMemo } from "react";
 import HassuAineistoNimiExtLink from "./projekti/HassuAineistoNimiExtLink";
 import { AineistoNew } from "@services/api";
 
@@ -11,9 +11,15 @@ interface NestedAineistoAccordionProps {
   aineisto: AineistoNew[];
   kategoriat: AineistoKategoria[];
   paakategoria?: boolean;
+  expandedState?: [Key[], Dispatch<Key[]>];
 }
 
-export const NestedAineistoAccordion: FunctionComponent<NestedAineistoAccordionProps> = ({ aineisto, kategoriat, paakategoria }) => {
+export const NestedAineistoAccordion: FunctionComponent<NestedAineistoAccordionProps> = ({
+  aineisto,
+  kategoriat,
+  paakategoria,
+  expandedState,
+}) => {
   const { t } = useTranslation("aineisto");
   const accordionItems: AccordionItem[] = useMemo(
     () =>
@@ -43,13 +49,17 @@ export const NestedAineistoAccordion: FunctionComponent<NestedAineistoAccordionP
                     ))}
                 </Stack>
               )}
-              {kategoria.alaKategoriat && <NestedAineistoAccordion aineisto={aineisto} kategoriat={kategoria.alaKategoriat} />}
+              {kategoria.alaKategoriat && (
+                <NestedAineistoAccordion aineisto={aineisto} kategoriat={kategoria.alaKategoriat} expandedState={expandedState} />
+              )}
             </>
           ),
         })),
-    [kategoriat, aineisto, paakategoria, t]
+    [kategoriat, aineisto, paakategoria, t, expandedState]
   );
-  return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
+  return !!accordionItems.length ? (
+    <HassuAccordion items={accordionItems} expandedState={expandedState} style={{ position: "relative", top: "-1em" }} />
+  ) : null;
 };
 
 const AineistoRow = styled("span")(sx({ display: "flex", gap: 3 }));

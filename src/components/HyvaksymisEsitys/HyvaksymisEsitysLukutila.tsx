@@ -15,7 +15,7 @@ import HassuGridItem from "@components/HassuGridItem";
 import useTranslation from "next-translate/useTranslation";
 import TiedostoComponent from "@components/tiedosto";
 import HassuAccordion from "@components/HassuAccordion";
-import { useMemo } from "react";
+import { Key, useMemo, useState } from "react";
 import { kuntametadata } from "common/kuntametadata";
 import SectionContent from "@components/layout/SectionContent";
 import React from "react";
@@ -24,12 +24,14 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import HassuTable from "@components/table/HassuTable";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
+import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
+  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
 
   const avaaMuokkaus = useSpinnerAndSuccessMessage(async () => {
@@ -137,7 +139,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
           </HassuGridItem>
         </HassuGrid>
       </Section>
-      <Section>
+      <Section className="mb-4">
         <H2>Hyväksymisesitykseen liitettävä aineisto</H2>
         <H5 style={{ marginBottom: "0.5em" }}>Linkki hyväksymisesityksen aineistoon</H5>
         {`${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitys?hash=${hyvaksymisEsitys.hash}`}
@@ -149,13 +151,22 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
             </li>
           ))}
         </ul>
-        <H3>Suunnitelma</H3>
+
         {hyvaksymisEsitys.suunnitelma && (
-          <NestedAineistoAccordion kategoriat={aineistoKategoriat.listKategoriat()} aineisto={hyvaksymisEsitys.suunnitelma} paakategoria />
+          <>
+            <H3>Suunnitelma</H3>
+            <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+            <NestedAineistoAccordion
+              kategoriat={aineistoKategoriat.listKategoriat()}
+              aineisto={hyvaksymisEsitys.suunnitelma}
+              paakategoria
+              expandedState={[expandedAineisto, setExpandedAineisto]}
+            />
+          </>
         )}
       </Section>
-      <Section>
-        <H3>Vuorovaikutus</H3>
+      <Section className="pt-8">
+        <H2>Vuorovaikutus</H2>
         <SectionContent>
           <H4>Muistutukset ({hyvaksymisEsitys.muistutukset?.length ?? 0})</H4>
           <HassuAccordion
