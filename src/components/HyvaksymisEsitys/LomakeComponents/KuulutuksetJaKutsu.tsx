@@ -1,4 +1,3 @@
-import Section from "@components/layout/Section2";
 import { ReactElement, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
@@ -6,6 +5,7 @@ import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import IconButton from "@components/button/IconButton";
+import { H4 } from "@components/Headings";
 
 export default function KuulutuksetJaKutsu(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
@@ -20,8 +20,9 @@ export default function KuulutuksetJaKutsu(): ReactElement {
   };
 
   return (
-    <Section>
-      <h4 className="vayla-small-title">Kuulutukset ja kutsu vuorovaikutukseen</h4>
+    <>
+      <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
+      <p>Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen.</p>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
@@ -52,6 +53,6 @@ export default function KuulutuksetJaKutsu(): ReactElement {
           Tuo tiedostot
         </Button>
       </label>
-    </Section>
+    </>
   );
 }

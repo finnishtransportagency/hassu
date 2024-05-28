@@ -16,7 +16,6 @@ export default function ViestiVastaanottajalle(): ReactElement {
         name="muokattavaHyvaksymisEsitys.kiireellinen"
         render={({ field: { value, onChange, ...field } }) => (
           <FormControlLabel
-            sx={{ marginLeft: "0px" }}
             label="Pyydetään kiireellistä käsittelyä"
             control={
               <Checkbox

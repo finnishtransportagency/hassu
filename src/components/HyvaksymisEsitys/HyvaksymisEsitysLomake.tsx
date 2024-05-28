@@ -13,7 +13,6 @@ import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
 import Laskutustiedot from "./LomakeComponents/Laskutustiedot";
 import LinkkiHyvEsAineistoon from "./LomakeComponents/LinkkiHyvEsAineistoon";
 import HyvaksymisEsitysTiedosto from "./LomakeComponents/HyvaksymisEsitysTiedosto";
-import SectionContent from "@components/layout/SectionContent";
 import Muistutukset from "./LomakeComponents/Muistutukset";
 import Vastaanottajat from "./LomakeComponents/Vastaanottajat";
 import MuuAineistoKoneelta from "./LomakeComponents/MuuAineistoKoneelta";
@@ -25,7 +24,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
-import { H3 } from "@components/Headings";
+import { H3, H4 } from "@components/Headings";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -116,31 +115,33 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               </Section>
 
               <Section>
-                <h2 className="vayla-title">Hyväksymisesitykseen liitettävä aineisto</h2>
+                <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
                 <HyvaksymisEsitysTiedosto />
-                <h3 className="vayla-subtitle">Suunnitelma</h3>
-                <Section>
-                  <h3 className="vayla-subtitle">Vuorovaikutus</h3>
-                  <SectionContent>
-                    <Muistutukset kunnat={[50, 43]} />
-                    <Lausunnot />
-                    <Maanomistajaluettelo />
-                    <KuulutuksetJaKutsu />
-                  </SectionContent>
-                </Section>
-                <Section>
-                  <h3 className="vayla-subtitle">Muu tekninen aineisto</h3>
-                  <p>Voit halutessasi liittää...</p>
-                  <MuuAineistoVelhosta />
-                  <MuuAineistoKoneelta />
-                </Section>
+                <H4 variant="h3">Suunnitelma</H4>
+                <p>
+                  Tuo Projektivelhosta suunnitelman kansiot A–C tai 100–300. Suunnitelma jaotellaan automaattisesti selostusosaan,
+                  pääpiirustuksiin ja informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä,
+                  siirtää alikansioista toiseen tai poistaa.
+                </p>
+                <H4 variant="h3">Vuorovaikutus</H4>
+                <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
+                <Muistutukset kunnat={[50, 43]} />
+                <Lausunnot />
+                <Maanomistajaluettelo />
+                <KuulutuksetJaKutsu />
+                <H4 variant="h3">Muu tekninen aineisto</H4>
+                <p>
+                  Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
+                </p>
+                <MuuAineistoVelhosta />
+                <MuuAineistoKoneelta />
               </Section>
               <Section>
                 <Vastaanottajat />
-                <AineistonEsikatselu />
               </Section>
-              <Section>
+              <AineistonEsikatselu />
+              <Section noDivider>
                 <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
                   <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
                     Tallenna luonnos

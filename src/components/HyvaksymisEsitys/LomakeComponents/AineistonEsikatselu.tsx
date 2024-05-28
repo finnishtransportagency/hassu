@@ -4,6 +4,7 @@ import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import { H3 } from "@components/Headings";
 
 export default function AineistonEsikatselu() {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
@@ -12,7 +13,7 @@ export default function AineistonEsikatselu() {
 
   return (
     <Section>
-      <h3 className="vayla-subtitle">Hyväksymisesityksen sisällön esikatselu</h3>
+      <H3 variant="h2">Hyväksymisesityksen sisällön esikatselu</H3>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen lähettämistä eteenpäin.</Notification>
       <a
         className="hidden"

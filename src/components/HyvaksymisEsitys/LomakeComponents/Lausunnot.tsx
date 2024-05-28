@@ -1,4 +1,3 @@
-import Section from "@components/layout/Section2";
 import { ReactElement, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
@@ -6,6 +5,7 @@ import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import IconButton from "@components/button/IconButton";
+import { H4 } from "@components/Headings";
 
 export default function Lausunnot(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
@@ -20,8 +20,8 @@ export default function Lausunnot(): ReactElement {
   };
 
   return (
-    <Section>
-      <h4 className="vayla-small-title">Lausunnot</h4>
+    <>
+      <H4>Lausunnot</H4>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
@@ -39,7 +39,7 @@ export default function Lausunnot(): ReactElement {
         multiple
         accept={allowedFileTypes.join(", ")}
         style={{ display: "none" }}
-        id={`lausunnot-input`}
+        id="lausunnot-input"
         onChange={handleUploadedFiles}
         ref={(e) => {
           if (hiddenInputRef) {
@@ -47,11 +47,11 @@ export default function Lausunnot(): ReactElement {
           }
         }}
       />
-      <label htmlFor={`lausunnot-input`}>
-        <Button className="mt-4" type="button" id={`tuo_lausunnot_button`} onClick={onButtonClick}>
+      <label htmlFor="lausunnot-input">
+        <Button className="mt-4" type="button" id="tuo_lausunnot_button" onClick={onButtonClick}>
           Tuo tiedostot
         </Button>
       </label>
-    </Section>
+    </>
   );
 }

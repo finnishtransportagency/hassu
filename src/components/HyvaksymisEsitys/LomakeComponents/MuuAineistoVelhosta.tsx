@@ -6,6 +6,7 @@ import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { uuid } from "common/util/uuid";
 import IconButton from "@components/button/IconButton";
+import { H5 } from "@components/Headings";
 
 export default function MuuAineistoVelhosta(): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -14,8 +15,8 @@ export default function MuuAineistoVelhosta(): ReactElement {
 
   return (
     <SectionContent>
-      <h4 className="vayla-small-title">Projektivelho</h4>
-      <p>Voit halutessasi liittää...</p>
+      <H5 variant="h4">Projektivelho</H5>
+      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D-E tai 500-600.</p>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
