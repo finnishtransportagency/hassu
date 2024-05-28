@@ -1,5 +1,6 @@
 import Button from "@components/button/Button";
 import IconButton from "@components/button/IconButton";
+import { H5, H6 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { allowedFileTypes } from "common/fileValidationSettings";
@@ -11,6 +12,7 @@ import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 export default function Muistutukset({ kunnat }: Readonly<{ kunnat: number[] }>): ReactElement {
   return (
     <SectionContent>
+      <H5 variant="h4">Muistutukset</H5>
       {kunnat.map((kunta) => (
         <KunnanMuistutukset key={kunta} kunta={kunta} />
       ))}
@@ -34,7 +36,7 @@ function KunnanMuistutukset({ kunta }: Readonly<{ kunta: number }>): ReactElemen
 
   return (
     <SectionContent>
-      <h5 className="vayla-smallest-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h5>
+      <H6>{kuntametadata.nameForKuntaId(kunta, "fi")}</H6>
       {!!kunnanMuistutukset?.length &&
         kunnanMuistutukset.map((aineisto) => (
           <div key={aineisto.id}>
