@@ -39,10 +39,6 @@ phases:
       - npm run release
       - npm run opensearch:delete-index
       - npm run opensearch:index
-      - npm run opensearch:delete-omistajaindex
-      - npm run opensearch:omistajaindex
-      - npm run opensearch:delete-muistuttajaindex
-      - npm run opensearch:muistuttajaindex
       - aws codebuild start-build --project-name Hassu-build-e2e-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
   post_build:
     on-failure: ABORT
