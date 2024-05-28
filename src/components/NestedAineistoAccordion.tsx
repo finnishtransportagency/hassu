@@ -43,7 +43,7 @@ export const NestedAineistoAccordion: FunctionComponent<NestedAineistoAccordionP
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto) => (
                       <AineistoRow key={aineisto.dokumenttiOid}>
-                        <HassuAineistoNimiExtLink tiedostoPolku={aineisto.tiedosto} aineistoNimi={aineisto.nimi} target="_blank" />
+                        <HassuAineistoNimiExtLink tiedostoPolku={"/" + aineisto.tiedosto} aineistoNimi={aineisto.nimi} target="_blank" />
                         {!!aineisto.tuotu && <span>({formatDateTime(aineisto.lisatty)})</span>}
                       </AineistoRow>
                     ))}

@@ -10,7 +10,7 @@ export default function TiedostoComponent({ tiedosto }: { tiedosto: LadattuTiedo
     return <>{tiedosto.nimi}: VIRHE, ei tiedostoa</>;
   } else {
     return (
-      <ExtLink className="file_download" href={tiedosto.tiedosto} sx={{ mr: 3 }}>
+      <ExtLink className="file_download" href={"/" + tiedosto.tiedosto} sx={{ mr: 3 }}>
         {tiedosto.nimi}{" "}
         <span className="text-black ml-2">
           ({fileType}) {lisatty}
