@@ -112,6 +112,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
         );
         const omistajaMap = new Map<string, DBOmistaja>();
+        // Lainhuutotiedot saattaa palauttaa omistajan tyttönimen kun taas yhteystiedoissa on oikea sukunimi
+        // Jos kiinteistöllä ei ole muita omistajia samoilla etunimillä, niin lisätään hetu yhteystietoihin tästä mäpistä
+        // Jos kiinteistöllä on monta omistajaa samoilla etunimillä niin silloin ei lisätä hetua yhteystietoihin
+        const omistajaMapNoLastName = new Map<string, DBOmistaja>();
+        let keys: string[] = [];
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
         yhteystiedot.push(...tiekunnat, ...yhteisalueet);
@@ -138,6 +143,18 @@ const handlerFactory = (event: SQSEvent) => async () => {
               mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }),
               omistaja
             );
+            const key = mapKey({
+              kiinteistotunnus: k.kiinteistotunnus,
+              kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus,
+              ...o,
+              sukunimi: undefined,
+            });
+            if (keys.includes(key)) {
+              omistajaMapNoLastName.delete(key);
+            } else {
+              keys.push(key);
+              omistajaMapNoLastName.set(key, omistaja);
+            }
           });
           if (k.omistajat.length === 0) {
             const omistaja: DBOmistaja = {
@@ -152,11 +169,17 @@ const handlerFactory = (event: SQSEvent) => async () => {
             omistajaMap.set(mapKey(k), omistaja);
           }
         });
-        const keys: string[] = [];
+        keys = [];
         kiinteistot.forEach((k) => {
           k.omistajat.forEach((o) => {
-            const key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o });
-            const omistaja = omistajaMap.get(key);
+            let key = mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o });
+            let omistaja = omistajaMap.get(key);
+            if (!omistaja) {
+              omistaja = omistajaMapNoLastName.get(mapKey({ kiinteistotunnus: k.kiinteistotunnus, ...o, sukunimi: undefined }));
+              if (omistaja) {
+                key = mapKey({ ...omistaja });
+              }
+            }
             if (omistaja) {
               const taydennettyOmistaja: DBOmistaja = {
                 ...omistaja,
