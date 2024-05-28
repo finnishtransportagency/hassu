@@ -15,7 +15,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
   const { lisaAineistot, aineistopaketti, aineistot } = data;
 
   if (data.linkkiVanhentunut) {
-    return <VanhentunutAineistolinkki projekti={projekti} data={data} />;
+    return <VanhentunutAineistolinkki suunnitelmanNimi={projekti.velho?.nimi!} data={data} />;
   }
 
   return (

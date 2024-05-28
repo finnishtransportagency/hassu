@@ -13,7 +13,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
     return <></>;
   }
   if (data.linkkiVanhentunut) {
-    return <VanhentunutAineistolinkki projekti={projekti} data={data} />;
+    return <VanhentunutAineistolinkki suunnitelmanNimi={projekti.velho?.nimi!} data={data} />;
   }
 
   const { muutAineistot, muistutukset, aineistopaketti, kunta } = data;

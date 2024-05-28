@@ -1,20 +1,20 @@
 import React, { ReactElement } from "react";
-import { LadattavatTiedostot, ProjektiJulkinen } from "@services/api";
+import { LadattavatTiedostot } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { H1, H2 } from "@components/Headings";
 
 export default function VanhentunutAineistolinkki({
   data,
-  projekti,
+  suunnitelmanNimi,
 }: {
-  data: LadattavatTiedostot;
-  projekti: ProjektiJulkinen;
+  data: Pick<LadattavatTiedostot, "poistumisPaiva" | "projektipaallikonYhteystiedot">;
+  suunnitelmanNimi: string;
 }): ReactElement {
   return (
     <>
       <H1>Aineistolinkin voimassaolo on päättynyt</H1>
       <H2 variant="lead" className="mt-8 mb-8">
-        {projekti?.velho.nimi}
+        {suunnitelmanNimi}
       </H2>
       <div style={{ maxWidth: "40em" }}>
         <p>
