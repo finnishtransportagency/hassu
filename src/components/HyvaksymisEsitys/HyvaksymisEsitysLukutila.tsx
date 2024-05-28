@@ -19,10 +19,11 @@ import { useMemo } from "react";
 import { kuntametadata } from "common/kuntametadata";
 import SectionContent from "@components/layout/SectionContent";
 import React from "react";
-import dayjs from "dayjs";
 import { lahetysTila } from "src/util/aloitusKuulutusUtil";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import HassuTable from "@components/table/HassuTable";
+import { aineistoKategoriat } from "common/aineistoKategoriat";
+import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 
 export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
@@ -149,7 +150,9 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
           ))}
         </ul>
         <H3>Suunnitelma</H3>
-        <p>TODO</p>
+        {hyvaksymisEsitys.suunnitelma && (
+          <NestedAineistoAccordion kategoriat={aineistoKategoriat.listKategoriat()} aineisto={hyvaksymisEsitys.suunnitelma} paakategoria />
+        )}
       </Section>
       <Section>
         <H3>Vuorovaikutus</H3>

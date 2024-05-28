@@ -26,6 +26,7 @@ module.exports = {
     "/suunnitelma/[oid]/suunnittelu": ["suunnittelu"],
     "/yllapito/projekti/[oid]/suunnittelu": ["suunnittelu"],
     "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen": ["suunnittelu"],
+    "/yllapito/projekti/[oid]/hyvaksymisesitys": ["aineisto"],
   },
   ignoreRoutes: ["/api/"],
   loadLocaleFrom: (lang, ns) =>
