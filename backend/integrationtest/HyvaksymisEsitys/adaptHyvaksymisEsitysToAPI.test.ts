@@ -4,7 +4,7 @@ import { adaptHyvaksymisEsitysToAPI } from "../../src/projekti/adapter/adaptToAP
 import * as API from "hassu-common/graphql/apiModel";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 
-describe("adaptHyvaksymisEsitysToApi", () => {
+describe.only("adaptHyvaksymisEsitysToApi", () => {
   it("adaptoi tiedostopolut oikein", () => {
     const projektiInDB: Pick<
       DBProjekti,
