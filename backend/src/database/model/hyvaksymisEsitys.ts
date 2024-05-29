@@ -2,7 +2,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { AineistoNew, KunnallinenLadattuTiedosto, LadattuTiedostoNew, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
 
 export interface IHyvaksymisEsitys {
-  poistumisPaiva: string;
+  poistumisPaiva?: string | null;
   kiireellinen?: boolean | null;
   lisatiedot?: string | null;
   laskutustiedot?: Laskutustiedot | null;

@@ -143,7 +143,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <AineistonEsikatselu />
               <Section noDivider>
                 <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-                  <Button primary id="save" onClick={useFormReturn.handleSubmit(save)}>
+                  <Button primary id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
                     Tallenna luonnos
                   </Button>
                   <Button

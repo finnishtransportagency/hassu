@@ -12,15 +12,6 @@ import {
 export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot): TallennaHyvaksymisEsitysInput {
   const { oid, versio, hyvaksymisEsitys: muokattavaHyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
 
-  if (!muokattavaHyvaksymisEsitys) {
-    return {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys: {
-        poistumisPaiva: "",
-      },
-    };
-  }
   const {
     poistumisPaiva,
     kiireellinen,
@@ -35,20 +26,20 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
-  } = muokattavaHyvaksymisEsitys;
+  } = muokattavaHyvaksymisEsitys ?? {};
   const { yTunnus, ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
   return {
     oid,
     versio,
     muokattavaHyvaksymisEsitys: {
-      poistumisPaiva: poistumisPaiva ?? "",
-      kiireellinen: kiireellinen ?? false,
+      poistumisPaiva: poistumisPaiva ?? null,
+      kiireellinen: !!kiireellinen,
       lisatiedot: lisatiedot ?? "",
       laskutustiedot: {
-        yTunnus,
-        ovtTunnus,
-        verkkolaskuoperaattorinTunnus,
-        viitetieto,
+        yTunnus: yTunnus ?? "",
+        ovtTunnus: ovtTunnus ?? "",
+        verkkolaskuoperaattorinTunnus: verkkolaskuoperaattorinTunnus ?? "",
+        viitetieto: viitetieto ?? "",
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
       suunnitelma: adaptAineistotNewToInput(suunnitelma),

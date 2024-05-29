@@ -253,7 +253,7 @@ input LausuntoPyynnonTaydennysInput {
 }
 
 input HyvaksymisEsitysInput {
-  poistumisPaiva: String!
+  poistumisPaiva: String
   kiireellinen: Boolean
   lisatiedot: String
   laskutustiedot: LaskutustiedotInput
