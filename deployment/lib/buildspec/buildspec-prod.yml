@@ -29,8 +29,6 @@ phases:
       - npm run deploy:stackpolicies
       - npm run release
       - npm run opensearch:index
-      - npm run opensearch:omistajaindex
-      - npm run opensearch:muistuttajaindex
   post_build:
     on-failure: ABORT
     commands:
