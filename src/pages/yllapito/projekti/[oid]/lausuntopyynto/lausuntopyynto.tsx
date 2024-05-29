@@ -102,7 +102,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             <LausuntoPyyntoForm index={index} projekti={projekti} remove={remove} />
           </SectionContent>
         ))}
-        <Section>
+        <Section marginBottom={10} marginTop={10} gap={6}>
           <h2 className="vayla-subtitle">Luo uusi aineistolinkki</h2>
           <Button
             id="add_new_lausuntopyynto"
@@ -115,7 +115,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
           </Button>
         </Section>
 
-        <Section noDivider>
+        <Section marginBottom={10} >
           <h2 className="vayla-subtitle">Lausuntopyynnön mallipohjat</h2>
           <p>
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
@@ -123,7 +123,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
           </p>
           <div>
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
-              <>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink
                   id="mallipohja-32T"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/139cb55f-1acb-4c5e-bc20-90fa0a9febe7/850_32T%20YSTS%20Lausuntopyynt%c3%b6%20kunnalle.dotx?a=true"
@@ -136,7 +136,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                 >
                   Mallipohja muille lausunnonantajille 42T
                 </DownloadButtonLink>
-              </>
+              </div>
             )}
             {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
               <>

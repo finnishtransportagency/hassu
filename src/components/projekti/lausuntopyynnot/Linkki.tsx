@@ -64,7 +64,7 @@ export default function Linkki({
   }, [uuid]);
 
   return (
-    <SectionContent className="mt-16">
+    <SectionContent className="mt-16 mb-10">
       <h3 className="vayla-subtitle mb-1">{title}</h3>
       <p className="mt-8 mb-8">{infoText}</p>
       {buttonDisabled && (

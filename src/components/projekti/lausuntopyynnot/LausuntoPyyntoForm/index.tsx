@@ -32,9 +32,9 @@ export default function LausuntoPyyntoForm({
   const formDataForThisLink = getValues(`lausuntoPyynnot.${index}`);
 
   return (
-    <Section style={{ marginBottom: "6em" }}>
+    <Section style={{ marginBottom: "2.5rem", marginTop: "2.5rem" }}> 
       <Stack direction="row" justifyContent="space-between">
-        <h2 className="vayla-title">Lausuntopyyntöön liitettävä aineisto</h2>
+        <h2 className="vayla-title" style={{marginBottom: 12}}>Lausuntopyyntöön liitettävä aineisto</h2>
         {!!index && (
           <Button
             className="pl-12 pr-12 pt-1 pb-1"
@@ -45,7 +45,7 @@ export default function LausuntoPyyntoForm({
           </Button>
         )}
       </Stack>
-      <PoistumisPaiva index={index} />
+      <PoistumisPaiva index={index}/>
       <Muistiinpano index={index} />
       <Linkki index={index} projekti={projekti} uuid={formDataForThisLink.uuid} formData={formDataForThisLink} />
       <LisaAineistot index={index} projekti={projekti} />

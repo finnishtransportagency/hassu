@@ -11,7 +11,7 @@ export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: numbe
       ) : (
         <h3 className="vayla-subtitle mb-1">Aineistolinkin voimassaoloaika</h3>
       )}
-      <p className="mb-4">
+      <p className="mb-6">
         Valitse {kunta ? "lausuntopyynnön täydennyksen" : "lausuntopyynnön"} sisällölle voimassaoloaika. Linkki ja sen sisältö on
         tarkasteltavissa alla olevaan päiväärään saakka. Päivämäärää on mahdollista päivittää jälkikäteen.
       </p>

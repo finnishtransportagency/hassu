@@ -118,7 +118,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
             <LausuntoPyynnonTaydennysForm index={index} projekti={projekti} kunta={field.kunta} />
           </SectionContent>
         ))}
-        <Section noDivider>
+        <Section marginBottom={10}>
           <h2 className="vayla-subtitle">Lausuntopyynnon täydennyksen mallipohja</h2>
           <p>
             Alla löydät linkin viimeisimpiin lausuntopyynnön taydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
