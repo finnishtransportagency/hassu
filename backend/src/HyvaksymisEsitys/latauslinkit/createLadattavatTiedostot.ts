@@ -78,13 +78,15 @@ export default async function createLadattavatTiedostot(
       )
     )
   ).sort(jarjestaTiedostot);
-  const maanomistajaluettelo: API.LadattavaTiedosto[] = (
+  const maanomistajaluetteloProjektista = await getMaanomistajaLuettelo(projekti);
+  const maanomistajaluetteloOmaltaKoneelta: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.maanomistajaluettelo?.map((aineisto) =>
         adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "maanomistajaluettelo"))
       ) ?? []
     )
   ).sort(jarjestaTiedostot);
+  const maanomistajaluettelo = (await maanomistajaluetteloProjektista).concat(maanomistajaluetteloOmaltaKoneelta);
   const lausunnot: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.lausunnot?.map((aineisto) => adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "lausunnot"))) ??
@@ -100,6 +102,23 @@ export default async function createLadattavatTiedostot(
     muutAineistot,
     maanomistajaluettelo,
   };
+}
+
+export async function getMaanomistajaLuettelo(projekti: ProjektiTiedostoineen): Promise<API.LadattavaTiedosto[]> {
+  const maanomistajaluttelo: API.LadattavaTiedosto[] = [];
+  //Nähtävilläolovaihe
+  const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
+  if (nahtavillaoloVaiheJulkaisut) {
+    for (const nahtavillaoloVaiheJulkaisu of nahtavillaoloVaiheJulkaisut) {
+      if (nahtavillaoloVaiheJulkaisu.tila != API.KuulutusJulkaisuTila.HYVAKSYTTY) {
+        continue;
+      }
+      if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
+        maanomistajaluttelo.push(await adaptTiedostoPathToLadattavaTiedosto(projekti.oid, nahtavillaoloVaiheJulkaisu.maanomistajaluettelo));
+      }
+    }
+  }
+  return maanomistajaluttelo;
 }
 
 export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.LadattavaTiedosto[]> {
