@@ -1,4 +1,4 @@
-import { Dispatch, Key, ReactNode, useState } from "react";
+import { ComponentProps, Dispatch, Key, ReactNode, useState } from "react";
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
@@ -47,17 +47,17 @@ export interface AccordionItem {
   id?: Key;
 }
 
-interface Props {
+type Props = {
   items: AccordionItem[];
   singular?: boolean;
-  expandedState?: [Key[], Dispatch<Key[]>];
-}
+  expandedstate?: [Key[], Dispatch<Key[]>];
+} & ComponentProps<"div">;
 
 export default function CustomizedAccordions(props: Props) {
-  const { items, singular } = props;
+  const { items, singular, ...rest } = props;
   const uncontrolledExpanded = useState<Key[]>([]);
 
-  const [expanded, setExpanded] = props.expandedState ?? uncontrolledExpanded;
+  const [expanded, setExpanded] = props.expandedstate ?? uncontrolledExpanded;
 
   const handleChange = (panel: Key) => (_: React.SyntheticEvent, newExpanded: boolean) => {
     if (singular) {
@@ -68,7 +68,7 @@ export default function CustomizedAccordions(props: Props) {
   };
 
   return (
-    <div>
+    <div {...rest}>
       {items.map((item, index) => {
         const key = item.id ?? index;
         return (

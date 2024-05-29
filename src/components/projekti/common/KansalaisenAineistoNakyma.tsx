@@ -161,7 +161,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
     t,
   ]);
 
-  return props.aineistoKategoriat ? <HassuAccordion items={aineistoKategoriaItems} expandedState={props.expandedState} /> : null;
+  return props.aineistoKategoriat ? <HassuAccordion items={aineistoKategoriaItems} expandedstate={props.expandedState} /> : null;
 };
 
 interface SuunnitelmaAineistoKategoriaContentProps {
