@@ -111,7 +111,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               </Section>
               <Section>
                 <ViestiVastaanottajalle />
-                <Laskutustiedot />
+                <Laskutustiedot perustiedot={hyvaksymisEsityksenTiedot.perustiedot} />
               </Section>
               <Section>
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
@@ -125,7 +125,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 </p>
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
-                <Muistutukset kunnat={[50, 43]} />
+                <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
                 <Lausunnot />
                 <Maanomistajaluettelo />
                 <KuulutuksetJaKutsu />

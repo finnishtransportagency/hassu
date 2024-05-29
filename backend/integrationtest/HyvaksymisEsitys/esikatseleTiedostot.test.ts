@@ -209,9 +209,9 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
     };
     const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
-    expect(tiedot.suunnitelmanNimi).to.eql("Projektin nimi");
-    expect(tiedot.asiatunnus).to.eql("asiatunnusVayla");
-    expect(tiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
+    expect(tiedot.perustiedot.suunnitelmanNimi).to.eql("Projektin nimi");
+    expect(tiedot.perustiedot.asiatunnus).to.eql("asiatunnusVayla");
+    expect(tiedot.perustiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
       elyOrganisaatio: undefined,

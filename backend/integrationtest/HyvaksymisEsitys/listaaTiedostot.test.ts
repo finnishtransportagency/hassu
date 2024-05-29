@@ -240,7 +240,9 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       __typename: "HyvaksymisEsityksenAineistot",
       poistumisPaiva: "2033-01-01",
       linkkiVanhentunut: true,
-      suunnitelmanNimi: "Projektin nimi",
+      perustiedot: {
+        suunnitelmanNimi: "Projektin nimi",
+      },
       projektipaallikonYhteystiedot: {
         __typename: "ProjektiKayttajaJulkinen",
         etunimi: "Pekka",

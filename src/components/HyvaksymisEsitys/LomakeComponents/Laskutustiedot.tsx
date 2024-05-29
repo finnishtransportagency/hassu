@@ -1,12 +1,16 @@
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { H4 } from "@components/Headings";
 import { Grid } from "@mui/material";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { ProjektinPerustiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
+import useTranslation from "next-translate/useTranslation";
 import { ReactElement } from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function Laskutustiedot(): ReactElement {
+export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinPerustiedot }>): ReactElement {
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { perustiedot } = props;
+
+  const { t } = useTranslation("common");
 
   return (
     <>
@@ -15,19 +19,19 @@ export default function Laskutustiedot(): ReactElement {
         <Grid component="dl" container spacing={4} columns={2} sx={{ maxWidth: "700px", dt: { fontWeight: 700, marginBottom: 2 } }}>
           <Grid item xs={2} lg={1}>
             <dt>Suunnitelman nimi</dt>
-            <dd>jokin nimi</dd>
+            <dd>{perustiedot.suunnitelmanNimi ?? "-"}</dd>
           </Grid>
           <Grid item xs={2} lg={1}>
             <dt>Asiatunnus</dt>
-            <dd>ASIA-123</dd>
+            <dd>{perustiedot.suunnitelmanNimi ?? "-"}</dd>
           </Grid>
           <Grid item xs={2} lg={1}>
             <dt>Vastuuorganisaatio</dt>
-            <dd>ORG</dd>
+            <dd>{perustiedot.vastuuorganisaatio ? t(`viranomainen.${perustiedot.vastuuorganisaatio}`) : "-"}</dd>
           </Grid>
           <Grid item xs={2} lg={1}>
             <dt>Y-tunnus</dt>
-            <dd>Y1212</dd>
+            <dd>{perustiedot.yTunnus ?? "-"}</dd>
           </Grid>
         </Grid>
       </div>

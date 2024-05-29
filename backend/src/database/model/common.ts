@@ -175,7 +175,6 @@ export type KunnallinenLadattuTiedosto = {
 } & ILadattuTiedosto;
 
 export type Laskutustiedot = {
-  yTunnus?: string | null;
   ovtTunnus?: string | null;
   verkkolaskuoperaattorinTunnus?: string | null;
   viitetieto?: string | null;
