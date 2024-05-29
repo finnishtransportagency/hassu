@@ -404,7 +404,7 @@ type LausuntoPyynnonTaydennys {
 }
 
 type HyvaksymisEsitys {
-  poistumisPaiva: String!
+  poistumisPaiva: String
   kiireellinen: Boolean
   lisatiedot: String
   laskutustiedot: Laskutustiedot
