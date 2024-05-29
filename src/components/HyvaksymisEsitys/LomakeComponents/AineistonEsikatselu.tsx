@@ -1,5 +1,4 @@
 import Button from "@components/button/Button";
-import Section from "@components/layout/Section2";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
@@ -12,12 +11,12 @@ export default function AineistonEsikatselu() {
   const formData = watch();
 
   return (
-    <Section>
+    <>
       <H3 variant="h2">Hyväksymisesityksen sisällön esikatselu</H3>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen lähettämistä eteenpäin.</Notification>
       <a
         className="hidden"
-        id={`esikatsele-hyvaksymisesitys-link`}
+        id="esikatsele-hyvaksymisesitys-link"
         target="_blank"
         rel="noreferrer"
         href={`/yllapito/projekti/${formData.oid}/esikatsele-hyvaksymisesitys`}
@@ -41,6 +40,6 @@ export default function AineistonEsikatselu() {
       >
         Aineiston esikatselu
       </Button>
-    </Section>
+    </>
   );
 }

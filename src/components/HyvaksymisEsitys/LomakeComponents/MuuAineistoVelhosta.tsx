@@ -11,7 +11,7 @@ import { H5 } from "@components/Headings";
 export default function MuuAineistoVelhosta(): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove, prepend } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muuAineistoVelhosta`, control });
+  const { fields, remove, prepend } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoVelhosta", control });
 
   return (
     <SectionContent>
@@ -29,12 +29,12 @@ export default function MuuAineistoVelhosta(): ReactElement {
           />
         </div>
       ))}
-      <Button type="button" id={"muu_aineisto_velhosta_import_button"} onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo aineistot
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
-        infoText={"TODO aseta info text"}
+        infoText="TODO aseta info text"
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
           const valitutAineistot = valitutVelhoAineistot.map(adaptVelhoAineistoToAineistoInputNew);
@@ -56,8 +56,8 @@ function getNewAineistot(
   oldAineisto: AineistoInputNew[] | undefined | null,
   valitutAineistot: AineistoInputNew[] | undefined | null
 ): AineistoInputNew[] {
-  const dokumenttiOids = (oldAineisto || []).map((aineisto) => aineisto.dokumenttiOid);
-  return (valitutAineistot || []).filter((aineisto) => !dokumenttiOids.includes(aineisto.dokumenttiOid));
+  const dokumenttiOids = (oldAineisto ?? []).map((aineisto) => aineisto.dokumenttiOid);
+  return (valitutAineistot ?? []).filter((aineisto) => !dokumenttiOids.includes(aineisto.dokumenttiOid));
 }
 
 function adaptVelhoAineistoToAineistoInputNew(velhoAineisto: VelhoAineisto): AineistoInputNew {

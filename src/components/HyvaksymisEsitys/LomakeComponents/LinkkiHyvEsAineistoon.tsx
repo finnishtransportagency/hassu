@@ -36,7 +36,7 @@ export default function LinkkiHyvEsAineistoon({
         <Stack direction="row" alignItems="end">
           <TextField
             name="linkki"
-            label={"Linkki hyväksymisesityksen aineistoon"}
+            label="Linkki hyväksymisesityksen aineistoon"
             sx={{ flexGrow: 1 }}
             disabled
             value={linkHref ?? "-"}

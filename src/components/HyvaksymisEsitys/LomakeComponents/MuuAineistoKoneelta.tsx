@@ -6,14 +6,14 @@ import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import IconButton from "@components/button/IconButton";
-import { H4, H5 } from "@components/Headings";
+import { H5 } from "@components/Headings";
 
 export default function MuuAineistoKoneelta(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muuAineistoKoneelta`, control });
+  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoKoneelta", control });
 
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta`);
+  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.muuAineistoKoneelta");
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -45,7 +45,7 @@ export default function MuuAineistoKoneelta(): ReactElement {
         multiple
         accept={allowedFileTypes.join(", ")}
         style={{ display: "none" }}
-        id={`muu-aineisto-koneelta-input`}
+        id="muu-aineisto-koneelta-input"
         onChange={handleUploadedFiles}
         ref={(e) => {
           if (hiddenInputRef) {
@@ -53,8 +53,8 @@ export default function MuuAineistoKoneelta(): ReactElement {
           }
         }}
       />
-      <label htmlFor={`muu-aineisto-koneelta-input`}>
-        <Button className="mt-4" type="button" id={`tuo_muu_aineisto_button`} onClick={onButtonClick}>
+      <label htmlFor="muu-aineisto-koneelta-input">
+        <Button className="mt-4" type="button" id="tuo_muu_aineisto_button" onClick={onButtonClick}>
           Tuo tiedostot
         </Button>
       </label>

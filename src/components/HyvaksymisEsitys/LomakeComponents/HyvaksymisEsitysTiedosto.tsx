@@ -11,8 +11,8 @@ import SectionContent from "@components/layout/SectionContent";
 export default function HyvaksymisEsitysTiedosto(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.hyvaksymisEsitys`, control });
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.hyvaksymisEsitys`);
+  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.hyvaksymisEsitys", control });
+  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.hyvaksymisEsitys");
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -50,7 +50,7 @@ export default function HyvaksymisEsitysTiedosto(): ReactElement {
         }}
       />
       <label htmlFor="hyvaksymisesitys-input">
-        <Button className="mt-4" type="button" id={`tuo_hyvaksymisesitys_button`} onClick={onButtonClick}>
+        <Button className="mt-4" type="button" id="tuo_hyvaksymisesitys_button" onClick={onButtonClick}>
           Tuo tiedosto
         </Button>
       </label>

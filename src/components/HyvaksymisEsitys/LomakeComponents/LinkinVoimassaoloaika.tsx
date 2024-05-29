@@ -12,7 +12,7 @@ export default function LinkinVoimassaoloaika(): ReactElement {
         <HassuDatePickerWithController
           label="Voimassaoloaika päättyy"
           controllerProps={{
-            name: `muokattavaHyvaksymisEsitys.poistumisPaiva`,
+            name: "muokattavaHyvaksymisEsitys.poistumisPaiva",
           }}
           onChange={(date) => {
             if (date?.isValid()) {

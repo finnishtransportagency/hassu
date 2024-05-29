@@ -10,8 +10,8 @@ import { H4 } from "@components/Headings";
 export default function Lausunnot(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.lausunnot`, control });
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.lausunnot`);
+  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.lausunnot", control });
+  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.lausunnot");
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {

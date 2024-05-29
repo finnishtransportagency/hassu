@@ -10,8 +10,8 @@ import { H4 } from "@components/Headings";
 export default function Maanomistajaluettelo(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.maanomistajaluettelo`, control });
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.maanomistajaluettelo`);
+  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
+  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.maanomistajaluettelo");
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -40,7 +40,7 @@ export default function Maanomistajaluettelo(): ReactElement {
         multiple
         accept={allowedFileTypes.join(", ")}
         style={{ display: "none" }}
-        id={`maanomistajaluettelo-input`}
+        id="maanomistajaluettelo-input"
         onChange={handleUploadedFiles}
         ref={(e) => {
           if (hiddenInputRef) {
@@ -48,8 +48,8 @@ export default function Maanomistajaluettelo(): ReactElement {
           }
         }}
       />
-      <label htmlFor={`maanomistajaluettelo-input`}>
-        <Button className="mt-4" type="button" id={`tuo_maanomistajaluettelo_button`} onClick={onButtonClick}>
+      <label htmlFor="maanomistajaluettelo-input">
+        <Button className="mt-4" type="button" id="tuo_maanomistajaluettelo_button" onClick={onButtonClick}>
           Tuo tiedostot
         </Button>
       </label>

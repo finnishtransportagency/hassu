@@ -10,8 +10,8 @@ import { H4 } from "@components/Headings";
 export default function KuulutuksetJaKutsu(): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu`, control });
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu`);
+  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu", control });
+  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu");
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -40,7 +40,7 @@ export default function KuulutuksetJaKutsu(): ReactElement {
         multiple
         accept={allowedFileTypes.join(", ")}
         style={{ display: "none" }}
-        id={`kuulutuksetJaKutsu-input`}
+        id="kuulutuksetJaKutsu-input"
         onChange={handleUploadedFiles}
         ref={(e) => {
           if (hiddenInputRef) {
@@ -48,8 +48,8 @@ export default function KuulutuksetJaKutsu(): ReactElement {
           }
         }}
       />
-      <label htmlFor={`kuulutuksetJaKutsu-input`}>
-        <Button className="mt-4" type="button" id={`tuo_kuulutuksetJaKutsu_button`} onClick={onButtonClick}>
+      <label htmlFor="kuulutuksetJaKutsu-input">
+        <Button className="mt-4" type="button" id="tuo_kuulutuksetJaKutsu_button" onClick={onButtonClick}>
           Tuo tiedostot
         </Button>
       </label>

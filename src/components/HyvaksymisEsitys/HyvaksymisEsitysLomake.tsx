@@ -113,7 +113,6 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <ViestiVastaanottajalle />
                 <Laskutustiedot />
               </Section>
-
               <Section>
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
@@ -140,7 +139,9 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <Vastaanottajat />
               </Section>
-              <AineistonEsikatselu />
+              <Section>
+                <AineistonEsikatselu />
+              </Section>
               <Section noDivider>
                 <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
                   <Button primary id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
