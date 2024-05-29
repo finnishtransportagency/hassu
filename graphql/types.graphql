@@ -430,6 +430,14 @@ type HyvaksymisEsityksenTiedot {
   versio: Int!
   hyvaksymisEsitys: HyvaksymisEsitys
   muokkauksenVoiAvata: Boolean!
+  aineistotValmiit: Boolean
+  perustiedot: ProjektinPerustiedot!
+}
+
+type ProjektinPerustiedot {
+  suunnitelmanNimi: String!
+  asiatunnus: String
+  vastuuorganisaatio: String
 }
 
 type Laskutustiedot {

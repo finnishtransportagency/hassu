@@ -912,6 +912,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ProjektinPerustiedot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "ProjektinTiedottaminen",
         "possibleTypes": null,
         "__typename": "__Type"

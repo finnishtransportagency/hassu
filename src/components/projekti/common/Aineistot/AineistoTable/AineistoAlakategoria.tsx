@@ -27,7 +27,7 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
 
   return (
     <HassuAccordion
-      expandedState={props.expandedAineistoState}
+      expandedstate={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
         title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria)})`,
         content: (

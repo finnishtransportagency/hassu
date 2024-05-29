@@ -33,6 +33,11 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       salt: "salt",
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnus",
+        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
@@ -50,6 +55,11 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
       julkaistuHyvaksymisEsitys,
       hyvaksymisPaatosVaihe: { id: 1 },
       salt: "salt",
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnus",
+        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
