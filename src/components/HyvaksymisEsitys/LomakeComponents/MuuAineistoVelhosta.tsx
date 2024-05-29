@@ -16,7 +16,7 @@ export default function MuuAineistoVelhosta(): ReactElement {
   return (
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
-      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D-E tai 500-600.</p>
+      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
