@@ -9,6 +9,7 @@ type DeepPartial<T> = T extends object
 
 const TEST_ALOITUSKUULUTUS_JULKAISU: DeepPartial<AloitusKuulutusJulkaisu> = {
   id: 1,
+  tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
   aloituskuulutusPDFt: {
     SUOMI: {
       aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -45,6 +46,7 @@ const TEST_VUOROVAIKUTUS_KIERROS_JULKAISU2: DeepPartial<VuorovaikutusKierrosJulk
 function getTestVuorovaikutusKierrosJulkaisu(number: number = 1) {
   return {
     id: number,
+    tila: API.VuorovaikutusKierrosTila.JULKINEN,
     aineistot: [
       {
         tiedosto: `/suunnitteluvaihe/vuorovaikutus_${number}/vuorovaikutusaineisto äöå ${number} 1.png`,
@@ -80,6 +82,7 @@ function getTestVuorovaikutusKierrosJulkaisu(number: number = 1) {
 }
 const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> = {
   id: 1,
+  tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
   aineistoNahtavilla: [
     {
       tiedosto: "/nahtavillaolo/1/nähtävilläoloaineisto äöå 1.png",
@@ -120,6 +123,7 @@ const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> 
     tiedosto: "/nahtavillaolo/1/lähetekirje.eml",
     nimi: "lähetekirje.eml",
   },
+  maanomistajaluettelo: "/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
 };
 
 /**
@@ -191,4 +195,5 @@ export const TEST_PROJEKTI_FILES: { tiedosto: string; nimi: string }[] = [
     nimi: "T414_1 Ilmoitus suunnitelman nähtävilläolo sv.pdf",
   },
   { tiedosto: "/nahtavillaolo/1/lähetekirje.eml", nimi: "lähetekirje.eml" },
+  { tiedosto: "/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx", nimi: "T416 Maanomistajaluettelo 20240522.xlsx" },
 ];
