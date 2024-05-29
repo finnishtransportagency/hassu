@@ -22,7 +22,10 @@ export default function KuulutuksetJaKutsu(): ReactElement {
   return (
     <>
       <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
-      <p>Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen.</p>
+      <p>
+        Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
+        koneeltasi.
+      </p>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
