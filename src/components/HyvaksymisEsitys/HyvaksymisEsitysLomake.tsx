@@ -74,7 +74,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <OhjelistaNotification onClose={ohjeetOnClose} open={ohjeetOpen}>
                   <li>
                     Tällä sivulla luodaan hyväksymisesityksenä lähetettävän suunnitelman aineiston sisältö ja määritellään sen
-                    vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee
+                    vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkistä pääsee
                     tarkastelemaan ja lataamaan hyväksymisesityksen sisällön.
                   </li>
                   <li>
