@@ -32,13 +32,14 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
     const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
     const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
     assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
       return {
         __typename: "HyvaksymisEsityksenAineistot",
         poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
         linkkiVanhentunut: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
-        perustiedot: adaptVelhoToProjektinPerustiedot(projekti),
+        perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       };
     }
     const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
@@ -49,7 +50,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       __typename: "HyvaksymisEsityksenAineistot",
       ...ladattavatTiedostot,
       aineistopaketti,
-      perustiedot: adaptVelhoToProjektinPerustiedot(projekti),
+      perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),

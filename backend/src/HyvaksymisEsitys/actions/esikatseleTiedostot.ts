@@ -19,11 +19,13 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
   const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
   const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
   assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+  assertIsDefined(dbProjekti.velho, "projektilla tulee olla velho");
+
   return {
     __typename: "HyvaksymisEsityksenAineistot",
     aineistopaketti: "(esikatselu)",
     ...ladattavatTiedostot,
-    perustiedot: adaptVelhoToProjektinPerustiedot(dbProjekti),
+    perustiedot: adaptVelhoToProjektinPerustiedot(dbProjekti.velho),
     laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),

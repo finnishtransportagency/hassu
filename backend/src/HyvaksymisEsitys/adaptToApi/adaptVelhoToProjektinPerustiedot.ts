@@ -1,17 +1,17 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { assertIsDefined } from "../../util/assertions";
 import { vastaavanViranomaisenYTunnus } from "../../util/vastaavaViranomainen/yTunnus";
 import { vastaavanViranomaisenAsiatunnus } from "../../util/vastaavaViranomainen/asiatunnus";
-import { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import { Velho } from "../../database/model";
 
-export function adaptVelhoToProjektinPerustiedot(projekti: HyvaksymisEsityksenTiedot): API.ProjektinPerustiedot {
-  assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
+export function adaptVelhoToProjektinPerustiedot(
+  velho: Pick<Velho, "nimi" | "suunnittelustaVastaavaViranomainen" | "kunnat">
+): API.ProjektinPerustiedot {
   return {
     __typename: "ProjektinPerustiedot",
-    suunnitelmanNimi: projekti.velho.nimi,
-    asiatunnus: vastaavanViranomaisenAsiatunnus(projekti.velho),
-    vastuuorganisaatio: projekti.velho.suunnittelustaVastaavaViranomainen,
-    yTunnus: vastaavanViranomaisenYTunnus(projekti.velho.suunnittelustaVastaavaViranomainen),
-    kunnat: projekti.velho.kunnat,
+    suunnitelmanNimi: velho.nimi,
+    asiatunnus: vastaavanViranomaisenAsiatunnus(velho),
+    vastuuorganisaatio: velho.suunnittelustaVastaavaViranomainen,
+    yTunnus: vastaavanViranomaisenYTunnus(velho.suunnittelustaVastaavaViranomainen),
+    kunnat: velho.kunnat,
   };
 }
