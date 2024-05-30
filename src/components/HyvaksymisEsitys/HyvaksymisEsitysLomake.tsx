@@ -127,8 +127,8 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
                 <Lausunnot />
-                <Maanomistajaluettelo />
-                <KuulutuksetJaKutsu />
+                <Maanomistajaluettelo tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo} />
+                <KuulutuksetJaKutsu tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu} />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>
                   Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
