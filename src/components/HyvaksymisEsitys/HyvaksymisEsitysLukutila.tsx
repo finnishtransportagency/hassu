@@ -45,16 +45,18 @@ export default function HyvaksymisEsitysLukutila({
   const { t } = useTranslation("common");
 
   const kuntaMuistutukset = useMemo(() => {
-    const ret: Record<string, LadattuTiedostoNew[]> = {};
-    hyvaksymisEsitys?.muistutukset?.forEach(({ kunta, __typename, ...ladattavaTiedosto }) => {
-      if (kunta) {
-        const muistutukset = ret[kunta] ?? [];
-        muistutukset.push({ __typename: "LadattuTiedostoNew", ...ladattavaTiedosto });
-        ret[kunta] = muistutukset;
-      }
-    });
-    return ret;
-  }, [hyvaksymisEsitys]);
+    const kunnat = perustiedot.kunnat ?? [];
+    return kunnat.reduce<Record<string, LadattuTiedostoNew[]>>((acc, kunta) => {
+      acc[kunta] =
+        hyvaksymisEsitys?.muistutukset
+          ?.filter((muistutus) => muistutus.kunta === kunta)
+          .map<LadattuTiedostoNew>(({ kunta, __typename, ...ladattavaTiedosto }) => ({
+            __typename: "LadattuTiedostoNew",
+            ...ladattavaTiedosto,
+          })) ?? [];
+      return acc;
+    }, {});
+  }, [hyvaksymisEsitys?.muistutukset, perustiedot.kunnat]);
 
   if (!hyvaksymisEsitys) {
     return null;

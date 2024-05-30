@@ -37,16 +37,18 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
   const { suunnitelmanNimi, asiatunnus, vastuuorganisaatio, yTunnus } = perustiedot;
 
   const muistutukset = useMemo(() => {
-    const ret: Record<string, LadattavaTiedosto[]> = {};
-    kuntaMuistutukset?.forEach(({ kunta, __typename, ...ladattavaTiedosto }) => {
-      if (kunta) {
-        const muistutukset = ret[kunta] ?? [];
-        muistutukset.push({ __typename: "LadattavaTiedosto", ...ladattavaTiedosto });
-        ret[kunta] = muistutukset;
-      }
-    });
-    return ret;
-  }, [kuntaMuistutukset]);
+    const kunnat = perustiedot.kunnat ?? [];
+    return kunnat.reduce<Record<string, LadattavaTiedosto[]>>((acc, kunta) => {
+      acc[kunta] =
+        kuntaMuistutukset
+          ?.filter((muistutus) => muistutus.kunta === kunta)
+          .map<LadattavaTiedosto>(({ kunta, __typename, ...ladattavaTiedosto }) => ({
+            __typename: "LadattavaTiedosto",
+            ...ladattavaTiedosto,
+          })) ?? [];
+      return acc;
+    }, {});
+  }, [kuntaMuistutukset, perustiedot.kunnat]);
   const { t } = useTranslation("common");
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
