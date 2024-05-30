@@ -6,10 +6,12 @@ import { H1, H2 } from "@components/Headings";
 export default function VanhentunutAineistolinkki({
   data,
   suunnitelmanNimi,
-}: {
+  hyvaksymisesitys,
+}: Readonly<{
   data: Pick<LadattavatTiedostot, "poistumisPaiva" | "projektipaallikonYhteystiedot">;
   suunnitelmanNimi: string;
-}): ReactElement {
+  hyvaksymisesitys?: boolean;
+}>): ReactElement {
   return (
     <>
       <H1>Aineistolinkin voimassaolo on päättynyt</H1>
@@ -18,7 +20,8 @@ export default function VanhentunutAineistolinkki({
       </H2>
       <div style={{ maxWidth: "40em" }}>
         <p>
-          Lausuntopyynnön aineistolinkin voimassaolo on päättynyt <b>{formatDate(data.poistumisPaiva)}</b>.
+          {hyvaksymisesitys ? "Hyväksymisesityksen" : "Lausuntopyynnön"} aineistolinkin voimassaolo on päättynyt{" "}
+          <b>{formatDate(data.poistumisPaiva)}</b>.
         </p>
         <p>
           Aineistoon liittyvissä tiedusteluissa ja kysymyksissä voit olla yhteydessä projektipäällikköön. Voit pyytää esimerkiksi jatkoa
