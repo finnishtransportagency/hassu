@@ -105,6 +105,7 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnus",
         suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+        kunnat: [91, 92],
       },
     };
     await insertProjektiToDB(projektiBefore);
@@ -114,6 +115,8 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
       suunnitelmanNimi: "Projektin nimi",
       asiatunnus: "asiatunnus",
       vastuuorganisaatio: "VAYLAVIRASTO",
+      kunnat: [91, 92],
+      yTunnus: "1010547-1",
     });
   });
 
