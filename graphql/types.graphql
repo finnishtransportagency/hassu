@@ -432,6 +432,12 @@ type HyvaksymisEsityksenTiedot {
   muokkauksenVoiAvata: Boolean!
   aineistotValmiit: Boolean
   perustiedot: ProjektinPerustiedot!
+  tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+}
+
+type HyvaksymisEsityksenTuodutTiedostot {
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  maanomistajaluettelo: [LadattavaTiedosto!]
 }
 
 type ProjektinPerustiedot {

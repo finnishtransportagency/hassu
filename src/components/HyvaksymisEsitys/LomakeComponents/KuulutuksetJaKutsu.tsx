@@ -2,12 +2,13 @@ import { ReactElement, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattavaTiedosto, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 
-export default function KuulutuksetJaKutsu(): ReactElement {
+export default function KuulutuksetJaKutsu({ tuodut }: Readonly<{ tuodut?: LadattavaTiedosto[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
   const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu", control });
@@ -26,6 +27,14 @@ export default function KuulutuksetJaKutsu(): ReactElement {
         Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
+      <ul style={{ listStyle: "none" }} className="mt-4">
+        {!!tuodut?.length &&
+          tuodut.map((tiedosto) => (
+            <li key={tiedosto.nimi}>
+              <LadattavaTiedostoComponent tiedosto={tiedosto} />
+            </li>
+          ))}
+      </ul>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}

@@ -25,12 +25,13 @@ import { aineistoKategoriat } from "common/aineistoKategoriat";
 import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import ExtLink from "@components/ExtLink";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
 }: Readonly<{ hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }>) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
-  const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot } = hyvaksymisEsityksenTiedot;
+  const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot, tuodutTiedostot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
   const hyvaksytty = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.HYVAKSYTTY;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
@@ -135,7 +136,7 @@ export default function HyvaksymisEsitysLukutila({
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{perustiedot ?? "-"}</p>
+            <p>{perustiedot.yTunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
@@ -224,6 +225,11 @@ export default function HyvaksymisEsitysLukutila({
                 title: <H4 sx={{ margin: 0 }}>Maanomistajaluettelo</H4>,
                 content: hyvaksymisEsitys.maanomistajaluettelo?.length ? (
                   <ul style={{ listStyle: "none" }}>
+                    {tuodutTiedostot.maanomistajaluettelo?.map((tiedosto, index) => (
+                      <li key={index}>
+                        <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                      </li>
+                    ))}
                     {hyvaksymisEsitys.maanomistajaluettelo?.map((tiedosto, index) => (
                       <li key={index}>
                         <TiedostoComponent tiedosto={tiedosto} />
@@ -239,6 +245,11 @@ export default function HyvaksymisEsitysLukutila({
                 title: <H4 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H4>,
                 content: hyvaksymisEsitys.kuulutuksetJaKutsu?.length ? (
                   <ul style={{ listStyle: "none" }}>
+                    {tuodutTiedostot.kuulutuksetJaKutsu?.map((tiedosto, index) => (
+                      <li key={index}>
+                        <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                      </li>
+                    ))}
                     {hyvaksymisEsitys.kuulutuksetJaKutsu?.map((tiedosto, index) => (
                       <li key={index}>
                         <TiedostoComponent tiedosto={tiedosto} />
