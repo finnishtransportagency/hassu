@@ -133,11 +133,11 @@ export default function HyvaksymisEsitysLukutila({
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{perustiedot?.yTunnus ? perustiedot.yTunnus : "-"}</p>
+            <p>{perustiedot ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
-            <p>{laskutustiedot?.ovtTunnus ? laskutustiedot.ovtTunnus : "-"}</p>
+            <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Verkkolaskuoperaattorin välittäjätunnus</H5>

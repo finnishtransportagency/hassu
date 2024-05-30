@@ -2,7 +2,6 @@ import * as API from "hassu-common/graphql/apiModel";
 import { AineistoNew, KunnallinenLadattuTiedosto, LadattuTiedostoNew, Laskutustiedot, SahkopostiVastaanottaja } from "./common";
 
 export interface IHyvaksymisEsitys {
-  poistumisPaiva?: string | null;
   kiireellinen?: boolean | null;
   lisatiedot?: string | null;
   laskutustiedot?: Laskutustiedot | null;
@@ -20,11 +19,13 @@ export interface IHyvaksymisEsitys {
 }
 
 export type MuokattavaHyvaksymisEsitys = {
+  poistumisPaiva?: string | null;
   tila?: API.HyvaksymisTila | null;
   palautusSyy?: string | null;
 } & IHyvaksymisEsitys;
 
 export type JulkaistuHyvaksymisEsitys = {
+  poistumisPaiva: string;
   hyvaksyja?: string | null;
   hyvaksymisPaiva?: string | null;
   aineistopaketti?: string;

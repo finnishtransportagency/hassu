@@ -173,7 +173,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       lisatiedot: "Lisätietoja",
       laskutustiedot: {
         __typename: "Laskutustiedot",
-        yTunnus: "yTunnus",
         ovtTunnus: "ovtTunnus",
         verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus",
         viitetieto: "viitetieto",

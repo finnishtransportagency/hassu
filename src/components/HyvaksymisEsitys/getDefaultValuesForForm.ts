@@ -27,7 +27,7 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
     maanomistajaluettelo,
     vastaanottajat,
   } = muokattavaHyvaksymisEsitys ?? {};
-  const { yTunnus, ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
+  const { ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
   return {
     oid,
     versio,
@@ -36,7 +36,6 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
       kiireellinen: !!kiireellinen,
       lisatiedot: lisatiedot ?? "",
       laskutustiedot: {
-        yTunnus: yTunnus ?? "",
         ovtTunnus: ovtTunnus ?? "",
         verkkolaskuoperaattorinTunnus: verkkolaskuoperaattorinTunnus ?? "",
         viitetieto: viitetieto ?? "",
