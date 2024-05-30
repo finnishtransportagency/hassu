@@ -12,6 +12,7 @@ import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 import { assertIsDefined } from "../../util/assertions";
+import { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
