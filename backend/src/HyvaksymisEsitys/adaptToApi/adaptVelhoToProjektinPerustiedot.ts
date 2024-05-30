@@ -4,7 +4,7 @@ import { vastaavanViranomaisenAsiatunnus } from "../../util/vastaavaViranomainen
 import { Velho } from "../../database/model";
 
 export function adaptVelhoToProjektinPerustiedot(
-  velho: Pick<Velho, "nimi" | "suunnittelustaVastaavaViranomainen" | "kunnat">
+  velho: Pick<Velho, "nimi" | "suunnittelustaVastaavaViranomainen" | "kunnat" | "asiatunnusELY" | "asiatunnusVayla">
 ): API.ProjektinPerustiedot {
   return {
     __typename: "ProjektinPerustiedot",
