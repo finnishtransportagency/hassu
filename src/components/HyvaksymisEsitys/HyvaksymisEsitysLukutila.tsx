@@ -136,7 +136,7 @@ export default function HyvaksymisEsitysLukutila({
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{perustiedot ?? "-"}</p>
+            <p>{perustiedot.yTunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
