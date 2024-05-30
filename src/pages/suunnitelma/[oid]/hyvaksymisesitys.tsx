@@ -12,7 +12,14 @@ export default function HyvaksymisesitysLinkki(): ReactElement {
   }
 
   if (data.linkkiVanhentunut) {
-    return <VanhentunutAineistolinkki suunnitelmanNimi={data.suunnitelmanNimi} data={data} hyvaksymisesitys />;
+    return (
+      <VanhentunutAineistolinkki
+        poistumisPaiva={data.poistumisPaiva}
+        suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
+        projarinYhteystiedot={data.projektipaallikonYhteystiedot}
+        hyvaksymisesitys
+      />
+    );
   }
 
   return <HyvaksymisEsitysAineistoPage {...data} />;
