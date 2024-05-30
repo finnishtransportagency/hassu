@@ -129,7 +129,7 @@ export class HassuBackendStack extends Stack {
       pdfGeneratorLambda,
       true,
       suomifiLambda,
-      vpc,
+      vpc
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -551,7 +551,10 @@ export class HassuBackendStack extends Stack {
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
-      this.props.yllapitoBucket.grantRead(backendLambda, "*/nahtavillaolo/*"); // Lausuntopyyntöjä varten lukuoikeus
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/suunnittelu/*"); // Hyväksymisesitystä varten lukuoikeus
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/hyvaksymisesitys/*"); // Hyväksymisesitystä varten lukuoikeus
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/nahtavillaolo/*"); // Lausuntopyyntöjä  ja hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynto/*"); // Lausuntopyyntöjä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynnon_taydennys/*"); // Lausuntopyynnön täydennyksiä varten lukuoikeus
       this.props.publicBucket.grantRead(backendLambda);
