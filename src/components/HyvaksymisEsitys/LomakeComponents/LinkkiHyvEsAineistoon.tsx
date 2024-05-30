@@ -1,9 +1,9 @@
-import TextInput from "@components/form/TextInput";
 import SectionContent from "@components/layout/SectionContent";
-import { Stack } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import { useMemo, useRef } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
-import Button from "@components/button/Button";
+import { H4 } from "@components/Headings";
+import { RectangleButton } from "@components/button/RectangleButton";
 
 export default function LinkkiHyvEsAineistoon({
   oid,
@@ -24,35 +24,41 @@ export default function LinkkiHyvEsAineistoon({
   const { showInfoMessage, showErrorMessage } = useSnackbars();
 
   return (
-    <SectionContent className="mt-16">
-      <h3 className="vayla-subtitle mb-1">Linkki hyväksymisesityksen aineistoon</h3>
-      <p className="mt-8 mb-8">Liitä alla...</p>
-      <Stack direction="row" alignItems="end">
-        <TextInput
-          name="linkki"
-          label={"Linkki hyväksymisesityksen aineistoon"}
-          style={{ flexGrow: 1 }}
-          disabled
-          value={linkHref ?? "-"}
-          ref={linkRef}
-        />
-        <Button
-          primary
-          style={{ borderRadius: 0, textTransform: "none" }}
-          type="button"
-          disabled={!linkHref}
-          onClick={() => {
-            if (linkRef.current?.value) {
-              navigator.clipboard.writeText(linkRef.current.value);
-              showInfoMessage("Kopioitu");
-            } else {
-              showErrorMessage("Ongelma kopioinnissa");
-            }
-          }}
-        >
-          Kopioi linkki
-        </Button>
-      </Stack>
-    </SectionContent>
+    <>
+      <SectionContent>
+        <H4 variant="h3">Linkki hyväksymisesityksen aineistoon</H4>
+        <p>
+          Liitä alla oleva linkki hyväksymisesitykseen. Linkin sisältö vastaa Traficomille toimitettavan aineistopaketin sisältöä. Linkki
+          sisällytetään automaattisesti myös sähköpostiviestiin, jonka järjestelmä lähettää Traficomiin.
+        </p>
+      </SectionContent>
+      <SectionContent>
+        <Stack direction="row" alignItems="end">
+          <TextField
+            name="linkki"
+            label="Linkki hyväksymisesityksen aineistoon"
+            sx={{ flexGrow: 1 }}
+            disabled
+            value={linkHref ?? "-"}
+            ref={linkRef}
+          />
+          <RectangleButton
+            sx={{ marginBottom: "6px" }}
+            type="button"
+            disabled={!linkHref}
+            onClick={() => {
+              if (linkRef.current?.value) {
+                navigator.clipboard.writeText(linkRef.current.value);
+                showInfoMessage("Kopioitu");
+              } else {
+                showErrorMessage("Ongelma kopioinnissa");
+              }
+            }}
+          >
+            Kopioi linkki
+          </RectangleButton>
+        </Stack>
+      </SectionContent>
+    </>
   );
 }

@@ -4,9 +4,7 @@ import * as sinon from "sinon";
 import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 import { SqsEvent, SqsEventType } from "../../src/sqsEvents/sqsEvent";
 import { assertIsDefined } from "../../src/util/assertions";
-
-const chai = require("chai");
-const { expect } = chai;
+import { expect } from "chai";
 
 describe("eventSqsClient", () => {
   after(() => {

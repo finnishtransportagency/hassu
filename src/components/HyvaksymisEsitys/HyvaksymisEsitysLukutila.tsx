@@ -15,10 +15,9 @@ import HassuGridItem from "@components/HassuGridItem";
 import useTranslation from "next-translate/useTranslation";
 import TiedostoComponent from "@components/tiedosto";
 import HassuAccordion from "@components/HassuAccordion";
-import { Key, useMemo, useState } from "react";
+import React, { Key, useMemo, useState } from "react";
 import { kuntametadata } from "common/kuntametadata";
 import SectionContent from "@components/layout/SectionContent";
-import React from "react";
 import { lahetysTila } from "src/util/aloitusKuulutusUtil";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import HassuTable from "@components/table/HassuTable";
@@ -27,7 +26,9 @@ import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import ExtLink from "@components/ExtLink";
 
-export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: { hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }) {
+export default function HyvaksymisEsitysLukutila({
+  hyvaksymisEsityksenTiedot,
+}: Readonly<{ hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }>) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
@@ -44,16 +45,18 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
   const { t } = useTranslation("common");
 
   const kuntaMuistutukset = useMemo(() => {
-    const ret: Record<string, LadattuTiedostoNew[]> = {};
-    hyvaksymisEsitys?.muistutukset?.forEach(({ kunta, __typename, ...ladattavaTiedosto }) => {
-      if (kunta) {
-        const muistutukset = ret[kunta] ?? [];
-        muistutukset.push({ __typename: "LadattuTiedostoNew", ...ladattavaTiedosto });
-        ret[kunta] = muistutukset;
-      }
-    });
-    return ret;
-  }, [hyvaksymisEsitys]);
+    const kunnat = perustiedot.kunnat ?? [];
+    return kunnat.reduce<Record<string, LadattuTiedostoNew[]>>((acc, kunta) => {
+      acc[kunta] =
+        hyvaksymisEsitys?.muistutukset
+          ?.filter((muistutus) => muistutus.kunta === kunta)
+          .map<LadattuTiedostoNew>(({ kunta, __typename, ...ladattavaTiedosto }) => ({
+            __typename: "LadattuTiedostoNew",
+            ...ladattavaTiedosto,
+          })) ?? [];
+      return acc;
+    }, {});
+  }, [hyvaksymisEsitys?.muistutukset, perustiedot.kunnat]);
 
   if (!hyvaksymisEsitys) {
     return null;
@@ -132,11 +135,11 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{laskutustiedot?.yTunnus ? laskutustiedot.yTunnus : "-"}</p>
+            <p>{perustiedot ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
-            <p>{laskutustiedot?.ovtTunnus ? laskutustiedot.ovtTunnus : "-"}</p>
+            <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Verkkolaskuoperaattorin välittäjätunnus</H5>
@@ -160,7 +163,6 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
             </li>
           ))}
         </ul>
-
         {hyvaksymisEsitys.suunnitelma && (
           <>
             <H3>Suunnitelma</H3>
@@ -187,7 +189,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
                   {kuntametadata.nameForKuntaId(parseInt(kunta), "fi")} ({kuntaMuistutukset[kunta]?.length ?? 0})
                 </H5>
               ),
-              content: !!kuntaMuistutukset[kunta]?.length ? (
+              content: kuntaMuistutukset[kunta]?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {kuntaMuistutukset[kunta]?.map((tiedosto, index) => (
                     <li key={index}>
@@ -205,7 +207,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
               {
                 id: "2",
                 title: <H4 sx={{ margin: 0 }}>Lausunnot</H4>,
-                content: !!hyvaksymisEsitys.lausunnot?.length ? (
+                content: hyvaksymisEsitys.lausunnot?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.lausunnot?.map((tiedosto, index) => (
                       <li key={index}>
@@ -220,7 +222,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
               {
                 id: "3",
                 title: <H4 sx={{ margin: 0 }}>Maanomistajaluettelo</H4>,
-                content: !!hyvaksymisEsitys.maanomistajaluettelo?.length ? (
+                content: hyvaksymisEsitys.maanomistajaluettelo?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.maanomistajaluettelo?.map((tiedosto, index) => (
                       <li key={index}>
@@ -235,7 +237,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
               {
                 id: "4",
                 title: <H4 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H4>,
-                content: !!hyvaksymisEsitys.kuulutuksetJaKutsu?.length ? (
+                content: hyvaksymisEsitys.kuulutuksetJaKutsu?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.kuulutuksetJaKutsu?.map((tiedosto, index) => (
                       <li key={index}>
@@ -259,7 +261,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
               {
                 id: "2",
                 title: <H3 sx={{ margin: 0 }}>Projektivelho ({hyvaksymisEsitys.muuAineistoVelhosta?.length ?? 0})</H3>,
-                content: !!hyvaksymisEsitys.muuAineistoVelhosta?.length ? (
+                content: hyvaksymisEsitys.muuAineistoVelhosta?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.muuAineistoVelhosta?.map((tiedosto, index) => (
                       <li key={index}>
@@ -274,7 +276,7 @@ export default function HyvaksymisEsitysLukutila({ hyvaksymisEsityksenTiedot }: 
               {
                 id: "3",
                 title: <H3 sx={{ margin: 0 }}>Omalta koneelta ({hyvaksymisEsitys.muuAineistoKoneelta?.length ?? 0})</H3>,
-                content: !!hyvaksymisEsitys.muuAineistoKoneelta?.length ? (
+                content: hyvaksymisEsitys.muuAineistoKoneelta?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.muuAineistoKoneelta?.map((tiedosto, index) => (
                       <li key={index}>
@@ -337,7 +339,7 @@ const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
   },
 ];
 
-function IlmoituksenVastaanottajatTable(props: { vastaanottajat: SahkopostiVastaanottaja[] }) {
+function IlmoituksenVastaanottajatTable(props: Readonly<{ vastaanottajat: SahkopostiVastaanottaja[] }>) {
   const table = useReactTable({
     columns,
     getCoreRowModel: getCoreRowModel(),

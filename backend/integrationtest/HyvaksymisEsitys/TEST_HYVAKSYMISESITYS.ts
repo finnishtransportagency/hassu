@@ -1,10 +1,10 @@
-import { IHyvaksymisEsitys } from "../../src/database/model";
+import { IHyvaksymisEsitys, JulkaistuHyvaksymisEsitys } from "../../src/database/model";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { DeepReadonly } from "hassu-common/specialTypes";
 
 const TEST_HYVAKSYMISESITYS: DeepReadonly<IHyvaksymisEsitys> = getTestHyvaksymisEsitys();
 
-function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsitys> {
+function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsitys & Pick<JulkaistuHyvaksymisEsitys, "poistumisPaiva">> {
   const nbr = number || "";
   const lisatty = "2022-01-02T02:00:00+02:00";
   return {
@@ -28,7 +28,6 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
     kiireellinen: true,
     lisatiedot: `Lisätietoja${nbr}`,
     laskutustiedot: {
-      yTunnus: `yTunnus${nbr}`,
       ovtTunnus: `ovtTunnus${nbr}`,
       verkkolaskuoperaattorinTunnus: `verkkolaskuoperaattorinTunnus${nbr}`,
       viitetieto: `viitetieto${nbr}`,

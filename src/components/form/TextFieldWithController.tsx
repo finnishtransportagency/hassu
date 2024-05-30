@@ -39,7 +39,7 @@ export const TextFieldWithController = <TFieldValues extends FieldValues>({
         <HelperTextContainer component="span">
           <HelperText>{text}</HelperText>
           <Counter className={classNames("MuiFormHelperText-counter", fieldState.error?.message && "Mui-error")}>{`${
-            (field.value as string).length
+            (field.value as string)?.length ?? 0
           } / ${maxLength}`}</Counter>
         </HelperTextContainer>
       );

@@ -404,7 +404,7 @@ type LausuntoPyynnonTaydennys {
 }
 
 type HyvaksymisEsitys {
-  poistumisPaiva: String!
+  poistumisPaiva: String
   kiireellinen: Boolean
   lisatiedot: String
   laskutustiedot: Laskutustiedot
@@ -438,10 +438,11 @@ type ProjektinPerustiedot {
   suunnitelmanNimi: String!
   asiatunnus: String
   vastuuorganisaatio: String
+  yTunnus: String
+  kunnat: [Int!]
 }
 
 type Laskutustiedot {
-  yTunnus: String
   ovtTunnus: String
   verkkolaskuoperaattorinTunnus: String
   viitetieto: String
@@ -1241,10 +1242,8 @@ type LadattavatTiedostot {
 }
 
 type HyvaksymisEsityksenAineistot {
-  suunnitelmanNimi: String!
-  asiatunnus: String
-  vastuuorganisaatio: String
-  poistumisPaiva: String!
+  perustiedot: ProjektinPerustiedot!
+  poistumisPaiva: String
   pyydetaanKiireellistaKasittelya: Boolean
   linkkiVanhentunut: Boolean
   lisatiedot: String

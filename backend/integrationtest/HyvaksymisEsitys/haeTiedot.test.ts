@@ -6,6 +6,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 import { haeHyvaksymisEsityksenTiedot } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
+import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 
 describe("HaeHyvaksymisRsityksenTiedot", () => {
   const userFixture = new UserFixture(userService);
@@ -25,9 +26,16 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
 
   it("antaa muokkauksenVoiAvata=true, kun hyväksymisesitys on hyväksytty ja hyväksymispäätösvaihetta ei vielä ole", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-    const projektiBefore = {
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
@@ -36,8 +44,10 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnus",
-        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
       },
+      kayttoOikeudet: [],
     };
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
@@ -46,9 +56,16 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
 
   it("antaa muokkauksenVoiAvata=false, kun hyväksymisesitys on hyväksytty ja hyväksymispäätösvaihetta on olemassa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-    const projektiBefore = {
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
@@ -58,8 +75,10 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnus",
-        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
       },
+      kayttoOikeudet: [],
     };
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);

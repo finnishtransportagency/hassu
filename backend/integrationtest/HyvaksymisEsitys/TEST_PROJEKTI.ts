@@ -132,6 +132,7 @@ export const TEST_PROJEKTI: Pick<DBProjekti, "oid"> & DeepPartial<DBProjekti> = 
     nimi: "Projektin nimi",
     asiatunnusVayla: "asiatunnusVayla",
     suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    kunnat: [91, 92],
   },
   kielitiedot: {
     ensisijainenKieli: API.Kieli.SUOMI,

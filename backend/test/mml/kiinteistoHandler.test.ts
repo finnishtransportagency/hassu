@@ -1,22 +1,13 @@
 import { SQSRecord } from "aws-lambda";
 import {
   OmistajaHakuEvent,
-  haeKiinteistonOmistajat,
   handleEvent,
   setClient,
   tallennaKiinteistonOmistajat,
   tuoKarttarajausJaTallennaKiinteistotunnukset,
 } from "../../src/mml/kiinteistoHandler";
 import { MmlClient } from "../../src/mml/mmlClient";
-import {
-  BatchGetCommand,
-  BatchWriteCommand,
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-  UpdateCommand,
-  QueryCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { BatchWriteCommand, DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { assert, expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
 import { setLogContextOid } from "../../src/logger";

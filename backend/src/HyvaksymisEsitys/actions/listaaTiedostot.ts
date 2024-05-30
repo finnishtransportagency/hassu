@@ -9,6 +9,7 @@ import { fileService } from "../../files/fileService";
 import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
 import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -25,18 +26,21 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       throw new NotFoundError("Hyvaksymisesitystä ei löydy");
     }
     assertIsDefined(projekti.salt, "Projektin salt on määritelty tässä vaiheessa");
+    assertIsDefined(projekti.velho, "Projektilla tulee olla velho");
     validateHyvaksymisEsitysHash(oid, projekti.salt, hyvaksymisEsitys.versio, params.hash);
+
     const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
     const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
     assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-      return Promise.resolve({
+      return {
         __typename: "HyvaksymisEsityksenAineistot",
-        suunnitelmanNimi: projekti.velho!.nimi,
         poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
         linkkiVanhentunut: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
-      });
+        perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
+      };
     }
     const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, hyvaksymisEsitys?.aineistopaketti)
@@ -46,9 +50,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       __typename: "HyvaksymisEsityksenAineistot",
       ...ladattavatTiedostot,
       aineistopaketti,
-      suunnitelmanNimi: projekti.velho!.nimi,
-      asiatunnus: projekti.velho!.asiatunnusVayla,
-      vastuuorganisaatio: projekti.velho!.suunnittelustaVastaavaViranomainen,
+      perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
