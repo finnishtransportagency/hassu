@@ -4,7 +4,7 @@ import { vastaavanViranomaisenYTunnus } from "../../util/vastaavaViranomainen/yT
 import { vastaavanViranomaisenAsiatunnus } from "../../util/vastaavaViranomainen/asiatunnus";
 import { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
-export function haePerustiedot(projekti: HyvaksymisEsityksenTiedot): API.ProjektinPerustiedot {
+export function adaptVelhoToProjektinPerustiedot(projekti: HyvaksymisEsityksenTiedot): API.ProjektinPerustiedot {
   assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
   return {
     __typename: "ProjektinPerustiedot",

@@ -9,7 +9,7 @@ import { fileService } from "../../files/fileService";
 import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot";
 import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
-import { haePerustiedot } from "./haePerustiedot";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -38,7 +38,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
         poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
         linkkiVanhentunut: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
-        perustiedot: haePerustiedot(projekti),
+        perustiedot: adaptVelhoToProjektinPerustiedot(projekti),
       };
     }
     const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
@@ -49,7 +49,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       __typename: "HyvaksymisEsityksenAineistot",
       ...ladattavatTiedostot,
       aineistopaketti,
-      perustiedot: haePerustiedot(projekti),
+      perustiedot: adaptVelhoToProjektinPerustiedot(projekti),
       laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),

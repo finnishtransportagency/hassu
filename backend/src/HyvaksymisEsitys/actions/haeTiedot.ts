@@ -2,7 +2,7 @@ import { adaptHyvaksymisEsitysToAPI } from "../../projekti/adapter/adaptToAPI";
 import { requirePermissionLuku } from "../../user";
 import { haeProjektinTiedotHyvaksymisEsityksesta } from "../dynamoDBCalls";
 import * as API from "hassu-common/graphql/apiModel";
-import { haePerustiedot } from "./haePerustiedot";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -16,6 +16,6 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     versio,
     hyvaksymisEsitys,
     muokkauksenVoiAvata: !hyvaksymisPaatosVaihe && hyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY,
-    perustiedot: haePerustiedot(projekti),
+    perustiedot: adaptVelhoToProjektinPerustiedot(projekti),
   };
 }
