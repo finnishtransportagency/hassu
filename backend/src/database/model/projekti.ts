@@ -117,6 +117,8 @@ export type KasittelynTila = {
   hallintoOikeus?: OikeudenPaatos;
   korkeinHallintoOikeus?: OikeudenPaatos;
   lisatieto?: string;
+  ennakkotarkastus?: string;
+  toimitusKaynnistynyt?: string;
 };
 
 export type OikeudenPaatos = {
