@@ -99,10 +99,10 @@ export default function Linkki({
           Hidden link
         </a>
         <Button
+          className="btn-small"
           endIcon="external-link-alt"
-          style={{ borderRadius: 0, textTransform: "none" }}
           type="button"
-          disabled={buttonDisabled}
+          disabled={false}
           onClick={() => {
             const adaptedInput = kunta
               ? adaptLausuntoPyynnonTaydennysLisakentillaToInput(formData as LausuntoPyynnonTaydennysLisakentilla)
@@ -116,10 +116,9 @@ export default function Linkki({
           Esikatsele
         </Button>
         <Button
-          primary
-          style={{ borderRadius: 0, textTransform: "none" }}
+          className="btn-small-primary"
           type="button"
-          disabled={!linkHref || buttonDisabled}
+          disabled={false}
           onClick={() => {
             if (linkRef.current?.value) {
               navigator.clipboard.writeText(linkRef.current.value);
