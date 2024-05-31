@@ -102,7 +102,7 @@ export default function Linkki({
           className="btn-small"
           endIcon="external-link-alt"
           type="button"
-          disabled={false}
+          disabled={buttonDisabled}
           onClick={() => {
             const adaptedInput = kunta
               ? adaptLausuntoPyynnonTaydennysLisakentillaToInput(formData as LausuntoPyynnonTaydennysLisakentilla)
@@ -118,7 +118,7 @@ export default function Linkki({
         <Button
           className="btn-small-primary"
           type="button"
-          disabled={false}
+          disabled={!linkHref || buttonDisabled}
           onClick={() => {
             if (linkRef.current?.value) {
               navigator.clipboard.writeText(linkRef.current.value);
