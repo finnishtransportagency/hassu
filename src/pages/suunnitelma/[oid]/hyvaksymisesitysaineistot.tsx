@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import { HyvaksymisEsityksenAineistot } from "@services/api";
-import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 import { useHyvaksymisEsityksenAineistot } from "src/hooks/useHyvaksymisEsityksenAineistot";
 import HyvaksymisEsitysAineistoPage from "@components/HyvaksymisEsitys/AineistoPage";
+import VanhentunutAineistolinkki from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
 
 export default function HyvaksymisesitysLinkki(): ReactElement {
   const data: null | undefined | HyvaksymisEsityksenAineistot = useHyvaksymisEsityksenAineistot().data;

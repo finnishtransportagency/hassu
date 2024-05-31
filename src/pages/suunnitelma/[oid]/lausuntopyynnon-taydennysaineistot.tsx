@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 import { useLausuntoPyynnonTaydennysAineistot } from "src/hooks/useLausuntoPyynnonTaydennysAineistot";
 import { LadattavatTiedostot } from "@services/api";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import VanhentunutAineistolinkki from "@components/projekti/lausuntopyynnot/VanhentunutAineistolinkki";
 import LausuntopyyntoTaydennysAineistoPage from "@components/projekti/lausuntopyynnot/LausuntopyyntoTaydennysAineistoPage";
+import VanhentunutAineistolinkki from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LadattavatTiedostot = useLausuntoPyynnonTaydennysAineistot().data;
