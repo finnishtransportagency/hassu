@@ -367,6 +367,7 @@
   .btn:disabled,
   .btn.disabled {
     @apply cursor-default;
+    border-color: #999999;
   }
   .btn:disabled,
   .btn.disabled > div {
