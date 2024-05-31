@@ -23,7 +23,7 @@ export default function VanhentunutAineistolinkki({
       <div style={{ maxWidth: "40em" }}>
         <p>
           {hyvaksymisesitys ? "Hyväksymisesityksen" : "Lausuntopyynnön"} aineistolinkin voimassaolo on päättynyt{" "}
-          <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "??"}</b>.
+          <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "virhe: päivämäärä puuttuu"}</b>.
         </p>
         <p>
           Aineistoon liittyvissä tiedusteluissa ja kysymyksissä voit olla yhteydessä projektipäällikköön. Voit pyytää esimerkiksi jatkoa
