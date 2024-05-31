@@ -78,13 +78,15 @@ export default async function createLadattavatTiedostot(
       )
     )
   ).sort(jarjestaTiedostot);
-  const maanomistajaluettelo: API.LadattavaTiedosto[] = (
+  const maanomistajaluetteloProjektista = await getMaanomistajaLuettelo(projekti);
+  const maanomistajaluetteloOmaltaKoneelta: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.maanomistajaluettelo?.map((aineisto) =>
         adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "maanomistajaluettelo"))
       ) ?? []
     )
   ).sort(jarjestaTiedostot);
+  const maanomistajaluettelo = (await maanomistajaluetteloProjektista).concat(maanomistajaluetteloOmaltaKoneelta);
   const lausunnot: API.LadattavaTiedosto[] = (
     await Promise.all(
       hyvaksymisEsitys?.lausunnot?.map((aineisto) => adaptLadattuTiedostoNewToLadattavaTiedosto(aineisto, joinPath(path, "lausunnot"))) ??
@@ -102,37 +104,61 @@ export default async function createLadattavatTiedostot(
   };
 }
 
-async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.LadattavaTiedosto[]> {
+export async function getMaanomistajaLuettelo(projekti: ProjektiTiedostoineen): Promise<API.LadattavaTiedosto[]> {
+  const maanomistajaluttelo: API.LadattavaTiedosto[] = [];
+  //Nähtävilläolovaihe
+  const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
+  if (nahtavillaoloVaiheJulkaisut) {
+    for (const nahtavillaoloVaiheJulkaisu of nahtavillaoloVaiheJulkaisut) {
+      if (nahtavillaoloVaiheJulkaisu.tila != API.KuulutusJulkaisuTila.HYVAKSYTTY) {
+        continue;
+      }
+      if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
+        maanomistajaluttelo.push(await adaptTiedostoPathToLadattavaTiedosto(projekti.oid, nahtavillaoloVaiheJulkaisu.maanomistajaluettelo));
+      }
+    }
+  }
+  return maanomistajaluttelo;
+}
+
+export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.LadattavaTiedosto[]> {
   const oid = projekti.oid;
   const onSaameProjekti =
     projekti.kielitiedot?.ensisijainenKieli == API.Kieli.POHJOISSAAME || projekti.kielitiedot?.toissijainenKieli == API.Kieli.POHJOISSAAME;
   const kutsut: API.LadattavaTiedosto[] = [];
   //Aloituskuulutus
-  const aloituskuulutusJulkaisu = projekti.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1];
-  const aloituskuulutusJulkaisuPDFt = aloituskuulutusJulkaisu?.aloituskuulutusPDFt;
-  assertIsDefined(aloituskuulutusJulkaisuPDFt, "aloituskuulutusJulkaisuPDFt on määritelty tässä vaiheessa");
-  for (const kieli in API.Kieli) {
-    const kuulutus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusPDFPath;
-    if (kuulutus) {
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
-    }
-    const ilmoitus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusIlmoitusPDFPath;
-    if (ilmoitus) {
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
-    }
-  }
+  const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
+  if (aloitusKuulutusJulkaisut) {
+    for (const aloituskuulutusJulkaisu of aloitusKuulutusJulkaisut) {
+      if (aloituskuulutusJulkaisu.tila != API.KuulutusJulkaisuTila.HYVAKSYTTY) {
+        continue;
+      }
+      const aloituskuulutusJulkaisuPDFt = aloituskuulutusJulkaisu?.aloituskuulutusPDFt;
+      assertIsDefined(aloituskuulutusJulkaisuPDFt, "aloituskuulutusJulkaisuPDFt on määritelty tässä vaiheessa");
+      for (const kieli in API.Kieli) {
+        const kuulutus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusPDFPath;
+        if (kuulutus) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+        }
+        const ilmoitus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusIlmoitusPDFPath;
+        if (ilmoitus) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+        }
+      }
 
-  if (onSaameProjekti) {
-    const aloituskuulutusSaamePDFt = aloituskuulutusJulkaisu?.aloituskuulutusSaamePDFt;
-    await forEverySaameDoAsync(async (kieli) => {
-      assertIsDefined(aloituskuulutusSaamePDFt, "aloituskuulutusSaamePDFt on määritelty tässä vaiheessa");
-      const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
-      assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
-      kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
-      const ilmoitus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-      assertIsDefined(ilmoitus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
-      kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
-    });
+      if (onSaameProjekti) {
+        const aloituskuulutusSaamePDFt = aloituskuulutusJulkaisu?.aloituskuulutusSaamePDFt;
+        await forEverySaameDoAsync(async (kieli) => {
+          assertIsDefined(aloituskuulutusSaamePDFt, "aloituskuulutusSaamePDFt on määritelty tässä vaiheessa");
+          const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
+          assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
+          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
+          const ilmoitus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
+          assertIsDefined(ilmoitus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
+          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
+        });
+      }
+    }
   }
 
   //Suunnitteluvaihe
@@ -140,6 +166,9 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   if (vuorovaikutusKierrosJulkaisut) {
     // Lyhyen mennettelyn projekteissa ei ole suunnitteluvaihetta
     for (const julkaisu of vuorovaikutusKierrosJulkaisut) {
+      if (julkaisu.tila != API.VuorovaikutusKierrosTila.JULKINEN) {
+        continue;
+      }
       const vuorovaikutusPDFt = julkaisu.vuorovaikutusPDFt;
       assertIsDefined(vuorovaikutusPDFt, "vuorovaikutusPDFt on määritelty tässä vaiheessa");
       for (const kieli in API.Kieli) {
@@ -162,36 +191,44 @@ async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.Ladattava
   }
 
   //Nähtävilläolovaihe
-  const nahtavillaoloVaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
-  const nahtavillaoloVaiheJulkaisuPDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloPDFt;
-  assertIsDefined(nahtavillaoloVaiheJulkaisuPDFt, "nahtavillaoloVaiheJulkaisuPDFt on määritelty tässä vaiheessa");
-  for (const kieli in API.Kieli) {
-    const kuulutus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloPDFPath;
-    if (kuulutus) {
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
-    }
-    const ilmoitus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusPDFPath;
-    if (ilmoitus) {
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
-    }
-    const ilmoitusKiinteistonomistajille: string | undefined =
-      nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
-    if (ilmoitusKiinteistonomistajille) {
-      kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitusKiinteistonomistajille));
+  const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
+  if (nahtavillaoloVaiheJulkaisut) {
+    for (const nahtavillaoloVaiheJulkaisu of nahtavillaoloVaiheJulkaisut) {
+      if (nahtavillaoloVaiheJulkaisu.tila != API.KuulutusJulkaisuTila.HYVAKSYTTY) {
+        continue;
+      }
+      const nahtavillaoloVaiheJulkaisuPDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloPDFt;
+      assertIsDefined(nahtavillaoloVaiheJulkaisuPDFt, "nahtavillaoloVaiheJulkaisuPDFt on määritelty tässä vaiheessa");
+      for (const kieli in API.Kieli) {
+        const kuulutus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloPDFPath;
+        if (kuulutus) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
+        }
+        const ilmoitus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusPDFPath;
+        if (ilmoitus) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
+        }
+        const ilmoitusKiinteistonomistajille: string | undefined =
+          nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+        if (ilmoitusKiinteistonomistajille) {
+          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitusKiinteistonomistajille));
+        }
+      }
+
+      if (onSaameProjekti) {
+        await forEverySaameDoAsync(async (kieli) => {
+          const nahtavillaoloSaamePDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloSaamePDFt;
+          assertIsDefined(nahtavillaoloSaamePDFt, "nahtavillaoloSaamePDFt on määritelty tässä vaiheessa");
+          const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
+          assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
+          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
+          const ilmoitus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
+          assertIsDefined(ilmoitus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusIlmoitusPDF on oltava olemassa`);
+          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
+        });
+      }
     }
   }
 
-  if (onSaameProjekti) {
-    await forEverySaameDoAsync(async (kieli) => {
-      const nahtavillaoloSaamePDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloSaamePDFt;
-      assertIsDefined(nahtavillaoloSaamePDFt, "nahtavillaoloSaamePDFt on määritelty tässä vaiheessa");
-      const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
-      assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
-      kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
-      const ilmoitus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-      assertIsDefined(ilmoitus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusIlmoitusPDF on oltava olemassa`);
-      kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
-    });
-  }
   return kutsut;
 }
