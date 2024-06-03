@@ -46,11 +46,10 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
-    const attachments = await Promise.all(
-      (julkaistuHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
-        fileService.getFileAsAttachment(projektiInDB.oid, `hyvaksymisesitys/hyvaksymisesitys/${adaptFileName(he.nimi)}`)
-      )
+    const promises = (julkaistuHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
+      fileService.getFileAsAttachment(projektiInDB.oid, `/hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(he.nimi)}`)
     );
+    const attachments = await Promise.all(promises);
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
@@ -75,6 +74,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   } else {
     log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
   }
+
   return oid;
 }
 
