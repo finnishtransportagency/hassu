@@ -207,6 +207,52 @@ function getKuulutusKohde(projekti: DBProjekti, tilasiirtymaTyyppi: Tilasiirtyma
   }
 }
 
+export function createHyvaksymisesitysHyvaksyttavanaEmail(
+  projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "oid">
+): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti.velho);
+  return {
+    subject: `Valtion liikenneväylien suunnittelu: Hyväksymisesitys odottaa hyväksyntää ${asiatunnus}`,
+    text: `Valtion liikenneväylien suunnittelu -järjestelmän projektistasi ${projekti.velho?.nimi} on luotu hyväksymisesitys, joka odottaa hyväksyntääsi.
+  
+    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+    
+    ${projektiPaallikkoSuffix}`,
+    to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+  };
+}
+
+export function createHyvaksymisesitysHyvaksyttyLaatijalleEmail(
+  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet">
+): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti.velho);
+  const muokkaaja = projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus == projekti.muokattavaHyvaksymisEsitys?.muokkaaja);
+  return {
+    subject: `Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty ${asiatunnus}`,
+    text: `Valtion liikenneväylien suunnittelu -järjestelmän projektisi ${projekti.velho?.nimi} hyväksymisesitys on hyväksytty.
+
+    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+    
+    ${muokkaajaSuffix}`,
+    to: muokkaaja?.email ?? undefined,
+  };
+}
+
+export function createHyvaksymisesitysHyvaksyttyPpEmail(
+  projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
+): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti.velho);
+  return {
+    subject: `Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty ${asiatunnus}`,
+    text: `Valtion liikenneväylien suunnittelu -järjestelmän projektisi ${projekti.velho?.nimi} hyväksymisesitys on hyväksytty.
+
+    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+    
+    ${!projekti.asianhallinta?.inaktiivinen ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix}`,
+    to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+  };
+}
+
 export function createKuulutusHyvaksyttavanaEmail(projekti: DBProjekti, tilasiirtymaTyyppi: TilasiirtymaTyyppi): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
   const kuulutusTyyppiUpperCase = getKuulutusTyyppi(tilasiirtymaTyyppi);
@@ -377,7 +423,9 @@ Planens namn: ${projekti.kielitiedot.projektinNimiVieraskielella}
 Planens ärendekod: ${asiatunnus}
 
 ${
-  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Trafikledsverket" : "NTM-centralen"
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+    ? "Trafikledsverket"
+    : "NTM-centralen"
 } behandlar din anmärkning med en ärendekod. Om du vill kontakta oss i anslutning till planen, meddela ärendekoden i ditt meddelande.
 
 Du kommer till planens uppgifter via denna länk: ${linkNahtavillaOlo(projekti, Kieli.RUOTSI)}
@@ -387,7 +435,7 @@ ${muistutus.muistutus ?? ""}
 
 ${getMuistutusLiiteTeksti(muistutus, "Bilagor med följande namn som bifogats anmärkningen")}
 `;
-    subject += " / Anmärkningen har mottagits"
+    subject += " / Anmärkningen har mottagits";
   }
   const email = {
     subject,
