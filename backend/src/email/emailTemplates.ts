@@ -262,8 +262,8 @@ export function createHyvaksymisesitysViranomaisilleEmail(
   const asiatunnus = getAsiatunnus(projekti.velho);
   const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
   return {
-    subject: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymiseistys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}`,
-    text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymiseistys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
+    subject: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}`,
+    text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
 
     ${
       projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
