@@ -115,7 +115,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
           </Button>
         </Section>
 
-        <Section marginBottom={10} >
+        <Section marginBottom={10}>
           <h2 className="vayla-subtitle">Lausuntopyynnön mallipohjat</h2>
           <p>
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
