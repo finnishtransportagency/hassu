@@ -6,7 +6,7 @@ import { omit } from "lodash";
 import { nyt } from "../../util/dateUtil";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
@@ -18,6 +18,8 @@ import {
 } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
+import { fileService } from "../../files/fileService";
+import Mail from "nodemailer/lib/mailer";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -43,7 +45,17 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
   if (emailOptions.to) {
-    await emailClient.sendEmail(emailOptions);
+    // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
+    const attachments = await Promise.all(
+      (julkaistuHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
+        fileService.getFileAsAttachment(projektiInDB.oid, `hyvaksymisesitys/hyvaksymisesitys/${adaptFileName(he.nimi)}`)
+      )
+    );
+    if (attachments.find((a) => !a)) {
+      log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
+    }
+
+    await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
