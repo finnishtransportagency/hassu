@@ -7,7 +7,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
 
-    Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan [object Promise].
+Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan undefined.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -38,7 +38,7 @@ Object {
   "subject": "Kiire hyväksymisesitys Projektin nimi",
   "text": "Kiire hyväksymisesitys Projektin nimi
 
-    ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
     
@@ -103,7 +103,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
 
-    Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -134,7 +134,7 @@ Object {
   "subject": "Kiire hyväksymisesitys Projektin nimi",
   "text": "Kiire hyväksymisesitys Projektin nimi
 
-    ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
     
@@ -199,7 +199,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
 
-    Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -230,7 +230,7 @@ Object {
   "subject": "Kiire hyväksymisesitys Projektin nimi",
   "text": "Kiire hyväksymisesitys Projektin nimi
 
-    Väylävirasto lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+Väylävirasto lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
     
