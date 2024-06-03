@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import { translate } from "../util/localization";
 import * as API from "hassu-common/graphql/apiModel";
 import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
+import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -218,9 +219,9 @@ export function createHyvaksymisesitysHyvaksyttavanaEmail(
     subject: `Valtion liikenneväylien suunnittelu: Hyväksymisesitys odottaa hyväksyntää ${asiatunnus}`,
     text: `Valtion liikenneväylien suunnittelu -järjestelmän projektistasi ${projekti.velho?.nimi} on luotu hyväksymisesitys, joka odottaa hyväksyntääsi.
   
-    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
     
-    ${projektiPaallikkoSuffix}`,
+${projektiPaallikkoSuffix}`,
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
@@ -234,24 +235,32 @@ export function createHyvaksymisesitysHyvaksyttyLaatijalleEmail(
     subject: `Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty ${asiatunnus}`,
     text: `Valtion liikenneväylien suunnittelu -järjestelmän projektisi ${projekti.velho?.nimi} hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
     
-    ${muokkaajaSuffix}`,
+${muokkaajaSuffix}`,
     to: muokkaaja?.email ?? undefined,
   };
 }
 
 export function createHyvaksymisesitysHyvaksyttyPpEmail(
-  projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
+  projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta" | "asianhallinta">
 ): EmailOptions {
   const asiatunnus = getAsiatunnus(projekti.velho);
   return {
     subject: `Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty ${asiatunnus}`,
     text: `Valtion liikenneväylien suunnittelu -järjestelmän projektisi ${projekti.velho?.nimi} hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
-    
-    ${!projekti.asianhallinta?.inaktiivinen ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix}`,
+Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
+
+    ${
+      !projekti.asianhallinta?.inaktiivinen
+        ? `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan ${getLinkkiAsianhallintaan(
+            projekti
+          )}.`
+        : `Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.`
+    }
+
+${projektiPaallikkoSuffix}`,
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
