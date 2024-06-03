@@ -700,11 +700,11 @@ export abstract class AbstractApi {
 
   async listaaHyvaksymisEsityksenTiedostot(
     oid: string,
-    listaaHyvaksymisEsityksenTiedostot: ListaaHyvaksymisEsityksenTiedostotInput
+    listaaHyvaksymisEsityksenTiedostotInput: ListaaHyvaksymisEsityksenTiedostotInput
   ): Promise<HyvaksymisEsityksenAineistot> {
     return await this.callAPI(apiConfig.listaaHyvaksymisEsityksenTiedostot, {
       oid,
-      listaaHyvaksymisEsityksenTiedostot,
+      listaaHyvaksymisEsityksenTiedostotInput,
     } as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
   }
 
