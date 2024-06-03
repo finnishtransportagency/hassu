@@ -10,7 +10,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
-  IlmoitettavaViranomainen,
   Kielitiedot,
   KuulutusJulkaisuTila,
   LaskuriTyyppi,
