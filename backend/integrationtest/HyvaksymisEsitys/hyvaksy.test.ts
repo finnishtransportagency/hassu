@@ -155,6 +155,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
+
     expect(emailStub?.callCount).to.eql(3);
 
     const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
@@ -176,7 +177,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
     expect(ilmoitusVastaanottajille).to.exist;
-    expect(ilmoitusVastaanottajille?.firstArg).toMatchSnapshot();
+    expect(omit(ilmoitusVastaanottajille?.firstArg, "attachments")).toMatchSnapshot();
+    expect(ilmoitusVastaanottajille?.firstArg.attachments?.length).to.eql(1);
+    expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
   it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja tarvitaan kiireellistä käsittelyä", async () => {
@@ -240,8 +243,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
-    expect(ilmoitusVastaanottajille).to.exist;
-    expect(ilmoitusVastaanottajille?.firstArg).toMatchSnapshot();
+    expect(omit(ilmoitusVastaanottajille?.firstArg, "attachments")).toMatchSnapshot();
+    expect(ilmoitusVastaanottajille?.firstArg.attachments?.length).to.eql(1);
+    expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
   it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä", async () => {
@@ -305,8 +309,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
-    expect(ilmoitusVastaanottajille).to.exist;
-    expect(ilmoitusVastaanottajille?.firstArg).toMatchSnapshot();
+    expect(omit(ilmoitusVastaanottajille?.firstArg, "attachments")).toMatchSnapshot();
+    expect(ilmoitusVastaanottajille?.firstArg.attachments?.length).to.eql(1);
+    expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
   it("onnistuu projektipäälliköltä ", async () => {
@@ -372,6 +377,41 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         await insertYllapitoFileToS3(fullpath);
       })
     );
+    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
+    expect(files).to.eql([
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/muistutukset/muistutukset_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/muuAineistoVelhosta/muuAineistoVelhosta_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/suunnitelma/suunnitelma_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muuAineistoVelhosta/muuAineistoVelhosta_aoa_.png",
+      "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/suunnitelma/suunnitelma_aoa_.png",
+    ]);
+  });
+
+  it("kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle, kun julkaistaan ekaa kertaa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
+    const versio = 2;
+    const projektiBefore = {
+      oid,
+      versio,
+      muokattavaHyvaksymisEsitys,
+      kayttoOikeudet,
+      velho,
+    };
+    await insertProjektiToDB(projektiBefore);
+
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
     expect(files).to.eql([
