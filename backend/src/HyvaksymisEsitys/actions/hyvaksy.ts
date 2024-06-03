@@ -11,6 +11,13 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
+import {
+  createHyvaksymisesitysHyvaksyttyLaatijalleEmail,
+  createHyvaksymisesitysHyvaksyttyPpEmail,
+  createHyvaksymisesitysViranomaisilleEmail,
+} from "../../email/emailTemplates";
+import { emailClient } from "../../email/email";
+import { log } from "../../logger";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -32,6 +39,30 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     hyvaksyja: nykyinenKayttaja.uid,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+
+  // Lähetä email vastaanottajille
+  const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
+  if (emailOptions.to) {
+    await emailClient.sendEmail(emailOptions);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
+  }
+
+  // Lähetä email hyväksymisesityksen laatijalle
+  const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
+  if (emailOptions2.to) {
+    await emailClient.sendEmail(emailOptions2);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt laatijan sahkopostiosoitetta");
+  }
+
+  // Lähetä email projarille ja varahenkilöille
+  const emailOptions3 = createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
+  if (emailOptions3.to) {
+    await emailClient.sendEmail(emailOptions3);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
+  }
   return oid;
 }
 
