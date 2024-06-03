@@ -936,7 +936,7 @@ type KunnallinenLadattuTiedosto implements ILadattuTiedosto {
   uuid: String!
   lisatty: String
   jarjestys: Int
-  kunta: Int
+  kunta: Int!
   tiedosto: String
 }
 

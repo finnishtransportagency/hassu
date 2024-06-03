@@ -11,6 +11,16 @@ const getAineistoSchema = () =>
   });
 export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
+const getAineistoNewSchema = () =>
+  Yup.object().shape({
+    dokumenttiOid: Yup.string().required(),
+    kategoriaId: Yup.string().nullable(),
+    nimi: Yup.string().required(),
+    uuid: Yup.string().required(),
+    jarjestys: Yup.number().integer().nullable(),
+  });
+export const getAineistotNewSchema = () => Yup.array().of(getAineistoNewSchema()).nullable();
+
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({
     tiedosto: Yup.string().required(),
@@ -18,7 +28,18 @@ const getLadattuTiedostoSchema = () =>
     jarjestys: Yup.number().integer().notRequired(),
     tila: Yup.string().required(),
   });
+
 export const getLadatutTiedostotSchema = () => Yup.array().of(getLadattuTiedostoSchema()).nullable();
+
+const getLadattuTiedostoNewSchema = () =>
+  Yup.object().shape({
+    tiedosto: Yup.string().nullable(),
+    nimi: Yup.string().required(),
+    jarjestys: Yup.number().integer().notRequired(),
+    uuid: Yup.string().required(),
+  });
+
+export const getLadatutTiedostotNewSchema = () => Yup.array().of(getLadattuTiedostoNewSchema()).nullable();
 
 export const ilmoituksenVastaanottajat = () =>
   Yup.object()

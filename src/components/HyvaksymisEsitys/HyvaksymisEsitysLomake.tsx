@@ -28,6 +28,8 @@ import { H3, H4 } from "@components/Headings";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -40,7 +42,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
   );
 
   const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput> = {
-    //resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
+    resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",

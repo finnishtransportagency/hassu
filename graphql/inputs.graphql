@@ -384,7 +384,7 @@ input KunnallinenLadattuTiedostoInput {
   Numero jarjestamista varten
   """
   jarjestys: Int
-  kunta: Int
+  kunta: Int!
 }
 
 input ProjektiKayttajaInput {
