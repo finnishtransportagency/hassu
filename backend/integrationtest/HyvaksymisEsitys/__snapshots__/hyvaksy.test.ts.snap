@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä 1`] = `
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 1`] = `
 Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
-    
-    Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan{{linkkiAsianhallintaan}}.
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+
+    Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan [object Promise].
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -17,19 +17,19 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 }
 `;
 
-exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä 2`] = `
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 2`] = `
 Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-    Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": "muokkaaja@email.com",
 }
 `;
 
-exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä 3`] = `
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 3`] = `
 Object {
   "cc": Array [
     "email@email.com",
@@ -101,9 +101,9 @@ Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
-    
-    Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan{{linkkiAsianhallintaan}}.
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+
+    Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -118,9 +118,9 @@ Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-    Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": "muokkaaja@email.com",
 }
 `;
@@ -197,9 +197,9 @@ Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
-    
-    Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan{{linkkiAsianhallintaan}}.
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+
+    Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -214,9 +214,9 @@ Object {
   "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-    Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": "muokkaaja@email.com",
 }
 `;

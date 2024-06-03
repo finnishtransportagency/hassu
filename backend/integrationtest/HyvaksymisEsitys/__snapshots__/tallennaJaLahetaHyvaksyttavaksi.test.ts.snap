@@ -5,9 +5,9 @@ Object {
   "subject": "Valtion liikenneväylien suunnittelu: Hyväksymisesitys odottaa hyväksyntää undefined",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi undefined on luotu hyväksymisesitys, joka odottaa hyväksyntääsi.
   
-    Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-    Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
     "email@email.com",
     "email2@email.com",
