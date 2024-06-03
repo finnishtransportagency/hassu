@@ -63,7 +63,7 @@ export default function HyvaksymisEsitysLukutila({
     return null;
   }
 
-  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitys?hash=${hyvaksymisEsitys.hash}`;
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`;
 
   const laskutustiedot = hyvaksymisEsitys.laskutustiedot;
 
