@@ -146,6 +146,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           kayttajatunnus: "muokkaaja-oid",
         },
       ],
+      asianhallinta: {
+        inaktiivinen: true,
+      },
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnusVayla",
@@ -214,6 +217,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           kayttajatunnus: "muokkaaja-oid",
         },
       ],
+      asianhallinta: {
+        inaktiivinen: true,
+      },
       velho: {
         nimi: "Projektin nimi",
         asiatunnusELY: "asiatunnusELY",
@@ -248,7 +254,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
-  it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä", async () => {
+  it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
@@ -285,6 +291,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         asiatunnusELY: "asiatunnusELY",
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
         kunnat: [91, 92],
+      },
+      asianhallinta: {
+        inaktiivinen: false,
+        asiaId: "asiaId",
       },
     };
     await insertProjektiToDB(projektiBefore);
