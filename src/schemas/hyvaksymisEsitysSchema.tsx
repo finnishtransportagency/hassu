@@ -25,7 +25,7 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
     laskutustiedot: Yup.object().shape({
       ovtTunnus: Yup.string().defined("OVT-tunnus on annettava"),
       verkkolaskuoperaattorinTunnus: Yup.string().defined("Verkkolaskuoperaattorin välittäjätunnus on annettava"),
-      viitetieto: Yup.string().defined("Viitetieto on annettava"),
+      viitetieto: Yup.string().defined("Viite on annettava"),
     }),
     kuulutuksetJaKutsu: getLadatutTiedostotNewSchema().defined(),
     hyvaksymisEsitys: getLadatutTiedostotNewSchema().defined(),

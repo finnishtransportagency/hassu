@@ -53,7 +53,7 @@ export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinP
           </Grid>
           <Grid item xs={2} lg={2}>
             <TextFieldWithController
-              label="Viitetieto"
+              label="Viite"
               controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.viitetieto" }}
               fullWidth
             />

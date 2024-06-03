@@ -30,6 +30,7 @@ import { formatDate } from "common/util/dateUtils";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
+import Suunnitelma from "./LomakeComponents/Suunnitelma";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -160,12 +161,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
                 <HyvaksymisEsitysTiedosto />
-                <H4 variant="h3">Suunnitelma</H4>
-                <p>
-                  Tuo Projektivelhosta suunnitelman kansiot A–C tai 100–300. Suunnitelma jaotellaan automaattisesti selostusosaan,
-                  pääpiirustuksiin ja informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä,
-                  siirtää alikansioista toiseen tai poistaa.
-                </p>
+                <Suunnitelma />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
