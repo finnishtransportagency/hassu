@@ -242,23 +242,22 @@ ${muokkaajaSuffix}`,
   };
 }
 
-export function createHyvaksymisesitysHyvaksyttyPpEmail(
+export async function createHyvaksymisesitysHyvaksyttyPpEmail(
   projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta" | "asianhallinta">
-): EmailOptions {
+): Promise<EmailOptions> {
   const asiatunnus = getAsiatunnus(projekti.velho);
+  const linkkiAsianhallintaan = await getLinkkiAsianhallintaan(projekti);
   return {
     subject: `Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty ${asiatunnus}`,
     text: `Valtion liikenneväylien suunnittelu -järjestelmän projektisi ${projekti.velho?.nimi} hyväksymisesitys on hyväksytty.
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
 
-    ${
-      !projekti.asianhallinta?.inaktiivinen
-        ? `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan ${getLinkkiAsianhallintaan(
-            projekti
-          )}.`
-        : `Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.`
-    }
+${
+  !projekti.asianhallinta?.inaktiivinen
+    ? `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan ${linkkiAsianhallintaan}.`
+    : `Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.`
+}
 
 ${projektiPaallikkoSuffix}`,
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
@@ -274,9 +273,9 @@ export function createHyvaksymisesitysViranomaisilleEmail(
     subject: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}`,
     text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
 
-    ${
-      projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
-    } lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
+${
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
+} lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
       projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? " kiireellisenä" : ""
     }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://${domain}/suunnitelma/${
       projekti.oid

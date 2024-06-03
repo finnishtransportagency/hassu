@@ -68,7 +68,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   }
 
   // Lähetä email projarille ja varahenkilöille
-  const emailOptions3 = createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
+  const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
   if (emailOptions3.to) {
     await emailClient.sendEmail(emailOptions3);
   } else {
