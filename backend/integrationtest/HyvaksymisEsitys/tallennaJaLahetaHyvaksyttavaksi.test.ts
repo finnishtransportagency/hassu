@@ -163,7 +163,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       kiireellinen: false,
       lisatiedot: "Lisätietoja2",
       laskutustiedot: {
-        yTunnus: "yTunnus2",
         ovtTunnus: "ovtTunnus2",
         verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus2",
         viitetieto: "viitetieto2",
@@ -180,7 +179,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.lisatiedot).to.eql("Lisätietoja2");
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.laskutustiedot).to.eql({
-      yTunnus: "yTunnus2",
       ovtTunnus: "ovtTunnus2",
       verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus2",
       viitetieto: "viitetieto2",

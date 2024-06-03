@@ -8,5 +8,10 @@ export const RectangleButton = styled("button")({
     padding: "4px 12px",
     overflowWrap: "anywhere",
     hyphens: "auto",
+    "&:disabled": {
+      border: "1px solid #999999",
+      color: "#242222",
+      backgroundColor: "#E5E5E5",
+    },
   },
 });

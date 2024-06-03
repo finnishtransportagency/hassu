@@ -3,8 +3,7 @@ import { auditLog } from "../../logger";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
-import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import { haeProjektinTiedotHyvaksymisEsityksesta, tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import { AineistoNew } from "../../database/model";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
@@ -13,6 +12,7 @@ import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 import { assertIsDefined } from "../../util/assertions";
+import { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.

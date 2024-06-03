@@ -37,12 +37,12 @@ function getMetadataJSON() {
   return metaDataJSON;
 }
 
-function extractVelhoValuesIntoMap(field: string) {
-  const values: any = {};
-  const definition: any = (getMetadataJSON().info["x-velho-nimikkeistot"] as any)[field];
+function extractVelhoValuesIntoMap(field: string): Record<string, unknown> {
+  const values: Record<string, unknown> = {};
+  const definition = getMetadataJSON().info["x-velho-nimikkeistot"][field];
   const keyTitleMap = definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
   Object.keys(keyTitleMap).forEach((key) => {
-    return (values[key] = { otsikko: keyTitleMap[key].otsikko, kategoria: keyTitleMap[key].kategoria });
+    values[key] = { otsikko: keyTitleMap[key].otsikko, kategoria: keyTitleMap[key].kategoria };
   });
   return values;
 }
@@ -289,7 +289,7 @@ function getGeoJSON(data: ProjektiProjekti) {
 }
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {
-  const type = metadata.dokumenttiTyypit[dokumenttiTyyppi];
+  const type = metadata.dokumenttiTyypit[dokumenttiTyyppi] as undefined | { otsikko: string; kategoria: string };
   if (!type) {
     throw new Error("adaptDokumenttiTyyppi: tyyppiä ${dokumenttiTyyppi} ei löydy metadata.dokumenttiTyypit avaimista.");
   }

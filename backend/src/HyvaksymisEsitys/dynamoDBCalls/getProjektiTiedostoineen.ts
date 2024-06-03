@@ -1,6 +1,6 @@
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../../config";
-import { DBProjekti } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
 import { getDynamoDBDocumentClient } from "../../aws/client";
 import { log } from "../../logger";
 
@@ -18,7 +18,7 @@ export type ProjektiTiedostoineen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
->;
+> & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
 
 export default async function haeHyvaksymisEsityksenTiedostoTiedot(oid: string): Promise<ProjektiTiedostoineen> {
   const params = new GetCommand({
@@ -37,6 +37,7 @@ export default async function haeHyvaksymisEsityksenTiedostoTiedot(oid: string):
       "nahtavillaoloVaiheJulkaisut, " +
       "muokattavaHyvaksymisEsitys, " +
       "julkaistuHyvaksymisEsitys, " +
+      "hyvaksymisPaatosVaihe.id, " +
       "aineistoHandledAt",
   });
 

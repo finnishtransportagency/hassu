@@ -7,6 +7,8 @@ export function adaptLaskutustiedotToAPI(laskutustiedot: Laskutustiedot | null |
   }
   return {
     __typename: "Laskutustiedot",
-    ...laskutustiedot,
+    ovtTunnus: laskutustiedot.ovtTunnus,
+    verkkolaskuoperaattorinTunnus: laskutustiedot.verkkolaskuoperaattorinTunnus,
+    viitetieto: laskutustiedot.viitetieto,
   };
 }

@@ -5,8 +5,8 @@ import { log } from "../../logger";
 export function validateHyvaksymisEsitysHash(oid: string, salt: string, versio: number, givenHash: string) {
   const hash = createHyvaksymisEsitysHash(oid, versio, salt);
   if (hash != givenHash) {
-    log.error("Lausuntopyynnon aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
-    throw new IllegalAccessError("Lausuntopyynnon aineiston tarkistussumma ei täsmää");
+    log.error("Hyväksymisesityksen aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
+    throw new IllegalAccessError("Hyväksymisesityksen aineiston tarkistussumma ei täsmää");
   }
 }
 

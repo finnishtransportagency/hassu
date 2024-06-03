@@ -44,7 +44,7 @@ export function adaptHyvaksymisEsitysToAPI(
     __typename: "HyvaksymisEsitys",
     hyvaksyja: julkaistuHyvaksymisEsitys?.hyvaksyja,
     hyvaksymisPaiva: julkaistuHyvaksymisEsitys?.hyvaksymisPaiva,
-    poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
+    poistumisPaiva: hyvaksymisEsitys.poistumisPaiva ?? null,
     kiireellinen: hyvaksymisEsitys.kiireellinen,
     lisatiedot: hyvaksymisEsitys.lisatiedot,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),

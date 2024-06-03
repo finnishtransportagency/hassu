@@ -12,6 +12,8 @@ import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { assertIsDefined } from "../../util/assertions";
+import dayjs from "dayjs";
+import { nyt, parseDate } from "../../util/dateUtil";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -84,7 +86,12 @@ function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tal
 }
 
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
-  // Validoi, että kaikki kentät on täytetty (poistumisPaivan olemassaolo varmistetaan tallennuksessa)
+  if (!muokattavaHyvaksymisEsitys.poistumisPaiva || !dayjs(muokattavaHyvaksymisEsitys.poistumisPaiva).isValid()) {
+    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole asetettu poistumisajankohtaa");
+  }
+  if (parseDate(muokattavaHyvaksymisEsitys.poistumisPaiva).endOf("day").isBefore(nyt())) {
+    throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivä ei tulisi olla menneisyydessä");
+  }
   if (!muokattavaHyvaksymisEsitys.laskutustiedot) {
     throw new IllegalArgumentError("Hyväksymisesityksellä ei ole laskutustietoja");
   }

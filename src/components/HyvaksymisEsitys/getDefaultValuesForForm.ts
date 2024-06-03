@@ -12,15 +12,6 @@ import {
 export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot): TallennaHyvaksymisEsitysInput {
   const { oid, versio, hyvaksymisEsitys: muokattavaHyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
 
-  if (!muokattavaHyvaksymisEsitys) {
-    return {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys: {
-        poistumisPaiva: "",
-      },
-    };
-  }
   const {
     poistumisPaiva,
     kiireellinen,
@@ -35,20 +26,19 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
-  } = muokattavaHyvaksymisEsitys;
-  const { yTunnus, ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
+  } = muokattavaHyvaksymisEsitys ?? {};
+  const { ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
   return {
     oid,
     versio,
     muokattavaHyvaksymisEsitys: {
-      poistumisPaiva: poistumisPaiva ?? "",
-      kiireellinen: kiireellinen ?? false,
+      poistumisPaiva: poistumisPaiva ?? null,
+      kiireellinen: !!kiireellinen,
       lisatiedot: lisatiedot ?? "",
       laskutustiedot: {
-        yTunnus,
-        ovtTunnus,
-        verkkolaskuoperaattorinTunnus,
-        viitetieto,
+        ovtTunnus: ovtTunnus ?? "",
+        verkkolaskuoperaattorinTunnus: verkkolaskuoperaattorinTunnus ?? "",
+        viitetieto: viitetieto ?? "",
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
       suunnitelma: adaptAineistotNewToInput(suunnitelma),
@@ -58,7 +48,7 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
-      vastaanottajat: !!vastaanottajat?.length
+      vastaanottajat: vastaanottajat?.length
         ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
         : [{ sahkoposti: "kirjaamo@traficom.fi" }],
     },

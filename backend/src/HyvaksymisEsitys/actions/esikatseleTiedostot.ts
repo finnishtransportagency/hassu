@@ -6,6 +6,7 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function esikatseleHyvaksymisEsityksenTiedostot({
   oid,
@@ -18,13 +19,13 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
   const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
   const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
   assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+  assertIsDefined(dbProjekti.velho, "projektilla tulee olla velho");
+
   return {
     __typename: "HyvaksymisEsityksenAineistot",
     aineistopaketti: "(esikatselu)",
     ...ladattavatTiedostot,
-    suunnitelmanNimi: dbProjekti.velho!.nimi,
-    asiatunnus: dbProjekti.velho!.asiatunnusVayla,
-    vastuuorganisaatio: dbProjekti.velho!.suunnittelustaVastaavaViranomainen,
+    perustiedot: adaptVelhoToProjektinPerustiedot(dbProjekti.velho),
     laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),

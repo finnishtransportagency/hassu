@@ -1,21 +1,65 @@
-import TextInput from "@components/form/TextInput";
-import SectionContent from "@components/layout/SectionContent";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { TextFieldWithController } from "@components/form/TextFieldWithController";
+import { H4 } from "@components/Headings";
+import { Grid } from "@mui/material";
+import { ProjektinPerustiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
+import useTranslation from "next-translate/useTranslation";
 import { ReactElement } from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function Laskutustiedot(): ReactElement {
-  const { register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinPerustiedot }>): ReactElement {
+  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { perustiedot } = props;
+
+  const { t } = useTranslation("common");
 
   return (
-    <SectionContent>
-      <h3 className="vayla-subtitle">Laskutustiedot hyväksymismaksua varten</h3>
-      <TextInput label={"OVT tunnus"} {...register("muokattavaHyvaksymisEsitys.laskutustiedot.ovtTunnus")} />
-      <TextInput
-        label={"Verkkolaskuoperaattorin välittäjätunnus"}
-        {...register("muokattavaHyvaksymisEsitys.laskutustiedot.verkkolaskuoperaattorinTunnus")}
-      />
-      <TextInput label={"Viitetieto"} {...register("muokattavaHyvaksymisEsitys.laskutustiedot.viitetieto")} />
-    </SectionContent>
+    <>
+      <H4 variant="h3">Laskutustiedot hyväksymismaksua varten</H4>
+      <div>
+        <Grid component="dl" container spacing={4} columns={2} sx={{ maxWidth: "700px", dt: { fontWeight: 700, marginBottom: 2 } }}>
+          <Grid item xs={2} lg={1}>
+            <dt>Suunnitelman nimi</dt>
+            <dd>{perustiedot.suunnitelmanNimi ?? "-"}</dd>
+          </Grid>
+          <Grid item xs={2} lg={1}>
+            <dt>Asiatunnus</dt>
+            <dd>{perustiedot.suunnitelmanNimi ?? "-"}</dd>
+          </Grid>
+          <Grid item xs={2} lg={1}>
+            <dt>Vastuuorganisaatio</dt>
+            <dd>{perustiedot.vastuuorganisaatio ? t(`viranomainen.${perustiedot.vastuuorganisaatio}`) : "-"}</dd>
+          </Grid>
+          <Grid item xs={2} lg={1}>
+            <dt>Y-tunnus</dt>
+            <dd>{perustiedot.yTunnus ?? "-"}</dd>
+          </Grid>
+        </Grid>
+      </div>
+      <div>
+        <Grid container spacing={4} columns={2} sx={{ maxWidth: "700px" }}>
+          <Grid item xs={2} lg={1}>
+            <TextFieldWithController
+              label="OVT tunnus"
+              controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.ovtTunnus" }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={2} lg={1}>
+            <TextFieldWithController
+              label="Verkkolaskuoperaattorin välittäjätunnus"
+              controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.verkkolaskuoperaattorinTunnus" }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={2} lg={2}>
+            <TextFieldWithController
+              label="Viitetieto"
+              controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.viitetieto" }}
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+      </div>
+    </>
   );
 }

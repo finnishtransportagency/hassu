@@ -253,7 +253,7 @@ input LausuntoPyynnonTaydennysInput {
 }
 
 input HyvaksymisEsitysInput {
-  poistumisPaiva: String!
+  poistumisPaiva: String
   kiireellinen: Boolean
   lisatiedot: String
   laskutustiedot: LaskutustiedotInput
@@ -273,7 +273,6 @@ input SahkopostiVastaanottajaInput {
 }
 
 input LaskutustiedotInput {
-  yTunnus: String
   ovtTunnus: String
   verkkolaskuoperaattorinTunnus: String
   viitetieto: String

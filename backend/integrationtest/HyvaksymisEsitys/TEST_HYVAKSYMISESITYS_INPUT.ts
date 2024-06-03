@@ -23,7 +23,6 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
     kiireellinen: true,
     lisatiedot: "Lisätietoja",
     laskutustiedot: {
-      yTunnus: "yTunnus",
       ovtTunnus: "ovtTunnus",
       verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus",
       viitetieto: "viitetieto",

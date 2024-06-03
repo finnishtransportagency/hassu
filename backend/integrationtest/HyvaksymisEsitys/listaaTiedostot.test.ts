@@ -240,7 +240,14 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       __typename: "HyvaksymisEsityksenAineistot",
       poistumisPaiva: "2033-01-01",
       linkkiVanhentunut: true,
-      suunnitelmanNimi: "Projektin nimi",
+      perustiedot: {
+        __typename: "ProjektinPerustiedot",
+        asiatunnus: "asiatunnusVayla",
+        kunnat: [91, 92],
+        suunnitelmanNimi: "Projektin nimi",
+        vastuuorganisaatio: "VAYLAVIRASTO",
+        yTunnus: "1010547-1",
+      },
       projektipaallikonYhteystiedot: {
         __typename: "ProjektiKayttajaJulkinen",
         etunimi: "Pekka",

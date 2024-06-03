@@ -201,6 +201,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "HyvaksymisEsityksenTuodutTiedostot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "HyvaksymisEsitys",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -907,6 +913,12 @@
       {
         "kind": "OBJECT",
         "name": "ProjektiKayttajaJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProjektinPerustiedot",
         "possibleTypes": null,
         "__typename": "__Type"
       },

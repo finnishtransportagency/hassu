@@ -19,13 +19,10 @@ import { kuntametadata } from "common/kuntametadata";
 export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: boolean }): ReactElement {
   const {
     aineistopaketti,
-    suunnitelmanNimi,
     suunnitelma,
     poistumisPaiva,
     pyydetaanKiireellistaKasittelya,
     lisatiedot,
-    asiatunnus,
-    vastuuorganisaatio,
     laskutustiedot,
     projektipaallikonYhteystiedot,
     hyvaksymisEsitys,
@@ -34,19 +31,24 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     maanomistajaluettelo,
     kuulutuksetJaKutsu,
     muutAineistot,
+    perustiedot,
   } = props;
 
+  const { suunnitelmanNimi, asiatunnus, vastuuorganisaatio, yTunnus } = perustiedot;
+
   const muistutukset = useMemo(() => {
-    const ret: Record<string, LadattavaTiedosto[]> = {};
-    kuntaMuistutukset?.forEach(({ kunta, __typename, ...ladattavaTiedosto }) => {
-      if (kunta) {
-        const muistutukset = ret[kunta] ?? [];
-        muistutukset.push({ __typename: "LadattavaTiedosto", ...ladattavaTiedosto });
-        ret[kunta] = muistutukset;
-      }
-    });
-    return ret;
-  }, [kuntaMuistutukset]);
+    const kunnat = perustiedot.kunnat ?? [];
+    return kunnat.reduce<Record<string, LadattavaTiedosto[]>>((acc, kunta) => {
+      acc[kunta] =
+        kuntaMuistutukset
+          ?.filter((muistutus) => muistutus.kunta === kunta)
+          .map<LadattavaTiedosto>(({ kunta, __typename, ...ladattavaTiedosto }) => ({
+            __typename: "LadattavaTiedosto",
+            ...ladattavaTiedosto,
+          })) ?? [];
+      return acc;
+    }, {});
+  }, [kuntaMuistutukset, perustiedot.kunnat]);
   const { t } = useTranslation("common");
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
@@ -97,11 +99,11 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Y-tunnus</H4>
-              <p>{laskutustiedot?.yTunnus ? laskutustiedot.yTunnus : "-"}</p>
+              <p>{yTunnus ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={1}>
               <H4>OVT-tunnus</H4>
-              <p>{laskutustiedot?.ovtTunnus ? laskutustiedot.ovtTunnus : "-"}</p>
+              <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Verkkolaskuoperaattorin välittäjätunnus</H4>
@@ -131,7 +133,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
         <H3>Hyväksymisesitys</H3>
-        {!!hyvaksymisEsitys?.length ? (
+        {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
             {hyvaksymisEsitys?.map((tiedosto, index) => (
               <li key={index}>
@@ -161,7 +163,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                   {Object.keys(muistutukset).map((kunta) => (
                     <div key={kunta} style={{ marginTop: "1em" }}>
                       <H5>{kuntametadata.nameForKuntaId(parseInt(kunta), "fi")}</H5>
-                      {!!muistutukset[kunta]?.length ? (
+                      {muistutukset[kunta]?.length ? (
                         <ul style={{ listStyle: "none" }}>
                           {muistutukset[kunta]?.map((tiedosto, index) => (
                             <li key={index}>
@@ -180,7 +182,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "2",
               title: <H3 sx={{ margin: 0 }}>Lausunnot</H3>,
-              content: !!lausunnot?.length ? (
+              content: lausunnot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {lausunnot?.map((tiedosto, index) => (
                     <li key={index}>
@@ -195,7 +197,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "3",
               title: <H3 sx={{ margin: 0 }}>Maanomistajaluettelo</H3>,
-              content: !!maanomistajaluettelo?.length ? (
+              content: maanomistajaluettelo?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {maanomistajaluettelo?.map((tiedosto, index) => (
                     <li key={index}>
@@ -210,7 +212,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "4",
               title: <H3 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H3>,
-              content: !!kuulutuksetJaKutsu?.length ? (
+              content: kuulutuksetJaKutsu?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {kuulutuksetJaKutsu?.map((tiedosto, index) => (
                     <li key={index}>
@@ -231,7 +233,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             {
               id: "3",
               title: <H2 sx={{ margin: 0 }}>Muu tekninen aineisto</H2>,
-              content: !!muutAineistot?.length ? (
+              content: muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
                     <li key={index}>
