@@ -98,38 +98,40 @@ export default function Linkki({
         >
           Hidden link
         </a>
-        <Button
-          className="btn-small"
-          endIcon="external-link-alt"
-          type="button"
-          disabled={buttonDisabled}
-          onClick={() => {
-            const adaptedInput = kunta
-              ? adaptLausuntoPyynnonTaydennysLisakentillaToInput(formData as LausuntoPyynnonTaydennysLisakentilla)
-              : adaptLausuntoPyyntoLisakentillaToLausuntoPyyntoInput(formData as LausuntoPyyntoLisakentilla);
-            localStorage.setItem(`lausuntoPyyntoInput.${uuid}`, JSON.stringify(adaptedInput));
-            if (hiddenLinkRef.current) {
-              hiddenLinkRef.current.click();
-            }
-          }}
-        >
-          Esikatsele
-        </Button>
-        <Button
-          className="btn-small-primary"
-          type="button"
-          disabled={!linkHref || buttonDisabled}
-          onClick={() => {
-            if (linkRef.current?.value) {
-              navigator.clipboard.writeText(linkRef.current.value);
-              showInfoMessage("Kopioitu");
-            } else {
-              showErrorMessage("Ongelma kopioinnissa");
-            }
-          }}
-        >
-          Kopioi linkki
-        </Button>
+        <div className="flex flex-row mb-1 gap-6">
+          <Button
+            className="btn-small"
+            endIcon="external-link-alt"
+            type="button"
+            disabled={buttonDisabled}
+            onClick={() => {
+              const adaptedInput = kunta
+                ? adaptLausuntoPyynnonTaydennysLisakentillaToInput(formData as LausuntoPyynnonTaydennysLisakentilla)
+                : adaptLausuntoPyyntoLisakentillaToLausuntoPyyntoInput(formData as LausuntoPyyntoLisakentilla);
+              localStorage.setItem(`lausuntoPyyntoInput.${uuid}`, JSON.stringify(adaptedInput));
+              if (hiddenLinkRef.current) {
+                hiddenLinkRef.current.click();
+              }
+            }}
+          >
+            Esikatsele
+          </Button>
+          <Button
+            className="btn-small-primary"
+            type="button"
+            disabled={!linkHref || buttonDisabled}
+            onClick={() => {
+              if (linkRef.current?.value) {
+                navigator.clipboard.writeText(linkRef.current.value);
+                showInfoMessage("Kopioitu");
+              } else {
+                showErrorMessage("Ongelma kopioinnissa");
+              }
+            }}
+          >
+            Kopioi linkki
+          </Button>
+        </div>
       </Stack>
     </SectionContent>
   );
