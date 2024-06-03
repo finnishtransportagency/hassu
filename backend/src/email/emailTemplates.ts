@@ -23,6 +23,9 @@ import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksym
 import { EmailOptions } from "./model/emailOptions";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "../asiakirja/adapter/kuulutusKutsuAdapter";
 import dayjs from "dayjs";
+import { translate } from "../util/localization";
+import * as API from "hassu-common/graphql/apiModel";
+import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -250,6 +253,80 @@ export function createHyvaksymisesitysHyvaksyttyPpEmail(
     
     ${!projekti.asianhallinta?.inaktiivinen ? ppHyvaksyttyLinkkiAsianhallintaanSuffix : ppHyvaksyttySuffix}`,
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+  };
+}
+
+export function createHyvaksymisesitysViranomaisilleEmail(
+  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
+): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti.velho);
+  const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
+  return {
+    subject: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymiseistys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}`,
+    text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymiseistys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
+
+    ${
+      projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
+    } lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
+      projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? " kiireellisenä" : ""
+    }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://${domain}/suunnitelma/${
+      projekti.oid
+    }/hyvaksymisesityksen-aineistot
+
+Sähköpostin liitteenä on myös hyväksymisesitys.
+    
+Lisätiedot 
+
+${projekti.muokattavaHyvaksymisEsitys?.lisatiedot}
+
+
+
+Laskutustiedot hyväksymismaksua varten
+
+Suunnitelman nimi
+
+${projekti.velho?.nimi}
+
+Asiatunnus
+
+${asiatunnus}
+
+Vastuuorganisaatio
+
+${translate(projekti.velho?.suunnittelustaVastaavaViranomainen ?? API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, API.Kieli.SUOMI)}
+
+Y-tunnus
+
+${vastaavanViranomaisenYTunnus(projekti.velho?.suunnittelustaVastaavaViranomainen)}
+
+OVT-tunnus
+
+${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.ovtTunnus}
+
+Verkkolaskuoperaattorin välittäjätunnus
+
+${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.verkkolaskuoperaattorinTunnus}
+
+Viite
+
+${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.viitetieto}
+
+
+
+Lisätietoja suunnitelmasta antaa 
+
+${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
+      projektiPaallikko?.elyOrganisaatio ? translate(projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI) : projektiPaallikko?.organisaatio
+    }, 
+
+puh ${projektiPaallikko?.puhelinnumero},
+
+${projektiPaallikko?.email}
+
+
+Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.`,
+    to: projekti.muokattavaHyvaksymisEsitys?.vastaanottajat?.map((vo) => vo.sahkoposti),
+    cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
 
