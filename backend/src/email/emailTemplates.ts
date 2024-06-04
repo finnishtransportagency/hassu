@@ -237,7 +237,7 @@ export function createHyvaksymisesitysHyvaksyttyLaatijalleEmail(
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
     
-${muokkaajaSuffix}`,
+Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`,
     to: muokkaaja?.email ?? undefined,
   };
 }
