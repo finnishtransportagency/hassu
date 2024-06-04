@@ -52,6 +52,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       hyvaksymisPaiva: "2022-01-01",
     },
     kayttoOikeudet: [projariAsVaylaDBUser],
+    aineistoHandledAt: "2022-01-01",
   };
 
   before(async () => {
@@ -180,6 +181,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         hyvaksyja: "theadminuid",
         hyvaksymisPaiva: "2022-01-01",
       },
+      aineistoHandledAt: "2022-01-01",
     };
     await insertProjektiToDB(projektiInDB);
     // Testataan, saadaanko uudet tiedostot

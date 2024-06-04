@@ -18,7 +18,9 @@ export default function LinkkiHyvEsAineistoon({
     if (typeof window === "undefined") {
       return undefined;
     }
-    return hash ? `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitys?hash=${hash}` : undefined;
+    return hash
+      ? `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hash}`
+      : undefined;
   }, [oid, hash]);
 
   const { showInfoMessage, showErrorMessage } = useSnackbars();

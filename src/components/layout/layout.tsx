@@ -13,7 +13,11 @@ interface Props {
 
 export default function Layout({ children }: Props): ReactElement {
   const { route } = useRouter();
-  if (route.includes("lausuntopyyntoaineistot") || route.includes("lausuntopyynnon-taydennysaineistot")) {
+  if (
+    route.includes("lausuntopyyntoaineistot") ||
+    route.includes("lausuntopyynnon-taydennysaineistot") ||
+    route.includes("hyvaksymisesitysaineistot")
+  ) {
     return (
       <div className="min-h-screen relative flex flex-col">
         {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
