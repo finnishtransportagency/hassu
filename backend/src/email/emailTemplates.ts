@@ -301,7 +301,10 @@ ${asiatunnus}
 
 Vastuuorganisaatio
 
-${translate(projekti.velho?.suunnittelustaVastaavaViranomainen ?? API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, API.Kieli.SUOMI)}
+${translate(
+  "vastaava-viranomainen." + projekti.velho?.suunnittelustaVastaavaViranomainen ?? API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+  API.Kieli.SUOMI
+)}
 
 Y-tunnus
 
@@ -324,7 +327,9 @@ ${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.viitetieto}
 Lisätietoja suunnitelmasta antaa 
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
-      projektiPaallikko?.elyOrganisaatio ? translate(projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI) : projektiPaallikko?.organisaatio
+      projektiPaallikko?.elyOrganisaatio
+        ? translate("vastaava-viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
+        : projektiPaallikko?.organisaatio
     }, 
 
 puh ${projektiPaallikko?.puhelinnumero},
