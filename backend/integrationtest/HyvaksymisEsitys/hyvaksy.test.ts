@@ -90,10 +90,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await removeProjektiFromDB(oid);
     userFixture.logout();
     emailStub?.reset();
+    sinon.reset();
   });
 
   after(() => {
-    sinon.reset();
     sinon.restore();
   });
 
@@ -265,6 +265,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
+    sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(true);
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
