@@ -62,7 +62,15 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     emailStub = sinon.stub(emailClient, "sendEmail");
-    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(true));
+
+    const getParameterStub = sinon.stub(parameters, "getParameter");
+
+    getParameterStub.callsFake((paramName) => {
+      if (paramName == "AsianhallintaIntegrationEnabled") {
+        return Promise.resolve("true");
+      }
+      return Promise.resolve("getParameterValue_" + paramName);
+    });
   });
 
   beforeEach(async () => {
