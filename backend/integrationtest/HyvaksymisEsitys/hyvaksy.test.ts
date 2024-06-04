@@ -17,6 +17,7 @@ import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { emailClient } from "../../src/email/email";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { parameters } from "../../src/aws/parameters";
 
 describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
@@ -61,6 +62,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     emailStub = sinon.stub(emailClient, "sendEmail");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(true));
   });
 
   beforeEach(async () => {
