@@ -328,7 +328,7 @@ Lisätietoja suunnitelmasta antaa
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
       projektiPaallikko?.elyOrganisaatio
-        ? translate("vastaava-viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
+        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 
 
