@@ -24,7 +24,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": "muokkaaja@email.com",
 }
 `;
@@ -120,7 +120,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     
-Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": "muokkaaja@email.com",
 }
 `;
