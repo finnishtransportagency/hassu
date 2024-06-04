@@ -254,7 +254,7 @@ export async function createHyvaksymisesitysHyvaksyttyPpEmail(
 Voit tarkastella hyväksymisesitystä osoitteessa https://${domain}/yllapito/projekti/${projekti.oid}/hyvaksymisesitys
 
 ${
-  !projekti.asianhallinta?.inaktiivinen
+  !projekti.asianhallinta?.inaktiivinen && linkkiAsianhallintaan !== undefined
     ? `Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan ${linkkiAsianhallintaan} .`
     : `Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.`
 }

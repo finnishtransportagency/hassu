@@ -61,12 +61,18 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+
+    // Stubataan sähköpostin lähettäminen
     emailStub = sinon.stub(emailClient, "sendEmail");
 
+    // Stubataan parametrien hakeminen aws:stä
     const getParameterStub = sinon.stub(parameters, "getParameter");
 
     getParameterStub.callsFake((paramName) => {
       if (paramName == "AsianhallintaIntegrationEnabled") {
+        return Promise.resolve("true");
+      }
+      if (paramName == "UspaIntegrationEnabled") {
         return Promise.resolve("true");
       }
       return Promise.resolve("getParameterValue_" + paramName);
@@ -90,10 +96,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await removeProjektiFromDB(oid);
     userFixture.logout();
     emailStub?.reset();
-    sinon.reset();
   });
 
   after(() => {
+    sinon.reset();
     sinon.restore();
   });
 
@@ -124,7 +130,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
   });
 
-  it("lähettää oikeat s.postit kun vastaava viranomainen on Väylävirasto ja projari on ulkoisesta organisaatiosta ja tarvitaan kiireellistä käsittelyä", async () => {
+  it("lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
@@ -195,77 +201,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
-  it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja tarvitaan kiireellistä käsittelyä", async () => {
-    userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys,
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          elyOrganisaatio: API.ELY.HAME_ELY,
-          puhelinnumero: "0291234567",
-        },
-        {
-          etunimi: "Etunimi2",
-          sukunimi: "Sukunimi2",
-          email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-        },
-        {
-          etunimi: "Matti",
-          sukunimi: "Muokkaaja",
-          email: "muokkaaja@email.com",
-          kayttajatunnus: "muokkaaja-oid",
-        },
-      ],
-      asianhallinta: {
-        inaktiivinen: true,
-      },
-      velho: {
-        nimi: "Projektin nimi",
-        asiatunnusELY: "asiatunnusELY",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
-        kunnat: [91, 92],
-      },
-    };
-    await insertProjektiToDB(projektiBefore);
-    await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
-
-    const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
-      const to = (call.firstArg as EmailOptions).to;
-      return Array.isArray(to) && to.includes("email@email.com") && to.includes("email2@email.com");
-    });
-    expect(ilmoitusProjarille).to.exist;
-    expect(ilmoitusProjarille?.firstArg).toMatchSnapshot();
-
-    const ilmoitusMuokkaajalle = emailStub?.getCalls().find((call) => {
-      const to = (call.firstArg as EmailOptions).to;
-      return to == "muokkaaja@email.com";
-    });
-    expect(ilmoitusMuokkaajalle).to.exist;
-    expect(ilmoitusMuokkaajalle?.firstArg).toMatchSnapshot();
-
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
-      const to = (call.firstArg as EmailOptions).to;
-      return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
-    });
-    expect(omit(ilmoitusVastaanottajille?.firstArg, "attachments")).toMatchSnapshot();
-    expect(ilmoitusVastaanottajille?.firstArg.attachments?.length).to.eql(1);
-    expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
-  });
-
-  it("lähettää oikeat s.postit kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY ja EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
-    sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(true);
+  it("lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
@@ -318,6 +254,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     });
     expect(ilmoitusProjarille).to.exist;
     expect(ilmoitusProjarille?.firstArg).toMatchSnapshot();
+    expect(/getParameterValue_UspaBaseUrl\/Asia\.aspx\?AsiaId=asiaId/.test((ilmoitusProjarille?.firstArg as EmailOptions).text as string))
+      .to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
 
     const ilmoitusMuokkaajalle = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
@@ -335,7 +273,137 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
-  it("onnistuu projektipäälliköltä ", async () => {
+  it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
+    const versio = 2;
+    const projektiBefore = {
+      oid,
+      versio,
+      muokattavaHyvaksymisEsitys,
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          elyOrganisaatio: API.ELY.HAME_ELY,
+          puhelinnumero: "0291234567",
+        },
+        {
+          etunimi: "Etunimi2",
+          sukunimi: "Sukunimi2",
+          email: "email2@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+        },
+        {
+          etunimi: "Matti",
+          sukunimi: "Muokkaaja",
+          email: "muokkaaja@email.com",
+          kayttajatunnus: "muokkaaja-oid",
+        },
+      ],
+      asianhallinta: {
+        inaktiivinen: true,
+      },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusELY: "asiatunnusELY",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
+        kunnat: [91, 92],
+      },
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    expect(emailStub?.callCount).to.eql(3);
+
+    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+      const to = (call.firstArg as EmailOptions).to;
+      return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
+    });
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Asiatunnus\n\nasiatunnusELY")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nLapin ELY-keskus")).to.be
+      .true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Y-tunnus\n\n2296962-1")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Hämeen ELY-keskus")).to.be.true;
+  });
+
+  it("näyttää oiketa tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const versio = 2;
+    const projektiBefore = {
+      oid,
+      versio,
+      muokattavaHyvaksymisEsitys,
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "0291234567",
+        },
+        {
+          etunimi: "Etunimi2",
+          sukunimi: "Sukunimi2",
+          email: "email2@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+        },
+        {
+          etunimi: "Matti",
+          sukunimi: "Muokkaaja",
+          email: "muokkaaja@email.com",
+          kayttajatunnus: "muokkaaja-oid",
+        },
+      ],
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusELY: "asiatunnusELY",
+        asiatunnusVayla: "asiatunnusVAYLA",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
+      },
+      asianhallinta: {
+        inaktiivinen: false,
+        asiaId: "asiaId",
+      },
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    expect(emailStub?.callCount).to.eql(3);
+
+    const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
+      const to = (call.firstArg as EmailOptions).to;
+      return Array.isArray(to) && to.includes("email@email.com") && to.includes("email2@email.com");
+    });
+    expect(ilmoitusProjarille).to.exist;
+    expect(
+      /getParameterValue_AshaBaseUrl\/group\/asianhallinta\/asianhallinta\/-\/case\/asiaId\/view/.test(
+        (ilmoitusProjarille?.firstArg as EmailOptions).text as string
+      )
+    ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
+
+    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+      const to = (call.firstArg as EmailOptions).to;
+      return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
+    });
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Asiatunnus\n\nasiatunnusVAYLA")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nVäylävirasto")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Y-tunnus\n\n1010547-1")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Väylävirasto")).to.be.true;
+  });
+
+  it("onnistuu projektipäälliköltä", async () => {
     const projari = UserFixture.pekkaProjari;
     const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
       kayttajatunnus: projari.uid!,
@@ -348,7 +416,15 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
-      kayttoOikeudet: [projariAsVaylaDBUser],
+      kayttoOikeudet: [
+        projariAsVaylaDBUser,
+        {
+          etunimi: "Matti",
+          sukunimi: "Muokkaaja",
+          email: "muokkaaja@email.com",
+          kayttajatunnus: "muokkaaja-oid",
+        },
+      ], // Muokkaajan tiedot tarvitsee olla, jotta s.postia lähetettäessä ei tule virhettä logille
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
