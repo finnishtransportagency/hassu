@@ -323,6 +323,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["suunnitelman-tila"]);
   kasittelynTila.ennakkoneuvotteluPaiva = objectToString(ominaisuudet["ennakkoneuvottelu"]);
   kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
+  kasittelynTila.ennakkotarkastus = objectToString(ominaisuudet["hyvaksymisesitys"]?.saapunut);
   const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
   if (hyvaksymispaatos) {
     kasittelynTila.hyvaksymispaatos = kasittelynTila.hyvaksymispaatos ?? {};
@@ -351,6 +352,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   );
 
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
+  setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
 
   // Palauta tyhjälle lopputulokselle undefined
   if (isEqual(pickBy(kasittelynTila, identity), {})) {
@@ -368,7 +370,7 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
     (value) =>
       (ominaisuudet["hyvaksymisesitys"] = {
         lahetetty: toLocalDate(value),
-        saapunut: null,
+        saapunut: params.ennakkotarkastus ? toLocalDate(params.ennakkotarkastus) : ominaisuudet["hyvaksymisesitys"]?.saapunut ?? null,
       })
   );
 
@@ -464,6 +466,15 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
     };
   }
   setIfDefined(params.lisatieto, (value) => (ominaisuudet.lisatiedot = value));
+  setIfDefined(params.lainvoimaAlkaen, (value) => {
+    ominaisuudet["lainvoimaisuus"] = {
+      alkaen: toLocalDate(value),
+      paattyen: params.lainvoimaPaattyen ? toLocalDate(params.lainvoimaPaattyen) : ominaisuudet["lainvoimaisuus"]?.paattyen ?? null,
+    };
+  });
+  setIfDefined(params.toimitusKaynnistynyt, (value) => {
+    ominaisuudet["vaylatoimitus-kaynnistynyt"] = toLocalDate(value);
+  });
   return projekti;
 }
 
