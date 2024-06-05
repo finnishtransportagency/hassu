@@ -103,7 +103,19 @@ class MuistuttajaDatabase {
 
   async deleteMuistuttajatByOid(oid: string) {
     if (config.env !== "prod") {
-      for (const chunk of chunkArray(await this.haeProjektinKaytossaolevatMuistuttajat(oid), 25)) {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+        },
+        ProjectionExpression: "id",
+      });
+      const data = await getDynamoDBDocumentClient().send(command);
+      for (const chunk of chunkArray(data?.Items ?? [], 25)) {
         const deleteRequests = chunk.map((muistuttaja) => ({
           DeleteRequest: {
             Key: { oid, id: muistuttaja.id },
