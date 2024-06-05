@@ -430,7 +430,8 @@ type HyvaksymisEsityksenTiedot {
   versio: Int!
   hyvaksymisEsitys: HyvaksymisEsitys
   muokkauksenVoiAvata: Boolean!
-  aineistotValmiit: Boolean
+  voiLahettaaHyvaksyttavaksi: Boolean!
+  vaiheOnAktiivinen: Boolean!
   perustiedot: ProjektinPerustiedot!
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
 }
