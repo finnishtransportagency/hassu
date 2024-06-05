@@ -10,7 +10,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
-  IlmoitettavaViranomainen,
   Kielitiedot,
   KuulutusJulkaisuTila,
   LaskuriTyyppi,
@@ -54,6 +53,8 @@ import useValidationMode from "src/hooks/useValidationMode";
 import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 import { label } from "src/util/textUtil";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
+import defaultVastaanottajat from "src/util/defaultVastaanottajat";
+import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -103,31 +104,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
-
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
   const defaultValues: FormValues = useMemo(() => {
-    const kuntaIds: number[] = [
-      ...new Set([
-        ...(projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => kunta.id) || []),
-        ...(projekti.velho.kunnat || []),
-      ]),
-    ];
-
     const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
-
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
       aloitusKuulutus: {
-        ilmoituksenVastaanottajat: {
-          kunnat: kuntaIds.map((id) => ({
-            id,
-            sahkoposti: projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.id === id)?.sahkoposti || "",
-          })),
-          viranomaiset: projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
-            nimi,
-            sahkoposti,
-          })) || [{ nimi: "" as IlmoitettavaViranomainen, sahkoposti: "" }],
-        },
+        ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, projekti.aloitusKuulutus?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
         hankkeenKuvaus,
         kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva || null,
         siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen || null,
@@ -153,7 +137,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     }
 
     return tallentamisTiedot;
-  }, [projekti]);
+  }, [projekti, kirjaamoOsoitteet]);
 
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ||
