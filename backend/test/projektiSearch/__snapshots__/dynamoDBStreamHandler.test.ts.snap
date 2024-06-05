@@ -266,21 +266,28 @@ Array [
 
 exports[`dynamoDBStreamHandler should reindex the database successfully on maintenance event 1`] = `
 Object {
-  "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"1\\"}",
+  "Entries": Array [
+    Object {
+      "Id": "00000001-94d4-4a05-ae90-ef6b01e9c076",
+      "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"1\\"}",
+    },
+    Object {
+      "Id": "00000002-94d4-4a05-ae90-ef6b01e9c076",
+      "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"2\\"}",
+    },
+  ],
   "QueueUrl": "mockedIndexerSQSUrl",
 }
 `;
 
 exports[`dynamoDBStreamHandler should reindex the database successfully on maintenance event 2`] = `
 Object {
-  "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"2\\"}",
-  "QueueUrl": "mockedIndexerSQSUrl",
-}
-`;
-
-exports[`dynamoDBStreamHandler should reindex the database successfully on maintenance event 3`] = `
-Object {
-  "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"5\\"}",
+  "Entries": Array [
+    Object {
+      "Id": "00000003-94d4-4a05-ae90-ef6b01e9c076",
+      "MessageBody": "{\\"action\\":\\"index\\",\\"oid\\":\\"5\\"}",
+    },
+  ],
   "QueueUrl": "mockedIndexerSQSUrl",
 }
 `;

@@ -14,6 +14,7 @@ import OpenSearchClient from "../../src/projektiSearch/openSearchClient";
 import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
 import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
+import { mockUUID } from "../../integrationtest/shared/sharedMock";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -28,6 +29,7 @@ describe("dynamoDBStreamHandler", () => {
   let removeProjektiSuomiStub: sinon.SinonStub;
   let removeProjektiRuotsiStub: sinon.SinonStub;
   let openSearchClientIlmoitustauluSyoteStub: SinonStubbedInstance<OpenSearchClient>;
+  mockUUID();
 
   before(() => {
     fixture = new ProjektiSearchFixture();
@@ -130,9 +132,8 @@ describe("dynamoDBStreamHandler", () => {
     await handleDynamoDBEvents(mEvent);
     expect(indexProjektiStub.calledOnce).to.be.false;
 
-    expect(sqsStub.send).to.have.been.calledThrice;
+    expect(sqsStub.send).to.have.been.calledTwice;
     expect(sqsStub.send.args[0][0].input).toMatchSnapshot();
     expect(sqsStub.send.args[1][0].input).toMatchSnapshot();
-    expect(sqsStub.send.args[2][0].input).toMatchSnapshot();
   });
 });

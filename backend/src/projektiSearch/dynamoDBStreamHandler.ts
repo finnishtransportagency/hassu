@@ -11,7 +11,9 @@ import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { SendMessageCommandInput } from "@aws-sdk/client-sqs";
+import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
+import { chunkArray } from "../database/chunkArray";
+import { uuid } from "hassu-common/util/uuid";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
@@ -45,12 +47,12 @@ async function handleManagementAction(event: MaintenanceEvent) {
     do {
       const scanResult = await projektiDatabase.scanProjektit(startKey);
       startKey = scanResult.startKey;
-      const entries = scanResult.projektis.map<SendMessageCommandInput>((projekti) => ({
-        QueueUrl: queueUrl,
+      const entries = scanResult.projektis.map<SendMessageBatchRequestEntry>((projekti) => ({
+        Id: uuid.v4(),
         MessageBody: JSON.stringify({ action: "index", oid: projekti.oid }),
       }));
-      for (const args of entries) {
-        await getSQS().sendMessage(args);
+      for (const chunk of chunkArray(entries, 10)) {
+        await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: chunk });
       }
     } while (startKey);
     log.info("Indeksointi aloitettu");
@@ -72,11 +74,11 @@ export const handleDynamoDBEvents = async (event: Event): Promise<void> => {
   if (eventIsMaintenanceEvent(event)) {
     await handleManagementAction(event);
   } else if (eventIsSqsEvent(event)) {
-    await handleSqsEvent(event)
+    await handleSqsEvent(event);
   } else {
     await handleStreamEvent(event);
   }
-}
+};
 
 async function handleSqsEvent(event: SQSEvent) {
   log.info("handleSqsEvent");
@@ -126,4 +128,4 @@ function handleStreamEvent(event: DynamoDBStreamEvent) {
       }
     })();
   });
-};
+}
