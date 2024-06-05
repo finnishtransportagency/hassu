@@ -96,12 +96,13 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should reindex the database successfully", async () => {
+    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti2);
     const sqsEvent: SQSEvent = {
       Records: [
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {
           messageId: "1",
-          body: JSON.stringify({ action: "index", projekti: projekti2 }),
+          body: JSON.stringify({ action: "index", oid: projekti2.oid }),
         } as SQSRecord,
       ],
     };
