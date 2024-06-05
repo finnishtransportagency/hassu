@@ -25,6 +25,8 @@ import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import { H3, H4 } from "@components/Headings";
+import ExtLink from "@components/ExtLink";
+import { formatDate } from "common/util/dateUtils";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -64,8 +66,24 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
 
+  const { oid, hyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
+
+  if (!hyvaksymisEsitys) {
+    return null;
+  }
+
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`;
+
   return (
     <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
+      {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
+        <Section noDivider>
+          <Notification type={NotificationType.INFO_GREEN}>
+            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
+            <ExtLink href={url}>{url}</ExtLink>
+          </Notification>
+        </Section>
+      )}
       <ProjektiPageLayoutContext.Consumer>
         {({ ohjeetOnClose, ohjeetOpen }) => (
           <FormProvider {...useFormReturn}>
