@@ -121,7 +121,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
             sisältö. Vie valmislausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
-          <div>
+          <div className="grid gap-4" >
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink
@@ -139,7 +139,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
               </div>
             )}
             {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
-              <>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink
                   id="mallipohja-32R"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/02f97aa5-ad38-42de-a934-1b87c0b69792/32R%20Lausuntopyynt%c3%b6%20kunnalle%20xx%20xxS.docx?a=true"
@@ -158,7 +158,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                 >
                   Mallipohja muille lausunnonantajille 42R
                 </DownloadButtonLink>
-              </>
+              </div>
             )}
           </div>
         </Section>
