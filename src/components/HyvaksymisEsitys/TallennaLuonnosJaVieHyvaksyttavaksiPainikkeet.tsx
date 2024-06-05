@@ -79,7 +79,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet({ hyvaksym
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
             const convertedFormData = await adaptFormDataForAPI(formData);
-            await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
+            await api.tallennaHyvaksymisEsitys(convertedFormData);
             showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
             reloadProjekti();
           } catch (error) {

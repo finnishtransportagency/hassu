@@ -146,7 +146,7 @@ export default function HyvaksymisEsitysLukutila({
             <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={3}>
-            <H5>Viite</H5>
+            <H5>Viitetieto</H5>
             <p>{laskutustiedot?.viitetieto ?? "-"}</p>
           </HassuGridItem>
         </HassuGrid>

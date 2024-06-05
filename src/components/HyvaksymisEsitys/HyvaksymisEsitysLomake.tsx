@@ -27,6 +27,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
 import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "./TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -38,12 +39,14 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     [hyvaksymisEsityksenTiedot]
   );
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput> = {
     resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    //context: { hyvaksymisEsityksenTiedot, validationMode },
+    context: { hyvaksymisEsityksenTiedot, validationMode },
   };
 
   const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
