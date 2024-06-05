@@ -38,7 +38,7 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
     vastaanottajat: Yup.array()
       .of(
         Yup.object()
-          .shape({ sahkoposti: Yup.string().required("Sähköposti on pakollinen") })
+          .shape({ sahkoposti: Yup.string().defined("Sähköposti on annettava") })
           .required()
       )
       .min(1)

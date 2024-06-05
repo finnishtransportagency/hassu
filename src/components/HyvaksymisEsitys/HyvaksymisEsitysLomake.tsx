@@ -3,11 +3,6 @@ import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
 import Section from "@components/layout/Section2";
-import { Stack } from "@mui/material";
-import Button from "@components/button/Button";
-import useApi from "src/hooks/useApi";
-import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
-import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
 import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
 import Laskutustiedot from "./LomakeComponents/Laskutustiedot";
@@ -31,6 +26,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
+import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "./TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -52,60 +48,22 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
 
   const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
 
-  const {
-    formState: { isDirty },
-  } = useFormReturn;
-
-  useLeaveConfirm(isDirty);
-
-  const api = useApi();
-  const { mutate: reloadData } = useHyvaksymisEsitys();
-
-  const save = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
-    await api.tallennaHyvaksymisEsitys(formData);
-    await reloadData();
-  }, "Tallennus onnistui");
-
-  const sendForApproval = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
-    await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(formData);
-    await reloadData();
-  }, "Tallennus ja hyväksyttäväksi lähettäminen onnistui");
-
-  const { oid, versio, hyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
-
-  const suljeMuokkaus = useSpinnerAndSuccessMessage(async () => {
-    if (isDirty) {
-      if (
-        window.confirm(
-          "Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos suljet muokkauksen. \n\nHaluatko poistua tallentamatta?"
-        )
-      ) {
-        await api.suljeHyvaksymisEsityksenMuokkaus({ oid, versio });
-        await reloadData();
-      } else {
-        throw "Abort action 'sulje muokkaus'. Please ignore this error.";
-      }
-    }
-  }, "Muokkauksen sulkeminen onnistui");
-
-  const tallennaHyvaksyttavaksiDisabled = false; // TODO: muuta
-
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
 
-  if (!hyvaksymisEsitys) {
+  if (!hyvaksymisEsityksenTiedot) {
     return null;
   }
 
-  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`;
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${hyvaksymisEsityksenTiedot.oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash}`;
 
   return (
     <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
       {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>
-            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
+            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
             <ExtLink href={url}>{url}</ExtLink>
           </Notification>
         </Section>
@@ -181,33 +139,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <AineistonEsikatselu />
               </Section>
-              <Section noDivider>
-                <Stack
-                  justifyContent={hyvaksymisEsitys.hyvaksymisPaiva ? "space-between" : "flex-end"}
-                  direction={{ xs: "column", md: "row" }}
-                >
-                  {hyvaksymisEsitys.hyvaksymisPaiva && (
-                    <Button id="save" style={{ float: "left" }} type="button" onClick={suljeMuokkaus}>
-                      Sulje muokkaus
-                    </Button>
-                  )}
-                  <Stack justifyContent="flex-end" direction={{ xs: "column", md: "row" }}>
-                    <Button id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
-                      Tallenna luonnos
-                    </Button>
-                    <Button
-                      style={{ justifyContent: "flex-end" }}
-                      type="button"
-                      disabled={tallennaHyvaksyttavaksiDisabled}
-                      id="save_and_send_for_acceptance"
-                      primary
-                      onClick={useFormReturn.handleSubmit(sendForApproval)}
-                    >
-                      Lähetä Hyväksyttäväksi
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Section>
+              <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
             </form>
           </FormProvider>
         )}
