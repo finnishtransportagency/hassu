@@ -2,8 +2,6 @@ import * as API from "hassu-common/graphql/apiModel";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
-import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
@@ -11,11 +9,12 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
+import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 
 export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   const kayttaja = requirePermissionLuku();
   const { oid, versio } = input;
-  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Poista muokattavissa olevan hyväksymisesityksen tiedostot
   await poistaMuokattavanHyvaksymisEsityksenTiedostot(oid, projektiInDB.muokattavaHyvaksymisEsitys);
@@ -29,7 +28,7 @@ export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMu
     tila: API.HyvaksymisTila.HYVAKSYTTY,
   };
   assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
-  await tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys, muokkaaja: kayttaja.uid });
+  await projektiDatabase.tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys, muokkaaja: kayttaja.uid });
   return oid;
 }
 

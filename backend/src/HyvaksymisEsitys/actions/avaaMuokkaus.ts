@@ -1,8 +1,7 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
-import muutaMuokattavanHyvaksymisEsityksenTilaa from "../dynamoDBCalls/muutaTilaa";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 
 /**
  * Asettaa muokattavan hyväksymisesityksen muokkaus-tilaan
@@ -15,10 +14,10 @@ import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } fr
 export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;
-  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Aseta muokattavan hyväksymisesityksen tila
-  await muutaMuokattavanHyvaksymisEsityksenTilaa({
+  await projektiDatabase.muutaMuokattavanHyvaksymisEsityksenTilaa({
     oid,
     versio,
     uusiTila: API.HyvaksymisTila.MUOKKAUS,
