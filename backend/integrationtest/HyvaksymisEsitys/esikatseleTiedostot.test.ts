@@ -11,6 +11,7 @@ import { expect } from "chai";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import omit from "lodash/omit";
+import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 
 describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   const userFixture = new UserFixture(userService);
@@ -211,7 +212,52 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
     expect(tiedot.perustiedot.suunnitelmanNimi).to.eql("Projektin nimi");
     expect(tiedot.perustiedot.asiatunnus).to.eql("asiatunnusVayla");
+    expect(tiedot.perustiedot.yTunnus).to.eql("1010547-1");
+    expect(tiedot.perustiedot.kunnat).to.eql([91, 92]);
     expect(tiedot.perustiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
+    expect(tiedot.projektipaallikonYhteystiedot).to.eql({
+      __typename: "ProjektiKayttajaJulkinen",
+      elyOrganisaatio: undefined,
+      email: "email@email.com",
+      etunimi: "Etunimi",
+      organisaatio: undefined,
+      projektiPaallikko: true,
+      puhelinnumero: undefined,
+      sukunimi: "Sukunimi",
+    });
+  });
+
+  it("antaa oikeat lisätiedot ELY projektille", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      velho: {
+        ...TEST_PROJEKTI.velho,
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+        asiatunnusELY: "asiatunnusELY",
+      },
+      versio: 1,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined },
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const input: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+    };
+    const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    expect(tiedot.perustiedot.suunnitelmanNimi).to.eql("Projektin nimi");
+    expect(tiedot.perustiedot.asiatunnus).to.eql("asiatunnusELY");
+    expect(tiedot.perustiedot.yTunnus).to.eql("2296962-1");
+    expect(tiedot.perustiedot.kunnat).to.eql([91, 92]);
+    expect(tiedot.perustiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY);
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
       elyOrganisaatio: undefined,

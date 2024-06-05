@@ -23,7 +23,7 @@ export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinP
           </Grid>
           <Grid item xs={2} lg={1}>
             <dt>Asiatunnus</dt>
-            <dd>{perustiedot.suunnitelmanNimi ?? "-"}</dd>
+            <dd>{perustiedot.asiatunnus ?? "-"}</dd>
           </Grid>
           <Grid item xs={2} lg={1}>
             <dt>Vastuuorganisaatio</dt>

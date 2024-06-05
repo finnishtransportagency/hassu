@@ -28,10 +28,10 @@ export default async function createLadattavatTiedostot(
   >
 > {
   const oid = projekti.oid;
-  const aineistoHandledAt = projekti.aineistoHandledAt || true;
+  const aineistoHandledAt = projekti.aineistoHandledAt;
   const path = joinPath(
     getYllapitoPathForProjekti(oid),
-    aineistoHandledAt === true ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
+    (hyvaksymisEsitys as JulkaistuHyvaksymisEsitys).hyvaksymisPaiva ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
   );
   const hyvaksymisEsitysTiedostot: API.LadattavaTiedosto[] = (
     await Promise.all(

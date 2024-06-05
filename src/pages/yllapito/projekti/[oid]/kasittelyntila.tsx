@@ -220,6 +220,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     reset,
     watch,
     setValue,
+    trigger,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -399,6 +400,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 disabled={disableAdminOnlyFields}
                 controllerProps={{ control, name: "kasittelynTila.hyvaksymisesitysTraficomiinPaiva" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva)}
+                onChange={() => trigger("kasittelynTila.ennakkotarkastus")}
               />
             </HassuGrid>
           </SectionContent>
@@ -504,6 +506,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 controllerProps={{ control, name: "kasittelynTila.lainvoimaAlkaen" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.lainvoimaAlkaen)}
+                onChange={() => trigger("kasittelynTila.lainvoimaPaattyen")}
               />
               <DatePickerConditionallyInTheForm
                 label="Lainvoima päättyen"
