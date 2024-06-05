@@ -107,7 +107,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
           aloituskuulutusPDFtRuotsi.aloituskuulutusIlmoitusPDFPath
         );
         if (!aloituskuulutusIlmoitusPDFRuotsi) {
-          throw new Error("AloituskuulutusIlmoitusPDFToinenKieli:n saaminen epäonnistui");
+          throw new Error("AloituskuulutusIlmoitusPDFRuotis:n saaminen epäonnistui");
         }
       }
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.POHJOISSAAME)) {
@@ -118,7 +118,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
           aloituskuulutusPDFtPohjoissaame.aloituskuulutusIlmoitusPDFPath
         );
         if (!aloituskuulutusIlmoitusPDFPohjoissaame) {
-          throw new Error("AloituskuulutusIlmoitusPDFToinenKieli:n saaminen epäonnistui");
+          throw new Error("AloituskuulutusIlmoitusPDFPohjoissaame:n saaminen epäonnistui");
         }
       }
 
