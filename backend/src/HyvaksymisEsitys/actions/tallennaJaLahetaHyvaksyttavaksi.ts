@@ -3,13 +3,7 @@ import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
-<<<<<<< HEAD
-import { auditLog } from "../../logger";
-=======
 import { auditLog, log } from "../../logger";
-import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
->>>>>>> f043506a (Lähetä s.postit hyväksyttäväksi lähettämisen ja hyväksymisen yhteydessä)
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
@@ -18,12 +12,9 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
 import { nyt, parseDate } from "../../util/dateUtil";
-<<<<<<< HEAD
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
-=======
 import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
->>>>>>> f043506a (Lähetä s.postit hyväksyttäväksi lähettämisen ja hyväksymisen yhteydessä)
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
