@@ -184,10 +184,15 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <AineistonEsikatselu />
               </Section>
               <Section noDivider>
-                <Stack justifyContent="space-between" direction={{ xs: "column", md: "row" }}>
-                  <Button id="save" style={{ float: "left" }} type="button" onClick={suljeMuokkaus}>
-                    Sulje muokkaus
-                  </Button>
+                <Stack
+                  justifyContent={hyvaksymisEsitys.hyvaksymisPaiva ? "space-between" : "flex-end"}
+                  direction={{ xs: "column", md: "row" }}
+                >
+                  {hyvaksymisEsitys.hyvaksymisPaiva && (
+                    <Button id="save" style={{ float: "left" }} type="button" onClick={suljeMuokkaus}>
+                      Sulje muokkaus
+                    </Button>
+                  )}
                   <Stack justifyContent="flex-end" direction={{ xs: "column", md: "row" }}>
                     <Button id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
                       Tallenna luonnos
