@@ -111,11 +111,11 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         }
       }
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.POHJOISSAAME)) {
-        const aloituskuulutusPDFtPohjoissaame = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.POHJOISSAAME];
+        const aloituskuulutusPDFtPohjoissaame = aloituskuulutus.aloituskuulutusSaamePDFt?.[Kieli.POHJOISSAAME];
         assertIsDefined(aloituskuulutusPDFtPohjoissaame);
         aloituskuulutusIlmoitusPDFPohjoissaame = await fileService.getFileAsAttachment(
           projekti.oid,
-          aloituskuulutusPDFtPohjoissaame.aloituskuulutusIlmoitusPDFPath
+          String(aloituskuulutusPDFtPohjoissaame.kuulutusIlmoitusPDF?.tiedosto)
         );
         if (!aloituskuulutusIlmoitusPDFPohjoissaame) {
           throw new Error("AloituskuulutusIlmoitusPDFPohjoissaame:n saaminen epäonnistui");
