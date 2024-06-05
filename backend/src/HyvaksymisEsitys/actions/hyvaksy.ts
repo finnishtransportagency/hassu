@@ -4,19 +4,18 @@ import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
 import { nyt } from "../../util/dateUtil";
-import { tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi } from "../dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
+import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio } = input;
-  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
   validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
@@ -25,12 +24,14 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   await copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid, projektiInDB.muokattavaHyvaksymisEsitys);
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
+  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
   const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
     ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
+    poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
   };
-  await tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
   return oid;
 }
 
