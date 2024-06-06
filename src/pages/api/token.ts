@@ -1,4 +1,5 @@
 import { SSM } from "@aws-sdk/client-ssm";
+import { getAppDomainUri } from "@services/userService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const ssm = new SSM({ region: "eu-west-1" });
@@ -14,18 +15,10 @@ async function getParameter(name: string, envVariable: string): Promise<string> 
   throw new Error("Getting parameter " + name + " failed");
 }
 
-function getRedirectUri() {
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000/";
-  } else {
-    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
-  }
-}
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
-  const redirect_uri = getRedirectUri();
+  const redirect_uri = getAppDomainUri();
   const client_id = process.env.KEYCLOAK_CLIENT_ID!;
   const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
   userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";

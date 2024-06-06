@@ -1,8 +1,8 @@
-function getAppDomainUri() {
+export function getAppDomainUri() {
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000/";
   } else {
-    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+    return "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/";
   }
 }
 
