@@ -204,7 +204,7 @@ export class HassuBackendStack extends Stack {
       value: eventSQS.queueUrl ?? "",
     });
     new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
-      // TODO: Mitä tää tekee?
+      // TODO: Mitä tää tekee? Tuleeko tästä backend stack output??
       value: hyvaksymisEsitysSQS.queueUrl ?? "",
     });
     if (Config.isDeveloperEnvironment()) {
