@@ -111,6 +111,7 @@ module.exports = (phase) => {
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
     EVENT_SQS_URL: process.env.EVENT_SQS_URL,
+    HYVAKSYMISESITYS_SQS_URL: process.env.HYVAKSYMISESITYS_SQS_URL,
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
     ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
 

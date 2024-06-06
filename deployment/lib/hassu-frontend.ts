@@ -91,7 +91,7 @@ export class HassuFrontendStack extends Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    const { AppSyncAPIKey, EventSqsUrl } = await readBackendStackOutputs();
+    const { AppSyncAPIKey, EventSqsUrl, HyvaksymisEsitysSqsUrl } = await readBackendStackOutputs();
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
@@ -109,6 +109,7 @@ export class HassuFrontendStack extends Stack {
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
       EVENT_SQS_URL: EventSqsUrl,
+      HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl, // TODO: tarvitseeko tätä?? Miksi??
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
@@ -140,7 +141,12 @@ export class HassuFrontendStack extends Stack {
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
-    const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(config.dmzProxyEndpoint, env, edgeFunctionRole, frontendRequestFunction);
+    const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(
+      config.dmzProxyEndpoint,
+      env,
+      edgeFunctionRole,
+      frontendRequestFunction
+    );
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
       config,

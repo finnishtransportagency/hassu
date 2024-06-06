@@ -57,6 +57,7 @@ export type BackendStackOutputs = {
   AppSyncAPIURL: string;
   EventSqsUrl: string;
   PdfGeneratorLambda: string;
+  HyvaksymisEsitysSqsUrl: string;
 };
 
 export const backendStackName = "hassu-backend-" + Config.env;
@@ -124,6 +125,7 @@ export class HassuBackendStack extends Stack {
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       eventSQS,
+      hyvaksymisEsitysSQS,
       asianhallintaSQS,
       kiinteistoSQS,
       suomiFiSQS,
@@ -142,6 +144,7 @@ export class HassuBackendStack extends Stack {
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       eventSQS,
+      hyvaksymisEsitysSQS,
       asianhallintaSQS,
       kiinteistoSQS,
       suomiFiSQS,
@@ -451,6 +454,7 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
     eventSQS: Queue,
+    hyvaksymisEsitysSQS: Queue,
     asianhallintaSQS: Queue,
     kiinteistoSQS: Queue,
     suomifiSQS: Queue,
@@ -480,6 +484,7 @@ export class HassuBackendStack extends Stack {
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         EVENT_SQS_URL: eventSQS.queueUrl,
         EVENT_SQS_ARN: eventSQS.queueArn,
+        HYVAKSYMISESITYS_SQS_URL: hyvaksymisEsitysSQS.queueUrl,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       };
     } else {
@@ -542,6 +547,7 @@ export class HassuBackendStack extends Stack {
       );
 
       eventSQS.grantSendMessages(backendLambda);
+      hyvaksymisEsitysSQS.grantSendMessages(backendLambda);
       asianhallintaSQS.grantSendMessages(backendLambda);
       kiinteistoSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
@@ -774,8 +780,7 @@ export class HassuBackendStack extends Stack {
       },
       environment: {
         ...commonEnvironmentVariables,
-        EVENT_SQS_URL: hyvaksymisEsitysSqs.queueUrl,
-        EVENT_SQS_ARN: hyvaksymisEsitysSqs.queueArn,
+        HYVAKSYMISESITYS_SQS_URL: hyvaksymisEsitysSqs.queueUrl,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.ACTIVE,
