@@ -184,6 +184,7 @@ class OmistajaDatabase {
         ExpressionAttributeNames: {
           "#oid": "oid",
         },
+        ProjectionExpression: "id",
       });
       const data = await getDynamoDBDocumentClient().send(command);
       for (const chunk of chunkArray(data?.Items ?? [], 25)) {

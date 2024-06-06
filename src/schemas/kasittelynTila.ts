@@ -82,8 +82,33 @@ export const kasittelynTilaSchema = Yup.object().shape({
     ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable(),
     valitustenMaara: Yup.string().min(1, "Valitusten lukumäärä on pakollinen").nullable(),
     lainvoimaAlkaen: paivamaara().notRequired().nullable(),
-    lainvoimaPaattyen: paivamaara().notRequired().nullable(),
-    ennakkotarkastus: paivamaara().notRequired().nullable(),
+    lainvoimaPaattyen: paivamaara().notRequired().nullable().test((value, context) => {
+      if (value) {
+        if (!context.parent.lainvoimaAlkaen) {
+          return context.createError({
+            message: "Lainvoima alkaen on annettava.",
+            path: `${context.path}`,
+            type: "custom",
+          });
+        }
+      }
+      return true;
+    }),
+    ennakkotarkastus: paivamaara()
+      .notRequired()
+      .nullable()
+      .test((value, context) => {
+        if (value) {
+          if (!context.parent.hyvaksymisesitysTraficomiinPaiva) {
+            return context.createError({
+              message: "Hyväksymisesitys Traficomiin on annettava.",
+              path: `${context.path}`,
+              type: "custom",
+            });
+          }
+        }
+        return true;
+      }),
     toimitusKaynnistynyt: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable(),

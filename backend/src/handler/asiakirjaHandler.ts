@@ -136,7 +136,7 @@ async function handleHyvaksymisPaatosKuulutus(
   projektiWithChanges.velho = velho; // Restore read-only velho data which was removed by adaptProjektiToSave
 
   const kasittelynTila = projektiWithChanges.kasittelynTila;
-  assert(kasittelynTila);
+  assert(kasittelynTila, "Käsittelyn tila puuttuu");
   const muutostenAvaimet = Object.keys(muutokset);
   const avainPaatokselle = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
     ? "hyvaksymisPaatosVaihe"
