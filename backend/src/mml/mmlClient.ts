@@ -44,6 +44,7 @@ export type MmlOptions = {
   endpoint: string;
   apiKey: string;
   ogcApiKey: string;
+  ogcApiExamples: string;
 };
 
 const TIMEOUT = 120000;
@@ -193,9 +194,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        let geojson = response.data as FeatureCollection;
+        let geojson = response.data as FeatureCollection | undefined;
         const ids: number[] = [];
-        for (const feat of geojson.features) {
+        for (const feat of geojson?.features || []) {
           if (feat.properties?.tiekunta) {
             feat.properties.tiekunta.forEach((t: { nimi: string; id: number }) => {
               const omistaja = { id: t.id, nimi: t.nimi, kayttooikeusyksikkotunnus: feat.properties?.kayttooikeusyksikkotunnus };
@@ -207,7 +208,10 @@ export function getMmlClient(options: MmlOptions): MmlClient {
           }
         }
         url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
-        auditLog.info("Tiekuntien yhteystietojen haku", { ids });
+        if (options.ogcApiExamples === "true") {
+          url = url.replace("/features/", "/examples/");
+        }
+        auditLog.info("Tiekuntien yhteystietojen haku", { ids, url });
         response = await axios.get(url, {
           headers: { "x-api-key": options.ogcApiKey, enduserid: uid },
           timeout: TIMEOUT,
@@ -215,8 +219,8 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        geojson = response.data as FeatureCollection;
-        for (const feat of geojson.features) {
+        geojson = response.data as FeatureCollection | undefined;
+        for (const feat of geojson?.features ?? []) {
           if (feat?.properties?.yhteyshenkilo[0]) {
             const omistaja = tiekuntaMap.get(feat.id as number);
             if (omistaja && !omistaja.yhteystiedot) {

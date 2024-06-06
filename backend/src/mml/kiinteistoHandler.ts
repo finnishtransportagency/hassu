@@ -44,7 +44,8 @@ async function getClient() {
     const apiKey = await parameters.getMmlApiKey();
     const ogcEndpoint = await parameters.getOgcBaseUrl();
     const ogcApiKey = await parameters.getOgcApiKey();
-    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey });
+    const ogcApiExamples = await parameters.getOgcApiExmaples();
+    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey, ogcApiExamples });
   }
   return mmlClient;
 }
