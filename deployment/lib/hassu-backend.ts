@@ -110,7 +110,8 @@ export class HassuBackendStack extends Stack {
     // TODO: Remove once no schedules for this queue
     const aineistoSQS = this.createAineistoImporterQueue();
     const eventSQS = this.createEventQueue();
-    this.eventQueue = eventSQS;
+    this.eventQueue = eventSQS; // TODO: Miksi?
+    const hyvaksymisEsitysSQS = this.createHyvaksymisEsitysAineistoQueue();
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
@@ -156,6 +157,10 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
     const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
+    const hyvaksymisEsitysAineistoHandlerLambda = await this.createHyvaksymisEsitysAineistoLambda(
+      commonEnvironmentVariables,
+      hyvaksymisEsitysSQS
+    );
     const omistajaSearchIndexer = this.createOmistajaSearchIndexer(commonEnvironmentVariables);
     const muistuttajaSearchIndexer = this.createMuistuttajaSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(omistajaSearchIndexer, true);
@@ -163,8 +168,22 @@ export class HassuBackendStack extends Stack {
 
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
-    this.createAndProvideSchedulerExecutionRole(eventSQS, aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
+    // TODO: Riittääkö nämä kaksi??
+    hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI", this.props.projektiTable.tableName);
+    this.props.projektiTable.grantFullAccess(hyvaksymisEsitysAineistoHandlerLambda); // TODO: riittääkö read ja write? onko update ja put silloin kielletty?
 
+    // TODO: tarvitseeko hyvaksymisEsitysAineistoLambda tätä?
+    this.createAndProvideSchedulerExecutionRole(
+      eventSQS,
+      aineistoSQS,
+      hyvaksymisEsitysSQS,
+      hyvaksymisEsitysAineistoHandlerLambda,
+      yllapitoBackendLambda,
+      sqsEventHandlerLambda,
+      projektiSearchIndexer
+    );
+
+    // TODO: tarvitseeko hyvaksymisEsitysAineistoLambda tätä?
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
       [yllapitoBackendLambda, sqsEventHandlerLambda],
@@ -183,6 +202,10 @@ export class HassuBackendStack extends Stack {
     });
     new CfnOutput(this, "EventSqsUrl", {
       value: eventSQS.queueUrl ?? "",
+    });
+    new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
+      // TODO: Mitä tää tekee?
+      value: hyvaksymisEsitysSQS.queueUrl ?? "",
     });
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
@@ -730,6 +753,63 @@ export class HassuBackendStack extends Stack {
     return suomiFiLambda;
   }
 
+  private async createHyvaksymisEsitysAineistoLambda(
+    commonEnvironmentVariables: Record<string, string>,
+    hyvaksymisEsitysSqs: Queue
+  ): Promise<NodejsFunction> {
+    const frontendStackOutputs = await readFrontendStackOutputs(); // TODO mitä tämä tekee?
+    const concurrency = 10;
+    const importer = new NodejsFunction(this, "HyvaksymisEsitysAineistoHandlerLambda", {
+      functionName: "hassu-hyvaksymisesitys-aineisto-handler-" + Config.env,
+      runtime: lambdaRuntime,
+      entry: `${__dirname}/../../backend/src/HyvaksymisEsitys/aineistoHandling/aineistoHandler.ts`,
+      handler: "handleEvent",
+      memorySize: 1024,
+      reservedConcurrentExecutions: concurrency,
+      timeout: Duration.seconds(600),
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        externalModules,
+      },
+      environment: {
+        ...commonEnvironmentVariables,
+        EVENT_SQS_URL: hyvaksymisEsitysSqs.queueUrl,
+        EVENT_SQS_ARN: hyvaksymisEsitysSqs.queueArn,
+        CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
+      },
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: this.layers,
+      logRetention: this.getLogRetention(),
+    });
+    this.addPermissionsForMonitoring(importer);
+
+    this.props.yllapitoBucket.grantReadWrite(importer);
+
+    importer.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+    if (frontendStackOutputs?.CloudfrontDistributionId) {
+      importer.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["cloudfront:CreateInvalidation"],
+          resources: ["arn:aws:cloudfront::" + this.account + ":distribution/" + frontendStackOutputs?.CloudfrontDistributionId],
+        })
+      );
+    }
+
+    const eventSource = new SqsEventSource(hyvaksymisEsitysSqs, { batchSize: 1, maxConcurrency: concurrency });
+    importer.addEventSource(eventSource);
+    hyvaksymisEsitysSqs.grantSendMessages(importer);
+    return importer;
+  }
+
   private grantInternalBucket(func: NodejsFunction, pattern?: string) {
     func.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
     this.props.internalBucket.grantReadWrite(func, pattern);
@@ -987,6 +1067,16 @@ export class HassuBackendStack extends Stack {
     return variables;
   }
 
+  private createHyvaksymisEsitysAineistoQueue() {
+    return new Queue(this, "HyvaksymisEsitysQueue", {
+      queueName: "hyvaksymisesitys-queue-" + Config.env + ".fifo",
+      fifo: true,
+      contentBasedDeduplication: true,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+  }
+
   private createAineistoImporterQueue() {
     return new Queue(this, "AineistoImporter", {
       queueName: "aineisto-importer-" + Config.env + ".fifo",
@@ -1092,7 +1182,7 @@ export class HassuBackendStack extends Stack {
       parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",
       stringValue: queue.queueUrl,
     });
-    this.asianhallintaQueue = queue;
+    this.asianhallintaQueue = queue; // TODO: Miksi??
     return queue;
   }
 
@@ -1115,7 +1205,13 @@ export class HassuBackendStack extends Stack {
     return queue;
   }
 
-  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, aineistoSQS: Queue, ...backendLambdas: NodejsFunction[]) {
+  private createAndProvideSchedulerExecutionRole(
+    eventSQS: Queue,
+    aineistoSQS: Queue,
+    hyvaksymisEsitysSQS: Queue,
+    hyvaksymisEsitysAineistoHandlerLambda: NodejsFunction,
+    ...backendLambdas: NodejsFunction[]
+  ) {
     const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
@@ -1134,10 +1230,16 @@ export class HassuBackendStack extends Stack {
               actions: ["sqs:SendMessage"],
               resources: [aineistoSQS.queueArn],
             }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ["sqs:SendMessage"],
+              resources: [hyvaksymisEsitysSQS.queueArn],
+            }),
           ],
         }),
       },
     });
+    // TODO: jotain oikkia hyvaksymisEsitysAineistoHandlerLambda:lle ??
     for (const backendLambda of backendLambdas) {
       backendLambda.addEnvironment("SCHEDULER_EXECUTION_ROLE_ARN", role.roleArn);
       backendLambda.addToRolePolicy(
