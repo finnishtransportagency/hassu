@@ -12,6 +12,10 @@ import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
 import { findAloitusKuulutusLastApproved } from "../../projekti/projektiUtil";
 
+const saamet = [Kieli.POHJOISSAAME];
+
+type SaameLanguage = Kieli.POHJOISSAAME;
+
 class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -97,9 +101,10 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         throw new Error("AloituskuulutusIlmoitusPDFSUOMI:n saaminen epäonnistui");
       }
       let aloituskuulutusIlmoitusPDFRuotsi = undefined;
-      let aloituskuulutusIlmoitusPDFPohjoissaame = undefined;
 
-      if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+      const projectLanguages = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli];
+
+      if (projectLanguages.includes(Kieli.RUOTSI)) {
         const aloituskuulutusPDFtRuotsi = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI];
         assertIsDefined(aloituskuulutusPDFtRuotsi);
         aloituskuulutusIlmoitusPDFRuotsi = await fileService.getFileAsAttachment(
@@ -110,27 +115,36 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
           throw new Error("AloituskuulutusIlmoitusPDFRuotis:n saaminen epäonnistui");
         }
       }
-      if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.POHJOISSAAME)) {
-        const aloituskuulutusPDFtPohjoissaame = aloituskuulutus.aloituskuulutusSaamePDFt?.[Kieli.POHJOISSAAME];
-        assertIsDefined(aloituskuulutusPDFtPohjoissaame);
-        if (aloituskuulutusPDFtPohjoissaame.kuulutusIlmoitusPDF?.tiedosto) {
-          aloituskuulutusIlmoitusPDFPohjoissaame = await fileService.getFileAsAttachment(
-            projekti.oid,
-            aloituskuulutusPDFtPohjoissaame.kuulutusIlmoitusPDF.tiedosto
-          );
-        }
-        if (!aloituskuulutusIlmoitusPDFPohjoissaame) {
-          throw new Error("AloituskuulutusIlmoitusPDFPohjoissaame:n saaminen epäonnistui");
-        }
-      }
 
       emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI];
+
       if (aloituskuulutusIlmoitusPDFRuotsi) {
         emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFRuotsi);
       }
-      if (aloituskuulutusIlmoitusPDFPohjoissaame) {
-        emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFPohjoissaame);
+
+      const saameLanguages = projectLanguages.filter((language) => language !== undefined && saamet.includes(language)) as SaameLanguage[];
+
+      if (saameLanguages) {
+        for (const saameLanguage of saameLanguages) {
+          const aloituskuulutusPDF = aloituskuulutus.aloituskuulutusSaamePDFt?.[saameLanguage];
+          assertIsDefined(aloituskuulutusPDF);
+          let aloituskuulutusIlmoitusPDF;
+
+          if (aloituskuulutusPDF.kuulutusIlmoitusPDF?.tiedosto) {
+            aloituskuulutusIlmoitusPDF = await fileService.getFileAsAttachment(
+              projekti.oid,
+              aloituskuulutusPDF.kuulutusIlmoitusPDF.tiedosto
+            );
+          }
+
+          if (!aloituskuulutusIlmoitusPDF) {
+            throw new Error(`Aloituskuulutusilmoituksen saaminen kielelle ${saameLanguage} epäonnistui`);
+          } else {
+            emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDF);
+          }
+        }
       }
+
       const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
 
       const aikaleima = localDateTimeString();
