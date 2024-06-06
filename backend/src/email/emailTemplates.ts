@@ -243,7 +243,7 @@ Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. T
 }
 
 export async function createHyvaksymisesitysHyvaksyttyPpEmail(
-  projekti: Pick<DBProjekti, "velho" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta" | "asianhallinta">
+  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta" | "asianhallinta">
 ): Promise<EmailOptions> {
   const asiatunnus = getAsiatunnus(projekti.velho);
   const linkkiAsianhallintaan = await getLinkkiAsianhallintaan(projekti);
