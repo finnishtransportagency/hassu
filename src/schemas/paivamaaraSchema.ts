@@ -1,5 +1,6 @@
 import { is2100Century, isInFuture, isInPast, isValidDate } from "hassu-common/util/dateUtils";
 import * as Yup from "yup";
+import { AnyObject } from "yup/lib/types";
 
 interface PaivamaaraProps {
   preventPast?: boolean | string;
@@ -12,21 +13,31 @@ export const paivamaara = (props?: PaivamaaraProps) => {
   const preventPastMessage = typeof props?.preventPast === "string" ? props.preventPast : "Päivämäärää ei voida asettaa menneisyyteen";
   const preventFutureMessage =
     typeof props?.preventFuture === "string" ? props.preventFuture : "Päivämäärää ei voida asettaa tulevaisuuteen";
-  return Yup.string()
-    .nullable()
-    .test("is-valid-date", "Virheellinen päivämäärä", checkValidDate)
-    .test("not-in-past", preventPastMessage, (dateString) => {
-      // This test doesn't throw errors if date is not set.
-      if (!checkValidDate(dateString) || !props?.preventPast) {
-        return true;
-      }
-      return !isInPast(dateString, "day");
-    })
-    .test("not-in-future", preventFutureMessage, (dateString) => {
-      // This test doesn't throw errors if date is not set.
-      if (!checkValidDate(dateString) || !props?.preventFuture) {
-        return true;
-      }
-      return !isInFuture(dateString, "day");
-    });
+
+  let schema = Yup.string().nullable().test("is-valid-date", "Virheellinen päivämäärä", checkValidDate);
+
+  if (props?.preventPast) {
+    schema = schema.test("not-in-past", preventPastMessage, notInPastCheck);
+  }
+  if (props?.preventFuture) {
+    schema = schema.test("not-in-future", preventFutureMessage, notInFutureCheck);
+  }
+  return schema;
+};
+
+export const notInPastCheck: Yup.TestFunction<string | null | undefined, AnyObject> = (dateString: string | null | undefined) => {
+  // This test doesn't throw errors if date is not set.
+  if (!checkValidDate(dateString)) {
+    return true;
+  }
+  return !isInPast(dateString, "day");
+};
+
+export const notInFutureCheck: Yup.TestFunction<string | null | undefined, AnyObject> = (dateString: string | null | undefined) => {
+  console.log("bong");
+  // This test doesn't throw errors if date is not set.
+  if (!checkValidDate(dateString)) {
+    return true;
+  }
+  return !isInFuture(dateString, "day");
 };

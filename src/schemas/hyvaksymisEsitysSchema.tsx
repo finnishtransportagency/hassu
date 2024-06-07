@@ -1,7 +1,7 @@
 import { ValidationMode, ValidationModeState } from "common/ProjektiValidationContext";
 import * as Yup from "yup";
 import { getAineistotNewSchema, getLadatutTiedostotNewSchema } from "./common";
-import { paivamaara } from "./paivamaaraSchema";
+import { notInPastCheck, paivamaara } from "./paivamaaraSchema";
 
 const getKunnallinenLadattuTiedostoSchema = () =>
   Yup.object().shape({
@@ -21,11 +21,12 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
   oid: Yup.string().required(),
   versio: Yup.number().integer().required(),
   muokattavaHyvaksymisEsitys: Yup.object().shape({
-    poistumisPaiva: paivamaara({ preventFuture: false, preventPast: false })
+    poistumisPaiva: paivamaara()
       .defined()
       .when("$validationMode", {
         is: isValidationModePublish,
-        then: (schema) => schema.required("Päivämäärä on pakollinen"),
+        then: (schema) =>
+          schema.required("Päivämäärä on pakollinen").test("not-in-past", "Päivämäärää ei voi asettaa menneisyyteen", notInPastCheck),
       }),
     kiireellinen: Yup.boolean().defined(),
     lisatiedot: Yup.string().defined(),
