@@ -9,8 +9,12 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useCallback } from "react";
 
 /**
- *
  * @param keyToLadatutTiedostot avain FielValueseissa, jonka takana on LadattuTiedostoNew[]-tyyppistä dataa
+ *
+ * @param settings sisältää valinnaiset asetukset:
+ * - allowOnlyOne: jos tiedostovalitsimessa voidaan valita vain yksi tiedosto
+ * - kunta: muistutuksia varten lisätty asetus, jolla tiedostolle lisätään kuntatieto
+ *
  * @returns funktio, jonka voi antaa monivalinta-tiedosto-inputin onChange-kohtaan
  */
 export default function useHandleUploadedFiles<F extends FieldValues>(
