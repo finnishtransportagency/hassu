@@ -62,12 +62,7 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
         }),
     }),
     kuulutuksetJaKutsu: getLadatutTiedostotNewSchema().defined(),
-    hyvaksymisEsitys: getLadatutTiedostotNewSchema()
-      .defined()
-      .when("$validationMode", {
-        is: isValidationModePublish,
-        then: (schema) => schema.min(1, "Hyväksymisesitys on pakollinen"),
-      }),
+    hyvaksymisEsitys: getLadatutTiedostotNewSchema().defined(),
     lausunnot: getLadatutTiedostotNewSchema().defined(),
     maanomistajaluettelo: getLadatutTiedostotNewSchema().defined(),
     muuAineistoKoneelta: getLadatutTiedostotNewSchema().defined(),
