@@ -49,7 +49,8 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 async function tuoAineistot(oid: string) {
   const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid);
   const { aineistoHandledAt, versio, lockedUntil } = projekti;
-  if (lockedUntil && lockedUntil > nyt().unix()) {
+  const timestampNow = nyt().unix();
+  if (lockedUntil && lockedUntil > timestampNow) {
     throw new SimultaneousUpdateError();
   }
   const aineistot = getHyvaksymisEsityksenAineistot(projekti);
@@ -118,9 +119,11 @@ async function setAineistoHandledAt(oid: string, versio: number) {
       ":aineistoHandledAt": aineistoHandledAt,
       ":versioFromInput": versio,
       ":now": nyt().unix(),
+      ":null": null,
     },
     ConditionExpression:
-      "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " + `(attribute_not_exists(#lockedUntil) OR #lockedUntil < :now)`,
+      "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
+      `(attribute_not_exists(#lockedUntil) OR #lockedUntil = :null OR #lockedUntil < :now)`,
   });
 
   if (log.isLevelEnabled("debug")) {
