@@ -57,7 +57,7 @@ async function tuoAineistot(oid: string) {
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
-    (aineisto) => !aineistoHandledAt || parseDate(aineisto.lisatty).isBefore(parseDate(aineistoHandledAt))
+    (aineisto) => !aineistoHandledAt || parseDate(aineisto.lisatty).isAfter(parseDate(aineistoHandledAt))
   );
   if (!uudetAineistot.length) {
     log.info("Ei uusia aineistoja", "aineistoHandledAt viimeksi " + aineistoHandledAt);
