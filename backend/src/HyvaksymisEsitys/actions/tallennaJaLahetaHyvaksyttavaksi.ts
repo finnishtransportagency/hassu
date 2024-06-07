@@ -92,13 +92,13 @@ function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tal
   if (input.versio !== projektiInDB.versio) {
     throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
   }
+  const context: HyvaksymisEsitysValidationContext = { validationMode: { current: ValidationMode.PUBLISH }, testType: TestType.BACKEND };
+  hyvaksymisEsitysSchema.validateSync(input, {
+    context,
+  });
 }
 
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
-  const context: HyvaksymisEsitysValidationContext = { validationMode: { current: ValidationMode.PUBLISH }, testType: TestType.BACKEND };
-  hyvaksymisEsitysSchema.validateSync(muokattavaHyvaksymisEsitys, {
-    context,
-  });
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   if (!aineistotHandledAt || !aineistot.every((aineisto) => aineistotHandledAt.localeCompare(aineisto.lisatty) > 0)) {

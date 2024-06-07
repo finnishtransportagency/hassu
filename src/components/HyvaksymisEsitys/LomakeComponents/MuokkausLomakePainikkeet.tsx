@@ -51,25 +51,22 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   useLeaveConfirm(isDirty);
 
   const suljeMuokkaus = useCallback(
-    (formData) =>
+    () =>
       withLoadingSpinner(
         (async () => {
-          if (isDirty) {
-            if (
-              window.confirm(
-                "Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos suljet muokkauksen. \n\nHaluatko poistua tallentamatta?"
-              )
-            ) {
-              await api.suljeHyvaksymisEsityksenMuokkaus({ oid: hyvaksymisesitys.oid, versio: hyvaksymisesitys.versio });
-              await reloadProjekti();
-              showSuccessMessage("Muokkauksen sulkeminen onnistui");
-            } else {
-              throw "Abort action 'sulje muokkaus'. Please ignore this error.";
-            }
+          if (
+            !isDirty ||
+            window.confirm(
+              "Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos suljet muokkauksen. \n\nHaluatko poistua tallentamatta?"
+            )
+          ) {
+            await api.suljeHyvaksymisEsityksenMuokkaus({ oid: hyvaksymisesitys.oid, versio: hyvaksymisesitys.versio });
+            await reloadProjekti();
+            showSuccessMessage("Muokkauksen sulkeminen onnistui");
           }
         })()
       ),
-    [api, hyvaksymisesitys.oid, hyvaksymisesitys.versio, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, hyvaksymisesitys.oid, hyvaksymisesitys.versio, isDirty, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
   const lahetaHyvaksyttavaksi: SubmitHandler<TallennaHyvaksymisEsitysInput> = useCallback(

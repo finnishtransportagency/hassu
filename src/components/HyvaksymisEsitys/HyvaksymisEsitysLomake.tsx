@@ -22,7 +22,6 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import { H3, H4 } from "@components/Headings";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
-import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";

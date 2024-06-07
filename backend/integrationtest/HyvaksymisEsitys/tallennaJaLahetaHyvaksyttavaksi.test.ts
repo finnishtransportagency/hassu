@@ -15,6 +15,7 @@ import MockDate from "mockdate";
 import { emailClient } from "../../src/email/email";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { ValidationError } from "yup";
 
 describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettäminen", () => {
   const userFixture = new UserFixture(userService);
@@ -121,6 +122,30 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const firstArgs = emailStub?.firstCall.firstArg as EmailOptions;
     expect(firstArgs.to).to.eql(["email@email.com", "email2@email.com"]);
     expect(firstArgs).toMatchSnapshot();
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos poistumisPaiva menneisyydessa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2000-01-01" },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Päivämäärää ei voi asettaa menneisyyteen");
   });
 
   it("ei onnistu, jos tallennuksen yhteydessä annetaan uusi aineisto", async () => {
