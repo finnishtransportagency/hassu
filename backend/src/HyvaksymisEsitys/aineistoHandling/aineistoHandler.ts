@@ -53,14 +53,14 @@ async function tuoAineistot(oid: string) {
   if (lockedUntil && lockedUntil > timestampNow) {
     throw new SimultaneousUpdateError();
   }
-  const aineistot = getHyvaksymisEsityksenAineistot(projekti);
+  const aineistot = getHyvaksymisEsityksenAineistot(projekti.muokattavaHyvaksymisEsitys);
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
     (aineisto) => !aineistoHandledAt || parseDate(aineisto.lisatty).isBefore(parseDate(aineistoHandledAt))
   );
   if (!uudetAineistot.length) {
-    log.info("Ei uusia aineistoja", "aineistoHandledAt viimeksi" + aineistoHandledAt);
+    log.info("Ei uusia aineistoja", "aineistoHandledAt viimeksi " + aineistoHandledAt);
   }
   // Tuo aineistot
   await Promise.all(
