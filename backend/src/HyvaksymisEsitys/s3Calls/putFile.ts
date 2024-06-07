@@ -1,7 +1,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "../../aws/client";
 import { adaptFileName } from "../../tiedostot/paths";
-import mime from "mime";
+import * as mime from "mime-types";
 import { log } from "../../logger";
 import { config } from "../../config";
 
@@ -22,7 +22,7 @@ export default async function putFile({
         Body: contents,
         Bucket: config.yllapitoBucketName,
         Key: targetPath,
-        ContentType: contentType ?? "application/octet-stream",
+        ContentType: contentType || "application/octet-stream",
         ContentDisposition: contentDisposition,
       })
     );
