@@ -54,7 +54,6 @@ async function tuoAineistot(oid: string) {
     throw new SimultaneousUpdateError();
   }
   const aineistot = getHyvaksymisEsityksenAineistot(projekti.muokattavaHyvaksymisEsitys);
-  log.info("aineistot", "aineistot " + aineistot.map((a) => a.lisatty).join(", "));
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
