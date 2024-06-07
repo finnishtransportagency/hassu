@@ -103,7 +103,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet({ hyvaksym
         </Button>
         <Button
           type="button"
-          disabled={!hyvaksymisesitys.voiLahettaaHyvaksyttavaksi}
+          disabled={!hyvaksymisesitys.aineistotValmiit}
           id="save_and_send_for_acceptance"
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}
