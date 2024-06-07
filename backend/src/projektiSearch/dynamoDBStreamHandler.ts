@@ -11,7 +11,9 @@ import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { SendMessageCommandInput } from "@aws-sdk/client-sqs";
+import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
+import { chunkArray } from "../database/chunkArray";
+import { uuid } from "hassu-common/util/uuid";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
@@ -35,57 +37,74 @@ async function handleRemove(record: DynamoDBRecord) {
 }
 
 async function handleManagementAction(event: MaintenanceEvent) {
+  log.info("handleManagementAction");
   const action = event.action;
   if (action == "deleteIndex") {
     await new ProjektiSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
     let startKey: string | undefined = undefined;
-    const events: MaintenanceEvent[] = [];
+    const queueUrl = await parameters.getIndexerSQSUrl();
     do {
       const scanResult = await projektiDatabase.scanProjektit(startKey);
       startKey = scanResult.startKey;
-      for (const projekti of scanResult.projektis) {
-        events.push({ action: "index", projekti })
+      const entries = scanResult.projektis.map<SendMessageBatchRequestEntry>((projekti) => ({
+        Id: uuid.v4(),
+        MessageBody: JSON.stringify({ action: "index", oid: projekti.oid }),
+      }));
+      for (const chunk of chunkArray(entries, 10)) {
+        await getSQS().sendMessageBatch({ QueueUrl: queueUrl, Entries: chunk });
       }
     } while (startKey);
-    let i = 1;
-    for (event of events) {
-      event.index = i++;
-      event.size = events.length;
-      const args: SendMessageCommandInput = {
-        QueueUrl: await parameters.getIndexerSQSUrl(),
-        MessageBody: JSON.stringify(event)
-      };
-      log.info("Sending SQS event " + event.index);
-      await getSQS().sendMessage(args);
-    }
     log.info("Indeksointi aloitettu");
   }
 }
 
-export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | MaintenanceEvent | SQSEvent): Promise<void> => {
-  const action = (event as MaintenanceEvent).action;
-  if (action) {
-    return handleManagementAction(event as MaintenanceEvent);
-  }
+type Event = DynamoDBStreamEvent | MaintenanceEvent | SQSEvent;
+
+function eventIsMaintenanceEvent(event: Event): event is MaintenanceEvent {
+  return !!(event as MaintenanceEvent).action;
+}
+
+function eventIsSqsEvent(event: Event): event is SQSEvent {
   const records = (event as SQSEvent).Records;
-  if (records && records.length == 1 && records[0].body) {
-    const body: MaintenanceEvent = JSON.parse(records[0].body);
-    log.info("SQS event " + body.index + "/" + body.size + " received", { oid: body.projekti?.oid });
-    if (body.projekti) {
-      try {
-        await projektiSearchService.indexProjekti(body.projekti);
-      } catch (e) {
-        log.error(e);
-      }
-    }
-    if (body.index === body.size) {
-      log.info("Indeksointi valmis");
-    }
-    return;
+  return !!records.length && records.every((record) => record.body);
+}
+
+export const handleDynamoDBEvents = async (event: Event): Promise<void> => {
+  if (eventIsMaintenanceEvent(event)) {
+    await handleManagementAction(event);
+  } else if (eventIsSqsEvent(event)) {
+    await handleSqsEvent(event);
+  } else {
+    await handleStreamEvent(event);
   }
+};
+
+async function handleSqsEvent(event: SQSEvent) {
+  log.info("handleSqsEvent");
+  log.info("SQS records: " + event.Records.length);
+  await Promise.all(
+    event.Records.map(async (record) => {
+      if (!record.body) {
+        return;
+      }
+      const body: MaintenanceEvent = JSON.parse(record.body);
+      log.info("Projektin oid " + body.oid);
+      if (body.oid) {
+        const dbProjekti = await projektiDatabase.loadProjektiByOid(body.oid);
+        if (dbProjekti) {
+          await projektiSearchService.indexProjekti(dbProjekti);
+        }
+      }
+    })
+  );
+  log.info("Batchin indeksointi valmis");
+}
+
+function handleStreamEvent(event: DynamoDBStreamEvent) {
+  log.info("handleStreamEvent");
   setupLambdaMonitoring();
-  if (!(event as DynamoDBStreamEvent).Records) {
+  if (!event.Records) {
     log.warn("No records");
     return;
   }
@@ -93,7 +112,7 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
     return (async () => {
       setupLambdaMonitoringMetaData(subsegment);
       try {
-        for (const record of (event as DynamoDBStreamEvent).Records) {
+        for (const record of event.Records) {
           switch (record.eventName) {
             case "INSERT":
             case "MODIFY":
@@ -109,4 +128,4 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
       }
     })();
   });
-};
+}

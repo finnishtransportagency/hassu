@@ -66,7 +66,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         ? "/hyvaksymispaatos"
         : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
         ? "/jatkopaatos1"
-        : "jatkopaatos2");
+        : "/jatkopaatos2");
   }
 
   return (

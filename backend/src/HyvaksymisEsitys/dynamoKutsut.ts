@@ -20,6 +20,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "hyvaksymisPaatosVaihe"
   | "aineistoHandledAt"
   | "velho"
+  | "asianhallinta"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -63,7 +64,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta",
     });
 
     try {

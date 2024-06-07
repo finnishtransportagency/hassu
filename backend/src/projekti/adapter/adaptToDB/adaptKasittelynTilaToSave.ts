@@ -2,7 +2,6 @@ import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { Hyvaksymispaatos, KasittelynTila, OikeudenPaatos } from "../../../database/model";
 import { KasittelyntilaInput, OikeudenPaatosInput } from "hassu-common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
-import isEqual from "lodash/isEqual";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptKasittelynTilaToSave(
@@ -71,9 +70,7 @@ export function adaptKasittelynTilaToSave(
   };
 
   const newKasittelynTila: KasittelynTila = mergeWith({}, dbKasittelynTila, adaptedKasittelynTila, preventArrayMergingCustomizer);
-  if (!isEqual(dbKasittelynTila, newKasittelynTila)) {
-    projektiAdaptationResult.saveProjektiToVelho();
-  }
+  projektiAdaptationResult.saveProjektiToVelho();
   return newKasittelynTila;
 }
 

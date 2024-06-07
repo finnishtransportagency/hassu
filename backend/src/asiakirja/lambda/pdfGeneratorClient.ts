@@ -18,16 +18,18 @@ class PdfGeneratorClient {
     }
 
     const result = await invokeLambda(config.pdfGeneratorLambdaArn, true, JSON.stringify(event));
+    let errorMessage = "Tuntematon virhe";
     if (result) {
       const response = JSON.parse(result);
       if (!response.errorType) {
         return response;
       } else {
         log.error("PDF-generointi ei onnistunut", { response });
+        errorMessage = response.errorMessage ?? errorMessage;
       }
     }
     log.error(event);
-    throw new Error("PDF-generointi ei onnistunut");
+    throw new Error("PDF-generointi ei onnistunut: " + errorMessage);
   }
 
   async createAloituskuulutusPdf(param: AloituskuulutusPdfOptions) {

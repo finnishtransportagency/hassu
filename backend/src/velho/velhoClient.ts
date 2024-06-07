@@ -311,11 +311,21 @@ export class VelhoClient {
         return new VelhoUnavailableError(response.status, response.statusText);
       }
       if (response.status >= 400) {
+        log.error("Virhe Velho-rajapinnan kutsussa", {
+          statusText: response.statusText,
+          status: response.status,
+          problems: (response.data as BadRequestResponse)?.problems,
+        });
         return new VelhoError(response.status, response.statusText);
       }
     }
     return e;
   }
 }
+
+type BadRequestResponse = {
+  problems: object;
+  value: object;
+};
 
 export const velho = new VelhoClient();

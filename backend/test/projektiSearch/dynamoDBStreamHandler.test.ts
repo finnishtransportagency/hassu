@@ -14,6 +14,7 @@ import OpenSearchClient from "../../src/projektiSearch/openSearchClient";
 import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
 import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
+import { mockUUID } from "../../integrationtest/shared/sharedMock";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -28,6 +29,7 @@ describe("dynamoDBStreamHandler", () => {
   let removeProjektiSuomiStub: sinon.SinonStub;
   let removeProjektiRuotsiStub: sinon.SinonStub;
   let openSearchClientIlmoitustauluSyoteStub: SinonStubbedInstance<OpenSearchClient>;
+  mockUUID();
 
   before(() => {
     fixture = new ProjektiSearchFixture();
@@ -96,12 +98,13 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should reindex the database successfully", async () => {
+    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti2);
     const sqsEvent: SQSEvent = {
       Records: [
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {
           messageId: "1",
-          body: JSON.stringify({ action: "index", projekti: projekti2 }),
+          body: JSON.stringify({ action: "index", oid: projekti2.oid }),
         } as SQSRecord,
       ],
     };
@@ -129,9 +132,8 @@ describe("dynamoDBStreamHandler", () => {
     await handleDynamoDBEvents(mEvent);
     expect(indexProjektiStub.calledOnce).to.be.false;
 
-    expect(sqsStub.send).to.have.been.calledThrice;
+    expect(sqsStub.send).to.have.been.calledTwice;
     expect(sqsStub.send.args[0][0].input).toMatchSnapshot();
     expect(sqsStub.send.args[1][0].input).toMatchSnapshot();
-    expect(sqsStub.send.args[2][0].input).toMatchSnapshot();
   });
 });

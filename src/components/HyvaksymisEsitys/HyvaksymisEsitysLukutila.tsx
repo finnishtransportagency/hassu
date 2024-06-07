@@ -33,7 +33,6 @@ export default function HyvaksymisEsitysLukutila({
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot, tuodutTiedostot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
-  const hyvaksytty = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.HYVAKSYTTY;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
@@ -81,7 +80,7 @@ export default function HyvaksymisEsitysLukutila({
         )
       }
     >
-      {hyvaksytty && (
+      {hyvaksymisEsitys.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>
             Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
