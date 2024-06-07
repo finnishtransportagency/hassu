@@ -39,11 +39,6 @@ export type ProjektiTiedostoineen = Pick<
   | "aineistoHandledAt"
 > & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
 
-export type HyvaksymisEsityksenAineistotiedot = Pick<
-  DBProjekti,
-  "oid" | "versio" | "aineistoHandledAt" | "muokattavaHyvaksymisEsitys" | "lockedUntil"
->;
-
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   private static async sendUpdateCommandToDynamoDB(params: UpdateCommand): Promise<void> {
     if (log.isLevelEnabled("debug")) {
@@ -80,29 +75,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         throw new Error();
       }
       const projekti = data.Item as HyvaksymisEsityksenTiedot;
-      return projekti;
-    } catch (e) {
-      log.error(e instanceof Error ? e.message : String(e), { params });
-      throw e;
-    }
-  }
-
-  async haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<HyvaksymisEsityksenAineistotiedot> {
-    const params = new GetCommand({
-      TableName: this.projektiTableName,
-      Key: { oid },
-      ConsistentRead: true,
-      ProjectionExpression: "oid, versio, muokattavaHyvaksymiseistys, aineistoHandledAt, lockedUntil",
-    });
-
-    try {
-      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      const data = await dynamoDBDocumentClient.send(params);
-      if (!data.Item) {
-        log.error("Yritettiin hakea projektin tietoja, mutta ei onnistuttu", { params });
-        throw new Error();
-      }
-      const projekti = data.Item as HyvaksymisEsityksenAineistotiedot;
       return projekti;
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
@@ -192,8 +164,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   }
 
   async setLock(oid: string): Promise<void> {
-    // TODO:
-    const lockedUntil = "TODO";
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
@@ -204,7 +174,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#lockedUntil": "lockedUntil",
       },
       ExpressionAttributeValues: {
-        ":lockedUntil": lockedUntil,
+        ":lockedUntil": nyt().add(2, "minutes").unix(), //TODO laita tähän be-lambdan timeout-arvo
       },
     });
 
