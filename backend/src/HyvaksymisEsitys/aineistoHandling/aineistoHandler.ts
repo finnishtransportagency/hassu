@@ -59,6 +59,9 @@ async function tuoAineistot(oid: string) {
   const uudetAineistot = aineistot.filter(
     (aineisto) => !aineistoHandledAt || parseDate(aineisto.lisatty).isBefore(parseDate(aineistoHandledAt))
   );
+  if (!uudetAineistot.length) {
+    log.info("Ei uusia aineistoja", "aineistoHandledAt viimeksi" + aineistoHandledAt);
+  }
   // Tuo aineistot
   await Promise.all(
     uudetAineistot.map(async (aineisto) => {
