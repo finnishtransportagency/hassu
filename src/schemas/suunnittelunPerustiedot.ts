@@ -2,8 +2,8 @@ import { Kieli, Kielitiedot } from "@services/api";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
-import { paivamaara } from "./paivamaaraSchema";
-import { getAineistotSchema } from "./common";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
+import { getAineistotSchema } from "hassu-common/schema/common";
 
 const maxLenght = 2000;
 

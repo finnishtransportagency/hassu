@@ -1,7 +1,7 @@
 import * as Yup from "yup";
-import { IlmoitettavaViranomainen } from "@services/api";
 import filter from "lodash/filter";
 import { yhteystietoSchema } from "./yhteystieto";
+import { IlmoitettavaViranomainen } from "../graphql/apiModel";
 
 const getAineistoSchema = () =>
   Yup.object().shape({

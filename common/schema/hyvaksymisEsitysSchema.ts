@@ -1,4 +1,4 @@
-import { ValidationMode, ValidationModeState } from "common/ProjektiValidationContext";
+import { ValidationMode, ValidationModeState } from "../ProjektiValidationContext";
 import * as Yup from "yup";
 import { getAineistotNewSchema, getLadatutTiedostotNewSchema } from "./common";
 import { notInPastCheck, paivamaara } from "./paivamaaraSchema";
@@ -15,6 +15,17 @@ const getKunnallinenLadattuTiedostoSchema = () =>
 const getKunnallinenLadatutTiedostotSchema = () => Yup.array().of(getKunnallinenLadattuTiedostoSchema()).nullable();
 
 const isValidationModePublish = (validationMode: ValidationModeState) => validationMode?.current === ValidationMode.PUBLISH;
+
+export enum TestType {
+  FRONTEND = "FRONTEND",
+  BACKEND = "BACKEND",
+}
+
+export type HyvaksymisEsitysValidationContext = {
+  validationMode: ValidationModeState;
+  testType: TestType;
+};
+
 // Scheman kentät on oletuksena non nullableja ja defined-tarkistus estää ettei kentän arvot voi olla määrittämättä (undefined)
 // defined-kenttien validointiviestit ei pitäisi tulla käyttöliittymälle koskaan sillä kenttien arvoja ei pitäisi saada määrittämättömäksi
 export const hyvaksymisEsitysSchema = Yup.object().shape({

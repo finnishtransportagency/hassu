@@ -24,7 +24,7 @@ import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
 import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
 import useValidationMode from "src/hooks/useValidationMode";
@@ -41,15 +41,15 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput> = {
+  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext> = {
     resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: { hyvaksymisEsityksenTiedot, validationMode },
+    context: { validationMode, testType: TestType.FRONTEND },
   };
 
-  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
+  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext>(formOptions);
 
   useEffect(() => {
     useFormReturn.reset(defaultValues);

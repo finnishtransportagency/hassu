@@ -1,7 +1,7 @@
 import * as Yup from "yup";
-import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
+import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "hassu-common/schema/common";
 import { lokalisoituTeksti } from "./lokalisoituTeksti";
-import { paivamaara } from "./paivamaaraSchema";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { kuulutusSaamePDFtInput } from "./kuulutusSaamePDFtInput";
 import { uudelleenKuulutus } from "./uudelleenKuulutus";
 

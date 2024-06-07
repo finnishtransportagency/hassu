@@ -8,7 +8,7 @@ import HassuStack from "@components/layout/HassuStack";
 import FormGroup from "@components/form/FormGroup";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import IconButton from "@components/button/IconButton";
 import replace from "lodash/replace";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";

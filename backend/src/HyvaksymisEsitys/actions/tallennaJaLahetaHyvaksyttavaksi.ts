@@ -2,6 +2,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
+import { hyvaksymisEsitysSchema, TestType, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
 import { auditLog, log } from "../../logger";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
@@ -10,11 +11,10 @@ import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { assertIsDefined } from "../../util/assertions";
-import dayjs from "dayjs";
-import { nyt, parseDate } from "../../util/dateUtil";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
+import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -95,36 +95,10 @@ function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tal
 }
 
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
-  if (!muokattavaHyvaksymisEsitys.poistumisPaiva || !dayjs(muokattavaHyvaksymisEsitys.poistumisPaiva).isValid()) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole asetettu poistumisajankohtaa");
-  }
-  if (parseDate(muokattavaHyvaksymisEsitys.poistumisPaiva).endOf("day").isBefore(nyt())) {
-    throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivä ei tulisi olla menneisyydessä");
-  }
-  if (!muokattavaHyvaksymisEsitys.laskutustiedot) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole laskutustietoja");
-  }
-  if (!muokattavaHyvaksymisEsitys.hyvaksymisEsitys?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole hyväksymisesitys-tiedostoa");
-  }
-  if (!muokattavaHyvaksymisEsitys.suunnitelma?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole suunnitelmaa");
-  }
-  if (!muokattavaHyvaksymisEsitys.muistutukset?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole muistutuksia");
-  }
-  if (!muokattavaHyvaksymisEsitys.lausunnot?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole lausuntoja");
-  }
-  if (!muokattavaHyvaksymisEsitys.maanomistajaluettelo?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole maanomistajaluetteloa");
-  }
-  if (!muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole kuulutuksia ja kutsua");
-  }
-  if (!muokattavaHyvaksymisEsitys.vastaanottajat?.length) {
-    throw new IllegalArgumentError("Hyväksymisesityksellä ei ole vastaanottajia");
-  }
+  const context: HyvaksymisEsitysValidationContext = { validationMode: { current: ValidationMode.PUBLISH }, testType: TestType.BACKEND };
+  hyvaksymisEsitysSchema.validateSync(muokattavaHyvaksymisEsitys, {
+    context,
+  });
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   if (!aineistotHandledAt || !aineistot.every((aineisto) => aineistotHandledAt.localeCompare(aineisto.lisatty) > 0)) {
