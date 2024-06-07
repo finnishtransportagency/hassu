@@ -87,7 +87,7 @@ async function haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<Hyvaks
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
-    ProjectionExpression: "oid, versio, muokattavaHyvaksymisesitys, aineistoHandledAt, lockedUntil",
+    ProjectionExpression: "oid, versio, muokattavaHyvaksymisEsitys, aineistoHandledAt, lockedUntil",
   });
 
   try {
