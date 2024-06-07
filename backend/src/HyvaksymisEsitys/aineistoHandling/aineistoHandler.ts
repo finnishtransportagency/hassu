@@ -54,6 +54,7 @@ async function tuoAineistot(oid: string) {
     throw new SimultaneousUpdateError();
   }
   const aineistot = getHyvaksymisEsityksenAineistot(projekti.muokattavaHyvaksymisEsitys);
+  log.info("aineistot", "aineistot " + aineistot.map((a) => a.lisatty).join(", "));
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
@@ -87,7 +88,7 @@ async function haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<Hyvaks
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
-    ProjectionExpression: "oid, versio, muokattavaHyvaksymiseistys, aineistoHandledAt, lockedUntil",
+    ProjectionExpression: "oid, versio, muokattavaHyvaksymisesitys, aineistoHandledAt, lockedUntil",
   });
 
   try {
