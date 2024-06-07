@@ -13,6 +13,8 @@ import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
+import { SqsClient } from "../aineistoHandling/sqsClient";
+import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -68,7 +70,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
         getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
       )
     ) {
-      // TODO: reagoi mahdollisiin tiedostomuutoksiin
+      await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.TUO_HYV_ES_TIEDOSTOT, oid });
     }
     return oid;
   } finally {
