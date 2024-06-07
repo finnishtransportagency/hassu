@@ -3,16 +3,14 @@ import { auditLog } from "../../logger";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
-import { haeProjektinTiedotHyvaksymisEsityksesta, tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
 import { AineistoNew } from "../../database/model";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
-import { releaseLock, setLock } from "../dynamoDBCalls/lock";
 import { assertIsDefined } from "../../util/assertions";
-import { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -29,8 +27,8 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   try {
-    await setLock(oid);
-    const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+    await projektiDatabase.setLock(oid);
+    const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
     validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
@@ -56,7 +54,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
-    await tallennaMuokattavaHyvaksymisEsitys({
+    await projektiDatabase.tallennaMuokattavaHyvaksymisEsitys({
       oid,
       versio,
       muokattavaHyvaksymisEsitys: newMuokattavaHyvaksymisEsitys,
@@ -72,7 +70,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     }
     return oid;
   } finally {
-    await releaseLock(oid);
+    await projektiDatabase.releaseLock(oid);
   }
 }
 

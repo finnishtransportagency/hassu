@@ -1,6 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { log } from "../../logger";
-import haeHyvaksymisEsityksenTiedostoTiedot, { ProjektiTiedostoineen } from "../dynamoDBCalls/getProjektiTiedostoineen";
 import { NotFoundError } from "hassu-common/error";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
@@ -10,6 +9,7 @@ import createLadattavatTiedostot from "../latauslinkit/createLadattavatTiedostot
 import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
+import projektiDatabase, { ProjektiTiedostoineen } from "../dynamoKutsut";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -19,7 +19,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
   if (!params) {
     throw new Error("params ei annettu (listaaHyvaksymisEsityksenTiedostot)");
   }
-  const projekti: ProjektiTiedostoineen = await haeHyvaksymisEsityksenTiedostoTiedot(oid);
+  const projekti: ProjektiTiedostoineen = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
   if (projekti) {
     const hyvaksymisEsitys = projekti.julkaistuHyvaksymisEsitys;
     if (!hyvaksymisEsitys) {

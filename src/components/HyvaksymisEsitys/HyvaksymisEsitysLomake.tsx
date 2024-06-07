@@ -25,6 +25,9 @@ import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import { H3, H4 } from "@components/Headings";
+import ExtLink from "@components/ExtLink";
+import { formatDate } from "common/util/dateUtils";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -45,6 +48,13 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
   };
 
   const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
+
+  const {
+    formState: { isDirty },
+  } = useFormReturn;
+
+  useLeaveConfirm(isDirty);
+
   const api = useApi();
   const { mutate: reloadData } = useHyvaksymisEsitys();
 
@@ -58,14 +68,45 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     await reloadData();
   }, "Tallennus ja hyväksyttäväksi lähettäminen onnistui");
 
+  const { oid, versio, hyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
+
+  const suljeMuokkaus = useSpinnerAndSuccessMessage(async () => {
+    if (isDirty) {
+      if (
+        window.confirm(
+          "Olet tehnyt sivulle muutoksia, joita ei ole tallennettu. Tehdyt muutokset menetetään, jos suljet muokkauksen. \n\nHaluatko poistua tallentamatta?"
+        )
+      ) {
+        await api.suljeHyvaksymisEsityksenMuokkaus({ oid, versio });
+        await reloadData();
+      } else {
+        throw "Abort action 'sulje muokkaus'. Please ignore this error.";
+      }
+    }
+  }, "Muokkauksen sulkeminen onnistui");
+
   const tallennaHyvaksyttavaksiDisabled = false; // TODO: muuta
 
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
 
+  if (!hyvaksymisEsitys) {
+    return null;
+  }
+
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`;
+
   return (
     <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
+      {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
+        <Section noDivider>
+          <Notification type={NotificationType.INFO_GREEN}>
+            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
+            <ExtLink href={url}>{url}</ExtLink>
+          </Notification>
+        </Section>
+      )}
       <ProjektiPageLayoutContext.Consumer>
         {({ ohjeetOnClose, ohjeetOpen }) => (
           <FormProvider {...useFormReturn}>
@@ -143,19 +184,30 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <AineistonEsikatselu />
               </Section>
               <Section noDivider>
-                <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-                  <Button primary id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
-                    Tallenna luonnos
-                  </Button>
-                  <Button
-                    type="button"
-                    disabled={tallennaHyvaksyttavaksiDisabled}
-                    id="save_and_send_for_acceptance"
-                    primary
-                    onClick={useFormReturn.handleSubmit(sendForApproval)}
-                  >
-                    Lähetä Hyväksyttäväksi
-                  </Button>
+                <Stack
+                  justifyContent={hyvaksymisEsitys.hyvaksymisPaiva ? "space-between" : "flex-end"}
+                  direction={{ xs: "column", md: "row" }}
+                >
+                  {hyvaksymisEsitys.hyvaksymisPaiva && (
+                    <Button id="save" style={{ float: "left" }} type="button" onClick={suljeMuokkaus}>
+                      Sulje muokkaus
+                    </Button>
+                  )}
+                  <Stack justifyContent="flex-end" direction={{ xs: "column", md: "row" }}>
+                    <Button id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
+                      Tallenna luonnos
+                    </Button>
+                    <Button
+                      style={{ justifyContent: "flex-end" }}
+                      type="button"
+                      disabled={tallennaHyvaksyttavaksiDisabled}
+                      id="save_and_send_for_acceptance"
+                      primary
+                      onClick={useFormReturn.handleSubmit(sendForApproval)}
+                    >
+                      Lähetä Hyväksyttäväksi
+                    </Button>
+                  </Stack>
                 </Stack>
               </Section>
             </form>

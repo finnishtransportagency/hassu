@@ -3,9 +3,7 @@ import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
-import { auditLog } from "../../logger";
-import { tallennaMuokattavaHyvaksymisEsitys } from "../dynamoDBCalls";
-import haeProjektinTiedotHyvaksymisEsityksesta, { HyvaksymisEsityksenTiedot } from "../dynamoDBCalls/getHyvaksymisEsityksenTiedot";
+import { auditLog, log } from "../../logger";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
@@ -14,6 +12,9 @@ import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
 import { nyt, parseDate } from "../../util/dateUtil";
+import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
+import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemplates";
+import { emailClient } from "../../email/email";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -30,7 +31,7 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const kayttaja = requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
 
-  const projektiInDB = await haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
   // Validoi ennen adaptointia
   validateCurrent(projektiInDB, input);
   // Adaptoi muokattava hyvaksymisesitys
@@ -63,13 +64,21 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   };
   auditLog.info("Tallenna hyväksymisesitys", { oid, versio, tallennettavaMuokattavaHyvaksymisEsitys });
   assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
-  await tallennaMuokattavaHyvaksymisEsitys({
+  await projektiDatabase.tallennaMuokattavaHyvaksymisEsitys({
     oid,
     versio,
     muokattavaHyvaksymisEsitys: tallennettavaMuokattavaHyvaksymisEsitys,
     muokkaaja: kayttaja.uid,
   });
   // Aineistomuutoksia ei voi olla, koska validoimme, että tiedostot ovat valmiita
+
+  // Lähetä email
+  const emailOptions = createHyvaksymisesitysHyvaksyttavanaEmail(projektiInDB);
+  if (emailOptions.to) {
+    await emailClient.sendEmail(emailOptions);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt projektipaallikon sahkopostiosoitetta");
+  }
   return oid;
 }
 

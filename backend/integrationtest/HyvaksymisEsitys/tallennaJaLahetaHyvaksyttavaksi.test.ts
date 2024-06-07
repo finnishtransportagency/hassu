@@ -12,15 +12,20 @@ import { DBVaylaUser } from "../../src/database/model";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName, joinPath } from "../../src/tiedostot/paths";
 import MockDate from "mockdate";
+import { emailClient } from "../../src/email/email";
+import { EmailOptions } from "../../src/email/model/emailOptions";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettäminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
   const oid = "Testi1";
+  let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+    emailStub = sinon.stub(emailClient, "sendEmail");
   });
 
   beforeEach(async () => {
@@ -40,6 +45,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     await removeProjektiFromDB(oid);
     userFixture.logout();
     MockDate.reset();
+    emailStub?.reset();
   });
 
   after(() => {
@@ -61,12 +67,60 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA);
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.palautusSyy).is.undefined;
+  });
+
+  it("lähettää s.postin projarille", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+        {
+          etunimi: "Etunimi2",
+          sukunimi: "Sukunimi2",
+          email: "email2@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+        },
+      ],
+    };
+    await insertProjektiToDB(projektiBefore);
+    await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
+    expect(emailStub?.firstCall).to.exist;
+    const firstArgs = emailStub?.firstCall.firstArg as EmailOptions;
+    expect(firstArgs.to).to.eql(["email@email.com", "email2@email.com"]);
+    expect(firstArgs).toMatchSnapshot();
   });
 
   it("ei onnistu, jos tallennuksen yhteydessä annetaan uusi aineisto", async () => {
@@ -111,6 +165,15 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -144,6 +207,15 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -283,6 +355,15 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -375,6 +456,15 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+      kayttoOikeudet: [
+        {
+          etunimi: "Etunimi",
+          sukunimi: "Sukunimi",
+          email: "email@email.com",
+          kayttajatunnus: "theadminuid",
+          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });

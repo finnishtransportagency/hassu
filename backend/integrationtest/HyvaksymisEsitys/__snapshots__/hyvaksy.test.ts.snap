@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 1`] = `
+Object {
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
+  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
+
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+
+Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan getParameterValue_UspaBaseUrl/Asia.aspx?AsiaId=asiaId .
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+  "to": Array [
+    "email@email.com",
+    "email2@email.com",
+  ],
+}
+`;
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 2`] = `
+Object {
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
+  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
+
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+    
+Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+  "to": "muokkaaja@email.com",
+}
+`;
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen 3`] = `
+Object {
+  "cc": Array [
+    "email@email.com",
+    "email2@email.com",
+  ],
+  "subject": "Kiire hyväksymisesitys Projektin nimi",
+  "text": "Kiire hyväksymisesitys Projektin nimi
+
+ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+
+Sähköpostin liitteenä on myös hyväksymisesitys.
+    
+Lisätiedot 
+
+Lisätietoja
+
+
+
+Laskutustiedot hyväksymismaksua varten
+
+Suunnitelman nimi
+
+Projektin nimi
+
+Asiatunnus
+
+asiatunnusELY
+
+Vastuuorganisaatio
+
+Lapin ELY-keskus
+
+Y-tunnus
+
+2296962-1
+
+OVT-tunnus
+
+ovtTunnus
+
+Verkkolaskuoperaattorin välittäjätunnus
+
+verkkolaskuoperaattorinTunnus
+
+Viite
+
+viitetieto
+
+
+
+Lisätietoja suunnitelmasta antaa 
+
+Etunimi Sukunimi Hämeen ELY-keskus, 
+
+puh 0291234567,
+
+email@email.com
+
+
+Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.",
+  "to": Array [
+    "vastaanottaja@sahkoposti.fi",
+  ],
+}
+`;
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen 1`] = `
+Object {
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
+  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
+
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+
+Viethän hyväksymisesityksen asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+  "to": Array [
+    "email@email.com",
+    "email2@email.com",
+  ],
+}
+`;
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen 2`] = `
+Object {
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
+  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
+
+Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
+    
+Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+  "to": "muokkaaja@email.com",
+}
+`;
+
+exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen 3`] = `
+Object {
+  "cc": Array [
+    "email@email.com",
+    "email2@email.com",
+  ],
+  "subject": "Kiire hyväksymisesitys Projektin nimi",
+  "text": "Kiire hyväksymisesitys Projektin nimi
+
+Väylävirasto lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+
+Sähköpostin liitteenä on myös hyväksymisesitys.
+    
+Lisätiedot 
+
+Lisätietoja
+
+
+
+Laskutustiedot hyväksymismaksua varten
+
+Suunnitelman nimi
+
+Projektin nimi
+
+Asiatunnus
+
+asiatunnusVayla
+
+Vastuuorganisaatio
+
+Väylävirasto
+
+Y-tunnus
+
+1010547-1
+
+OVT-tunnus
+
+ovtTunnus
+
+Verkkolaskuoperaattorin välittäjätunnus
+
+verkkolaskuoperaattorinTunnus
+
+Viite
+
+viitetieto
+
+
+
+Lisätietoja suunnitelmasta antaa 
+
+Etunimi Sukunimi Pupulandia, 
+
+puh 0291234567,
+
+email@email.com
+
+
+Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.",
+  "to": Array [
+    "vastaanottaja@sahkoposti.fi",
+  ],
+}
+`;

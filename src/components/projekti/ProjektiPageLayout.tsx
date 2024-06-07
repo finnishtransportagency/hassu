@@ -1,5 +1,5 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, ReactNode, createContext, useCallback, useMemo, useState } from "react";
+import React, { ReactElement, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
 import { IconButton, Stack, SvgIcon } from "@mui/material";
@@ -33,11 +33,13 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
     return `${deburr(title).replace(/[^a-zA-Z]/g, "_")}Ohjeet`;
   }, [title]);
 
-  const [ohjeetOpen, setOhjeetOpen] = useState(() => {
+  const [ohjeetOpen, setOhjeetOpen] = useState(false);
+  // access localStorage only in client side (browser), safeguard for SSR
+  useEffect(() => {
     const savedValue = localStorage.getItem(localStorageKey);
     const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
-    return isOpen;
-  });
+    setOhjeetOpen(isOpen);
+  }, [localStorageKey]);
 
   const ohjeetOnClose = useCallback(() => {
     setOhjeetOpen(false);
