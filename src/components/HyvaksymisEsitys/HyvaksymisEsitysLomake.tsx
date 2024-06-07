@@ -26,7 +26,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { hyvaksymisEsitysSchema } from "../../schemas/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
-import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "./TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
+import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
 import useValidationMode from "src/hooks/useValidationMode";
 
 type Props = {
@@ -142,7 +142,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <AineistonEsikatselu />
               </Section>
-              <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
+              <MuokkausLomakePainikkeet hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
             </form>
           </FormProvider>
         )}

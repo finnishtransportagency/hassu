@@ -18,7 +18,7 @@ type Props = {
 
 const adaptFormDataForAPI: (formData: TallennaHyvaksymisEsitysInput) => TallennaHyvaksymisEsitysInput = (data) => data;
 
-export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet({ hyvaksymisesitys }: Props) {
+export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty },
