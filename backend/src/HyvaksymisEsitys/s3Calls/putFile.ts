@@ -5,6 +5,14 @@ import * as mime from "mime-types";
 import { log } from "../../logger";
 import { config } from "../../config";
 
+/**
+ * Lisää annetun tiedoston annettuun polkuun ylläpito-bucketissa.
+ *
+ * @param param0.contents Tiedosto Buffer-muodossa
+ * @param param0.filename Filename loppupäätteineen. Saa sisältää erikoismerkkejä.
+ * @param param0.targetPath Polku, johon tiedosto luodaan ylläpito-bucketissa. Ei saa alkaa /-merkillä.
+ */
+
 export default async function putFile({
   contents,
   filename,
