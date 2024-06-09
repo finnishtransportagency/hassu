@@ -209,7 +209,7 @@
     "loader-utils": "$loader-utils",
     "uuid": "$uuid",
     "shell-quote": "$shell-quote",
-    "@aws-sdk/types": "3.433.0",
+    "@aws-sdk/types": "3.577.0",
     "postcss": "$postcss",
     "got": "12.6.1",
     "fast-xml-parser": "4.2.5"

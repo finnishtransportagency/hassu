@@ -19,8 +19,8 @@
     "yargs": "^17.7.2"
   },
   "overrides": {
-    "@aws-sdk/types": "3.433.0",
-    "@aws-sdk/service-error-classification": "3.370.0"
+    "@aws-sdk/types": "3.577.0",
+    "@aws-sdk/service-error-classification": "3.374.0"
   },
   "engines": {
     "node": ">=16.20.0",
