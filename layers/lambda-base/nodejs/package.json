@@ -20,7 +20,7 @@
     "@aws-sdk/protocol-http": "3.370.0",
     "@aws-sdk/s3-request-presigner": "3.438.0",
     "@aws-sdk/util-dynamodb": "3.438.0",
-    "@types/nodemailer": "6.4.13",
+    "@types/nodemailer": "6.4.15",
     "aws-xray-sdk-core": "3.5.3",
     "nodemailer": "6.7.2"
   },
