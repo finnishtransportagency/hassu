@@ -7,7 +7,6 @@ const getKunnallinenLadattuTiedostoSchema = () =>
   Yup.object().shape({
     tiedosto: Yup.string().nullable(),
     nimi: Yup.string().required(),
-    jarjestys: Yup.number().integer().notRequired(),
     uuid: Yup.string().required(),
     kunta: Yup.number().integer().required(),
   });

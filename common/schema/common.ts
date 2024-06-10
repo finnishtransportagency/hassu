@@ -25,7 +25,6 @@ const getAineistoNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
       }),
     nimi: Yup.string().required(),
     uuid: Yup.string().required(),
-    jarjestys: Yup.number().integer().nullable(),
   });
 export const getAineistotNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
   Yup.array().of(getAineistoNewSchema(kategoriaPakollinenJulkaisussa)).nullable();
@@ -44,7 +43,6 @@ const getLadattuTiedostoNewSchema = () =>
   Yup.object().shape({
     tiedosto: Yup.string().nullable(),
     nimi: Yup.string().required(),
-    jarjestys: Yup.number().integer().notRequired(),
     uuid: Yup.string().required(),
   });
 

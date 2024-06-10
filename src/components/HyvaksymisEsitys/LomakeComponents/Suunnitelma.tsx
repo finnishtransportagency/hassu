@@ -43,7 +43,8 @@ export default function Suunnitelma(): ReactElement {
         onSubmit={(valitutVelhoAineistot) => {
           const valitutAineistot = valitutVelhoAineistot.map(adaptVelhoAineistoToAineistoInputNew);
           const newAineisto = getNewAineistot(fields, valitutAineistot);
-          prepend(newAineisto);
+          const aineistotWithKategoria = newAineisto.map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" }));
+          prepend(aineistotWithKategoria);
         }}
       />
     </>
