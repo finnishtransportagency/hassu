@@ -33,7 +33,6 @@ function createMessageParams(params: SqsEvent, retry?: boolean) {
     params.retriesLeft = retriesLeft;
   }
   const messageParams: SendMessageRequest = {
-    MessageGroupId: params.oid,
     MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
     QueueUrl: config.hyvaksymisesitysSqsUrl,
     DelaySeconds: retry ? 60 : undefined,
