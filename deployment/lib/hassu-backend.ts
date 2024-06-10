@@ -1074,9 +1074,7 @@ export class HassuBackendStack extends Stack {
 
   private createHyvaksymisEsitysAineistoQueue() {
     return new Queue(this, "HyvaksymisEsitysQueue", {
-      queueName: "hyvaksymisesitys-queue-" + Config.env + ".fifo",
-      fifo: true,
-      contentBasedDeduplication: true,
+      queueName: "hyvaksymisesitys-queue-" + Config.env,
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
