@@ -7,6 +7,7 @@ import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocal
 import { tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi } from "../../src/HyvaksymisEsitys/actions";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import * as API from "hassu-common/graphql/apiModel";
+
 import { expect } from "chai";
 import { DBVaylaUser } from "../../src/database/model";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
@@ -16,6 +17,7 @@ import { emailClient } from "../../src/email/email";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { ValidationError } from "yup";
+import { cloneDeep } from "lodash";
 
 describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettäminen", () => {
   const userFixture = new UserFixture(userService);
@@ -146,6 +148,199 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2000-01-01" },
     });
     await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Päivämäärää ei voi asettaa menneisyyteen");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos poistumisPaiva menneisyydessa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2000-01-01" },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Päivämäärää ei voi asettaa menneisyyteen");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos OVT-tunnus puuttuu", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    delete hyvaksymisEsitysInput.laskutustiedot?.ovtTunnus;
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "OVT-tunnus on annettava");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos laskutustiedot.verkkolaskuoperaattorinTunnus puuttuu", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    delete hyvaksymisEsitysInput.laskutustiedot?.verkkolaskuoperaattorinTunnus;
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Verkkolaskuoperaattorin välittäjätunnus on annettava");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos OVT-tunnus on tyhjänä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: {
+        ...hyvaksymisEsitysInput,
+        laskutustiedot: { ...(hyvaksymisEsitysInput.laskutustiedot ?? {}), verkkolaskuoperaattorinTunnus: "" },
+      },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Verkkolaskuoperaattorin välittäjätunnus on pakollinen");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos vastaanottajan sähköposti on virheellinen", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: {
+        ...hyvaksymisEsitysInput,
+        vastaanottajat: [{ sahkoposti: "testi.testi.com" }],
+      },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Virheellinen sähköpostiosoite");
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos vastaanottajalista on tyhjä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: {
+        ...hyvaksymisEsitysInput,
+        vastaanottajat: [],
+      },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(
+      ValidationError,
+      "muokattavaHyvaksymisEsitys.vastaanottajat field must have at least 1 items"
+    );
+  });
+
+  it("hyväksyttäväksi lähettäminen ei onnistu jos vastaanottajan sähköpostiosoite on tyhjä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+
+    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: {
+        ...hyvaksymisEsitysInput,
+        vastaanottajat: [{ sahkoposti: "" }],
+      },
+    });
+    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Sähköposti on pakollinen");
   });
 
   it("ei onnistu, jos tallennuksen yhteydessä annetaan uusi aineisto", async () => {

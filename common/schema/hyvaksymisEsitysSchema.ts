@@ -77,7 +77,7 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
               .defined("Sähköposti on annettava")
               .when("$validationMode", {
                 is: isValidationModePublish,
-                then: (schema) => schema.required("Sähköposti on pakollinen"),
+                then: (schema) => schema.email("Virheellinen sähköpostiosoite").required("Sähköposti on pakollinen"),
               }),
           })
           .required()
