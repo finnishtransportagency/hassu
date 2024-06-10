@@ -34,7 +34,6 @@ export const notInPastCheck: Yup.TestFunction<string | null | undefined, AnyObje
 };
 
 export const notInFutureCheck: Yup.TestFunction<string | null | undefined, AnyObject> = (dateString: string | null | undefined) => {
-  console.log("bong");
   // This test doesn't throw errors if date is not set.
   if (!checkValidDate(dateString)) {
     return true;
