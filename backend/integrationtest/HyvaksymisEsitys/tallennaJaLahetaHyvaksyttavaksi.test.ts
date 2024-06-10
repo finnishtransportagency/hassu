@@ -127,6 +127,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
   });
 
   it("hyväksyttäväksi lähettäminen ei onnistu jos poistumisPaiva menneisyydessa", async () => {
+    MockDate.set("2023-01-02");
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -145,31 +146,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
       oid,
       versio: 2,
-      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2000-01-01" },
-    });
-    await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Päivämäärää ei voi asettaa menneisyyteen");
-  });
-
-  it("hyväksyttäväksi lähettäminen ei onnistu jos poistumisPaiva menneisyydessa", async () => {
-    userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = {
-      ...TEST_HYVAKSYMISESITYS,
-      palautusSyy: "virheitä",
-      tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
-      muokattavaHyvaksymisEsitys,
-      julkaistuHyvaksymisEsitys: undefined,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-    };
-    await insertProjektiToDB(projektiBefore);
-    const tallennaProjekti = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
-      oid,
-      versio: 2,
-      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2000-01-01" },
+      muokattavaHyvaksymisEsitys: { ...hyvaksymisEsitysInput, poistumisPaiva: "2023-01-01" },
     });
     await expect(tallennaProjekti).to.eventually.be.rejectedWith(ValidationError, "Päivämäärää ei voi asettaa menneisyyteen");
   });
@@ -365,6 +342,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
           dokumenttiOid: "suunnitelmaDokumenttiOid2",
           nimi: "suunnitelma äöå 2.png",
           uuid: "suunnitelma-uuid2",
+          kategoriaId: "osa_b",
         },
       ],
     };

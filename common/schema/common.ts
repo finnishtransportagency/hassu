@@ -2,6 +2,9 @@ import * as Yup from "yup";
 import filter from "lodash/filter";
 import { yhteystietoSchema } from "./yhteystieto";
 import { IlmoitettavaViranomainen } from "../graphql/apiModel";
+import { ValidationMode, ValidationModeState } from "../ProjektiValidationContext";
+
+export const isValidationModePublish = (validationMode: ValidationModeState) => validationMode?.current === ValidationMode.PUBLISH;
 
 const getAineistoSchema = () =>
   Yup.object().shape({
@@ -11,15 +14,21 @@ const getAineistoSchema = () =>
   });
 export const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
-const getAineistoNewSchema = () =>
+const getAineistoNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
   Yup.object().shape({
     dokumenttiOid: Yup.string().required(),
-    kategoriaId: Yup.string().nullable(),
+    kategoriaId: Yup.string()
+      .nullable()
+      .when("$validationMode", {
+        is: (validationMode: ValidationModeState) => kategoriaPakollinenJulkaisussa && isValidationModePublish(validationMode),
+        then: (schema) => schema.required("Kategoria on pakko asettaa"),
+      }),
     nimi: Yup.string().required(),
     uuid: Yup.string().required(),
     jarjestys: Yup.number().integer().nullable(),
   });
-export const getAineistotNewSchema = () => Yup.array().of(getAineistoNewSchema()).nullable();
+export const getAineistotNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
+  Yup.array().of(getAineistoNewSchema(kategoriaPakollinenJulkaisussa)).nullable();
 
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({

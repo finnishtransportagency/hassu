@@ -1,6 +1,6 @@
-import { ValidationMode, ValidationModeState } from "../ProjektiValidationContext";
+import { ValidationModeState } from "../ProjektiValidationContext";
 import * as Yup from "yup";
-import { getAineistotNewSchema, getLadatutTiedostotNewSchema } from "./common";
+import { getAineistotNewSchema, getLadatutTiedostotNewSchema, isValidationModePublish } from "./common";
 import { notInPastCheck, paivamaara } from "./paivamaaraSchema";
 
 const getKunnallinenLadattuTiedostoSchema = () =>
@@ -9,12 +9,10 @@ const getKunnallinenLadattuTiedostoSchema = () =>
     nimi: Yup.string().required(),
     jarjestys: Yup.number().integer().notRequired(),
     uuid: Yup.string().required(),
-    kunta: Yup.number().integer().defined(),
+    kunta: Yup.number().integer().required(),
   });
 
 const getKunnallinenLadatutTiedostotSchema = () => Yup.array().of(getKunnallinenLadattuTiedostoSchema()).nullable();
-
-const isValidationModePublish = (validationMode: ValidationModeState) => validationMode?.current === ValidationMode.PUBLISH;
 
 export enum TestType {
   FRONTEND = "FRONTEND",
@@ -67,8 +65,8 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
     maanomistajaluettelo: getLadatutTiedostotNewSchema().defined(),
     muuAineistoKoneelta: getLadatutTiedostotNewSchema().defined(),
     muistutukset: getKunnallinenLadatutTiedostotSchema().defined(),
-    suunnitelma: getAineistotNewSchema().defined(),
-    muuAineistoVelhosta: getAineistotNewSchema().defined(),
+    suunnitelma: getAineistotNewSchema(true).defined(),
+    muuAineistoVelhosta: getAineistotNewSchema(false).defined(),
     vastaanottajat: Yup.array()
       .of(
         Yup.object()

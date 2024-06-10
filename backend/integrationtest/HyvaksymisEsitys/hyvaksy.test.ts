@@ -18,6 +18,7 @@ import { emailClient } from "../../src/email/email";
 import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { parameters } from "../../src/aws/parameters";
+import MockDate from "mockdate";
 
 describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
@@ -744,5 +745,29 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
     await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei onnistu jos poistumisPaiva on menneisyydessa", async () => {
+    MockDate.set("2023-01-02");
+    userFixture.loginAsAdmin();
+    const versio = 2;
+    const projektiBefore: DBProjekti = {
+      oid,
+      versio,
+      muokattavaHyvaksymisEsitys: {
+        ...(TEST_HYVAKSYMISESITYS as unknown as MuokattavaHyvaksymisEsitys),
+        tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+        palautusSyy: "Virheitä",
+        poistumisPaiva: "2023-01-01",
+      },
+      kayttoOikeudet: kayttoOikeudet as unknown as DBVaylaUser[],
+      velho,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const hyvaksy = hyvaksyHyvaksymisEsitys({ oid, versio });
+    await expect(hyvaksy).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä"
+    );
   });
 });
