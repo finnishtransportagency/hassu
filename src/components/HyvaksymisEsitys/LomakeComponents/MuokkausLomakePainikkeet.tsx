@@ -76,7 +76,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
             const convertedFormData = await adaptFormDataForAPI(formData);
-            await api.tallennaHyvaksymisEsitys(convertedFormData);
+            await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
             showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
             reloadProjekti();
           } catch (error) {
