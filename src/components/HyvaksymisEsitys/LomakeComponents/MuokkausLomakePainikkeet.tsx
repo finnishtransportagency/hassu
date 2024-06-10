@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
 import { SubmitHandler, useFormContext } from "react-hook-form";
 import { TallennaHyvaksymisEsitysInput, HyvaksymisEsityksenTiedot } from "@services/api";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -14,6 +14,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
+  lomakkeellaUusiaAineistoja: boolean;
 };
 
 const adaptFormDataForAPI: (formData: TallennaHyvaksymisEsitysInput) => TallennaHyvaksymisEsitysInput = (data) => data;
@@ -22,7 +23,26 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty },
-  } = useFormContext();
+    watch,
+  } = useFormContext<TallennaHyvaksymisEsitysInput>();
+
+  const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
+  const muuAineistoVelhosta = watch("muokattavaHyvaksymisEsitys.muuAineistoVelhosta");
+
+  const lomakkeellaUusiaAineistoja = useMemo(() => {
+    const uusiSuunnitelmaAineisto = suunnitelma?.some(
+      (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((a) => a.uuid === aineisto.uuid)
+    );
+    const uusiMuuAineistoVelhosta = muuAineistoVelhosta?.some(
+      (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
+    );
+    return uusiSuunnitelmaAineisto || uusiMuuAineistoVelhosta;
+  }, [
+    hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta,
+    hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma,
+    muuAineistoVelhosta,
+    suunnitelma,
+  ]);
 
   const { mutate: reloadProjekti } = useHyvaksymisEsitys();
 
@@ -100,7 +120,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
         </Button>
         <Button
           type="button"
-          disabled={!hyvaksymisesitys.aineistotValmiit}
+          disabled={lomakkeellaUusiaAineistoja}
           id="save_and_send_for_acceptance"
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}
