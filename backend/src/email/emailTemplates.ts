@@ -281,11 +281,12 @@ ${
       projekti.oid
     }/hyvaksymisesityksen-aineistot
 ${
-  projekti.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys?.length &&
-  `
-Sähköpostin liitteenä on myös hyväksymisesitys.`
+  projekti.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys?.length
+    ? `
+Sähköpostin liitteenä on myös hyväksymisesitys.
+`
+    : ""
 }
-    
 Lisätiedot 
 
 ${projekti.muokattavaHyvaksymisEsitys?.lisatiedot}
