@@ -26,6 +26,7 @@ import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import ExtLink from "@components/ExtLink";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import { nyt, parseDate } from "backend/src/util/dateUtil";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
@@ -33,6 +34,9 @@ export default function HyvaksymisEsitysLukutila({
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot, tuodutTiedostot } = hyvaksymisEsityksenTiedot;
   const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
+  const invalidPoistumisPaiva =
+    !hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.poistumisPaiva ||
+    parseDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day");
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
@@ -88,11 +92,19 @@ export default function HyvaksymisEsitysLukutila({
           </Notification>
         </Section>
       )}
-      {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
+      {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && !invalidPoistumisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.WARN}>
             Hyväksymisesitys odottaa hyväksyntää. Tarkista hyväksymisesitys ja a) hyväksy tai b) palauta hyväksymisesitys korjattavaksi, jos
             havaitset puutteita tai virheen.
+          </Notification>
+        </Section>
+      )}
+      {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && invalidPoistumisPaiva && (
+        <Section noDivider>
+          <Notification type={NotificationType.ERROR}>
+            Hyväksymisesityksen Voimassaoloaika päättyy -päivämäärä on menneisyydessä. Hyväksymisesitystä ei voi hyväksyä. Palauta
+            hyväksymisesitys muokattavaksi, jotta päivämäärä voidaan korjata.
           </Notification>
         </Section>
       )}
@@ -311,7 +323,12 @@ export default function HyvaksymisEsitysLukutila({
         )}
       </Section>
       {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
-        <HyvaksyTaiPalautaPainikkeet oid={oid} versio={versio} vastaanottajat={hyvaksymisEsitys.vastaanottajat!} />
+        <HyvaksyTaiPalautaPainikkeet
+          oid={oid}
+          versio={versio}
+          vastaanottajat={hyvaksymisEsitys.vastaanottajat!}
+          invalidPoistumisPaiva={invalidPoistumisPaiva}
+        />
       )}
     </ProjektiPageLayout>
   );

@@ -88,7 +88,7 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja
   if (!projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva) {
     throw new IllegalArgumentError("Hyväksymisesitykseltä puuttuu poistumispäivämäärä");
   }
-  if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "date")) {
+  if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day")) {
     throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä");
   }
   return nykyinenKayttaja;
