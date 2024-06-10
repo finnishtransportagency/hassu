@@ -207,7 +207,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
           });
         });
         if (keys) {
-          log.error("Lainhuutotiedolle ei löytynyt yhteystietoja", { keys });
+          log.info("Lainhuutotiedolle ei löytynyt yhteystietoja", { keys });
         }
         const dbOmistajat = [...omistajaMap.values()];
 
