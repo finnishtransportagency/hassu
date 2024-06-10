@@ -39,7 +39,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           await SqsClient.addEventToSqsQueue(sqsEvent, false);
         } else {
           log.error(e);
-          throw e;
+          await SqsClient.addEventToSqsQueue(sqsEvent, true);
         }
       }
     }
