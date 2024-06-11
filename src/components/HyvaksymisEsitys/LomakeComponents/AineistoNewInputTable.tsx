@@ -1,3 +1,4 @@
+import ExtLink from "@components/ExtLink";
 import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import { MUIStyledCommonProps, styled } from "@mui/system";
@@ -7,14 +8,13 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import { formatDateTime } from "common/util/dateUtils";
 import { ComponentProps, useCallback, useMemo } from "react";
 import {
-  ArrayPath,
   FieldArrayWithId,
   FieldPath,
   FieldPathValue,
   FieldValues,
+  UseFieldArrayMove,
   UseFieldArrayRemove,
-  useFieldArray,
-  useFormContext,
+  UseFormRegisterReturn,
 } from "react-hook-form";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
@@ -26,15 +26,20 @@ export type FieldPathByValue<TFieldValues extends FieldValues, TValue> = {
 type FormWithAineistoInputNewArray = { [Key: string]: AineistoInputNew[] };
 
 export default function AineistoNewInputTable({
-  aineistoRoute,
   aineisto,
+  fields,
+  remove,
+  move,
+  registerDokumenttiOid,
+  registerNimi,
 }: {
-  aineistoRoute: FieldPathByValue<FormWithAineistoInputNewArray, AineistoInputNew[]> & ArrayPath<FormWithAineistoInputNewArray>;
-  aineisto?: AineistoNew[];
+  aineisto?: AineistoNew[] | null;
+  fields: FieldArrayWithId<FormWithAineistoInputNewArray, string, "id">[];
+  remove: UseFieldArrayRemove;
+  move: UseFieldArrayMove;
+  registerDokumenttiOid: (index: number) => UseFormRegisterReturn;
+  registerNimi: (index: number) => UseFormRegisterReturn;
 }) {
-  const { control } = useFormContext<FormWithAineistoInputNewArray>();
-  const { fields, remove, move } = useFieldArray({ name: aineistoRoute, control });
-
   const enrichedFields: (FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> & Pick<AineistoNew, "lisatty" | "tiedosto">)[] =
     useMemo(
       () =>
@@ -54,7 +59,22 @@ export default function AineistoNewInputTable({
         meta: { minWidth: 250, widthFractions: 4 },
         id: "aineisto",
         accessorFn: (aineisto) => {
-          return <>{aineisto.uuid}</>;
+          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
+          return (
+            <>
+              <ExtLink
+                className="file_download"
+                href={aineisto.tiedosto ?? undefined}
+                target="_blank"
+                disabled={!aineisto.tiedosto}
+                hideIcon={!aineisto.tiedosto}
+              >
+                {aineisto.nimi}
+              </ExtLink>
+              <input type="hidden" {...registerDokumenttiOid(index)} />
+              <input type="hidden" {...registerNimi(index)} />
+            </>
+          );
         },
       },
       {
@@ -73,7 +93,7 @@ export default function AineistoNewInputTable({
         meta: { minWidth: 120, widthFractions: 2 },
       },
     ],
-    [fields, remove]
+    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove]
   );
 
   const findRowIndex = useCallback(
