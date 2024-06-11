@@ -9,6 +9,7 @@ import {
   KayttajaTyyppi,
   Kieli,
   KuulutusJulkaisuTila,
+  LadattuTiedostoTila,
   Projekti,
   ProjektiKayttaja,
   ProjektiTyyppi,
@@ -32,6 +33,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import pick from "lodash/pick";
 import { assertIsDefined } from "../../src/util/assertions";
 import { nyt } from "../../src/util/dateUtil";
+import { julkaisuIsVuorovaikutusKierrosLista } from "hassu-common/util/haeVaiheidentiedot";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -52,6 +54,7 @@ export class ProjektiFixture {
   public PROJEKTI4_NIMI = "Testiprojekti 4";
   public PROJEKTI4_OID = "4";
   public PROJEKTI5_OID = "5";
+  public PROJEKTI6_OID = "6";
 
   private yhteystietoLista = [
     {
@@ -2194,6 +2197,73 @@ export class ProjektiFixture {
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,
+    };
+  }
+
+  dbProjekti6(): DBProjekti {
+    const projekti = this.dbProjekti5();
+    return {
+      ...projekti,
+      oid: this.PROJEKTI6_OID,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+        projektinNimiVieraskielella: "Saame nimi",
+      },
+      aloitusKuulutus: {
+        id: 6,
+        ...projekti.aloitusKuulutus,
+        aloituskuulutusSaamePDFt:{
+          POHJOISSAAME: {
+            kuulutusPDF: {
+              tiedosto: "/saamePDF",
+              nimi: "saame kuulutus",
+              uuid: "saameuid",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+            kuulutusIlmoitusPDF: {
+              tiedosto: "/saamePDF",
+              nimi: "saame ilmoitus",
+              uuid: "saameuid",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+          },
+        }
+      },
+      aloitusKuulutusJulkaisut: projekti.aloitusKuulutusJulkaisut?.map<AloitusKuulutusJulkaisu>((julkaisu) => ({
+        ...julkaisu,
+        kielitiedot: {
+          ensisijainenKieli: Kieli.SUOMI,
+          toissijainenKieli: Kieli.POHJOISSAAME,
+          projektinNimiVieraskielella: "Saame nimi",
+        },
+        aloituskuulutusPDFt: {
+          SUOMI: {
+            aloituskuulutusIlmoitusPDFPath:
+              "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+          },
+        },
+        aloituskuulutusSaamePDFt: {
+          POHJOISSAAME: {
+            kuulutusPDF: {
+              tiedosto: "/aloituskuulutus/1/POHJOISSAAME KUULUTUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti testiprojekti.pdf",
+              uuid: "uniikki",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+            kuulutusIlmoitusPDF: {
+              tiedosto: "/aloituskuulutus/1/POHJOISSAAME ILMOITUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+              uuid: "uniikimpi",
+              tila: LadattuTiedostoTila.VALMIS,
+            },
+          },
+        },
+        hankkeenKuvaus: {
+          SUOMI:
+            "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+          POHJOISSAAME: "Hankkeeen kuvaus saameksi",
+        },
+      })),
     };
   }
 

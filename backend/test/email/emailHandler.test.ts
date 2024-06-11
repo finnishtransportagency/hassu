@@ -27,6 +27,7 @@ import { eventSqsClient } from "../../src/sqsEvents/eventSqsClient";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { fakeEventInSqsQueue } from "../sqsEvents/sqsEventHandlerLambdaTests/util/util";
 import { SqsEventType } from "../../src/sqsEvents/sqsEvent";
+import Mail from "nodemailer/lib/mailer";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -111,6 +112,27 @@ describe("emailHandler", () => {
 
       await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
       expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+      emailClientStub.verifyEmailsSent();
+    });
+
+    it("should send saame attachments succesfully", async () => {
+      loadProjektiByOidStub.resolves(fixture.dbProjekti6());
+
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      updateAloitusKuulutusJulkaisuStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
+
+      const projekti = fixture.dbProjekti6();
+
+      await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
+      expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
+      const calls = emailClientStub.sendEmailStub.getCalls();
+      const hasPohjoissaameAttachment = calls[2].lastArg.attachments.some((attachment: Mail.Attachment) => attachment.filename === "POHJOISSAAME ILMOITUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf")
+      expect(hasPohjoissaameAttachment).to.be.true
       emailClientStub.verifyEmailsSent();
     });
   });
