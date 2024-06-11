@@ -40,19 +40,19 @@ export default function AineistoNewInputTable({
   registerDokumenttiOid: (index: number) => UseFormRegisterReturn;
   registerNimi: (index: number) => UseFormRegisterReturn;
 }) {
-  const enrichedFields: (FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> & Pick<AineistoNew, "lisatty" | "tiedosto">)[] =
-    useMemo(
-      () =>
-        fields.map((field) => {
-          const aineistoData = aineisto || [];
-          const { lisatty, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
+  const enrichedFields: (FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> &
+    Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">)[] = useMemo(
+    () =>
+      fields.map((field) => {
+        const aineistoData = aineisto || [];
+        const { lisatty, tiedosto, tuotu } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
 
-          return { ...field, lisatty, tiedosto };
-        }),
-      [fields, aineisto]
-    );
+        return { ...field, lisatty, tiedosto, tuotu: tuotu ?? false };
+      }),
+    [fields, aineisto]
+  );
 
-  const columns = useMemo<ColumnDef<AineistoInputNew & Pick<AineistoNew, "lisatty" | "tiedosto">>[]>(
+  const columns = useMemo<ColumnDef<AineistoInputNew & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">>[]>(
     () => [
       {
         header: "Aineisto",
@@ -80,7 +80,7 @@ export default function AineistoNewInputTable({
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (aineisto) => (aineisto.lisatty ? formatDateTime(aineisto.lisatty) : undefined),
+        accessorFn: (aineisto) => (aineisto.lisatty && aineisto.tuotu ? formatDateTime(aineisto.lisatty) : undefined),
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
