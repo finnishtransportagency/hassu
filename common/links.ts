@@ -50,7 +50,7 @@ export const linkJatkoPaatos2: JulkinenLinkFunction = (projekti, kieli) => {
 };
 
 export function linkSuunnitelmaYllapito(oid: string): string {
-  return "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/yllapito/projekti/" + oid;
+  return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/projekti/" + oid;
 }
 
 export function linkAloituskuulutusYllapito(oid: string): string {

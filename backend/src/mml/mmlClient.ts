@@ -4,7 +4,7 @@ import axios from "axios";
 import { parseStringPromise as parseString } from "xml2js";
 import { auditLog, log } from "../logger";
 import { chunkArray } from "../database/chunkArray";
-import { FeatureCollection } from "geojson";
+import { Feature, FeatureCollection } from "geojson";
 import lookup from "country-code-lookup";
 
 type Yhteystieto = {
@@ -44,6 +44,7 @@ export type MmlOptions = {
   endpoint: string;
   apiKey: string;
   ogcApiKey: string;
+  ogcApiExamples: string;
 };
 
 const TIMEOUT = 120000;
@@ -193,9 +194,9 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        let geojson = response.data as FeatureCollection;
+        let geojson = response.data as FeatureCollection | undefined;
         const ids: number[] = [];
-        for (const feat of geojson.features) {
+        for (const feat of geojson?.features || []) {
           if (feat.properties?.tiekunta) {
             feat.properties.tiekunta.forEach((t: { nimi: string; id: number }) => {
               const omistaja = { id: t.id, nimi: t.nimi, kayttooikeusyksikkotunnus: feat.properties?.kayttooikeusyksikkotunnus };
@@ -206,8 +207,14 @@ export function getMmlClient(options: MmlOptions): MmlClient {
             });
           }
         }
-        url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
-        auditLog.info("Tiekuntien yhteystietojen haku", { ids });
+        if (options.ogcApiExamples === "true") {
+          // haetaan vain joku yhteystieto, id listalla ei voi hakea esimerkeistä kun palauttaa HTTP 400
+          // lisäksi jos hakee sellaisella id:llä jota ei löydy tulee HTTP 400
+          url = (options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items/94615362").replace("/features/", "/examples/");
+        } else {
+          url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
+        }
+        auditLog.info("Tiekuntien yhteystietojen haku", { ids, url });
         response = await axios.get(url, {
           headers: { "x-api-key": options.ogcApiKey, enduserid: uid },
           timeout: TIMEOUT,
@@ -215,21 +222,40 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        geojson = response.data as FeatureCollection;
-        for (const feat of geojson.features) {
-          if (feat?.properties?.yhteyshenkilo[0]) {
-            const omistaja = tiekuntaMap.get(feat.id as number);
-            if (omistaja && !omistaja.yhteystiedot) {
-              // tiekunnan nimi sulkuihin
-              omistaja.nimi = feat.properties.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
-              omistaja.yhteystiedot = {
-                jakeluosoite: feat.properties.yhteyshenkilo[0].osoite[0]?.osoite,
-                postinumero: feat.properties.yhteyshenkilo[0].osoite[0]?.postinumero,
-                paikkakunta: feat.properties.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
-                maakoodi: feat.properties.yhteyshenkilo[0].osoite[0]?.valtio
-                  ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
-                  : undefined,
-              };
+        if (options.ogcApiExamples === "true") {
+          const feat = response.data as Feature;
+          // jätetään ensimmäinen tiekunta ilman yhteyshenkilöä
+          const tiekunnat = [...tiekuntaMap.values()];
+          tiekunnat.shift();
+          for (const omistaja of tiekunnat) {
+            // tiekunnan nimi sulkuihin
+            omistaja.nimi = feat.properties?.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
+            omistaja.yhteystiedot = {
+              jakeluosoite: feat.properties?.yhteyshenkilo[0].osoite[0]?.osoite,
+              postinumero: feat.properties?.yhteyshenkilo[0].osoite[0]?.postinumero,
+              paikkakunta: feat.properties?.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
+              maakoodi: feat.properties?.yhteyshenkilo[0].osoite[0]?.valtio
+                ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
+                : undefined,
+            };
+          }
+        } else {
+          geojson = response.data as FeatureCollection | undefined;
+          for (const feat of geojson?.features ?? []) {
+            if (feat?.properties?.yhteyshenkilo[0]) {
+              const omistaja = tiekuntaMap.get(feat.id as number);
+              if (omistaja && !omistaja.yhteystiedot) {
+                // tiekunnan nimi sulkuihin
+                omistaja.nimi = feat.properties.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
+                omistaja.yhteystiedot = {
+                  jakeluosoite: feat.properties.yhteyshenkilo[0].osoite[0]?.osoite,
+                  postinumero: feat.properties.yhteyshenkilo[0].osoite[0]?.postinumero,
+                  paikkakunta: feat.properties.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
+                  maakoodi: feat.properties.yhteyshenkilo[0].osoite[0]?.valtio
+                    ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
+                    : undefined,
+                };
+              }
             }
           }
         }
