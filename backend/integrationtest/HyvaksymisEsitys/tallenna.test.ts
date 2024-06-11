@@ -11,7 +11,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { deleteYllapitoFiles, emptyUploadFiles, getYllapitoFilesUnderPath, insertUploadFileToS3, insertYllapitoFileToS3 } from "./util";
 import { expect } from "chai";
 import { getProjektiFromDB, insertProjektiToDB, removeProjektiFromDB, setupLocalDatabase } from "../util/databaseUtil";
-import { omit } from "lodash";
+import { cloneDeep, omit } from "lodash";
 import MockDate from "mockdate";
 import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS2,
@@ -20,6 +20,7 @@ import TEST_HYVAKSYMISESITYS, {
 } from "./TEST_HYVAKSYMISESITYS";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName } from "../../src/tiedostot/paths";
+import { ValidationError } from "yup";
 
 describe("Hyväksymisesityksen tallentaminen", () => {
   const userFixture = new UserFixture(userService);
@@ -78,6 +79,116 @@ describe("Hyväksymisesityksen tallentaminen", () => {
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
     expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+  });
+
+  it("vaatii OVT-tunnuksen inputissa", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT);
+    delete muokattavaHyvaksymisEsitysInput.laskutustiedot?.ovtTunnus;
+    const tallenna = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    await expect(tallenna).to.eventually.be.rejectedWith(ValidationError, "OVT-tunnus on annettava");
+  });
+
+  it("OVT-tunnus ei ole pakollinen (voi olla '')", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const { laskutustiedot = {}, ...muokattavaHyvaksymisEsitysInput }: API.HyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT);
+    const tallenna = tallennaHyvaksymisEsitys({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitysInput, laskutustiedot: { ...laskutustiedot, ovtTunnus: "" } },
+    });
+    await expect(tallenna).to.eventually.be.fulfilled;
+  });
+
+  it("vaatii vastaanottajalistan", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const { vastaanottajat: _v, ...muokattavaHyvaksymisEsitysInput }: API.HyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT);
+    const tallenna = tallennaHyvaksymisEsitys({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitysInput },
+    });
+    await expect(tallenna).to.eventually.be.rejectedWith(ValidationError, "muokattavaHyvaksymisEsitys.vastaanottajat must be defined");
+  });
+
+  it("vaatii vähintään yhden vastaanottajan", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const { vastaanottajat: _v, ...muokattavaHyvaksymisEsitysInput }: API.HyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT);
+    const tallenna = tallennaHyvaksymisEsitys({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitysInput, vastaanottajat: [] },
+    });
+    await expect(tallenna).to.eventually.be.rejectedWith(
+      ValidationError,
+      "muokattavaHyvaksymisEsitys.vastaanottajat field must have at least 1 items"
+    );
+  });
+
+  it("vastaanottajan sähköposti voi olla tyhjä", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const { vastaanottajat: _v, ...muokattavaHyvaksymisEsitysInput }: API.HyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT);
+    const tallenna = tallennaHyvaksymisEsitys({
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitysInput, vastaanottajat: [{ sahkoposti: "" }] },
+    });
+    await expect(tallenna).to.eventually.be.fulfilled;
   });
 
   it("poistaa tiedostot, jotka tiputettiin muokattavasta hyväksymisesityksestä", async () => {

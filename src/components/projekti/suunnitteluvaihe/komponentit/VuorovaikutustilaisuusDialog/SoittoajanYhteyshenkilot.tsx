@@ -7,7 +7,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { YhteystietoInput } from "@services/api";
 import { ReactElement } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import { VuorovaikutustilaisuusFormValues } from ".";
 
 const defaultYhteystieto: YhteystietoInput = {

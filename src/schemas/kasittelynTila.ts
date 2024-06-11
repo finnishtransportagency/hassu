@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { paivamaara } from "./paivamaaraSchema";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KasittelynTila } from "@services/api";
 
@@ -82,18 +82,21 @@ export const kasittelynTilaSchema = Yup.object().shape({
     ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable(),
     valitustenMaara: Yup.string().min(1, "Valitusten lukumäärä on pakollinen").nullable(),
     lainvoimaAlkaen: paivamaara().notRequired().nullable(),
-    lainvoimaPaattyen: paivamaara().notRequired().nullable().test((value, context) => {
-      if (value) {
-        if (!context.parent.lainvoimaAlkaen) {
-          return context.createError({
-            message: "Lainvoima alkaen on annettava.",
-            path: `${context.path}`,
-            type: "custom",
-          });
+    lainvoimaPaattyen: paivamaara()
+      .notRequired()
+      .nullable()
+      .test((value, context) => {
+        if (value) {
+          if (!context.parent.lainvoimaAlkaen) {
+            return context.createError({
+              message: "Lainvoima alkaen on annettava.",
+              path: `${context.path}`,
+              type: "custom",
+            });
+          }
         }
-      }
-      return true;
-    }),
+        return true;
+      }),
     ennakkotarkastus: paivamaara()
       .notRequired()
       .nullable()

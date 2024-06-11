@@ -11,7 +11,7 @@ import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, ProjektiKayttaja, Yhtey
 import useTranslation from "next-translate/useTranslation";
 import React, { ReactElement, Fragment, useMemo } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;

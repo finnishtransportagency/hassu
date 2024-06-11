@@ -1,6 +1,6 @@
 import * as Yup from "yup";
+import { Projekti } from "../graphql/apiModel";
 import { puhelinNumeroSchema } from "./puhelinNumero";
-import { Projekti } from "@services/api";
 
 export const yhteystietoSchema = Yup.object()
   .shape({

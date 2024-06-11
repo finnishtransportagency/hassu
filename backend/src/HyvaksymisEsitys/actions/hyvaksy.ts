@@ -3,7 +3,7 @@ import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../dat
 import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
-import { nyt } from "../../util/dateUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName } from "../../tiedostot/paths";
@@ -84,6 +84,12 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja
   // Projektilla on oltava hyväksymistä odottava hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA) {
     throw new IllegalArgumentError("Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä");
+  }
+  if (!projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva) {
+    throw new IllegalArgumentError("Hyväksymisesitykseltä puuttuu poistumispäivämäärä");
+  }
+  if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day")) {
+    throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä");
   }
   return nykyinenKayttaja;
 }

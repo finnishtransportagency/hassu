@@ -18,6 +18,8 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     oid,
     versio,
     hyvaksymisEsitys,
+    vaiheOnAktiivinen: false,
+    aineistotValmiit: false,
     muokkauksenVoiAvata: !hyvaksymisPaatosVaihe && hyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY,
     perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
     tuodutTiedostot: {

@@ -430,7 +430,8 @@ type HyvaksymisEsityksenTiedot {
   versio: Int!
   hyvaksymisEsitys: HyvaksymisEsitys
   muokkauksenVoiAvata: Boolean!
-  aineistotValmiit: Boolean
+  aineistotValmiit: Boolean!
+  vaiheOnAktiivinen: Boolean!
   perustiedot: ProjektinPerustiedot!
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
 }
@@ -936,7 +937,7 @@ type KunnallinenLadattuTiedosto implements ILadattuTiedosto {
   uuid: String!
   lisatty: String
   jarjestys: Int
-  kunta: Int
+  kunta: Int!
   tiedosto: String
 }
 

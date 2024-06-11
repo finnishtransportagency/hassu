@@ -1,6 +1,6 @@
 import SectionContent from "@components/layout/SectionContent";
 import { Stack, TextField } from "@mui/material";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import useSnackbars from "src/hooks/useSnackbars";
 import { H4 } from "@components/Headings";
 import { RectangleButton } from "@components/button/RectangleButton";
@@ -12,8 +12,6 @@ export default function LinkkiHyvEsAineistoon({
   oid: string;
   hash: string | undefined;
 }>) {
-  const linkRef = useRef<HTMLInputElement>(null);
-
   const linkHref = useMemo(() => {
     if (typeof window === "undefined") {
       return undefined;
@@ -36,21 +34,14 @@ export default function LinkkiHyvEsAineistoon({
       </SectionContent>
       <SectionContent>
         <Stack direction="row" alignItems="end">
-          <TextField
-            name="linkki"
-            label="Linkki hyväksymisesityksen aineistoon"
-            sx={{ flexGrow: 1 }}
-            disabled
-            value={linkHref ?? "-"}
-            ref={linkRef}
-          />
+          <TextField name="linkki" label="Linkki hyväksymisesityksen aineistoon" sx={{ flexGrow: 1 }} disabled value={linkHref ?? "-"} />
           <RectangleButton
             sx={{ marginBottom: "6px" }}
             type="button"
             disabled={!linkHref}
             onClick={() => {
-              if (linkRef.current?.value) {
-                navigator.clipboard.writeText(linkRef.current.value);
+              if (linkHref) {
+                navigator.clipboard.writeText(linkHref);
                 showInfoMessage("Kopioitu");
               } else {
                 showErrorMessage("Ongelma kopioinnissa");
