@@ -111,7 +111,7 @@ export class HassuBackendStack extends Stack {
     // TODO: Remove once no schedules for this queue
     const aineistoSQS = this.createAineistoImporterQueue();
     const eventSQS = this.createEventQueue();
-    this.eventQueue = eventSQS; // TODO: Miksi?
+    this.eventQueue = eventSQS;
     const hyvaksymisEsitysSQS = this.createHyvaksymisEsitysAineistoQueue();
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
@@ -171,11 +171,9 @@ export class HassuBackendStack extends Stack {
 
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
-    // TODO: Riittääkö nämä kaksi??
     hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI", this.props.projektiTable.tableName);
     this.props.projektiTable.grantFullAccess(hyvaksymisEsitysAineistoHandlerLambda); // TODO: riittääkö read ja write? onko update ja put silloin kielletty?
 
-    // TODO: tarvitseeko hyvaksymisEsitysAineistoLambda tätä?
     this.createAndProvideSchedulerExecutionRole(
       eventSQS,
       aineistoSQS,
@@ -186,7 +184,6 @@ export class HassuBackendStack extends Stack {
       projektiSearchIndexer
     );
 
-    // TODO: tarvitseeko hyvaksymisEsitysAineistoLambda tätä?
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
       [yllapitoBackendLambda, sqsEventHandlerLambda],
@@ -207,7 +204,6 @@ export class HassuBackendStack extends Stack {
       value: eventSQS.queueUrl ?? "",
     });
     new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
-      // TODO: Mitä tää tekee? Tuleeko tästä backend stack output??
       value: hyvaksymisEsitysSQS.queueUrl ?? "",
     });
     if (Config.isDeveloperEnvironment()) {
@@ -763,7 +759,7 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     hyvaksymisEsitysSqs: Queue
   ): Promise<NodejsFunction> {
-    const frontendStackOutputs = await readFrontendStackOutputs(); // TODO mitä tämä tekee?
+    const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
     const importer = new NodejsFunction(this, "HyvaksymisEsitysAineistoHandlerLambda", {
       functionName: "hassu-hyvaksymisesitys-aineisto-handler-" + Config.env,
@@ -1185,7 +1181,7 @@ export class HassuBackendStack extends Stack {
       parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",
       stringValue: queue.queueUrl,
     });
-    this.asianhallintaQueue = queue; // TODO: Miksi??
+    this.asianhallintaQueue = queue;
     return queue;
   }
 
@@ -1242,7 +1238,6 @@ export class HassuBackendStack extends Stack {
         }),
       },
     });
-    // TODO: jotain oikkia hyvaksymisEsitysAineistoHandlerLambda:lle ??
     for (const backendLambda of backendLambdas) {
       backendLambda.addEnvironment("SCHEDULER_EXECUTION_ROLE_ARN", role.roleArn);
       backendLambda.addToRolePolicy(
