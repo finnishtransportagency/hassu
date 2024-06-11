@@ -2,22 +2,25 @@ import { ReactElement, useState } from "react";
 import Button from "@components/button/Button";
 import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import IconButton from "@components/button/IconButton";
-import { H5 } from "@components/Headings";
-import { getNewAineistot } from "../../../util/hyvaksymisesitys/getNewAineistot";
-import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
+import { H4 } from "@components/Headings";
+import { adaptVelhoAineistoToAineistoInputNew } from "src/util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
+import { getNewAineistot } from "src/util/hyvaksymisesitys/getNewAineistot";
 
-export default function MuuAineistoVelhosta(): ReactElement {
+export default function Suunnitelma(): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove, prepend } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoVelhosta", control });
+  const { fields, remove, prepend } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.suunnitelma", control });
 
   return (
-    <SectionContent>
-      <H5 variant="h4">Projektivelho</H5>
-      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
+    <>
+      <H4 variant="h3">Suunnitelma</H4>
+      <p>
+        Tuo Projektivelhosta suunnitelman kansiot A–C tai 100–300. Suunnitelma jaotellaan automaattisesti selostusosaan, pääpiirustuksiin ja
+        informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä, siirtää alikansioista toiseen tai
+        poistaa.
+      </p>
       {fields.map((aineisto) => (
         <div key={aineisto.id}>
           {aineisto.nimi}
@@ -40,9 +43,10 @@ export default function MuuAineistoVelhosta(): ReactElement {
         onSubmit={(valitutVelhoAineistot) => {
           const valitutAineistot = valitutVelhoAineistot.map(adaptVelhoAineistoToAineistoInputNew);
           const newAineisto = getNewAineistot(fields, valitutAineistot);
-          prepend(newAineisto);
+          const aineistotWithKategoria = newAineisto.map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" }));
+          prepend(aineistotWithKategoria);
         }}
       />
-    </SectionContent>
+    </>
   );
 }

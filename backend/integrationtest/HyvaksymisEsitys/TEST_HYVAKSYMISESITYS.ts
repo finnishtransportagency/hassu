@@ -20,6 +20,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
     suunnitelma: [
       {
         dokumenttiOid: `suunnitelmaDokumenttiOid${nbr}`,
+        kategoriaId: "osa_b",
         nimi: `suunnitelma äöå ${nbr}.png`,
         uuid: `suunnitelma-uuid${nbr}`,
         lisatty,

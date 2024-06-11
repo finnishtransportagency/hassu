@@ -10,9 +10,10 @@ type Props = {
   versio: number;
   oid: string;
   vastaanottajat: SahkopostiVastaanottaja[];
+  invalidPoistumisPaiva: boolean;
 };
 
-export default function HyvaksyTaiPalautaPainikkeet({ versio, oid, vastaanottajat }: Props) {
+export default function HyvaksyTaiPalautaPainikkeet({ versio, oid, vastaanottajat, invalidPoistumisPaiva }: Props) {
   const [isOpenPalauta, setIsOpenPalauta] = useState(false);
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
 
@@ -23,7 +24,13 @@ export default function HyvaksyTaiPalautaPainikkeet({ versio, oid, vastaanottaja
           <Button type="button" id="button_reject" onClick={() => setIsOpenPalauta(true)}>
             Palauta
           </Button>
-          <Button type="button" id="button_open_acceptance_dialog" primary onClick={() => setIsOpenHyvaksy(true)}>
+          <Button
+            type="button"
+            id="button_open_acceptance_dialog"
+            primary
+            disabled={invalidPoistumisPaiva}
+            onClick={() => setIsOpenHyvaksy(true)}
+          >
             Hyväksy ja lähetä
           </Button>
         </Stack>

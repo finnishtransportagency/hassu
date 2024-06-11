@@ -7,7 +7,7 @@ Object {
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
 
-Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan getParameterValue_UspaBaseUrl/Asia.aspx?AsiaId=asiaId .
+Järjestelmä vie automaattisesti tarpeelliset tiedostot asianhallintaan. Käythän kuitenkin tarkistamassa asianhallinnan getParameterValue_UspaBaseUrl/Asia.aspx?AsiaId=14 .
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
   "to": Array [
@@ -41,7 +41,7 @@ Object {
 ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
-    
+
 Lisätiedot 
 
 Lisätietoja
@@ -137,7 +137,7 @@ Object {
 Väylävirasto lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
-    
+
 Lisätiedot 
 
 Lisätietoja

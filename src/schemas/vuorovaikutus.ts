@@ -1,8 +1,8 @@
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import * as Yup from "yup";
-import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
+import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "hassu-common/schema/common";
 import { lokalisoituTeksti, lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
-import { paivamaara } from "./paivamaaraSchema";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { kutsuSaamePDFInput } from "./kutsuSaamePDFInput";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;

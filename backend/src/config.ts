@@ -51,6 +51,7 @@ const config = {
 
   eventSqsUrl: process.env.EVENT_SQS_URL ?? "",
   eventSqsArn: process.env.EVENT_SQS_ARN ?? "",
+  hyvaksymisesitysSqsUrl: process.env.HYVAKSYMISESITYS_SQS_URL ?? "",
   schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN ?? "",
 
   pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN ?? "",

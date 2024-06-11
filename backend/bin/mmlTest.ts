@@ -53,15 +53,24 @@ Promise.all([
   stsClient.getCallerIdentity({}).then((resp) => {
     return { name: "UserId", value: resp.UserId?.split(":")[1] };
   }),
+  euWestSSMClient
+    .getParameter({
+      Name: "OgcApiExamples",
+      WithDecryption: true,
+    })
+    .then((param) => {
+      return { name: param.Parameter?.Name, value: param.Parameter?.Value };
+    }),
 ])
   .then((params) => {
     const ktjBaseUrl = params.find((p) => p.name === "KtjBaseUrl")?.value;
     const mmlApiKey = params.find((p) => p.name === "MmlApiKey")?.value;
     const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl")?.value;
     const ogcApiKey = params.find((p) => p.name === "OgcApiKey")?.value;
+    const ogcApiExamples = params.find((p) => p.name === "OgcApiExamples")?.value;
     const uid = params.find((p) => p.name === "UserId")?.value;
-    if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid) {
-      const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey });
+    if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid && ogcApiExamples) {
+      const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey, ogcApiExamples });
       const debug = process.argv.includes("--debug");
       if (process.argv.includes("-y")) {
         return client.haeYhteystiedot(process.argv[process.argv.length - 1].split(","), uid, debug);

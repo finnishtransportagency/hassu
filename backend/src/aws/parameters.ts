@@ -199,6 +199,10 @@ class Parameters {
     return this.getRequiredParameter("OgcApiKey");
   }
 
+  getOgcApiExmaples() {
+    return this.getRequiredParameter("OgcApiExamples");
+  }
+
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
     const value = await this.getParameterForEnv(paramName);
     if (!value) {
