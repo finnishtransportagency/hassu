@@ -64,7 +64,7 @@ export default function AineistoNewInputTable({
             <>
               <ExtLink
                 className="file_download"
-                href={aineisto.tiedosto ?? undefined}
+                href={aineisto.tiedosto ? "/" + aineisto.tiedosto : undefined}
                 target="_blank"
                 disabled={!aineisto.tiedosto}
                 hideIcon={!aineisto.tiedosto}
