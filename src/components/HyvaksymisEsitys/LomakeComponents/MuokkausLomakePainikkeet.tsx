@@ -14,7 +14,6 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 
 type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
-  lomakkeellaUusiaAineistoja: boolean;
 };
 
 const adaptFormDataForAPI: (formData: TallennaHyvaksymisEsitysInput) => TallennaHyvaksymisEsitysInput = (data) => data;
