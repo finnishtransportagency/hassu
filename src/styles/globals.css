@@ -367,6 +367,7 @@
   .btn:disabled,
   .btn.disabled {
     @apply cursor-default;
+    border-color: #999999;
   }
   .btn:disabled,
   .btn.disabled > div {
@@ -390,6 +391,36 @@
   }
   .btn-remove-red {
     @apply btn text-red border-red;
+  }
+  .btn-small {
+    color: #0064AF;
+    background-color: #FFFFFF;
+    font-size: 1rem;
+    border: 3px solid;
+    text-transform: none;
+    border-color: #0064AF;
+    border-image: linear-gradient(117deg, #009ae0, #49c2f1) 2;
+    border-radius: 0;
+    font-weight: 700;
+  }
+  .btn-small:disabled {
+    background-color: #FFFFFF;
+    color: #242222;
+    border: 3px solid #e5e5e5;
+  }
+  .btn-small-primary {
+    border: 3px solid #0064AF;
+    border-radius: 0;
+    font-size: 1rem;
+    text-transform: none;
+    font-weight: 700;
+    background-color: #0064AF;
+    color: #FFFFFF;
+  }
+  .btn-small-primary:disabled {
+    background-color: #e5e5e5;
+    color: #242222;
+    border: 3px solid #e5e5e5;
   }
   .alert {
     @apply border py-2 px-3 bg-gray-lightest border-gray;
