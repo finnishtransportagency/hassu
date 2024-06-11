@@ -174,7 +174,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#lockedUntil": "lockedUntil",
       },
       ExpressionAttributeValues: {
-        ":lockedUntil": nyt().add(2, "minutes").unix(), //TODO laita tähän be-lambdan timeout-arvo
+        ":lockedUntil": nyt().add(29, "seconds").unix(),
       },
     });
 
