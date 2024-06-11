@@ -209,6 +209,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         }
         if (options.ogcApiExamples === "true") {
           // haetaan vain joku yhteystieto, id listalla ei voi hakea esimerkeistä kun palauttaa HTTP 400
+          // lisäksi jos hakee sellaisella id:llä jota ei löydy tulee HTTP 400
           url = (options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items/94615362").replace("/features/", "/examples/");
         } else {
           url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
