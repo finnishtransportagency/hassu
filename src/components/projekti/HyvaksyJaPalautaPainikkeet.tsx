@@ -9,7 +9,7 @@ import { isInPast } from "common/util/dateUtils";
 import React, { useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
-import { paivamaara } from "src/schemas/paivamaaraSchema";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import * as yup from "yup";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";

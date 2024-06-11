@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { paivamaara } from "./paivamaaraSchema";
-import { getLadatutTiedostotSchema } from "./common";
+import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
+import { getLadatutTiedostotSchema } from "hassu-common/schema/common";
 
 const maxNoteLength = 2000;
 

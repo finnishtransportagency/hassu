@@ -31,6 +31,7 @@ async function main() {
     TABLE_PROJEKTI_MUISTUTTAJA: Config.projektiMuistuttajaTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
+    HYVAKSYMISESITYS_SQS_URL: backendStackOutputs.HyvaksymisEsitysSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,
     YLLAPITO_BUCKET_NAME: Config.yllapitoBucketName,
     PDF_GENERATOR_LAMBDA_ARN: backendStackOutputs.PdfGeneratorLambda,
@@ -53,6 +54,7 @@ async function main() {
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
       EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
+      HYVAKSYMISESITYS_SQS_URL: backendStackOutputs.HyvaksymisEsitysSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,

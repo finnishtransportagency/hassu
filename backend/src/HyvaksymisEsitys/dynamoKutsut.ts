@@ -20,6 +20,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "hyvaksymisPaatosVaihe"
   | "aineistoHandledAt"
   | "velho"
+  | "asianhallinta"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -63,7 +64,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta",
     });
 
     try {
@@ -163,8 +164,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   }
 
   async setLock(oid: string): Promise<void> {
-    // TODO:
-    const lockedUntil = "TODO";
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
@@ -175,7 +174,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#lockedUntil": "lockedUntil",
       },
       ExpressionAttributeValues: {
-        ":lockedUntil": lockedUntil,
+        ":lockedUntil": nyt().add(29, "seconds").unix(),
       },
     });
 

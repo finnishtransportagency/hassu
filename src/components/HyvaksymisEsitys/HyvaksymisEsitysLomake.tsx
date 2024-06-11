@@ -3,11 +3,6 @@ import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import getDefaultValuesForForm from "./getDefaultValuesForForm";
 import Section from "@components/layout/Section2";
-import { Stack } from "@mui/material";
-import Button from "@components/button/Button";
-import useApi from "src/hooks/useApi";
-import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
-import useSpinnerAndSuccessMessage from "src/hooks/useSpinnerAndSuccessMessage";
 import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
 import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
 import Laskutustiedot from "./LomakeComponents/Laskutustiedot";
@@ -25,6 +20,13 @@ import AineistonEsikatselu from "./LomakeComponents/AineistonEsikatselu";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import { H3, H4 } from "@components/Headings";
+import ExtLink from "@components/ExtLink";
+import { formatDate } from "common/util/dateUtils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
+import Suunnitelma from "./LomakeComponents/Suunnitelma";
+import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -36,36 +38,38 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     [hyvaksymisEsityksenTiedot]
   );
 
-  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput> = {
-    //resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
+  const validationMode = useValidationMode();
+
+  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext> = {
+    resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    //context: { hyvaksymisEsityksenTiedot, validationMode },
+    context: { validationMode, testType: TestType.FRONTEND },
   };
 
-  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput>(formOptions);
-  const api = useApi();
-  const { mutate: reloadData } = useHyvaksymisEsitys();
-
-  const save = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
-    await api.tallennaHyvaksymisEsitys(formData);
-    await reloadData();
-  }, "Tallennus onnistui");
-
-  const sendForApproval = useSpinnerAndSuccessMessage(async (formData: TallennaHyvaksymisEsitysInput) => {
-    await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(formData);
-    await reloadData();
-  }, "Tallennus ja hyväksyttäväksi lähettäminen onnistui");
-
-  const tallennaHyvaksyttavaksiDisabled = false; // TODO: muuta
+  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext>(formOptions);
 
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
 
+  if (!hyvaksymisEsityksenTiedot) {
+    return null;
+  }
+
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${hyvaksymisEsityksenTiedot.oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash}`;
+
   return (
     <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
+      {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
+        <Section noDivider>
+          <Notification type={NotificationType.INFO_GREEN}>
+            Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
+            <ExtLink href={url}>{url}</ExtLink>
+          </Notification>
+        </Section>
+      )}
       <ProjektiPageLayoutContext.Consumer>
         {({ ohjeetOnClose, ohjeetOpen }) => (
           <FormProvider {...useFormReturn}>
@@ -117,12 +121,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
                 <HyvaksymisEsitysTiedosto />
-                <H4 variant="h3">Suunnitelma</H4>
-                <p>
-                  Tuo Projektivelhosta suunnitelman kansiot A–C tai 100–300. Suunnitelma jaotellaan automaattisesti selostusosaan,
-                  pääpiirustuksiin ja informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä,
-                  siirtää alikansioista toiseen tai poistaa.
-                </p>
+                <Suunnitelma />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
@@ -142,22 +141,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <AineistonEsikatselu />
               </Section>
-              <Section noDivider>
-                <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-                  <Button primary id="save" type="button" onClick={useFormReturn.handleSubmit(save)}>
-                    Tallenna luonnos
-                  </Button>
-                  <Button
-                    type="button"
-                    disabled={tallennaHyvaksyttavaksiDisabled}
-                    id="save_and_send_for_acceptance"
-                    primary
-                    onClick={useFormReturn.handleSubmit(sendForApproval)}
-                  >
-                    Lähetä Hyväksyttäväksi
-                  </Button>
-                </Stack>
-              </Section>
+              <MuokkausLomakePainikkeet hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
             </form>
           </FormProvider>
         )}

@@ -3,7 +3,7 @@ import { parameters } from "../aws/parameters";
 import { DBProjekti } from "../database/model";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
-type LinkkiAsianhallintaanFunc = (projekti: DBProjekti) => Promise<string | undefined>;
+type LinkkiAsianhallintaanFunc = (projekti: Pick<DBProjekti, "asianhallinta" | "velho">) => Promise<string | undefined>;
 
 export const getLinkkiAsianhallintaan: LinkkiAsianhallintaanFunc = async (projekti) => {
   const asiaId = projekti.asianhallinta?.asiaId;

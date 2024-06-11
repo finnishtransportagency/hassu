@@ -192,7 +192,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           __typename: "AineistoNew",
           dokumenttiOid: "suunnitelmaDokumenttiOid",
           jarjestys: undefined,
-          kategoriaId: undefined,
+          kategoriaId: "osa_b",
           nimi: "suunnitelma äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "suunnitelma-uuid",

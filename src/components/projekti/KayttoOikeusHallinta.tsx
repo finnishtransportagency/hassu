@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
 import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
-import { maxPhoneLength } from "src/schemas/puhelinNumero";
+import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import Section from "@components/layout/Section2";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";

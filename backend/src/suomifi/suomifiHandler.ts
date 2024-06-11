@@ -164,7 +164,14 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
   }
 }
 
-async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, success: boolean, approvalType: PublishOrExpireEventType, traceId?: string) {
+async function paivitaLahetysStatus(
+  oid: string,
+  id: string,
+  omistaja: boolean,
+  success: boolean,
+  approvalType: PublishOrExpireEventType,
+  traceId?: string
+) {
   const params = new UpdateCommand({
     TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
@@ -174,7 +181,9 @@ async function paivitaLahetysStatus(oid: string, id: string, omistaja: boolean, 
     UpdateExpression: "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
     ExpressionAttributeNames: { "#l": "lahetykset" },
     ExpressionAttributeValues: {
-      ":status": [{ tila: success ? "OK" : "VIRHE", lahetysaika: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ), tyyppi: approvalType, traceId }],
+      ":status": [
+        { tila: success ? "OK" : "VIRHE", lahetysaika: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ), tyyppi: approvalType, traceId },
+      ],
       ":tyhjalista": [],
     },
   });

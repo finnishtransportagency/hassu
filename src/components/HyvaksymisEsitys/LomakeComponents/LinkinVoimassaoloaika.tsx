@@ -14,6 +14,7 @@ export default function LinkinVoimassaoloaika(): ReactElement {
           controllerProps={{
             name: "muokattavaHyvaksymisEsitys.poistumisPaiva",
           }}
+          disablePast
           onChange={(date) => {
             if (date?.isValid()) {
               date.format("YYYY-MM-DD");

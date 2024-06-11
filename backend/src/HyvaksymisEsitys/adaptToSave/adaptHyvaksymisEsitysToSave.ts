@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { KunnallinenLadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { adaptLadatutTiedostotToSave } from "./adaptLadatutTiedostotToSave";
 import { adaptAineistotToSave } from "./adaptAineistotToSave";
 
@@ -29,10 +29,7 @@ export function adaptHyvaksymisEsitysToSave(
   const newMuokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys = {
     hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys),
     suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma),
-    muistutukset: adaptLadatutTiedostotToSave<KunnallinenLadattuTiedosto, API.KunnallinenLadattuTiedostoInput>(
-      dbHyvaksymisEsitys?.muistutukset,
-      muistutukset
-    ),
+    muistutukset: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset),
     lausunnot: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.lausunnot, lausunnot),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.kuulutuksetJaKutsu, kuulutuksetJaKutsu),
     muuAineistoVelhosta: adaptAineistotToSave(dbHyvaksymisEsitys?.muuAineistoVelhosta, muuAineistoVelhosta),

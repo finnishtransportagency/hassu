@@ -3,14 +3,23 @@ import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../dat
 import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
-import { nyt } from "../../util/dateUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
+import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
+import {
+  createHyvaksymisesitysHyvaksyttyLaatijalleEmail,
+  createHyvaksymisesitysHyvaksyttyPpEmail,
+  createHyvaksymisesitysViranomaisilleEmail,
+} from "../../email/emailTemplates";
+import { emailClient } from "../../email/email";
+import { log } from "../../logger";
+import { fileService } from "../../files/fileService";
+import Mail from "nodemailer/lib/mailer";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -32,6 +41,40 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     hyvaksyja: nykyinenKayttaja.uid,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+
+  // Lähetä email vastaanottajille
+  const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
+  if (emailOptions.to) {
+    // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
+    const promises = (julkaistuHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
+      fileService.getFileAsAttachment(projektiInDB.oid, `/hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(he.nimi)}`)
+    );
+    const attachments = await Promise.all(promises);
+    if (attachments.find((a) => !a)) {
+      log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
+    }
+
+    await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+  } else {
+    log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
+  }
+
+  // Lähetä email hyväksymisesityksen laatijalle
+  const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
+  if (emailOptions2.to) {
+    await emailClient.sendEmail(emailOptions2);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt laatijan sahkopostiosoitetta");
+  }
+
+  // Lähetä email projarille ja varahenkilöille
+  const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
+  if (emailOptions3.to) {
+    await emailClient.sendEmail(emailOptions3);
+  } else {
+    log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
+  }
+
   return oid;
 }
 
@@ -41,6 +84,12 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja
   // Projektilla on oltava hyväksymistä odottava hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA) {
     throw new IllegalArgumentError("Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä");
+  }
+  if (!projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva) {
+    throw new IllegalArgumentError("Hyväksymisesitykseltä puuttuu poistumispäivämäärä");
+  }
+  if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day")) {
+    throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä");
   }
   return nykyinenKayttaja;
 }

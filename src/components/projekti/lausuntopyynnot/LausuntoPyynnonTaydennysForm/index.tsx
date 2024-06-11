@@ -19,9 +19,9 @@ export default function LausuntoPyynnonTaydennysForm({
   const formDataForThisLink = getValues(`lausuntoPyynnonTaydennykset.${index}`);
 
   return (
-    <Section style={{ marginBottom: "4em", marginTop: "4em" }}>
+    <Section style={{ marginBottom: "4em", marginTop: "2.5em" }} gap={10}>
       <Stack direction="row" justifyContent="space-between">
-        <h2 className="vayla-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h2>
+        <h2 className="vayla-title mb-0">{kuntametadata.nameForKuntaId(kunta, "fi")}</h2>
       </Stack>
       <PoistumisPaiva index={index} kunta={kunta} />
       <Muistutukset index={index} projekti={projekti} />
