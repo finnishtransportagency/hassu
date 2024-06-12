@@ -63,11 +63,10 @@ function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] 
 }
 
 function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): LadattuTiedostoInputNew {
-  const { nimi, uuid, jarjestys } = ladattuTiedosto;
+  const { nimi, uuid } = ladattuTiedosto;
   return {
     nimi,
     uuid,
-    jarjestys,
   };
 }
 
@@ -81,11 +80,10 @@ function adaptKunnallisetLadatutTiedostoToInput(
 }
 
 function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLadattuTiedosto): KunnallinenLadattuTiedostoInput {
-  const { nimi, uuid, jarjestys, kunta } = ladattuTiedosto;
+  const { nimi, uuid, kunta } = ladattuTiedosto;
   return {
     nimi,
     uuid,
-    jarjestys,
     kunta,
   };
 }
@@ -98,12 +96,11 @@ function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): 
 }
 
 function adaptAineistoNewToInput(aineisto: AineistoNew): AineistoInputNew {
-  const { dokumenttiOid, uuid, kategoriaId, nimi, jarjestys } = aineisto;
+  const { dokumenttiOid, uuid, kategoriaId, nimi } = aineisto;
   return {
     dokumenttiOid,
     uuid,
     kategoriaId,
     nimi,
-    jarjestys,
   };
 }

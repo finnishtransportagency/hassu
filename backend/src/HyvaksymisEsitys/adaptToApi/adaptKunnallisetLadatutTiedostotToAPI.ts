@@ -1,5 +1,4 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { KunnallinenLadattuTiedosto } from "../../database/model";
 import { joinPath } from "../../tiedostot/paths";
 
@@ -11,11 +10,10 @@ export function adaptKunnallisetLadatutTiedostotToApi({
   path: string;
 }): API.KunnallinenLadattuTiedosto[] | undefined {
   if (tiedostot && tiedostot.length > 0) {
-    return [...tiedostot].sort(jarjestaTiedostot).map((tiedosto: KunnallinenLadattuTiedosto) => {
-      const { jarjestys, nimi, lisatty, uuid, kunta } = tiedosto;
+    return [...tiedostot].map((tiedosto: KunnallinenLadattuTiedosto) => {
+      const { nimi, lisatty, uuid, kunta } = tiedosto;
       const apiAineisto: API.KunnallinenLadattuTiedosto = {
         __typename: "KunnallinenLadattuTiedosto",
-        jarjestys,
         nimi,
         lisatty,
         uuid,
