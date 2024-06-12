@@ -32,7 +32,7 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
   return (
     <Section noDivider>
       <SectionContent>
-        <h4 className="vayla-small-title">Liikenne- ja viestintäviraston {paatosGenetiivi} päivä ja asiatunnus</h4>
+        <h3 className="vayla-subtitle">Liikenne- ja viestintäviraston {paatosGenetiivi} päivä ja asiatunnus</h3>
         <p>
           {isHyvaksymisPaatos ? (
             <>

@@ -41,10 +41,10 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
         expandedstate={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+            <h4 className="vayla-small-title mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               aineistoNahtavillaFlat,
               paakategoria
-            )})`}</span>
+            )})`}</h4>
           ),
           content: (
             <SectionContent largeGaps>

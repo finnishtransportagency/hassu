@@ -99,7 +99,7 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
   return (
     <Section>
       <SectionContent>
-        <h4 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h4>
+        <h3 className="vayla-subtitle">Kuulutuksessa esitettävät yhteystiedot</h3>
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle

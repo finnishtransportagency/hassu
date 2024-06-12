@@ -19,7 +19,7 @@ export default function MuutoksenHaku() {
   return (
     <Section noDivider>
       <SectionContent>
-        <h4 className="vayla-small-title">Muutoksen haku</h4>
+        <h3 className="vayla-subtitle">Muutoksen haku</h3>
         <p>
           Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Valitse
           pudotusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.

@@ -121,7 +121,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
       )}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
-          <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
+          <h2 className="vayla-title">Ilmoituksen vastaanottajat</h2>
           <SectionContent>
             <p>
               Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
@@ -136,7 +136,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
 
           <>
             <SectionContent>
-              <h6 className="font-bold">Viranomaiset</h6>
+              <h3 className="vayla-subtitle">Viranomaiset</h3>
               {(errors.paatos?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">{(errors.paatos?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
@@ -209,7 +209,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
             </Button>
           </>
           <SectionContent>
-            <h6 className="font-bold">Kunnat</h6>
+            <h3 className="vayla-subtitle">Kunnat</h3>
             {kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>

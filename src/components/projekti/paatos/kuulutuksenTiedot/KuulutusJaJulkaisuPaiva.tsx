@@ -34,7 +34,7 @@ export default function KuulutusJaJulkaisuPaiva() {
   return (
     <Section noDivider>
       <SectionContent>
-        <h4 className="vayla-small-title">Kuulutus ja julkaisupäivä</h4>
+        <h2 className="vayla-title">Kuulutus ja julkaisupäivä</h2>
         <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePickerWithController
