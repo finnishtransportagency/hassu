@@ -136,7 +136,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                   Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
                 </p>
                 <MuuAineistoVelhosta aineisto={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoVelhosta} />
-                <MuuAineistoKoneelta />
+                <MuuAineistoKoneelta tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoKoneelta} />
               </Section>
               <Section>
                 <Vastaanottajat />

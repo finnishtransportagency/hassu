@@ -40,7 +40,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
       <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
       {!!fields?.length && (
         <TiedostoInputNewTable
-          id="hyvaksymis_esitys_files_table"
+          id="hyvaksymisesitys_files_table"
           tiedostot={tiedostot}
           remove={remove}
           fields={fields}
