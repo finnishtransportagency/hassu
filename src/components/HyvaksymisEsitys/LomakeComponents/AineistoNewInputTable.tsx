@@ -34,7 +34,7 @@ export default function TiedostoNewInputTable<S extends GenTiedosto>({
   move,
   registerDokumenttiOid,
   registerNimi,
-  header,
+  ladattuTiedosto,
 }: {
   tiedostot?: S[] | null;
   fields: FieldType[];
@@ -42,7 +42,7 @@ export default function TiedostoNewInputTable<S extends GenTiedosto>({
   move: UseFieldArrayMove;
   registerNimi: (index: number) => UseFormRegisterReturn;
   registerDokumenttiOid?: (index: number) => UseFormRegisterReturn;
-  header?: string;
+  ladattuTiedosto?: boolean;
 }) {
   const enrichedFields: RowDataType<S>[] = useMemo(
     () =>
@@ -58,7 +58,7 @@ export default function TiedostoNewInputTable<S extends GenTiedosto>({
   const columns = useMemo<ColumnDef<RowDataType<S>>[]>(
     () => [
       {
-        header: header ?? "Aineisto",
+        header: ladattuTiedosto ? "Tiedostot" : "Aineisto",
         meta: { minWidth: 250, widthFractions: 4 },
         id: "tiedosto",
         accessorFn: (tiedosto) => {
@@ -83,7 +83,7 @@ export default function TiedostoNewInputTable<S extends GenTiedosto>({
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (tiedosto) => (tiedosto.lisatty && tiedosto.tuotu ? formatDateTime(tiedosto.lisatty) : undefined),
+        accessorFn: (tiedosto) => (tiedosto.lisatty && (tiedosto.tuotu || ladattuTiedosto) ? formatDateTime(tiedosto.lisatty) : undefined),
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
@@ -96,7 +96,7 @@ export default function TiedostoNewInputTable<S extends GenTiedosto>({
         meta: { minWidth: 120, widthFractions: 2 },
       },
     ],
-    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, header]
+    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, ladattuTiedosto]
   );
 
   const findRowIndex = useCallback((id: string, rows?: Row<RowDataType<S>>[]) => {
