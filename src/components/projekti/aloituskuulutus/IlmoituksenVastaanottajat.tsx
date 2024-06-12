@@ -69,7 +69,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
   return (
     <Section>
       <SectionContent>
-        <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+        <h3 className="vayla-subtitle">Ilmoituksen vastaanottajat</h3>
         {!isReadonly && (
           <>
             <p>
@@ -95,7 +95,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       {!isReadonly && kirjaamoOsoitteet && (
         <>
           <SectionContent>
-            <h6 className="font-bold">Viranomaiset</h6>
+            <h4 className="vayla-small-title">Viranomaiset</h4>
             {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
               <p className="text-red">{(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
             )}
@@ -199,7 +199,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         </SectionContent>
       )}
       <SectionContent>
-        <h6 className="font-bold">Kunnat</h6>
+        <h4 className="vayla-small-title">Kunnat</h4>
         {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu Projektivelhoon.</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {

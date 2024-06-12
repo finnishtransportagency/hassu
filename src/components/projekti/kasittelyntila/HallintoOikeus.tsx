@@ -40,8 +40,8 @@ function HallintoOikeusContent(props: {
 
   return (
     <SectionContent>
-      <h5 className="vayla-subtitle">Hallinto-oikeus</h5>
-      <h4 className="vayla-small-title mt-6 !mb-6">Hallinto-oikeuden välipäätös</h4>
+      <h2 className="vayla-title">Hallinto-oikeus</h2>
+      <h3 className="vayla-small-title mt-6 !mb-6">Hallinto-oikeuden välipäätös</h3>
       {fieldState?.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
       <HassuDatePicker
         textFieldProps={{ name: "kasittelynTila.hallintoOikeus.valipaatos.paiva" }}
@@ -79,7 +79,7 @@ function HallintoOikeusContent(props: {
           minRows={3}
         ></Textarea>
       </div>
-      <h4 className="vayla-small-title !mb-6">Hallinto-oikeuden päätös</h4>
+      <h3 className="vayla-small-title !mb-6">Hallinto-oikeuden päätös</h3>
       <HassuDatePicker
         textFieldProps={{ name: "kasittelynTila.hallintoOikeus.paatos.paiva" }}
         label="Päivämäärä"

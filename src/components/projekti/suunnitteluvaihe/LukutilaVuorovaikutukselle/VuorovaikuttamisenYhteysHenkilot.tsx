@@ -11,7 +11,7 @@ export const VuorovaikuttamisenYhteysHenkilot: VFC<{
 
   return (
     <Section>
-      <h4 className="vayla-label">Kutsussa esitettävät yhteyshenkilöt</h4>
+      <h3 className="vayla-subtitle">Kutsussa esitettävät yhteyshenkilöt</h3>
       {julkaisu.yhteystiedot?.map((yhteystieto, index) => {
         return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto, t)}</p>;
       })}

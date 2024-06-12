@@ -22,7 +22,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
   return (
     <Section>
       <ContentSpacer>
-        <h4 className="vayla-small-title">Vähäinen menettely</h4>
+        <h3 className="vayla-subtitle">Vähäinen menettely</h3>
         <p>
           Jos suunnitelma on vaikutuksiltaan vähäinen, eikä sanottavasti muuta paikallisia liikenneolosuhteita, projektin menettelytavaksi
           voidaan valita vähäinen menettely. Sillä tarkoitetaan LjMTL 28 § tai RataL 23 § mukaista menettelyä. Vähäinen menettely eroaa
@@ -57,7 +57,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
         </p>
       </Notification>
       <ContentSpacer>
-        <h5 className="vayla-smallest-title">Sovelletaanko projektissa vähäistä menettelytapaa?</h5>
+        <h4 className="vayla-smallest-title">Sovelletaanko projektissa vähäistä menettelytapaa?</h4>
         <Controller
           name="vahainenMenettely"
           shouldUnregister

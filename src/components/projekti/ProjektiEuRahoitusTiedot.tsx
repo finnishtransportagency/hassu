@@ -31,7 +31,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
 
   return (
     <Section smallGaps>
-      <h4 className="vayla-small-title">EU-rahoitus</h4>
+      <h3 className="vayla-subtitle">EU-rahoitus</h3>
       {disabled && (
         <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa EU-rahoituksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää.

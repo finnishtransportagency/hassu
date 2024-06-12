@@ -7,7 +7,7 @@ import { VuorovaikutusFormValues } from ".";
 export default function Julkaisupaiva(): ReactElement {
   return (
     <SectionContent>
-      <h4 className="vayla-small-title">Julkaisupäivä</h4>
+      <h3 className="vayla-subtitle">Julkaisupäivä</h3>
       <p>
         Anna päivämäärä, jolloin suunnitteluvaiheen tiedot ja kutsu vuorovaikutukseen julkaistaan palvelun julkisella puolella sekä muilla
         ilmoituskanavilla, esim. kunnan verkkosivuilla.

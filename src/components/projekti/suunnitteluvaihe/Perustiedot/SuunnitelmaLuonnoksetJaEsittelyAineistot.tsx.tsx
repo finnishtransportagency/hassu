@@ -40,7 +40,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
 
   return (
     <Section noDivider>
-      <h4 className="vayla-small-title">Suunnitelmaluonnokset ja esittelyaineistot</h4>
+      <h2 className="vayla-title">Suunnitelmaluonnokset ja esittelyaineistot</h2>
       <p>
         Kansalaiselle järjestelmän julkisella puolella esiteltävät suunnitelmaluonnokset ja esittelylyaineistot tuodaan Projektivelhosta.
         Suunnitelmaluonnokset ja aineistot julkaistaan palvelun julkisella puolella kutsun julkaisupäivänä. Suunnitelmaluonnoksia ja
@@ -48,7 +48,7 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
       </p>
       <AineistotSaavutettavuusOhje />
       <ContentSpacer>
-        <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
+        <h3 className="vayla-subtitle">Suunnitelmaluonnokset ja esittelyaineistot</h3>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan.</p>
         <ButtonFlatWithIcon

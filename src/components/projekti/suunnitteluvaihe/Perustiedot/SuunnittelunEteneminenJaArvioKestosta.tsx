@@ -25,7 +25,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
 
   return (
     <Section>
-      <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
+      <h3 className="vayla-subtitle">Suunnittelun eteneminen ja arvio kestosta</h3>
       <ContentSpacer>
         <p>
           Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa omin

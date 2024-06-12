@@ -289,7 +289,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
           )}
           <Section gap={4}>
-            <h4 className="vayla-small-title">Muistiinpanot</h4>
+            <h3 className="vayla-subtitle">Muistiinpanot</h3>
             <p>
               Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
               Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet.

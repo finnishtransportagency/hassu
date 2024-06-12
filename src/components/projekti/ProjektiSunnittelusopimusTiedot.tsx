@@ -45,7 +45,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
 
   return (
     <Section smallGaps>
-      <h4 className="vayla-small-title">Suunnittelusopimus</h4>
+      <h3 className="vayla-subtitle">Suunnittelusopimus</h3>
       {disabled && (
         <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
@@ -86,7 +86,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 render={() => (
                   <SectionContent largeGaps sx={{ marginLeft: 4 }}>
                     <SectionContent>
-                      <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
+                      <h4 className="vayla-small-title">Kunnan edustajan tiedot</h4>
                       <p>
                         Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten
                         yhteystiedoissa.
@@ -117,7 +117,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                       </HassuGrid>
                     </SectionContent>
                     <SectionContent>
-                      <h5 className="vayla-smallest-title">Kunnan logo</h5>
+                      <h4 className="vayla-small-title">Kunnan logo</h4>
                       {ensisijainenKaannettavaKieli && (
                         <ProjektiSuunnittelusopimusLogoInput<FormValues>
                           lang={ensisijainenKaannettavaKieli}

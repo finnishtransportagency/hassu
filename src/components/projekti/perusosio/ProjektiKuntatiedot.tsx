@@ -20,7 +20,7 @@ export default function ProjektiKuntatiedot({ projekti }: Props): ReactElement {
 
   return (
     <ContentSpacer>
-      <h4 className="vayla-small-title">Projektiin liittyvät maakunnat ja kunnat</h4>
+      <h3 className="vayla-subtitle">Projektiin liittyvät maakunnat ja kunnat</h3>
       <KeyValueTable rows={kuntatiedot} />
     </ContentSpacer>
   );

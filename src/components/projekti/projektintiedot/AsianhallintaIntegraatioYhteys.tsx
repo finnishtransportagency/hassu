@@ -16,7 +16,7 @@ type Props = {
 export default function AsianhallintaIntegraatioYhteys(props: Props) {
   return (
     <Section>
-      <H4>Integraatioyhteys</H4>
+      <h3 className="vayla-subtitle">Integraatioyhteys</h3>
       <ContentSpacer>
         <p>
           Järjestelmä mahdollistaa integraation avulla kuulutusten, ilmoitusten, kutsujen ja lähetekirjeiden viemisen automaattisesti

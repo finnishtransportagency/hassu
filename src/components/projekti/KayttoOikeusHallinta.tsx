@@ -181,7 +181,7 @@ function KayttoOikeusHallintaFormElements({
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>
           <ContentSpacer>
-            <h2 className="vayla-small-title">Projektipäällikkö</h2>
+            <h2 className="vayla-title">Projektipäällikkö</h2>
             <p>Projektipäällikkö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
           </ContentSpacer>
           {projektiPaallikot.map((paallikko, index) => {
@@ -204,7 +204,7 @@ function KayttoOikeusHallintaFormElements({
       )}
       <ContentSpacer gap={8}>
         <ContentSpacer>
-          <h3 className="vayla-small-title">Muut henkilöt</h3>
+          <h3 className="vayla-subtitle">Muut henkilöt</h3>
         </ContentSpacer>
         {muutHenkilot.map((user, index) => {
           const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;

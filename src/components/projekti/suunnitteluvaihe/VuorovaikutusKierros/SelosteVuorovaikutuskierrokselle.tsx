@@ -13,7 +13,7 @@ export default function SelosteVuorovaikutuskierrokselle() {
 
   return (
     <Section>
-      <H4>Seloste lähetekirjeeseen</H4>
+      <h2 className="vayla-title">Seloste lähetekirjeeseen</h2>
       <ContentSpacer>
         <p>
           Kirjoita lähetekirjettä varten seloste kutsun uudelleenjulkaisun syistä. Seloste tulee nähtäville viranomaiselle ja kunnille

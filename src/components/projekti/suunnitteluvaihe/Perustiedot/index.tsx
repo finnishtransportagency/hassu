@@ -413,7 +413,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <Section noDivider>
-            <h3 className="vayla-subtitle">Suunnitteluvaiheen perustiedot</h3>
+            <h2 className="vayla-title">Suunnitteluvaiheen perustiedot</h2>
             <SectionContent>
               {!julkinen && (
                 <p>
@@ -429,9 +429,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           <EnnaltaKuvattuVideoesittely />
           <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
           <Section>
-            <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
+            <h2 className="vayla-title">Kysymykset ja palautteet</h2>
             <SectionContent>
-              <h4 className="vayla-label">Kysymyksien esittäminen ja palautteiden antaminen</h4>
+              <h3 className="vayla-subtitle">Kysymyksien esittäminen ja palautteiden antaminen</h3>
               <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
               <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"
@@ -445,7 +445,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               />
             </SectionContent>
             <SectionContent>
-              <h4 className="vayla-label">Kysymysten ja palautteiden vastaanottajat</h4>
+              <h3 className="vayla-subtitle">Kysymysten ja palautteiden vastaanottajat</h3>
               <p>
                 Järjestelmään saapuneesta uudesta kysymyksestä tai palautteesta lähetetään automaattisesti sähköpostitse tieto valituille
                 henkilöille. Jos et halua sähköpostiin tiedotetta jokaisesta saapuneesta kysymyksestä tai palautteesta, ota valinta pois

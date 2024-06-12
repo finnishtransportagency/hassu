@@ -16,7 +16,7 @@ export default function LinkitetytProjektit({ projekti }: Props): ReactElement {
 
   return (
     <Section smallGaps>
-      <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
+      <h3 className="vayla-subtitle">Projektiin liittyvät suunnitelmat</h3>
       {!linkitetytProjektit && (
         <SectionContent>
           <p>Projektiin ei ole liitetty muita suunnitelmia. Voit liittää projektiin suunnitelmia Projektivelhossa.</p>

@@ -23,7 +23,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </p>
       </Section>
       <Section>
-        <h3 className="vayla-subtitle">Suunnitelman tila</h3>
+        <h3 className="vayla-title">Suunnitelman tila</h3>
         <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon</p>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Suunnitelman tila</p>

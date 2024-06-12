@@ -65,7 +65,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
     <>
       <div>
         <Section>
-          <h4 className="vayla-small-title">Kutsun ilmoituksen vastaanottajat</h4>
+          <h2 className="vayla-title">Kutsun ilmoituksen vastaanottajat</h2>
           <SectionContent>
             <p>
               Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
@@ -80,7 +80,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
 
           <>
             <SectionContent>
-              <h6 className="font-bold">Viranomaiset</h6>
+              <h3 className="vayla-subtitle">Viranomaiset</h3>
               {(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">{(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
@@ -153,7 +153,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
             </Button>
           </>
           <SectionContent>
-            <h6 className="font-bold">Kunnat</h6>
+            <h3 className="vayla-subtitle">Kunnat</h3>
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

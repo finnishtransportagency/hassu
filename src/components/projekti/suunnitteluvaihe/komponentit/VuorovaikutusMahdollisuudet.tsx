@@ -50,7 +50,7 @@ export default function VuorovaikutusMahdollisuudet({
   return (
     <>
       <Section>
-        <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
+        <h2 className="vayla-title">Vuorovaikutustilaisuudet</h2>
         {setOpenVuorovaikutustilaisuus && (
           <>
             <p>

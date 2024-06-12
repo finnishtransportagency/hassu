@@ -70,7 +70,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
 
   return (
     <Section>
-      <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
+      <h3 className="vayla-subtitle">Saapuneet kysymykset ja palautteet</h3>
       {!palautteet?.length ? (
         <p>Ei saapuneita kysymyksiä tai palautteita</p>
       ) : (

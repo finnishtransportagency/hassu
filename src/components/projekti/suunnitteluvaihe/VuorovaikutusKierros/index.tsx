@@ -317,6 +317,10 @@ function VuorovaikutusKierrosKutsu({
   const julkaisuIsDisabled = useMemo(() => {
     const kunnatPuuttuu = !kuntavastaanottajat?.length;
     const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
+    console.log("vaihe: ", vaihe)
+    console.log("1: ", !projektiHasPublishedAloituskuulutusJulkaisu(projekti))
+    console.log("2: ", kunnatPuuttuu)
+    console.log("3: ", isAsianhallintaVaarassaTilassa(projekti, vaihe))
     return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, vaihe);
   }, [kuntavastaanottajat?.length, projekti]);
 
@@ -332,7 +336,7 @@ function VuorovaikutusKierrosKutsu({
         <form>
           <fieldset>
             <Section>
-              <h3 className="vayla-subtitle">Kutsu vuorovaikutukseen</h3>
+              <h2 className="vayla-title">Kutsu vuorovaikutukseen</h2>
               <p>
                 Tällä välilehdellä luodaan kutsu suunnitelman vuorovaikutukseen. Kutsussa näkyy tieto vuorovaikutustilaisuuksista, linkki
                 järjestelmän julkisella puolelle esiteltäviin suunnitelmaluonnoksiin ja -aineistoihin sekä yhteyshenkilöt.
@@ -357,7 +361,7 @@ function VuorovaikutusKierrosKutsu({
             )}
             {
               <Section>
-                <h4 className="vayla-small-title">Kutsun esikatselu</h4>
+                <h2 className="vayla-title">Kutsun esikatselu</h2>
                 <SectionContent largeGaps>
                   {isKieliTranslatable(ensisijainenKieli) && (
                     <>

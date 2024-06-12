@@ -47,7 +47,7 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
   return (
     <Section className="mt-8">
       <SectionContent>
-        <h4 className="vayla-small-title">Kutsussa esitettävät yhteystiedot</h4>
+        <h2 className="vayla-title">Kutsussa esitettävät yhteystiedot</h2>
         <p>
           Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
           tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista

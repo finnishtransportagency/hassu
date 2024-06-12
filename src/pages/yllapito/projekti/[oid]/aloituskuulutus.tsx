@@ -338,7 +338,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   </ProjektiPageLayoutContext.Consumer>
 
                   <ContentSpacer>
-                    <h5 className="vayla-small-title">Kuulutus- ja julkaisupäivä</h5>
+                    <h2 className="vayla-title">Kuulutus- ja julkaisupäivä</h2>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
                     <div className="flex flex-col flex-wrap md:flex-row gap-y-4 gap-x-7">
                       <HassuDatePickerWithController
@@ -370,7 +370,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                 />
                 <Section>
                   <ContentSpacer>
-                    <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
+                    <h3 className="vayla-subtitle">Hankkeen sisällönkuvaus</h3>
                     <p>
                       Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
                       alueellista rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
@@ -414,7 +414,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           <PdfPreviewForm ref={pdfFormRef} />
           {esikatselePdf && (
             <Section>
-              <h5 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h5>
+              <h3 className="vayla-subtitle">Kuulutuksen ja ilmoituksen esikatselu</h3>
               <Notification type={NotificationType.INFO_GRAY}>
                 Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
               </Notification>

@@ -33,7 +33,7 @@ export default function ProjektiPerustiedot({ projekti }: PerusosioProps): React
 
   return (
     <ContentSpacer>
-      <h4 className="vayla-small-title">Projektin perustiedot</h4>
+      <h2 className="vayla-title">Projektin perustiedot</h2>
       <KeyValueTable rows={perustiedot} />
     </ContentSpacer>
   );

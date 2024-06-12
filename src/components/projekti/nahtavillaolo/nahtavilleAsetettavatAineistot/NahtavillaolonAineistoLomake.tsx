@@ -35,7 +35,7 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
 
   return (
     <Section>
-      <h4 className="vayla-subtitle">Nähtäville asetettava aineisto</h4>
+      <h2 className="vayla-subtitle">Nähtäville asetettava aineisto</h2>
       <p>
         Nähtäville asetettava aineisto sekä lausuntopyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto
         siirtyy automaation avulla alakategorioihin ja käyttäjän on mahdollista järjestellä aineistoja, siirtää aineistoja alakategoriasta

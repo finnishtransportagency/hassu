@@ -58,7 +58,7 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
   return (
     <Section>
       <SectionContent>
-        <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
+        <h3 className="vayla-subtitle">Projektin kuulutusten kielet</h3>
         <p>Valitse projektin ensisijaisesti käytettävä kieli (alueen enemmistön kieli) sekä mahdollinen toissijainen kieli.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuMuiSelect

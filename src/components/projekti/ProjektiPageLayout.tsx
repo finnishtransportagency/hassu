@@ -9,6 +9,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import deburr from "lodash/deburr";
+import { H2 } from "../Headings";
 
 interface Props {
   children: ReactNode;
@@ -86,7 +87,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
               {contentAsideTitle}
             </Stack>
             <ContentSpacer gap={7}>
-              <h2>{projekti?.velho?.nimi ?? "-"}</h2>
+              <p className="vayla-lead">{projekti?.velho?.nimi ?? "-"}</p>
               {projekti && projektiOnEpaaktiivinen(projekti) ? (
                 <Notification type={NotificationType.INFO_GRAY}>
                   Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut

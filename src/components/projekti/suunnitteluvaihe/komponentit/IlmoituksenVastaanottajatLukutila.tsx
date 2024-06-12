@@ -10,7 +10,7 @@ interface Props {
 export default function IlmoituksenVastaanottajatLukutila({ vuorovaikutus }: Props): ReactElement {
   return (
     <Section>
-      <h4 className="vayla-small-title">Kutsun ilmoituksen vastaanottajat</h4>
+      <h3 className="vayla-subtitle">Kutsun ilmoituksen vastaanottajat</h3>
       <SectionContent>
         <p>
           Ilmoitus vuorovaikuttamisesta on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei

@@ -5,7 +5,6 @@ import ProjektiKuntatiedot from "./ProjektiKuntatiedot";
 import ProjektinLinkit from "./ProjektinLinkit";
 import Section from "@components/layout/Section2";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
-import { H5 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import TextInput from "@components/form/TextInput";
 import { FormState, UseFormRegister } from "react-hook-form";
@@ -32,13 +31,13 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
       <Section>
         <ProjektiKuntatiedot projekti={projekti} />
         <ContentSpacer>
-          <H5>Projekti kartalla</H5>
+          <h4 className="vayla-smallest-title">Projekti kartalla</h4>
           <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
         </ContentSpacer>
       </Section>
       {register && formState && (
         <Section gap={4}>
-          <h4 className="vayla-small-title">Projektin viitetieto</h4>
+          <h3 className="vayla-subtitle">Projektin viitetieto</h3>
           <p>
             Tämä tieto on Suomi.fi-viestien tulostus-, kuoritus- ja jakelupalvelun laskutusta varten. Väylän projektissa projektikohtainen
             VSK-koodi. ELYn projektissa käytetään oman ohjeistuksen mukaista viitetietoa. Viitetiedon maksimipituus on 15 merkkiä ja se voi
