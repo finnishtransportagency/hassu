@@ -25,7 +25,7 @@ export type FieldPathByValue<TFieldValues extends FieldValues, TValue> = {
 
 type FormWithAineistoInputNewArray = { [Key: string]: AineistoInputNew[] };
 
-type RowDataType = AineistoInputNew & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">;
+type RowDataType = FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">;
 
 export default function AineistoNewInputTable({
   aineisto,
@@ -42,8 +42,7 @@ export default function AineistoNewInputTable({
   registerDokumenttiOid: (index: number) => UseFormRegisterReturn;
   registerNimi: (index: number) => UseFormRegisterReturn;
 }) {
-  const enrichedFields: (FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> &
-    Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">)[] = useMemo(
+  const enrichedFields: RowDataType[] = useMemo(
     () =>
       fields.map((field) => {
         const aineistoData = aineisto || [];
