@@ -32,15 +32,17 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
       <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
-      <TiedostoInputNewTable
-        id="muu_aineisto_velhosta_table"
-        tiedostot={aineisto}
-        remove={remove}
-        fields={fields}
-        move={move}
-        registerDokumenttiOid={registerDokumenttiOid}
-        registerNimi={registerNimi}
-      />
+      {!!aineisto?.length && (
+        <TiedostoInputNewTable
+          id="muu_aineisto_velhosta_table"
+          tiedostot={aineisto}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerDokumenttiOid={registerDokumenttiOid}
+          registerNimi={registerNimi}
+        />
+      )}
       <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo aineistot
       </Button>
