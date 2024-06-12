@@ -27,7 +27,7 @@ type FormWithTiedostoInputNewArray<T extends GenTiedostoInput> = { [Key: string]
 type FieldType = FieldArrayWithId<FormWithTiedostoInputNewArray<GenTiedostoInput>, string, "id">;
 type RowDataType<S extends GenTiedosto> = FieldType & Pick<S, "lisatty" | "tiedosto" | "tuotu">;
 
-export default function TiedostoNewInputTable<S extends GenTiedosto>({
+export default function TiedostoInputNewTable<S extends GenTiedosto>({
   tiedostot,
   fields,
   remove,

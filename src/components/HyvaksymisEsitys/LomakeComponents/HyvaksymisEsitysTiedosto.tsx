@@ -6,7 +6,7 @@ import { LadattuTiedostoInputNew, TallennaHyvaksymisEsitysInput } from "@service
 import { useController, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
-import AineistoNewInputTable from "./AineistoNewInputTable";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
 export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: LadattuTiedostoInputNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
@@ -38,7 +38,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
     <SectionContent>
       <H4 variant="h3">Hyväksymisesitys</H4>
       <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
-      <AineistoNewInputTable
+      <TiedostoInputNewTable
         tiedostot={tiedostot}
         remove={remove}
         fields={fields}

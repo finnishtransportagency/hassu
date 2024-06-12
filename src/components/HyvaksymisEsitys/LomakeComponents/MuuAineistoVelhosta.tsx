@@ -7,7 +7,7 @@ import AineistojenValitseminenDialog from "@components/projekti/common/Aineistoj
 import { H5 } from "@components/Headings";
 import { getNewAineistot } from "../../../util/hyvaksymisesitys/getNewAineistot";
 import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
-import AineistoNewInputTable from "./AineistoNewInputTable";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
 export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoNew[] | null }): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
       <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
-      <AineistoNewInputTable
+      <TiedostoInputNewTable
         tiedostot={aineisto}
         remove={remove}
         fields={fields}
