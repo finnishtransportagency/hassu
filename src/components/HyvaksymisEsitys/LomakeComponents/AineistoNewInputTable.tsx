@@ -3,7 +3,6 @@ import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import { MUIStyledCommonProps, styled } from "@mui/system";
 import sx from "@mui/system/sx";
-import { AineistoInputNew, AineistoNew } from "@services/api";
 import { ColumnDef, Row, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import { ComponentProps, useCallback, useMemo } from "react";
@@ -11,11 +10,24 @@ import { FieldArrayWithId, UseFieldArrayMove, UseFieldArrayRemove, UseFormRegist
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 
-type FormWithAineistoInputNewArray = { [Key: string]: AineistoInputNew[] };
+type GenTiedosto = {
+  uuid: string;
+  tiedosto?: string | null;
+  lisatty?: string | null;
+  tuotu?: boolean | null;
+};
 
-type RowDataType = FieldArrayWithId<FormWithAineistoInputNewArray, string, "id"> & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">;
+type GenTiedostoInput = {
+  uuid: string;
+  nimi: string;
+};
 
-export default function AineistoNewInputTable({
+type FormWithAineistoInputNewArray<T extends GenTiedostoInput> = { [Key: string]: T[] };
+
+type FieldType = FieldArrayWithId<FormWithAineistoInputNewArray<GenTiedostoInput>, string, "id">;
+type RowDataType<S extends GenTiedosto> = FieldType & Pick<S, "lisatty" | "tiedosto" | "tuotu">;
+
+export default function AineistoNewInputTable<S extends GenTiedosto>({
   aineisto,
   fields,
   remove,
@@ -23,14 +35,14 @@ export default function AineistoNewInputTable({
   registerDokumenttiOid,
   registerNimi,
 }: {
-  aineisto?: AineistoNew[] | null;
-  fields: FieldArrayWithId<FormWithAineistoInputNewArray, string, "id">[];
+  aineisto?: S[] | null;
+  fields: FieldType[];
   remove: UseFieldArrayRemove;
   move: UseFieldArrayMove;
-  registerDokumenttiOid: (index: number) => UseFormRegisterReturn;
   registerNimi: (index: number) => UseFormRegisterReturn;
+  registerDokumenttiOid?: (index: number) => UseFormRegisterReturn;
 }) {
-  const enrichedFields: RowDataType[] = useMemo(
+  const enrichedFields: RowDataType<S>[] = useMemo(
     () =>
       fields.map((field) => {
         const aineistoData = aineisto || [];
@@ -41,7 +53,7 @@ export default function AineistoNewInputTable({
     [fields, aineisto]
   );
 
-  const columns = useMemo<ColumnDef<RowDataType>[]>(
+  const columns = useMemo<ColumnDef<RowDataType<S>>[]>(
     () => [
       {
         header: "Aineisto",
@@ -60,7 +72,7 @@ export default function AineistoNewInputTable({
               >
                 {aineisto.nimi}
               </ExtLink>
-              <input type="hidden" {...registerDokumenttiOid(index)} />
+              {registerDokumenttiOid && <input type="hidden" {...registerDokumenttiOid(index)} />}
               <input type="hidden" {...registerNimi(index)} />
             </>
           );
@@ -85,12 +97,12 @@ export default function AineistoNewInputTable({
     [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove]
   );
 
-  const findRowIndex = useCallback((id: string, rows?: Row<RowDataType>[]) => {
+  const findRowIndex = useCallback((id: string, rows?: Row<RowDataType<S>>[]) => {
     return rows?.findIndex((row) => row.id === id) ?? -1;
   }, []);
 
   const onDragAndDrop = useCallback(
-    (id: string, targetRowIndex: number, rows?: Row<RowDataType>[]) => {
+    (id: string, targetRowIndex: number, rows?: Row<RowDataType<S>>[]) => {
       const index = findRowIndex(id, rows ?? []);
       move(index, targetRowIndex);
     },
