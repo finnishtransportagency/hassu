@@ -40,7 +40,7 @@ export default function EsitettavatYhteystiedot(): ReactElement {
   return (
     <Section>
       <SectionContent>
-        <h2 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h2>
+        <h2 className="vayla-title">Kuulutuksessa esitettävät yhteystiedot</h2>
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle

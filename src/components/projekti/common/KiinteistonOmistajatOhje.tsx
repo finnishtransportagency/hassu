@@ -82,7 +82,7 @@ export default function KiinteistonomistajatOhje({
   if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
     return (
       <SectionContent>
-        <h6 className="font-bold">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h6>
+        <h3 className="vayla-subtitle">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h3>
         {omistajahakuStatus ? (
           <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
         ) : (

@@ -13,14 +13,14 @@ type Props = {
 const PohjoissaamenkielinenKuulutusJaIlmoitusInput: VFC<Props> = ({ saamePdfAvain: vaiheAvain, ilmoitusTiedot, kuulutusTiedot }) => {
   return (
     <Section>
-      <h4 className="vayla-small-title">Saamenkielinen kuulutus ja ilmoitus *</h4>
+      <h2 className="vayla-title">Saamenkielinen kuulutus ja ilmoitus *</h2>
       <ContentSpacer>
-        <h5 className="vayla-smallest-title">Pohjoissaamenkielinen kuulutus</h5>
+        <h3 className="vayla-subtitle">Pohjoissaamenkielinen kuulutus</h3>
         <p>Tuo pdf-muotoinen pohjoissaamenkielinen kuulutus</p>
       </ContentSpacer>
       <SaameTiedostoValitsin name={`${vaiheAvain}.POHJOISSAAME.kuulutusPDFPath`} tiedosto={kuulutusTiedot} />
       <ContentSpacer>
-        <h5 className="vayla-smallest-title">Pohjoissaamenkielinen ilmoitus</h5>
+        <h3 className="vayla-subtitle">Pohjoissaamenkielinen ilmoitus</h3>
         <p>Tuo pdf-muotoinen pohjoissaamenkielinen ilmoitus</p>
       </ContentSpacer>
       <SaameTiedostoValitsin name={`${vaiheAvain}.POHJOISSAAME.kuulutusIlmoitusPDFPath`} tiedosto={ilmoitusTiedot} />

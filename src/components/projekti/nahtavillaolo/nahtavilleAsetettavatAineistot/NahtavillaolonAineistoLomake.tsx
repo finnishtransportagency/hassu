@@ -35,7 +35,7 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
 
   return (
     <Section>
-      <h2 className="vayla-subtitle">Nähtäville asetettava aineisto</h2>
+      <h2 className="vayla-title">Nähtäville asetettava aineisto</h2>
       <p>
         Nähtäville asetettava aineisto sekä lausuntopyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto
         siirtyy automaation avulla alakategorioihin ja käyttäjän on mahdollista järjestellä aineistoja, siirtää aineistoja alakategoriasta
@@ -48,10 +48,10 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
         expandedstate={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+            <h3 className="vayla-subtitle mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               aineistoNahtavillaFlat,
               paakategoria
-            )})`}</span>
+            )})`}</h3>
           ),
           content: (
             <SectionContent largeGaps>

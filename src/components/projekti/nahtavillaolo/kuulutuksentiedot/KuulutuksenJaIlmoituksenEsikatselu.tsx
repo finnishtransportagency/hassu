@@ -30,7 +30,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
 
   return (
     <Section>
-      <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
+      <h2 className="vayla-title">Kuulutuksen ja ilmoituksen esikatselu</h2>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.</Notification>
       <div style={{ marginTop: "4em" }}>
         {isKieliTranslatable(ensisijainenKieli) && (

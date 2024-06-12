@@ -53,7 +53,7 @@ export default function KuulutusJaJulkaisuPaiva() {
   return (
     <Section noDivider>
       <ContentSpacer>
-        <h4 className="vayla-small-title">Kuulutus ja julkaisupäivä</h4>
+        <h2 className="vayla-title">Kuulutus ja julkaisupäivä</h2>
         <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePickerWithController
@@ -78,7 +78,7 @@ export default function KuulutusJaJulkaisuPaiva() {
         </HassuGrid>
       </ContentSpacer>
       <ContentSpacer>
-        <h4 className="vayla-small-title">Muistutusten antaminen</h4>
+        <h3 className="vayla-subtitle">Muistutusten antaminen</h3>
         <p>
           Kansalaisten tulee muistuttaa suunnitelmista järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
           määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.
