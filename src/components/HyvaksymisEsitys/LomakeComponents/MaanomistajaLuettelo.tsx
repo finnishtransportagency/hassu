@@ -42,7 +42,7 @@ export default function Maanomistajaluettelo({
             </li>
           ))}
       </ul>
-      {!!tiedostot?.length && (
+      {!!fields?.length && (
         <TiedostoInputNewTable
           id="maanomistajaluettelo_files_table"
           tiedostot={tiedostot}

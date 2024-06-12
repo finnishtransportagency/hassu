@@ -29,7 +29,7 @@ export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNe
   return (
     <>
       <H4>Lausunnot</H4>
-      {!!tiedostot?.length && (
+      {!!fields?.length && (
         <TiedostoInputNewTable
           id="lausunnot_files_table"
           tiedostot={tiedostot}
