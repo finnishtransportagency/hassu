@@ -317,10 +317,6 @@ function VuorovaikutusKierrosKutsu({
   const julkaisuIsDisabled = useMemo(() => {
     const kunnatPuuttuu = !kuntavastaanottajat?.length;
     const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
-    console.log("vaihe: ", vaihe)
-    console.log("1: ", !projektiHasPublishedAloituskuulutusJulkaisu(projekti))
-    console.log("2: ", kunnatPuuttuu)
-    console.log("3: ", isAsianhallintaVaarassaTilassa(projekti, vaihe))
     return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, vaihe);
   }, [kuntavastaanottajat?.length, projekti]);
 
