@@ -125,7 +125,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
-                <Lausunnot />
+                <Lausunnot tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.lausunnot} />
                 <Maanomistajaluettelo tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo} />
                 <KuulutuksetJaKutsu tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu} />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
