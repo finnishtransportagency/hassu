@@ -21,13 +21,11 @@ export const RiittamattomatOikeudetDialog: VFC<Omit<HassuDialogProps, "open"> & 
     if (!baseUrl || !projekti) {
       return undefined;
     }
-    return process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti;
+    return process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
   }, [projekti]);
 
   const julkinenURL: LinkProps["href"] | undefined = useMemo(() => {
-    if (!projekti?.oid) {
-      return undefined;
-    } else if (!projekti.viimeisinJulkaisu || !isDateTimeInThePast(projekti.viimeisinJulkaisu, "start-of-day")) {
+    if (!projekti?.oid || !projekti.viimeisinJulkaisu || !isDateTimeInThePast(projekti.viimeisinJulkaisu, "start-of-day")) {
       return undefined;
     }
     return { pathname: "/suunnitelma/[oid]", query: { oid: projekti.oid } };
