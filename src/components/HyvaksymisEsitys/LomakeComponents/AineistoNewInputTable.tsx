@@ -7,21 +7,9 @@ import { AineistoInputNew, AineistoNew } from "@services/api";
 import { ColumnDef, Row, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import { ComponentProps, useCallback, useMemo } from "react";
-import {
-  FieldArrayWithId,
-  FieldPath,
-  FieldPathValue,
-  FieldValues,
-  UseFieldArrayMove,
-  UseFieldArrayRemove,
-  UseFormRegisterReturn,
-} from "react-hook-form";
+import { FieldArrayWithId, UseFieldArrayMove, UseFieldArrayRemove, UseFormRegisterReturn } from "react-hook-form";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
-
-export type FieldPathByValue<TFieldValues extends FieldValues, TValue> = {
-  [Key in FieldPath<TFieldValues>]: FieldPathValue<TFieldValues, Key> extends TValue ? Key : never;
-}[FieldPath<TFieldValues>];
 
 type FormWithAineistoInputNewArray = { [Key: string]: AineistoInputNew[] };
 
