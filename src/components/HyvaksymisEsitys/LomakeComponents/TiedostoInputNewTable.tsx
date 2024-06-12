@@ -36,6 +36,8 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   registerDokumenttiOid,
   registerNimi,
   ladattuTiedosto,
+  noHeaders,
+  showTuotu,
 }: {
   id: string;
   tiedostot?: S[] | null;
@@ -45,6 +47,8 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   registerNimi: (index: number) => UseFormRegisterReturn;
   registerDokumenttiOid?: (index: number) => UseFormRegisterReturn;
   ladattuTiedosto?: boolean;
+  noHeaders?: boolean;
+  showTuotu?: boolean;
 }) {
   const enrichedFields: RowDataType<S>[] = useMemo(
     () =>
@@ -57,13 +61,13 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
     [fields, tiedostot]
   );
 
-  const columns = useMemo<ColumnDef<RowDataType<S>>[]>(
-    () => [
+  const columns = useMemo<ColumnDef<RowDataType<S>>[]>(() => {
+    const all = [
       {
-        header: ladattuTiedosto ? "Tiedostot" : "Aineisto",
+        header: noHeaders ? undefined : ladattuTiedosto ? "Tiedostot" : "Aineisto",
         meta: { minWidth: 250, widthFractions: 4 },
         id: "tiedosto",
-        accessorFn: (tiedosto) => {
+        accessorFn: (tiedosto: RowDataType<S>) => {
           const index = enrichedFields.findIndex((row) => row.uuid === tiedosto.uuid);
           return (
             <>
@@ -83,23 +87,27 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         },
       },
       {
-        header: "Tuotu",
+        header: noHeaders ? undefined : "Tuotu",
         id: "tuotu",
-        accessorFn: (tiedosto) => (tiedosto.lisatty && (tiedosto.tuotu || ladattuTiedosto) ? formatDateTime(tiedosto.lisatty) : undefined),
+        accessorFn: (tiedosto: RowDataType<S>) =>
+          tiedosto.lisatty && (tiedosto.tuotu || ladattuTiedosto) ? formatDateTime(tiedosto.lisatty) : undefined,
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
-        header: "",
+        header: noHeaders ? undefined : "",
         id: "actions",
-        accessorFn: (tiedosto) => {
+        accessorFn: (tiedosto: RowDataType<S>) => {
           const index = fields.findIndex((row) => row.id === tiedosto.uuid);
           return <ActionsColumn length={fields.length} index={index} remove={remove} />;
         },
-        meta: { minWidth: 120, widthFractions: 2 },
+        meta: { minWidth: 120, widthFractions: 0 },
       },
-    ],
-    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, ladattuTiedosto]
-  );
+    ];
+    if (showTuotu) {
+      return all;
+    }
+    return all.filter((col) => col.id !== "tuotu");
+  }, [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, ladattuTiedosto, noHeaders, showTuotu]);
 
   const findRowIndex = useCallback((id: string, rows?: Row<RowDataType<S>>[]) => {
     return rows?.findIndex((row) => row.id === id) ?? -1;

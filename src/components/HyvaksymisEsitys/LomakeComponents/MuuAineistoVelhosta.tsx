@@ -41,6 +41,7 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
           move={move}
           registerDokumenttiOid={registerDokumenttiOid}
           registerNimi={registerNimi}
+          showTuotu
         />
       )}
       <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
