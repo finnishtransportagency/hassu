@@ -22,55 +22,57 @@ type GenTiedostoInput = {
   nimi: string;
 };
 
-type FormWithAineistoInputNewArray<T extends GenTiedostoInput> = { [Key: string]: T[] };
+type FormWithTiedostoInputNewArray<T extends GenTiedostoInput> = { [Key: string]: T[] };
 
-type FieldType = FieldArrayWithId<FormWithAineistoInputNewArray<GenTiedostoInput>, string, "id">;
+type FieldType = FieldArrayWithId<FormWithTiedostoInputNewArray<GenTiedostoInput>, string, "id">;
 type RowDataType<S extends GenTiedosto> = FieldType & Pick<S, "lisatty" | "tiedosto" | "tuotu">;
 
-export default function AineistoNewInputTable<S extends GenTiedosto>({
-  aineisto,
+export default function TiedostoNewInputTable<S extends GenTiedosto>({
+  tiedostot,
   fields,
   remove,
   move,
   registerDokumenttiOid,
   registerNimi,
+  header,
 }: {
-  aineisto?: S[] | null;
+  tiedostot?: S[] | null;
   fields: FieldType[];
   remove: UseFieldArrayRemove;
   move: UseFieldArrayMove;
   registerNimi: (index: number) => UseFormRegisterReturn;
   registerDokumenttiOid?: (index: number) => UseFormRegisterReturn;
+  header?: string;
 }) {
   const enrichedFields: RowDataType<S>[] = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = aineisto || [];
-        const { lisatty, tiedosto, tuotu } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
+        const tiedostoData = tiedostot || [];
+        const { lisatty, tiedosto, tuotu } = tiedostoData.find(({ uuid }) => uuid === field.uuid) || {};
 
         return { ...field, lisatty, tiedosto, tuotu: tuotu ?? false };
       }),
-    [fields, aineisto]
+    [fields, tiedostot]
   );
 
   const columns = useMemo<ColumnDef<RowDataType<S>>[]>(
     () => [
       {
-        header: "Aineisto",
+        header: header ?? "Aineisto",
         meta: { minWidth: 250, widthFractions: 4 },
-        id: "aineisto",
-        accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
+        id: "tiedosto",
+        accessorFn: (tiedosto) => {
+          const index = enrichedFields.findIndex((row) => row.uuid === tiedosto.uuid);
           return (
             <>
               <ExtLink
                 className="file_download"
-                href={aineisto.tiedosto ? "/" + aineisto.tiedosto : undefined}
+                href={tiedosto.tiedosto ? "/" + tiedosto.tiedosto : undefined}
                 target="_blank"
-                disabled={!aineisto.tiedosto}
-                hideIcon={!aineisto.tiedosto}
+                disabled={!tiedosto.tiedosto}
+                hideIcon={!tiedosto.tiedosto}
               >
-                {aineisto.nimi}
+                {tiedosto.nimi}
               </ExtLink>
               {registerDokumenttiOid && <input type="hidden" {...registerDokumenttiOid(index)} />}
               <input type="hidden" {...registerNimi(index)} />
@@ -81,20 +83,20 @@ export default function AineistoNewInputTable<S extends GenTiedosto>({
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (aineisto) => (aineisto.lisatty && aineisto.tuotu ? formatDateTime(aineisto.lisatty) : undefined),
+        accessorFn: (tiedosto) => (tiedosto.lisatty && tiedosto.tuotu ? formatDateTime(tiedosto.lisatty) : undefined),
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
         header: "",
         id: "actions",
-        accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.id === aineisto.uuid);
+        accessorFn: (tiedosto) => {
+          const index = fields.findIndex((row) => row.id === tiedosto.uuid);
           return <ActionsColumn index={index} remove={remove} />;
         },
         meta: { minWidth: 120, widthFractions: 2 },
       },
     ],
-    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove]
+    [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, header]
   );
 
   const findRowIndex = useCallback((id: string, rows?: Row<RowDataType<S>>[]) => {
