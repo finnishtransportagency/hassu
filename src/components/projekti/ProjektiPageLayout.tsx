@@ -9,7 +9,6 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import deburr from "lodash/deburr";
-import { H2 } from "../Headings";
 
 interface Props {
   children: ReactNode;
