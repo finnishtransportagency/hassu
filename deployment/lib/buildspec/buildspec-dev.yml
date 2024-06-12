@@ -39,7 +39,6 @@ phases:
       - npm run deploy:stackpolicies
       - npm run opensearch:delete-index
       - npm run opensearch:index
-      - aws codebuild start-build --project-name Hassu-build-e2e-$ENVIRONMENT --source-version $CODEBUILD_SOURCE_VERSION
   post_build:
     on-failure: ABORT
     commands:
