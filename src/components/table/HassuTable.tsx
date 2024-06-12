@@ -196,6 +196,7 @@ export function BodyContent<T>(
     }
 ) {
   const actualRows = props.table.getRowModel().rows;
+
   const rowVirtualizer = props?.virtualizer;
 
   const virtualRows = rowVirtualizer?.getVirtualItems();
@@ -356,15 +357,15 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
 
   const findRow = table.options.meta?.findRowIndex;
   const onDragAndDrop = table.options.meta?.onDragAndDrop;
-  const originalIndex = findRow?.(row.id);
+  const originalIndex = findRow?.(row.id, table.getRowModel().rows);
 
   const [, dropRef] = useDrop(
     {
       accept: "row",
       hover({ id: draggedId }: Row<T>) {
         if (draggedId !== row.id) {
-          const overIndex = findRow?.(row.id);
-          typeof overIndex === "number" && onDragAndDrop?.(draggedId, index);
+          const overIndex = findRow?.(row.id, table.getRowModel().rows);
+          typeof overIndex === "number" && onDragAndDrop?.(draggedId, index, table.getRowModel().rows);
         }
       },
     },
@@ -384,7 +385,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
         const { id: droppedId, originalIndex } = item;
         const didDrop = monitor.didDrop();
         if (!didDrop && typeof originalIndex === "number") {
-          onDragAndDrop?.(droppedId, originalIndex);
+          onDragAndDrop?.(droppedId, originalIndex, table.getRowModel().rows);
         }
       },
     },

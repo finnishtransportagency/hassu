@@ -4,7 +4,7 @@ import HassuTable from "@components/table/HassuTable";
 import { MUIStyledCommonProps, styled } from "@mui/system";
 import sx from "@mui/system/sx";
 import { AineistoInputNew, AineistoNew } from "@services/api";
-import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, Row, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import { ComponentProps, useCallback, useMemo } from "react";
 import {
@@ -24,6 +24,8 @@ export type FieldPathByValue<TFieldValues extends FieldValues, TValue> = {
 }[FieldPath<TFieldValues>];
 
 type FormWithAineistoInputNewArray = { [Key: string]: AineistoInputNew[] };
+
+type RowDataType = AineistoInputNew & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">;
 
 export default function AineistoNewInputTable({
   aineisto,
@@ -52,7 +54,7 @@ export default function AineistoNewInputTable({
     [fields, aineisto]
   );
 
-  const columns = useMemo<ColumnDef<AineistoInputNew & Pick<AineistoNew, "lisatty" | "tiedosto" | "tuotu">>[]>(
+  const columns = useMemo<ColumnDef<RowDataType>[]>(
     () => [
       {
         header: "Aineisto",
@@ -96,16 +98,13 @@ export default function AineistoNewInputTable({
     [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove]
   );
 
-  const findRowIndex = useCallback(
-    (id: string) => {
-      return enrichedFields.findIndex((row) => row.id === id);
-    },
-    [enrichedFields]
-  );
+  const findRowIndex = useCallback((id: string, rows?: Row<RowDataType>[]) => {
+    return rows?.findIndex((row) => row.id === id) ?? -1;
+  }, []);
 
   const onDragAndDrop = useCallback(
-    (id: string, targetRowIndex: number) => {
-      const index = findRowIndex(id);
+    (id: string, targetRowIndex: number, rows?: Row<RowDataType>[]) => {
+      const index = findRowIndex(id, rows ?? []);
       move(index, targetRowIndex);
     },
     [findRowIndex, move]

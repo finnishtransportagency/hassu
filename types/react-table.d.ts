@@ -29,8 +29,8 @@ declare module "@tanstack/table-core" {
 
   interface TableMeta<TData extends RowData> {
     tableId?: string;
-    onDragAndDrop?: (id: string, targetRowIndex: number) => void;
-    findRowIndex?: (id: string) => number;
+    onDragAndDrop?: (id: string, targetRowIndex: number, rows?: Row<TData>[]) => void;
+    findRowIndex?: (id: string, rows?: Row<TData>[]) => number;
     rowOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, row: Row<TData>) => void;
     rowHref?: (row: Row<TData>) => string;
     virtualization?: TableWindowVirtualization | TableScrollElementVirtualization;
