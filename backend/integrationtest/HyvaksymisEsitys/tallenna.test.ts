@@ -81,6 +81,61 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
+  it("tallentaa hyväksymisesitystiedostot annetussa järjestyksessä tietokantaan", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisEsitys: [
+        {
+          nimi: `hyvaksymisEsitys äöå 2.png`,
+          uuid: `hyvaksymis-esitys-uuid2`,
+          lisatty: "2022-01-02T02:00:00+02:00",
+        },
+        {
+          nimi: `hyvaksymisEsitys äöå .png`,
+          uuid: `hyvaksymis-esitys-uuid`,
+          lisatty: "2022-01-02T02:00:00+02:00",
+        },
+      ],
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+      hyvaksymisEsitys: [
+        {
+          nimi: `hyvaksymisEsitys äöå .png`,
+          uuid: `hyvaksymis-esitys-uuid`,
+        },
+        {
+          nimi: `hyvaksymisEsitys äöå 2.png`,
+          uuid: `hyvaksymis-esitys-uuid2`,
+        },
+      ],
+    };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    const projektiAfter = await getProjektiFromDB(oid);
+    // Järjestys vastaa inputissa annettua, vaikka se oli alun perin db:ssä toisin päin
+    expect(projektiAfter.muokattavaHyvaksymisEsitys.hyvaksymisEsitys).to.eql([
+      {
+        nimi: `hyvaksymisEsitys äöå .png`,
+        uuid: `hyvaksymis-esitys-uuid`,
+        lisatty: "2022-01-02T02:00:00+02:00",
+      },
+      {
+        nimi: `hyvaksymisEsitys äöå 2.png`,
+        uuid: `hyvaksymis-esitys-uuid2`,
+        lisatty: "2022-01-02T02:00:00+02:00",
+      },
+    ]);
+    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+  });
+
   it("vaatii OVT-tunnuksen inputissa", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
