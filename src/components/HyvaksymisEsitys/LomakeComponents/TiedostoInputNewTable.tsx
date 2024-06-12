@@ -39,15 +39,48 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   noHeaders,
   showTuotu,
 }: {
+  /**
+   * Id taulukolle. Oltava uniikki.
+   */
   id: string;
+  /**
+   * Tiedostot DB:ssä DB-muodossa
+   */
   tiedostot?: S[] | null;
+  /**
+   * useFieldArray:stä ulos saadut kentät, jotka vastavat tiedostojen dataa lomakkeella
+   */
   fields: FieldType[];
+  /**
+   * saman useFieldArrayn remove-funktio kuin mistä fields on tullut
+   */
   remove: UseFieldArrayRemove;
+  /**
+   * saman useFieldArrayn move-funktio kuin mistä fields on tullut
+   */
   move: UseFieldArrayMove;
+  /**
+   * Funktio, joka palauttaa funktion, jolla rekisteröidään annetussa indeksissä olevan tiedoston nimi
+   * @example (index: number) => register(`muokattavaHyvaksymisEsitys.hyvaksymisEsitys.${index}.nimi`);
+   */
   registerNimi: (index: number) => UseFormRegisterReturn;
+  /**
+   * Anna tämä parametri, jos tiedostotyyppi on Aineisto(New):
+   * funktio, joka palauttaa funktion, jolla rekisteröidään annetussa indeksissä olevan tiedoston dokumenttiOid
+   * @example (index: number) => register(`muokattavaHyvaksymisEsitys.muuAineistoVelhosta.${index}.dokumenttiOid`);
+   */
   registerDokumenttiOid?: (index: number) => UseFormRegisterReturn;
+  /**
+   * Onko taulun datatyyppi LadattuTiedostoNew
+   */
   ladattuTiedosto?: boolean;
+  /**
+   * Piilotetaanko headerit taulukossa
+   */
   noHeaders?: boolean;
+  /**
+   * Näytetäänkö tuotu-aikaleima-sarake
+   */
   showTuotu?: boolean;
 }) {
   const enrichedFields: RowDataType<S>[] = useMemo(
