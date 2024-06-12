@@ -130,7 +130,10 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                   tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo}
                   tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.maanomistajaluettelo}
                 />
-                <KuulutuksetJaKutsu tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu} />
+                <KuulutuksetJaKutsu
+                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.kuulutuksetJaKutsu}
+                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu}
+                />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>
                   Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.

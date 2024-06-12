@@ -1,17 +1,21 @@
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { LadattavaTiedosto, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattavaTiedosto, LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
+import LadattavaTiedostoTable from "./LadattavaTiedostoTable";
 
-export default function KuulutuksetJaKutsu({ tuodut }: Readonly<{ tuodut?: LadattavaTiedosto[] | null }>): ReactElement {
+export default function KuulutuksetJaKutsu({
+  tuodut,
+  tiedostot,
+}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu", control });
+  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu", control });
   const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu");
 
   const onButtonClick = () => {
@@ -20,6 +24,13 @@ export default function KuulutuksetJaKutsu({ tuodut }: Readonly<{ tuodut?: Ladat
     }
   };
 
+  const registerNimi = useCallback(
+    (index: number) => {
+      return register(`muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu.${index}.nimi`);
+    },
+    [register]
+  );
+
   return (
     <>
       <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
@@ -27,26 +38,20 @@ export default function KuulutuksetJaKutsu({ tuodut }: Readonly<{ tuodut?: Ladat
         Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
-      <ul style={{ listStyle: "none" }} className="mt-4">
-        {!!tuodut?.length &&
-          tuodut.map((tiedosto) => (
-            <li key={tiedosto.nimi}>
-              <LadattavaTiedostoComponent tiedosto={tiedosto} />
-            </li>
-          ))}
-      </ul>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      <LadattavaTiedostoTable id="tuodut_kuulutukset_ja_kutsut_table" tiedostot={tuodut} noHeaders />
+      {!!fields?.length && (
+        <TiedostoInputNewTable
+          id="hyvaksymisesitys_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
+      )}
       <input
         type="file"
         multiple
