@@ -48,6 +48,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
           registerNimi={registerNimi}
           ladattuTiedosto
           noHeaders
+          showTuotu
         />
       )}
       <input
