@@ -456,6 +456,7 @@ function VuorovaikutusKierrosKutsu({
           dialogiOnAuki={openHyvaksy}
           onClose={handleClickCloseHyvaksy}
           tallenna={saveForm}
+          asianhallintaIntegraatio={!projekti.asianhallinta.inaktiivinen}
         />
       )}
       <KierroksenPoistoDialogi

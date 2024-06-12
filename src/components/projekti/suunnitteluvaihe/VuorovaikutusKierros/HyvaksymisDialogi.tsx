@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import useTranslation from "next-translate/useTranslation";
@@ -11,10 +11,25 @@ interface Props {
   dialogiOnAuki: boolean;
   onClose: () => void;
   tallenna: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
+  asianhallintaIntegraatio: boolean;
 }
 
-export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOnAuki, onClose, tallenna }: Props): ReactElement {
+export default function HyvaksymisDialogi({
+  ilmoituksenVastaanottajat,
+  dialogiOnAuki,
+  onClose,
+  tallenna,
+  asianhallintaIntegraatio,
+}: Props): ReactElement {
   const { t, lang } = useTranslation();
+
+  const asianhallintaHint = useMemo(
+    () =>
+      asianhallintaIntegraatio
+        ? "Järjestelmä vie tarvittavat asiakirjat automaattisesti asianhallintaan."
+        : "Huomaathan viedä asianhallintaan tarvittavat tiedostot itse.",
+    [asianhallintaIntegraatio]
+  );
 
   return (
     <HassuDialog open={dialogiOnAuki} title="Vuorovaikutustietojen tallentaminen ja ilmoituksen lähettäminen" onClose={onClose}>
@@ -45,7 +60,7 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
           <p>
             Klikkaamalla Vahvista lähetys -painiketta vahvistat kutsun vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun palvelun
             julkiselle puolelle asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen
-            klikkaamisen jälkeen.
+            klikkaamisen jälkeen. {asianhallintaHint}
           </p>
         </div>
       </DialogContent>
