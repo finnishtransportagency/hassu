@@ -110,7 +110,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
               <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={3}>
-              <H4>Viite</H4>
+              <H4>Viitetieto</H4>
               <p>{laskutustiedot?.viitetieto ?? "-"}</p>
             </HassuGridItem>
           </HassuGrid>

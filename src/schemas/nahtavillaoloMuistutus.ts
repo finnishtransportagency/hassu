@@ -1,6 +1,6 @@
 import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
 import * as Yup from "yup";
-import { phoneNumberRegex } from "./puhelinNumero";
+import { phoneNumberRegex } from "hassu-common/schema/puhelinNumero";
 
 export const muistutusSchema = Yup.object().shape({
   katuosoite: Yup.string().required("katuosoite_on_pakollinen").max(100, "katuosoite_max_100"),

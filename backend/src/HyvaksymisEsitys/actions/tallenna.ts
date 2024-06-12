@@ -11,6 +11,10 @@ import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
+import { ValidationMode } from "hassu-common/ProjektiValidationContext";
+import { SqsClient } from "../aineistoHandling/sqsClient";
+import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -66,7 +70,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
         getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
       )
     ) {
-      // TODO: reagoi mahdollisiin tiedostomuutoksiin
+      await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.TUO_HYV_ES_TIEDOSTOT, oid });
     }
     return oid;
   } finally {
@@ -77,6 +81,7 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
 function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
+
   // Projektilla on oltava muokkaustilainen hyväksymisesitys tai
   // ei muokattavaa hyväksymisesitystä
   if (projektiInDB.muokattavaHyvaksymisEsitys && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
@@ -85,6 +90,10 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHy
   if (input.versio !== projektiInDB.versio) {
     throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
   }
+  const context: HyvaksymisEsitysValidationContext = { validationMode: { current: ValidationMode.DRAFT }, testType: TestType.BACKEND };
+  hyvaksymisEsitysSchema.validateSync(input, {
+    context,
+  });
 }
 
 function uusiaAineistoja(aineistotBefore: AineistoNew[], aineistotAfter: AineistoNew[]): boolean {

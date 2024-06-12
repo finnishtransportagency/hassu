@@ -280,9 +280,7 @@ ${
     }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://${domain}/suunnitelma/${
       projekti.oid
     }/hyvaksymisesityksen-aineistot
-
-Sähköpostin liitteenä on myös hyväksymisesitys.
-    
+${projekti.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys?.length ? `\nSähköpostin liitteenä on myös hyväksymisesitys.\n` : "\n"}
 Lisätiedot 
 
 ${projekti.muokattavaHyvaksymisEsitys?.lisatiedot}

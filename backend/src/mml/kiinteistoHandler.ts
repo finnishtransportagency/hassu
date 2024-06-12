@@ -44,7 +44,8 @@ async function getClient() {
     const apiKey = await parameters.getMmlApiKey();
     const ogcEndpoint = await parameters.getOgcBaseUrl();
     const ogcApiKey = await parameters.getOgcApiKey();
-    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey });
+    const ogcApiExamples = await parameters.getOgcApiExmaples();
+    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey, ogcApiExamples });
   }
   return mmlClient;
 }
@@ -206,7 +207,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
           });
         });
         if (keys) {
-          log.error("Lainhuutotiedolle ei löytynyt yhteystietoja", { keys });
+          log.info("Lainhuutotiedolle ei löytynyt yhteystietoja", { keys });
         }
         const dbOmistajat = [...omistajaMap.values()];
 

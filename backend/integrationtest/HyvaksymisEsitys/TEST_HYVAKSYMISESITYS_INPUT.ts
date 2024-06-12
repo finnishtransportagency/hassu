@@ -18,6 +18,7 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
         dokumenttiOid: "suunnitelmaDokumenttiOid",
         nimi: "suunnitelma äöå .png",
         uuid: "suunnitelma-uuid",
+        kategoriaId: "osa_b",
       },
     ],
     kiireellinen: true,

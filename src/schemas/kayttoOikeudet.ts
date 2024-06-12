@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
-import { addAgencyNumberTests, puhelinNumeroSchema } from "./puhelinNumero";
+import { addAgencyNumberTests, puhelinNumeroSchema } from "hassu-common/schema/puhelinNumero";
 import { isAorL } from "../../backend/src/util/userUtil";
 
 export interface KayttoOikeudetSchemaContext {

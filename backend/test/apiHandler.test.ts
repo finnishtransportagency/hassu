@@ -225,6 +225,11 @@ describe("apiHandler", () => {
                     tila: LadattuTiedostoTila.VALMIS,
                     tiedosto: "/Saame.pdf",
                   },
+                  kuulutusIlmoitusPDF: {
+                    uuid: "jotainmuuta",
+                    tila: LadattuTiedostoTila.VALMIS,
+                    tiedosto: "/Saame.pdf",
+                  },
                 },
               },
             },

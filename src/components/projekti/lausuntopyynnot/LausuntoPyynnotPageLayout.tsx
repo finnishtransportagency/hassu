@@ -71,7 +71,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
     <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Lausuntopyyntöjen aineistolinkit" showInfo={true}>
       {!migroitu ? (
         <>
-          <Section noDivider>
+          <Section noDivider className="mb-10">
             {!epaaktiivinen && (
               <ProjektiPageLayoutContext.Consumer>
                 {({ ohjeetOpen, ohjeetOnClose }) => (
