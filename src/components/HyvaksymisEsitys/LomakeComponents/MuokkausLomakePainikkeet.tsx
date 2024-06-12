@@ -124,7 +124,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}
         >
-          Lähetä Hyväksyttäväksiii
+          Lähetä Hyväksyttäväksi
         </Button>
       </Stack>
     </Section>
