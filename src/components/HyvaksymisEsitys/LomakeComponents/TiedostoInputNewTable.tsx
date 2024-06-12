@@ -131,7 +131,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         id: "actions",
         accessorFn: (tiedosto: RowDataType<S>) => {
           const index = fields.findIndex((row) => row.id === tiedosto.uuid);
-          return <ActionsColumn length={fields.length} index={index} remove={remove} />;
+          return <ActionsColumn noOrdering={fields.length <= 1} index={index} remove={remove} />;
         },
         meta: { minWidth: 120, widthFractions: 0 },
       },
@@ -172,11 +172,11 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
 type ActionColumnProps = {
   index: number;
   remove: UseFieldArrayRemove;
-  length: number;
+  noOrdering?: boolean;
 } & MUIStyledCommonProps &
   ComponentProps<"div">;
 
-export const ActionsColumn = styled(({ index, remove, length, ...props }: ActionColumnProps) => {
+export const ActionsColumn = styled(({ index, remove, noOrdering, ...props }: ActionColumnProps) => {
   const dragRef = useTableDragConnectSourceContext();
   const isTouch = useIsTouchScreen();
   return (
@@ -188,7 +188,15 @@ export const ActionsColumn = styled(({ index, remove, length, ...props }: Action
         }}
         icon="trash"
       />
-      {!isTouch && length > 1 && <IconButton type="button" icon="equals" ref={dragRef} />}
+      {!isTouch && (
+        <IconButton
+          style={noOrdering ? { visibility: "hidden" } : {}}
+          disabled={noOrdering ? true : false}
+          type="button"
+          icon="equals"
+          ref={dragRef}
+        />
+      )}
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));
