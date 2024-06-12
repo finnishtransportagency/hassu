@@ -33,6 +33,7 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
       <H5 variant="h4">Projektivelho</H5>
       <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
       <TiedostoInputNewTable
+        id="muu_aineisto_velhosta_table"
         tiedostot={aineisto}
         remove={remove}
         fields={fields}

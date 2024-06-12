@@ -28,6 +28,7 @@ type FieldType = FieldArrayWithId<FormWithTiedostoInputNewArray<GenTiedostoInput
 type RowDataType<S extends GenTiedosto> = FieldType & Pick<S, "lisatty" | "tiedosto" | "tuotu">;
 
 export default function TiedostoInputNewTable<S extends GenTiedosto>({
+  id,
   tiedostot,
   fields,
   remove,
@@ -36,6 +37,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   registerNimi,
   ladattuTiedosto,
 }: {
+  id: string;
   tiedostot?: S[] | null;
   fields: FieldType[];
   remove: UseFieldArrayRemove;
@@ -91,7 +93,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         id: "actions",
         accessorFn: (tiedosto) => {
           const index = fields.findIndex((row) => row.id === tiedosto.uuid);
-          return <ActionsColumn index={index} remove={remove} />;
+          return <ActionsColumn length={fields.length} index={index} remove={remove} />;
         },
         meta: { minWidth: 120, widthFractions: 2 },
       },
@@ -120,7 +122,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
     },
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     getRowId: (row) => row.uuid,
-    meta: { tableId: `jotain_table`, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { tableId: id, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
   });
 
   return <HassuTable table={table} />;
@@ -129,10 +131,11 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
 type ActionColumnProps = {
   index: number;
   remove: UseFieldArrayRemove;
+  length: number;
 } & MUIStyledCommonProps &
   ComponentProps<"div">;
 
-export const ActionsColumn = styled(({ index, remove, ...props }: ActionColumnProps) => {
+export const ActionsColumn = styled(({ index, remove, length, ...props }: ActionColumnProps) => {
   const dragRef = useTableDragConnectSourceContext();
   const isTouch = useIsTouchScreen();
   return (
@@ -144,7 +147,7 @@ export const ActionsColumn = styled(({ index, remove, ...props }: ActionColumnPr
         }}
         icon="trash"
       />
-      {!isTouch && <IconButton type="button" icon="equals" ref={dragRef} />}
+      {!isTouch && length > 1 && <IconButton type="button" icon="equals" ref={dragRef} />}
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));
