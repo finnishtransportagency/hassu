@@ -7,7 +7,7 @@ export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: numbe
   return (
     <SectionContent>
       {kunta ? (
-        <h3 className="vayla-small-title">Täydennysaineiston voimassaoloaika</h3>
+        <h3 className="vayla-subtitle">Täydennysaineiston voimassaoloaika</h3>
       ) : (
         <h3 className="vayla-subtitle mb-1">Aineistolinkin voimassaoloaika</h3>
       )}

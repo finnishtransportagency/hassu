@@ -47,7 +47,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
   );
   return (
     <SectionContent className="mt-16">
-      <h2 className="vayla-subtitle">Muistutukset</h2>
+      <h3 className="vayla-subtitle">Muistutukset</h3>
       <p>Tuo kuntaa koskevat muistutukset omalta koneeltasi.</p>
       {!!lausuntoPyynnonTaydennys?.muistutukset?.length && (
         <MuistutuksetTable lptIndex={index} joTallennetutMuistutukset={projekti.lausuntoPyynnonTaydennykset?.[index]?.muistutukset ?? []} />

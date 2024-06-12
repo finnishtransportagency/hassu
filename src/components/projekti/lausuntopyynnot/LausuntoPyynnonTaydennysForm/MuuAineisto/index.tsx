@@ -45,7 +45,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
   );
   return (
     <SectionContent className="mt-16">
-      <h2 className="vayla-subtitle">Muu aineisto</h2>
+      <h3 className="vayla-subtitle">Muu aineisto</h3>
       <p>
         Voit halutessasi liittää omalta koneelta lausuntopyynnön täydennyksen yhteydessä muuta lisäaineistoa, esimerkiksi
         lyhennelmätiedoston.

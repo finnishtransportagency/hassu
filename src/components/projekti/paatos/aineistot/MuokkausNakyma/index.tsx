@@ -113,7 +113,7 @@ function MuokkausnakymaForm({
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
           <Section>
-            <h4 className="vayla-subtitle">{getSectionTitle(paatosTyyppi)}</h4>
+            <h2 className="vayla-title">{getSectionTitle(paatosTyyppi)}</h2>
             <p>{getSectionInfoText(paatosTyyppi)}</p>
             <AineistotSaavutettavuusOhje />
             <TiedostoLomake vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />

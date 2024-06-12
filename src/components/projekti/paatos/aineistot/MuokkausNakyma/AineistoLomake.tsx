@@ -35,7 +35,7 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
 
   return (
     <Section>
-      {sectionSubtitle && <h5 className="vayla-small-title">{sectionSubtitle}</h5>}
+      {sectionSubtitle && <h4 className="vayla-small-title">{sectionSubtitle}</h4>}
       <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
       <HassuAccordion
         expandedstate={[expandedAineisto, setExpandedAineisto]}
