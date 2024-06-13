@@ -28,9 +28,11 @@ describe.only("getProjektiStatus", () => {
         id: 1,
         muokkausTila: API.MuokkausTila.LUKU,
       },
-      aloitusKuulutusJulkaisu: {
-        tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
-      },
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
       versio: 1,
       asianhallinta: { inaktiivinen: true },
       kayttoOikeudet: [
@@ -66,9 +68,11 @@ describe.only("getProjektiStatus", () => {
         id: 1,
         muokkausTila: API.MuokkausTila.LUKU,
       },
-      aloitusKuulutusJulkaisu: {
-        tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
-      },
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
       asianhallinta: { inaktiivinen: true },
       kayttoOikeudet: [
         {

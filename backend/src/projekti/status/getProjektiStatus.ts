@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, Velho } from "../../database/model";
+import { Aineisto, AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
@@ -12,6 +12,11 @@ import { adaptDBVaylaUsertoAPIProjektiKayttaja } from "../adapter/adaptToAPI";
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
 
+type JulkaisunTarpeellisetTiedot = Pick<
+  NahtavillaoloVaiheJulkaisu,
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "aineistoNahtavilla"
+>;
+
 export default async function getProjektiStatus(
   projekti: Pick<
     DBProjekti,
@@ -19,16 +24,17 @@ export default async function getProjektiStatus(
     | "vahainenMenettely"
     | "kasittelynTila"
     | "aloitusKuulutus"
-    | "aloitusKuulutusJulkaisut"
     | "vuorovaikutusKierros"
-    | "vuorovaikutusKierrosJulkaisut"
     | "nahtavillaoloVaihe"
-    | "nahtavillaoloVaiheJulkaisut"
     | "hyvaksymisPaatosVaihe"
-    | "hyvaksymisPaatosVaiheJulkaisut"
-    | "jatkoPaatos1VaiheJulkaisut"
-    | "jatkoPaatos2VaiheJulkaisut"
-  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi" | "asiatunnusELY" | "asiatunnusVayla"> }
+  > & {
+    velho?: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi" | "asiatunnusELY" | "asiatunnusVayla">;
+    aloitusKuulutusJulkaisut?: Pick<AloitusKuulutusJulkaisu, "tila" | "kuulutusPaiva">[];
+    nahtavillaoloVaiheJulkaisut?: JulkaisunTarpeellisetTiedot[];
+    hyvaksymisPaatosVaiheJulkaisut?: JulkaisunTarpeellisetTiedot[];
+    jatkoPaatos1VaiheJulkaisut?: JulkaisunTarpeellisetTiedot[];
+    jatkoPaatos2VaiheJulkaisut?: JulkaisunTarpeellisetTiedot[];
+  }
 ) {
   try {
     kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, {
@@ -51,9 +57,9 @@ export default async function getProjektiStatus(
         projekti: {
           asianhallinta: await adaptAsianhallinta(projekti), // Ainoat tiedot mitä testit käyttävät kontekstista
           velho: {
-            suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
-            asiatunnusVayla: projekti.velho.asiatunnusVayla,
-            asiatunnusEly: projekti.velho.asiatunnusELY,
+            suunnittelustaVastaavaViranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen,
+            asiatunnusVayla: projekti.velho?.asiatunnusVayla,
+            asiatunnusEly: projekti.velho?.asiatunnusELY,
           },
         },
       },
@@ -200,7 +206,9 @@ function aineistoNahtavillaIsOk(aineistoNahtavilla?: Aineisto[] | null | undefin
   );
 }
 
-function getJulkaisu<A extends GenericDbKuulutusJulkaisu>(julkaisut: A[] | null | undefined): A | undefined {
+function getJulkaisu<A extends Pick<GenericDbKuulutusJulkaisu, "tila" | "kuulutusPaiva">>(
+  julkaisut: A[] | null | undefined
+): A | undefined {
   return (
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ??
