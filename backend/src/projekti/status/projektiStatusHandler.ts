@@ -113,7 +113,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         (p.vahainenMenettely && p.aloitusKuulutusJulkaisu)
       ) {
         if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
-          p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
+          p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS }; // TODO: Lisää tämä muualle!!!
         }
         p.status = API.Status.NAHTAVILLAOLO_AINEISTOT;
 
@@ -133,7 +133,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
       if (isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
         p.status = API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT;
         if (!p.hyvaksymisPaatosVaihe && !p.hyvaksymisPaatosVaiheJulkaisu) {
-          p.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
+          p.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: MuokkausTila.MUOKKAUS }; // TODO: Lisää tämä muualle!!!
         }
         const hasRequiredAineistot =
           doesAineistoNahtavillaContainKategorisoidutAineistot(p.hyvaksymisPaatosVaihe?.aineistoNahtavilla) &&
