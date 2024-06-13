@@ -76,14 +76,14 @@ export default async function getProjektiStatus(
     return API.Status.EPAAKTIIVINEN_3;
   }
 
-  if (kasittelynTila?.toinenJatkopaatos && kasittelynTila.toinenJatkopaatos.asianumero && kasittelynTila.toinenJatkopaatos.paatoksenPvm) {
+  if (kasittelynTila?.toinenJatkopaatos?.asianumero && kasittelynTila?.toinenJatkopaatos?.paatoksenPvm) {
     if (aineistoNahtavillaIsOk(jatkoPaatos2Julkaisu?.aineistoNahtavilla)) {
       // Käsittelyn tilaan on annettu toisen jatkopäätöksen asianumeroi ja päätöksenpvm
       // ja jatkopäätös2-julkaisun aineisto nähtävillä on ok
       return API.Status.JATKOPAATOS_2;
     } else {
       // Käsittelyn tilaan on annettu toisen jatkopäätöksen asianumeroi ja päätöksenpvm
-      API.Status.JATKOPAATOS_2_AINEISTOT;
+      return API.Status.JATKOPAATOS_2_AINEISTOT;
     }
   }
 
@@ -101,18 +101,14 @@ export default async function getProjektiStatus(
     return API.Status.EPAAKTIIVINEN_2;
   }
 
-  if (
-    kasittelynTila?.ensimmainenJatkopaatos &&
-    kasittelynTila.ensimmainenJatkopaatos.asianumero &&
-    kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm
-  ) {
+  if (kasittelynTila?.ensimmainenJatkopaatos?.asianumero && kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm) {
     if (aineistoNahtavillaIsOk(jatkoPaatos1Julkaisu?.aineistoNahtavilla)) {
       // Käsittelyn tilaan on annettu toisen jatkopäätöksen asianumeroi ja päätöksenpvm
       // ja jatkopäätös2-julkaisun aineisto nähtävillä on ok
       return API.Status.JATKOPAATOS_2;
     } else {
       // Käsittelyn tilaan on annettu toisen jatkopäätöksen asianumeroi ja päätöksenpvm
-      API.Status.JATKOPAATOS_2_AINEISTOT;
+      return API.Status.JATKOPAATOS_2_AINEISTOT;
     }
   }
 
