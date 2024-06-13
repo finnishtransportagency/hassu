@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti } from "../../database/model";
+import { Aineisto, DBProjekti, Velho } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
@@ -12,7 +12,24 @@ import { adaptDBVaylaUsertoAPIProjektiKayttaja } from "../adapter/adaptToAPI";
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
 
-export default async function getProjektiStatus(projekti: DBProjekti) {
+export default async function getProjektiStatus(
+  projekti: Pick<
+    DBProjekti,
+    | "kayttoOikeudet"
+    | "vahainenMenettely"
+    | "kasittelynTila"
+    | "aloitusKuulutus"
+    | "aloitusKuulutusJulkaisut"
+    | "vuorovaikutusKierros"
+    | "vuorovaikutusKierrosJulkaisut"
+    | "nahtavillaoloVaihe"
+    | "nahtavillaoloVaiheJulkaisut"
+    | "hyvaksymisPaatosVaihe"
+    | "hyvaksymisPaatosVaiheJulkaisut"
+    | "jatkoPaatos1VaiheJulkaisut"
+    | "jatkoPaatos2VaiheJulkaisut"
+  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen"> }
+) {
   try {
     kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, {
       context: {

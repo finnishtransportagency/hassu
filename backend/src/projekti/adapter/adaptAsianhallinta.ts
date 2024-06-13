@@ -5,7 +5,7 @@ import {
   isProjektiAsianhallintaIntegrationEnabled,
 } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 
-export async function adaptAsianhallinta(projekti: DBProjekti): Promise<Asianhallinta> {
+export async function adaptAsianhallinta(projekti: Pick<DBProjekti, "asianhallinta" | "velho">): Promise<Asianhallinta> {
   return {
     __typename: "Asianhallinta",
     aktivoitavissa: await canProjektiAsianhallintaIntegrationBeEnabled(projekti),
