@@ -5,7 +5,7 @@ import getProjektiStatus from "../../../src/projekti/status/getProjektiStatus";
 import sinon from "sinon";
 import { parameters } from "../../../src/aws/parameters";
 
-describe.only("getProjektiStatus", () => {
+describe("getProjektiStatus", () => {
   before(() => {
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
