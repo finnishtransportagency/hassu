@@ -318,8 +318,6 @@ export class HassuDatabaseStack extends Stack {
       });
       backupPlanRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForS3Restore"));
       backupPlanRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForS3Backup"));
-      backupPlanRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForRestores"));
-      backupPlanRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForBackup"));
 
       plan.addSelection("HassuBackupTag", {
         allowRestores: true,
