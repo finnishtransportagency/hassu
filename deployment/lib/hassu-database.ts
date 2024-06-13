@@ -298,7 +298,7 @@ export class HassuDatabaseStack extends Stack {
         backupPlanRules: [
           new backup.BackupPlanRule({
             enableContinuousBackup: true,
-            deleteAfter: Duration.days(35),
+            deleteAfter: Config.isProductionEnvironment() ? Duration.days(365) : Duration.days(35),
             ruleName: "Daily",
             startWindow: Duration.hours(1),
             completionWindow: Duration.hours(2),
