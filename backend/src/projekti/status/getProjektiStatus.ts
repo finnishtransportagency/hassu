@@ -28,7 +28,7 @@ export default async function getProjektiStatus(
     | "hyvaksymisPaatosVaiheJulkaisut"
     | "jatkoPaatos1VaiheJulkaisut"
     | "jatkoPaatos2VaiheJulkaisut"
-  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi"> }
+  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi" | "asiatunnusELY" | "asiatunnusVayla"> }
 ) {
   try {
     kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, {
@@ -50,11 +50,17 @@ export default async function getProjektiStatus(
       context: {
         projekti: {
           asianhallinta: await adaptAsianhallinta(projekti), // Ainoat tiedot mitä testit käyttävät kontekstista
+          velho: {
+            suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen,
+            asiatunnusVayla: projekti.velho.asiatunnusVayla,
+            asiatunnusEly: projekti.velho.asiatunnusELY,
+          },
         },
       },
     });
   } catch (e) {
     if (e instanceof ValidationError) {
+      console.log(e);
       return API.Status.EI_JULKAISTU;
     } else {
       throw e;
