@@ -16,6 +16,7 @@ describe.only("getProjektiStatus", () => {
       oid: "123",
       velho: {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        nimi: "Nimi",
       },
       kielitiedot: {
         ensisijainenKieli: API.Kieli.SUOMI,
@@ -52,6 +53,7 @@ describe.only("getProjektiStatus", () => {
       oid: "123",
       velho: {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        nimi: "Nimi",
       },
       kielitiedot: {
         ensisijainenKieli: API.Kieli.SUOMI,

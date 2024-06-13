@@ -28,7 +28,7 @@ export default async function getProjektiStatus(
     | "hyvaksymisPaatosVaiheJulkaisut"
     | "jatkoPaatos1VaiheJulkaisut"
     | "jatkoPaatos2VaiheJulkaisut"
-  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen"> }
+  > & { velho: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi"> }
 ) {
   try {
     kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, {
