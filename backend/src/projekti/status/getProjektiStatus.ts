@@ -1,13 +1,69 @@
-import { Aineisto, DBProjekti, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { Aineisto, DBProjekti } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { GenericDbKuulutusJulkaisu, findJulkaisuWithTila } from "../projektiUtil";
+import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
+import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
+import { ValidationError } from "yup";
+import { log } from "../../logger";
+import { ValidateOptions } from "yup/lib/types";
+import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
+import pick from "lodash/pick";
+import { adaptAsianhallinta } from "../adapter/adaptAsianhallinta";
+import { adaptKielitiedotByAddingTypename, adaptLogotToAPI, adaptSuunnitteluSopimusToAPI, adaptVelhoToAPI } from "../adapter/adaptToAPI";
 
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
 
-export default function getProjektiStatus(projekti: DBProjekti) {
+export default async function getProjektiStatus(projekti: DBProjekti) {
+  const projektiLisatiedolla: ProjektiLisatiedolla = {
+    __typename: "Projekti",
+    ...(pick(projekti, "oid", "euRahoitus", "vahainenMenettely", "muistiinpano", "suunnitteluSopimus", "asianhallinta", "versio") as Pick<
+      DBProjekti,
+      "oid" | "euRahoitus" | "vahainenMenettely" | "muistiinpano" | "suunnitteluSopimus" | "asianhallinta" | "versio"
+    >),
+    euRahoitusLogot: adaptLogotToAPI(projekti.oid, projekti.euRahoitusLogot),
+    velho: adaptVelhoToAPI(projekti.velho),
+    kielitiedot: adaptKielitiedotByAddingTypename(projekti.kielitiedot, true),
+    asianhallinta: await adaptAsianhallinta(projekti),
+    suunnitteluSopimus: adaptSuunnitteluSopimusToAPI(projekti.oid, projekti.suunnitteluSopimus),
+    tallennettu: true,
+    nykyinenKayttaja: { omaaMuokkausOikeuden: true, onProjektipaallikkoTaiVarahenkilo: true, onYllapitaja: true },
+  };
+
+  const testContext: ValidateOptions<ProjektiValidationContext> = {
+    context: {
+      projekti: projektiLisatiedolla,
+      isRuotsinkielinenProjekti: {
+        current: [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
+      },
+      hasEuRahoitus: { current: !!projekti.euRahoitus },
+    },
+  };
+
+  try {
+    kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, { context: { projekti: pick(projekti, "kayttoOikeudet") } });
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      log.info("Käyttöoikeudet puutteelliset", e.message);
+      p.status = API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT;
+      return; // This is the final status
+    } else {
+      throw e;
+    }
+  }
+  try {
+    perustiedotValidationSchema.validateSync(projekti, testContext);
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      log.info("Perustiedot puutteelliset", { e });
+      return; // This is the final status
+    } else {
+      throw e;
+    }
+  }
+
   const kasittelynTila = projekti.kasittelynTila;
 
   const jatkoPaatos2Julkaisu = getJulkaisu(projekti.jatkoPaatos2VaiheJulkaisut);
