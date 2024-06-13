@@ -147,21 +147,28 @@ export default async function getProjektiStatus(projekti: DBProjekti) {
   const vuorovaikutusKierros = projekti.vuorovaikutusKierros;
   const aloitusKuulutusJulkaisu = getJulkaisu(projekti.aloitusKuulutusJulkaisut);
   if (nahtavillaoloVaiheJulkaisu && aineistoNahtavillaIsOk(projekti.nahtavillaoloVaihe?.aineistoNahtavilla)) {
+    // Nähtävilläolovaihejulkaisu on olemassa ja sen aineisto nähtävillä on kunnossa
     return API.Status.NAHTAVILLAOLO;
   }
   if (
     vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.MIGROITU ||
-    vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.JULKINEN ||
+    vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.JULKINEN ||
     (projekti.vahainenMenettely && aloitusKuulutusJulkaisu)
   ) {
+    // Käytössä on vähäinen menettely ja ainakin yksi aloituskuulutusjulkaisu on tehty
+    // tai vuorovaikutuskierroksen tila on migroitu tai julkinen,
+    // mutta ei pidä paikkansa, että nähtävilläolovaihejulkaisu olisi olemassa ja sen aineistot ovat kunnossa
     return API.Status.NAHTAVILLAOLO_AINEISTOT;
   }
 
-  if (aloitusKuulutusJulkaisu && projekti.vahainenMenettely) {
+  if (aloitusKuulutusJulkaisu && !projekti.vahainenMenettely) {
+    // Käytössä ei ole vähäinen menettely, ja ainakin yksi aloituskuulutus on julkaistu,
+    // mutta vuorovaikutuskierros ei ole migroitu tai julkinen
     return API.Status.SUUNNITTELU;
   }
 
-  return API.Status.EI_JULKAISTU;
+  // Projektilla on perustiedot ja käyttöoikeudet kunnossa, mutta sillä ei ole vielä yhtään aloituskuulutusjulkaisua
+  return API.Status.ALOITUSKUULUTUS;
 }
 
 function aineistoNahtavillaIsOk(aineistoNahtavilla?: Aineisto[] | null | undefined): boolean {
