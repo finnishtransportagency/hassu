@@ -11,6 +11,10 @@ describe("getProjektiStatus", () => {
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
+  after(() => {
+    sinon.restore();
+  });
+
   it("returns SUUNNITTELU if aloituskuulutus has been published and vahainenMenettely = false", async () => {
     const projekti = {
       oid: "123",
