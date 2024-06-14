@@ -388,7 +388,7 @@ function projektinStatusOnVahintaanNahtavillaolo({
   };
 }): boolean {
   const nahtavillaoloVaiheAineistoKunnossa = aineistoNahtavillaIsOk(projekti.nahtavillaoloVaihe?.aineistoNahtavilla);
-  if (projekti.nahtavillaoloVaiheJulkaisut?.length && nahtavillaoloVaiheAineistoKunnossa) {
+  if (projekti.nahtavillaoloVaiheJulkaisut?.length || nahtavillaoloVaiheAineistoKunnossa) {
     return true;
   }
   return false;
