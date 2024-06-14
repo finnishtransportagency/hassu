@@ -25,7 +25,6 @@ import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { getSuomiFiAuthenticationURL } from "@services/userService";
-import HassuLink from "@components/HassuLink";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -201,9 +200,12 @@ export default function Nahtavillaolo(): ReactElement {
               {kayttaja.tunnistautunut ? (
                 <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
               ) : (
-                <HassuLink href={authUrl}>
-                  <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")}/>
-                </HassuLink>
+                <JataPalautettaNappi
+                  teksti={t("muistutuslomake.jata_muistutus")}
+                  onClick={() => {
+                    router.push(authUrl, authUrl);
+                  }}
+                />
               )}
             </>
           )}
