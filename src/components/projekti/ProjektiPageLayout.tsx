@@ -9,7 +9,6 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import deburr from "lodash/deburr";
-import ExtLink from "../ExtLink";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
 import KuntatietoMissingNotification from "../KuntatietoMissingNotification";
 
