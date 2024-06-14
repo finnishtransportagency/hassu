@@ -42,6 +42,7 @@ import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import getProjektiStatus from "../status/getProjektiStatus";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -185,14 +186,14 @@ export class ProjektiAdapter {
       if (
         !apiProjekti.nahtavillaoloVaihe &&
         !apiProjekti.nahtavillaoloVaiheJulkaisu &&
-        Object.values(API.Status).indexOf(status) > Object.values(API.Status).indexOf(API.Status.NAHTAVILLAOLO_AINEISTOT)
+        isProjektiStatusGreaterOrEqualTo({ status }, API.Status.NAHTAVILLAOLO_AINEISTOT)
       ) {
         apiProjekti.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: API.MuokkausTila.MUOKKAUS };
       }
       if (
         !apiProjekti.hyvaksymisPaatosVaihe &&
         !apiProjekti.hyvaksymisPaatosVaiheJulkaisu &&
-        Object.values(API.Status).indexOf(status) > Object.values(API.Status).indexOf(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT)
+        isProjektiStatusGreaterOrEqualTo({ status }, API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT)
       ) {
         apiProjekti.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: API.MuokkausTila.MUOKKAUS };
       }
