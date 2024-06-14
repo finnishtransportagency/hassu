@@ -55,6 +55,8 @@ import { label } from "src/util/textUtil";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import ExtLink from "../../../../components/ExtLink";
+import { getVelhoUrl, isKuntatietoMissing } from "../../../../util/velhoUtils"; 
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -103,6 +105,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
+  const puuttuuKuntatieto = isKuntatietoMissing(projekti);
+  const velhoURL = getVelhoUrl(projekti.oid)
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
   const defaultValues: FormValues = useMemo(() => {
@@ -260,8 +264,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     projekti.nykyinenKayttaja.onYllapitaja;
 
   const kunnat = watch("aloitusKuulutus.ilmoituksenVastaanottajat.kunnat");
-  const puuttuuKunnat = !(kunnat && kunnat.length > 0);
-
   return (
     <ProjektiPageLayout
       title="Aloituskuulutus"
@@ -282,12 +284,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   {!isLoadingProjekti && (
                     <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
                   )}
-                  {puuttuuKunnat && (
-                    <Notification type={NotificationType.ERROR}>
-                      Projektilta puuttuu kunnat! Katso, että projektin kunnat on asetettu Projektivelhossa, ja päivitä ne Projektin tiedot
-                      -sivulla painamalla &quot;Päivitä tiedot&quot;.
-                    </Notification>
-                  )}
+
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
                       {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.aloitusKuulutus.palautusSyy}
