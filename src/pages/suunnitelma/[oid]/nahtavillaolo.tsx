@@ -84,7 +84,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const nahtavillaoloKuulutusPDFPath = kuulutus.kuulutusPDF?.[kieli];
 
-  const authUrl = getSuomiFiAuthenticationURL(`${lang === "sv" ? "sv/" : ""}suunnitelma/${projekti?.oid}/nahtavillaolo`);
+  const authUrl = getSuomiFiAuthenticationURL(`suunnitelma/${projekti?.oid}/nahtavillaolo`, lang);
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
@@ -203,7 +203,7 @@ export default function Nahtavillaolo(): ReactElement {
                 <JataPalautettaNappi
                   teksti={t("muistutuslomake.jata_muistutus")}
                   onClick={() => {
-                    router.push(authUrl, authUrl);
+                    router.push(authUrl);
                   }}
                 />
               )}
