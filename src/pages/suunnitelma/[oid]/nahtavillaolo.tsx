@@ -203,7 +203,7 @@ export default function Nahtavillaolo(): ReactElement {
                 <JataPalautettaNappi
                   teksti={t("muistutuslomake.jata_muistutus")}
                   onClick={() => {
-                    router.push(authUrl);
+                    router.push(authUrl, authUrl);
                   }}
                 />
               )}
