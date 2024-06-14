@@ -32,7 +32,6 @@ import {
   adaptSuunnitteluSopimusToSave,
   adaptVuorovaikutusKierrosToSave,
 } from "./adaptToDB";
-import { applyProjektiStatus } from "../status/projektiStatusHandler";
 import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
@@ -42,6 +41,7 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import getProjektiStatus from "../status/getProjektiStatus";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -87,6 +87,7 @@ export class ProjektiAdapter {
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
+
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       lyhytOsoite: dbProjekti.lyhytOsoite,
@@ -179,7 +180,22 @@ export class ProjektiAdapter {
     });
 
     if (apiProjekti.tallennettu) {
-      applyProjektiStatus(apiProjekti);
+      const status = await getProjektiStatus(dbProjekti);
+      apiProjekti.status = status;
+      if (
+        !apiProjekti.nahtavillaoloVaihe &&
+        !apiProjekti.nahtavillaoloVaiheJulkaisu &&
+        Object.values(API.Status).indexOf(status) > Object.values(API.Status).indexOf(API.Status.NAHTAVILLAOLO_AINEISTOT)
+      ) {
+        apiProjekti.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: API.MuokkausTila.MUOKKAUS };
+      }
+      if (
+        !apiProjekti.hyvaksymisPaatosVaihe &&
+        !apiProjekti.hyvaksymisPaatosVaiheJulkaisu &&
+        Object.values(API.Status).indexOf(status) > Object.values(API.Status).indexOf(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT)
+      ) {
+        apiProjekti.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: API.MuokkausTila.MUOKKAUS };
+      }
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
       if (apiProjekti.asianhallinta) {

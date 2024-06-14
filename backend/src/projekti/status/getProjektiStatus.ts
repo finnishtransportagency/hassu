@@ -29,6 +29,8 @@ type JulkaisunTarpeellisetTiedot = Pick<
 
 type ProjektiForGetStatus = Pick<
   DBProjekti,
+  | "kielitiedot"
+  | "euRahoitus"
   | "kayttoOikeudet"
   | "vahainenMenettely"
   | "kasittelynTila"
@@ -192,9 +194,13 @@ async function projektinPerustiedoissaOnOngelma(projekti: ProjektiForGetStatus):
           velho: {
             suunnittelustaVastaavaViranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen,
             asiatunnusVayla: projekti.velho?.asiatunnusVayla,
-            asiatunnusEly: projekti.velho?.asiatunnusELY,
+            asiatunnusELY: projekti.velho?.asiatunnusELY,
           },
         },
+        isRuotsinkielinenProjekti: {
+          current: [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
+        },
+        hasEuRahoitus: { current: !!projekti.euRahoitus },
       },
     });
   } catch (e) {

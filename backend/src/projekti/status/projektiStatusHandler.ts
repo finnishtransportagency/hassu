@@ -113,7 +113,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         (p.vahainenMenettely && p.aloitusKuulutusJulkaisu)
       ) {
         if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
-          p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS }; // TODO: Lisää tämä muualle!!!
+          p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
         }
         p.status = API.Status.NAHTAVILLAOLO_AINEISTOT;
 
