@@ -55,7 +55,6 @@ import { label } from "src/util/textUtil";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import { getVelhoUrl, isKuntatietoMissing } from "../../../../util/velhoUtils"; 
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
