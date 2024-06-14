@@ -47,7 +47,13 @@ type ProjektiForGetStatus = Pick<
   jatkoPaatos2VaiheJulkaisut?: JulkaisunTarpeellisetTiedot[] | null;
 };
 
-export default async function getProjektiStatus(projekti: ProjektiForGetStatus) {
+export default class GetProjektiStatus {
+  static async getProjektiStatus(projekti: ProjektiForGetStatus) {
+    return await getProjektiStatus(projekti);
+  }
+}
+
+async function getProjektiStatus(projekti: ProjektiForGetStatus) {
   if (projektiHenkiloissaOnOngelma(projekti)) {
     return API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT;
   }

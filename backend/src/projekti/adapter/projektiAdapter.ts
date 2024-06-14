@@ -41,7 +41,7 @@ import { haeAktiivisenVaiheenAsianhallinnanTila } from "./haeAktiivisenVaiheenAs
 import { adaptAsianhallinta } from "./adaptAsianhallinta";
 import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } from "./adaptToDB/adaptLausuntoPyynnotToSave";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
-import getProjektiStatus from "../status/getProjektiStatus";
+import GetProjektiStatus from "../status/getProjektiStatus";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 
 export class ProjektiAdapter {
@@ -181,7 +181,7 @@ export class ProjektiAdapter {
     });
 
     if (apiProjekti.tallennettu) {
-      const status = await getProjektiStatus(dbProjekti);
+      const status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
       apiProjekti.status = status;
       if (
         !apiProjekti.nahtavillaoloVaihe &&

@@ -1,9 +1,9 @@
 import { describe, it } from "mocha";
 import * as API from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
-import getProjektiStatus from "../../../src/projekti/status/getProjektiStatus";
 import sinon from "sinon";
 import { parameters } from "../../../src/aws/parameters";
+import GetProjektiStatus from "../../../src/projekti/status/getProjektiStatus";
 
 describe("getProjektiStatus", () => {
   before(() => {
@@ -51,7 +51,7 @@ describe("getProjektiStatus", () => {
         },
       ],
     };
-    const status = await getProjektiStatus(projekti);
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
     expect(status).to.eql(API.Status.SUUNNITTELU);
   });
 
@@ -90,7 +90,7 @@ describe("getProjektiStatus", () => {
         },
       ],
     };
-    const status = await getProjektiStatus(projekti);
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
     expect(status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
   });
 });
