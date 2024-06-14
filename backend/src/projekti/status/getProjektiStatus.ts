@@ -146,9 +146,6 @@ export default async function getProjektiStatus(projekti: ProjektiForGetStatus) 
 }
 
 function aineistoNahtavillaIsOk(aineistoNahtavilla?: Aineisto[] | null | undefined): boolean {
-  // Check if aineistoNahtavilla
-  // -- contains aineisto
-  // -- does not contain aineisto with kategorisoimattomat category.
   return (
     !!aineistoNahtavilla?.length &&
     !aineistoNahtavilla.some((aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId)
