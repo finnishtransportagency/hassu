@@ -3,7 +3,7 @@ import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import { MUIStyledCommonProps, styled } from "@mui/system";
 import sx from "@mui/system/sx";
-import { ColumnDef, Row, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import { ComponentProps, useCallback, useMemo } from "react";
 import { FieldArrayWithId, UseFieldArrayMove, UseFieldArrayRemove, UseFormRegisterReturn } from "react-hook-form";
