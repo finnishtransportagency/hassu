@@ -13,7 +13,7 @@ export interface TiedostoLomakeProps {
 export default function TiedostoLomake({ paatosTyyppi, vaihe }: TiedostoLomakeProps) {
   return (
     <>
-      <h5 className="vayla-small-title">{getPaatosSubtitle(paatosTyyppi)}</h5>
+      <h3 className="vayla-subtitle">{getPaatosSubtitle(paatosTyyppi)}</h3>
       {vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
         <LukutilainenPaatos vaihe={vaihe} />
       ) : (
