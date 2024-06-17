@@ -5,7 +5,6 @@ import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattavaTiedosto, LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
-import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import LadattavaTiedostoTable from "./LadattavaTiedostoTable";
 

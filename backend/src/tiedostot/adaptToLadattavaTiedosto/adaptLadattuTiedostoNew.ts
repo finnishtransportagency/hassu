@@ -7,7 +7,7 @@ export default async function adaptLadattuTiedostoNewToLadattavaTiedosto(
   tiedosto: LadattuTiedostoNew,
   path: string
 ): Promise<API.LadattavaTiedosto> {
-  const { jarjestys, nimi } = tiedosto;
+  const { nimi } = tiedosto;
   const linkki = await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(tiedosto.nimi)));
-  return { __typename: "LadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.lisatty };
+  return { __typename: "LadattavaTiedosto", nimi, linkki, tuotu: tiedosto.lisatty };
 }
