@@ -2,12 +2,12 @@ import Button from "@components/button/Button";
 import IconButton from "@components/button/IconButton";
 import { H5, H6 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { allowedFileTypes } from "common/fileValidationSettings";
 import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Muistutukset({ kunnat }: Readonly<{ kunnat: number[] | null | undefined }>): ReactElement {
   return (
@@ -20,11 +20,10 @@ export default function Muistutukset({ kunnat }: Readonly<{ kunnat: number[] | n
 
 function KunnanMuistutukset({ kunta }: Readonly<{ kunta: number }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { remove, fields } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muistutukset", control });
-  const kunnanMuistutukset = fields?.filter((m) => m.kunta == kunta);
+  const { control } = useFormContext<HyvaksymisEsitysForm>();
+  const { remove, fields } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });
 
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.muistutukset", { kunta });
+  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, { kunta });
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -35,8 +34,8 @@ function KunnanMuistutukset({ kunta }: Readonly<{ kunta: number }>): ReactElemen
   return (
     <SectionContent>
       <H6>{kuntametadata.nameForKuntaId(kunta, "fi")}</H6>
-      {!!kunnanMuistutukset?.length &&
-        kunnanMuistutukset.map((aineisto) => (
+      {!!fields?.length &&
+        fields.map((aineisto) => (
           <div key={aineisto.id}>
             {aineisto.nimi}
             <IconButton

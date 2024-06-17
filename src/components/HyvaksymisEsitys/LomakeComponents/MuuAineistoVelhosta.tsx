@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
-import { AineistoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { AineistoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
@@ -8,10 +8,11 @@ import { H5 } from "@components/Headings";
 import { getNewAineistot } from "../../../util/hyvaksymisesitys/getNewAineistot";
 import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoNew[] | null }): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
   const { fields, remove, prepend, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoVelhosta", control });
 
   const registerDokumenttiOid = useCallback(

@@ -3,13 +3,13 @@ import IconButton from "@components/button/IconButton";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { H3 } from "@components/Headings";
 import { Stack, styled } from "@mui/system";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { ReactElement, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Vastaanottajat(): ReactElement {
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control } = useFormContext<HyvaksymisEsitysForm>();
   const { fields, remove, append } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.vastaanottajat", control });
 
   const addNew = useCallback(() => append({ sahkoposti: "" }), [append]);

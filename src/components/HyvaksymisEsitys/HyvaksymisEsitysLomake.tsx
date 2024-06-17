@@ -1,7 +1,7 @@
-import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput, Vaihe } from "@services/api";
+import { HyvaksymisEsityksenTiedot, Vaihe } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
-import getDefaultValuesForForm from "./getDefaultValuesForForm";
+import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
 import Section from "@components/layout/Section2";
 import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
 import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
@@ -33,14 +33,14 @@ type Props = {
 };
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Readonly<Props>) {
-  const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
+  const defaultValues: HyvaksymisEsitysForm = useMemo(
     () => getDefaultValuesForForm(hyvaksymisEsityksenTiedot),
     [hyvaksymisEsityksenTiedot]
   );
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext> = {
+  const formOptions: UseFormProps<HyvaksymisEsitysForm, HyvaksymisEsitysValidationContext> = {
     resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
@@ -48,7 +48,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     context: { validationMode, testType: TestType.FRONTEND },
   };
 
-  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext>(formOptions);
+  const useFormReturn = useForm<HyvaksymisEsitysForm, HyvaksymisEsitysValidationContext>(formOptions);
 
   useEffect(() => {
     useFormReturn.reset(defaultValues);
