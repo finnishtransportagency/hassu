@@ -204,8 +204,6 @@ export function BodyContent<T>(
 
   const [, dropRef] = useDrop(() => ({ accept: "row" }));
 
-  console.log("inside rows ids", rows.map((r) => r.id).join(", "));
-
   return (
     <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
       <Tbody sx={props?.bodySx} ref={dropRef}>
