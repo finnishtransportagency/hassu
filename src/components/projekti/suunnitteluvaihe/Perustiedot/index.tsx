@@ -170,7 +170,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
-        hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
+        ...(!projekti.vuorovaikutusKierros?.hankkeenKuvaus && {
+          hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
+        }),
         arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
           projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta

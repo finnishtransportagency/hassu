@@ -17,10 +17,11 @@ function sort(kiinteistot: MmlKiinteisto[] | undefined) {
   return kiinteistot;
 }
 
+const parameterSuffix = process.argv.includes("--prod") ? "Prod" : "";
 Promise.all([
   euWestSSMClient
     .getParameter({
-      Name: "KtjBaseUrl",
+      Name: "KtjBaseUrl" + parameterSuffix,
       WithDecryption: true,
     })
     .then((param) => {
@@ -28,7 +29,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "MmlApiKey",
+      Name: "MmlApiKey" + parameterSuffix,
       WithDecryption: true,
     })
     .then((param) => {
@@ -36,7 +37,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcBaseUrl",
+      Name: "OgcBaseUrl" + parameterSuffix,
       WithDecryption: true,
     })
     .then((param) => {
@@ -44,7 +45,7 @@ Promise.all([
     }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcApiKey",
+      Name: "OgcApiKey" + parameterSuffix,
       WithDecryption: true,
     })
     .then((param) => {
@@ -55,7 +56,7 @@ Promise.all([
   }),
   euWestSSMClient
     .getParameter({
-      Name: "OgcApiExamples",
+      Name: "OgcApiExamples" + parameterSuffix,
       WithDecryption: true,
     })
     .then((param) => {
@@ -63,11 +64,11 @@ Promise.all([
     }),
 ])
   .then((params) => {
-    const ktjBaseUrl = params.find((p) => p.name === "KtjBaseUrl")?.value;
-    const mmlApiKey = params.find((p) => p.name === "MmlApiKey")?.value;
-    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl")?.value;
-    const ogcApiKey = params.find((p) => p.name === "OgcApiKey")?.value;
-    const ogcApiExamples = params.find((p) => p.name === "OgcApiExamples")?.value;
+    const ktjBaseUrl = params.find((p) => p.name === "KtjBaseUrl" + parameterSuffix)?.value;
+    const mmlApiKey = params.find((p) => p.name === "MmlApiKey" + parameterSuffix)?.value;
+    const ogcBaseUrl = params.find((p) => p.name === "OgcBaseUrl" + parameterSuffix)?.value;
+    const ogcApiKey = params.find((p) => p.name === "OgcApiKey" + parameterSuffix)?.value;
+    const ogcApiExamples = params.find((p) => p.name === "OgcApiExamples" + parameterSuffix)?.value;
     const uid = params.find((p) => p.name === "UserId")?.value;
     if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid && ogcApiExamples) {
       const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey, ogcApiExamples });

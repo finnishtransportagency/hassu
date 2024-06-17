@@ -29,7 +29,7 @@ module.exports = {
     "/yllapito/projekti/[oid]/hyvaksymisesitys": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymisesitysaineistot": ["aineisto"],
   },
-  ignoreRoutes: ["/api/"],
+  ignoreRoutes: ["/api/", "/keycloak/"],
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
     // return a Promise with the JSON file.

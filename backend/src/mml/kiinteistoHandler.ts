@@ -97,16 +97,13 @@ const handlerFactory = (event: SQSEvent) => async () => {
           client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
           client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
           client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeYhteisalueet(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
         ]);
         const kiinteistot = responses[0];
         const yhteystiedot = responses[1];
         const tiekunnat = responses[2];
-        const yhteisalueet = responses[3];
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a)");
-        log.info("Vastauksena saatiin " + yhteisalueet.length + " yhteisalue(atta)");
 
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
@@ -120,7 +117,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         let keys: string[] = [];
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
-        yhteystiedot.push(...tiekunnat, ...yhteisalueet);
+        yhteystiedot.push(...tiekunnat);
         yhteystiedot.forEach((k) => {
           k.omistajat.forEach((o) => {
             const omistaja: DBOmistaja = {
