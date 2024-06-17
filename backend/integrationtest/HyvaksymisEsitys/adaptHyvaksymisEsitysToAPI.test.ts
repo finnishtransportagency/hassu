@@ -180,7 +180,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       hyvaksymisEsitys: [
         {
           __typename: "LadattuTiedostoNew",
-          jarjestys: undefined,
           nimi: "hyvaksymisEsitys äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "hyvaksymis-esitys-uuid",
@@ -191,7 +190,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         {
           __typename: "AineistoNew",
           dokumenttiOid: "suunnitelmaDokumenttiOid",
-          jarjestys: undefined,
           kategoriaId: "osa_b",
           nimi: "suunnitelma äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
@@ -203,7 +201,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       muistutukset: [
         {
           __typename: "KunnallinenLadattuTiedosto",
-          jarjestys: undefined,
           nimi: "muistutukset äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muistutukset-uuid",
@@ -214,7 +211,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       lausunnot: [
         {
           __typename: "LadattuTiedostoNew",
-          jarjestys: undefined,
           nimi: "lausunnot äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "lausunnot-uuid",
@@ -224,7 +220,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       kuulutuksetJaKutsu: [
         {
           __typename: "LadattuTiedostoNew",
-          jarjestys: undefined,
           nimi: "kuulutuksetJaKutsu äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "kuulutuksetJaKutsu-uuid",
@@ -235,7 +230,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         {
           __typename: "AineistoNew",
           dokumenttiOid: "muuAineistoVelhostaDokumenttiOid",
-          jarjestys: undefined,
           kategoriaId: undefined,
           nimi: "muuAineistoVelhosta äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
@@ -247,7 +241,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       muuAineistoKoneelta: [
         {
           __typename: "LadattuTiedostoNew",
-          jarjestys: undefined,
           nimi: "muuAineistoKoneelta äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muuAineistoKoneelta-uuid",
@@ -257,7 +250,6 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       maanomistajaluettelo: [
         {
           __typename: "LadattuTiedostoNew",
-          jarjestys: undefined,
           nimi: "maanomistajaluettelo äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "maanomistajaluettelo-uuid",
