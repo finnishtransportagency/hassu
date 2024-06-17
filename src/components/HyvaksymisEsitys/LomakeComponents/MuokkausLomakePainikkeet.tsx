@@ -17,8 +17,10 @@ type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
 };
 
-const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymisEsitysInput = (data) =>
-  transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
+const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymisEsitysInput = (data) => {
+  console.log("data", data.muokattavaHyvaksymisEsitys.muistutukset);
+  return transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
+};
 
 export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { showSuccessMessage } = useSnackbars();

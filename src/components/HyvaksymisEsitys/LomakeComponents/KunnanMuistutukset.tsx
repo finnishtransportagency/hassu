@@ -1,41 +1,17 @@
 import Button from "@components/button/Button";
-import { H5, H6 } from "@components/Headings";
+import { H6 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import { allowedFileTypes } from "common/fileValidationSettings";
 import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { FormMuistutukset, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { KunnallinenLadattuTiedostoInput } from "@services/api";
 
-/**
- * Käytetään hyväksy defaultValuesia laskettaessa syntynyttä muistutukset-arvoa, jossa
- * muistutukset on jaettu kunnittain.
- */
-export default function Muistutukset({
-  kunnat,
-  muistutuksetSorted,
-}: Readonly<{ kunnat: number[] | null | undefined; muistutuksetSorted: FormMuistutukset }>): ReactElement {
-  return (
-    <SectionContent>
-      <H5 variant="h4">Muistutukset</H5>
-      {kunnat?.length
-        ? kunnat.map((kunta) => <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={muistutuksetSorted[kunta]} />)
-        : "Kunnat puuttuu"}
-    </SectionContent>
-  );
-}
-
-/**
- * Käytetään hyväksy defaultValuesia laskettaessa syntynyttä muistutukset-arvoa, jossa
- * muistutukset on jaettu kunnittain. Kunta-avaimen alla olevat arvot injektoidaan tälle komponentille.
- */
-function KunnanMuistutukset({
+export function KunnanMuistutukset({
   kunta,
-  tiedostot,
-}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedostoInput[] | null }>): ReactElement {
+}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedostoNew[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm>();
   const { remove, fields, move } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });

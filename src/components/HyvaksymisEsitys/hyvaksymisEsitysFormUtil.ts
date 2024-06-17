@@ -9,7 +9,7 @@ import {
   LadattuTiedostoNew,
 } from "@services/api";
 
-type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
+export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
@@ -79,7 +79,10 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(for
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
       muistutukset: muistutukset
-        ? Object.keys(muistutukset).reduce((acc, key) => acc.concat(muistutukset[key] ?? []), [] as KunnallinenLadattuTiedostoInput[])
+        ? Object.keys(muistutukset).reduce((acc, key) => {
+            acc.concat(muistutukset[key] ?? []);
+            return acc;
+          }, [] as KunnallinenLadattuTiedostoInput[])
         : [],
     },
   };
