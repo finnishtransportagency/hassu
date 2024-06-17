@@ -130,7 +130,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         header: noHeaders ? undefined : "",
         id: "actions",
         accessorFn: (tiedosto: RowDataType<S>) => {
-          const index = fields.findIndex((row) => row.id === tiedosto.uuid);
+          const index = fields.findIndex((row) => row.uuid === tiedosto.uuid);
           return <ActionsColumn noOrdering={fields.length <= 1} index={index} remove={remove} />;
         },
         meta: { minWidth: 120, widthFractions: 0 },
@@ -142,13 +142,16 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
     return all.filter((col) => col.id !== "tuotu");
   }, [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, ladattuTiedosto, noHeaders, showTuotu]);
 
-  const findRowIndex = useCallback((id: string, rows?: Row<RowDataType<S>>[]) => {
-    return rows?.findIndex((row) => row.id === id) ?? -1;
-  }, []);
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return enrichedFields?.findIndex((row) => row.uuid === id) ?? -1;
+    },
+    [enrichedFields]
+  );
 
   const onDragAndDrop = useCallback(
-    (id: string, targetRowIndex: number, rows?: Row<RowDataType<S>>[]) => {
-      const index = findRowIndex(id, rows ?? []);
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
       move(index, targetRowIndex);
     },
     [findRowIndex, move]
