@@ -6,7 +6,7 @@ import { LadattavaTiedosto, LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } 
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import LadattavaTiedostoTable from "./LadattavaTiedostoTable";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 
 export default function KuulutuksetJaKutsu({
   tuodut,
@@ -37,7 +37,14 @@ export default function KuulutuksetJaKutsu({
         Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
-      <LadattavaTiedostoTable id="tuodut_kuulutukset_ja_kutsut_table" tiedostot={tuodut} noHeaders />
+      <ul style={{ listStyle: "none" }} className="mt-4">
+        {!!tuodut?.length &&
+          tuodut.map((tiedosto) => (
+            <li key={tiedosto.nimi}>
+              <LadattavaTiedostoComponent tiedosto={tiedosto} />
+            </li>
+          ))}
+      </ul>{" "}
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="hyvaksymisesitys_files_table"
