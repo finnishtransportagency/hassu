@@ -13,6 +13,7 @@ import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import * as yup from "yup";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
+import { isKuntatietoMissing } from "../../util/velhoUtils";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -51,8 +52,9 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
   }, [julkaisu, showErrorMessage]);
 
   const hyvaksyIsDisabled = useMemo(() => {
+    const puuttuuKuntatieto = isKuntatietoMissing(projekti)
     const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
-    return kuulutusPaivaInPast || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
+    return kuulutusPaivaInPast || puuttuuKuntatieto || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
   }, [julkaisu.kuulutusPaiva, projekti, tilasiirtymaTyyppi]);
 
   return (

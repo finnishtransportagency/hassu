@@ -13,6 +13,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
+import { getVelhoUrl } from "../../../../util/velhoUtils";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -30,7 +31,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   if (!projekti || !julkaisu) {
     return null;
   }
-  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+  const velhoURL = getVelhoUrl(projekti.oid)
 
   const voiHyvaksya =
     julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&

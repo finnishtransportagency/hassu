@@ -16,6 +16,7 @@ import useApi from "src/hooks/useApi";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
+import { isKuntatietoMissing } from "../../util/velhoUtils";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -91,7 +92,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   const { data } = useSuomifiUser();
   const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
     const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
-    const lacksKunnat = !kuntavastaanottajat?.length;
+    const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
     let kiinteistonomistajatOk = true;
     if (
       data?.suomifiViestitEnabled &&
