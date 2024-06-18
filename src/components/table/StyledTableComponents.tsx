@@ -1,3 +1,4 @@
+import { Block } from "@mui/icons-material";
 import { styled, experimental_sx as sx } from "@mui/system";
 
 export const TableWrapper = styled("div")(
@@ -22,7 +23,7 @@ export const HeaderCell = styled(Cell)(({ onClick }) =>
     cursor: onClick ? "pointer" : undefined,
   })
 );
-export const DataCell = styled(Cell)(sx({}));
+export const DataCell = styled(Cell)(sx({alignContent: "center"}));
 export const DataCellContent = styled("div")({});
 export const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
 export const HeaderCellContents = styled("div")(sx({}));
