@@ -27,6 +27,12 @@ const lyhytOsoiteRedirects = [
     basePath: false,
     locale: false,
   },
+  {
+    source: "/sv/keycloak/:path*",
+    destination: "/keycloak/:path*",
+    permanent: true,
+    locale: false,
+  },
 ];
 
 function setupLocalDevelopmentMode(config, env) {
