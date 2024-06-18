@@ -8,10 +8,12 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
+import { KunnallinenLadattuTiedosto } from "@services/api";
 
 export function KunnanMuistutukset({
   kunta,
-}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedostoNew[] | null }>): ReactElement {
+  tiedostot,
+}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm>();
   const { remove, fields, move } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });
