@@ -80,8 +80,7 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(for
       ...formData.muokattavaHyvaksymisEsitys,
       muistutukset: muistutukset
         ? Object.keys(muistutukset).reduce((acc, key) => {
-            acc.concat(muistutukset[key] ?? []);
-            return acc;
+            return acc.concat(muistutukset[key] ?? []);
           }, [] as KunnallinenLadattuTiedostoInput[])
         : [],
     },

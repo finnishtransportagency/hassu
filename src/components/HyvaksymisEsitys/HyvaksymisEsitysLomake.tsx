@@ -23,10 +23,11 @@ import { H3, H4 } from "@components/Headings";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
 import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
 import useValidationMode from "src/hooks/useValidationMode";
+import { TestType } from "common/schema/common";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;

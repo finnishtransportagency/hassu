@@ -18,7 +18,6 @@ type Props = {
 };
 
 const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymisEsitysInput = (data) => {
-  console.log("data", data.muokattavaHyvaksymisEsitys.muistutukset);
   return transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
 };
 
