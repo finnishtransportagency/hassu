@@ -6,7 +6,7 @@ import { lisaAineistoService } from "../tiedostot/lisaAineistoService";
 import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 
 class LisaAineistoHandler {
-  async listaaLisaAineisto({ oid: oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LadattavatTiedostot> {
+  async listaaLisaAineisto({ oid, lisaAineistoTiedot: params }: ListaaLisaAineistoQueryVariables): Promise<LadattavatTiedostot> {
     log.info("Loading projekti", { oid });
     if (!params) {
       throw new Error("params ei annettu (listaaLisaAineisto)");

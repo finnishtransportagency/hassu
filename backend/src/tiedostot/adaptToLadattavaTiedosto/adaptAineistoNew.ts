@@ -11,8 +11,8 @@ export default async function adaptAineistoNewToLadattavaTiedosto(
   const { jarjestys, kategoriaId } = aineisto;
   const nimi = aineisto.nimi;
   let linkki;
-  if (aineistoHandletAt === true || (aineistoHandletAt && aineistoHandletAt.localeCompare(aineisto.lisatty))) {
-    linkki = await await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(aineisto.nimi)));
+  if (aineistoHandletAt === true || (aineistoHandletAt?.localeCompare(aineisto.lisatty))) {
+    linkki = await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(aineisto.nimi)));
   } else {
     linkki = "";
   }

@@ -69,7 +69,7 @@ import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 export const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
 const VIEW_PROJ = EPSG_3067;
-const DATA_CRS = "http://www.opengis.net/def/crs/EPSG/0/3067";
+const DATA_CRS = "https://www.opengis.net/def/crs/EPSG/0/3067";
 
 proj4.defs(EPSG_3067, "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
 register(proj4);

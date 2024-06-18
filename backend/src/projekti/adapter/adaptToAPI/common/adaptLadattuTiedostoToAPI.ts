@@ -9,7 +9,7 @@ export function adaptLadattuTiedostoToAPI(
   ladattuTiedosto: LadattuTiedosto,
   julkinen: boolean
 ): API.LadattuTiedosto | undefined {
-  if (ladattuTiedosto && ladattuTiedosto.nimi) {
+  if (ladattuTiedosto?.nimi) {
     const { tiedosto, nimi, tuotu, tila, jarjestys, uuid } = ladattuTiedosto;
     let fullPath: string = tiedosto;
     if (julkinen) {
