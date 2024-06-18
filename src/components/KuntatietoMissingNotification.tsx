@@ -10,7 +10,7 @@ export default function KuntatietoMissingNotification({ projekti }: Props) {
     return (
       <Notification type={NotificationType.ERROR}>
         Projektilta puuttuu kunta tai maakunta Projektivelhosta. Lisää tiedot Projektivelhoon ja päivitä projektin tiedot &quot;Päivitä
-        tiedot&quot; -painikkeella. <ExtLink href={velhoURL}>Projektin sivu Projektivelhossa</ExtLink>
+        tiedot&quot; -painikkeella. <ExtLink href={velhoURL}>Projektin sivu Projektivelhossa.</ExtLink>
       </Notification>
     );
 }
