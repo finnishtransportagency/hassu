@@ -127,7 +127,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset
                   kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat}
-                  muistutuksetSorted={defaultValues.muokattavaHyvaksymisEsitys.muistutukset}
+                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muistutukset}
                 />
                 <Lausunnot tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.lausunnot} />
                 <Maanomistajaluettelo
