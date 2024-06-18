@@ -1,4 +1,3 @@
-import { Block } from "@mui/icons-material";
 import { styled, experimental_sx as sx } from "@mui/system";
 
 export const TableWrapper = styled("div")(
