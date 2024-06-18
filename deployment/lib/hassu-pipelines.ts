@@ -39,13 +39,7 @@ const pipelines: Record<
     {
       name: "feature",
       env: "feature",
-      webhookBranches: ["feature/*"],
-      buildspec: "./deployment/lib/buildspec/buildspec-feature.yml",
-    },
-    {
-      name: "renovate",
-      env: "feature",
-      webhookBranches: ["renovate/*"],
+      webhookBranches: ["*"],
       buildspec: "./deployment/lib/buildspec/buildspec-feature.yml",
     },
     {
@@ -169,7 +163,13 @@ export class HassuPipelineStack extends Stack {
 
       const buildspec = pipelineConfig.buildspec;
 
-      const webhookFilters = webhookBranches?.map((b) => codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(b));
+      const webhookFilters = webhookBranches?.map((b) => {
+        if (b === "*") {
+          return codebuild.FilterGroup.inEventOf(codebuild.EventAction.PULL_REQUEST_CREATED, codebuild.EventAction.PULL_REQUEST_UPDATED);
+        } else {
+          return codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(b);
+        }
+      });
       const sourceProps: GitHubSourceProps = {
         owner: "finnishtransportagency",
         repo: "hassu",

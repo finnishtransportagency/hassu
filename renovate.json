@@ -44,7 +44,8 @@
         "next",
         "eslint-config-next",
         "localstack/localstack",
-        "@types/react"
+        "@types/react",
+        "@hassu/asianhallinta"
       ],
       "matchUpdateTypes": [
         "patch"
@@ -73,7 +74,8 @@
         "^@aws-sdk",
         "^aws-sdk",
         "^@sls-next/cdk-construct",
-        "inquirer"
+        "inquirer",
+        "@hassu/asianhallinta"
       ],
       "excludePackageNames": [
         "next",
