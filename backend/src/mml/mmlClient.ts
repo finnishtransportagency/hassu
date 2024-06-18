@@ -76,6 +76,10 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                     for (const yksikko of responseJson["kylh:Lainhuutotiedot"]["kylh:Rekisteriyksikko"]) {
                       const omistajat: Omistaja[] = [];
                       const kiinteistotunnus = yksikko["trpt:rekisteriyksikonPerustiedot"][0]["y:kiinteistotunnus"][0];
+                      let nimi;
+                      if (yksikko["trpt:rekisteriyksikonPerustiedot"][0]["trpt:nimi"]) {
+                        nimi = yksikko["trpt:rekisteriyksikonPerustiedot"][0]["trpt:nimi"][0];
+                      }
                       if (yksikko["trlh:lainhuudot"][0]["trlh:Lainhuutoasia"]) {
                         for (const asia of yksikko["trlh:lainhuudot"][0]["trlh:Lainhuutoasia"]) {
                           // Ratkaistu tai Loppuunsaatettu
@@ -95,6 +99,10 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                             }
                           }
                         }
+                      } else if (nimi) {
+                        omistajat.push({
+                          nimi,
+                        });
                       }
                       const idx = vastaustunnukset.indexOf(kiinteistotunnus);
                       if (idx !== -1) {
@@ -139,6 +147,10 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                     for (const yksikko of responseJson["kyyh:Yhteystiedot"]["tryh:Rekisteriyksikko"]) {
                       const omistajat: Omistaja[] = [];
                       const kiinteistotunnus = yksikko["trpt:rekisteriyksikonPerustiedot"][0]["y:kiinteistotunnus"][0];
+                      let nimi;
+                      if (yksikko["trpt:rekisteriyksikonPerustiedot"][0]["trpt:nimi"]) {
+                        nimi = yksikko["trpt:rekisteriyksikonPerustiedot"][0]["trpt:nimi"][0];
+                      }
                       if (yksikko["tryh:kohteenHenkilot"][0]["y:Henkilo"]) {
                         for (const hlo of yksikko["tryh:kohteenHenkilot"][0]["y:Henkilo"]) {
                           const tiedot = hlo["y:henkilonTiedot"][0];
@@ -155,6 +167,10 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                             },
                           });
                         }
+                      } else if (nimi) {
+                        omistajat.push({
+                          nimi,
+                        });
                       }
                       const idx = vastaustunnukset.indexOf(kiinteistotunnus);
                       if (idx !== -1) {
