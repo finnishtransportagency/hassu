@@ -196,12 +196,14 @@ export function BodyContent<T>(
     }
 ) {
   const actualRows = props.table.getRowModel().rows;
+
   const rowVirtualizer = props?.virtualizer;
 
   const virtualRows = rowVirtualizer?.getVirtualItems();
   const rows = virtualRows?.map((virtualRow) => actualRows[virtualRow.index]) ?? actualRows;
 
   const [, dropRef] = useDrop(() => ({ accept: "row" }));
+
   return (
     <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
       <Tbody sx={props?.bodySx} ref={dropRef}>

@@ -75,8 +75,6 @@ export type AineistoNew = {
   uuid: string;
   // Aikaleima, milloin tiedosto on lisatty jarjestelmaan yyyy-MM-ddTHH:mm
   lisatty: string;
-  // Numero jarjestamista varten
-  jarjestys?: number | null;
 };
 
 export type StandardiYhteystiedot = {
@@ -152,8 +150,6 @@ export interface ILadattuTiedosto {
   nimi: string;
   uuid: string;
   lisatty: string;
-  //Numero jarjestamista varten
-  jarjestys?: number;
 }
 
 export type LadattuTiedostoNew = ILadattuTiedosto;

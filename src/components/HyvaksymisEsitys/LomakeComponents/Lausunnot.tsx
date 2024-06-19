@@ -1,16 +1,16 @@
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
-export default function Lausunnot(): ReactElement {
+export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.lausunnot", control });
+  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.lausunnot", control });
   const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.lausunnot");
 
   const onButtonClick = () => {
@@ -19,21 +19,29 @@ export default function Lausunnot(): ReactElement {
     }
   };
 
+  const registerNimi = useCallback(
+    (index: number) => {
+      return register(`muokattavaHyvaksymisEsitys.lausunnot.${index}.nimi`);
+    },
+    [register]
+  );
+
   return (
     <>
       <H4>Lausunnot</H4>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      {!!fields?.length && (
+        <TiedostoInputNewTable
+          id="lausunnot_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
+      )}
       <input
         type="file"
         multiple

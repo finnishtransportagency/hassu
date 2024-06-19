@@ -624,10 +624,6 @@ type AineistoNew {
   """
   lisatty: String
   """
-  Numero jarjestamista varten
-  """
-  jarjestys: Int
-  """
   Onko tiedosto tuotu
   """
   tuotu: Boolean!
@@ -894,10 +890,6 @@ interface ILadattuTiedosto {
   """
   lisatty: String
   """
-  Numero jarjestamista varten
-  """
-  jarjestys: Int
-  """
   Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
   """
   tiedosto: String
@@ -928,7 +920,6 @@ type LadattuTiedostoNew implements ILadattuTiedosto {
   nimi: String!
   uuid: String!
   lisatty: String
-  jarjestys: Int
   tiedosto: String
 }
 
@@ -936,7 +927,6 @@ type KunnallinenLadattuTiedosto implements ILadattuTiedosto {
   nimi: String!
   uuid: String!
   lisatty: String
-  jarjestys: Int
   kunta: Int!
   tiedosto: String
 }
