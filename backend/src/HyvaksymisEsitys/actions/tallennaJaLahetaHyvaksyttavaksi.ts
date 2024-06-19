@@ -15,6 +15,7 @@ import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
+import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -31,9 +32,10 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const kayttaja = requirePermissionLuku();
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
 
-  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
   // Validoi ennen adaptointia
-  validateCurrent(projektiInDB, input);
+  await validateCurrent(projektiInDB, input);
   // Adaptoi muokattava hyvaksymisesitys
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
@@ -82,9 +84,10 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   return oid;
 }
 
-function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
+async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
+  await validateVaiheOnAktiivinen(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
     throw new IllegalArgumentError("Projektilla ei ole muokkaustilaista hyväksymisesitystä");

@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { ProjektiTiedostoineen } from "../dynamoDBCalls/getProjektiTiedostoineen";
+import { ProjektiTiedostoineen } from "../dynamoKutsut";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { JulkaistuHyvaksymisEsitys, LadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../../database/model";

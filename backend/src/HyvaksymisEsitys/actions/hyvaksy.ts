@@ -20,12 +20,14 @@ import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { fileService } from "../../files/fileService";
 import Mail from "nodemailer/lib/mailer";
+import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio } = input;
-  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
-  validate(projektiInDB);
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
+  await validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi muokattavan hyväksymisesityksen tiedostot julkaistun hyväksymisesityksen tiedostojen sijaintiin
@@ -78,9 +80,10 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   return oid;
 }
 
-function validate(projektiInDB: HyvaksymisEsityksenTiedot): API.NykyinenKayttaja {
+async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.NykyinenKayttaja> {
   // Toiminnon tekijän on oltava projektipäällikkö
   const nykyinenKayttaja = requireOmistaja(projektiInDB, "Hyväksymisesityksen voi hyväksyä vain projektipäällikkö");
+  await validateVaiheOnAktiivinen(projektiInDB);
   // Projektilla on oltava hyväksymistä odottava hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA) {
     throw new IllegalArgumentError("Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä");
