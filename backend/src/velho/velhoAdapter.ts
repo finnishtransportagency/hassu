@@ -169,14 +169,19 @@ function getKunnat(data: ProjektiProjekti): number[] | undefined {
     data.ominaisuudet.kunta.forEach((kuntaVelhoKey) => {
       const kuntaId = parseNumberIdFromVelhoKey(kuntaVelhoKey as unknown as string);
       if (!kuntametadata.kuntaForKuntaId(kuntaId)) {
-        log.warn("Velhosta saatua kuntaa ei löydy: " + kuntaId);
+        log.error("Velhosta saatua kuntaa ei löydy: " + kuntaId);
       } else {
         kunnat.push(kuntaId);
       }
     });
     return kunnat.sort(numberSorter);
   }
-  return data.ominaisuudet["muu-kunta"]?.split(",").map(kuntametadata.idForKuntaName).sort();
+  try {
+    return data.ominaisuudet["muu-kunta"]?.split(",").map(s => s.trim()).map(kuntametadata.idForKuntaName).sort();
+  } catch (e) {
+    log.error("Virheellinen muu-kunta: '" + data.ominaisuudet["muu-kunta"] + "'");
+    return undefined;
+  }
 }
 
 function getMaakunnat(data: ProjektiProjekti) {
@@ -185,14 +190,19 @@ function getMaakunnat(data: ProjektiProjekti) {
     data.ominaisuudet.maakunta.forEach((maakuntaVelhoKey) => {
       const maakuntaId = parseNumberIdFromVelhoKey(maakuntaVelhoKey as unknown as string);
       if (!kuntametadata.maakuntaForMaakuntaId(maakuntaId)) {
-        log.warn("Velhosta saatua maakuntaa ei löydy: " + maakuntaId);
+        log.error("Velhosta saatua maakuntaa ei löydy: " + maakuntaId);
       } else {
         maakunnat.push(maakuntaId);
       }
     });
     return maakunnat.sort(numberSorter);
   }
-  return data.ominaisuudet["muu-maakunta"]?.split(",").map(kuntametadata.idForMaakuntaName).sort();
+  try {
+    return data.ominaisuudet["muu-maakunta"]?.split(",").map(s => s.trim()).map(kuntametadata.idForMaakuntaName).sort();
+  } catch (e) {
+    log.error("Virheellinen muu-maakunta: '" + data.ominaisuudet["muu-maakunta"] + "'");
+    return undefined;
+  }
 }
 
 function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjekti[] {
