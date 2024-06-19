@@ -11,7 +11,6 @@ import { expect } from "chai";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import omit from "lodash/omit";
-import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 
 describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   const userFixture = new UserFixture(userService);
@@ -27,7 +26,12 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     // Aseta projektille tiedostoja S3:een
     await Promise.all(
       TEST_PROJEKTI_FILES.map(async ({ tiedosto }) => {
-        const path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        let path;
+        if (tiedosto.includes("Maanomistajaluettelo")) {
+          path = `yllapito/sisaiset/projekti/${oid}${tiedosto}`;
+        } else {
+          path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        }
         await insertYllapitoFileToS3(path);
       })
     );

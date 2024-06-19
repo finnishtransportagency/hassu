@@ -169,7 +169,12 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
     // Aseta projektille tiedostoja S3:een
     await Promise.all(
       TEST_PROJEKTI_FILES.map(async ({ tiedosto }) => {
-        const path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        let path;
+        if (tiedosto.includes("Maanomistajaluettelo")) {
+          path = `yllapito/sisaiset/projekti/${oid}${tiedosto}`;
+        } else {
+          path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        }
         await insertYllapitoFileToS3(path);
       })
     );
