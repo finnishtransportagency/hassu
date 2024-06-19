@@ -48,7 +48,7 @@ export default async function createLadattavatTiedostot(
     )
   ).sort(jarjestaTiedostot);
   const kuulutuksetJaKutsutProjektista = await getKutsut(projekti);
-  const kuulutuksetJaKutsu: API.LadattavaTiedosto[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+  const kuulutuksetJaKutsu: API.LadattavaTiedosto[] = kuulutuksetJaKutsutOmaltaKoneelta.concat(kuulutuksetJaKutsutProjektista);
   const muuAineistoOmaltaKoneelta = (
     await Promise.all(
       (hyvaksymisEsitys.muuAineistoKoneelta ?? []).map((tiedosto) =>
