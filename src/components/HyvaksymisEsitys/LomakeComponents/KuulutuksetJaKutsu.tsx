@@ -44,7 +44,7 @@ export default function KuulutuksetJaKutsu({
               <LadattavaTiedostoComponent tiedosto={tiedosto} />
             </li>
           ))}
-      </ul>{" "}
+      </ul>
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="hyvaksymisesitys_files_table"
