@@ -1,17 +1,17 @@
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import IconButton from "@components/button/IconButton";
 import { H5 } from "@components/Headings";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
-export default function MuuAineistoKoneelta(): ReactElement {
+export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoKoneelta", control });
+  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoKoneelta", control });
 
   const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.muuAineistoKoneelta");
 
@@ -21,6 +21,13 @@ export default function MuuAineistoKoneelta(): ReactElement {
     }
   };
 
+  const registerNimi = useCallback(
+    (index: number) => {
+      return register(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta.${index}.nimi`);
+    },
+    [register]
+  );
+
   return (
     <SectionContent>
       <H5 variant="h4">Omalta koneelta</H5>
@@ -28,18 +35,19 @@ export default function MuuAineistoKoneelta(): ReactElement {
         Voit halutessasi liittää omalta koneelta hyväksymisesitykseen toimitettavaan aineistoon myös muuta lisäaineistoa, kuten
         hyväksymisesityksen luonnoksen tai muuta valitsemaasi materiaalia.
       </p>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      {!!fields?.length && (
+        <TiedostoInputNewTable
+          id="muu_aineisto_koneelta_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
+      )}
       <input
         type="file"
         multiple

@@ -12,6 +12,7 @@ import ExtLink from "@components/ExtLink";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import replace from "lodash/replace";
 import useTranslation from "next-translate/useTranslation";
+import { getVelhoUrl } from "../../../../util/velhoUtils";
 
 interface Props {
   vuorovaikutusnro: number;
@@ -45,7 +46,7 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
     return <></>;
   }
 
-  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+  const velhoURL = getVelhoUrl(projekti.oid);
 
   return (
     <>

@@ -36,6 +36,7 @@ import cloneDeep from "lodash/cloneDeep";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { getVelhoUrl } from "../../../../util/velhoUtils";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -318,7 +319,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const jatkopaatos2Asiatunnus = watch("kasittelynTila.toinenJatkopaatos.asianumero");
   const jatkopaatos1lisaaDisabled = ensimmainenJatkopaatosDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus;
   const jatkopaatos2lisaaDisabled = toinenJatkopaatosDisabled || !jatkopaatos2Pvm || !jatkopaatos2Asiatunnus;
-  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+  const velhoURL = getVelhoUrl(projekti.oid);
 
   return (
     <FormProvider {...useFormReturn}>

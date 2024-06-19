@@ -22,12 +22,12 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi, vaihe }:
   const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
   return (
-    <>
+    <div>
       <p>{getPaatosInfoText(paatosTyyppi)}</p>
-      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot vaihe={vaihe} />}
       <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
         Tuo päätös
       </Button>
+      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot vaihe={vaihe} />}
       <AineistojenValitseminenDialog
         open={paatosDialogOpen}
         infoText="Valitse yksi tai useampi päätöstiedosto."
@@ -41,6 +41,6 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi, vaihe }:
           replaceHyvaksymisPaatos(newHyvaksymisPaatos);
         }}
       />
-    </>
+    </div>
   );
 }

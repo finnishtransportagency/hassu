@@ -9,6 +9,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
+import { getVelhoUrl } from "../../../../util/velhoUtils";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -19,8 +20,7 @@ export default function Lukunakyma() {
     return null;
   }
 
-  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
-
+  const velhoURL = getVelhoUrl(projekti.oid);
   const nahtavillaoloMenneisyydessa =
     !!julkaisu.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
 
