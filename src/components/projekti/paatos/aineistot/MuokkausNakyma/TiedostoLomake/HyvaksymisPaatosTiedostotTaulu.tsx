@@ -36,7 +36,7 @@ export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe 
   const columns = useMemo<ColumnDef<FormAineisto>[]>(
     () => [
       {
-        header: "Tiedosto",
+        header: "Aineisto",
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);

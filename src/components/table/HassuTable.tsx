@@ -146,7 +146,7 @@ export default function HassuTable<T>({ table }: HassuTableProps<T>) {
   }, [table.options.columns]);
 
   return (
-    <ContentSpacer gap={7}>
+    <ContentSpacer gap={7} style={{marginTop: "24px"}}>
       {!isMedium && table.options.enableSorting && <TableMobileSorting table={table} />}
       <HassuTablePagination table={table} />
       <TableWrapper>
