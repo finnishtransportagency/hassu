@@ -114,7 +114,10 @@ export async function getMaanomistajaLuettelo(projekti: ProjektiTiedostoineen): 
         continue;
       }
       if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
-        maanomistajaluttelo.push(await adaptTiedostoPathToLadattavaTiedosto(projekti.oid, nahtavillaoloVaiheJulkaisu.maanomistajaluettelo));
+        maanomistajaluttelo.push(
+          // Kolmas arvo on true, koska tiedosto sijaitsee ylläpidon sisäiset-kansiossa
+          await adaptTiedostoPathToLadattavaTiedosto(projekti.oid, nahtavillaoloVaiheJulkaisu.maanomistajaluettelo, true)
+        );
       }
     }
   }
