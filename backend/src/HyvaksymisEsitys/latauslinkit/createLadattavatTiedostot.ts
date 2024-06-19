@@ -140,10 +140,6 @@ export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.La
         if (kuulutus) {
           kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
         }
-        const ilmoitus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusIlmoitusPDFPath;
-        if (ilmoitus) {
-          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
-        }
       }
 
       if (onSaameProjekti) {
@@ -153,9 +149,6 @@ export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.La
           const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
           assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
           kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
-          const ilmoitus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-          assertIsDefined(ilmoitus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusIlmoitusPDFPath on oltava olemassa`);
-          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
         });
       }
     }
@@ -204,10 +197,6 @@ export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.La
         if (kuulutus) {
           kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, kuulutus));
         }
-        const ilmoitus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusPDFPath;
-        if (ilmoitus) {
-          kutsut.push(await adaptTiedostoPathToLadattavaTiedosto(oid, ilmoitus));
-        }
         const ilmoitusKiinteistonomistajille: string | undefined =
           nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
         if (ilmoitusKiinteistonomistajille) {
@@ -222,9 +211,6 @@ export async function getKutsut(projekti: ProjektiTiedostoineen): Promise<API.La
           const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
           assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
           kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, kuulutus));
-          const ilmoitus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusIlmoitusPDF;
-          assertIsDefined(ilmoitus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusIlmoitusPDF on oltava olemassa`);
-          kutsut.push(await adaptLadattuTiedostoToLadattavaTiedosto(oid, ilmoitus));
         });
       }
     }
