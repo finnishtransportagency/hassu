@@ -55,6 +55,7 @@ import useValidationMode from "src/hooks/useValidationMode";
 import { label } from "src/util/textUtil";
 import { isAsianhallintaVaarassaTilassa } from "../../../../util/asianhallintaVaarassaTilassa";
 import { onTulevaisuudessa } from "common/util/dateUtils";
+import { isKuntatietoMissing } from "../../../../util/velhoUtils";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -315,7 +316,7 @@ function VuorovaikutusKierrosKutsu({
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
 
   const julkaisuIsDisabled = useMemo(() => {
-    const kunnatPuuttuu = !kuntavastaanottajat?.length;
+    const kunnatPuuttuu = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
     const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
     return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, vaihe);
   }, [kuntavastaanottajat?.length, projekti]);
