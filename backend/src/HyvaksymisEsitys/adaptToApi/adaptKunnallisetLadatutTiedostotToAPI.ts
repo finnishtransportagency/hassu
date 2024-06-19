@@ -10,7 +10,7 @@ export function adaptKunnallisetLadatutTiedostotToApi({
   path: string;
 }): API.KunnallinenLadattuTiedosto[] | undefined {
   if (tiedostot && tiedostot.length > 0) {
-    return [...tiedostot].map((tiedosto: KunnallinenLadattuTiedosto) => {
+    return tiedostot.map((tiedosto: KunnallinenLadattuTiedosto) => {
       const { nimi, lisatty, uuid, kunta } = tiedosto;
       const apiAineisto: API.KunnallinenLadattuTiedosto = {
         __typename: "KunnallinenLadattuTiedosto",
