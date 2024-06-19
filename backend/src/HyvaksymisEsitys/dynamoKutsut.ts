@@ -37,7 +37,7 @@ export type ProjektiTiedostoineen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
-> & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
+> & { hyvaksymisPaatosVaihe?: Pick<HyvaksymisPaatosVaihe, "id"> | null };
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   private static async sendUpdateCommandToDynamoDB(params: UpdateCommand): Promise<void> {

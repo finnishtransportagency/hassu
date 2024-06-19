@@ -7,7 +7,7 @@ import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 import { Dayjs } from "dayjs";
 
@@ -66,7 +66,7 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<AloitusKuulutusJulkaisu[]> {
-    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
+    if (isStatusGreaterOrEqualTo(projektiStatus, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
       const julkaisutSet = await this.julkaisut.reduce(
         async (modifiedJulkaisutPromise: Promise<Set<AloitusKuulutusJulkaisu>>, julkaisu) => {
           const modifiedJulkaisut = await modifiedJulkaisutPromise;

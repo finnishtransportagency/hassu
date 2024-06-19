@@ -38,7 +38,7 @@ import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "common/statusOrder";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "@components/projekti/kansalaisnakyma/AineistoLinkkiLista";
@@ -229,7 +229,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
         ) : (
           <p>
             {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
-            {isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
+            {isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
           </p>
         )}
       </ContentSpacer>
@@ -248,7 +248,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
             <Trans i18nKey="suunnittelu:aineistot.voi_tutustua" />
           </p>
         ) : (
-          <p>{t(isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? "aineistot.poistettu" : "aineistot.julkaistaan")}</p>
+          <p>{t(isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? "aineistot.poistettu" : "aineistot.julkaistaan")}</p>
         )}
         {!!esittelyaineistot?.length && vuorovaikutus?.vuorovaikutusJulkaisuPaiva && (
           <ContentSpacer>
