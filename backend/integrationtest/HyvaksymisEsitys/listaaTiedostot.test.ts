@@ -123,7 +123,9 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     ]
       .filter((nimi) => !nimi.includes("lähetekirje"))
       .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
-      .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
+      .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"))
+      .filter((nimi) => !nimi.includes("Ilmoitus aloituskuulutuksesta"))
+      .filter((nimi) => !nimi.includes("Ilmoitus suunnitelman"));
     expect(nimet.sort()).to.eql(expectedFileNames.sort());
   });
 

@@ -196,7 +196,7 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
     expect(tiedot.tuodutTiedostot.maanomistajaluettelo?.[0].nimi).to.eql("T416 Maanomistajaluettelo 20240522.xlsx");
     const lataus1 = axios.get(tiedot.tuodutTiedostot.maanomistajaluettelo?.[0].linkki as string);
     await expect(lataus1).to.eventually.be.fulfilled;
-    expect(tiedot.tuodutTiedostot.kuulutuksetJaKutsu?.length).to.eql(12);
+    expect(tiedot.tuodutTiedostot.kuulutuksetJaKutsu?.length).to.eql(10);
     for (const tiedosto of tiedot.tuodutTiedostot.kuulutuksetJaKutsu!) {
       await expect(axios.get(tiedosto.linkki as string)).to.eventually.be.fulfilled;
     }
