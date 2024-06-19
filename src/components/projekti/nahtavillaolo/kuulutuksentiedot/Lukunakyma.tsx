@@ -179,12 +179,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               </div>
             )}
 
-            {toissijainenKaannettavaKieli && (
+            {toissijainenKieli && (
               <div className="content mb-4">
                 <p>
                   {label({
                     label: "Kuulutus ja ilmoitus",
-                    inputLanguage: toissijainenKaannettavaKieli,
+                    inputLanguage: toissijainenKieli,
                     kielitiedot,
                   })}
                 </p>
