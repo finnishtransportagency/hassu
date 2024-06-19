@@ -21,17 +21,21 @@ import TEST_HYVAKSYMISESITYS, {
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { ValidationError } from "yup";
+import { SqsClient } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsClient";
+import { SqsEvent } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsEvent";
 
 describe("Hyväksymisesityksen tallentaminen", () => {
   const userFixture = new UserFixture(userService);
   const oid = "Testi1";
   const date = "2022-01-02"; // Sama aika kuin testidatassa
+  let addEventToSqsQueueMock: sinon.SinonStub<[params: SqsEvent, retry?: boolean | undefined], Promise<void>> | undefined;
   setupLocalDatabase();
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     await emptyUploadFiles();
+    addEventToSqsQueueMock = sinon.stub(SqsClient, "addEventToSqsQueue");
   });
 
   beforeEach(() => {
@@ -46,6 +50,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await removeProjektiFromDB(oid);
     userFixture.logout();
     MockDate.reset();
+    addEventToSqsQueueMock?.reset();
   });
 
   after(() => {
@@ -603,5 +608,40 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await expect(projektiAfter.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
   });
 
-  // TODO: "laukaisee oikeanlaisia tapahtumia, jos on uusia tiedostoja tai aineistoja"
+  it("laukaisee oikeanlaisen tapahtuman, jos on uusi aineisto", async () => {
+    userFixture.loginAsAdmin();
+    // Luodaan DB:ssä olevan hyväksymisesityksen data
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    // Asetetaan DB:ssä olevan projektin data
+    await insertProjektiToDB(projektiBefore);
+
+    // Luodaan inputin data
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+      muuAineistoVelhosta: [
+        {
+          dokumenttiOid: "muuAineistoVelhostaDokumenttiOid",
+          nimi: "muuAineistoVelhosta äöå .png",
+          uuid: "muuAineistoVelhosta-uuid",
+        },
+        {
+          dokumenttiOid: "muuAineistoVelhostaDokumenttiOid2",
+          nimi: "muuAineistoVelhosta äöå 2.png",
+          uuid: "muuAineistoVelhosta-uuid2",
+        },
+      ],
+    };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    expect(addEventToSqsQueueMock?.calledOnce).to.be.true;
+    expect(addEventToSqsQueueMock?.firstCall.args?.[0]).to.eql({ operation: "TUO_HYV_ES_AINEISTOT", oid: "Testi1" });
+  });
 });
