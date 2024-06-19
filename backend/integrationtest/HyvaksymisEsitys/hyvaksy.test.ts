@@ -27,7 +27,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
 
   // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
-  const kayttoOikeudet = [
+  const kayttoOikeudet: DBVaylaUser[] = [
     {
       etunimi: "Etunimi",
       sukunimi: "Sukunimi",
@@ -36,19 +36,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
       elyOrganisaatio: API.ELY.HAME_ELY,
       puhelinnumero: "0291234567",
+      organisaatio: "org1",
     },
     {
       etunimi: "Etunimi2",
       sukunimi: "Sukunimi2",
       email: "email2@email.com",
-      kayttajatunnus: "theadminuid",
+      kayttajatunnus: "thevarahenkilouid",
       tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+      puhelinnumero: "0291213",
+      organisaatio: "org2",
     },
     {
       etunimi: "Matti",
       sukunimi: "Muokkaaja",
       email: "muokkaaja@email.com",
       kayttajatunnus: "muokkaaja-oid",
+      puhelinnumero: "0291213",
+      organisaatio: "org2",
     },
   ];
 
@@ -112,6 +117,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       kayttoOikeudet,
       velho,
     };
@@ -153,19 +162,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          puhelinnumero: "029123123",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "029123123",
         },
       ],
       asianhallinta: {
         inaktiivinen: true,
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined },
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnusVayla",
@@ -224,14 +238,16 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          puhelinnumero: "029213321",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "029213321",
         },
       ],
       velho: {
@@ -240,6 +256,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
         kunnat: [91, 92],
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       asianhallinta: {
         inaktiivinen: false,
         asiaId: 14,
@@ -296,19 +315,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          puhelinnumero: "0291234567",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "0291234567",
         },
       ],
       asianhallinta: {
         inaktiivinen: true,
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined },
       velho: {
         nimi: "Projektin nimi",
         asiatunnusELY: "asiatunnusELY",
@@ -357,14 +381,16 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          puhelinnumero: "0291234567",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "0291234567",
         },
       ],
       velho: {
@@ -374,6 +400,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         kunnat: [91, 92],
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       asianhallinta: {
         inaktiivinen: false,
         asiaId: "asiaId",
@@ -430,9 +459,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
           organisaatio: "Organisaatio1",
+          puhelinnumero: "0291234567",
         },
         {
           etunimi: "Matti",
@@ -440,6 +470,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
           organisaatio: "Organisaatio1",
+          puhelinnumero: "0291234567",
         },
       ],
       velho: {
@@ -449,6 +480,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         kunnat: [91, 92],
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       asianhallinta: {
         inaktiivinen: false,
         asiaId: 14,
@@ -508,9 +542,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
           organisaatio: "Organisaatio 1",
+          puhelinnumero: "0291234567",
         },
         {
           etunimi: "Matti",
@@ -518,6 +553,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
           organisaatio: "Organisaatio 1",
+          puhelinnumero: "0291234567",
         },
       ],
       velho: {
@@ -527,6 +563,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         kunnat: [91, 92],
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       asianhallinta: {
         inaktiivinen: false,
         asiaId: 14,
@@ -560,6 +599,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
       kayttajatunnus: projari.uid!,
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      puhelinnumero: "029213213",
     };
     userFixture.loginAs(projari);
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
@@ -568,6 +608,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       kayttoOikeudet: [
         projariAsVaylaDBUser,
         {
@@ -575,23 +619,34 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "029213213",
         },
       ], // Muokkaajan tiedot tarvitsee olla, jotta s.postia lähetettäessä ei tule virhettä logille
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnusVayla",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.fulfilled;
+    await expect(kutsu).to.be.eventually.be.fulfilled;
   });
 
   it("luo julkaistun hyväksymisesityksen muokattavan perusteella", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
-    const projektiBefore = {
+    const projektiBefore: DBProjekti = {
       oid,
       versio,
-      muokattavaHyvaksymisEsitys,
+      muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitys as unknown as MuokattavaHyvaksymisEsitys,
       kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       velho,
     };
     await insertProjektiToDB(projektiBefore);
@@ -616,6 +671,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       velho,
     };
     await insertProjektiToDB(projektiBefore);
@@ -658,6 +717,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet,
       velho,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
     };
     await insertProjektiToDB(projektiBefore);
 
@@ -715,10 +778,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
+      kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnusVayla",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa", async () => {
@@ -729,10 +806,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
+      kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnusVayla",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu, jos muokattavaa hyväksymisesitystä ei ole", async () => {
@@ -741,10 +832,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const projektiBefore = {
       oid,
       versio,
+      kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "asiatunnusVayla",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        kunnat: [91, 92],
+      },
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu jos poistumisPaiva on menneisyydessa", async () => {
@@ -760,7 +865,11 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         palautusSyy: "Virheitä",
         poistumisPaiva: "2023-01-01",
       },
-      kayttoOikeudet: kayttoOikeudet as unknown as DBVaylaUser[],
+      kayttoOikeudet,
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
       velho,
     };
     await insertProjektiToDB(projektiBefore);

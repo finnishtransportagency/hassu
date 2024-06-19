@@ -11,7 +11,7 @@ import { TEST_PROJEKTI, TEST_PROJEKTI_FILES } from "./TEST_PROJEKTI";
 import { deleteYllapitoFiles, insertYllapitoFileToS3 } from "./util";
 import axios from "axios";
 
-describe("HaeHyvaksymisRsityksenTiedot", () => {
+describe("HaeHyvaksymisEsityksenTiedot", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
   const oid = "Testi1";
@@ -52,6 +52,10 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         kunnat: [91, 92],
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      asianhallinta: { inaktiivinen: true },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined },
       kayttoOikeudet: [],
     };
     await insertProjektiToDB(projektiBefore);
@@ -139,19 +143,20 @@ describe("HaeHyvaksymisRsityksenTiedot", () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
     const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-    const projektiBefore = {
+    const projektiBefore: DBProjekti = {
       oid,
       versio: 2,
-      muokattavaHyvaksymisEsitys,
-      julkaistuHyvaksymisEsitys,
+      muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitys as unknown as MuokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: julkaistuHyvaksymisEsitys as unknown as JulkaistuHyvaksymisEsitys,
       hyvaksymisPaatosVaihe: { id: 1 },
       salt: "salt",
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "asiatunnus",
-        suunnittelustaVastaavaViranomainen: "VAYLAVIRASTO",
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
         kunnat: [91, 92],
       },
+      kayttoOikeudet: [],
     };
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
