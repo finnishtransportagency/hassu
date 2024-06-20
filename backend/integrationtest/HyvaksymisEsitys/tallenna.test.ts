@@ -541,6 +541,22 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await expect(kutsu).to.be.eventually.rejectedWith(IllegalAccessError);
   });
 
+  it("ei onnistu, jos status on liian pieni", async () => {
+    userFixture.loginAs(muokkaaja);
+    const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+    };
+    // Poistetaan eurahoitus ja kielitiedot, jotta projektin statukseksi tulee EI_JULKAISTU
+    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    const projektiBefore: DBProjekti = {
+      ...projekti,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
+    await expect(kutsu).to.be.eventually.rejectedWith(IllegalArgumentError, "Projektin hyväksymisesitysvaihe ei ole aktiivinen");
+  });
+
   it("ei onnistu, jos muokattava hyväksymisesitys on hyväksytty", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {

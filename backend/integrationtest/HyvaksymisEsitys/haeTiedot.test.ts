@@ -130,6 +130,31 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
     expect(tiedot.muokkauksenVoiAvata).to.be.true;
   });
 
+  it("antaa vaiheOnAktiivinen=false ja muokkauksenVoiAvata=false, jos projektin status on liian pieni", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    //Poistetaan vaadittuja tietoja, jotta status laskee EI_JULKAISTU:ksi
+    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    const projektiBefore: DBProjekti = {
+      ...projekti,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+      hyvaksymisPaatosVaihe: { id: 1 },
+    };
+    await insertProjektiToDB(projektiBefore);
+    const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
+    expect(tiedot.vaiheOnAktiivinen).to.be.false;
+    expect(tiedot.muokkauksenVoiAvata).to.be.false;
+  });
+
   it("antaa projektin perustiedot", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {

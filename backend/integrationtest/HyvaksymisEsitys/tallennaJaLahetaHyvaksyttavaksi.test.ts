@@ -114,6 +114,27 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     expect(projektiAfter.muokattavaHyvaksymisEsitys?.palautusSyy).is.undefined;
   });
 
+  it("ei onnistu, jos projektin status on liian pieni", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      palautusSyy: "virheitä",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
+    // Otetaan projektilta euRahoitus ja kielitiedot pois, jotta projektin status on EI_JULKAISTU
+    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    const projektiBefore: DBProjekti = {
+      ...projekti,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    };
+    await insertProjektiToDB(projektiBefore);
+    const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError, "Projektin hyväksymisesitysvaihe ei ole aktiivinen");
+  });
+
   it("lähettää s.postin projarille", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
@@ -604,7 +625,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     const kutsu = tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({
-      oid: "1",
+      oid,
       versio: 2,
       muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput,
     });

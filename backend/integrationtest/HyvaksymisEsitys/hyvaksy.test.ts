@@ -145,6 +145,23 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
   });
 
+  it("ei onnistu, jos projektin status on liian pieni", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    const projektiBefore: DBProjekti = {
+      ...projekti,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError, "Projektin hyväksymisesitysvaihe ei ole aktiivinen");
+  });
+
   it("lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
