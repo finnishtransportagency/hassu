@@ -22,7 +22,7 @@ export const HeaderCell = styled(Cell)(({ onClick }) =>
     cursor: onClick ? "pointer" : undefined,
   })
 );
-export const DataCell = styled(Cell)(sx({}));
+export const DataCell = styled(Cell)(sx({alignContent: "center"}));
 export const DataCellContent = styled("div")({});
 export const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
 export const HeaderCellContents = styled("div")(sx({}));
