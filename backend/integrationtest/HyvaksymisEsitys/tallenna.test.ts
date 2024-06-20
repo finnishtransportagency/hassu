@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
-import { DBVaylaUser } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS_INPUT, {
   INPUTIN_LADATUT_TIEDOSTOT,
@@ -22,10 +22,46 @@ import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { ValidationError } from "yup";
 
+const projari = UserFixture.pekkaProjari;
+const projariAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: projari.uid!,
+  tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+  etunimi: "Pekka",
+  sukunimi: "Projari",
+  email: "pekka.projari@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+const muokkaaja = UserFixture.manuMuokkaaja;
+const muokkaajaAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: muokkaaja.uid!,
+  etunimi: "Manu",
+  sukunimi: "Muokkaaja",
+  email: "namu.muokkaaja@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+
+const oid = "Testi1";
+const date = "2022-01-02"; // Sama aika kuin testidatassa
+const getProjektiBase: () => DBProjekti = () => ({
+  oid,
+  versio: 2,
+  kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+  vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+  asianhallinta: { inaktiivinen: true },
+  euRahoitus: false,
+  kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+  velho: {
+    nimi: "Projektin nimi",
+    asiatunnusVayla: "asiatunnusVayla",
+    suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    kunnat: [91, 92],
+  },
+});
+
 describe("Hyväksymisesityksen tallentaminen", () => {
   const userFixture = new UserFixture(userService);
-  const oid = "Testi1";
-  const date = "2022-01-02"; // Sama aika kuin testidatassa
   setupLocalDatabase();
 
   before(async () => {
@@ -58,10 +94,10 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -98,10 +134,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
         },
       ],
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -141,10 +176,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -160,10 +194,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -182,10 +215,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -204,10 +236,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -229,10 +260,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -251,10 +281,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const projektiBefore = {
-      oid,
-      versio: 2,
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
@@ -311,10 +340,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
         },
       ],
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     // Asetetaan DB:ssä olevan projektin data
@@ -424,11 +452,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
-    };
-    await insertProjektiToDB(projektiBefore);
+    await insertProjektiToDB(getProjektiBase());
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
     const projektiAfter = await getProjektiFromDB(oid);
@@ -444,10 +468,13 @@ describe("Hyväksymisesityksen tallentaminen", () => {
 
   it("korvaa vanhat tiedot uusilla", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, poistumisPaiva: "2033-01-02", tila: API.HyvaksymisTila.MUOKKAUS };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      poistumisPaiva: "2033-01-02",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
@@ -473,26 +500,11 @@ describe("Hyväksymisesityksen tallentaminen", () => {
   });
 
   it("onnistuu projektikäyttäjältä", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: muokkaaja.uid!,
-    };
     userFixture.loginAs(muokkaaja);
-
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
-      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
-    };
-    await insertProjektiToDB(projektiBefore);
+    await insertProjektiToDB(getProjektiBase());
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
     const kutsu = tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
     await expect(kutsu).to.be.eventually.fulfilled;
@@ -503,11 +515,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
-    };
-    await insertProjektiToDB(projektiBefore);
+    await insertProjektiToDB(getProjektiBase());
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
@@ -519,20 +527,12 @@ describe("Hyväksymisesityksen tallentaminen", () => {
   });
 
   it("ei onnistu henkilöltä, joka ei ole projektissa", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
     userFixture.loginAs(muokkaaja);
-
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
     const projektiBefore = {
-      oid,
-      versio: 2,
+      ...getProjektiBase(),
       kayttoOikeudet: [projariAsVaylaDBUser],
     };
     await insertProjektiToDB(projektiBefore);
@@ -546,15 +546,14 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksyja: "theadminoid",
       hyvaksymisPaiva: "2022-01-02",
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -570,10 +569,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -589,10 +587,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
