@@ -1073,7 +1073,7 @@ export class HassuBackendStack extends Stack {
       queueName: "hyvaksymisesitys-queue-" + Config.env,
       visibilityTimeout: Duration.seconds(60 * 5),
       encryption: QueueEncryption.KMS_MANAGED,
-      retentionPeriod: Duration.minutes(30),
+      retentionPeriod: Duration.hours(8),
     });
   }
 

@@ -13,11 +13,15 @@ import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
+import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", async () => {
     for (const record of event.Records) {
+      const receiptHandle = record.receiptHandle;
+      const sentTimestamp = record.attributes.SentTimestamp;
+      const timesInQueue = record.attributes.ApproximateReceiveCount;
       const sqsEvent: SqsEvent = JSON.parse(record.body);
       try {
         log.info("sqsEvent", sqsEvent);
@@ -34,10 +38,21 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
       } catch (e) {
         if (e instanceof SimultaneousUpdateError) {
-          log.info("SimultaneousUpdateError occured; trowing error (event will be handled again)", sqsEvent);
+          log.info(
+            "SimultaneousUpdateError occured; setting visibility timeout to 0 and trowing error (event will be handled again right away), " +
+              `if it has not been too long (RetentionPeriod) after message first appeared in queue (${sentTimestamp}). ` +
+              `This was the ${timesInQueue}. time handling this event.`,
+            sqsEvent
+          );
+          await setZeroMessageVisibilityTimeout(receiptHandle);
           throw e;
         } else {
-          log.error(e);
+          log.error(
+            `Some error occured: "${(e as Error)?.message}". Trying again after visibilityTimeout has passed, ` +
+              `if it has not been too long (RetentionPeriod) after message first appeared in queue (${sentTimestamp}). ` +
+              `This was the ${timesInQueue}. time handling this event.`,
+            sqsEvent
+          );
           throw e;
         }
       }
