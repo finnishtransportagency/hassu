@@ -5,6 +5,7 @@ import getAsiatunnus from "src/util/getAsiatunnus";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { PerusosioProps } from "./Perusosio";
 import { ProjektiTyyppi } from "@services/api";
+import { H2 } from "../../Headings";
 
 export default function ProjektiPerustiedot({ projekti }: PerusosioProps): ReactElement {
   const { t } = useTranslation("projekti");
@@ -33,7 +34,7 @@ export default function ProjektiPerustiedot({ projekti }: PerusosioProps): React
 
   return (
     <ContentSpacer>
-      <h2 className="vayla-title">Projektin perustiedot</h2>
+      <H2>Projektin perustiedot</H2>
       <KeyValueTable rows={perustiedot} />
     </ContentSpacer>
   );

@@ -7,6 +7,7 @@ import { isAllowedToChangeVahainenMenettely } from "hassu-common/util/operationV
 import React, { Fragment } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
+import { H3 } from "../../Headings";
 
 type Props = { formDisabled?: boolean; projekti: ProjektiLisatiedolla };
 
@@ -22,7 +23,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
   return (
     <Section>
       <ContentSpacer>
-        <h3 className="vayla-subtitle">Vähäinen menettely</h3>
+        <H3>Vähäinen menettely</H3>
         <p>
           Jos suunnitelma on vaikutuksiltaan vähäinen, eikä sanottavasti muuta paikallisia liikenneolosuhteita, projektin menettelytavaksi
           voidaan valita vähäinen menettely. Sillä tarkoitetaan LjMTL 28 § tai RataL 23 § mukaista menettelyä. Vähäinen menettely eroaa

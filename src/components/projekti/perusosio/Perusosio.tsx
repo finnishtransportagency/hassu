@@ -10,6 +10,7 @@ import TextInput from "@components/form/TextInput";
 import { FormState, UseFormRegister } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
+import { H3 } from "../../Headings";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -37,7 +38,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
       </Section>
       {register && formState && (
         <Section gap={4}>
-          <h3 className="vayla-subtitle">Projektin viitetieto</h3>
+          <H3>Projektin viitetieto</H3>
           <p>
             Tämä tieto on Suomi.fi-viestien tulostus-, kuoritus- ja jakelupalvelun laskutusta varten. Väylän projektissa projektikohtainen
             VSK-koodi. ELYn projektissa käytetään oman ohjeistuksen mukaista viitetietoa. Viitetiedon maksimipituus on 15 merkkiä ja se voi
