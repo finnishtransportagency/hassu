@@ -11,7 +11,6 @@ import { expect } from "chai";
 import { adaptFileName } from "../../src/tiedostot/paths";
 import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS_INPUT";
 import omit from "lodash/omit";
-import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 
 describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
   const userFixture = new UserFixture(userService);

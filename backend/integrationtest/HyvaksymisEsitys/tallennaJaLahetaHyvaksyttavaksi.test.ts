@@ -9,7 +9,7 @@ import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS
 import * as API from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
-import { DBVaylaUser } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName, joinPath } from "../../src/tiedostot/paths";
 import MockDate from "mockdate";
@@ -19,10 +19,47 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { ValidationError } from "yup";
 import { cloneDeep } from "lodash";
 
+const oid = "Testi1";
+
+const projari = UserFixture.pekkaProjari;
+const projariAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: projari.uid!,
+  tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+  etunimi: "Pekka",
+  sukunimi: "Projari",
+  email: "pekka.projari@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+const muokkaaja = UserFixture.manuMuokkaaja;
+const muokkaajaAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: muokkaaja.uid!,
+  email: "namu.muokkaaja@vayla.fi",
+  etunimi: "Manu",
+  sukunimi: "Muokkaaja",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+
+const getProjektiBase: () => DBProjekti = () => ({
+  oid,
+  versio: 2,
+  kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+  vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+  asianhallinta: { inaktiivinen: true },
+  euRahoitus: false,
+  kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+  velho: {
+    nimi: "Projektin nimi",
+    asiatunnusVayla: "asiatunnusVayla",
+    suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    kunnat: [91, 92],
+  },
+});
+
 describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettäminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
-  const oid = "Testi1";
   let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
 
   before(async () => {
@@ -62,23 +99,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        },
-      ],
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
@@ -93,14 +120,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
-      muokattavaHyvaksymisEsitys,
-      julkaistuHyvaksymisEsitys: undefined,
-      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       kayttoOikeudet: [
         {
           etunimi: "Etunimi",
@@ -108,15 +131,22 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
           email: "email@email.com",
           kayttajatunnus: "theadminuid",
           tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "0291221",
         },
         {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "theotheruid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "0291221",
         },
       ],
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys: undefined,
+      aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
@@ -133,11 +163,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -157,11 +186,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -184,11 +212,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -211,11 +238,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -239,11 +265,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -267,11 +292,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -298,11 +322,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -326,10 +349,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -356,22 +378,12 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        },
-      ],
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -398,22 +410,12 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        },
-      ],
     };
     await insertProjektiToDB(projektiBefore);
     const muistutusFileName = "muistutukset äöå 2.png";
@@ -456,27 +458,16 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
   });
 
   it("onnistuu projektihenkilöltä", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: muokkaaja.uid!,
-    };
     userFixture.loginAs(muokkaaja);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
-      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
     };
     await insertProjektiToDB(projektiBefore);
@@ -486,21 +477,15 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
   });
 
   it("ei onnistu henkilöltä, joka ei ole projektissa", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
     userFixture.loginAs(muokkaaja);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const { kayttoOikeudet: _ko, ...projekti } = getProjektiBase();
+    const projektiBefore: DBProjekti = {
+      ...projekti,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       kayttoOikeudet: [projariAsVaylaDBUser],
@@ -517,15 +502,14 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksyja: "theadminoid",
       hyvaksymisPaiva: "2022-01-02",
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -541,27 +525,17 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       hyvaksyja: "theadminoid",
       hyvaksymisPaiva: "2022-01-02",
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        },
-      ],
     };
     await insertProjektiToDB(projektiBefore);
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
@@ -575,10 +549,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -603,11 +576,10 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ],
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
@@ -619,14 +591,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
 
   it("ei onnistu, jos tietoja puuttuu", async () => {
     userFixture.loginAsAdmin();
+    const { suunnitelma: _s, ...muut } = TEST_HYVAKSYMISESITYS;
     const muokattavaHyvaksymisEsitys = {
-      ...TEST_HYVAKSYMISESITYS,
+      ...muut,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    delete muokattavaHyvaksymisEsitys.suunnitelma;
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
     };
@@ -646,23 +617,13 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        },
-      ],
     };
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
