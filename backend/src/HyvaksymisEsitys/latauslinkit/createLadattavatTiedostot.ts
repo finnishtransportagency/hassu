@@ -1,5 +1,4 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { ProjektiTiedostoineen } from "../dynamoKutsut";
 import { assertIsDefined } from "../../util/assertions";
 import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 import { JulkaistuHyvaksymisEsitys, LadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../../database/model";
@@ -17,6 +16,7 @@ import {
   getYllapitoPathForProjekti,
   joinPath,
 } from "../../tiedostot/paths";
+import { ProjektiTiedostoineen } from "../dynamoKutsut";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,

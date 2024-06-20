@@ -11,7 +11,6 @@ import { getDynamoDBDocumentClient } from "../../aws/client";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { SqsClient } from "./sqsClient";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
 
@@ -35,11 +34,11 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
       } catch (e) {
         if (e instanceof SimultaneousUpdateError) {
-          log.info("SimultaneousUpdateError occured; returning event back to queue", sqsEvent);
-          await SqsClient.addEventToSqsQueue(sqsEvent, false);
+          log.info("SimultaneousUpdateError occured; trowing error (event will be handled again)", sqsEvent);
+          throw e;
         } else {
           log.error(e);
-          await SqsClient.addEventToSqsQueue(sqsEvent, true);
+          throw e;
         }
       }
     }
