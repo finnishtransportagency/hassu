@@ -1,16 +1,16 @@
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useController, useFieldArray, useFormContext } from "react-hook-form";
-import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
-export default function HyvaksymisEsitysTiedosto(): ReactElement {
+export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
 
   const fieldName = "muokattavaHyvaksymisEsitys.hyvaksymisEsitys";
   const {
@@ -18,7 +18,7 @@ export default function HyvaksymisEsitysTiedosto(): ReactElement {
     fieldState: { error },
   } = useController({ name: fieldName, control });
 
-  const { fields, remove } = useFieldArray({ name: fieldName, control });
+  const { fields, remove, move } = useFieldArray({ name: fieldName, control });
   const handleUploadedFiles = useHandleUploadedFiles(fieldName);
 
   const onButtonClick = () => {
@@ -27,22 +27,30 @@ export default function HyvaksymisEsitysTiedosto(): ReactElement {
     }
   };
 
+  const registerNimi = useCallback(
+    (index: number) => {
+      return register(`muokattavaHyvaksymisEsitys.hyvaksymisEsitys.${index}.nimi`);
+    },
+    [register]
+  );
+
   return (
     <SectionContent>
       <H4 variant="h3">Hyväksymisesitys</H4>
       <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      {!!fields?.length && (
+        <TiedostoInputNewTable
+          id="hyvaksymisesitys_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
+      )}
       <input
         type="file"
         multiple
