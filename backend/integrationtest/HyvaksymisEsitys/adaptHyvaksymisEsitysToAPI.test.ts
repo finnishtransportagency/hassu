@@ -162,6 +162,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
       aineistoHandledAt: "2022-01-02T02:01:00+02:00",
+      hyvEsAineistoPaketti: "hyvaksymisesitys/aineisto.zip",
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys).to.eql({
@@ -265,6 +266,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       tila: "MUOKKAUS",
       palautusSyy: "Huono",
       hash: "f67cde5bf0977767e610740d0196732784a101160024d848d8c0a894d267d2c276c08b06e5076972480e98cf12a431676b36bf30b7a221415f91f14a9e1186a8",
+      aineistopaketti: "hyvaksymisesitys/aineisto.zip",
     });
   });
 
