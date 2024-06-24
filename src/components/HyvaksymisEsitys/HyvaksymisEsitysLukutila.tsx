@@ -354,7 +354,7 @@ const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
             backgroundColor: info.getValue() == "Ei lähetetty" ? "lightgrey" : "#F5FFEF",
           }}
         >
-          {info.getValue()}
+          <>{info.getValue()}</>
         </div>
       );
     },

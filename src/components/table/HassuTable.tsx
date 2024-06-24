@@ -146,7 +146,7 @@ export default function HassuTable<T>({ table }: HassuTableProps<T>) {
   }, [table.options.columns]);
 
   return (
-    <ContentSpacer gap={7} style={{marginTop: "24px"}}>
+    <ContentSpacer gap={7} style={{ marginTop: "24px" }}>
       {!isMedium && table.options.enableSorting && <TableMobileSorting table={table} />}
       <HassuTablePagination table={table} />
       <TableWrapper>
@@ -429,7 +429,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
           >
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
-                {!isMedium && <DataCellHeaderContent>{flexRender(cell.column.columnDef.header, cell.getContext())}</DataCellHeaderContent>}
+                {!isMedium && <DataCellHeaderContent>{flexRender<any>(cell.column.columnDef.header, {})}</DataCellHeaderContent>}
                 <DataCellContent>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
               </DataCell>
             ))}
