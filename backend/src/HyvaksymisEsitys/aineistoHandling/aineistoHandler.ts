@@ -15,7 +15,7 @@ import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
-import collectTiedostotToZip from "./zipTiedostot";
+import collectTiedostotToZip from "./haeZipTiedostot";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -66,7 +66,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   });
 };
 
-async function zipHyvEsAineistot(oid: string) {
+export async function zipHyvEsAineistot(oid: string) {
   const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid);
   const filesToZip: ZipSourceFile[] = collectTiedostotToZip(projekti);
   await generateAndStreamZipfileToS3(
@@ -77,7 +77,7 @@ async function zipHyvEsAineistot(oid: string) {
   await setAineistoZip(oid);
 }
 
-async function tuoAineistot(oid: string) {
+export async function tuoAineistot(oid: string) {
   const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid);
   const { aineistoHandledAt, versio, lockedUntil } = projekti;
   const timestampNow = nyt().unix();
