@@ -768,7 +768,7 @@ export class HassuBackendStack extends Stack {
       handler: "handleEvent",
       memorySize: 1024,
       reservedConcurrentExecutions: concurrency,
-      timeout: Duration.seconds(600),
+      timeout: Duration.seconds(60 * 5),
       bundling: {
         minify: true,
         sourceMap: true,
@@ -1071,8 +1071,9 @@ export class HassuBackendStack extends Stack {
   private createHyvaksymisEsitysAineistoQueue() {
     return new Queue(this, "HyvaksymisEsitysQueue", {
       queueName: "hyvaksymisesitys-queue-" + Config.env,
-      visibilityTimeout: Duration.minutes(10),
+      visibilityTimeout: Duration.seconds(60 * 5),
       encryption: QueueEncryption.KMS_MANAGED,
+      retentionPeriod: Duration.hours(8),
     });
   }
 
