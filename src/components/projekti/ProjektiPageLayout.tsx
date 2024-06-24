@@ -9,6 +9,8 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import deburr from "lodash/deburr";
+import { isKuntatietoMissing } from "../../util/velhoUtils";
+import KuntatietoMissingNotification from "../KuntatietoMissingNotification";
 
 interface Props {
   children: ReactNode;
@@ -114,6 +116,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
                   )}
                 </>
               )}
+              {isKuntatietoMissing(projekti) && <KuntatietoMissingNotification projekti={projekti} />}
             </ContentSpacer>
             {children}
           </div>

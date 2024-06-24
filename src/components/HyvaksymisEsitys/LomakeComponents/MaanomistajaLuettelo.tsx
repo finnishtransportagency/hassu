@@ -1,17 +1,20 @@
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { LadattavaTiedosto, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattavaTiedosto, LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import TiedostoInputNewTable from "./TiedostoInputNewTable";
 
-export default function Maanomistajaluettelo({ tuodut }: Readonly<{ tuodut?: LadattavaTiedosto[] | null }>): ReactElement {
+export default function Maanomistajaluettelo({
+  tuodut,
+  tiedostot,
+}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
-  const { fields, remove } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
+  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
   const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.maanomistajaluettelo");
 
   const onButtonClick = () => {
@@ -19,6 +22,13 @@ export default function Maanomistajaluettelo({ tuodut }: Readonly<{ tuodut?: Lad
       hiddenInputRef.current.click();
     }
   };
+
+  const registerNimi = useCallback(
+    (index: number) => {
+      return register(`muokattavaHyvaksymisEsitys.maanomistajaluettelo.${index}.nimi`);
+    },
+    [register]
+  );
 
   return (
     <>
@@ -32,18 +42,19 @@ export default function Maanomistajaluettelo({ tuodut }: Readonly<{ tuodut?: Lad
             </li>
           ))}
       </ul>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      {!!fields?.length && (
+        <TiedostoInputNewTable
+          id="maanomistajaluettelo_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
+      )}
       <input
         type="file"
         multiple

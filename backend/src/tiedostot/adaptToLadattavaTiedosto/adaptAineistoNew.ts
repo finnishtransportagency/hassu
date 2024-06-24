@@ -8,7 +8,7 @@ export default async function adaptAineistoNewToLadattavaTiedosto(
   aineistoHandletAt: string | true | undefined | null,
   path: string
 ): Promise<API.LadattavaTiedosto> {
-  const { jarjestys, kategoriaId } = aineisto;
+  const { kategoriaId } = aineisto;
   const nimi = aineisto.nimi;
   let linkki;
   if (aineistoHandletAt === true || (aineistoHandletAt?.localeCompare(aineisto.lisatty))) {
@@ -16,5 +16,5 @@ export default async function adaptAineistoNewToLadattavaTiedosto(
   } else {
     linkki = "";
   }
-  return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki, tuotu: aineisto.lisatty };
+  return { __typename: "LadattavaTiedosto", nimi, kategoriaId, linkki, tuotu: aineisto.lisatty };
 }
