@@ -5,7 +5,7 @@ import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { velho } from "../../velho/velhoClient";
 import putFile from "../s3Calls/putFile";
-import { adaptFileName } from "../../tiedostot/paths";
+import { adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 import { HyvaksymisEsitysAineistoOperation, SqsEvent } from "./sqsEvent";
 import { getDynamoDBDocumentClient } from "../../aws/client";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
@@ -14,6 +14,8 @@ import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
+import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
+import collectTiedostotToZip from "./zipTiedostot";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -29,6 +31,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         switch (operation) {
           case HyvaksymisEsitysAineistoOperation.TUO_HYV_ES_TIEDOSTOT: {
             await tuoAineistot(oid);
+            break;
+          }
+          case HyvaksymisEsitysAineistoOperation.ZIP_HYV_ES_AINEISTOT: {
+            await zipHyvEsAineistot(oid);
             break;
           }
           default: {
@@ -59,6 +65,17 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
     }
   });
 };
+
+async function zipHyvEsAineistot(oid: string) {
+  const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid);
+  const filesToZip: ZipSourceFile[] = collectTiedostotToZip(projekti);
+  await generateAndStreamZipfileToS3(
+    config.yllapitoBucketName,
+    filesToZip,
+    joinPath(getYllapitoPathForProjekti(projekti.oid), "hyvaksymisesitys", "/aineisto.zip")
+  );
+  // TODO: Merkkaa dynamoon, että zip on olemassa
+}
 
 async function tuoAineistot(oid: string) {
   const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid);
@@ -119,6 +136,49 @@ async function haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<Hyvaks
   }
 }
 
+type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
+  DBProjekti,
+  | "oid"
+  | "versio"
+  | "aineistoHandledAt"
+  | "muokattavaHyvaksymisEsitys"
+  | "lockedUntil"
+  | "aloitusKuulutusJulkaisut"
+  | "vuorovaikutusKierrosJulkaisut"
+  | "nahtavillaoloVaiheJulkaisut"
+>;
+
+async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
+  const params = new GetCommand({
+    TableName: config.projektiTableName,
+    Key: { oid },
+    ConsistentRead: true,
+    ProjectionExpression:
+      "oid, " +
+      "versio, " +
+      "kielitiedot, " +
+      "velho, " +
+      "aloitusKuulutusJulkaisut, " +
+      "vuorovaikutusKierrosJulkaisut, " +
+      "nahtavillaoloVaiheJulkaisut, " +
+      "muokattavaHyvaksymisEsitys",
+  });
+
+  try {
+    const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+    const data = await dynamoDBDocumentClient.send(params);
+    if (!data.Item) {
+      log.error("Yritettiin hakea projektin tietoja, mutta ei onnistuttu", { params });
+      throw new Error();
+    }
+    const projekti = data.Item as ZipattavatAineistotHyvaksymisEsitykseen;
+    return projekti;
+  } catch (e) {
+    log.error(e instanceof Error ? e.message : String(e), { params });
+    throw e;
+  }
+}
+
 async function setAineistoHandledAt(oid: string, versio: number) {
   const aineistoHandledAt = nyt().format();
   const params = new UpdateCommand({
@@ -141,6 +201,39 @@ async function setAineistoHandledAt(oid: string, versio: number) {
     ConditionExpression:
       "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
       `(attribute_not_exists(#lockedUntil) OR #lockedUntil = :null OR #lockedUntil < :now)`,
+  });
+
+  if (log.isLevelEnabled("debug")) {
+    log.debug("Setting aineistoHandledAt", "aineistoHandledAt:" + aineistoHandledAt);
+  }
+  try {
+    const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+    await dynamoDBDocumentClient.send(params);
+  } catch (e) {
+    if (e instanceof ConditionalCheckFailedException) {
+      throw new SimultaneousUpdateError();
+    }
+    log.error(e instanceof Error ? e.message : String(e), { params });
+    throw e;
+  }
+}
+
+async function setAineistoZip(oid: string) {
+  const aineistoHandledAt = nyt().format();
+  const params = new UpdateCommand({
+    TableName: config.projektiTableName,
+    Key: {
+      oid,
+    },
+    UpdateExpression: "SET " + "#aineistoHandledAt = :aineistoHandledAt",
+    ExpressionAttributeNames: {
+      "#aineistoHandledAt": "aineistoHandledAt",
+      "#versio": "versio",
+      "#lockedUntil": "lockedUntil",
+    },
+    ExpressionAttributeValues: {
+      ":aineistoZip": "aineisto.zip",
+    },
   });
 
   if (log.isLevelEnabled("debug")) {
