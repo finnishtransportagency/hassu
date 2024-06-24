@@ -74,7 +74,7 @@ async function zipHyvEsAineistot(oid: string) {
     filesToZip,
     joinPath(getYllapitoPathForProjekti(projekti.oid), "hyvaksymisesitys", "/aineisto.zip")
   );
-  // TODO: Merkkaa dynamoon, että zip on olemassa
+  await setAineistoZip(oid);
 }
 
 async function tuoAineistot(oid: string) {
@@ -219,33 +219,27 @@ async function setAineistoHandledAt(oid: string, versio: number) {
 }
 
 async function setAineistoZip(oid: string) {
-  const aineistoHandledAt = nyt().format();
   const params = new UpdateCommand({
     TableName: config.projektiTableName,
     Key: {
       oid,
     },
-    UpdateExpression: "SET " + "#aineistoHandledAt = :aineistoHandledAt",
+    UpdateExpression: "SET " + "#hyvEsAineistoPaketti = :aineistoZip",
     ExpressionAttributeNames: {
-      "#aineistoHandledAt": "aineistoHandledAt",
-      "#versio": "versio",
-      "#lockedUntil": "lockedUntil",
+      "#hyvEsAineistoPaketti": "hyvEsAineistoPaketti",
     },
     ExpressionAttributeValues: {
-      ":aineistoZip": "aineisto.zip",
+      ":aineistoZip": "hyvaksymisesitys/aineisto.zip",
     },
   });
 
   if (log.isLevelEnabled("debug")) {
-    log.debug("Setting aineistoHandledAt", "aineistoHandledAt:" + aineistoHandledAt);
+    log.debug("Marking hyvEsAineistoPaketti as created", "hyvEsAineistoPaketti: " + "hyvaksymisesitys/aineisto.zip");
   }
   try {
     const dynamoDBDocumentClient = getDynamoDBDocumentClient();
     await dynamoDBDocumentClient.send(params);
   } catch (e) {
-    if (e instanceof ConditionalCheckFailedException) {
-      throw new SimultaneousUpdateError();
-    }
     log.error(e instanceof Error ? e.message : String(e), { params });
     throw e;
   }

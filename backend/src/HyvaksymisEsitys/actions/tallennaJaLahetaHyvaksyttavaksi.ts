@@ -16,6 +16,8 @@ import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemp
 import { emailClient } from "../../email/email";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
+import { SqsClient } from "../aineistoHandling/sqsClient";
+import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -72,6 +74,9 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
     muokkaaja: kayttaja.uid,
   });
   // Aineistomuutoksia ei voi olla, koska validoimme, että tiedostot ovat valmiita
+
+  // Halutaan zipata aineistot ennen kuin ne julkaistaan
+  await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.ZIP_HYV_ES_AINEISTOT, oid });
 
   // Lähetä email
   const emailOptions = createHyvaksymisesitysHyvaksyttavanaEmail(projektiInDB);
