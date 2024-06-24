@@ -243,7 +243,7 @@ Sait tämän viestin, koska sinut on merkitty hyväksymisesityksen laatijaksi. T
 }
 
 export async function createHyvaksymisesitysHyvaksyttyPpEmail(
-  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta" | "asianhallinta">
+  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
 ): Promise<EmailOptions> {
   const asiatunnus = getAsiatunnus(projekti.velho);
   const linkkiAsianhallintaan = await getLinkkiAsianhallintaan(projekti);
@@ -300,7 +300,7 @@ ${asiatunnus}
 Vastuuorganisaatio
 
 ${translate(
-  "vastaava-viranomainen." + projekti.velho?.suunnittelustaVastaavaViranomainen ?? API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+  "vastaava-viranomainen." + (projekti.velho?.suunnittelustaVastaavaViranomainen ?? API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO),
   API.Kieli.SUOMI
 )}
 

@@ -5,7 +5,7 @@ import { SqsEvent } from "./sqsEvent";
 import { config } from "../../config";
 
 export class SqsClient {
-  static getSQS = (): SQS => {
+  static readonly getSQS = (): SQS => {
     return produce<SQS>("sqs-hyvaksymisesitys", () => new SQS({ region: "eu-west-1" }));
   };
 

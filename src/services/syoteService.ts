@@ -61,7 +61,7 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
     try {
       // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
       const { username, password } = await getCredentials();
-      await api.setOneTimeForwardHeaders({
+      api.setOneTimeForwardHeaders({
         ...req.headers,
         authorization: createAuthorizationHeader(username, password),
       });
@@ -72,9 +72,9 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
 
         const nimi: Partial<Record<Kieli, string>> = {};
         if (projekti.kielitiedot?.ensisijainenKieli) {
-          nimi[projekti.kielitiedot?.ensisijainenKieli] = projekti.velho.nimi || "";
+          nimi[projekti.kielitiedot?.ensisijainenKieli] = projekti.velho.nimi ?? "";
           if (projekti.kielitiedot?.toissijainenKieli) {
-            nimi[projekti.kielitiedot?.toissijainenKieli] = projekti.kielitiedot?.projektinNimiVieraskielella || "";
+            nimi[projekti.kielitiedot?.toissijainenKieli] = projekti.kielitiedot?.projektinNimiVieraskielella ?? "";
           }
         }
 
@@ -97,7 +97,7 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
 
         const tiedot: ProjektiTiedot = {
           nimi,
-          status: projekti.status || undefined,
+          status: projekti.status ?? undefined,
           link,
           links,
           aktiivinenKuulutus: activeKuulutusLink,
@@ -114,7 +114,7 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
       console.error("Error generating pdf:", e, e.networkError?.result);
 
       const networkError = e.networkError;
-      if (networkError && networkError.statusCode) {
+      if (networkError?.statusCode) {
         res.status(networkError.statusCode);
         res.send(networkError.bodyText);
       } else {
