@@ -1,4 +1,4 @@
-import React, { useCallback, useState, VFC, useMemo } from "react";
+import React, { useCallback, useState, useMemo, FunctionComponent } from "react";
 import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
@@ -411,7 +411,7 @@ export type InitialSearchResponses = {
   lisatyt: KiinteistonOmistajat;
 };
 
-export const FormContents: VFC<{
+export const FormContents: FunctionComponent<{
   projekti: ProjektiLisatiedolla;
   initialSearchResponses: InitialSearchResponses;
 }> = ({ projekti, initialSearchResponses }) => {
@@ -685,6 +685,7 @@ const LisatytTaulukko = () => {
         onClick={() => {
           append({
             nimi: "",
+            maa: null,
             jakeluosoite: "",
             kiinteistotunnus: "",
             postinumero: "",

@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState, useMemo, useEffect, VFC } from "react";
+import React, { ReactElement, useCallback, useState, useMemo, useEffect, FunctionComponent } from "react";
 import { KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -672,12 +672,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   );
 }
 
-const DatePickerConditionallyInTheForm: VFC<HassuDatePickerWithControllerProps<KasittelynTilaFormValues> & { includeInForm: boolean }> = ({
-  controllerProps,
-  value,
-  includeInForm,
-  ...props
-}) => {
+const DatePickerConditionallyInTheForm: FunctionComponent<
+  HassuDatePickerWithControllerProps<KasittelynTilaFormValues> & { includeInForm: boolean }
+> = ({ controllerProps, value, includeInForm, ...props }) => {
   if (!includeInForm) {
     return <HassuDatePicker {...props} value={value} />;
   }

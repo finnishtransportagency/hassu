@@ -8,7 +8,11 @@ import { UrlObject } from "url";
 import { ProjektiJulkinen, Status } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
-const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode }> = ({ children, pageTitle, saameContent }) => {
+const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode; children?: React.ReactNode }> = ({
+  children,
+  pageTitle,
+  saameContent,
+}) => {
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti) {
@@ -83,9 +87,11 @@ const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({
 
   return (
     <Tabs value={value}>
-      {tabProps.filter((t) => !t.disabled).map((tProps, index) => (
-        <LinkTab key={index} {...tProps} />
-      ))}
+      {tabProps
+        .filter((t) => !t.disabled)
+        .map((tProps, index) => (
+          <LinkTab key={index} {...tProps} />
+        ))}
     </Tabs>
   );
 };

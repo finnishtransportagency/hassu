@@ -40,7 +40,7 @@ export default function AineistoTable({
         meta: { minWidth: 250, widthFractions: 6 },
         accessorFn: (aineisto) => {
           const aineistoIndex = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
-          const errorMessage = (formState.errors.lausuntoPyynnonTaydennykset?.[lptIndex].muuAineisto?.[aineistoIndex] as any | undefined)
+          const errorMessage = (formState.errors.lausuntoPyynnonTaydennykset?.[lptIndex]?.muuAineisto?.[aineistoIndex] as any | undefined)
             ?.message;
           return (
             <>

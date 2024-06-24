@@ -93,7 +93,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     setLisaaHakuehtojaState(lisaaHakuehtoja);
   }, [lisaaHakuehtoja, pienennaHaku]);
 
-  const nollaaHakuehdot = useCallback(
+  const nollaaHakuehdot: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
       e.preventDefault();
       router.push(

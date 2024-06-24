@@ -4,12 +4,12 @@ import { DefinitionList, StyledDefinitionList } from "@components/projekti/commo
 import StyledLink from "@components/StyledLink";
 import { Kielitiedot, Linkki, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
-import React, { Fragment, useMemo, VFC } from "react";
+import React, { Fragment, useMemo, FunctionComponent } from "react";
 
-export const AineistotSection: VFC<{ julkaisu: VuorovaikutusKierrosJulkaisu; kielitiedot: Kielitiedot | null | undefined }> = ({
-  julkaisu,
-  kielitiedot,
-}) => {
+export const AineistotSection: FunctionComponent<{
+  julkaisu: VuorovaikutusKierrosJulkaisu;
+  kielitiedot: Kielitiedot | null | undefined;
+}> = ({ julkaisu, kielitiedot }) => {
   const aineistoDefinitions: DefinitionList = useMemo(() => {
     return [
       {
@@ -25,7 +25,7 @@ export const AineistotSection: VFC<{ julkaisu: VuorovaikutusKierrosJulkaisu; kie
   );
 };
 
-const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
+const SuunnitelmaluonnoksetJaEsittelyAineistot: FunctionComponent<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
   kielitiedot: Kielitiedot | null | undefined;
 }> = ({ julkaisu, kielitiedot }) => {

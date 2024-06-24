@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
+import React, { ReactElement, ReactNode, useMemo, FunctionComponent } from "react";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
@@ -36,7 +36,7 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
   );
 }
 
-const PaatosOhje: VFC<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({ projekti, paatosTyyppi }) => {
+const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({ projekti, paatosTyyppi }) => {
   return (
     <>
       {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? (

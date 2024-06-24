@@ -4,7 +4,7 @@ import log from "loglevel";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import { Kieli, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
+import { Kieli, KielitiedotInput, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -39,6 +39,7 @@ import { H3 } from "../../../../components/Headings";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
+  kielitiedot: { ensisijainenKieli: Kieli | ""; toissijainenKieli: Kieli | ""; projektinNimiVieraskielella: string | null };
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
@@ -48,7 +49,6 @@ type PersitentFormValues = Pick<
   | "euRahoitus"
   | "euRahoitusLogot"
   | "suunnitteluSopimus"
-  | "kielitiedot"
   | "vahainenMenettely"
   | "asianhallinta"
   | "kustannuspaikka"
@@ -107,6 +107,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const { showSuccessMessage } = useSnackbars();
 
   const defaultValues: FormValues = useMemo(() => {
+    const { ensisijainenKieli, projektinNimiVieraskielella, toissijainenKieli } = projekti.kielitiedot ?? {};
+    const vieraskielinen = [ensisijainenKieli, toissijainenKieli].some((kieli) => kieli === Kieli.POHJOISSAAME || kieli === Kieli.RUOTSI);
     const tallentamisTiedot: FormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -116,11 +118,12 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       suunnittelusopimusprojekti:
         projekti.status === Status.EI_JULKAISTU_PROJEKTIN_HENKILOT ? null : projekti.suunnitteluSopimus ? "true" : "false",
       kustannuspaikka: projekti.kustannuspaikka,
+      kielitiedot: {
+        ensisijainenKieli: ensisijainenKieli ?? "",
+        toissijainenKieli: toissijainenKieli ?? "",
+        projektinNimiVieraskielella: vieraskielinen ? projektinNimiVieraskielella ?? "" : null,
+      },
     };
-    if (projekti.kielitiedot) {
-      const { __typename, ...kielitiedotInput } = projekti.kielitiedot;
-      tallentamisTiedot.kielitiedot = kielitiedotInput;
-    }
     if (projekti.suunnitteluSopimus) {
       const { __typename, logo, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
       const { __typename: _t, ...logoInput } = logo || {};
@@ -189,11 +192,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     (data: FormValues) =>
       withLoadingSpinner(
         (async () => {
-          const { suunnittelusopimusprojekti, ...persistentData } = data;
-          const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
-          if (persistentData.kielitiedot && !kieli2) {
-            persistentData.kielitiedot.toissijainenKieli = null;
-          }
+          const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
             if (suunnittelusopimusprojekti === "true" && persistentData.suunnitteluSopimus?.logo) {
               const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
@@ -224,9 +223,21 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               persistentData.euRahoitusLogot = euLogo;
             }
 
+            const kielitiedotInput: KielitiedotInput | null = !!kielitiedot
+              ? {
+                  ensisijainenKieli: kielitiedot.ensisijainenKieli as Kieli,
+                  toissijainenKieli: kielitiedot.toissijainenKieli ? kielitiedot.toissijainenKieli : null,
+                  projektinNimiVieraskielella: kielitiedot.projektinNimiVieraskielella,
+                }
+              : null;
+            const apiData: TallennaProjektiInput = {
+              ...persistentData,
+              kielitiedot: kielitiedotInput,
+            };
+
             setStatusBeforeSave(projekti?.status);
 
-            await api.tallennaProjekti(persistentData);
+            await api.tallennaProjekti(apiData);
             await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
           } catch (e) {
