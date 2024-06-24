@@ -1,6 +1,6 @@
 import {
   Kieli,
-  KuulutusJulkaisuTila as KuulutusJulkaisuTila,
+  KuulutusJulkaisuTila,
   NykyinenKayttaja,
   Status,
   VuorovaikutusKierrosTila,
