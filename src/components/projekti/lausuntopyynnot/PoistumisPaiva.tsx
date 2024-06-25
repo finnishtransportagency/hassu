@@ -14,7 +14,7 @@ export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: numbe
       )}
       <p className="mb-6">
         Valitse {kunta ? "lausuntopyynnön täydennyksen" : "lausuntopyynnön"} sisällölle voimassaoloaika. Linkki ja sen sisältö on
-        tarkasteltavissa alla olevaan päiväärään saakka. Päivämäärää on mahdollista päivittää jälkikäteen.
+        tarkasteltavissa alla olevaan päivämäärään saakka. Päivämäärää on mahdollista päivittää jälkikäteen.
       </p>
       <HassuDatePickerWithController
         label="Päättyy"
