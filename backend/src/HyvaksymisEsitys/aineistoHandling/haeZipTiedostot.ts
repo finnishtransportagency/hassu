@@ -1,7 +1,13 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { DBProjekti, LadattuTiedosto } from "../../database/model";
-import { MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
+import {
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  adaptFileName,
+  getSisaisetPathForProjekti,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 import { ZipSourceFile } from "../../tiedostot/zipFiles";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -84,9 +90,10 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): ZipSourceF
       if (nahtavillaoloVaiheJulkaisu.tila != API.KuulutusJulkaisuTila.HYVAKSYTTY) {
         continue;
       }
+
       if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
         maanomistajaluttelo.push({
-          s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
+          s3Key: joinPath(getSisaisetPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
           zipFolder: "Maanomistajaluttelo",
         });
       }
