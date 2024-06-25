@@ -69,6 +69,10 @@ export class ProjektiPaths extends PathTuple {
     return `yllapito/tiedostot/projekti/${this.oid}`;
   }
 
+  get yllapitoSisaisetFullPath(): string {
+    return `yllapito/sisaiset/projekti/${this.oid}`;
+  }
+
   get publicPath(): string {
     return "";
   }
