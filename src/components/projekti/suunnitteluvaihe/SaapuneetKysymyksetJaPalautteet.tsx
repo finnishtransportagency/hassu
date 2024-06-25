@@ -107,7 +107,7 @@ function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }
           </ExtLink>
         </div>
       )}
-      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liiteestä löytyi virus</div>}
+      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liitteestä löytyi virus</div>}
     </>
   );
 }
