@@ -1,88 +1,154 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { assertIsDefined } from "../../util/assertions";
-import { DBProjekti, LadattuTiedosto } from "../../database/model";
+import { assertIsDefined } from "../util/assertions";
+import { Aineisto, DBProjekti, JulkaistuHyvaksymisEsitys, LadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../database/model";
 import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
   MUOKATTAVA_HYVAKSYMISESITYS_PATH,
   adaptFileName,
   getSisaisetPathForProjekti,
   getYllapitoPathForProjekti,
   joinPath,
-} from "../../tiedostot/paths";
-import { ZipSourceFile } from "../../tiedostot/zipFiles";
-import { forEverySaameDo } from "../../projekti/adapter/common";
+} from "../tiedostot/paths";
+import { forEverySaameDo } from "../projekti/adapter/common";
 import { kuntametadata } from "hassu-common/kuntametadata";
+import { fileService } from "../files/fileService";
+import dayjs from "dayjs";
+import { getZipFolder } from "../tiedostot/ProjektiTiedostoManager/util";
 
 type TarvittavatTiedot = Pick<
   DBProjekti,
-  | "oid"
-  | "kielitiedot"
-  | "muokattavaHyvaksymisEsitys"
-  | "aloitusKuulutusJulkaisut"
-  | "vuorovaikutusKierrosJulkaisut"
-  | "nahtavillaoloVaiheJulkaisut"
+  "oid" | "kielitiedot" | "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut" | "nahtavillaoloVaiheJulkaisut"
 >;
 
-export default function collectTiedostotToZip(projekti: TarvittavatTiedot): ZipSourceFile[] {
-  const path = joinPath(getYllapitoPathForProjekti(projekti.oid), MUOKATTAVA_HYVAKSYMISESITYS_PATH);
-  const hyvaksymisEsitys = projekti.muokattavaHyvaksymisEsitys;
+export type FileInfo = {
+  s3Key: string;
+  zipFolder?: string | undefined;
+  nimi: string;
+  valmis: boolean;
+  tuotu?: string | undefined | null;
+  kunta?: number | null;
+};
+
+type ProjektinAineistot = {
+  hyvaksymisEsitys: FileInfo[];
+  suunnitelma: FileInfo[];
+  kuntaMuistutukset: FileInfo[];
+  lausunnot: FileInfo[];
+  kuulutuksetJaKutsu: FileInfo[];
+  muutAineistot: FileInfo[];
+  maanomistajaluettelo: FileInfo[];
+};
+
+function aineistoNewIsReady(lisatty: string, aineistoHandledAt?: string | null): boolean {
+  return !!(aineistoHandledAt && dayjs(aineistoHandledAt).isAfter(dayjs(lisatty)));
+}
+
+/**
+ *
+ * @param projekti DBProjekti
+ * @param hyvaksymisEsitys hyväksymisesitys, josta tahdotaan ottaa tiedostoja kokoelmaan
+ * @param aineistoHandledAt projektin aineistoHandledAt-arvo
+ * @returns {ProjektinAineistot} Kokoelmatiedot hyväksymisesityksen kannalta relevanteista projektin tiedostoista zippausta tai linkin katselua/esikatselua varten
+ */
+export default function collectHyvaksymisEsitysAineistot(
+  projekti: TarvittavatTiedot,
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys,
+  aineistoHandledAt?: string | null
+): ProjektinAineistot {
+  const path = joinPath(
+    getYllapitoPathForProjekti(projekti.oid),
+    (hyvaksymisEsitys as JulkaistuHyvaksymisEsitys).hyvaksymisPaiva ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
+  );
   const hyvaksymisEsitysTiedostot = (hyvaksymisEsitys?.hyvaksymisEsitys ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "hyvaksymisEsitys", adaptFileName(tiedosto.nimi)),
     zipFolder: "Hyväksymisesitys",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
   }));
 
   const kuulutuksetJaKutsutOmaltaKoneelta = (hyvaksymisEsitys?.kuulutuksetJaKutsu ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "kuulutuksetJaKutsu", adaptFileName(tiedosto.nimi)),
     zipFolder: "Kuulutukset ja kutsut",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
   }));
 
   const kuulutuksetJaKutsutProjektista = getKutsut(projekti);
-  const kuulutuksetJaKutsut: ZipSourceFile[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+  const kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "muuAineistoKoneelta", adaptFileName(tiedosto.nimi)),
     zipFolder: "Muu aineisto",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
   }));
   const muuAineistoVelhosta = (hyvaksymisEsitys?.muuAineistoVelhosta ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "muuAineistoVelhosta", adaptFileName(tiedosto.nimi)),
     zipFolder: "Muu aineisto",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: aineistoNewIsReady(tiedosto.lisatty, aineistoHandledAt),
   }));
-  const muutAineistot: ZipSourceFile[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
-  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map((aineisto) => ({
-    s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
-    zipFolder: "Suunnitelma",
-  }));
+  const muutAineistot: FileInfo[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
+  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map((aineisto) => {
+    const kategoriaFolder = getZipFolder(aineisto.kategoriaId) ?? "Kategorisoimattomat";
+    return {
+      s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
+      zipFolder: joinPath("Suunnitelma", kategoriaFolder),
+      nimi: aineisto.nimi,
+      tuotu: aineisto.lisatty,
+      valmis: aineistoNewIsReady(aineisto.lisatty, aineistoHandledAt),
+    };
+  });
   const kuntaMuistutukset = (hyvaksymisEsitys?.muistutukset ?? []).map((tiedosto) => {
     const kunta = kuntametadata.kuntaForKuntaId(tiedosto.kunta);
     assertIsDefined(kunta, `Kuntaa id:llä ${tiedosto.kunta} ei löytynyt kuntametadatasta`);
     return {
       s3Key: joinPath(path, "muistutukset", adaptFileName(tiedosto.nimi)),
       zipFolder: `Muistutukset/${kunta.nimi.SUOMI}`,
+      nimi: tiedosto.nimi,
+      tuotu: tiedosto.lisatty,
+      kunta: tiedosto.kunta,
+      valmis: true,
     };
   });
   const maanomistajaluetteloProjektista = getMaanomistajaLuettelo(projekti);
-  const maanomistajaluetteloOmaltaKoneelta: ZipSourceFile[] = (hyvaksymisEsitys?.maanomistajaluettelo ?? []).map((tiedosto) => ({
+  const maanomistajaluetteloOmaltaKoneelta: FileInfo[] = (hyvaksymisEsitys?.maanomistajaluettelo ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "maanomistajaluettelo", adaptFileName(tiedosto.nimi)),
     zipFolder: "Maanomistajaluettelo",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
   }));
   const maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
   const lausunnot = (hyvaksymisEsitys?.lausunnot ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "lausunnot", adaptFileName(tiedosto.nimi)),
     zipFolder: "Lausunnot",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
   }));
 
-  return [
-    ...hyvaksymisEsitysTiedostot,
-    ...kuulutuksetJaKutsut,
-    ...muutAineistot,
-    ...suunnitelma,
-    ...kuntaMuistutukset,
-    ...maanomistajaluettelo,
-    ...lausunnot,
-  ];
+  return {
+    hyvaksymisEsitys: hyvaksymisEsitysTiedostot,
+    kuulutuksetJaKutsu,
+    muutAineistot,
+    suunnitelma,
+    kuntaMuistutukset,
+    maanomistajaluettelo,
+    lausunnot,
+  };
 }
 
-export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): ZipSourceFile[] {
-  const maanomistajaluttelo: ZipSourceFile[] = [];
+function tiedostoVanhaIsReady(aineisto: Aineisto | LadattuTiedosto): boolean {
+  return aineisto.tila == API.AineistoTila.VALMIS;
+}
+
+export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): FileInfo[] {
+  const maanomistajaluttelo: FileInfo[] = [];
   //Nähtävilläolovaihe
   const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
   if (nahtavillaoloVaiheJulkaisut) {
@@ -95,6 +161,8 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): ZipSourceF
         maanomistajaluttelo.push({
           s3Key: joinPath(getSisaisetPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
           zipFolder: "Maanomistajaluttelo",
+          nimi: fileService.getFileNameFromFilePath(nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
+          valmis: true,
         });
       }
     }
@@ -102,11 +170,10 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): ZipSourceF
   return maanomistajaluttelo;
 }
 
-export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
-  const filesToZip: [] = [];
+export function getKutsut(projekti: TarvittavatTiedot): FileInfo[] {
   const onSaameProjekti =
     projekti.kielitiedot?.ensisijainenKieli == API.Kieli.POHJOISSAAME || projekti.kielitiedot?.toissijainenKieli == API.Kieli.POHJOISSAAME;
-  const kutsut: ZipSourceFile[] = [];
+  const kutsut: FileInfo[] = [];
   //Aloituskuulutus
   const aloitusKuulutusJulkaisut = projekti.aloitusKuulutusJulkaisut;
   if (aloitusKuulutusJulkaisut) {
@@ -122,6 +189,8 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: fileService.getFileNameFromFilePath(kuulutus),
+            valmis: true,
           });
         }
       }
@@ -135,6 +204,9 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
+            tuotu: kuulutus.tuotu,
+            valmis: tiedostoVanhaIsReady(kuulutus),
           });
         });
       }
@@ -157,6 +229,8 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: fileService.getFileNameFromFilePath(kutsu),
+            valmis: true,
           });
         }
       }
@@ -170,6 +244,9 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu.tiedosto),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: kutsu.nimi ?? fileService.getFileNameFromFilePath(kutsu.tiedosto),
+            tuotu: kutsu.tuotu,
+            valmis: tiedostoVanhaIsReady(kutsu),
           });
         });
       }
@@ -191,6 +268,8 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: fileService.getFileNameFromFilePath(kuulutus),
+            valmis: true,
           });
         }
         const ilmoitusKiinteistonomistajille: string | undefined =
@@ -199,6 +278,8 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), ilmoitusKiinteistonomistajille),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: fileService.getFileNameFromFilePath(ilmoitusKiinteistonomistajille),
+            valmis: true,
           });
         }
       }
@@ -212,11 +293,14 @@ export function getKutsut(projekti: TarvittavatTiedot): ZipSourceFile[] {
           kutsut.push({
             s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
             zipFolder: "Kuulutukset ja kutsut",
+            nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
+            tuotu: kuulutus.tuotu,
+            valmis: tiedostoVanhaIsReady(kuulutus),
           });
         });
       }
     }
   }
 
-  return filesToZip;
+  return kutsut;
 }

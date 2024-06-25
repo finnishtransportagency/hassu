@@ -3,11 +3,12 @@ import { requirePermissionLuku } from "../../user";
 import * as API from "hassu-common/graphql/apiModel";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import { assertIsDefined } from "../../util/assertions";
-import { getKutsut, getMaanomistajaLuettelo } from "../latauslinkit/createLadattavatTiedostot";
 import projektiDatabase from "../dynamoKutsut";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { AineistoNew } from "../../database/model";
 import dayjs from "dayjs";
+import { getKutsut, getMaanomistajaLuettelo } from "../collectHyvaksymisEsitysAineistot";
+import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattavatTiedostot";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -28,8 +29,8 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
     tuodutTiedostot: {
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
-      maanomistajaluettelo: await getMaanomistajaLuettelo(projekti),
-      kuulutuksetJaKutsu: await getKutsut(projekti),
+      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(projekti).map(adaptFileInfoToLadattavaTiedosto)),
+      kuulutuksetJaKutsu: await Promise.all(getKutsut(projekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
   };
 }

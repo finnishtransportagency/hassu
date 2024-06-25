@@ -113,7 +113,7 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       // eri kuin db:ssä
       muistutukset: [
         {
-          kunta: 2,
+          kunta: 92,
           nimi: alternativeMuistutuksetName,
           uuid: "muistutukset-esitys-uuid-TALLENTAMATON",
         },

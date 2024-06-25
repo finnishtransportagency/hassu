@@ -58,12 +58,36 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
 
     const expectedArgs2 = [
       {
+        s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
+        zipFolder: "Maanomistajaluttelo",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_2.png",
         zipFolder: "Hyväksymisesitys",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_2.png",
         zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_2.png",
+        zipFolder: "Lausunnot",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_2.png",
+        zipFolder: "Maanomistajaluettelo",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_2.png",
+        zipFolder: "Muistutukset/Helsinki",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_2.png",
@@ -75,29 +99,46 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/suunnitelma/suunnitelma_aoa_2.png",
-        zipFolder: "Suunnitelma",
+        zipFolder: "Suunnitelma/Pääpiirustukset/",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_2.png",
-        zipFolder: "Muistutukset/Helsinki",
+        s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo sv.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
       },
       {
-        s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
-        zipFolder: "Maanomistajaluttelo",
+        s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_2.png",
-        zipFolder: "Maanomistajaluettelo",
+        s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo sv.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_2.png",
-        zipFolder: "Lausunnot",
+        s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen sv.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen sv.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
+      },
+      {
+        s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
+        zipFolder: "Kuulutukset ja kutsut",
       },
     ];
     const sortFunc = (a: ZipSourceFile, b: ZipSourceFile) => a.s3Key.localeCompare(b.s3Key);
+    const cleanUpFunc = (a: ZipSourceFile) => ({ s3Key: a.s3Key, zipFolder: a.zipFolder });
     expect(zipStub?.firstCall.args[0]).to.eql("hassu-localstack-yllapito");
     expect(zipStub?.firstCall.args[2]).to.eql("yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/aineisto.zip");
-    expect(zipStub?.firstCall.args[1].sort(sortFunc)).to.eql(expectedArgs2.sort(sortFunc));
+    expect(zipStub?.firstCall.args[1].map(cleanUpFunc).sort(sortFunc)).to.eql(expectedArgs2.sort(sortFunc));
   });
 
   it("Päivittää dynamodb:hen tiedon zippauksesta", async () => {

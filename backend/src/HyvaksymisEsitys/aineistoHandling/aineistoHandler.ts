@@ -15,7 +15,8 @@ import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
-import collectTiedostotToZip from "./haeZipTiedostot";
+import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
+import { assertIsDefined } from "../../util/assertions";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -68,7 +69,18 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
 export async function zipHyvEsAineistot(oid: string) {
   const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid);
-  const filesToZip: ZipSourceFile[] = collectTiedostotToZip(projekti);
+  assertIsDefined(projekti.muokattavaHyvaksymisEsitys, "Muokattava hyväksymisesitys oltava zipattaessa");
+  const { hyvaksymisEsitys, kuulutuksetJaKutsu, muutAineistot, suunnitelma, kuntaMuistutukset, maanomistajaluettelo, lausunnot } =
+    collectHyvaksymisEsitysAineistot(projekti, projekti.muokattavaHyvaksymisEsitys, projekti.aineistoHandledAt);
+  const filesToZip: ZipSourceFile[] = [
+    ...hyvaksymisEsitys,
+    ...kuulutuksetJaKutsu,
+    ...muutAineistot,
+    ...suunnitelma,
+    ...kuntaMuistutukset,
+    ...maanomistajaluettelo,
+    ...lausunnot,
+  ];
   await generateAndStreamZipfileToS3(
     config.yllapitoBucketName,
     filesToZip,
