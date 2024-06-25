@@ -18,6 +18,7 @@ import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
+import { parseDate } from "../../util/dateUtil";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -107,7 +108,10 @@ function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tal
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
-  if (!aineistotHandledAt || !aineistot.every((aineisto) => aineistotHandledAt.localeCompare(aineisto.lisatty) > 0)) {
+  if (
+    aineistot.length > 0 &&
+    (!aineistotHandledAt || !aineistot.every((aineisto) => parseDate(aineistotHandledAt).isAfter(parseDate(aineisto.lisatty))))
+  ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
 }
