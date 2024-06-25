@@ -9,6 +9,7 @@ import { LausuntoPyynnonTaydennysFormValues, LausuntoPyynnonTaydennysLisakentill
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
+import { H3 } from "../../../../Headings";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
@@ -45,7 +46,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
   );
   return (
     <SectionContent className="mt-16">
-      <h2 className="vayla-subtitle">Muu aineisto</h2>
+      <H3>Muu aineisto</H3>
       <p>
         Voit halutessasi liittää omalta koneelta lausuntopyynnön täydennyksen yhteydessä muuta lisäaineistoa, esimerkiksi
         lyhennelmätiedoston.

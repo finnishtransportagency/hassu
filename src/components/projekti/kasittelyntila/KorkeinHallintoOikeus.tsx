@@ -9,6 +9,7 @@ import RadioButton from "@components/form/RadioButton";
 import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasittelyntila";
 import styled from "@emotion/styled";
 import FormGroup from "@components/form/FormGroup";
+import { H2, H3 } from "../../Headings";
 
 type KorkeinHallintoOikeusProps = { disabled: boolean; projekti: ProjektiLisatiedolla; includeInForm: boolean };
 
@@ -41,8 +42,8 @@ function KorkeinHallintoOikeusContent(props: {
   const { value, disabled, fieldState, formState, onChange } = props;
   return (
     <SectionContent>
-      <h5 className="vayla-subtitle">Korkein hallinto-oikeus</h5>
-      <h4 className="vayla-small-title mt-6 !mb-6">Korkeimman hallinto-oikeuden välipäätös</h4>
+      <H2>Korkein hallinto-oikeus</H2>
+      <H3 className="vayla-small-title mt-6 !mb-6">Korkeimman hallinto-oikeuden välipäätös</H3>
       {fieldState?.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
       <HassuDatePicker
         label="Päivämäärä"
@@ -80,7 +81,7 @@ function KorkeinHallintoOikeusContent(props: {
           minRows={3}
         ></Textarea>
       </div>
-      <h4 className="vayla-small-title !mb-6">Korkeimman hallinto-oikeuden päätös</h4>
+      <H3 className="vayla-small-title !mb-6">Korkeimman hallinto-oikeuden päätös</H3>
       <HassuDatePicker
         label="Päivämäärä"
         textFieldProps={{ name: "kasittelynTila.korkeinHallintoOikeus.paatos.paiva" }}

@@ -1,5 +1,6 @@
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import SectionContent from "@components/layout/SectionContent";
+import { H3 } from "../../Headings";
 
 export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: number; kunta?: number }>) {
   const keyWord = kunta ? "lausuntoPyynnonTaydennykset" : "lausuntoPyynnot";
@@ -7,9 +8,9 @@ export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: numbe
   return (
     <SectionContent>
       {kunta ? (
-        <h3 className="vayla-small-title">Täydennysaineiston voimassaoloaika</h3>
+        <H3>Täydennysaineiston voimassaoloaika</H3>
       ) : (
-        <h3 className="vayla-subtitle mb-1">Aineistolinkin voimassaoloaika</h3>
+        <H3 className="mb-1">Aineistolinkin voimassaoloaika</H3>
       )}
       <p className="mb-6">
         Valitse {kunta ? "lausuntopyynnön täydennyksen" : "lausuntopyynnön"} sisällölle voimassaoloaika. Linkki ja sen sisältö on
