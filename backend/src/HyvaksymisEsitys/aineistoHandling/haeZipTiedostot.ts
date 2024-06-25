@@ -45,10 +45,14 @@ export default function collectTiedostotToZip(projekti: TarvittavatTiedot): ZipS
     s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
     zipFolder: "Suunnitelma",
   }));
-  const kuntaMuistutukset = (hyvaksymisEsitys?.muistutukset ?? []).map((tiedosto) => ({
-    s3Key: joinPath(path, "muistutukset", adaptFileName(tiedosto.nimi)),
-    zipFolder: `Muistutukset/${kuntametadata.kuntaForKuntaId(tiedosto.kunta)}`,
-  }));
+  const kuntaMuistutukset = (hyvaksymisEsitys?.muistutukset ?? []).map((tiedosto) => {
+    const kunta = kuntametadata.kuntaForKuntaId(tiedosto.kunta);
+    assertIsDefined(kunta, `Kuntaa id:llä ${tiedosto.kunta} ei löytynyt kuntametadatasta`);
+    return {
+      s3Key: joinPath(path, "muistutukset", adaptFileName(tiedosto.nimi)),
+      zipFolder: `Muistutukset/${kunta.nimi.SUOMI}`,
+    };
+  });
   const maanomistajaluetteloProjektista = getMaanomistajaLuettelo(projekti);
   const maanomistajaluetteloOmaltaKoneelta: ZipSourceFile[] = (hyvaksymisEsitys?.maanomistajaluettelo ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "maanomistajaluettelo", adaptFileName(tiedosto.nimi)),
