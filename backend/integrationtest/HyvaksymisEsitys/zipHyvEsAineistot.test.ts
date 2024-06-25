@@ -82,7 +82,7 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
         zipFolder: "Muistutukset/Helsinki",
       },
       {
-        s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
+        s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
         zipFolder: "Maanomistajaluttelo",
       },
       {
