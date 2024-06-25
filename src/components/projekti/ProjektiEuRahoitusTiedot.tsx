@@ -10,6 +10,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { isAllowedToChangeEuRahoitus } from "hassu-common/util/operationValidators";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { H3 } from "../Headings";
 
 interface Props {
   projekti?: Projekti | null;
@@ -31,7 +32,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
 
   return (
     <Section smallGaps>
-      <h4 className="vayla-small-title">EU-rahoitus</h4>
+      <H3>EU-rahoitus</H3>
       {disabled && (
         <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa EU-rahoituksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää.
