@@ -6,7 +6,7 @@ import { handlerFactory } from "../../../../src/sqsEvents/sqsEventHandlerLambda"
 import { SQSEvent, SQSRecord } from "aws-lambda";
 import { projektiDatabase } from "../../../../src/database/projektiDatabase";
 import { parameters } from "../../../../src/aws/parameters";
-import * as projektiStatusHandler from "../../../../src/projekti/status/projektiStatusHandler";
+import GetProjektiStatus from "../../../../src/projekti/status/getProjektiStatus";
 import { CreateFileProperties, DeleteFileProperties, PersistFileProperties, fileService } from "../../../../src/files/fileService";
 import { eventSqsClient } from "../../../../src/sqsEvents/eventSqsClient";
 
@@ -66,9 +66,7 @@ export function stubBasics({
   sinon.stub(projektiDatabase, "loadProjektiByOid").returns(Promise.resolve(loadProjektiByOidReturnValue));
   sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
   sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
-  sinon.stub(projektiStatusHandler, "applyProjektiStatus").callsFake((projekti: API.Projekti) => {
-    projekti.status = applyProjektiStatusSetStatus;
-  });
+  sinon.stub(GetProjektiStatus, "getProjektiStatus").returns(Promise.resolve(applyProjektiStatusSetStatus));
   sinon.stub(synchronizeFilesToPublic, "synchronizeFilesToPublic").callsFake(() => Promise.resolve(true));
   const saveProjektiInternalStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
   const persistFileStub = sinon.stub(fileService, "persistFileToProjekti").callsFake((param: PersistFileProperties) => {

@@ -55,7 +55,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
       withLoadingSpinner(
         (async () => {
           try {
-            const convertedFormData = await adaptFormDataForAPI(formData);
+            const convertedFormData = adaptFormDataForAPI(formData);
             await api.tallennaHyvaksymisEsitys(convertedFormData);
             await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
@@ -94,7 +94,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
-            const convertedFormData = await adaptFormDataForAPI(formData);
+            const convertedFormData = adaptFormDataForAPI(formData);
             await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
             showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
             reloadProjekti();

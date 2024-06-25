@@ -31,8 +31,8 @@ function TutustuVaylavirastoonJaElyynWidget() {
           <ResponsiveButtonLink
             external
             primary
-            href={lang == "fi" ? "http://vayla.fi" : "https://vayla.fi/sv/framsida"}
-            style={{ marginLeft: "auto", marginRight: "auto" }}
+            href={lang == "fi" ? "https://vayla.fi" : "https://vayla.fi/sv/framsida"}
+              style={{ marginLeft: "auto", marginRight: "auto" }}
             target="_blank"
           >
             {t("widgetit.vaylavirasto")}
@@ -40,7 +40,7 @@ function TutustuVaylavirastoonJaElyynWidget() {
           <ResponsiveButtonLink
             external
             primary
-            href={lang == "fi" ? "http://ely-keskus.fi" : "https://www.ely-keskus.fi/sv/etusivu"}
+            href={lang == "fi" ? "https://ely-keskus.fi" : "https://www.ely-keskus.fi/sv/etusivu"}
             style={{ marginLeft: "auto", marginRight: "auto" }}
             target="_blank"
           >

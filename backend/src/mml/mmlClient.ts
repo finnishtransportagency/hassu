@@ -212,7 +212,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
         }
         let geojson = response.data as FeatureCollection | undefined;
         const ids: number[] = [];
-        for (const feat of geojson?.features || []) {
+        for (const feat of geojson?.features ?? []) {
           if (feat.properties?.tiekunta) {
             feat.properties.tiekunta.forEach((t: { nimi: string; id: number }) => {
               const omistaja = { id: t.id, nimi: t.nimi, kayttooikeusyksikkotunnus: feat.properties?.kayttooikeusyksikkotunnus };
