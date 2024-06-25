@@ -3,11 +3,12 @@ import React, { ReactElement } from "react";
 import { today } from "hassu-common/util/dateUtils";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { VuorovaikutusFormValues } from ".";
+import { H3 } from "../../../Headings";
 
 export default function Julkaisupaiva(): ReactElement {
   return (
     <SectionContent>
-      <h3 className="vayla-subtitle">Julkaisupäivä</h3>
+      <H3>Julkaisupäivä</H3>
       <p>
         Anna päivämäärä, jolloin suunnitteluvaiheen tiedot ja kutsu vuorovaikutukseen julkaistaan palvelun julkisella puolella sekä muilla
         ilmoituskanavilla, esim. kunnan verkkosivuilla.

@@ -5,6 +5,7 @@ import { LinkitettyVelhoProjekti, Projekti } from "@services/api";
 import ExtLink from "@components/ExtLink";
 import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
+import { H3 } from "../Headings";
 
 interface Props {
   projekti?: Projekti | null;
@@ -16,7 +17,7 @@ export default function LinkitetytProjektit({ projekti }: Props): ReactElement {
 
   return (
     <Section smallGaps>
-      <h3 className="vayla-subtitle">Projektiin liittyvät suunnitelmat</h3>
+      <H3>Projektiin liittyvät suunnitelmat</H3>
       {!linkitetytProjektit && (
         <SectionContent>
           <p>Projektiin ei ole liitetty muita suunnitelmia. Voit liittää projektiin suunnitelmia Projektivelhossa.</p>

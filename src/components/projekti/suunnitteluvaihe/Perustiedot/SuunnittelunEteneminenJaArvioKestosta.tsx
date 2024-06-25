@@ -9,6 +9,7 @@ import TextInput from "@components/form/TextInput";
 import { Kielitiedot } from "@services/api";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
+import { H3 } from "../../../Headings";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -25,7 +26,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
 
   return (
     <Section>
-      <h3 className="vayla-subtitle">Suunnittelun eteneminen ja arvio kestosta</h3>
+      <H3>Suunnittelun eteneminen ja arvio kestosta</H3>
       <ContentSpacer>
         <p>
           Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa omin

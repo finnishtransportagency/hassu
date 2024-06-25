@@ -17,6 +17,7 @@ import {
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import { AccordionToggleButton } from "../../common/Aineistot/AccordionToggleButton";
+import { H2, H3 } from "../../../Headings";
 
 export interface SuunnitelmatJaAineistotProps {
   vaihe: NahtavillaoloVaihe | null | undefined;
@@ -35,7 +36,7 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
 
   return (
     <Section>
-      <h2 className="vayla-title">Nähtäville asetettava aineisto</h2>
+      <H2>Nähtäville asetettava aineisto</H2>
       <p>
         Nähtäville asetettava aineisto sekä lausuntopyyntöön liitettävä aineisto tuodaan Projektivelhosta. Nähtäville asetettu aineisto
         siirtyy automaation avulla alakategorioihin ja käyttäjän on mahdollista järjestellä aineistoja, siirtää aineistoja alakategoriasta
@@ -48,10 +49,10 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
         expandedstate={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
-            <h3 className="vayla-subtitle mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+            <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               aineistoNahtavillaFlat,
               paakategoria
-            )})`}</h3>
+            )})`}</H3>
           ),
           content: (
             <SectionContent largeGaps>

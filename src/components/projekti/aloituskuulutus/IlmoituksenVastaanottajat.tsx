@@ -16,6 +16,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import { formatDateTimeIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { H3, H4 } from "../../Headings";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -69,7 +70,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
   return (
     <Section>
       <SectionContent>
-        <h3 className="vayla-subtitle">Ilmoituksen vastaanottajat</h3>
+        <H3>Ilmoituksen vastaanottajat</H3>
         {!isReadonly && (
           <>
             <p>
@@ -95,7 +96,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       {!isReadonly && kirjaamoOsoitteet && (
         <>
           <SectionContent>
-            <h4 className="vayla-small-title">Viranomaiset</h4>
+            <H4>Viranomaiset</H4>
             {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
               <p className="text-red">{(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
             )}
@@ -199,7 +200,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         </SectionContent>
       )}
       <SectionContent>
-        <h4 className="vayla-small-title">Kunnat</h4>
+        <H4>Kunnat</H4>
         {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu Projektivelhoon.</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {

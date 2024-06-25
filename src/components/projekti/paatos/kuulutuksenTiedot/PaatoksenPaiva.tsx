@@ -9,6 +9,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { Hyvaksymispaatos } from "@services/api";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import StyledLink from "@components/StyledLink";
+import { H3 } from "../../../Headings";
 
 type Props = {
   paatos?: Hyvaksymispaatos | undefined | null;
@@ -32,7 +33,7 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
   return (
     <Section noDivider>
       <SectionContent>
-        <h3 className="vayla-subtitle">Liikenne- ja viestintäviraston {paatosGenetiivi} päivä ja asiatunnus</h3>
+        <H3>Liikenne- ja viestintäviraston {paatosGenetiivi} päivä ja asiatunnus</H3>
         <p>
           {isHyvaksymisPaatos ? (
             <>

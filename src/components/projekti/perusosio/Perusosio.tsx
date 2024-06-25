@@ -10,7 +10,7 @@ import TextInput from "@components/form/TextInput";
 import { FormState, UseFormRegister } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
-import { H3 } from "../../Headings";
+import { H3, H4 } from "../../Headings";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -32,7 +32,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
       <Section>
         <ProjektiKuntatiedot projekti={projekti} />
         <ContentSpacer>
-          <h4 className="vayla-smallest-title">Projekti kartalla</h4>
+          <H4 className="vayla-smallest-title">Projekti kartalla</H4>
           <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
         </ContentSpacer>
       </Section>

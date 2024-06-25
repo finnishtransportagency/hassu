@@ -10,6 +10,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { isAllowedToChangeKielivalinta } from "hassu-common/util/operationValidators";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { H3 } from "../Headings";
 
 export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {
@@ -58,7 +59,7 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
   return (
     <Section>
       <SectionContent>
-        <h3 className="vayla-subtitle">Projektin kuulutusten kielet</h3>
+        <H3>Projektin kuulutusten kielet</H3>
         <p>Valitse projektin ensisijaisesti käytettävä kieli (alueen enemmistön kieli) sekä mahdollinen toissijainen kieli.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuMuiSelect

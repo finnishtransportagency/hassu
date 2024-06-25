@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { formatDateIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { H3 } from "../../Headings";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -23,7 +24,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </p>
       </Section>
       <Section>
-        <h3 className="vayla-title">Suunnitelman tila</h3>
+        <H3 className="vayla-title">Suunnitelman tila</H3>
         <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon</p>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Suunnitelman tila</p>
@@ -149,7 +150,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </ContentSpacer>
       </Section>
       <Section>
-        <h3 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h3>
+        <H3>Lisätietoa käsittelyn tilasta</H3>
         <PreWrapParagraph>{projekti.kasittelynTila?.lisatieto || "-"}</PreWrapParagraph>
       </Section>
     </>

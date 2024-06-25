@@ -3,6 +3,7 @@ import { VuorovaikutusKierrosJulkaisu } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "../../common/IlmoituksenVastaanottajatLukutilaCommon";
+import { H3 } from "../../../Headings";
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu | undefined;
 }
@@ -10,7 +11,7 @@ interface Props {
 export default function IlmoituksenVastaanottajatLukutila({ vuorovaikutus }: Props): ReactElement {
   return (
     <Section>
-      <h3 className="vayla-subtitle">Kutsun ilmoituksen vastaanottajat</h3>
+      <H3>Kutsun ilmoituksen vastaanottajat</H3>
       <SectionContent>
         <p>
           Ilmoitus vuorovaikuttamisesta on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei

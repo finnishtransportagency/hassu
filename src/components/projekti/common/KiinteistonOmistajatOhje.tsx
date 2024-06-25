@@ -5,6 +5,7 @@ import { KuulutusJulkaisuTila, Status, UudelleenKuulutus, Vaihe } from "@service
 import { nyt } from "backend/src/util/dateUtil";
 import dayjs from "dayjs";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
+import { H3 } from "../../Headings";
 
 export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
 interface KiinteistonomistajatOhjeProps {
@@ -82,7 +83,7 @@ export default function KiinteistonomistajatOhje({
   if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
     return (
       <SectionContent>
-        <h3 className="vayla-subtitle">{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</h3>
+        <H3>{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</H3>
         {omistajahakuStatus ? (
           <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
         ) : (

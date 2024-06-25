@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { H3 } from "../../../Headings";
 
 export default function MuutoksenHaku() {
   const {
@@ -19,7 +20,7 @@ export default function MuutoksenHaku() {
   return (
     <Section noDivider>
       <SectionContent>
-        <h3 className="vayla-subtitle">Muutoksen haku</h3>
+        <H3>Muutoksen haku</H3>
         <p>
           Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Valitse
           pudotusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.

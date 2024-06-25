@@ -14,6 +14,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import { formatNimi } from "../../../../util/userUtil";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { H2 } from "../../../Headings";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -40,7 +41,7 @@ export default function EsitettavatYhteystiedot(): ReactElement {
   return (
     <Section>
       <SectionContent>
-        <h2 className="vayla-title">Kuulutuksessa esitettävät yhteystiedot</h2>
+        <H2>Kuulutuksessa esitettävät yhteystiedot</H2>
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle

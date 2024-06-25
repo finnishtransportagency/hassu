@@ -11,6 +11,7 @@ import useApi from "src/hooks/useApi";
 import ButtonLink from "@components/button/ButtonLink";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { H3 } from "../../Headings";
 
 interface Props {
   projekti: Projekti;
@@ -70,7 +71,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
 
   return (
     <Section>
-      <h3 className="vayla-subtitle">Saapuneet kysymykset ja palautteet</h3>
+      <H3>Saapuneet kysymykset ja palautteet</H3>
       {!palautteet?.length ? (
         <p>Ei saapuneita kysymyksiä tai palautteita</p>
       ) : (

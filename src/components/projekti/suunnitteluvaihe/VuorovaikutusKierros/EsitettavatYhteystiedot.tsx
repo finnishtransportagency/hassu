@@ -15,6 +15,7 @@ import { VuorovaikutusFormValues } from ".";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useTranslation from "next-translate/useTranslation";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { H2 } from "../../../Headings";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -47,7 +48,7 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
   return (
     <Section className="mt-8">
       <SectionContent>
-        <h2 className="vayla-title">Kutsussa esitettävät yhteystiedot</h2>
+        <H2>Kutsussa esitettävät yhteystiedot</H2>
         <p>
           Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
           tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista

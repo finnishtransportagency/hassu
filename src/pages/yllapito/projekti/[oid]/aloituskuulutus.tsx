@@ -55,6 +55,7 @@ import { label } from "src/util/textUtil";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
+import { H2, H3 } from "../../../../components/Headings";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -330,7 +331,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   </ProjektiPageLayoutContext.Consumer>
 
                   <ContentSpacer>
-                    <h2 className="vayla-title">Kuulutus- ja julkaisupäivä</h2>
+                    <H2>Kuulutus- ja julkaisupäivä</H2>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
                     <div className="flex flex-col flex-wrap md:flex-row gap-y-4 gap-x-7">
                       <HassuDatePickerWithController
@@ -362,7 +363,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                 />
                 <Section>
                   <ContentSpacer>
-                    <h3 className="vayla-subtitle">Hankkeen sisällönkuvaus</h3>
+                    <H3>Hankkeen sisällönkuvaus</H3>
                     <p>
                       Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
                       alueellista rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
@@ -406,7 +407,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           <PdfPreviewForm ref={pdfFormRef} />
           {esikatselePdf && (
             <Section>
-              <h3 className="vayla-subtitle">Kuulutuksen ja ilmoituksen esikatselu</h3>
+              <H3>Kuulutuksen ja ilmoituksen esikatselu</H3>
               <Notification type={NotificationType.INFO_GRAY}>
                 Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
               </Notification>

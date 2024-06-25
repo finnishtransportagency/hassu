@@ -19,6 +19,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "common/testUtil.dev";
+import { H2 } from "../../../Headings";
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
@@ -50,7 +51,7 @@ export default function VuorovaikutusMahdollisuudet({
   return (
     <>
       <Section>
-        <h2 className="vayla-title">Vuorovaikutustilaisuudet</h2>
+        <H2>Vuorovaikutustilaisuudet</H2>
         {setOpenVuorovaikutustilaisuus && (
           <>
             <p>

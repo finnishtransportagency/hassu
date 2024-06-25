@@ -7,7 +7,7 @@ import { isAllowedToChangeVahainenMenettely } from "hassu-common/util/operationV
 import React, { Fragment } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import { H3 } from "../../Headings";
+import { H3, H4 } from "../../Headings";
 
 type Props = { formDisabled?: boolean; projekti: ProjektiLisatiedolla };
 
@@ -58,7 +58,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
         </p>
       </Notification>
       <ContentSpacer>
-        <h4 className="vayla-smallest-title">Sovelletaanko projektissa vähäistä menettelytapaa?</h4>
+        <H4 className="vayla-smallest-title">Sovelletaanko projektissa vähäistä menettelytapaa?</H4>
         <Controller
           name="vahainenMenettely"
           shouldUnregister

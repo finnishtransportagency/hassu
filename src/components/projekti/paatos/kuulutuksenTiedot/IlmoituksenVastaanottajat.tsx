@@ -19,6 +19,7 @@ import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
 import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
+import { H2, H3 } from "../../../Headings";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -121,7 +122,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
       )}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
-          <h2 className="vayla-title">Ilmoituksen vastaanottajat</h2>
+          <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
             <p>
               Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
@@ -136,7 +137,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
 
           <>
             <SectionContent>
-              <h3 className="vayla-subtitle">Viranomaiset</h3>
+              <H3>Viranomaiset</H3>
               {(errors.paatos?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">{(errors.paatos?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
@@ -209,7 +210,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
             </Button>
           </>
           <SectionContent>
-            <h3 className="vayla-subtitle">Kunnat</h3>
+            <H3>Kunnat</H3>
             {kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>

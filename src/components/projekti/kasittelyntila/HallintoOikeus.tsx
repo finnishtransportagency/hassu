@@ -9,6 +9,7 @@ import FormGroup from "@components/form/FormGroup";
 import styled from "@emotion/styled";
 import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasittelyntila";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
+import { H2, H3 } from "../../Headings";
 
 type HallintoOikeusProps = { disabled: boolean; projekti: ProjektiLisatiedolla; includeInForm: boolean };
 
@@ -40,8 +41,8 @@ function HallintoOikeusContent(props: {
 
   return (
     <SectionContent>
-      <h2 className="vayla-title">Hallinto-oikeus</h2>
-      <h3 className="vayla-small-title mt-6 !mb-6">Hallinto-oikeuden välipäätös</h3>
+      <H2>Hallinto-oikeus</H2>
+      <H3 className="vayla-small-title mt-6 !mb-6">Hallinto-oikeuden välipäätös</H3>
       {fieldState?.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
       <HassuDatePicker
         textFieldProps={{ name: "kasittelynTila.hallintoOikeus.valipaatos.paiva" }}
@@ -79,7 +80,7 @@ function HallintoOikeusContent(props: {
           minRows={3}
         ></Textarea>
       </div>
-      <h3 className="vayla-small-title !mb-6">Hallinto-oikeuden päätös</h3>
+      <H3 className="vayla-small-title !mb-6">Hallinto-oikeuden päätös</H3>
       <HassuDatePicker
         textFieldProps={{ name: "kasittelynTila.hallintoOikeus.paatos.paiva" }}
         label="Päivämäärä"
