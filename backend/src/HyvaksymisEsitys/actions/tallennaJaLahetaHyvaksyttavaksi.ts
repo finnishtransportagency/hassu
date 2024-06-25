@@ -18,7 +18,7 @@ import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
-import { parseDate } from "../../util/dateUtil";
+import dayjs from "dayjs";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -110,7 +110,7 @@ function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   if (
     aineistot.length > 0 &&
-    (!aineistotHandledAt || !aineistot.every((aineisto) => parseDate(aineistotHandledAt).isAfter(parseDate(aineisto.lisatty))))
+    (!aineistotHandledAt || !aineistot.every((aineisto) => dayjs(aineistotHandledAt).isAfter(dayjs(aineisto.lisatty))))
   ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
