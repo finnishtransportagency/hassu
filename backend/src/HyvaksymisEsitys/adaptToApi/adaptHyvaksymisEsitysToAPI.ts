@@ -79,6 +79,8 @@ export function adaptHyvaksymisEsitysToAPI(
     tila: muokattavaHyvaksymisEsitys?.tila ?? API.HyvaksymisTila.MUOKKAUS,
     hash: createHyvaksymisEsitysHash(oid, hyvaksymisEsitys.versio, salt),
     palautusSyy: muokattavaHyvaksymisEsitys?.palautusSyy,
-    aineistopaketti: projekti.hyvEsAineistoPaketti,
+    aineistopaketti: projekti.hyvEsAineistoPaketti
+      ? joinPath(getYllapitoPathForProjekti(projekti.oid), JULKAISTU_HYVAKSYMISESITYS_PATH, "aineisto.zip")
+      : undefined,
   };
 }
