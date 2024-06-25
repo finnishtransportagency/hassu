@@ -7,12 +7,8 @@ import { fileService } from "../../files/fileService";
  * @param tiedostoPath tiedoston polku projektin tiedostot tai sisaiset -kansion projektikohtaisen kansion alla
  * @param sisaiset sijaitseeko tiedosto sisaiset-kansiossa
  */
-export default async function adaptTiedostoPathToLadattavaTiedosto(
-  oid: string,
-  tiedostoPath: string,
-  sisaiset?: boolean
-): Promise<API.LadattavaTiedosto> {
-  const linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedostoPath, sisaiset);
+export default async function adaptTiedostoPathToLadattavaTiedosto(oid: string, tiedostoPath: string): Promise<API.LadattavaTiedosto> {
+  const linkki = await fileService.createYllapitoSignedDownloadLink(oid, tiedostoPath);
   const nimi = tiedostoPath.split("/").pop() ?? "Tiedosto";
   return { __typename: "LadattavaTiedosto", nimi, linkki };
 }
