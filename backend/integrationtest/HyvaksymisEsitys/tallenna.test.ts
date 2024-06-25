@@ -86,6 +86,28 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
+  it("tallentaa kiireellisyyden muutoksen tietokantaan", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
+    const muokattavaHyvaksymisEsitysInput: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT,
+      kiireellinen: false,
+    };
+    await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.muokattavaHyvaksymisEsitys.kiireellinen).to.eql(false);
+  });
+
   it("tallentaa hyväksymisesitystiedostot annetussa järjestyksessä tietokantaan", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {

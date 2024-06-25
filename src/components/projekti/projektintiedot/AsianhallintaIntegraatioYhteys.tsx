@@ -1,12 +1,12 @@
 import React from "react";
 import FormGroup from "@components/form/FormGroup";
-import { H4 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { FormControlLabel, Switch } from "@mui/material";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import { H3 } from "../../Headings";
 
 type Props = {
   formDisabled: boolean;
@@ -16,7 +16,7 @@ type Props = {
 export default function AsianhallintaIntegraatioYhteys(props: Props) {
   return (
     <Section>
-      <H4>Integraatioyhteys</H4>
+      <H3>Integraatioyhteys</H3>
       <ContentSpacer>
         <p>
           Järjestelmä mahdollistaa integraation avulla kuulutusten, ilmoitusten, kutsujen ja lähetekirjeiden viemisen automaattisesti

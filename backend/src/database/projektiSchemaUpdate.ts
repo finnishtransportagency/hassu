@@ -251,7 +251,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {
         SUOMI: value[Kieli.SUOMI],
       };
-      if (value && Object.keys(value).includes("RUOTSI")) {
+      if (Object.keys(value).includes("RUOTSI")) {
         newValue[Kieli.RUOTSI] = value[Kieli.RUOTSI];
       }
       return newValue;

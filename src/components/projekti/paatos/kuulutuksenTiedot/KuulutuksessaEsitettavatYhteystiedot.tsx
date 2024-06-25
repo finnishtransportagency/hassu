@@ -17,6 +17,7 @@ import { formatNimi } from "../../../../util/userUtil";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useTranslation from "next-translate/useTranslation";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { H3 } from "../../../Headings";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -99,7 +100,7 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
   return (
     <Section>
       <SectionContent>
-        <h4 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h4>
+        <H3>Kuulutuksessa esitettävät yhteystiedot</H3>
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle

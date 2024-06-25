@@ -24,9 +24,11 @@ export function adaptHyvaksymisEsitysToSave(
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
+    kiireellinen,
     ...rest
   } = hyvaksymisEsitysInput;
   const newMuokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys = {
+    kiireellinen,
     hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.hyvaksymisEsitys, hyvaksymisEsitys),
     suunnitelma: adaptAineistotToSave(dbHyvaksymisEsitys?.suunnitelma, suunnitelma),
     muistutukset: adaptLadatutTiedostotToSave(dbHyvaksymisEsitys?.muistutukset, muistutukset),

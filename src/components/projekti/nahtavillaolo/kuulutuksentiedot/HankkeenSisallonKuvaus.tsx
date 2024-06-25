@@ -8,6 +8,7 @@ import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { label } from "src/util/textUtil";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
+import { H3 } from "../../../Headings";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -35,7 +36,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
   return (
     <Section>
       <SectionContent>
-        <h4 className="vayla-small-title">Hankkeen sisällönkuvaus</h4>
+        <H3>Hankkeen sisällönkuvaus</H3>
         <p>
           Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen alueellisesta
           rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
