@@ -419,7 +419,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <SectionContent>
               {!julkinen && (
                 <p>
-                  Suunnitteluvaiheen perustiedot tulevat näkyviin palvelun julkisella puolella. Tietoja on mahdollistaa päivittää koko
+                  Suunnitteluvaiheen perustiedot tulevat näkyviin palvelun julkisella puolella. Tietoja on mahdollista päivittää koko
                   suunnitteluvaiheen ajan. Kutsu vuorovaikutukseen luodaan seuraavalla välilehdellä. Täytä ensin tämän sivun pakolliset
                   kentät, jonka jälkeen pystyt siirtymään kutsun täyttämiseen ja julkaisuun.
                 </p>
