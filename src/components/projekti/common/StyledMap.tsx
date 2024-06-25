@@ -726,7 +726,7 @@ export function getControls({
         tipLabel: "Piirrä suorakulmio",
       },
       undo: {
-        label: createElement(<KumoaIkoni color="error" fontSize="medium" />, "span"),
+        label: createElement(<KumoaIkoni />, "span"),
         tipLabel: "Kumoa",
       },
       removeFeature: {
