@@ -46,15 +46,7 @@ export default function Ajansiirto({ oid }: { oid: string }) {
       <form>
         <div style={{ width: "100%", height: "100%", padding: "1.1em", background: "white" }}>
           <h3 className="text-primary-dark">
-            <FontAwesomeIcon
-              icon="magic"
-              className="text-primary-dark"
-              size="lg"
-              style={{
-                margin: "auto",
-                height: "100%",
-              }}
-            />
+            <FontAwesomeIcon icon="magic" className="text-primary-dark m-auto h-full" size="lg" />
             <span style={{ marginLeft: "1em", marginRight: "1em" }}>AJANSIIRTO</span>
           </h3>
           <TextInput

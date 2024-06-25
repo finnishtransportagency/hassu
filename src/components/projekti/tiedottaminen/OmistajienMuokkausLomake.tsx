@@ -143,7 +143,7 @@ const createPoistaColumn = (
             }}
             {...field}
           >
-            {value ? "Kumoa poisto" : <FontAwesomeIcon icon={"trash"} size="lg" />}
+            {value ? "Kumoa poisto" : <FontAwesomeIcon icon="trash" size="lg" />}
           </StyledIconButton>
         )}
       />

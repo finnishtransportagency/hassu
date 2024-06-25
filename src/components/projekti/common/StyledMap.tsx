@@ -666,10 +666,12 @@ export function getControls({
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
       const featuresWithoutLines = features.filter((feat) => !(feat.getGeometry() instanceof LineString));
-      const linePolygons = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
-        const geom = feat.getGeometry() as LineString;
-        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
-      });
+      const linePolygons = features
+        .filter((feat) => feat.getGeometry() instanceof LineString)
+        .map((feat) => {
+          const geom = feat.getGeometry() as LineString;
+          return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
+        });
       const suodatetut = featuresWithoutLines.concat(linePolygons).filter((feat) => {
         try {
           validateSelection(feat.getGeometry());
@@ -723,7 +725,10 @@ export function getControls({
         label: createElement(<SuorakulmioIkoni />, "span"),
         tipLabel: "Piirrä suorakulmio",
       },
-      undo: { label: createElement(<KumoaIkoni fontSize="small" />, "span"), tipLabel: "Kumoa" },
+      undo: {
+        label: createElement(<KumoaIkoni color="error" fontSize="medium" />, "span"),
+        tipLabel: "Kumoa",
+      },
       removeFeature: {
         label: createIconSpan("trash"),
         tipLabel: "Poista valittu rajaus",

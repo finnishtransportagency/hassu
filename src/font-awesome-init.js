@@ -1,5 +1,5 @@
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import { library } from "@fortawesome/fontawesome-svg-core";
+const { library, config } = require("@fortawesome/fontawesome-svg-core");
 import {
   faAngleDown,
   faAngleLeft,
