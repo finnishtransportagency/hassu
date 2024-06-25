@@ -121,7 +121,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
         <Section marginBottom={10}>
           <h2 className="vayla-title">Lausuntopyynnon täydennyksen mallipohja</h2>
           <p>
-            Alla löydät linkin viimeisimpiin lausuntopyynnön taydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
+            Alla löydät linkin viimeisimpään lausuntopyynnön täydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
             tietokoneellesi ja täytä sen sisältö. Lausuntopyynnön täydennys lähetetään järjestelmän ulkopuolella.
           </p>
           <div>

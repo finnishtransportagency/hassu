@@ -66,7 +66,7 @@ function addDotSecToMailRecipients(mailOptions: MailOptions) {
       mailOptions[field] = recipients + ".sec";
     } else if (Array.isArray(recipients)) {
       for (let i = 0; i < recipients.length; i++) {
-        recipients[i] = recipients[i] + ".sec";
+        recipients[i] = recipients[i] + ".sec"; //NOSONAR
       }
     }
   }
@@ -86,7 +86,7 @@ class EmailClient {
 
   async sendEmailInternal(options: EmailOptions, isTurvaposti: boolean): Promise<SMTPTransport.SentMessageInfo | undefined> {
     if (config.emailsOn !== "true") {
-      const { attachments: attachments, ...restOptions } = options;
+      const { attachments, ...restOptions } = options;
       log.info("Sähköpostin lähetys kytketty pois päältä", {
         emailOptions: restOptions,
         attachments: attachments?.map((att) => {
