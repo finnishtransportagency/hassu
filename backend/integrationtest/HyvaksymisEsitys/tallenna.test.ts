@@ -649,10 +649,9 @@ describe("Hyväksymisesityksen tallentaminen", () => {
       ...TEST_HYVAKSYMISESITYS,
 
       tila: API.HyvaksymisTila.MUOKKAUS,
-    };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: DBProjekti = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     // Asetetaan DB:ssä olevan projektin data
