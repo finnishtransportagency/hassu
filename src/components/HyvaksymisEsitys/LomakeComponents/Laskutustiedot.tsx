@@ -1,13 +1,14 @@
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import { H4 } from "@components/Headings";
 import { Grid } from "@mui/material";
-import { ProjektinPerustiedot, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { ProjektinPerustiedot } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { ReactElement } from "react";
 import { useFormContext } from "react-hook-form";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinPerustiedot }>): ReactElement {
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control } = useFormContext<HyvaksymisEsitysForm>();
   const { perustiedot } = props;
 
   const { t } = useTranslation("common");

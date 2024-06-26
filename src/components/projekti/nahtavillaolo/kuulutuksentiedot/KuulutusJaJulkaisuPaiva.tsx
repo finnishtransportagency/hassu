@@ -9,6 +9,7 @@ import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "hassu-common/util/dateUtils";
 import useApi from "src/hooks/useApi";
+import { H2, H3 } from "../../../Headings";
 
 type FormFields = {
   nahtavillaoloVaihe: {
@@ -53,7 +54,7 @@ export default function KuulutusJaJulkaisuPaiva() {
   return (
     <Section noDivider>
       <ContentSpacer>
-        <h4 className="vayla-small-title">Kuulutus ja julkaisupäivä</h4>
+        <H2>Kuulutus ja julkaisupäivä</H2>
         <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePickerWithController
@@ -78,7 +79,7 @@ export default function KuulutusJaJulkaisuPaiva() {
         </HassuGrid>
       </ContentSpacer>
       <ContentSpacer>
-        <h4 className="vayla-small-title">Muistutusten antaminen</h4>
+        <H3>Muistutusten antaminen</H3>
         <p>
           Kansalaisten tulee muistuttaa suunnitelmista järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
           määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.

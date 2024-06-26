@@ -74,9 +74,9 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
     <SectionContent className="mt-16">
       <h4 className="vayla-small-title">Liitettävät lisäaineistot</h4>
       <p>
-        Voit liittää asetettujen aineistojen lisäksi lausuntopyyntöön lisäaineistoa. Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista
-        palvelun kansalaispuolelle. Liitettyjen lisäaineistojen sisältö näkyy automaattisesti linkin takana, kun aineistot on tuotu tälle
-        sivulle ja muutokset on tallennettu. Esikatselu-toiminnolla voit nähdä tallentamattomat lisäaineistomuutokset.
+        Voit liittää nähtäville asetettujen aineistojen lisäksi lausuntopyyntöön lisäaineistoa. Lausuntopyyntöön liitettävää lisäaineistoa
+        ei julkaista palvelun kansalaispuolelle. Liitettyjen lisäaineistojen sisältö näkyy automaattisesti linkin takana, kun aineistot on
+        tuotu tälle sivulle ja muutokset on tallennettu. Esikatselu-toiminnolla voit nähdä tallentamattomat lisäaineistomuutokset.
       </p>
       {!!lausuntoPyynto?.lisaAineistot?.length && (
         <LisaAineistotTable

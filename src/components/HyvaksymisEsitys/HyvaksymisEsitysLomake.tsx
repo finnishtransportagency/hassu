@@ -1,7 +1,7 @@
-import { HyvaksymisEsityksenTiedot, TallennaHyvaksymisEsitysInput, Vaihe } from "@services/api";
+import { HyvaksymisEsityksenTiedot, Vaihe } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
-import getDefaultValuesForForm from "./getDefaultValuesForForm";
+import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
 import Section from "@components/layout/Section2";
 import LinkinVoimassaoloaika from "./LomakeComponents/LinkinVoimassaoloaika";
 import ViestiVastaanottajalle from "./LomakeComponents/ViestiVastaanottajalle";
@@ -23,24 +23,25 @@ import { H3, H4 } from "@components/Headings";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext, TestType } from "hassu-common/schema/hyvaksymisEsitysSchema";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import Suunnitelma from "./LomakeComponents/Suunnitelma";
 import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
 import useValidationMode from "src/hooks/useValidationMode";
+import { TestType } from "common/schema/common";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
 };
 
 export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Readonly<Props>) {
-  const defaultValues: TallennaHyvaksymisEsitysInput = useMemo(
+  const defaultValues: HyvaksymisEsitysForm = useMemo(
     () => getDefaultValuesForForm(hyvaksymisEsityksenTiedot),
     [hyvaksymisEsityksenTiedot]
   );
 
   const validationMode = useValidationMode();
 
-  const formOptions: UseFormProps<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext> = {
+  const formOptions: UseFormProps<HyvaksymisEsitysForm, HyvaksymisEsitysValidationContext> = {
     resolver: yupResolver(hyvaksymisEsitysSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
@@ -48,7 +49,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     context: { validationMode, testType: TestType.FRONTEND },
   };
 
-  const useFormReturn = useForm<TallennaHyvaksymisEsitysInput, HyvaksymisEsitysValidationContext>(formOptions);
+  const useFormReturn = useForm<HyvaksymisEsitysForm, HyvaksymisEsitysValidationContext>(formOptions);
 
   useEffect(() => {
     useFormReturn.reset(defaultValues);
@@ -120,20 +121,29 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
-                <HyvaksymisEsitysTiedosto />
+                <HyvaksymisEsitysTiedosto tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisEsitys} />
                 <Suunnitelma />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
-                <Muistutukset kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat} />
-                <Lausunnot />
-                <Maanomistajaluettelo tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo} />
-                <KuulutuksetJaKutsu tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu} />
+                <Muistutukset
+                  kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat}
+                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muistutukset}
+                />
+                <Lausunnot tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.lausunnot} />
+                <Maanomistajaluettelo
+                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo}
+                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.maanomistajaluettelo}
+                />
+                <KuulutuksetJaKutsu
+                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.kuulutuksetJaKutsu}
+                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu}
+                />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>
                   Voit halutessasi liittää hyväksymisesitykseen muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
                 </p>
-                <MuuAineistoVelhosta />
-                <MuuAineistoKoneelta />
+                <MuuAineistoVelhosta aineisto={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoVelhosta} />
+                <MuuAineistoKoneelta tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoKoneelta} />
               </Section>
               <Section>
                 <Vastaanottajat />

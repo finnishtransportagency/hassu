@@ -35,6 +35,7 @@ import AsianhallintaIntegraatioYhteys from "@components/projekti/projektintiedot
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
+import { H3 } from "../../../../components/Headings";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -289,7 +290,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
           )}
           <Section gap={4}>
-            <h4 className="vayla-small-title">Muistiinpanot</h4>
+            <H3>Muistiinpanot</H3>
             <p>
               Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
               Muistiinpanoa voi muokata ainoastaan henkilöt, joilla on projektiin muokkausoikeudet.

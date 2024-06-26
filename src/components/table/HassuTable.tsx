@@ -146,7 +146,7 @@ export default function HassuTable<T>({ table }: HassuTableProps<T>) {
   }, [table.options.columns]);
 
   return (
-    <ContentSpacer gap={7}>
+    <ContentSpacer gap={7} style={{marginTop: "24px"}}>
       {!isMedium && table.options.enableSorting && <TableMobileSorting table={table} />}
       <HassuTablePagination table={table} />
       <TableWrapper>
@@ -196,12 +196,14 @@ export function BodyContent<T>(
     }
 ) {
   const actualRows = props.table.getRowModel().rows;
+
   const rowVirtualizer = props?.virtualizer;
 
   const virtualRows = rowVirtualizer?.getVirtualItems();
   const rows = virtualRows?.map((virtualRow) => actualRows[virtualRow.index]) ?? actualRows;
 
   const [, dropRef] = useDrop(() => ({ accept: "row" }));
+
   return (
     <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
       <Tbody sx={props?.bodySx} ref={dropRef}>

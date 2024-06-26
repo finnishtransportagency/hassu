@@ -22,10 +22,14 @@ export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMu
   assertIsDefined(projektiInDB.julkaistuHyvaksymisEsitys, "julkaistun hyväksymisesityksen olemassaolo on validoitu");
   await copyJulkaistunHyvaksymisEsitysFilesToMuokattava(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi julkaisusta jutut muokattavaHyvaksymisEsitykseen ja aseta tila hyväksytyksi
-  // – tiedostojen polkuja ei tarvitse päivittää
+  // – tiedostojen polkuja ei tarvitse päivittää.
+  // Tiputa vastaanottajista pois sähköpostin lähetystiedot.
   const muokattavaHyvaksymisEsitys = {
-    ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti"]),
+    ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "aineistopaketti", "vastaanottajat"]),
     tila: API.HyvaksymisTila.HYVAKSYTTY,
+    vastaanottajat: projektiInDB.julkaistuHyvaksymisEsitys.vastaanottajat?.map((vo) => ({
+      sahkoposti: vo.sahkoposti,
+    })),
   };
   assertIsDefined(kayttaja.uid, "Kayttaja.uid oltava määritelty");
   await projektiDatabase.tallennaMuokattavaHyvaksymisEsitys({ oid, versio, muokattavaHyvaksymisEsitys, muokkaaja: kayttaja.uid });

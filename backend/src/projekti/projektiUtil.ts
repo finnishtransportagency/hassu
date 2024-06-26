@@ -51,7 +51,7 @@ export type GenericApiKuulutusJulkaisu = Pick<
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "aineistoMuokkaus" | "ilmoituksenVastaanottajat"
 >;
 
-export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
+export function findJulkaisutWithTila<J extends Pick<GenericDbKuulutusJulkaisu, "tila" | "kuulutusPaiva">>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila,
   sort: ((a: J, b: J) => number) | undefined = sortByKuulutusPaivaAsc
@@ -59,7 +59,7 @@ export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sort);
 }
 
-export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
+export function findJulkaisuWithTila<J extends Pick<GenericDbKuulutusJulkaisu, "tila" | "kuulutusPaiva">>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
@@ -77,7 +77,10 @@ export function findJulkaisuWithAsianhallintaEventId<
   return julkaisut.filter((julkaisu) => julkaisu.asianhallintaEventId == asianhallintaEventId)?.pop();
 }
 
-export function sortByKuulutusPaivaAsc<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T): number {
+export function sortByKuulutusPaivaAsc<T extends Pick<GenericDbKuulutusJulkaisu, "tila" | "kuulutusPaiva">>(
+  julkaisu1: T,
+  julkaisu2: T
+): number {
   assertIsDefined(julkaisu1.kuulutusPaiva);
   assertIsDefined(julkaisu2.kuulutusPaiva);
   return parseDate(julkaisu1.kuulutusPaiva).unix() - parseDate(julkaisu2.kuulutusPaiva).unix();

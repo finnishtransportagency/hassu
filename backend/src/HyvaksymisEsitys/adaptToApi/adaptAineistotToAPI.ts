@@ -1,5 +1,4 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { AineistoNew } from "../../database/model";
 import { adaptFileName, joinPath } from "../../tiedostot/paths";
 
@@ -22,13 +21,12 @@ export function adaptAineistotToAPI({
   path: string;
 }): API.AineistoNew[] | undefined {
   if (aineistot && aineistot.length > 0) {
-    return [...aineistot].sort(jarjestaTiedostot).map((aineisto) => {
-      const { dokumenttiOid, jarjestys, kategoriaId, nimi, lisatty, uuid } = aineisto;
+    return [...aineistot].map((aineisto) => {
+      const { dokumenttiOid, kategoriaId, nimi, lisatty, uuid } = aineisto;
       const tuotu = aineistotHandledAt === true || !!(aineistotHandledAt && aineistotHandledAt.localeCompare(lisatty));
       const apiAineisto: API.AineistoNew = {
         __typename: "AineistoNew",
         dokumenttiOid,
-        jarjestys,
         kategoriaId,
         nimi,
         lisatty,

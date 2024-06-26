@@ -7,8 +7,7 @@ export default async function adaptKunnallinenLadattuTiedostoToKunnallinenLadatt
   tiedosto: KunnallinenLadattuTiedosto,
   path: string
 ): Promise<API.KunnallinenLadattavaTiedosto> {
-  const { jarjestys } = tiedosto;
   const nimi: string = tiedosto.nimi ?? "";
   const linkki = await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(tiedosto.nimi)));
-  return { __typename: "KunnallinenLadattavaTiedosto", nimi, jarjestys, linkki, tuotu: tiedosto.lisatty, kunta: tiedosto.kunta };
+  return { __typename: "KunnallinenLadattavaTiedosto", nimi, linkki, tuotu: tiedosto.lisatty, kunta: tiedosto.kunta };
 }

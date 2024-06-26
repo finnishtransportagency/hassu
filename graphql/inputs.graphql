@@ -330,10 +330,6 @@ input AineistoInputNew {
   kategoriaId: String
   nimi: String!
   uuid: String!
-  """
-  Numero jarjestamista varten
-  """
-  jarjestys: Int
 }
 
 input LadattuTiedostoInput {
@@ -364,10 +360,6 @@ input LadattuTiedostoInputNew {
   """
   nimi: String!
   uuid: String!
-  """
-  Numero jarjestamista varten
-  """
-  jarjestys: Int
 }
 
 input KunnallinenLadattuTiedostoInput {

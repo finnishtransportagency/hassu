@@ -8,13 +8,13 @@ export default async function adaptAineistoNewToLadattavaTiedosto(
   aineistoHandletAt: string | true | undefined | null,
   path: string
 ): Promise<API.LadattavaTiedosto> {
-  const { jarjestys, kategoriaId } = aineisto;
+  const { kategoriaId } = aineisto;
   const nimi = aineisto.nimi;
   let linkki;
-  if (aineistoHandletAt === true || (aineistoHandletAt && aineistoHandletAt.localeCompare(aineisto.lisatty))) {
-    linkki = await await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(aineisto.nimi)));
+  if (aineistoHandletAt === true || (aineistoHandletAt?.localeCompare(aineisto.lisatty))) {
+    linkki = await getYllapitoSignedDownloadLink(joinPath(path, adaptFileName(aineisto.nimi)));
   } else {
     linkki = "";
   }
-  return { __typename: "LadattavaTiedosto", nimi, jarjestys, kategoriaId, linkki, tuotu: aineisto.lisatty };
+  return { __typename: "LadattavaTiedosto", nimi, kategoriaId, linkki, tuotu: aineisto.lisatty };
 }

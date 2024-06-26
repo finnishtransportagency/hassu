@@ -32,6 +32,7 @@ import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
+import { H2, H3 } from "../Headings";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -181,7 +182,7 @@ function KayttoOikeusHallintaFormElements({
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>
           <ContentSpacer>
-            <h4 className="vayla-small-title">Projektipäällikkö</h4>
+            <H2>Projektipäällikkö</H2>
             <p>Projektipäällikkö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
           </ContentSpacer>
           {projektiPaallikot.map((paallikko, index) => {
@@ -204,7 +205,7 @@ function KayttoOikeusHallintaFormElements({
       )}
       <ContentSpacer gap={8}>
         <ContentSpacer>
-          <h4 className="vayla-small-title">Muut henkilöt</h4>
+          <H3>Muut henkilöt</H3>
         </ContentSpacer>
         {muutHenkilot.map((user, index) => {
           const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;

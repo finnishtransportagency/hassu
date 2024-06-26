@@ -11,6 +11,7 @@ import HassuGrid from "@components/HassuGrid";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
+import { H2, H3 } from "../../../Headings";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -65,7 +66,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
     <>
       <div>
         <Section>
-          <h4 className="vayla-small-title">Kutsun ilmoituksen vastaanottajat</h4>
+          <H2>Kutsun ilmoituksen vastaanottajat</H2>
           <SectionContent>
             <p>
               Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
@@ -80,7 +81,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
 
           <>
             <SectionContent>
-              <h6 className="font-bold">Viranomaiset</h6>
+              <H3>Viranomaiset</H3>
               {(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">{(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
@@ -153,7 +154,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
             </Button>
           </>
           <SectionContent>
-            <h6 className="font-bold">Kunnat</h6>
+            <H3>Kunnat</H3>
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

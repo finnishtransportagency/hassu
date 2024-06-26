@@ -2,17 +2,17 @@ import { TextFieldWithController } from "@components/form/TextFieldWithControlle
 import { H4, H5 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { ReactElement } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function ViestiVastaanottajalle(): ReactElement {
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control } = useFormContext<HyvaksymisEsitysForm>();
 
   return (
     <SectionContent>
       <H4 variant="h3">Viesti vastaanottajalle</H4>
-      <Controller<TallennaHyvaksymisEsitysInput>
+      <Controller<HyvaksymisEsitysForm>
         name="muokattavaHyvaksymisEsitys.kiireellinen"
         render={({ field: { value, onChange, ...field } }) => (
           <FormControlLabel

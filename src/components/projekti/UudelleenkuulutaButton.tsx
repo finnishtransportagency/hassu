@@ -28,7 +28,7 @@ const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps>
 
   return (
     <>
-      <Button onClick={openDialog} id="uudelleenkuuluta_button">
+      <Button onClick={openDialog} id="uudelleenkuuluta_button" className="text-nowrap">
         Uudelleenkuuluta
       </Button>
       <UudelleenkuulutaModal open={isDialogOpen} onClose={closeDialog} oid={oid} reloadProjekti={reloadProjekti} tyyppi={tyyppi} />

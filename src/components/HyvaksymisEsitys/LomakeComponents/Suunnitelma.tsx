@@ -1,16 +1,16 @@
 import { ReactElement, useState } from "react";
 import Button from "@components/button/Button";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import IconButton from "@components/button/IconButton";
 import { H4 } from "@components/Headings";
 import { adaptVelhoAineistoToAineistoInputNew } from "src/util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
 import { getNewAineistot } from "src/util/hyvaksymisesitys/getNewAineistot";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Suunnitelma(): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { control } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control } = useFormContext<HyvaksymisEsitysForm>();
   const { fields, remove, prepend } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.suunnitelma", control });
 
   return (

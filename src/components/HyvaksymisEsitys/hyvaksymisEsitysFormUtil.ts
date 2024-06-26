@@ -2,15 +2,24 @@ import {
   AineistoInputNew,
   AineistoNew,
   HyvaksymisEsityksenTiedot,
+  HyvaksymisEsitysInput,
   KunnallinenLadattuTiedosto,
   KunnallinenLadattuTiedostoInput,
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
-  TallennaHyvaksymisEsitysInput,
 } from "@services/api";
 
-export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot): TallennaHyvaksymisEsitysInput {
-  const { oid, versio, hyvaksymisEsitys: muokattavaHyvaksymisEsitys } = hyvaksymisEsityksenTiedot;
+export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
+export type HyvaksymisEsitysForm = {
+  oid: string;
+  versio: number;
+  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset"> & {
+    muistutukset: FormMuistutukset;
+  };
+};
+
+export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot): HyvaksymisEsitysForm {
+  const { oid, versio, hyvaksymisEsitys: muokattavaHyvaksymisEsitys, perustiedot } = hyvaksymisEsityksenTiedot;
 
   const {
     poistumisPaiva,
@@ -28,6 +37,14 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
     vastaanottajat,
   } = muokattavaHyvaksymisEsitys ?? {};
   const { ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
+  const muistutuksetSorted =
+    perustiedot.kunnat?.reduce((acc, kunta) => {
+      acc[kunta] = [];
+      return acc;
+    }, {} as FormMuistutukset) ?? {};
+  muistutukset?.forEach((muistutus) => {
+    muistutuksetSorted[muistutus.kunta]?.push(adaptKunnallinenLadattuTiedostoToInput(muistutus));
+  });
   return {
     oid,
     versio,
@@ -42,7 +59,7 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
       suunnitelma: adaptAineistotNewToInput(suunnitelma),
-      muistutukset: adaptKunnallisetLadatutTiedostoToInput(muistutukset),
+      muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
@@ -55,6 +72,21 @@ export default function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: Hyvak
   };
 }
 
+export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData: HyvaksymisEsitysForm) {
+  const muistutukset = formData.muokattavaHyvaksymisEsitys.muistutukset;
+  return {
+    ...formData,
+    muokattavaHyvaksymisEsitys: {
+      ...formData.muokattavaHyvaksymisEsitys,
+      muistutukset: muistutukset
+        ? Object.keys(muistutukset).reduce((acc, key) => {
+            return acc.concat(muistutukset[key] ?? []);
+          }, [] as KunnallinenLadattuTiedostoInput[])
+        : [],
+    },
+  };
+}
+
 function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] | undefined | null): LadattuTiedostoInputNew[] {
   if (!ladatutTiedostot) {
     return [];
@@ -63,29 +95,18 @@ function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] 
 }
 
 function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): LadattuTiedostoInputNew {
-  const { nimi, uuid, jarjestys } = ladattuTiedosto;
+  const { nimi, uuid } = ladattuTiedosto;
   return {
     nimi,
     uuid,
-    jarjestys,
   };
 }
 
-function adaptKunnallisetLadatutTiedostoToInput(
-  ladatutTiedostot: KunnallinenLadattuTiedosto[] | undefined | null
-): KunnallinenLadattuTiedostoInput[] {
-  if (!ladatutTiedostot) {
-    return [];
-  }
-  return ladatutTiedostot.map(adaptKunnallinenLadattuTiedostoToInput);
-}
-
 function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLadattuTiedosto): KunnallinenLadattuTiedostoInput {
-  const { nimi, uuid, jarjestys, kunta } = ladattuTiedosto;
+  const { nimi, uuid, kunta } = ladattuTiedosto;
   return {
     nimi,
     uuid,
-    jarjestys,
     kunta,
   };
 }
@@ -98,12 +119,11 @@ function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): 
 }
 
 function adaptAineistoNewToInput(aineisto: AineistoNew): AineistoInputNew {
-  const { dokumenttiOid, uuid, kategoriaId, nimi, jarjestys } = aineisto;
+  const { dokumenttiOid, uuid, kategoriaId, nimi } = aineisto;
   return {
     dokumenttiOid,
     uuid,
     kategoriaId,
     nimi,
-    jarjestys,
   };
 }
