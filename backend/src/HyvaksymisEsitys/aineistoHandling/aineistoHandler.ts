@@ -152,12 +152,12 @@ type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
   DBProjekti,
   | "oid"
   | "versio"
-  | "aineistoHandledAt"
-  | "muokattavaHyvaksymisEsitys"
-  | "lockedUntil"
+  | "kielitiedot"
   | "aloitusKuulutusJulkaisut"
   | "vuorovaikutusKierrosJulkaisut"
   | "nahtavillaoloVaiheJulkaisut"
+  | "muokattavaHyvaksymisEsitys"
+  | "aineistoHandledAt"
 >;
 
 async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
@@ -169,11 +169,11 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<Z
       "oid, " +
       "versio, " +
       "kielitiedot, " +
-      "velho, " +
       "aloitusKuulutusJulkaisut, " +
       "vuorovaikutusKierrosJulkaisut, " +
       "nahtavillaoloVaiheJulkaisut, " +
-      "muokattavaHyvaksymisEsitys",
+      "muokattavaHyvaksymisEsitys, " +
+      "aineistoHandledAt",
   });
 
   try {
