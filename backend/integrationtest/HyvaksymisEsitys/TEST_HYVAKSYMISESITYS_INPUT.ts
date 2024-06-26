@@ -30,7 +30,7 @@ function getHyvaksymisEsitysInput(includeTiedosto = true): Readonly<API.Hyvaksym
     },
     muistutukset: [
       {
-        kunta: 1,
+        kunta: 91,
         tiedosto: includeTiedosto ? "muistutukset/muistutukset_aoa_.png" : undefined,
         nimi: "muistutukset äöå .png",
         uuid: "muistutukset-uuid",

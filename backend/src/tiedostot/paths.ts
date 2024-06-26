@@ -10,6 +10,10 @@ export function getYllapitoPathForProjekti(oid: string) {
   return `yllapito/tiedostot/projekti/${oid}/`;
 }
 
+export function getSisaisetPathForProjekti(oid: string) {
+  return `yllapito/sisaiset/projekti/${oid}/`;
+}
+
 /**
  * Luo valideja tiedostopoluja osista, riippumatta onko polun alussa tai lopussa kauttaviivaa
  *
