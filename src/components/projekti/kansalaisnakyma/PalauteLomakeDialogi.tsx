@@ -21,7 +21,6 @@ import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
-import sx from "@mui/system/sx";
 
 interface Props {
   open: boolean;
