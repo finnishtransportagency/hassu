@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakuehtoNappi, HakutulosInfo, MobiiliBlokki } from "./TyylitellytKomponentit";
+import { HakuehtoNappi, HakutulosInfo } from "./TyylitellytKomponentit";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import { SelectOption } from "@components/form/Select";
@@ -19,8 +19,9 @@ import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 import MenuItem from "@mui/material/MenuItem";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { H2 } from "@components/Headings";
+import HakulomakeMobile from "./HakulomakeMobile";
 
-type HakulomakeFormValues = {
+export type HakulomakeFormValues = {
   vapaasanahaku: string;
   kunta: string;
   maakunta: string;
@@ -132,14 +133,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     [router, pienennaHakuState, lisaaHakuehtojaState]
   );
 
-  const pienennaHakuHandler = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault();
-      setPienennaHakuState(!pienennaHakuState);
-    },
-    [pienennaHakuState]
-  );
-
   const lisaaHakuehtojaHandler = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
@@ -148,39 +141,50 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     [lisaaHakuehtojaState]
   );
 
-  return (
+  return !desktop ? (
+    <HakulomakeMobile
+      useFormReturn={useFormReturn}
+      kuntaOptions={kuntaOptions}
+      maakuntaOptions={maakuntaOptions}
+      vaylamuotoOptions={vaylamuotoOptions}
+      haeSuunnitelmat={haeSuunnitelmat}
+      hakutulostenMaara={hakutulostenMaara}
+      nollaaHakuehdot={nollaaHakuehdot}
+    />
+  ) : (
     <div className="mb-6">
-      {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
-        <MobiiliBlokki id="pienenna_hakulomake_button" onClick={pienennaHakuHandler}>
-          {t("suunnitelmien-haku")}
-          {pienennaHakuState ? (
-            <FontAwesomeIcon
-              icon="chevron-down"
-              className={classNames("float-right mt-1 pointer-events-none text-white")}
-              style={{ top: `calc(50% - 0.5rem)` }}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon="chevron-up"
-              className={classNames("float-right mt-1 pointer-events-none text-white")}
-              style={{ top: `calc(50% - 0.5rem)` }}
-            />
-          )}
-        </MobiiliBlokki>
-      )}
+      <SearchSection noDivider>
+        <H2 id="mainPageContent">{t("suunnitelmien-haku")}</H2>
+        <FormProvider {...useFormReturn}>
+          <form className="mt-4">
+            <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
+              {" "}
+              <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
+                <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} id="vapaasanahaku" />
+              </HassuGridItem>
+              <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
+                {kuntaOptions.map((option) => {
+                  return (
+                    <MenuItem key={option.label} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  );
+                })}
+              </HassuMuiSelect>
+            </HassuGrid>
 
-      {(desktop || (!desktop && !pienennaHakuState)) && (
-        <SearchSection noDivider>
-          <H2 id="mainPageContent">{t("suunnitelmien-haku")}</H2>
-          <FormProvider {...useFormReturn}>
-            <form className="mt-4">
+            <HakuehtoNappi id="lisaa_hakuehtoja_button" onClick={lisaaHakuehtojaHandler}>
+              {lisaaHakuehtojaState ? t("vahemman-hakuehtoja") : t("lisaa-hakuehtoja")}
+              <FontAwesomeIcon
+                icon={`chevron-${lisaaHakuehtojaState ? "up" : "down"}`}
+                className={classNames("ml-3 pointer-events-none text-primary-dark")}
+                style={{ top: `calc(50% - 0.5rem)` }}
+              />
+            </HakuehtoNappi>
+            {lisaaHakuehtojaState && (
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-                {" "}
-                <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
-                  <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} id="vapaasanahaku" />
-                </HassuGridItem>
-                <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
-                  {kuntaOptions.map((option) => {
+                <HassuMuiSelect name="maakunta" label={t("maakunta")} control={control} defaultValue="">
+                  {maakuntaOptions.map((option) => {
                     return (
                       <MenuItem key={option.label} value={option.value}>
                         {option.label}
@@ -188,63 +192,36 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                     );
                   })}
                 </HassuMuiSelect>
-              </HassuGrid>
-              {desktop && (
-                // Desktop-näkymässä on mahdollista piilottaa tai paljastaa kaksi vikaa hakukenttää.
-                // Tässä on nappi sitä varten.
-                <HakuehtoNappi id="lisaa_hakuehtoja_button" onClick={lisaaHakuehtojaHandler}>
-                  {lisaaHakuehtojaState ? t("vahemman-hakuehtoja") : t("lisaa-hakuehtoja")}
-                  <FontAwesomeIcon
-                    icon={`chevron-${lisaaHakuehtojaState ? "up" : "down"}`}
-                    className={classNames("ml-3 pointer-events-none text-primary-dark")}
-                    style={{ top: `calc(50% - 0.5rem)` }}
-                  />
-                </HakuehtoNappi>
-              )}
-              {(!desktop || (desktop && lisaaHakuehtojaState)) && (
-                //Desktop-näkymässä nämä hakukentät näkyvät vain, jos käyttäjä on avannut ne näkyviin
-
-                <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-                  <HassuMuiSelect name="maakunta" label={t("maakunta")} control={control} defaultValue="">
-                    {maakuntaOptions.map((option) => {
+                <HassuMuiSelect name="vaylamuoto" label={t("vaylamuoto")} control={control} defaultValue="">
+                  {vaylamuotoOptions
+                    .filter((option) => option.value !== "")
+                    .map((option) => {
                       return (
                         <MenuItem key={option.label} value={option.value}>
                           {option.label}
                         </MenuItem>
                       );
                     })}
-                  </HassuMuiSelect>
-                  <HassuMuiSelect name="vaylamuoto" label={t("vaylamuoto")} control={control} defaultValue="">
-                    {vaylamuotoOptions
-                      .filter((option) => option.value !== "")
-                      .map((option) => {
-                        return (
-                          <MenuItem key={option.label} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        );
-                      })}
-                  </HassuMuiSelect>
-                </HassuGrid>
-              )}
+                </HassuMuiSelect>
+              </HassuGrid>
+            )}
 
-              <Button
-                type="submit"
-                onClick={handleSubmit(haeSuunnitelmat)}
-                primary
-                style={{ marginRight: "auto", marginTop: "1em" }}
-                endIcon="search"
-                id="hae"
-                disabled={false}
-              >
-                {t("hae")}
-              </Button>
-            </form>
-          </FormProvider>
-        </SearchSection>
-      )}
+            <Button
+              type="submit"
+              onClick={handleSubmit(haeSuunnitelmat)}
+              primary
+              style={{ marginRight: "auto", marginTop: "1em" }}
+              endIcon="search"
+              id="hae"
+              disabled={false}
+            >
+              {t("hae")}
+            </Button>
+          </form>
+        </FormProvider>
+      </SearchSection>
       {hakutulostenMaara != undefined && (
-        <HakutulosInfo className={desktop ? "" : "mobiili"}>
+        <HakutulosInfo>
           <p id="hakutulosmaara" style={{ marginBottom: "0.5rem" }}>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
           </p>
