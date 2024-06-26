@@ -2,7 +2,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
-import { hyvaksymisEsitysSchema, TestType, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
+import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
 import { auditLog, log } from "../../logger";
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
@@ -16,6 +16,7 @@ import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemp
 import { emailClient } from "../../email/email";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
+import { TestType } from "hassu-common/schema/common";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot

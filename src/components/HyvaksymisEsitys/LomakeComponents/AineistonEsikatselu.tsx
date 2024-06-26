@@ -1,13 +1,13 @@
 import Button from "@components/button/Button";
-import { TallennaHyvaksymisEsitysInput } from "@services/api";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function AineistonEsikatselu() {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
-  const { watch } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { watch } = useFormContext<HyvaksymisEsitysForm>();
   const formData = watch();
 
   return (

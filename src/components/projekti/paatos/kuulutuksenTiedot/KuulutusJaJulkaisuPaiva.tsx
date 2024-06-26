@@ -10,6 +10,7 @@ import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 import useApi from "src/hooks/useApi";
+import { H2 } from "../../../Headings";
 
 export default function KuulutusJaJulkaisuPaiva() {
   const { setValue, control } = useFormContext<KuulutuksenTiedotFormValues>();
@@ -34,7 +35,7 @@ export default function KuulutusJaJulkaisuPaiva() {
   return (
     <Section noDivider>
       <SectionContent>
-        <h4 className="vayla-small-title">Kuulutus ja julkaisupäivä</h4>
+        <H2>Kuulutus ja julkaisupäivä</H2>
         <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePickerWithController

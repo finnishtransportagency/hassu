@@ -26,7 +26,12 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     // Aseta projektille tiedostoja S3:een
     await Promise.all(
       TEST_PROJEKTI_FILES.map(async ({ tiedosto }) => {
-        const path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        let path;
+        if (tiedosto.includes("Maanomistajaluettelo")) {
+          path = `yllapito/sisaiset/projekti/${oid}${tiedosto}`;
+        } else {
+          path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        }
         await insertYllapitoFileToS3(path);
       })
     );
@@ -142,6 +147,8 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
       ...TEST_PROJEKTI_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)) // ei saametiedostoja
         .map((file) => file.nimi)
         .filter((nimi) => !nimi.includes("lähetekirje"))
+        .filter((nimi) => !nimi.includes("Ilmoitus aloituskuulutuksesta"))
+        .filter((nimi) => !nimi.includes("Ilmoitus suunnitelman"))
         .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
         .filter((nimi) => !nimi.includes("nähtävilläoloaineisto")),
       ...TEST_HYVAKSYMISESITYS_FILES.filter(({ nimi }) => !nimi.match(/se\.pdf$/)) // ei saametiedostoja

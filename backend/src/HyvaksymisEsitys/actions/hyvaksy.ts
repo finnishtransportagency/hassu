@@ -34,21 +34,12 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys, "muokattavan hyväksymisesityksen olemassaolo on validoitu");
   await copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid, projektiInDB.muokattavaHyvaksymisEsitys);
 
-  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
-  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
-  const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
-    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
-    poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
-    hyvaksymisPaiva: nyt().format(),
-    hyvaksyja: nykyinenKayttaja.uid,
-  };
-  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
-
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
+  let lahetysvirhe: boolean = false;
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
-    const promises = (julkaistuHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
+    const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
       fileService.getFileAsAttachment(projektiInDB.oid, `/hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(he.nimi)}`)
     );
     const attachments = await Promise.all(promises);
@@ -56,10 +47,31 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
 
-    await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+    try {
+      await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+    } catch (e) {
+      lahetysvirhe = true;
+      log.error("Sähköpostin lähettäminen vastaanottajille ei onnistunut", (e as Error).message);
+    }
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
+
+  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
+  // Vastaanottajiin lisätään lähetystieto.
+  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
+  const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
+    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "vastaanottajat"]),
+    poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
+    hyvaksymisPaiva: nyt().format(),
+    hyvaksyja: nykyinenKayttaja.uid,
+    vastaanottajat: projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => ({
+      ...vo,
+      lahetetty: lahetysvirhe ? undefined : nyt().format(),
+      lahetysvirhe,
+    })),
+  };
+  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
 
   // Lähetä email hyväksymisesityksen laatijalle
   const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);

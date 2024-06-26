@@ -140,74 +140,143 @@ describe("getProjektiStatus", () => {
     expect(status).to.eql(API.Status.NAHTAVILLAOLO);
   });
 
-  it("returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed but hyväksymisvaihe aineistot is not ok", async () => {
-    MockDate.set("2000-01-02");
-    const projekti = {
-      ...baseProjekti,
-      nahtavillaoloVaiheJulkaisut: [
-        {
-          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
-          kuulutusVaihePaattyyPaiva: "2000-01-01",
+  it(
+    "returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed but " +
+      "hyväksymisvaihe aineistot includes uncategorized aineistoNahtavilla",
+    async () => {
+      MockDate.set("2000-01-02");
+      const projekti = {
+        ...baseProjekti,
+        nahtavillaoloVaiheJulkaisut: [
+          {
+            tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+            kuulutusVaihePaattyyPaiva: "2000-01-01",
+          },
+        ],
+        hyvaksymisPaatosVaihe: {
+          id: 1,
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "2",
+              nimi: "Nimi2",
+              uuid: "2",
+              tila: API.AineistoTila.VALMIS,
+            },
+          ],
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1",
+              nimi: "Nimi",
+              uuid: "1",
+              tila: API.AineistoTila.VALMIS,
+              kategoriaId: kategorisoimattomatId,
+            },
+          ],
         },
-      ],
-      hyvaksymisPaatosVaihe: {
-        id: 1,
-        hyvaksymisPaatos: [
-          {
-            dokumenttiOid: "2",
-            nimi: "Nimi2",
-            uuid: "2",
-            tila: API.AineistoTila.VALMIS,
-          },
-        ],
-        aineistoNahtavilla: [
-          {
-            dokumenttiOid: "1",
-            nimi: "Nimi",
-            uuid: "1",
-            tila: API.AineistoTila.VALMIS,
-            kategoriaId: kategorisoimattomatId,
-          },
-        ],
-      },
-    };
-    const status = await GetProjektiStatus.getProjektiStatus(projekti);
-    expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
-  });
+      };
+      const status = await GetProjektiStatus.getProjektiStatus(projekti);
+      expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    }
+  );
 
-  it("returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is migrated but hyväksymisvaihe aineistot is not ok", async () => {
-    MockDate.set("2000-01-02");
-    const projekti = {
-      ...baseProjekti,
-      nahtavillaoloVaiheJulkaisut: [
-        {
-          tila: API.KuulutusJulkaisuTila.MIGROITU,
+  it(
+    "returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed but " +
+      "hyväksymisvaihe is missing hyvaksymisPaatos",
+    async () => {
+      MockDate.set("2000-01-02");
+      const projekti = {
+        ...baseProjekti,
+        nahtavillaoloVaiheJulkaisut: [
+          {
+            tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+            kuulutusVaihePaattyyPaiva: "2000-01-01",
+          },
+        ],
+        hyvaksymisPaatosVaihe: {
+          id: 1,
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "2",
+              nimi: "Nimi2",
+              uuid: "2",
+              tila: API.AineistoTila.VALMIS,
+            },
+          ],
         },
-      ],
-      hyvaksymisPaatosVaihe: {
-        id: 1,
-        hyvaksymisPaatos: [
+      };
+      const status = await GetProjektiStatus.getProjektiStatus(projekti);
+      expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    }
+  );
+
+  it(
+    "returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed but " +
+      "hyväksymisvaihe is missing aineistoNahtavilla",
+    async () => {
+      MockDate.set("2000-01-02");
+      const projekti = {
+        ...baseProjekti,
+        nahtavillaoloVaiheJulkaisut: [
           {
-            dokumenttiOid: "2",
-            nimi: "Nimi2",
-            uuid: "2",
-            tila: API.AineistoTila.VALMIS,
+            tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+            kuulutusVaihePaattyyPaiva: "2000-01-01",
           },
         ],
-        aineistoNahtavilla: [
+        hyvaksymisPaatosVaihe: {
+          id: 1,
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1",
+              nimi: "Nimi",
+              uuid: "1",
+              tila: API.AineistoTila.VALMIS,
+              kategoriaId: "osa-a",
+            },
+          ],
+        },
+      };
+      const status = await GetProjektiStatus.getProjektiStatus(projekti);
+      expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    }
+  );
+
+  it(
+    "returns HYVAKSYMISMENETTELYSSA_AINEISTOT if nähtävilläolo is migrated but " +
+      "hyväksymisvaihe aineistot includes uncategorized aineistoNahtavilla",
+    async () => {
+      MockDate.set("2000-01-02");
+      const projekti = {
+        ...baseProjekti,
+        nahtavillaoloVaiheJulkaisut: [
           {
-            dokumenttiOid: "1",
-            nimi: "Nimi",
-            uuid: "1",
-            tila: API.AineistoTila.VALMIS,
-            kategoriaId: kategorisoimattomatId,
+            tila: API.KuulutusJulkaisuTila.MIGROITU,
           },
         ],
-      },
-    };
-    const status = await GetProjektiStatus.getProjektiStatus(projekti);
-    expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
-  });
+        hyvaksymisPaatosVaihe: {
+          id: 1,
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "2",
+              nimi: "Nimi2",
+              uuid: "2",
+              tila: API.AineistoTila.VALMIS,
+            },
+          ],
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1",
+              nimi: "Nimi",
+              uuid: "1",
+              tila: API.AineistoTila.VALMIS,
+              kategoriaId: kategorisoimattomatId,
+            },
+          ],
+        },
+      };
+      const status = await GetProjektiStatus.getProjektiStatus(projekti);
+      expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    }
+  );
 
   it("returns HYVAKSYMISMENETTELYSSA if nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed and hyväksymisvaihe aineistot is ok", async () => {
     MockDate.set("2000-01-02");
@@ -278,46 +347,50 @@ describe("getProjektiStatus", () => {
     expect(status).to.eql(API.Status.HYVAKSYMISMENETTELYSSA);
   });
 
-  it("returns HYVAKSYTTY if käsittelyn tila has hyväksymispäätös info, nähtävilläolo is published and its kuulutusVaihePaattyyPaiva has passed and hyväksymisvaihe aineistot is ok", async () => {
-    MockDate.set("2000-01-02");
-    const projekti = {
-      ...baseProjekti,
-      kasittelynTila: {
-        hyvaksymispaatos: {
-          paatoksenPvm: "2000-01-01",
-          asianumero: "asianumero",
+  it(
+    "returns HYVAKSYTTY if käsittelyn tila has hyväksymispäätös info, nähtävilläolo is published and " +
+      "its kuulutusVaihePaattyyPaiva has passed and hyväksymisvaihe aineistot is ok",
+    async () => {
+      MockDate.set("2000-01-02");
+      const projekti = {
+        ...baseProjekti,
+        kasittelynTila: {
+          hyvaksymispaatos: {
+            paatoksenPvm: "2000-01-01",
+            asianumero: "asianumero",
+          },
         },
-      },
-      nahtavillaoloVaiheJulkaisut: [
-        {
-          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
-          kuulutusVaihePaattyyPaiva: "2000-01-01",
-        },
-      ],
-      hyvaksymisPaatosVaihe: {
-        id: 1,
-        hyvaksymisPaatos: [
+        nahtavillaoloVaiheJulkaisut: [
           {
-            dokumenttiOid: "2",
-            nimi: "Nimi2",
-            uuid: "2",
-            tila: API.AineistoTila.VALMIS,
+            tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+            kuulutusVaihePaattyyPaiva: "2000-01-01",
           },
         ],
-        aineistoNahtavilla: [
-          {
-            dokumenttiOid: "1",
-            nimi: "Nimi",
-            uuid: "1",
-            tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
-          },
-        ],
-      },
-    };
-    const status = await GetProjektiStatus.getProjektiStatus(projekti);
-    expect(status).to.eql(API.Status.HYVAKSYTTY);
-  });
+        hyvaksymisPaatosVaihe: {
+          id: 1,
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "2",
+              nimi: "Nimi2",
+              uuid: "2",
+              tila: API.AineistoTila.VALMIS,
+            },
+          ],
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1",
+              nimi: "Nimi",
+              uuid: "1",
+              tila: API.AineistoTila.ODOTTAA_TUONTIA,
+              kategoriaId: "osa-a",
+            },
+          ],
+        },
+      };
+      const status = await GetProjektiStatus.getProjektiStatus(projekti);
+      expect(status).to.eql(API.Status.HYVAKSYTTY);
+    }
+  );
 
   it("returns HYVAKSYTTY if käsittelyn tila has hyväksymispäätös info, nähtävilläolo is migrated and hyväksymisvaihe aineistot is ok", async () => {
     const projekti = {
@@ -419,7 +492,7 @@ describe("getProjektiStatus", () => {
     expect(status).to.eql(API.Status.EPAAKTIIVINEN_1);
   });
 
-  it("returns JATKOPAATOS_1_AINEISTOT if kasittelyn tila has jatkopäätös 1 info, but jatkopäätösjulkaisu aineistot is ok", async () => {
+  it("returns JATKOPAATOS_1_AINEISTOT if kasittelyn tila has jatkopäätös 1 info, but jatkopäätösvaihe aineistot has uncategorised aineistoNahtavilla", async () => {
     MockDate.set("2001-01-02");
     const projekti = {
       ...baseProjekti,
@@ -429,12 +502,32 @@ describe("getProjektiStatus", () => {
           asianumero: "asianumero",
         },
       },
+      jatkoPaatos1Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: kategorisoimattomatId,
+          },
+        ],
+      },
     };
     const status = await GetProjektiStatus.getProjektiStatus(projekti);
     expect(status).to.eql(API.Status.JATKOPAATOS_1_AINEISTOT);
   });
 
-  it("returns JATKOPAATOS_1 if kasittelyn tila has jatkopäätös 1 info and jatkopäätösjulkaisu aineistot is ok", async () => {
+  it("returns JATKOPAATOS_1_AINEISTOT if kasittelyn tila has jatkopäätös 1 info, but jatkopäätösvaihe is missing hyvaksymisPaatos", async () => {
+    MockDate.set("2001-01-02");
     const projekti = {
       ...baseProjekti,
       kasittelynTila: {
@@ -443,9 +536,77 @@ describe("getProjektiStatus", () => {
           asianumero: "asianumero",
         },
       },
+      jatkoPaatos1Vaihe: {
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.JATKOPAATOS_1_AINEISTOT);
+  });
+
+  it("returns JATKOPAATOS_1_AINEISTOT if kasittelyn tila has jatkopäätös 1 info, but jatkopäätösvaihe is missing aineistoNahtavilla", async () => {
+    MockDate.set("2001-01-02");
+    const projekti = {
+      ...baseProjekti,
+      kasittelynTila: {
+        ensimmainenJatkopaatos: {
+          paatoksenPvm: "2000-01-01",
+          asianumero: "asianumero",
+        },
+      },
+      jatkoPaatos1Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.JATKOPAATOS_1_AINEISTOT);
+  });
+
+  it("returns JATKOPAATOS_1 if kasittelyn tila has jatkopäätös 1 info and jatkopäätösvaihe aineistot is ok", async () => {
+    const projekti = {
+      ...baseProjekti,
+      kasittelynTila: {
+        ensimmainenJatkopaatos: {
+          paatoksenPvm: "2000-01-01",
+          asianumero: "asianumero",
+        },
+      },
+      jatkoPaatos1Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
+      },
       jatkoPaatos1VaiheJulkaisut: [
         {
-          id: 1,
           tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
           aineistoNahtavilla: [
             {
@@ -463,7 +624,7 @@ describe("getProjektiStatus", () => {
     expect(status).to.eql(API.Status.JATKOPAATOS_1);
   });
 
-  it("returns JATKOPAATOS_1 if jatkopäätös 1 is published but it has not yet beemn 6 months has passed since jatkopaatos1 kuulutusVaihePaattyyPaiva", async () => {
+  it("returns JATKOPAATOS_1 if jatkopäätös 1 is published but it has not yet been 6 months has passed since jatkopaatos1 kuulutusVaihePaattyyPaiva", async () => {
     MockDate.set("2000-07-01");
     const projekti = {
       ...baseProjekti,
@@ -472,6 +633,25 @@ describe("getProjektiStatus", () => {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
         },
+      },
+      jatkoPaatos1Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
       },
       jatkoPaatos1VaiheJulkaisut: [
         {
@@ -516,7 +696,7 @@ describe("getProjektiStatus", () => {
     expect(status).to.eql(API.Status.EPAAKTIIVINEN_2);
   });
 
-  it("returns JATKOPAATOS_2_AINEISTOT if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 julkaisu aineistot is not ok", async () => {
+  it("returns JATKOPAATOS_2_AINEISTOT if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 vaihe aineistot has uncategorized aineistoNahtavilla", async () => {
     const projekti = {
       ...baseProjekti,
       kasittelynTila: {
@@ -525,12 +705,80 @@ describe("getProjektiStatus", () => {
           asianumero: "asianumero",
         },
       },
+      jatkoPaatos2Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: kategorisoimattomatId,
+          },
+        ],
+      },
     };
     const status = await GetProjektiStatus.getProjektiStatus(projekti);
     expect(status).to.eql(API.Status.JATKOPAATOS_2_AINEISTOT);
   });
 
-  it("returns JATKOPAATOS_2 if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 julkaisu aineistot is ok", async () => {
+  it("returns JATKOPAATOS_2_AINEISTOT if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 vaihe is missing hyvaksymisPaatos", async () => {
+    const projekti = {
+      ...baseProjekti,
+      kasittelynTila: {
+        toinenJatkopaatos: {
+          paatoksenPvm: "2000-01-01",
+          asianumero: "asianumero",
+        },
+      },
+      jatkoPaatos2Vaihe: {
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.JATKOPAATOS_2_AINEISTOT);
+  });
+
+  it("returns JATKOPAATOS_2_AINEISTOT if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 vaihe is missing aineistoNahtavilla", async () => {
+    const projekti = {
+      ...baseProjekti,
+      kasittelynTila: {
+        toinenJatkopaatos: {
+          paatoksenPvm: "2000-01-01",
+          asianumero: "asianumero",
+        },
+      },
+      jatkoPaatos2Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.JATKOPAATOS_2_AINEISTOT);
+  });
+
+  it("returns JATKOPAATOS_2 if käsittelyn tila has jatkopäätös 2 info, but jatkopäätös 2 vaihe aineistot is ok", async () => {
     MockDate.set("2000-01-02");
     const projekti = {
       ...baseProjekti,
@@ -540,11 +788,38 @@ describe("getProjektiStatus", () => {
           asianumero: "asianumero",
         },
       },
+      jatkoPaatos2Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
+      },
       jatkoPaatos2VaiheJulkaisut: [
         {
           id: 1,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "2",
+              nimi: "Nimi2",
+              uuid: "2",
+              tila: API.AineistoTila.VALMIS,
+            },
+          ],
           aineistoNahtavilla: [
             {
               dokumenttiOid: "1",
@@ -570,6 +845,25 @@ describe("getProjektiStatus", () => {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
         },
+      },
+      jatkoPaatos2Vaihe: {
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "2",
+            nimi: "Nimi2",
+            uuid: "2",
+            tila: API.AineistoTila.VALMIS,
+          },
+        ],
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.VALMIS,
+            kategoriaId: "osa-a",
+          },
+        ],
       },
       jatkoPaatos2VaiheJulkaisut: [
         {

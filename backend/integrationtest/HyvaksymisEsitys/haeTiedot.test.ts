@@ -187,7 +187,12 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
     // Aseta projektille tiedostoja S3:een
     await Promise.all(
       TEST_PROJEKTI_FILES.map(async ({ tiedosto }) => {
-        const path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        let path;
+        if (tiedosto.includes("Maanomistajaluettelo")) {
+          path = `yllapito/sisaiset/projekti/${oid}${tiedosto}`;
+        } else {
+          path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        }
         await insertYllapitoFileToS3(path);
       })
     );
@@ -215,7 +220,7 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
     expect(tiedot.tuodutTiedostot.maanomistajaluettelo?.[0].nimi).to.eql("T416 Maanomistajaluettelo 20240522.xlsx");
     const lataus1 = axios.get(tiedot.tuodutTiedostot.maanomistajaluettelo?.[0].linkki as string);
     await expect(lataus1).to.eventually.be.fulfilled;
-    expect(tiedot.tuodutTiedostot.kuulutuksetJaKutsu?.length).to.eql(12);
+    expect(tiedot.tuodutTiedostot.kuulutuksetJaKutsu?.length).to.eql(10);
     for (const tiedosto of tiedot.tuodutTiedostot.kuulutuksetJaKutsu!) {
       await expect(axios.get(tiedosto.linkki as string)).to.eventually.be.fulfilled;
     }

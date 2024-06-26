@@ -14,6 +14,7 @@ import { isAllowedToChangeSuunnittelusopimus } from "hassu-common/util/operation
 import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { H3, H4 } from "../Headings";
 
 interface Props {
   projekti?: Projekti | null;
@@ -45,7 +46,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
 
   return (
     <Section smallGaps>
-      <h4 className="vayla-small-title">Suunnittelusopimus</h4>
+      <H3>Suunnittelusopimus</H3>
       {disabled && (
         <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
@@ -86,7 +87,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 render={() => (
                   <SectionContent largeGaps sx={{ marginLeft: 4 }}>
                     <SectionContent>
-                      <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
+                      <H4>Kunnan edustajan tiedot</H4>
                       <p>
                         Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten
                         yhteystiedoissa.
@@ -117,7 +118,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                       </HassuGrid>
                     </SectionContent>
                     <SectionContent>
-                      <h5 className="vayla-smallest-title">Kunnan logo</h5>
+                      <H4>Kunnan logo</H4>
                       {ensisijainenKaannettavaKieli && (
                         <ProjektiSuunnittelusopimusLogoInput<FormValues>
                           lang={ensisijainenKaannettavaKieli}

@@ -7,7 +7,7 @@ import { log } from "../logger";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
-import { SimultaneousUpdateError } from "hassu-common/error";
+import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
@@ -107,8 +107,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       const dynamoDBDocumentClient = getDynamoDBDocumentClient();
       const data = await dynamoDBDocumentClient.send(params);
       if (!data.Item) {
-        log.error("Yritettiin hakea projektin tietoja, mutta ei onnistuttu", { params });
-        throw new Error();
+        log.error(`Projektia oid:lla ${oid} ei löydy`);
+        throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       return projekti;

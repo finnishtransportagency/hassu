@@ -4,7 +4,14 @@ import { yhteystietoSchema } from "./yhteystieto";
 import { IlmoitettavaViranomainen } from "../graphql/apiModel";
 import { ValidationMode, ValidationModeState } from "../ProjektiValidationContext";
 
+export enum TestType {
+  FRONTEND = "FRONTEND",
+  BACKEND = "BACKEND",
+}
+
 export const isValidationModePublish = (validationMode: ValidationModeState) => validationMode?.current === ValidationMode.PUBLISH;
+export const isTestTypeFrontend = (testType: TestType) => testType === TestType.FRONTEND;
+export const isTestTypeBackend = (testType: TestType) => testType === TestType.BACKEND;
 
 const getAineistoSchema = () =>
   Yup.object().shape({

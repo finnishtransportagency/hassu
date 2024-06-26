@@ -26,21 +26,22 @@ import { DBProjekti } from "../database/model";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getVaylaUser } from "../user";
 
-class AsianhallintaService {
+//prettier-ignore
+class AsianhallintaService { //NOSONAR
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
-    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId);
+    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId); //NOSONAR
   }
 
   /**
    * Jonotus on erillisenä metodina, jotta sitä voidaan kutsua testiympäristössä haluttaessa. Lopullisessa toteutuksessa kutsu tulee aina
    * saveAndEnqueueSynchronization-metodin kautta.
    */
-  async enqueueSynchronization(oid: string, asianhallintaEventId: string) {
+  async enqueueSynchronization(oid: string, asianhallintaEventId: string) { //NOSONAR
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
@@ -52,7 +53,7 @@ class AsianhallintaService {
     }
     const body: AsianhallintaEvent = {
       oid,
-      asianhallintaEventId,
+      asianhallintaEventId, //NOSONAR
       correlationId: getCorrelationId() ?? uuid.v4(),
       hyvaksyja: getVaylaUser()?.uid ?? undefined,
       hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined,
@@ -168,4 +169,4 @@ const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
   JATKOPAATOS2: "JATKOPAATOSKUULUTUS2",
 };
 
-export const asianhallintaService = new AsianhallintaService();
+export const asianhallintaService = new AsianhallintaService(); //NOSONAR

@@ -16,6 +16,7 @@ import {
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoTable";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from ".";
+import { H4 } from "../../../../Headings";
 
 export interface AineistoLomakeProps {
   dialogInfoText: string;
@@ -41,10 +42,10 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
         expandedstate={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
-            <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+            <H4 className="vayla-small-title mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               aineistoNahtavillaFlat,
               paakategoria
-            )})`}</span>
+            )})`}</H4>
           ),
           content: (
             <SectionContent largeGaps>
