@@ -105,6 +105,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.Ny
   if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day")) {
     throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä");
   }
+  // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
   await validateVaiheOnAktiivinen(projektiInDB);
   return nykyinenKayttaja;
 }

@@ -96,6 +96,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tall
   hyvaksymisEsitysSchema.validateSync(input, {
     context,
   });
+  // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 

@@ -105,6 +105,7 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
   hyvaksymisEsitysSchema.validateSync(input, {
     context,
   });
+  // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 
