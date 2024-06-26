@@ -2,15 +2,16 @@ import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { LadattuTiedostoNew, TallennaHyvaksymisEsitysInput } from "@services/api";
+import { LadattuTiedostoNew } from "@services/api";
 import { useController, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
+import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
 
   const fieldName = "muokattavaHyvaksymisEsitys.hyvaksymisEsitys";
   const {

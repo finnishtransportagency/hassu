@@ -1,19 +1,21 @@
 import React from "react";
 import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
-import { styled } from "@mui/material";
+import { styled, useMediaQuery } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTheme } from "@mui/material/styles";
 
 const Hakuohje = () => {
+  const theme = useTheme();
+  const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const { t } = useTranslation("etusivu");
   const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
     [`&.${accordionClasses.root}`]: {
       backgroundColor: "white",
     },
-    border: "#dfdfdf 2px solid",
   });
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
@@ -31,12 +33,13 @@ const Hakuohje = () => {
           aria-controls="panel1a-content"
           id="panel1a-header"
           style={{
-            height: "48px",
+            height: desktop ? "48px" : "64px",
             backgroundColor: "#0064AF",
             color: "white",
             alignItems: "center",
             fontWeight: "700",
             paddingLeft: 24,
+            marginBottom: desktop ? 0 : 16
           }}
         >
           <h2 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h2>
