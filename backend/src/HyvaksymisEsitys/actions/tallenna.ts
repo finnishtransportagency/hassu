@@ -84,7 +84,6 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
 async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
-  await validateVaiheOnAktiivinen(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys tai
   // ei muokattavaa hyväksymisesitystä
   if (projektiInDB.muokattavaHyvaksymisEsitys && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
@@ -97,6 +96,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tall
   hyvaksymisEsitysSchema.validateSync(input, {
     context,
   });
+  await validateVaiheOnAktiivinen(projektiInDB);
 }
 
 function uusiaAineistoja(aineistotBefore: AineistoNew[], aineistotAfter: AineistoNew[]): boolean {

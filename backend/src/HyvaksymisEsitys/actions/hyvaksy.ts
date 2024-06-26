@@ -95,7 +95,6 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
 async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.NykyinenKayttaja> {
   // Toiminnon tekijän on oltava projektipäällikkö
   const nykyinenKayttaja = requireOmistaja(projektiInDB, "Hyväksymisesityksen voi hyväksyä vain projektipäällikkö");
-  await validateVaiheOnAktiivinen(projektiInDB);
   // Projektilla on oltava hyväksymistä odottava hyväksymisesitys
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA) {
     throw new IllegalArgumentError("Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä");
@@ -106,6 +105,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.Ny
   if (parseDate(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day")) {
     throw new IllegalArgumentError("Hyväksymisesityksen poistumispäivämäärä ei voi olla menneisyydessä");
   }
+  await validateVaiheOnAktiivinen(projektiInDB);
   return nykyinenKayttaja;
 }
 
