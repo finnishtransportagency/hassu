@@ -294,7 +294,9 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
             </form>
           </FormProvider>
         </DialogContent>
-        <DialogActions className={isMobile ? "flex-row-reverse justify-between sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}>
+        <DialogActions
+          className={isMobile ? "flex-row-reverse justify-between sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}
+        >
           <Button id={"submit_feedback"} primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
             {t("common:laheta")}
           </Button>
@@ -322,13 +324,21 @@ interface KiitosProps {
 export function KiitosDialogi({ open, onClose, isMobile }: Readonly<KiitosProps>): ReactElement {
   const { t } = useTranslation();
   return (
-    <HassuDialog scroll="body" open={open} title={t("projekti:palautelomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"} fullScreen={isMobile}>
+    <HassuDialog
+      PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
+      scroll={"paper"}
+      open={open}
+      title={t("projekti:palautelomake.kiitos_viestista")}
+      onClose={onClose}
+      maxWidth={"sm"}
+      fullScreen={isMobile}
+    >
       <DialogContent>
         <p>{t("projekti:palautelomake.olemme_vastaanottaneet_viestisi")}</p>
         <p>{t("projekti:palautelomake.kaikki_viestit_kasitellaan")}</p>
         <p>{t("projekti:palautelomake.jos_toivoit_yhteydenottoa")}</p>
       </DialogContent>
-      <DialogActions className={isMobile ? "sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""} >
+      <DialogActions className={isMobile ? "sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}>
         <Button onClick={onClose} primary>
           {t("common:sulje")}
         </Button>
