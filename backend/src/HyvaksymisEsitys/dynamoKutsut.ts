@@ -21,6 +21,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "aineistoHandledAt"
   | "velho"
   | "asianhallinta"
+  | "hyvEsAineistoPaketti"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -37,6 +38,7 @@ export type ProjektiTiedostoineen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
+  | "hyvEsAineistoPaketti"
 > & { hyvaksymisPaatosVaihe?: Pick<HyvaksymisPaatosVaihe, "id"> | null };
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -64,7 +66,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti",
     });
 
     try {
@@ -100,7 +102,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
         "hyvaksymisPaatosVaihe.id, " +
-        "aineistoHandledAt",
+        "aineistoHandledAt, " +
+        "hyvEsAineistoPaketti",
     });
 
     try {
