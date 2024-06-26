@@ -1,4 +1,4 @@
-import { Checkbox, DialogActions, DialogContent, FormControlLabel } from "@mui/material";
+import { Checkbox, DialogActions, DialogContent, FormControlLabel, useMediaQuery, useTheme } from "@mui/material";
 import React, { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
@@ -21,6 +21,7 @@ import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
+import sx from "@mui/system/sx";
 
 interface Props {
   open: boolean;
@@ -50,6 +51,8 @@ const defaultValues = {
 
 export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
@@ -117,7 +120,15 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
 
   return (
     <>
-      <HassuDialog scroll="body" open={open} title={t("projekti:jata_palaute_tai")} onClose={onClose} maxWidth={"md"}>
+      <HassuDialog
+        scroll="body"
+        open={open}
+        title={t("projekti:jata_palaute_tai")}
+        onClose={onClose}
+        maxWidth={"md"}
+        fullScreen={isMobile}
+        PaperProps={isMobile ? { sx: { paddingBottom: 0 } } : undefined}
+      >
         <DialogContent>
           <p>{t("projekti:voit_jattaa_palautetta")}</p>
           <p style={{ fontWeight: "bold" }}>
@@ -284,8 +295,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
             </form>
           </FormProvider>
         </DialogContent>
-
-        <DialogActions>
+        <DialogActions className={isMobile ? "flex-row-reverse justify-between sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}>
           <Button id={"submit_feedback"} primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
             {t("common:laheta")}
           </Button>
@@ -299,7 +309,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           </Button>
         </DialogActions>
       </HassuDialog>
-      <KiitosDialogi open={kiitosDialogiOpen} onClose={() => setKiitosDialogiOpen(false)} />
+      <KiitosDialogi open={kiitosDialogiOpen} onClose={() => setKiitosDialogiOpen(false)} isMobile={isMobile} />
     </>
   );
 }
@@ -307,18 +317,19 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
 interface KiitosProps {
   open: boolean;
   onClose: () => void;
+  isMobile: boolean;
 }
 
-export function KiitosDialogi({ open, onClose }: Readonly<KiitosProps>): ReactElement {
+export function KiitosDialogi({ open, onClose, isMobile }: Readonly<KiitosProps>): ReactElement {
   const { t } = useTranslation();
   return (
-    <HassuDialog scroll="body" open={open} title={t("projekti:palautelomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>
+    <HassuDialog scroll="body" open={open} title={t("projekti:palautelomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"} fullScreen={isMobile}>
       <DialogContent>
         <p>{t("projekti:palautelomake.olemme_vastaanottaneet_viestisi")}</p>
         <p>{t("projekti:palautelomake.kaikki_viestit_kasitellaan")}</p>
         <p>{t("projekti:palautelomake.jos_toivoit_yhteydenottoa")}</p>
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={isMobile ? "sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""} >
         <Button onClick={onClose} primary>
           {t("common:sulje")}
         </Button>
