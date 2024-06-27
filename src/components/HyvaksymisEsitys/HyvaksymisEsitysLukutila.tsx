@@ -27,6 +27,8 @@ import { AccordionToggleButton } from "@components/projekti/common/Aineistot/Acc
 import ExtLink from "@components/ExtLink";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import { nyt, parseDate } from "backend/src/util/dateUtil";
+import ButtonLink from "@components/button/ButtonLink";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
@@ -313,6 +315,16 @@ export default function HyvaksymisEsitysLukutila({
             ]}
           />
         </SectionContent>
+      </Section>
+      <Section>
+        <ButtonLink
+          disabled={!hyvaksymisEsitys.aineistopaketti}
+          href={hyvaksymisEsitys.aineistopaketti ? "/" + hyvaksymisEsitys.aineistopaketti : undefined}
+        >
+          Lataa kaikki
+          <DownloadIcon className="ml-2" />
+        </ButtonLink>
+        {!hyvaksymisEsitys.aineistopaketti && <p className="text-red">Aineistopaketin luominen on vielä kesken.</p>}
       </Section>
       <Section>
         <H2>Hyväksymisesityksen vastaanottajat</H2>

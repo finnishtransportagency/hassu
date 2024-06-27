@@ -42,8 +42,8 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
         perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       };
     }
-    const aineistopaketti = hyvaksymisEsitys?.aineistopaketti
-      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, hyvaksymisEsitys?.aineistopaketti)
+    const aineistopaketti = projekti?.hyvEsAineistoPaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, projekti?.hyvEsAineistoPaketti)
       : null;
     const ladattavatTiedostot = await createLadattavatTiedostot(projekti, hyvaksymisEsitys);
     return {

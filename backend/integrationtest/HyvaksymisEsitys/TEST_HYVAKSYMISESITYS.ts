@@ -38,7 +38,7 @@ function getTestHyvaksymisEsitys(number?: number): DeepReadonly<IHyvaksymisEsity
         nimi: `muistutukset äöå ${nbr}.png`,
         uuid: `muistutukset-uuid${nbr}`,
         lisatty,
-        kunta: 1,
+        kunta: 91,
       },
     ],
     lausunnot: [
