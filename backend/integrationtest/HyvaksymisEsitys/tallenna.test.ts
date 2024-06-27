@@ -576,10 +576,12 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const muokattavaHyvaksymisEsitys: API.HyvaksymisEsitysInput = {
       ...TEST_HYVAKSYMISESITYS_INPUT,
     };
-    // Poistetaan eurahoitus ja kielitiedot, jotta projektin statukseksi tulee EI_JULKAISTU
-    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    // annetaan projektille aloituskuulutusjulkaisu ja poistetaan vuorovaikutusKierros, jotta projektin statukseksi tulee SUUNNITTELU
+    const projekti = getProjektiBase();
     const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projekti,
+      vuorovaikutusKierros: undefined,
+      aloitusKuulutusJulkaisut: [{ id: 1, yhteystiedot: [], kuulutusYhteystiedot: {}, velho: { nimi: "Nimi" } }],
     };
     await insertProjektiToDB(projektiBefore);
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));
