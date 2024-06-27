@@ -8,13 +8,15 @@ import setLanguage from "next-translate/setLanguage";
 import { Box, BoxProps, styled } from "@mui/system";
 import { SuomiFiLoginComponent } from "./SuomiFiLogin";
 import HassuDialog from "@components/HassuDialog";
-import { DialogActions, DialogContent } from "@mui/material";
+import { DialogActions, DialogContent, useMediaQuery, useTheme } from "@mui/material";
 import Button from "@components/button/Button";
 import { getSuomiFiLogoutURL } from "@services/userService";
 
 const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { data: projekti } = useProjektiJulkinen();
   const { showInfoMessage } = useSnackbars();
   const [kirjautunutOpen, setKirjautunutOpen] = useState(router.asPath.indexOf("#kirjautunut") !== -1);
@@ -26,7 +28,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   }, [router]);
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
-      <HassuDialog open={kirjautunutOpen} title={t("kirjautuminen_onnistui")} maxWidth="sm" onClose={closeDialog}>
+      <HassuDialog fullScreen={isMobile} open={kirjautunutOpen} title={t("kirjautuminen_onnistui")} maxWidth="sm" onClose={closeDialog}>
         <DialogContent>
           <p>{t("kirjautuminen_ohje")}</p>
         </DialogContent>
