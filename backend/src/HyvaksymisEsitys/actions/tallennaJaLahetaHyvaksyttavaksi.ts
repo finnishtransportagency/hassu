@@ -16,6 +16,9 @@ import { createHyvaksymisesitysHyvaksyttavanaEmail } from "../../email/emailTemp
 import { emailClient } from "../../email/email";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
+import { SqsClient } from "../aineistoHandling/sqsClient";
+import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
+import dayjs from "dayjs";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -73,6 +76,9 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   });
   // Aineistomuutoksia ei voi olla, koska validoimme, että tiedostot ovat valmiita
 
+  // Halutaan zipata aineistot ennen kuin ne julkaistaan
+  await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.ZIP_HYV_ES_AINEISTOT, oid });
+
   // Lähetä email
   const emailOptions = createHyvaksymisesitysHyvaksyttavanaEmail(projektiInDB);
   if (emailOptions.to) {
@@ -102,7 +108,10 @@ function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tal
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
-  if (!aineistotHandledAt || !aineistot.every((aineisto) => aineistotHandledAt.localeCompare(aineisto.lisatty) > 0)) {
+  if (
+    aineistot.length > 0 &&
+    (!aineistotHandledAt || !aineistot.every((aineisto) => dayjs(aineistotHandledAt).isAfter(dayjs(aineisto.lisatty))))
+  ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
 }
