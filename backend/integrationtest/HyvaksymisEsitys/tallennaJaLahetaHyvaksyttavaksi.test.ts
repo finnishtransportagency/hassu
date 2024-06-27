@@ -9,7 +9,7 @@ import { TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO } from "./TEST_HYVAKSYMISESITYS
 import * as API from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
-import { DBProjekti, DBVaylaUser, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { adaptFileName, joinPath } from "../../src/tiedostot/paths";
 import MockDate from "mockdate";
@@ -18,6 +18,7 @@ import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { ValidationError } from "yup";
 import { cloneDeep } from "lodash";
+import { DeepReadonly } from "hassu-common/specialTypes";
 
 const oid = "Testi1";
 
@@ -41,7 +42,7 @@ const muokkaajaAsVaylaDBUser: DBVaylaUser = {
   puhelinnumero: "123456789",
 };
 
-const getProjektiBase: () => DBProjekti = () => ({
+const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
@@ -99,9 +100,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -120,11 +121,11 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     // Otetaan projektilta euRahoitus ja kielitiedot pois, jotta projektin status on EI_JULKAISTU
     const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projekti,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -141,9 +142,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       kayttoOikeudet: [
         {
@@ -184,9 +185,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -207,9 +208,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -233,9 +234,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = cloneDeep(TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO);
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -259,9 +260,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -286,9 +287,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -313,9 +314,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -343,9 +344,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -370,8 +371,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -399,8 +400,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -431,8 +432,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -484,8 +485,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -503,9 +504,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const { kayttoOikeudet: _ko, ...projekti } = getProjektiBase();
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projekti,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -523,13 +524,14 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksyja: "theadminoid",
       hyvaksymisPaiva: "2022-01-02",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2033-01-01",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -546,13 +548,14 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       hyvaksyja: "theadminoid",
       hyvaksymisPaiva: "2022-01-02",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2033-01-01",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -570,8 +573,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       aineistoHandledAt: "2022-01-02T03:00:00+02:00",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -597,9 +600,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ],
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -616,8 +619,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     const muokattavaHyvaksymisEsitys = {
       ...muut,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,
@@ -638,9 +641,9 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
       ...TEST_HYVAKSYMISESITYS,
       palautusSyy: "virheitä",
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys: undefined,

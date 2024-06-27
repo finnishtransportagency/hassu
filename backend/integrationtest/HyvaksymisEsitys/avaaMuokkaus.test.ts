@@ -7,9 +7,10 @@ import { deleteYllapitoFiles, getYllapitoFilesUnderPath, insertYllapitoFileToS3 
 import { UserFixture } from "../../test/fixture/userFixture";
 import { avaaHyvaksymisEsityksenMuokkaus } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
-import { DBVaylaUser, DBProjekti, MuokattavaHyvaksymisEsitys, JulkaistuHyvaksymisEsitys } from "../../src/database/model";
+import { DBVaylaUser, DBProjekti } from "../../src/database/model";
 import omit from "lodash/omit";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
+import { DeepReadonly } from "hassu-common/specialTypes";
 
 const projari = UserFixture.pekkaProjari;
 const projariAsVaylaDBUser: DBVaylaUser = {
@@ -32,7 +33,7 @@ const muokkaajaAsVaylaDBUser: DBVaylaUser = {
 };
 
 const oid = "Testi1";
-const getProjektiBase: () => DBProjekti = () => ({
+const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
   kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
@@ -91,13 +92,14 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -122,13 +124,14 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -143,13 +146,14 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -167,12 +171,12 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
+    };
     const projektiBefore = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
@@ -190,8 +194,8 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -205,13 +209,14 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -229,12 +234,12 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
+    };
     const projektiBefore = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
@@ -253,16 +258,17 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    } as unknown as JulkaistuHyvaksymisEsitys;
+      poistumisPaiva: "2022-01-02",
+    };
     const hyvaksymisPaatosVaihe = {
       id: 1,
     };
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,

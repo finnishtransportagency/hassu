@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS2,
@@ -19,10 +19,11 @@ import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { parameters } from "../../src/aws/parameters";
 import MockDate from "mockdate";
+import { DeepReadonly } from "hassu-common/specialTypes";
 
 const oid = "Testi1";
 
-const getProjektiBase: () => DBProjekti = () => ({
+const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
   vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
@@ -126,8 +127,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -163,9 +164,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projekti,
       muokattavaHyvaksymisEsitys,
     };
@@ -181,8 +182,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -203,9 +204,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const versio = 2;
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       asianhallinta: {
@@ -247,9 +248,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const versio = 2;
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       asianhallinta: {
@@ -354,9 +355,9 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const { kayttoOikeudet: _ko, ...projektinen } = getProjektiBase();
-    const projektiBefore: DBProjekti = {
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projektinen,
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [
@@ -433,8 +434,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
       hyvaksymisEsitys: null,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -472,8 +473,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [
@@ -501,8 +502,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -531,13 +532,14 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       hyvaksyja: "theadminuid",
       hyvaksymisPaiva: "2022-01-01",
-    } as unknown as JulkaistuHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+      poistumisPaiva: "2033-01-01",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
@@ -579,7 +581,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
+    };
     const projektiBefore = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
@@ -632,8 +634,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
@@ -649,8 +651,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -668,8 +670,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
@@ -702,8 +704,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
       poistumisPaiva: "2023-01-01",
-    } as unknown as MuokattavaHyvaksymisEsitys;
-    const projektiBefore: DBProjekti = {
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
