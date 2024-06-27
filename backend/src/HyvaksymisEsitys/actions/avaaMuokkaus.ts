@@ -21,7 +21,6 @@ export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuu
     oid,
     versio,
     uusiTila: API.HyvaksymisTila.MUOKKAUS,
-    vanhaTila: API.HyvaksymisTila.HYVAKSYTTY,
   });
   return oid;
 }
