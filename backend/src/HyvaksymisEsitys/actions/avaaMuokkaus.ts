@@ -2,6 +2,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
+import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 
 /**
  * Asettaa muokattavan hyväksymisesityksen muokkaus-tilaan
@@ -15,7 +16,7 @@ export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuu
   requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
-  validate(projektiInDB);
+  await validate(projektiInDB);
   // Aseta muokattavan hyväksymisesityksen tila
   await projektiDatabase.muutaMuokattavanHyvaksymisEsityksenTilaa({
     oid,
@@ -26,7 +27,7 @@ export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuu
   return oid;
 }
 
-function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
+async function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   // Toiminnon tekijän on oltava projektikäyttäjä
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava julkaistu hyväksymisesitys
@@ -37,7 +38,5 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot) {
   if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.HYVAKSYTTY) {
     throw new IllegalArgumentError("Projektin tulee olla lukutilassa, jotta muokkauksen voi avata.");
   }
-  if (projektiInDB.hyvaksymisPaatosVaihe) {
-    throw new IllegalArgumentError("Projekti on jo hyväksymisvaiheessa, joten et voi avata hyväksymiseistyksen muokkausta.");
-  }
+  await validateVaiheOnAktiivinen(projektiInDB);
 }
