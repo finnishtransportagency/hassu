@@ -1,4 +1,6 @@
 {
   "yleinen": "Ett oväntat fel har uppstått i systemet",
-  "tyyppi": {}
+  "tyyppi": {},
+  "epaaktiivinen": "Planen har godkänts och tagits ur bruk.",
+  "eiloydy": "Projektet hittades inte."
 }

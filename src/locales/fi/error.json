@@ -1,4 +1,6 @@
 {
   "yleinen": "Järjestelmässä tapahtui odottamaton virhe.",
-  "tyyppi": {}
+  "tyyppi": {},
+  "epaaktiivinen": "Suunnitelma on hyväksytty ja poistunut palvelusta.",
+  "eiloydy": "Projektia ei löydy."
 }
