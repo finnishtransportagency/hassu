@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS_INPUT, {
   INPUTIN_LADATUT_TIEDOSTOT,
@@ -287,7 +287,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
 
   it("vastaanottajan sähköposti voi olla tyhjä", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys: DeepReadonly<MuokattavaHyvaksymisEsitys> = {
+    const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
     };
@@ -498,7 +498,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
 
   it("korvaa vanhat tiedot uusilla", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys: DeepReadonly<MuokattavaHyvaksymisEsitys> = {
+    const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
       poistumisPaiva: "2033-01-02",
       tila: API.HyvaksymisTila.MUOKKAUS,
@@ -613,7 +613,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
 
   it("ei onnistu, jos muokattava hyväksymisesitys odottaa hyväksyntää", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys: DeepReadonly<MuokattavaHyvaksymisEsitys> = {
+    const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
     };
@@ -631,7 +631,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
 
   it("ei ylikirjoita aineistoHandledAt-tietoa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys: DeepReadonly<MuokattavaHyvaksymisEsitys> = {
+    const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
     };
@@ -650,7 +650,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
   it("laukaisee oikeanlaisen tapahtuman, jos on uusi aineisto", async () => {
     userFixture.loginAsAdmin();
     // Luodaan DB:ssä olevan hyväksymisesityksen data
-    const muokattavaHyvaksymisEsitys: DeepReadonly<MuokattavaHyvaksymisEsitys> = {
+    const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
 
       tila: API.HyvaksymisTila.MUOKKAUS,
