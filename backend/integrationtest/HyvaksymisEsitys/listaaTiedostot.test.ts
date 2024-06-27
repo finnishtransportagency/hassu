@@ -270,6 +270,41 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     });
   });
 
+  it("palauttaa projektipäällikön yhteystiedot ja ei tiedostoja, jos hyväksymisesitystä ei vielä ole", async () => {
+    // Aseta projekti DB:hen ja hae hash
+    await insertProjektiToDB({
+      ...projektiInDB,
+      muokattavaHyvaksymisEsitys: { ...projektiInDB.muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.MUOKKAUS },
+      julkaistuHyvaksymisEsitys: undefined,
+    });
+    const response = await listaaHyvaksymisEsityksenTiedostot({
+      oid,
+      listaaHyvaksymisEsityksenTiedostotInput: { hash },
+    });
+    expect(response).to.eql({
+      __typename: "HyvaksymisEsityksenAineistot",
+      eiOlemassa: true,
+      perustiedot: {
+        __typename: "ProjektinPerustiedot",
+        asiatunnus: "asiatunnusVayla",
+        kunnat: [91, 92],
+        suunnitelmanNimi: "Projektin nimi",
+        vastuuorganisaatio: "VAYLAVIRASTO",
+        yTunnus: "1010547-1",
+      },
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        etunimi: "Pekka",
+        sukunimi: "Projari",
+        email: "email@email.com",
+        puhelinnumero: "01234567",
+        organisaatio: "Väylävirasto",
+        projektiPaallikko: true,
+        elyOrganisaatio: "LAPIN_ELY",
+      },
+    });
+  });
+
   it("ei onnistu jos hyväksymisesityksen versionumeroa nostetaan", async () => {
     // Vuotaneen linkin voi mitätöidä tällä tekniikalla
     const newProjektiInDB = {
