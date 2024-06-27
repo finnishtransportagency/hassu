@@ -11,19 +11,22 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
 
 type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
 };
 
-const adaptFormDataForAPI: (formData: TallennaHyvaksymisEsitysInput) => TallennaHyvaksymisEsitysInput = (data) => data;
+const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymisEsitysInput = (data) => {
+  return transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
+};
 
 export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty },
     watch,
-  } = useFormContext<TallennaHyvaksymisEsitysInput>();
+  } = useFormContext<HyvaksymisEsitysForm>();
 
   const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
   const muuAineistoVelhosta = watch("muokattavaHyvaksymisEsitys.muuAineistoVelhosta");
@@ -46,16 +49,16 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { mutate: reloadProjekti } = useHyvaksymisEsitys();
 
   const { withLoadingSpinner } = useLoadingSpinner();
-  const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<TallennaHyvaksymisEsitysInput>();
+  const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<HyvaksymisEsitysForm>();
 
   const api = useApi();
 
-  const saveDraft: SubmitHandler<TallennaHyvaksymisEsitysInput> = useCallback(
+  const saveDraft: SubmitHandler<HyvaksymisEsitysForm> = useCallback(
     (formData) =>
       withLoadingSpinner(
         (async () => {
           try {
-            const convertedFormData = await adaptFormDataForAPI(formData);
+            const convertedFormData = adaptFormDataForAPI(formData);
             await api.tallennaHyvaksymisEsitys(convertedFormData);
             await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
@@ -88,13 +91,13 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
     [api, hyvaksymisesitys.oid, hyvaksymisesitys.versio, isDirty, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
-  const lahetaHyvaksyttavaksi: SubmitHandler<TallennaHyvaksymisEsitysInput> = useCallback(
+  const lahetaHyvaksyttavaksi: SubmitHandler<HyvaksymisEsitysForm> = useCallback(
     (formData) =>
       withLoadingSpinner(
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
-            const convertedFormData = await adaptFormDataForAPI(formData);
+            const convertedFormData = adaptFormDataForAPI(formData);
             await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
             showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
             reloadProjekti();

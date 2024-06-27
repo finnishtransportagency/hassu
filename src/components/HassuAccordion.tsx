@@ -79,7 +79,7 @@ export default function CustomizedAccordions(props: Props) {
             onChange={handleChange(key)}
           >
             <AccordionSummary>
-              {typeof item.title === "string" ? <span className="vayla-smallest-title">{item.title}</span> : item.title}
+              {typeof item.title === "string" ? <h5 className="vayla-smallest-title mb-0">{item.title}</h5> : item.title}
             </AccordionSummary>
             <AccordionDetails>{item.content}</AccordionDetails>
           </Accordion>

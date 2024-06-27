@@ -56,6 +56,7 @@ import { label } from "src/util/textUtil";
 import { isAsianhallintaVaarassaTilassa } from "../../../../util/asianhallintaVaarassaTilassa";
 import { onTulevaisuudessa } from "common/util/dateUtils";
 import { isKuntatietoMissing } from "../../../../util/velhoUtils";
+import { H2 } from "../../../Headings";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -333,7 +334,7 @@ function VuorovaikutusKierrosKutsu({
         <form>
           <fieldset>
             <Section>
-              <h3 className="vayla-subtitle">Kutsu vuorovaikutukseen</h3>
+              <H2>Kutsu vuorovaikutukseen</H2>
               <p>
                 Tällä välilehdellä luodaan kutsu suunnitelman vuorovaikutukseen. Kutsussa näkyy tieto vuorovaikutustilaisuuksista, linkki
                 järjestelmän julkisella puolelle esiteltäviin suunnitelmaluonnoksiin ja -aineistoihin sekä yhteyshenkilöt.
@@ -358,7 +359,7 @@ function VuorovaikutusKierrosKutsu({
             )}
             {
               <Section>
-                <h4 className="vayla-small-title">Kutsun esikatselu</h4>
+                <H2>Kutsun esikatselu</H2>
                 <SectionContent largeGaps>
                   {isKieliTranslatable(ensisijainenKieli) && (
                     <>

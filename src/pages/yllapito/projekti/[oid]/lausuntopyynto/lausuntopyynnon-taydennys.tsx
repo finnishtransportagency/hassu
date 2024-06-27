@@ -20,6 +20,7 @@ import { handleLadattuTiedostoArrayForDefaultValues } from "@components/projekti
 import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut";
 import dayjs from "dayjs";
 import DownloadButtonLink from "@components/button/DownloadButtonLink";
+import { H2 } from "../../../../../components/Headings";
 
 export default function LausuntoPyynnonTaydennysWrapper() {
   useProjekti({ revalidateOnMount: true });
@@ -119,7 +120,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
           </SectionContent>
         ))}
         <Section marginBottom={10}>
-          <h2 className="vayla-subtitle">Lausuntopyynnön täydennyksen mallipohja</h2>
+          <H2>Lausuntopyynnon täydennyksen mallipohja</H2>
           <p>
             Alla löydät linkin viimeisimpään lausuntopyynnön täydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
             tietokoneellesi ja täytä sen sisältö. Lausuntopyynnön täydennys lähetetään järjestelmän ulkopuolella.

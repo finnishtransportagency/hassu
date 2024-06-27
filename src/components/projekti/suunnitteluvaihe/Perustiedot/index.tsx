@@ -47,6 +47,7 @@ import EnnaltaKuvattuVideoesittely from "./EnnaltaKuvattuVideoesittely";
 import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useValidationMode from "src/hooks/useValidationMode";
+import { H2, H3 } from "../../../Headings";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -415,7 +416,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <Section noDivider>
-            <h3 className="vayla-subtitle">Suunnitteluvaiheen perustiedot</h3>
+            <H2>Suunnitteluvaiheen perustiedot</H2>
             <SectionContent>
               {!julkinen && (
                 <p>
@@ -431,9 +432,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           <EnnaltaKuvattuVideoesittely />
           <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
           <Section>
-            <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
+            <H2>Kysymykset ja palautteet</H2>
             <SectionContent>
-              <h4 className="vayla-label">Kysymyksien esittäminen ja palautteiden antaminen</h4>
+              <H3>Kysymyksien esittäminen ja palautteiden antaminen</H3>
               <p>Anna päivämäärä, johon mennessä kansalaisten toivotaan esittävän kysymykset ja palautteet.</p>
               <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"
@@ -447,7 +448,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               />
             </SectionContent>
             <SectionContent>
-              <h4 className="vayla-label">Kysymysten ja palautteiden vastaanottajat</h4>
+              <H3>Kysymysten ja palautteiden vastaanottajat</H3>
               <p>
                 Järjestelmään saapuneesta uudesta kysymyksestä tai palautteesta lähetetään automaattisesti sähköpostitse tieto valituille
                 henkilöille. Jos et halua sähköpostiin tiedotetta jokaisesta saapuneesta kysymyksestä tai palautteesta, ota valinta pois

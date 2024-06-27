@@ -10,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { H2 } from "../../../Headings";
 
 type Props = {
   esikatselePdf: (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -53,7 +54,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
 
   return (
     <Section>
-      <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
+      <H2>Kuulutuksen ja ilmoituksen esikatselu</H2>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä. </Notification>
       <div style={{ marginTop: "4em" }}>
         {isKieliTranslatable(ensisijainenKieli) && (

@@ -9,6 +9,7 @@ import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import { useFormContext } from "react-hook-form";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
+import { H2 } from "../../../Headings";
 
 type Props = {
   esikatselePdf: (formData: KuulutuksenTiedotFormValues, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -30,7 +31,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
 
   return (
     <Section>
-      <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
+      <H2>Kuulutuksen ja ilmoituksen esikatselu</H2>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.</Notification>
       <div style={{ marginTop: "4em" }}>
         {isKieliTranslatable(ensisijainenKieli) && (

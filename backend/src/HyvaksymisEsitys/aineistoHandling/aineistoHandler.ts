@@ -5,20 +5,26 @@ import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { velho } from "../../velho/velhoClient";
 import putFile from "../s3Calls/putFile";
-import { adaptFileName } from "../../tiedostot/paths";
+import { adaptFileName, getYllapitoPathForProjekti, joinPath } from "../../tiedostot/paths";
 import { HyvaksymisEsitysAineistoOperation, SqsEvent } from "./sqsEvent";
 import { getDynamoDBDocumentClient } from "../../aws/client";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { SqsClient } from "./sqsClient";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { DBProjekti } from "../../database/model";
+import { setZeroMessageVisibilityTimeout } from "./sqsClient";
+import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
+import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
+import { assertIsDefined } from "../../util/assertions";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", async () => {
     for (const record of event.Records) {
+      const receiptHandle = record.receiptHandle;
+      const sentTimestamp = record.attributes.SentTimestamp;
+      const timesInQueue = record.attributes.ApproximateReceiveCount;
       const sqsEvent: SqsEvent = JSON.parse(record.body);
       try {
         log.info("sqsEvent", sqsEvent);
@@ -28,6 +34,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
             await tuoAineistot(oid);
             break;
           }
+          case HyvaksymisEsitysAineistoOperation.ZIP_HYV_ES_AINEISTOT: {
+            await zipHyvEsAineistot(oid);
+            break;
+          }
           default: {
             log.error(`Unknown event type: ${operation}`);
             break;
@@ -35,18 +45,51 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
       } catch (e) {
         if (e instanceof SimultaneousUpdateError) {
-          log.info("SimultaneousUpdateError occured; returning event back to queue", sqsEvent);
-          await SqsClient.addEventToSqsQueue(sqsEvent, false);
+          log.info(
+            "SimultaneousUpdateError occured; setting visibility timeout to 0 and trowing error (event will be handled again right away), " +
+              `if it has not been too long (RetentionPeriod) after message first appeared in queue (${sentTimestamp}). ` +
+              `This was the ${timesInQueue}. time handling this event.`,
+            sqsEvent
+          );
+          await setZeroMessageVisibilityTimeout(receiptHandle);
+          throw e;
         } else {
-          log.error(e);
-          await SqsClient.addEventToSqsQueue(sqsEvent, true);
+          log.error(
+            `Some error occured: "${(e as Error)?.message}". Trying again after visibilityTimeout has passed, ` +
+              `if it has not been too long (RetentionPeriod) after message first appeared in queue (${sentTimestamp}). ` +
+              `This was the ${timesInQueue}. time handling this event.`,
+            sqsEvent
+          );
+          throw e;
         }
       }
     }
   });
 };
 
-async function tuoAineistot(oid: string) {
+export async function zipHyvEsAineistot(oid: string) {
+  const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid);
+  assertIsDefined(projekti.muokattavaHyvaksymisEsitys, "Muokattava hyväksymisesitys oltava zipattaessa");
+  const { hyvaksymisEsitys, kuulutuksetJaKutsu, muutAineistot, suunnitelma, kuntaMuistutukset, maanomistajaluettelo, lausunnot } =
+    collectHyvaksymisEsitysAineistot(projekti, projekti.muokattavaHyvaksymisEsitys, projekti.aineistoHandledAt);
+  const filesToZip: ZipSourceFile[] = [
+    ...hyvaksymisEsitys,
+    ...kuulutuksetJaKutsu,
+    ...muutAineistot,
+    ...suunnitelma,
+    ...kuntaMuistutukset,
+    ...maanomistajaluettelo,
+    ...lausunnot,
+  ];
+  await generateAndStreamZipfileToS3(
+    config.yllapitoBucketName,
+    filesToZip,
+    joinPath(getYllapitoPathForProjekti(projekti.oid), "hyvaksymisesitys", "/aineisto.zip")
+  );
+  await setAineistoZip(oid);
+}
+
+export async function tuoAineistot(oid: string) {
   const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid);
   const { aineistoHandledAt, versio, lockedUntil } = projekti;
   const timestampNow = nyt().unix();
@@ -105,6 +148,49 @@ async function haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<Hyvaks
   }
 }
 
+type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
+  DBProjekti,
+  | "oid"
+  | "versio"
+  | "kielitiedot"
+  | "aloitusKuulutusJulkaisut"
+  | "vuorovaikutusKierrosJulkaisut"
+  | "nahtavillaoloVaiheJulkaisut"
+  | "muokattavaHyvaksymisEsitys"
+  | "aineistoHandledAt"
+>;
+
+async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
+  const params = new GetCommand({
+    TableName: config.projektiTableName,
+    Key: { oid },
+    ConsistentRead: true,
+    ProjectionExpression:
+      "oid, " +
+      "versio, " +
+      "kielitiedot, " +
+      "aloitusKuulutusJulkaisut, " +
+      "vuorovaikutusKierrosJulkaisut, " +
+      "nahtavillaoloVaiheJulkaisut, " +
+      "muokattavaHyvaksymisEsitys, " +
+      "aineistoHandledAt",
+  });
+
+  try {
+    const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+    const data = await dynamoDBDocumentClient.send(params);
+    if (!data.Item) {
+      log.error("Yritettiin hakea projektin tietoja, mutta ei onnistuttu", { params });
+      throw new Error();
+    }
+    const projekti = data.Item as ZipattavatAineistotHyvaksymisEsitykseen;
+    return projekti;
+  } catch (e) {
+    log.error(e instanceof Error ? e.message : String(e), { params });
+    throw e;
+  }
+}
+
 async function setAineistoHandledAt(oid: string, versio: number) {
   const aineistoHandledAt = nyt().format();
   const params = new UpdateCommand({
@@ -139,6 +225,33 @@ async function setAineistoHandledAt(oid: string, versio: number) {
     if (e instanceof ConditionalCheckFailedException) {
       throw new SimultaneousUpdateError();
     }
+    log.error(e instanceof Error ? e.message : String(e), { params });
+    throw e;
+  }
+}
+
+async function setAineistoZip(oid: string) {
+  const params = new UpdateCommand({
+    TableName: config.projektiTableName,
+    Key: {
+      oid,
+    },
+    UpdateExpression: "SET " + "#hyvEsAineistoPaketti = :aineistoZip",
+    ExpressionAttributeNames: {
+      "#hyvEsAineistoPaketti": "hyvEsAineistoPaketti",
+    },
+    ExpressionAttributeValues: {
+      ":aineistoZip": "hyvaksymisesitys/aineisto.zip",
+    },
+  });
+
+  if (log.isLevelEnabled("debug")) {
+    log.debug("Marking hyvEsAineistoPaketti as created", "hyvEsAineistoPaketti: " + "hyvaksymisesitys/aineisto.zip");
+  }
+  try {
+    const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+    await dynamoDBDocumentClient.send(params);
+  } catch (e) {
     log.error(e instanceof Error ? e.message : String(e), { params });
     throw e;
   }

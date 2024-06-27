@@ -76,6 +76,37 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
     );
   });
 
+  it("poistaa lähetystiedot kopioidusta julkaisusta", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.MUOKKAUS };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      vastaanottajat: [
+        {
+          sahkoposti: "vastaanottaja@sahkoposti.fi",
+          lahetetty: "2000-01-01T02:00:00+02:00",
+          lahetysvirhe: false,
+        },
+      ],
+    };
+    const projektiBefore = {
+      oid,
+      versio: 2,
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.muokattavaHyvaksymisEsitys.vastaanottajat).to.eql([
+      {
+        sahkoposti: "vastaanottaja@sahkoposti.fi",
+      },
+    ]);
+  });
+
   it("onnistuu projektikayttajalta", async () => {
     const projari = UserFixture.pekkaProjari;
     const projariAsVaylaDBUser: Partial<DBVaylaUser> = {

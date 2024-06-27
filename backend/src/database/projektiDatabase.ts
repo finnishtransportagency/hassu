@@ -495,9 +495,9 @@ export class ProjektiDatabase {
         Key: {
           oid,
         },
-        UpdateExpression: "set synkronoinnit.#asianhallintaEventId = :synkronointi",
+        UpdateExpression: "set synkronoinnit.#asianhallintaEventId = :synkronointi", //NOSONAR
         ExpressionAttributeNames: {
-          ["#asianhallintaEventId"]: synkronointi.asianhallintaEventId,
+          ["#asianhallintaEventId"]: synkronointi.asianhallintaEventId, //NOSONAR
         },
         ExpressionAttributeValues: {
           ":synkronointi": synkronointi,

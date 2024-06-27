@@ -162,6 +162,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
       aineistoHandledAt: "2022-01-02T02:01:00+02:00",
+      hyvEsAineistoPaketti: "hyvaksymisesitys/aineisto.zip",
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
     const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys).to.eql({
@@ -204,7 +205,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "muistutukset äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muistutukset-uuid",
-          kunta: 1,
+          kunta: 91,
           tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muistutukset/muistutukset äöå .png",
         },
       ],
@@ -265,6 +266,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       tila: "MUOKKAUS",
       palautusSyy: "Huono",
       hash: "f67cde5bf0977767e610740d0196732784a101160024d848d8c0a894d267d2c276c08b06e5076972480e98cf12a431676b36bf30b7a221415f91f14a9e1186a8",
+      aineistopaketti: "yllapito/tiedostot/projekti/1/hyvaksymisesitys/aineisto.zip",
     });
   });
 
