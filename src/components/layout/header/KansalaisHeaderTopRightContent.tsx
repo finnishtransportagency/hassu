@@ -36,7 +36,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
           <Button onClick={closeDialog}>{t("sulje")}</Button>
         </DialogActions>
       </HassuDialog>
-      <HassuDialog open={sessioVanhentunut} title={t("istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
+      <HassuDialog open={sessioVanhentunut} fullScreen={isMobile} title={t("istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
         <DialogContent>
           <p>{t("istunto_vanhentunut_teksti")}</p>
         </DialogContent>
