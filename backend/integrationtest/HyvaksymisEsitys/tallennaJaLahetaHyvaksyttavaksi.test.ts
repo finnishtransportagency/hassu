@@ -19,6 +19,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { ValidationError } from "yup";
 import { cloneDeep } from "lodash";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { parameters } from "../../src/aws/parameters";
 
 const oid = "Testi1";
 
@@ -67,6 +68,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     emailStub = sinon.stub(emailClient, "sendEmail");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(async () => {

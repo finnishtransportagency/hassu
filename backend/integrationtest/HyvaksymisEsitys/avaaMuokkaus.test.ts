@@ -11,6 +11,7 @@ import { DBVaylaUser, DBProjekti } from "../../src/database/model";
 import omit from "lodash/omit";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { parameters } from "../../src/aws/parameters";
 
 const projari = UserFixture.pekkaProjari;
 const projariAsVaylaDBUser: DBVaylaUser = {
@@ -56,6 +57,8 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(async () => {

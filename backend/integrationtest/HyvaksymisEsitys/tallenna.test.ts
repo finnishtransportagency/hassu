@@ -24,6 +24,7 @@ import { ValidationError } from "yup";
 import { SqsClient } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsClient";
 import { SqsEvent } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsEvent";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { parameters } from "../../src/aws/parameters";
 
 const projari = UserFixture.pekkaProjari;
 const projariAsVaylaDBUser: DBVaylaUser = {
@@ -73,6 +74,8 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     await emptyUploadFiles();
     addEventToSqsQueueMock = sinon.stub(SqsClient, "addEventToSqsQueue");
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {
