@@ -3,6 +3,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import projektiDatabase, { HyvaksymisEsityksenTiedot } from "../dynamoKutsut";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
+import { assertIsDefined } from "../../util/assertions";
 
 /**
  * Asettaa muokattavan hyväksymisesityksen muokkaus-tilaan
@@ -15,7 +16,8 @@ import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 export default async function avaaHyvaksymisEsityksenMuokkaus(input: API.TilaMuutosInput): Promise<string> {
   requirePermissionLuku();
   const { oid, versio } = input;
-  const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projektiInDB);
   await validate(projektiInDB);
   // Aseta muokattavan hyväksymisesityksen tila
   await projektiDatabase.muutaMuokattavanHyvaksymisEsityksenTilaa({

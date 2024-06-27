@@ -221,7 +221,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
         "#tila": "tila",
         "#paivitetty": "paivitetty",
-        "#hyvaksymisPaatosVaihe": "hyvaksymisPaatosVaihe",
       },
       ExpressionAttributeValues: {
         ":versio": nextVersion,
@@ -231,9 +230,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         ":versioFromInput": versio,
       },
       ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "attribute_not_exists(#hyvaksymisPaatosVaihe) AND " +
-        "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
+        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " + "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
