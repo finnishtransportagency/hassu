@@ -54,10 +54,10 @@ Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä m
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, 
 
 
-.
+https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -92,7 +92,7 @@ Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorova
 
 Hankkeen kuvaus suunnitteluvaiheessa
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 Lisätietoja antaa:
 Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
@@ -421,7 +421,7 @@ Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus jul
 
 Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -446,21 +446,21 @@ Object {
 Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Kuulutuksesta ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
 Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
 
 Uudenmaan ELY-keskus pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -485,7 +485,7 @@ Object {
 
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
@@ -510,14 +510,14 @@ Object {
 
 
 Hyväksymispäätöksestä ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+{{kuuluttaja_pitkä}} ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -540,14 +540,14 @@ Object {
 
 
 Hyväksymispäätöksestä ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -643,7 +643,7 @@ Object {
 
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
@@ -668,7 +668,7 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+{{kuuluttaja_pitkä}} ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -763,7 +763,7 @@ Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Väylävirasto ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
@@ -801,7 +801,7 @@ Object {
 
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
@@ -826,8 +826,8 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+{{kuuluttaja_pitkä}} ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
@@ -857,7 +857,7 @@ Object {
 
 Testiprojekti 2
 Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
 
@@ -1365,18 +1365,18 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut li
 
 
 Lorem Ipsum nahtavillaoloVaihe
-Uudenmaan ELY-keskus on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
+Uudenmaan ELY-keskus on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/2/2022.
 
 
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -1400,7 +1400,7 @@ Object {
 
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 7.6.2022 osoitteessa ***unittest***
 
 
@@ -1432,7 +1432,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa *
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§).
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (laki liikennejärjestelmästä ja maanteistä LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/2/2022.
 
@@ -1444,7 +1444,7 @@ Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltij
 	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
 	- joiden kiinteistön alueeseen perustetaan muu oikeus tai
 	- joiden kiinteistö rajoittuu tiealueeseen.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -1472,7 +1472,7 @@ Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Testip
 
 
 Lorem Ipsum nahtavillaoloVaihe
-Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
+Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
 
@@ -1507,7 +1507,7 @@ Object {
 
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 7.6.2022 osoitteessa ***unittest***
 
 
@@ -1579,12 +1579,12 @@ Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman: Testi
 
 
 Lorem Ipsum nahtavillaoloVaihe
-Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
+Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
@@ -1614,7 +1614,7 @@ Object {
 
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
 Kuulutus julkaistaan 7.6.2022 osoitteessa ***unittest***
 
 
@@ -1646,7 +1646,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa *
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§).
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (laki liikennejärjestelmästä ja maanteistä LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
@@ -2100,9 +2100,9 @@ Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotu
 
 
 
-Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -2126,7 +2126,7 @@ Object {
 
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
-Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
 
 

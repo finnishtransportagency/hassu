@@ -282,7 +282,7 @@
       "kappale3_ui": "Suunnitelma pidetään nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong> osoitteessa {{nahtavillaoloUrl}}.",
       "kappale4": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus ({{lakiviite}}). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä.\n\nMuistutuksen voi tehdä osoitteessa {{nahtavillaoloUrl}} tai toimittamalla se {{tilaajaGenetiivi}} kirjaamoon osoitteeseen {{kirjaamo}}. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus {{asiatunnus}}.",
       "kappale4_vahainen_menettely": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus ({{lakiviite_vahainen_menettely}}). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä.",
-      "lakiviite_ilmoitus_tie": "LjMTL 27§",
+      "lakiviite_ilmoitus_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 27§",
       "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom",
       "lakiviite_ilmoitus_rata2": "ratalaki 22 §",
       "kiinteistonomistaja_otsikko": "Hyvä suunnittelualueen kiinteistönomistaja,",
