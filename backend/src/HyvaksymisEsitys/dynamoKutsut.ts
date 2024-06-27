@@ -7,7 +7,7 @@ import { log } from "../logger";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
-import { SimultaneousUpdateError } from "hassu-common/error";
+import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
@@ -21,6 +21,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "aineistoHandledAt"
   | "velho"
   | "asianhallinta"
+  | "hyvEsAineistoPaketti"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -37,6 +38,7 @@ export type ProjektiTiedostoineen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
+  | "hyvEsAineistoPaketti"
 > & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -64,7 +66,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti",
     });
 
     try {
@@ -100,15 +102,16 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
         "hyvaksymisPaatosVaihe.id, " +
-        "aineistoHandledAt",
+        "aineistoHandledAt, " +
+        "hyvEsAineistoPaketti",
     });
 
     try {
       const dynamoDBDocumentClient = getDynamoDBDocumentClient();
       const data = await dynamoDBDocumentClient.send(params);
       if (!data.Item) {
-        log.error("Yritettiin hakea projektin tietoja, mutta ei onnistuttu", { params });
-        throw new Error();
+        log.error(`Projektia oid:lla ${oid} ei löydy`);
+        throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       return projekti;

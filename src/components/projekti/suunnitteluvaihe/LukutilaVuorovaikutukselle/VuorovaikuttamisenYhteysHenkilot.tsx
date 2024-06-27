@@ -3,6 +3,7 @@ import { VuorovaikutusKierrosJulkaisu } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import React, { VFC } from "react";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { H3 } from "../../../Headings";
 
 export const VuorovaikuttamisenYhteysHenkilot: VFC<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
@@ -11,7 +12,7 @@ export const VuorovaikuttamisenYhteysHenkilot: VFC<{
 
   return (
     <Section>
-      <h4 className="vayla-label">Kutsussa esitettävät yhteyshenkilöt</h4>
+      <H3>Kutsussa esitettävät yhteyshenkilöt</H3>
       {julkaisu.yhteystiedot?.map((yhteystieto, index) => {
         return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto, t)}</p>;
       })}

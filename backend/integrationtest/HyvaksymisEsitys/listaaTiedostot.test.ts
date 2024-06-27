@@ -52,7 +52,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       hyvaksymisPaiva: "2022-01-01",
     },
     kayttoOikeudet: [projariAsVaylaDBUser],
-    aineistoHandledAt: "2022-01-01",
+    aineistoHandledAt: "2022-01-02T02:00:01+02:00", //sekunti aineistojen lisäyshetken jälkeen
   };
 
   before(async () => {
@@ -65,7 +65,12 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     // Aseta projektille tiedostoja S3:een
     await Promise.all(
       TEST_PROJEKTI_FILES.map(async ({ tiedosto }) => {
-        const path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        let path;
+        if (tiedosto.includes("Maanomistajaluettelo")) {
+          path = `yllapito/sisaiset/projekti/${oid}${tiedosto}`;
+        } else {
+          path = `yllapito/tiedostot/projekti/${oid}${tiedosto}`;
+        }
         await insertYllapitoFileToS3(path);
       })
     );
@@ -123,7 +128,9 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     ]
       .filter((nimi) => !nimi.includes("lähetekirje"))
       .filter((nimi) => !nimi.includes("vuorovaikutusaineisto"))
-      .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"));
+      .filter((nimi) => !nimi.includes("nähtävilläoloaineisto"))
+      .filter((nimi) => !nimi.includes("Ilmoitus aloituskuulutuksesta"))
+      .filter((nimi) => !nimi.includes("Ilmoitus suunnitelman"));
     expect(nimet.sort()).to.eql(expectedFileNames.sort());
   });
 
@@ -181,7 +188,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         hyvaksyja: "theadminuid",
         hyvaksymisPaiva: "2022-01-01",
       },
-      aineistoHandledAt: "2022-01-01",
+      aineistoHandledAt: "2022-01-02T02:00:01+02:00", // sekunti tiedostojen lisäämishetken jälkeen
     };
     await insertProjektiToDB(projektiInDB);
     // Testataan, saadaanko uudet tiedostot

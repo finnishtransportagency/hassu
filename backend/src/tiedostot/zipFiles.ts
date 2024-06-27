@@ -5,11 +5,12 @@ import { Upload } from "@aws-sdk/lib-storage";
 import archiver from "archiver";
 import { getS3Client } from "../aws/client";
 import { config } from "../config";
+import { joinPath } from "./paths";
 
 function getFileName(s3Key: string, zipFolder?: string) {
   const fileName = s3Key.split("/").pop()!;
   if (!zipFolder) return fileName;
-  return zipFolder + fileName;
+  return joinPath(zipFolder, fileName);
 }
 
 const s3Client = getS3Client();

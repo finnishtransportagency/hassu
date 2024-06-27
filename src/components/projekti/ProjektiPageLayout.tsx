@@ -88,7 +88,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
               {contentAsideTitle}
             </Stack>
             <ContentSpacer gap={7}>
-              <h2>{projekti?.velho?.nimi ?? "-"}</h2>
+              <p className="vayla-lead">{projekti?.velho?.nimi ?? "-"}</p>
               {projekti && projektiOnEpaaktiivinen(projekti) ? (
                 <Notification type={NotificationType.INFO_GRAY}>
                   Projekti on siirtynyt epäaktiiviseen tilaan. Projektille voi luoda jatkokuulutuksen, kun pääkäyttäjä on palauttanut

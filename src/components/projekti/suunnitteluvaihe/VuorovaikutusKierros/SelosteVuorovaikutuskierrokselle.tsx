@@ -1,9 +1,9 @@
 import Textarea from "@components/form/Textarea";
-import { H4 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { H2 } from "../../../Headings";
 
 export default function SelosteVuorovaikutuskierrokselle() {
   const {
@@ -13,7 +13,7 @@ export default function SelosteVuorovaikutuskierrokselle() {
 
   return (
     <Section>
-      <H4>Seloste lähetekirjeeseen</H4>
+      <H2>Seloste lähetekirjeeseen</H2>
       <ContentSpacer>
         <p>
           Kirjoita lähetekirjettä varten seloste kutsun uudelleenjulkaisun syistä. Seloste tulee nähtäville viranomaiselle ja kunnille

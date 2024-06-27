@@ -164,7 +164,6 @@ export class EmailClientStub {
     });
     mocha.beforeEach(() => {
       const fakeEmailSender = (options: EmailOptions) => {
-        console.log("VAIHTOEHDOT:", options)
         return Promise.resolve({
           messageId: "messageId_test",
           accepted: (options.to || []) as string[],

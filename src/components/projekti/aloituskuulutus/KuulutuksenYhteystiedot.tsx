@@ -13,6 +13,7 @@ import React, { ReactElement, Fragment, useMemo } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { H3, H5 } from "../../Headings";
 
 type KuulutusYhteystiedot = Pick<AloitusKuulutusInput, "kuulutusYhteystiedot">;
 
@@ -72,7 +73,7 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
   return (
     <Section>
       <SectionContent>
-        <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
+        <H3>Kuulutuksessa esitettävät yhteystiedot</H3>
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
@@ -124,7 +125,7 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
         <p>Projektilla ei ole tallennettuja henkilöitä</p>
       )}
       <SectionContent>
-        <p>Uusi yhteystieto</p>
+        <H5>Uusi yhteystieto</H5>
         <p>
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
           eikä henkilölle tule käyttöoikeuksia projektiin.

@@ -37,6 +37,7 @@ import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { getVelhoUrl } from "../../../../util/velhoUtils";
+import { H2, H3 } from "../../../../components/Headings";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -332,7 +333,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             {!isFormDisabled && <input type="hidden" {...register("oid")} />}
             {!isFormDisabled && <input type="hidden" {...register("versio")} />}
-            <h5 className="vayla-subtitle">Suunnitelman tila</h5>
+            <H2>Suunnitelman tila</H2>
             <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon.</p>
             <HassuGrid cols={{ lg: 2 }}>
               {projekti.nykyinenKayttaja.onYllapitaja ? (
@@ -373,7 +374,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-subtitle">Hyväksymiskäsittelyn tila</h5>
+            <H2>Hyväksymiskäsittelyn tila</H2>
             <p className="mt-6">
               Anna päivämäärä, jolloin suunnitelma on ennakkotarkastuksessa Väylävirastossa, se on ennakkoneuvotteluissa ja mennyt
               hyväksymisesityksenä Traficomiin.
@@ -408,7 +409,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-subtitle">Hyväksymispäätös</h5>
+            <H2>Hyväksymispäätös</H2>
             <p>
               Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asiatunnus. Päätöksen päivä ja asiatunnus
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
@@ -430,7 +431,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             </HassuGrid>
           </SectionContent>
           <SectionContent>
-            <h6 className="vayla-smallest-title">Valitukset</h6>
+            <H3>Valitukset</H3>
             <p>Valitse ‘Kyllä’, jos hyväksymispäätöksestä on valitettu hallinto-oikeuteen.</p>
             {projekti.nykyinenKayttaja.onYllapitaja ? (
               <Controller
@@ -495,7 +496,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-subtitle">Lainvoima</h5>
+            <H2>Lainvoima</H2>
             <p>
               Anna päivämäärä, jolloin suunnitelma on saanut lainvoiman ja päivämäärä, jolloin lainvoimaisuus päättyy. Jatkopäätösten
               yhteydessä Lainvoima alkaen -päivämäärä pysyy samana ja Lainvoima päätten -päivämäärää siirretään päättyvän myöhäisemmäksi.
@@ -521,7 +522,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-subtitle">Väylätoimitus</h5>
+            <H2>Väylätoimitus</H2>
             <p className="mt-6">Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
@@ -534,7 +535,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             </HassuGrid>
           </SectionContent>
           <SectionContent>
-            <h5 className="vayla-small-title">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h5>
+            <H2>Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</H2>
             <p>
               Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa
               muille järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
@@ -566,7 +567,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Jatkopäätös</h5>
+            <H2>Jatkopäätös</H2>
             <p>
               Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asiatunnus ja paina ‘Lisää jatkopäätös’. Toiminto
               avaa suunnitelmalle jatkopäätöksen kuulutuksen. Tarkasta jatkopäätöksen lisäämisen jälkeen Projektivelhosta suunnitelman
@@ -645,7 +646,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h5>
+            <H3>Lisätietoa käsittelyn tilasta</H3>
             <HassuGrid className="mt-6" cols={{ lg: 1 }}>
               {projekti.nykyinenKayttaja.onYllapitaja ? (
                 <Textarea

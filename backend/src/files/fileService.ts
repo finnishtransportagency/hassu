@@ -577,11 +577,26 @@ export class FileService {
     }
   }
 
+  /**
+   *
+   * @param oid projektin oid
+   * @param tiedosto tiedoston polku projektin tiedostot tai sisaiset -kansion projektikohtaisen kansion alla
+   * @param sisaiset sijaitseeko tiedosto sisaiset-kansiossa
+   */
   async createYllapitoSignedDownloadLink(oid: string, tiedosto: string): Promise<string> {
+    const fullPath = joinPath(new ProjektiPaths(oid).yllapitoFullPath, tiedosto);
+    return this.createSignedDownloadLink(fullPath);
+  }
+
+  /**
+   *
+   * @param path tiedoston täydellinen polku ylläpito-bucketissa
+   */
+  async createSignedDownloadLink(path: string): Promise<string> {
     const s3client = getS3Client();
     const getObjectCommand = new GetObjectCommand({
       Bucket: config.yllapitoBucketName,
-      Key: joinPath(new ProjektiPaths(oid).yllapitoFullPath, tiedosto),
+      Key: path,
     });
     return getSignedUrl(s3client, getObjectCommand, {
       expiresIn: 60 * 60, // One hour

@@ -26,11 +26,13 @@ const TEST_ALOITUSKUULUTUS_JULKAISU: DeepPartial<AloitusKuulutusJulkaisu> = {
         tiedosto: "/aloituskuulutus/1/T412 Aloituskuulutus se.pdf",
         nimi: "T412 Aloituskuulutus se.pdf",
         tuotu: "2011-01-01T01:01",
+        tila: API.LadattuTiedostoTila.VALMIS,
       },
       kuulutusIlmoitusPDF: {
         tiedosto: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta se.pdf",
         nimi: "T412_1 Ilmoitus aloituskuulutuksesta se.pdf",
         tuotu: "2011-01-01T01:01",
+        tila: API.LadattuTiedostoTila.VALMIS,
       },
     },
   },
@@ -72,6 +74,7 @@ function getTestVuorovaikutusKierrosJulkaisu(number: number = 1) {
         tiedosto: `suunnitteluvaihe/vuorovaikutus_${number}/T413 Kutsu vuorovaikutukseen se.pdf`,
         nimi: "T413 Kutsu vuorovaikutukseen se.pdf",
         tuotu: "2011-01-01T01:01",
+        tila: API.LadattuTiedostoTila.VALMIS,
       },
     },
     lahetekirje: {
@@ -101,11 +104,13 @@ const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> 
         tiedosto: "/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo se.pdf",
         nimi: "T414 Kuulutus suunnitelman nähtävilläolo se.pdf",
         tuotu: "2011-01-01T01:01",
+        tila: API.LadattuTiedostoTila.VALMIS,
       },
       kuulutusIlmoitusPDF: {
         tiedosto: "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nähtävilläolo se.pdf",
         nimi: "T414_1 Ilmoitus suunnitelman nähtävilläolo se.pdf",
         tuotu: "2011-01-01T01:01",
+        tila: API.LadattuTiedostoTila.VALMIS,
       },
     },
   },
@@ -113,10 +118,14 @@ const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> 
     SUOMI: {
       nahtavillaoloPDFPath: "/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo.pdf",
       nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nähtävilläolo.pdf",
+      nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath:
+        "/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
     },
     RUOTSI: {
       nahtavillaoloPDFPath: "/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo sv.pdf",
       nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nähtävilläolo sv.pdf",
+      nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath:
+        "/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo sv.pdf",
     },
   },
   lahetekirje: {
@@ -195,5 +204,13 @@ export const TEST_PROJEKTI_FILES: { tiedosto: string; nimi: string }[] = [
     nimi: "T414_1 Ilmoitus suunnitelman nähtävilläolo sv.pdf",
   },
   { tiedosto: "/nahtavillaolo/1/lähetekirje.eml", nimi: "lähetekirje.eml" },
+  {
+    tiedosto: "/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
+    nimi: "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
+  },
+  {
+    tiedosto: "/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo sv.pdf",
+    nimi: "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo sv.pdf",
+  },
   { tiedosto: "/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx", nimi: "T416 Maanomistajaluettelo 20240522.xlsx" },
 ];

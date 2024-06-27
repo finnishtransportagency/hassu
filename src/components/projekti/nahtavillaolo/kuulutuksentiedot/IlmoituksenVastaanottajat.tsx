@@ -16,6 +16,7 @@ import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
 import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmistajatOhje";
 import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
+import { H2, H3 } from "../../../Headings";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -126,7 +127,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
       )}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
-          <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
+          <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
             <p>
               Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
@@ -141,7 +142,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
 
           <>
             <SectionContent>
-              <h6 className="font-bold">Viranomaiset</h6>
+              <H3>Viranomaiset</H3>
               {(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType)?.viranomaiset && (
                 <p className="text-red">{(errors.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as HelperType).viranomaiset?.message}</p>
               )}
@@ -212,7 +213,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
             </Button>
           </>
           <SectionContent>
-            <h6 className="font-bold">Kunnat</h6>
+            <H3>Kunnat</H3>
             {kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
