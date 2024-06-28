@@ -11,6 +11,7 @@ import { TEST_PROJEKTI, TEST_PROJEKTI_FILES } from "./TEST_PROJEKTI";
 import { deleteYllapitoFiles, insertYllapitoFileToS3 } from "./util";
 import axios from "axios";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { parameters } from "../../src/aws/parameters";
 
 const oid = "Testi1";
 const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
@@ -37,6 +38,11 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
 describe("HaeHyvaksymisEsityksenTiedot", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
+
+  before(() => {
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+  });
 
   afterEach(async () => {
     // Poista projekti joka testin päätteeksi
