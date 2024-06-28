@@ -2,8 +2,8 @@
 
 exports[`Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettäminen lähettää s.postin projarille 1`] = `
 Object {
-  "subject": "Valtion liikenneväylien suunnittelu: Hyväksymisesitys odottaa hyväksyntää undefined",
-  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi undefined on luotu hyväksymisesitys, joka odottaa hyväksyntääsi.
+  "subject": "Valtion liikenneväylien suunnittelu: Hyväksymisesitys odottaa hyväksyntää asiatunnusVayla",
+  "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Projektin nimi on luotu hyväksymisesitys, joka odottaa hyväksyntääsi.
   
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
     

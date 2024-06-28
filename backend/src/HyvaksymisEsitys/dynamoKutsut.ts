@@ -21,6 +21,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "aineistoHandledAt"
   | "velho"
   | "asianhallinta"
+  | "hyvEsAineistoPaketti"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -37,7 +38,8 @@ export type ProjektiTiedostoineen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
-> & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
+  | "hyvEsAineistoPaketti"
+>;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   private static async sendUpdateCommandToDynamoDB(params: UpdateCommand): Promise<void> {
@@ -64,7 +66,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti",
     });
 
     try {
@@ -99,8 +101,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "nahtavillaoloVaiheJulkaisut, " +
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
-        "hyvaksymisPaatosVaihe.id, " +
-        "aineistoHandledAt",
+        "aineistoHandledAt, " +
+        "hyvEsAineistoPaketti",
     });
 
     try {
@@ -218,7 +220,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
         "#tila": "tila",
         "#paivitetty": "paivitetty",
-        "#hyvaksymisPaatosVaihe": "hyvaksymisPaatosVaihe",
       },
       ExpressionAttributeValues: {
         ":versio": nextVersion,
@@ -228,9 +229,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         ":versioFromInput": versio,
       },
       ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "attribute_not_exists(#hyvaksymisPaatosVaihe) AND " +
-        "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
+        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " + "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
