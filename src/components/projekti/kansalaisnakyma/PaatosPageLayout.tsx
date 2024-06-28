@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode, useMemo, VoidFunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode, useMemo } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import { Tabs } from "@mui/material";
@@ -32,7 +32,7 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: Re
   );
 };
 
-const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
+const PaatosPageTabs: FunctionComponent<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
   const router = useRouter();
   const { t } = useTranslation("paatos");
 
