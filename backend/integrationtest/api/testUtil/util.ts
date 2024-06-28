@@ -108,9 +108,9 @@ export function adaptAPIAineistoToInput(aineistot: Aineisto[]): AineistoInput[] 
   });
 }
 
-export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
+export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture, error = NotFoundError): Promise<void> {
   userFixture.logout();
-  await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(NotFoundError);
+  await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(error);
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 

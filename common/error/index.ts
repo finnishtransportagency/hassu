@@ -5,6 +5,7 @@ export * from "./IllegalArgumentError";
 export * from "./NoHassuAccessError";
 export * from "./NoVaylaAuthenticationError";
 export * from "./NotFoundError";
+export * from "./NotActiveError";
 export * from "./SimultaneousUpdateError";
 export * from "./SystemError";
 export * from "./velhoError";
