@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
 
 export default function AineistonEsikatselu() {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
@@ -32,7 +32,10 @@ export default function AineistonEsikatselu() {
         endIcon="external-link-alt"
         type="button"
         onClick={() => {
-          localStorage.setItem(`tallennaHyvaksymisEsitysInput`, JSON.stringify(formData));
+          localStorage.setItem(
+            `tallennaHyvaksymisEsitysInput`,
+            JSON.stringify(transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData))
+          );
           if (hiddenLinkRef.current) {
             hiddenLinkRef.current.click();
           }

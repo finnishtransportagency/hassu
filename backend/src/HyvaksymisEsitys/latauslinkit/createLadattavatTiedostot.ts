@@ -1,6 +1,6 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { ProjektiTiedostoineen } from "../dynamoKutsut";
+import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import collectHyvaksymisEsitysAineistot, { FileInfo } from "../collectHyvaksymisEsitysAineistot";
 import { fileService } from "../../files/fileService";
 
