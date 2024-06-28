@@ -39,6 +39,7 @@ class PalauteHandlerJulkinen {
     }
     const palauteId = await feedbackDatabase.insertFeedback(palaute);
     await palauteEmailService.sendEmailsToPalautteidenVastaanottajat(projektiFromDB);
+    await palauteEmailService.sendEmailToFeedbackSender(projektiFromDB, palaute);
     return palauteId;
   }
 }

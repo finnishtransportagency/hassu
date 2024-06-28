@@ -1,7 +1,7 @@
 import { DBProjekti } from "../../database/model";
 import { Projekti, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { validateMuokkaustilaAllowsInput } from "./validateMuokkaustilaAllowsInput";
 import { validateAineistoInput } from "./validateAineistoInput";
@@ -27,7 +27,7 @@ export function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiPro
       (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
     );
     const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria;
-    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(apiProjekti, status) && !aineistoInputOk) {
+    if (kuulutuksenTiedotContainInput && !isStatusGreaterOrEqualTo(apiProjekti.status, status) && !aineistoInputOk) {
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });
