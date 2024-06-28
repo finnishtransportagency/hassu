@@ -105,7 +105,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
                     window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1VuosiMenneisyyteen());
                   } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-                    // TODO Lisää JATKOPAATOS2 toiminnot
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2VuosiMenneisyyteen());
                   }
                 }}
               >

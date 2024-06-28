@@ -11,8 +11,8 @@ type ErrorInfo = {
   errorMessage: string | null;
 };
 
-// Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille
-const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.env.ENVIRONMENT !== "prod" || props.isYllapito;
+// Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille tuotanto- ja koulutusympäristöissä
+const showErrorDetails = (props: GenerateErrorMessageProps): boolean => (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.
@@ -31,19 +31,19 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "LataaProjekti";
     },
-    errorMessage: () => "Projektin lataus epäonnistui. ",
+    errorMessage: () => "Projektin lataus epäonnistui.",
   },
   {
     validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "TallennaProjekti";
     },
-    errorMessage: () => "Projektin tallennus epäonnistui. ",
+    errorMessage: () => "Projektin tallennus epäonnistui.",
   },
   {
     validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "TallennaKiinteistonOmistajat";
     },
-    errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui. ",
+    errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui.",
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoGeoJsonSizeExceededError"),
@@ -56,19 +56,23 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
-    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä."),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
-    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoError", "Velho palautti virheen. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoError", "Velho palautti virheen."),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "IllegalAccessError"),
-    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "IllegalAccessError", "Puuttuvat käyttöoikeudet. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "IllegalAccessError", "Puuttuvat käyttöoikeudet."),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "NotFoundError"),
-    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "NotFoundError", ""),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "NotFoundError", props.t("error:eiloydy")),
+  },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "NotActiveError"),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "NotActiveError", props.t("error:epaaktiivinen")),
   },
 ];
 
@@ -117,7 +121,7 @@ const constructErrorClassSpecificErrorMessage = (props: GenerateErrorMessageProp
     errorMessage = message;
     // Ei nayteta yksityiskohtia kansalaisille
     if (showErrorDetails(props)) {
-      errorMessage += errorInfo.errorMessage + ". ";
+      errorMessage += " " + errorInfo.errorMessage + ".";
     }
   }
   return errorMessage;
