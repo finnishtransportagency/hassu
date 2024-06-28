@@ -4,6 +4,7 @@ import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import React, { ReactElement } from "react";
 import { splitFilePath } from "../../../util/fileUtil";
 import { label } from "src/util/textUtil";
+import { H2 } from "../../Headings";
 
 interface Props {
   oid: string;
@@ -42,7 +43,7 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
   return (
     <>
       <div className="content">
-        <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+        <H2>Ladattavat kuulutukset ja ilmoitukset</H2>
         {!!epaaktiivinen ? (
           <p>Kuulutukset löytyvät asianhallinnasta.</p>
         ) : (

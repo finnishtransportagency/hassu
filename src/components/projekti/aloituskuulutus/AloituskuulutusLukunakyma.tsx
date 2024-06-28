@@ -23,6 +23,7 @@ import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavat
 import DownloadLink from "@components/DownloadLink";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
+import { H2, H3 } from "../../Headings";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -93,54 +94,77 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
-          <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-          <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-1 mb-0">
-            <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
-          </p>
-        </div>
+        <H2>Kuulutuksen sisältö</H2>
+        <Section>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
+            <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
+            <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
+            <p className="md:col-span-1 mb-0">
+              <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
+            </p>
+          </div>
+          {isKieliTranslatable(ensisijainenKieli) && (
+            <div>
+              <p className="vayla-label">
+                {label({
+                  label: `Tiivistetty hankkeen sisällön kuvaus`,
+                  inputLanguage: ensisijainenKieli,
+                  kielitiedot,
+                })}
+              </p>
+              <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
+            </div>
+          )}
+          {isKieliTranslatable(toissijainenKieli) && (
+            <div className="content">
+              <p className="vayla-label">
+                {label({
+                  label: `Tiivistetty hankkeen sisällön kuvaus`,
+                  inputLanguage: toissijainenKieli,
+                  kielitiedot,
+                })}
+              </p>
+              <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
+            </div>
+          )}
+        </Section>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
-        {isKieliTranslatable(ensisijainenKieli) && (
+        <Section>
           <div>
-            <p className="vayla-label">
-              {label({
-                label: `Tiivistetty hankkeen sisällön kuvaus`,
-                inputLanguage: ensisijainenKieli,
-                kielitiedot,
-              })}
-            </p>
-            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
+            <H3>Kuulutuksen yhteystiedot</H3>
+            {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
+              <p style={{ margin: 0 }} key={index}>
+                {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
+              </p>
+            ))}
           </div>
-        )}
-        {isKieliTranslatable(toissijainenKieli) && (
-          <div className="content">
-            <p className="vayla-label">
-              {label({
-                label: `Tiivistetty hankkeen sisällön kuvaus`,
-                inputLanguage: toissijainenKieli,
-                kielitiedot,
-              })}
+        </Section>
+        <SectionContent>
+          <H3>Kuulutus julkisella puolella</H3>
+          {epaaktiivinen ? (
+            <p>
+              Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(aloituskuulutusjulkaisu.kuulutusPaiva)}—
+              {formatDate(aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen)} välisen ajan.
             </p>
-            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
-          </div>
-        )}
-        <div>
-          <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
-          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p style={{ margin: 0 }} key={index}>
-              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
-            </p>
-          ))}
-        </div>
+          ) : (
+            <>
+              {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
+              {published && (
+                <p>
+                  <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+                </p>
+              )}
+            </>
+          )}
+        </SectionContent>
       </Section>
       <Section>
         {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
           <SectionContent>
-            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            <H2>Esikatseltavat tiedostot</H2>
             <p>
               {label({
                 label: `Kuulutus ja ilmoitus`,
@@ -214,24 +238,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
-        <SectionContent>
-          <p className="vayla-label">Kuulutus julkisella puolella</p>
-          {epaaktiivinen ? (
-            <p>
-              Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(aloituskuulutusjulkaisu.kuulutusPaiva)}—
-              {formatDate(aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen)} välisen ajan.
-            </p>
-          ) : (
-            <>
-              {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-              {published && (
-                <p>
-                  <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
-                </p>
-              )}
-            </>
-          )}
-        </SectionContent>
       </Section>
 
       <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
