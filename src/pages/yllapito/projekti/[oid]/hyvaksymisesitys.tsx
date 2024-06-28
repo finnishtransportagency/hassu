@@ -10,7 +10,12 @@ export default function HyvaksymisEsitysPage(): ReactElement {
   const { oid, versio, hyvaksymisEsitys } = hyvaksymisEsityksenTiedot ?? {};
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
 
-  const muokkaustila = nykyinenKayttaja?.omaaMuokkausOikeuden && (!hyvaksymisEsitys || hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS);
+  if (!hyvaksymisEsityksenTiedot?.vaiheOnAktiivinen) {
+    return <></>;
+  }
+
+  const muokkaustila =
+    !!nykyinenKayttaja?.omaaMuokkausOikeuden && (!hyvaksymisEsitys || hyvaksymisEsitys?.tila === HyvaksymisTila.MUOKKAUS);
 
   return (
     <>

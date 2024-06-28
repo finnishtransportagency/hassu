@@ -41,11 +41,7 @@ const ProjektiSideNavigation = styled((props) => {
               return (
                 <div key={nimi} className="vayla-calling-card">
                   <p>{muodostaOrganisaatioTeksti(yt, t, lang)}</p>
-                  {
-                    !!yt.projektiPaallikko && (
-                      <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
-                    ) /* yhteystiedoilta puuttuu tittelitieto */
-                  }
+                  {!!yt.projektiPaallikko && <p>{t("common:rooli.PROJEKTIPAALLIKKO")}</p> /* yhteystiedoilta puuttuu tittelitieto */}
                   <p>
                     <b>{nimi}</b>
                   </p>
@@ -65,7 +61,7 @@ const ProjektiSideNavigation = styled((props) => {
               )}
               <div className="vayla-calling-card">
                 <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
-                <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
+                <p>{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
                   <b>{formatNimi(suunnitteluSopimus)}</b>
                 </p>
