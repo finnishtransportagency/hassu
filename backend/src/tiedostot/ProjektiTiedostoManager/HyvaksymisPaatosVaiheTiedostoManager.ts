@@ -4,7 +4,7 @@ import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
@@ -41,7 +41,7 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
-    if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
+    if (!(isStatusGreaterOrEqualTo(projektiStatus, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
       return [];
     }
     const julkaisutSet = await this.julkaisut.reduce(

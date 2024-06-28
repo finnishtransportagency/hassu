@@ -15,6 +15,7 @@ import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext } from "hassu
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
+import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { TestType } from "hassu-common/schema/common";
 
 /**
@@ -33,8 +34,9 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
   const { oid, versio, muokattavaHyvaksymisEsitys } = input;
   try {
     await projektiDatabase.setLock(oid);
-    const projektiInDB = await projektiDatabase.haeProjektinTiedotHyvaksymisEsityksesta(oid);
-    validate(projektiInDB, input);
+    const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+    assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
+    await validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
     // Persistoi uudet tiedostot
@@ -79,10 +81,9 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
   }
 }
 
-function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
+async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHyvaksymisEsitysInput) {
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
-
   // Projektilla on oltava muokkaustilainen hyväksymisesitys tai
   // ei muokattavaa hyväksymisesitystä
   if (projektiInDB.muokattavaHyvaksymisEsitys && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
@@ -95,6 +96,8 @@ function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.TallennaHy
   hyvaksymisEsitysSchema.validateSync(input, {
     context,
   });
+  // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
+  await validateVaiheOnAktiivinen(projektiInDB);
 }
 
 function uusiaAineistoja(aineistotBefore: AineistoNew[], aineistotAfter: AineistoNew[]): boolean {
