@@ -1,4 +1,4 @@
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, S3Paths, VaiheTiedostoManager } from ".";
 import { Aineisto, DBProjekti, LadattuTiedosto, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
@@ -69,7 +69,7 @@ export class VuorovaikutusKierrosTiedostoManager extends VaiheTiedostoManager<Vu
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<VuorovaikutusKierrosJulkaisu[]> {
-    if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
+    if (!(isStatusGreaterOrEqualTo(projektiStatus, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
       return [];
     }
     const julkaisutSet = await this.julkaisut.reduce(

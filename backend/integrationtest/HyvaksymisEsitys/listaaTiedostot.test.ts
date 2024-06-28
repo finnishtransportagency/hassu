@@ -19,6 +19,7 @@ import { IllegalAccessError } from "hassu-common/error";
 import MockDate from "mockdate";
 import omit from "lodash/omit";
 import { DBVaylaUser } from "../../src/database/model";
+import GetProjektiStatus from "../../src/projekti/status/getProjektiStatus";
 
 describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)", () => {
   const userFixture = new UserFixture(userService);
@@ -58,6 +59,8 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+    // Before eachissä haetaan projektin tiedot, mitä varten tarvitaan getProjektiStatusta
+    sinon.stub(GetProjektiStatus, "getProjektiStatus").resolves(API.Status.NAHTAVILLAOLO);
   });
 
   beforeEach(async () => {

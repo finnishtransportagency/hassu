@@ -1,6 +1,6 @@
 import { Status } from "@services/api";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import { isProjektiStatusGreaterOrEqualTo } from "../../common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "../../common/statusOrder";
 
 type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
 
@@ -90,6 +90,14 @@ export const LAUSUNTOPYYNNOT_MAIN_ROUTE: Route = {
   pathname: `/yllapito/projekti/[oid]/lausuntopyynto`,
   visible: true,
   isSubPath: true,
+};
+
+export const HYVAKSYMISESITYS_ROUTE: Route = {
+  title: "Hyväksymisesitys",
+  id: "hyvaksymisesitys",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/hyvaksymisesitys`,
+  visible: false,
 };
 
 export const LAUSUNTOPYYNNOT_ROUTE: Route = {
@@ -192,6 +200,7 @@ const routes: Route[] = [
   LAUSUNTOPYYNNOT_MAIN_ROUTE,
   LAUSUNTOPYYNNOT_ROUTE,
   LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE,
+  HYVAKSYMISESITYS_ROUTE,
   HYVAKSYMINEN_ROUTE,
   HYVAKSYMINEN_AINEISTO_ROUTE,
   HYVAKSYMINEN_KUULUTUS_ROUTE,
@@ -219,14 +228,14 @@ function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined
   if (!projekti) {
     return false;
   }
-  return isProjektiStatusGreaterOrEqualTo(projekti, Status.JATKOPAATOS_1_AINEISTOT);
+  return isStatusGreaterOrEqualTo(projekti.status, Status.JATKOPAATOS_1_AINEISTOT);
 }
 
 function isJatkopaatos2Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
   if (!projekti) {
     return false;
   }
-  return isProjektiStatusGreaterOrEqualTo(projekti, Status.JATKOPAATOS_2_AINEISTOT);
+  return isStatusGreaterOrEqualTo(projekti.status, Status.JATKOPAATOS_2_AINEISTOT);
 }
 
 export function isVisible(projekti: ProjektiLisatiedolla | null | undefined, route: Route) {

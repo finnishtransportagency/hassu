@@ -7,18 +7,58 @@ import { deleteYllapitoFiles, getYllapitoFilesUnderPath, insertYllapitoFileToS3 
 import { UserFixture } from "../../test/fixture/userFixture";
 import { avaaHyvaksymisEsityksenMuokkaus } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
-import { DBVaylaUser } from "../../src/database/model";
+import { DBVaylaUser, DBProjekti } from "../../src/database/model";
 import omit from "lodash/omit";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
+import { DeepReadonly } from "hassu-common/specialTypes";
+import { parameters } from "../../src/aws/parameters";
+
+const projari = UserFixture.pekkaProjari;
+const projariAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: projari.uid!,
+  tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+  etunimi: "Pekka",
+  sukunimi: "Projari",
+  email: "pekka.projari@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+const muokkaaja = UserFixture.manuMuokkaaja;
+const muokkaajaAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: muokkaaja.uid!,
+  etunimi: "Manu",
+  sukunimi: "Muokkaaja",
+  email: "namu.muokkaaja@vayla.fi",
+  organisaatio: "Väylävirasto",
+  puhelinnumero: "123456789",
+};
+
+const oid = "Testi1";
+const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
+  oid,
+  versio: 2,
+  kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
+  vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+  asianhallinta: { inaktiivinen: true },
+  euRahoitus: false,
+  kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+  velho: {
+    nimi: "Projektin nimi",
+    asiatunnusVayla: "asiatunnusVayla",
+    suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    kunnat: [91, 92],
+  },
+});
 
 describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
-  const oid = "Testi1";
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(async () => {
@@ -52,11 +92,18 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
 
   it("asettaa muokattavan hyväksymisesityksen muokkaustilaan", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
     };
@@ -76,24 +123,21 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   });
 
   it("onnistuu projektikayttajalta", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: muokkaaja.uid!,
-    };
     userFixture.loginAs(muokkaaja);
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      poistumisPaiva: "2022-01-02",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
-      kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
@@ -102,15 +146,18 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
 
   it("ei muokkaa tiedostoja", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.HYVAKSYTTY };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
+      poistumisPaiva: "2022-01-02",
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
     };
@@ -123,23 +170,18 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   });
 
   it("ei onnistu ulkopuoliselta", async () => {
-    const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
-      kayttajatunnus: projari.uid!,
-      tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    };
-    const muokkaaja = UserFixture.manuMuokkaaja;
     userFixture.loginAs(muokkaaja);
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.HYVAKSYTTY };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-      kayttoOikeudet: [projariAsVaylaDBUser],
     };
     const projektiBefore = {
-      oid,
-      versio: 2,
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       kayttoOikeudet: [projariAsVaylaDBUser],
@@ -152,71 +194,91 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
   it("ei onnistu, jos ei ole julkaistua hyväksymisesitystä", async () => {
     userFixture.loginAsAdmin();
     // Ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
-    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError, "Projektilla ei ole julkaistua hyväksymisesitystä");
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys odottaa hyväksyntää", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
+      poistumisPaiva: "2022-01-02",
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
-    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektin tulee olla lukutilassa, jotta muokkauksen voi avata."
+    );
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on jo muokkauksessa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.MUOKKAUS };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
     };
     const projektiBefore = {
-      oid,
-      versio: 2,
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
-    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektin tulee olla lukutilassa, jotta muokkauksen voi avata."
+    );
   });
 
-  it("ei onnistu, jos ollaan jo hyväksymisvaiheessa", async () => {
+  it("onnistuu vaikka ollaan jo hyväksymisvaiheessa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, hyvaksymisPaiva: "2022-01-01", hyvaksyja: "oid" };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      poistumisPaiva: "2022-01-02",
+    };
     const hyvaksymisPaatosVaihe = {
       id: 1,
     };
-    const projektiBefore = {
-      oid,
-      versio: 2,
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
       hyvaksymisPaatosVaihe,
     };
     await insertProjektiToDB(projektiBefore);
     const kutsu = avaaHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
-    await expect(kutsu).to.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.eventually.be.fulfilled;
   });
 });
