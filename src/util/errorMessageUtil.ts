@@ -11,8 +11,8 @@ type ErrorInfo = {
   errorMessage: string | null;
 };
 
-// Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille
-const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.env.ENVIRONMENT !== "prod" || props.isYllapito;
+// Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille tuotanto- ja koulutusympäristöissä
+const showErrorDetails = (props: GenerateErrorMessageProps): boolean => (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.

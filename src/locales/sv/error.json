@@ -1,6 +1,7 @@
 {
-  "yleinen": "Ett oväntat fel har uppstått i systemet",
+  "yleinen": "Ett oväntat fel har uppstått i systemet.",
   "tyyppi": {},
   "epaaktiivinen": "Planen har godkänts och tagits bort från webbtjänsten.",
-  "eiloydy": "Projektet hittades inte."
+  "eiloydy": "Projektet hittades inte.",
+  "anna-palautetta-palvelusta": "Feedback misslyckades."
 }
