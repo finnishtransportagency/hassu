@@ -57,7 +57,8 @@ class KuntaMetadata {
   }
 
   idForMaakuntaName(name: string | number): number {
-    if (typeof name == "number" || !isNaN(Number(name))) {
+    // tyhjä string ei ok ettei tule numeroksi 0
+    if (typeof name == "number" || (name && !isNaN(Number(name)))) {
       return Number(name);
     }
     const maakuntaId = findKey(alueData.maakunnat, (maakunta) => {

@@ -19,6 +19,7 @@ import { IllegalAccessError } from "hassu-common/error";
 import MockDate from "mockdate";
 import omit from "lodash/omit";
 import { DBVaylaUser } from "../../src/database/model";
+import GetProjektiStatus from "../../src/projekti/status/getProjektiStatus";
 
 describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)", () => {
   const userFixture = new UserFixture(userService);
@@ -58,6 +59,8 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
+    // Before eachissä haetaan projektin tiedot, mitä varten tarvitaan getProjektiStatusta
+    sinon.stub(GetProjektiStatus, "getProjektiStatus").resolves(API.Status.NAHTAVILLAOLO);
   });
 
   beforeEach(async () => {
@@ -249,6 +252,41 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
       __typename: "HyvaksymisEsityksenAineistot",
       poistumisPaiva: "2033-01-01",
       linkkiVanhentunut: true,
+      perustiedot: {
+        __typename: "ProjektinPerustiedot",
+        asiatunnus: "asiatunnusVayla",
+        kunnat: [91, 92],
+        suunnitelmanNimi: "Projektin nimi",
+        vastuuorganisaatio: "VAYLAVIRASTO",
+        yTunnus: "1010547-1",
+      },
+      projektipaallikonYhteystiedot: {
+        __typename: "ProjektiKayttajaJulkinen",
+        etunimi: "Pekka",
+        sukunimi: "Projari",
+        email: "email@email.com",
+        puhelinnumero: "01234567",
+        organisaatio: "Väylävirasto",
+        projektiPaallikko: true,
+        elyOrganisaatio: "LAPIN_ELY",
+      },
+    });
+  });
+
+  it("palauttaa projektipäällikön yhteystiedot ja ei tiedostoja, jos hyväksymisesitystä ei vielä ole", async () => {
+    // Aseta projekti DB:hen ja hae hash
+    await insertProjektiToDB({
+      ...projektiInDB,
+      muokattavaHyvaksymisEsitys: { ...projektiInDB.muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.MUOKKAUS },
+      julkaistuHyvaksymisEsitys: undefined,
+    });
+    const response = await listaaHyvaksymisEsityksenTiedostot({
+      oid,
+      listaaHyvaksymisEsityksenTiedostotInput: { hash },
+    });
+    expect(response).to.eql({
+      __typename: "HyvaksymisEsityksenAineistot",
+      eiOlemassa: true,
       perustiedot: {
         __typename: "ProjektinPerustiedot",
         asiatunnus: "asiatunnusVayla",

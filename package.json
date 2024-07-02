@@ -220,7 +220,7 @@
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
     "prepare": "husky install",
-    "dev": "cross-env VERSION=`git rev-parse --abbrev-ref HEAD` next dev",
+    "dev": "cross-env VERSION=`git rev-parse --abbrev-ref HEAD` LOG_LEVEL=info next dev",
     "build": "next build",
     "start": "next start",
     "export-under-maintenance": "next build ./under-maintenance && next export -o ./under-maintenance/out ./under-maintenance && aws s3 cp ./under-maintenance/out/ s3://hassu-$ENVIRONMENT-public/huoltokatko --recursive",

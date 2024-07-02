@@ -22,16 +22,22 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
   const projekti: ProjektiTiedostoineen = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
   if (projekti) {
     const hyvaksymisEsitys = projekti.julkaistuHyvaksymisEsitys;
+    const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+    assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
+    assertIsDefined(projekti.velho, "Projektilla tulee olla velho");
+
     if (!hyvaksymisEsitys) {
-      throw new NotFoundError("Hyvaksymisesitystä ei löydy");
+      return {
+        __typename: "HyvaksymisEsityksenAineistot",
+        eiOlemassa: true,
+        projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+        perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
+      };
     }
     assertIsDefined(projekti.salt, "Projektin salt on määritelty tässä vaiheessa");
-    assertIsDefined(projekti.velho, "Projektilla tulee olla velho");
     validateHyvaksymisEsitysHash(oid, projekti.salt, hyvaksymisEsitys.versio, params.hash);
 
     const poistumisPaivaEndOfTheDay = parseDate(hyvaksymisEsitys.poistumisPaiva).endOf("day");
-    const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
-    assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
 
     if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
       return {

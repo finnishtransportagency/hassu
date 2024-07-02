@@ -18,7 +18,7 @@ import {
 } from "src/util/getPaatosSpecificData";
 import { getPaatosSpecificData, paatosSpecificVaihe, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
@@ -163,7 +163,7 @@ function PaatosPageLayoutContent({
         },
       },
       label: <span>Päätös ja liitteenä oleva aineisto</span>,
-      disabled: !isProjektiStatusGreaterOrEqualTo(projekti, aineistoStatus),
+      disabled: !isStatusGreaterOrEqualTo(projekti.status, aineistoStatus),
       id: "aineisto_tab",
     };
     if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && julkaisu.aineistoMuokkaus) {
@@ -181,7 +181,7 @@ function PaatosPageLayoutContent({
           },
         },
         label: <span>Kuulutuksen tiedot</span>,
-        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, status),
+        disabled: !isStatusGreaterOrEqualTo(projekti.status, status),
         id: "kuulutuksentiedot_tab",
       },
     ];
