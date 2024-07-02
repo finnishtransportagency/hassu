@@ -161,11 +161,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           </SectionContent>
         ) : (
           <SectionContent>
-            {nahtavillaoloVaiheJulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY ? (
-              <H2>Ladattavat kuulutukset ja ilmoitukset</H2>
-            ) : (
-              <H2>Esikatseltavat tiedostot</H2>
-            )}
+            <H2>
+              {nahtavillaoloVaiheJulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY
+                ? "Ladattavat kuulutukset ja ilmoitukset"
+                : "Esikatseltavat tiedostot"}
+            </H2>
+
             <p>
               {label({
                 label: "Kuulutus ja ilmoitus",
