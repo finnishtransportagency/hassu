@@ -83,7 +83,9 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-  const hyvaksyttyJaJulkaistu = projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && !isInFuture(projekti.nahtavillaoloVaiheJulkaisu.kuulutusPaiva)
+  const hyvaksyttyJaJulkaistu =
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    !isInFuture(projekti.nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
 
   const showUudelleenkuulutaButton =
     projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
@@ -121,13 +123,13 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
             {!epaaktiivinen && (
               <>
                 {projekti.nahtavillaoloVaiheJulkaisu && !hyvaksyttyJaJulkaistu && (
-                    <KuulutusInfoElement
-                      julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
-                      edellinenVaiheMigroitu={projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU}
-                      projekti={projekti}
-                      vaihe={projekti.nahtavillaoloVaihe}
-                    />
-                  )}
+                  <KuulutusInfoElement
+                    julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
+                    edellinenVaiheMigroitu={projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU}
+                    projekti={projekti}
+                    vaihe={projekti.nahtavillaoloVaihe}
+                  />
+                )}
                 {(julkaisematonPaatos === null || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS) && (
                   <ProjektiPageLayoutContext.Consumer>
                     {({ ohjeetOpen, ohjeetOnClose }) => (
