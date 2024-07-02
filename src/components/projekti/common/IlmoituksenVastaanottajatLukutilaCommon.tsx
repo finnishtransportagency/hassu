@@ -6,6 +6,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
+import { H3 } from "../../Headings";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -20,7 +21,7 @@ export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }:
     <Section noDivider>
       <SectionContent>
         <div className="grid grid-cols-4 gap-x-6 mb-4">
-          <h6 className="font-bold">Viranomaiset</h6>
+          <H3 variant="h5">Viranomaiset</H3>
           <p></p>
           <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
           <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
@@ -42,7 +43,7 @@ export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }:
         </div>
       </SectionContent>
       <SectionContent>
-        <h6 className="font-bold">Kunnat</h6>
+        <H3 variant="h5">Kunnat</H3>
         <div className="content grid grid-cols-4 mb-4">
           <p className="vayla-table-header">Kunta</p>
           <p className="vayla-table-header">Sähköpostiosoite</p>

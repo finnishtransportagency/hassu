@@ -4,6 +4,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
 import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
+import { H2 } from "../../Headings";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -29,7 +30,7 @@ export default function IlmoituksenVastaanottajat({
   return (
     <Section>
       <SectionContent>
-        <h5 className="vayla-small-title">Ilmoituksen vastaanottajat</h5>
+        <H2>Ilmoituksen vastaanottajat</H2>
         {!epaaktiivinen && (
           <>
             <>

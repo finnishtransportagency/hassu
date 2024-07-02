@@ -1,5 +1,12 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF, Vaihe } from "@services/api";
+import {
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
+  Kieli,
+  KuulutusJulkaisuTila,
+  KuulutusSaamePDF,
+  Vaihe,
+} from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -21,6 +28,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
+import { H2, H3 } from "../../../Headings";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -30,6 +38,10 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
+  const isJatkopaatos = useMemo(
+    () => paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2,
+    [paatosTyyppi]
+  );
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -72,6 +84,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
   return (
     <>
       <Section>
+        <H2>Kuulutuksen sisältö</H2>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
@@ -122,13 +135,20 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           </p>
           <p className="md:col-span-3 mb-0">{kasittelyntilaData?.asianumero}</p>
         </div>
-        {julkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={julkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
+        {isJatkopaatos && (
+          <div>
+            <p className="vayla-label">Päätöksen viimeinen voimassaolovuosi</p>
+            <p>{julkaisu.viimeinenVoimassaolovuosi}</p>
+          </div>
         )}
+
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
       </Section>
+      {julkaisu.uudelleenKuulutus && (
+        <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={julkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
+      )}
       <Section>
-        <h4 className="vayla-label">Muutoksenhaku</h4>
+        <H3>Muutoksenhaku</H3>
         <p>
           Päätökseen voi valittamalla hakea muutosta {t(`hallinto-oikeus-ablatiivi.${julkaisu.hallintoOikeus}`)} 30 päivän kuluessa
           päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
@@ -136,15 +156,17 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
       </Section>
       <Section>
         <SectionContent>
-          <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
+          <H3>Kuulutuksen yhteyshenkilöt</H3>
           <p></p>
           {julkaisu?.yhteystiedot?.map((yhteystieto, index) => (
             <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
           ))}
         </SectionContent>
+      </Section>
+      <Section>
         {epaaktiivinen ? (
           <SectionContent>
-            <p className="vayla-label">Kuulutus julkisella puolella</p>
+            <H3>Kuulutus julkisella puolella</H3>
             <p>
               Kuulutus on ollut nähtävillä julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
               {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
@@ -152,7 +174,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           </SectionContent>
         ) : (
           <SectionContent>
-            <p className="vayla-label">Kuulutus julkisella puolella</p>
+            <H3>Kuulutus julkisella puolella</H3>
             {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
             {published && (
               <p>
@@ -161,14 +183,18 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
             )}
           </SectionContent>
         )}
+      </Section>
+      <Section>
         {epaaktiivinen ? (
           <SectionContent>
-            <p className="vayla-label">Ladattavat kuulutukset ja julkaisut</p>
+            <H2>Ladattavat kuulutukset ja julkaisut</H2>
             <p>Kuulutukset löytyvät asianhallinnasta.</p>
           </SectionContent>
         ) : (
           <SectionContent>
-            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            <H2>
+              {julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY ? "Ladattavat kuulutukset ja ilmoitukset" : "Esikatseltavat tiedostot"}
+            </H2>
             <p>
               {label({
                 label: "Kuulutus ja ilmoitus",
@@ -280,18 +306,16 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           </SectionContent>
         )}
       </Section>
-      <Section>
-        <IlmoituksenVastaanottajatLukutila
-          ilmoituksenVastaanottajat={julkaisu.ilmoituksenVastaanottajat}
-          julkaisunTila={julkaisu.tila}
-          epaaktiivinen={epaaktiivinen}
-          vaihe={paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? Vaihe.HYVAKSYMISPAATOS : undefined}
-          omistajahakuStatus={projekti.omistajahaku?.status}
-          oid={projekti.oid}
-          uudelleenKuulutus={julkaisu.uudelleenKuulutus}
-          kuulutusPaiva={kuulutusPaiva}
-        />
-      </Section>
+      <IlmoituksenVastaanottajatLukutila
+        ilmoituksenVastaanottajat={julkaisu.ilmoituksenVastaanottajat}
+        julkaisunTila={julkaisu.tila}
+        epaaktiivinen={epaaktiivinen}
+        vaihe={paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? Vaihe.HYVAKSYMISPAATOS : undefined}
+        omistajahakuStatus={projekti.omistajahaku?.status}
+        oid={projekti.oid}
+        uudelleenKuulutus={julkaisu.uudelleenKuulutus}
+        kuulutusPaiva={kuulutusPaiva}
+      />
     </>
   );
 }

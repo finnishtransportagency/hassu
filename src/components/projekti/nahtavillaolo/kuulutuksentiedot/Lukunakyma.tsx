@@ -1,4 +1,4 @@
-import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, Vaihe } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, Vaihe } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -21,6 +21,7 @@ import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannet
 import DownloadLink from "@components/DownloadLink";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
+import { H2, H3 } from "../../../Headings";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -59,6 +60,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
 
   return (
     <>
+      <H2>Kuulutuksen sisältö</H2>
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
@@ -83,6 +85,18 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
+        <div>
+          <p className="vayla-label">
+            {label({
+              label: "Muistutukset",
+              inputLanguage: Kieli.SUOMI,
+              kielitiedot,
+            })}
+          </p>
+          <PreWrapParagraph>
+            Kansalaisia pyydetään esittämään muistutukset viimeistään {formatDate(nahtavillaoloVaiheJulkaisu.muistutusoikeusPaattyyPaiva)}.
+          </PreWrapParagraph>
+        </div>
         <div>
           <p className="vayla-label">
             {label({
@@ -114,40 +128,44 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           </div>
         )}
       </Section>
+      <Section smallGaps>
+        <H3>Kuulutuksen yhteyshenkilöt</H3>
+        <p></p>
+        {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
+          <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
+        ))}
+      </Section>
+      <Section smallGaps>
+        <H3>Kuulutus julkisella puolella</H3>
+        {epaaktiivinen ? (
+          <p>
+            Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva)}—
+            {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
+          </p>
+        ) : (
+          <>
+            {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
+            {published && (
+              <p>
+                <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+              </p>
+            )}
+          </>
+        )}
+      </Section>
       <Section>
-        <SectionContent>
-          <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
-          <p></p>
-          {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
-          ))}
-        </SectionContent>
-        <SectionContent>
-          <p className="vayla-label">Kuulutus julkisella puolella</p>
-          {epaaktiivinen ? (
-            <p>
-              Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva)}—
-              {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
-            </p>
-          ) : (
-            <>
-              {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-              {published && (
-                <p>
-                  <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
-                </p>
-              )}
-            </>
-          )}
-        </SectionContent>
         {epaaktiivinen ? (
           <SectionContent>
-            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            <H2>Ladattavat kuulutukset ja ilmoitukset</H2>
             <p>Kuulutukset löytyvät asianhallinnasta</p>
           </SectionContent>
         ) : (
           <SectionContent>
-            <p className="vayla-label">Ladattavat kuulutukset ja ilmoitukset</p>
+            {nahtavillaoloVaiheJulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY ? (
+              <H2>Ladattavat kuulutukset ja ilmoitukset</H2>
+            ) : (
+              <H2>Esikatseltavat tiedostot</H2>
+            )}
             <p>
               {label({
                 label: "Kuulutus ja ilmoitus",
