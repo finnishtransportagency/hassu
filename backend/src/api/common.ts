@@ -2,7 +2,7 @@ import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { log, setLogContextOid } from "../logger";
 import { identifyUser } from "../user";
-import { ClientError, IllegalAccessError, IllegalAineistoStateError, NotFoundError, SystemError } from "hassu-common/error";
+import { ClientError, IllegalAccessError, IllegalAineistoStateError, NotActiveError, NotFoundError, SystemError } from "hassu-common/error";
 
 export type LambdaResult = {
   data: unknown;
@@ -37,13 +37,14 @@ export async function commonHandleEvent(
         let errorSubType = "(no subtype)";
         if (
           e instanceof NotFoundError ||
+          e instanceof NotActiveError ||
           e instanceof IllegalAineistoStateError ||
           e instanceof IllegalAccessError ||
           e instanceof ClientError
         ) {
           errorType = "ClientError";
           errorSubType = e.className;
-          log.error(e.message);
+          e instanceof NotActiveError ? log.info(e.message) : log.error(e.message);
         } else if (e instanceof SystemError) {
           errorType = "SystemError";
           errorSubType = e.className;

@@ -98,7 +98,7 @@ Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu
 
 exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen 1`] = `
 Object {
-  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
@@ -115,7 +115,7 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
 
 exports[`Hyväksymisesityksen hyväksyminen lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen 2`] = `
 Object {
-  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusVayla",
+  "subject": "Valtion liikenneväylien suunnittelu: hyväksymisesitys hyväksytty asiatunnusELY",
   "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Projektin nimi hyväksymisesitys on hyväksytty.
 
 Voit tarkastella hyväksymisesitystä osoitteessa https://localhost:3000/yllapito/projekti/Testi1/hyvaksymisesitys
@@ -134,7 +134,7 @@ Object {
   "subject": "Kiire hyväksymisesitys Projektin nimi",
   "text": "Kiire hyväksymisesitys Projektin nimi
 
-Väylävirasto lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
+ELY-keskus lähettää suunnitelman Projektin nimi hyväksyttäväksi Traficomiin kiireellisenä. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://localhost:3000/suunnitelma/Testi1/hyvaksymisesityksen-aineistot
 
 Sähköpostin liitteenä on myös hyväksymisesitys.
 
@@ -152,15 +152,15 @@ Projektin nimi
 
 Asiatunnus
 
-asiatunnusVayla
+asiatunnusELY
 
 Vastuuorganisaatio
 
-Väylävirasto
+Lapin ELY-keskus
 
 Y-tunnus
 
-1010547-1
+2296962-1
 
 OVT-tunnus
 
@@ -178,7 +178,7 @@ viitetieto
 
 Lisätietoja suunnitelmasta antaa 
 
-Etunimi Sukunimi Pupulandia, 
+Etunimi Sukunimi Hämeen ELY-keskus, 
 
 puh 0291234567,
 

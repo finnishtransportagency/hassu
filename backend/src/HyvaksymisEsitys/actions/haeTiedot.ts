@@ -7,30 +7,37 @@ import projektiDatabase from "../dynamoKutsut";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
 import { AineistoNew } from "../../database/model";
 import dayjs from "dayjs";
+import heVaiheOnAktiivinen from "../vaiheOnAktiivinen";
 import { getKutsut, getMaanomistajaLuettelo } from "../collectHyvaksymisEsitysAineistot";
 import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattavatTiedostot";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
-  const projekti = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
-  const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projekti);
-  const { versio, hyvaksymisPaatosVaihe, aineistoHandledAt } = projekti;
-  assertIsDefined(projekti.velho, "projektilla tulee olla velho");
-  const aineistot = getHyvaksymisEsityksenAineistot(projekti.muokattavaHyvaksymisEsitys);
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(dbProjekti, "projektia ei löydy");
+  assertIsDefined(dbProjekti.velho, "projektilla tulee olla velho");
+
+  const vaiheOnAktiivinen = await heVaiheOnAktiivinen(dbProjekti);
+  const { versio, aineistoHandledAt, velho } = dbProjekti;
+  const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(dbProjekti);
+
+  const aineistot = getHyvaksymisEsityksenAineistot(dbProjekti.muokattavaHyvaksymisEsitys);
+
+  const muokkauksenVoiAvata = vaiheOnAktiivinen && hyvaksymisEsitys?.tila === API.HyvaksymisTila.HYVAKSYTTY;
 
   return {
     __typename: "HyvaksymisEsityksenTiedot",
     oid,
     versio,
     hyvaksymisEsitys,
-    vaiheOnAktiivinen: false,
+    vaiheOnAktiivinen,
+    muokkauksenVoiAvata,
     aineistotValmiit: aineistotValmiit(aineistot, aineistoHandledAt),
-    muokkauksenVoiAvata: !hyvaksymisPaatosVaihe && hyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY,
-    perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
+    perustiedot: adaptVelhoToProjektinPerustiedot(velho),
     tuodutTiedostot: {
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
-      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(projekti).map(adaptFileInfoToLadattavaTiedosto)),
-      kuulutuksetJaKutsu: await Promise.all(getKutsut(projekti).map(adaptFileInfoToLadattavaTiedosto)),
+      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+      kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
   };
 }

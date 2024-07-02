@@ -39,7 +39,7 @@ export type ProjektiTiedostoineen = Pick<
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
   | "hyvEsAineistoPaketti"
-> & { hyvaksymisPaatosVaihe: Pick<HyvaksymisPaatosVaihe, "id"> };
+>;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   private static async sendUpdateCommandToDynamoDB(params: UpdateCommand): Promise<void> {
@@ -101,7 +101,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "nahtavillaoloVaiheJulkaisut, " +
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
-        "hyvaksymisPaatosVaihe.id, " +
         "aineistoHandledAt, " +
         "hyvEsAineistoPaketti",
     });
@@ -154,12 +153,9 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
         ":versioFromInput": versio,
         ":hyvaksytty": API.HyvaksymisTila.HYVAKSYTTY,
-        ":odottaaHyvaksyntaa": API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
         ":palautusSyy": null,
       },
-      ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "(attribute_exists(#muokattavaHyvaksymisEsitys) OR #muokattavaHyvaksymisEsitys.#tila = :odottaaHyvaksyntaa)",
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
@@ -202,13 +198,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
   }
 
-  async muutaMuokattavanHyvaksymisEsityksenTilaa(input: {
-    oid: string;
-    versio: number;
-    uusiTila: API.HyvaksymisTila;
-    vanhaTila: API.HyvaksymisTila;
-  }): Promise<number> {
-    const { oid, versio, uusiTila, vanhaTila } = input;
+  async muutaMuokattavanHyvaksymisEsityksenTilaa(input: { oid: string; versio: number; uusiTila: API.HyvaksymisTila }): Promise<number> {
+    const { oid, versio, uusiTila } = input;
     const nextVersion = versio + 1;
     const params = new UpdateCommand({
       TableName: config.projektiTableName,
@@ -221,19 +212,14 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
         "#tila": "tila",
         "#paivitetty": "paivitetty",
-        "#hyvaksymisPaatosVaihe": "hyvaksymisPaatosVaihe",
       },
       ExpressionAttributeValues: {
         ":versio": nextVersion,
         ":uusiTila": uusiTila,
         ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
-        ":vanhaTila": vanhaTila,
         ":versioFromInput": versio,
       },
-      ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "attribute_not_exists(#hyvaksymisPaatosVaihe) AND " +
-        "#muokattavaHyvaksymisEsitys.#tila = :vanhaTila",
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
@@ -259,21 +245,16 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
         "#tila": "tila",
         "#paivitetty": "paivitetty",
-        "#hyvaksymisPaatosVaihe": "hyvaksymisPaatosVaihe",
         "#palautusSyy": "palautusSyy",
       },
       ExpressionAttributeValues: {
         ":versio": nextVersion,
         ":muokkaus": API.HyvaksymisTila.MUOKKAUS,
         ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
-        ":odottaaHyvaksyntaa": API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
         ":syy": syy,
         ":versioFromInput": versio,
       },
-      ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "attribute_not_exists(#hyvaksymisPaatosVaihe) AND " +
-        "#muokattavaHyvaksymisEsitys.#tila = :odottaaHyvaksyntaa",
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
@@ -299,18 +280,14 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "#versio": "versio",
         "#muokattavaHyvaksymisEsitys": "muokattavaHyvaksymisEsitys",
         "#paivitetty": "paivitetty",
-        "#tila": "tila",
       },
       ExpressionAttributeValues: {
         ":versio": nextVersion,
         ":muokattavaHyvaksymisEsitys": { ...muokattavaHyvaksymisEsitys, muokkaaja },
         ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
         ":versioFromInput": versio,
-        ":muokkaus": API.HyvaksymisTila.MUOKKAUS,
       },
-      ConditionExpression:
-        "(attribute_not_exists(#versio) OR #versio = :versioFromInput) AND " +
-        "(attribute_not_exists(#muokattavaHyvaksymisEsitys) OR #muokattavaHyvaksymisEsitys.#tila = :muokkaus)",
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
     });
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);

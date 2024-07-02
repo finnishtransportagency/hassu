@@ -3,7 +3,7 @@ import { KasittelyntilaInput, Projekti, Status, TallennaProjektiInput } from "ha
 import { requireAdmin, requireOmistaja } from "../../user/userService";
 import assert from "assert";
 import { IllegalArgumentError } from "hassu-common/error";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { has, isEmpty, isEqual } from "lodash";
 
 type InputChangesKasittelynTilaFieldFunc = (key: keyof KasittelyntilaInput & keyof KasittelynTila) => boolean;
@@ -50,7 +50,7 @@ function validateKasittelyntilaHyvaksymispaatos(
   apiProjekti: Projekti,
   inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc
 ) {
-  if (inputChangesKasittelynTilaField("hyvaksymispaatos") && !isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.NAHTAVILLAOLO)) {
+  if (inputChangesKasittelynTilaField("hyvaksymispaatos") && !isStatusGreaterOrEqualTo(apiProjekti.status, Status.NAHTAVILLAOLO)) {
     throw new IllegalArgumentError(
       "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin. Projektin status nyt:" + apiProjekti.status
     );
@@ -66,7 +66,7 @@ function validateKasittelyntilaEnsimmainenJatkopaatos(
     if (!projekti.kasittelynTila?.hyvaksymispaatos) {
       throw new IllegalArgumentError("Ensimmäistä jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös");
     }
-    if (!isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.EPAAKTIIVINEN_1)) {
+    if (!isStatusGreaterOrEqualTo(apiProjekti.status, Status.EPAAKTIIVINEN_1)) {
       throw new IllegalArgumentError(
         "Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen. Projektin status nyt:" +
           apiProjekti.status
@@ -86,7 +86,7 @@ function validateKasittelyntilaToinenJatkopaatos(
         "Toista jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös ja ensimmäinen jatkopäätös."
       );
     }
-    if (!isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.EPAAKTIIVINEN_2)) {
+    if (!isStatusGreaterOrEqualTo(apiProjekti.status, Status.EPAAKTIIVINEN_2)) {
       throw new IllegalArgumentError(
         "Toista jatkopäätöstä voi muokata vasta toisen epäaktiivisuusjakson jälkeen. Projektin status nyt:" + apiProjekti.status
       );

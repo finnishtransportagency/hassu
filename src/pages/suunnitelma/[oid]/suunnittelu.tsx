@@ -38,7 +38,7 @@ import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "common/statusOrder";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "@components/projekti/kansalaisnakyma/AineistoLinkkiLista";
@@ -46,6 +46,7 @@ import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/Tiedos
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
+import { useIsBelowBreakpoint } from "../../../hooks/useIsSize";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -164,6 +165,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
   projektiOid: string;
 }> = ({ vuorovaikutus, projektiOid }) => {
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
+  const isMobile = useIsBelowBreakpoint("md");
   const { t } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
   const { data: projekti } = useProjektiJulkinen();
@@ -229,7 +231,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
         ) : (
           <p>
             {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
-            {isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
+            {isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
           </p>
         )}
       </ContentSpacer>
@@ -248,7 +250,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
             <Trans i18nKey="suunnittelu:aineistot.voi_tutustua" />
           </p>
         ) : (
-          <p>{t(isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? "aineistot.poistettu" : "aineistot.julkaistaan")}</p>
+          <p>{t(isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? "aineistot.poistettu" : "aineistot.julkaistaan")}</p>
         )}
         {!!esittelyaineistot?.length && vuorovaikutus?.vuorovaikutusJulkaisuPaiva && (
           <ContentSpacer>
@@ -271,7 +273,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               if (url) {
                 return (
                   <React.Fragment key={index}>
-                    {(parseVideoURL(url) && <iframe width={"640px"} height={"360"} src={parseVideoURL(url)}></iframe>) || (
+                    {(parseVideoURL(url) && <iframe width={isMobile ? "320px" : "640px"} height={isMobile ? "180px" : "360px"} src={parseVideoURL(url)}></iframe>) || (
                       <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
                     )}
                   </React.Fragment>
