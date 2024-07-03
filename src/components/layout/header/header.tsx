@@ -278,7 +278,7 @@ export default function Header(): ReactElement {
           </Container>
           {isMobile && (
             <Container
-              className="absolute left-0 right-0 top-50 bg-white w-full overflow-hidden transition-all duration-300"
+              className="absolute left-0 right-0 top-50 bg-white w-full overflow-hidden transition-all duration-300 h-auto"
               sx={{
                 maxHeight: isHamburgerOpen ? hamburgerMenuRef.current?.clientHeight : 0,
               }}
@@ -303,7 +303,7 @@ export default function Header(): ReactElement {
                 ) : (
                   <Box
                   sx={{
-                    marginTop: 5,
+                    marginTop: 11,
                   }}>
                     <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
                       Poistu Palvelusta
