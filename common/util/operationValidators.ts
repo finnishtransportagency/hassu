@@ -39,6 +39,7 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
     return false;
   }
   if (projekti.nahtavillaoloVaihe?.aineistoMuokkaus) {
+    // Nähtävilläolossa on aineistomuokkaus käynnissä. Se on hylättävä tai vietävä hyväksyttäväksi.
     return false;
   }
   if ((projekti as DBProjekti).hyvaksymisPaatosVaiheJulkaisut || (projekti as Projekti).hyvaksymisPaatosVaiheJulkaisu) {
