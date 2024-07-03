@@ -370,9 +370,9 @@ export const FormContents: FunctionComponent<{
   const {
     handleSubmit,
     getValues,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
   function getRemoveCount() {
@@ -421,8 +421,8 @@ export const FormContents: FunctionComponent<{
     [api, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
   );
 
-  const resetAndClose = useCallback(() => {
-    router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/muistuttajat", query: { oid: projekti.oid } });
+  const resetAndClose = useCallback(async () => {
+    await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/muistuttajat", query: { oid: projekti.oid } });
   }, [router, projekti.oid]);
 
   return (

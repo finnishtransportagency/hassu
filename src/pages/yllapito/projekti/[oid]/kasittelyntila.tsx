@@ -217,7 +217,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     control,
     reset,
     watch,
@@ -225,7 +225,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     trigger,
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const api = useApi();
 
@@ -251,21 +251,19 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [defaultValues, reset]);
 
   const avaaJatkopaatos = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
+    async (data: KasittelynTilaFormValues) =>
+      await withLoadingSpinner(
         (async () => {
           try {
             data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
             await onSubmit(data);
             showSuccessMessage("Jatkopäätös lisätty");
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
           setOpenTallenna(false);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          }, 1500);
-          return () => clearTimeout(siirtymaTimer);
         })()
       ),
     [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
@@ -283,21 +281,19 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [avaaJatkopaatos, handleSubmit]);
 
   const avaaJatkopaatos2 = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
+    async (data: KasittelynTilaFormValues) =>
+      await withLoadingSpinner(
         (async () => {
           try {
             data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
             await onSubmit(data);
             showSuccessMessage("Jatkopäätös lisätty");
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
           setOpenTallenna2(false);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          }, 1500);
-          return () => clearTimeout(siirtymaTimer);
         })()
       ),
     [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]

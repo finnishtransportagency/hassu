@@ -428,10 +428,10 @@ export const FormContents: FunctionComponent<{
 
   const {
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     getValues,
   } = useFormReturn;
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const api = useApi();
@@ -486,8 +486,8 @@ export const FormContents: FunctionComponent<{
     [api, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
   );
 
-  const resetAndClose = useCallback(() => {
-    router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
+  const resetAndClose = useCallback(async () => {
+    await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
   }, [router, projekti.oid]);
 
   return (

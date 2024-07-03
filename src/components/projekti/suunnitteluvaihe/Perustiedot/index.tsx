@@ -231,11 +231,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const {
     reset,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     control,
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const confirmPublish = () => {
     setIsOpenHyvaksy(true);
@@ -247,7 +247,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
     await saveDraft(formData);
-    router.push({
+    await router.push({
       pathname: "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen",
       query: { oid: projekti.oid },
     });

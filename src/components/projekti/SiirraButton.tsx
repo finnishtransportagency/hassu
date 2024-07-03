@@ -53,7 +53,7 @@ export const SiirraModal: FunctionComponent<DialogProps & SiirraButtonProps> = (
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const siirraSuunnitteluun: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
+    async (event) => {
       const siirraTilaJaPaivitaSivu = async () => {
         try {
           await api.siirraTila({
@@ -70,7 +70,7 @@ export const SiirraModal: FunctionComponent<DialogProps & SiirraButtonProps> = (
         }
         closeDialog(event);
       };
-      withLoadingSpinner(siirraTilaJaPaivitaSivu());
+      await withLoadingSpinner(siirraTilaJaPaivitaSivu());
     },
     [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, withLoadingSpinner]
   );
