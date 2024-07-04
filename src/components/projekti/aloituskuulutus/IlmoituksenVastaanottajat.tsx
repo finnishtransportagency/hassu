@@ -86,10 +86,13 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         )}
 
         {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-          <p>
-            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
-            sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
-          </p>
+          <>
+            <p>
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty, tarkasta
+              sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <a href="mailto:tuki.vayliensuunittelu@vayla.fi">tuki.vayliensuunittelu@vayla.fi</a>.
+            </p>
+            <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+          </>
         )}
       </SectionContent>
 
