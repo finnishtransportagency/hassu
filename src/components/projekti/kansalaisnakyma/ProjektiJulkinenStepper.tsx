@@ -11,7 +11,6 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/
 import HassuLink from "@components/HassuLink";
 import { Status } from "@services/api";
 import { UrlObject } from "url";
-import { maxWidth } from "@mui/system";
 interface Props {
   oid: string;
   activeStep: Status | null | undefined;
