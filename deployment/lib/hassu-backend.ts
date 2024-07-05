@@ -925,7 +925,7 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/sqsEvents/sqsEventHandlerLambda.ts`,
       handler: "handleEvent",
-      memorySize: 1024,
+      memorySize: 2048,
       reservedConcurrentExecutions: concurrency,
       timeout: Duration.seconds(600),
       bundling: {
