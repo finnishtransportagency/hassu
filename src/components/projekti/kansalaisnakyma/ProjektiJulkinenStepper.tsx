@@ -11,6 +11,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/
 import HassuLink from "@components/HassuLink";
 import { Status } from "@services/api";
 import { UrlObject } from "url";
+import classNames from "classnames";
 interface Props {
   oid: string;
   activeStep: Status | null | undefined;
@@ -20,26 +21,36 @@ interface Props {
   vahainenMenettely?: boolean | null;
 }
 
-const HassuStep = styled(Step)<StepProps>({
-  [`&.${stepClasses.root} > a span:hover`]: {
-    textDecorationThickness: "2px !important",
-    textDecoration: "underline",
-    color: "#0064AF",
-  },
+const HassuStep = styled(Step)<StepProps>(({}) => ({
   [`&.${stepClasses.horizontal}`]: {
     flex: "1 1 0px",
     width: "0",
   },
-});
+}));
 
 const HassuLabel = styled(StepLabel)<{
   active?: boolean;
   selected?: boolean;
-}>(({ active, selected }) => ({
+}>(({ selected }) => ({
+  "& .step-icon": {
+    boxShadow: selected ? "0 0 0 10px #009AE1" : undefined,
+  },
+  [`&:not(.${stepLabelClasses.disabled}):hover`]: {
+    [`&.${stepLabelClasses.horizontal} .step-name-label`]: {
+      color: "#0064AF",
+    },
+    [`& .${stepLabelClasses.label}`]: {
+      [`& .step-name-label`]: {
+        textDecoration: "solid underline 2px",
+      },
+    },
+    [`& .step-icon`]: {
+      boxShadow: selected ? undefined : "0 0 0 10px #D8D8D8",
+    },
+  },
   [`&.${stepLabelClasses.vertical}`]: {
     paddingTop: 0,
     paddingBottom: 0,
-    color: selected ? "white" : "black",
     [`& .${stepLabelClasses.iconContainer}`]: {
       paddingRight: "2rem",
     },
@@ -51,16 +62,23 @@ const HassuLabel = styled(StepLabel)<{
     },
     [`& .${stepLabelClasses.label}`]: {
       fontSize: "1rem",
-      color: selected ? "white" : active ? "#009AE1" : "black",
+      color: selected ? "white" : "#0064AF",
+      [".step-name-label"]: {
+        display: "block",
+      },
       [".step-status-label"]: {
+        display: "block",
         fontSize: "0.875rem",
-        margin: 0,
-        color: selected ? "white" : "black",
+        color: "black",
       },
     },
   },
   [`& .${stepLabelClasses.disabled}`]: {
     color: "#242222",
+    [".step-name-label"]: {
+      display: "block",
+      color: "black",
+    },
   },
   hyphens: "auto",
 }));
@@ -113,14 +131,10 @@ const HassuStepIconRoot = styled("div")<{
   borderRadius: "50%",
   justifyContent: "center",
   alignItems: "center",
-  ...(ownerState.completed && {
-    "&:hover": { boxShadow: "0 0 0 10px #D8D8D8" },
-  }),
   ...((ownerState.active || ownerState.completed) && {
     backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
   }),
   ...(ownerState.selected && {
-    boxShadow: "0 0 0 10px #009AE1",
     backgroundImage: "linear-gradient(117deg, #0064AF, #0064AF)",
   }),
 }));
@@ -130,7 +144,7 @@ function HassuStepIcon(props: StepIconProps) {
 
   const selected = property === "selected";
 
-  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={className} />;
+  return <HassuStepIconRoot ownerState={{ completed, active, selected }} className={classNames(className, "step-icon")} />;
 }
 
 const statusToPaatosLinkMap: Partial<Record<Status, string>> = {
@@ -214,8 +228,10 @@ export default function ProjektiJulkinenStepper({
               selected={selectedStepIndex === index}
               active={index === activeStepIndex}
             >
-              {step.label}
-              {vertical && selectedStepIndex !== index && <p className="step-status-label">{index === activeStepIndex ? "Käynnissä" : "Valmis"}</p>}
+              <span className="step-name-label">{step.label}</span>
+              {vertical && selectedStepIndex !== index && (
+                <span className="step-status-label">{index === activeStepIndex ? "Käynnissä" : "Valmis"}</span>
+              )}
             </HassuLabel>
           </HassuLink>
         )}
@@ -226,8 +242,8 @@ export default function ProjektiJulkinenStepper({
             StepIconProps={selectedStepIndex === index ? { property: "selected" } : {}}
             selected={selectedStepIndex === index}
           >
-            {step.label}
-            {vertical && <p className="step-status-label">Ei vielä tarkasteltavissa</p>}
+            <span className="step-name-label">{step.label}</span>
+            {vertical && <span className="step-status-label">Ei vielä tarkasteltavissa</span>}
           </HassuLabel>
         )}
       </HassuStep>
