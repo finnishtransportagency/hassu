@@ -154,40 +154,50 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       },
     };
 
-    kasittelynTila.ensimmainenJatkopaatos = {
-      paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
-      asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
-    };
-    kasittelynTila.toinenJatkopaatos = {
-      paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
-      asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
-    };
-    kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
-    kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
-    kasittelynTila.ennakkoneuvotteluPaiva = projekti.kasittelynTila?.ennakkoneuvotteluPaiva ?? null;
-    kasittelynTila.valitustenMaara = projekti.kasittelynTila?.valitustenMaara ?? null;
-    kasittelynTila.lainvoimaAlkaen = projekti.kasittelynTila?.lainvoimaAlkaen ?? null;
-    kasittelynTila.lainvoimaPaattyen = projekti.kasittelynTila?.lainvoimaPaattyen ?? null;
-    kasittelynTila.ennakkotarkastus = projekti.kasittelynTila?.ennakkotarkastus ?? null;
-    kasittelynTila.toimitusKaynnistynyt = projekti.kasittelynTila?.toimitusKaynnistynyt ?? null;
-    kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain ?? null;
-    kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null;
-    kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto ?? null;
-    kasittelynTila.hallintoOikeus =
-      projekti.kasittelynTila?.hallintoOikeus ??
-      ({
-        valipaatos: null,
-        paatos: null,
-        hyvaksymisPaatosKumottu: undefined,
-      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
-    kasittelynTila.korkeinHallintoOikeus =
-      projekti.kasittelynTila?.korkeinHallintoOikeus ??
-      ({
-        valipaatos: null,
-        paatos: null,
-        hyvaksymisPaatosKumottu: undefined,
-      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
-
+    if (projekti.nykyinenKayttaja.onYllapitaja) {
+      if (
+        isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) &&
+        isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1)
+      ) {
+        kasittelynTila.ensimmainenJatkopaatos = {
+          paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
+          asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
+        };
+      }
+      if (isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2)) {
+        kasittelynTila.toinenJatkopaatos = {
+          paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
+          asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
+        };
+      }
+      kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
+      kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
+      kasittelynTila.ennakkoneuvotteluPaiva = projekti.kasittelynTila?.ennakkoneuvotteluPaiva ?? null;
+      kasittelynTila.valitustenMaara = projekti.kasittelynTila?.valitustenMaara ?? null;
+      kasittelynTila.lainvoimaAlkaen = projekti.kasittelynTila?.lainvoimaAlkaen ?? null;
+      kasittelynTila.lainvoimaPaattyen = projekti.kasittelynTila?.lainvoimaPaattyen ?? null;
+      kasittelynTila.ennakkotarkastus = projekti.kasittelynTila?.ennakkotarkastus ?? null;
+      kasittelynTila.toimitusKaynnistynyt = projekti.kasittelynTila?.toimitusKaynnistynyt ?? null;
+      kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain ?? null;
+      kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null;
+      kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto ?? null;
+      if (isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)) {
+        kasittelynTila.hallintoOikeus =
+          projekti.kasittelynTila?.hallintoOikeus ??
+          ({
+            valipaatos: null,
+            paatos: null,
+            hyvaksymisPaatosKumottu: undefined,
+          } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
+        kasittelynTila.korkeinHallintoOikeus =
+          projekti.kasittelynTila?.korkeinHallintoOikeus ??
+          ({
+            valipaatos: null,
+            paatos: null,
+            hyvaksymisPaatosKumottu: undefined,
+          } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
+      }
+    }
     const formValues: KasittelynTilaFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -207,7 +217,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    shouldUnregister: true, //<-
+    shouldUnregister: true,
     context: { projekti },
   };
 
@@ -229,20 +239,22 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const api = useApi();
 
+  const save = useCallback(
+    async (data: KasittelynTilaFormValues, successMessage: string) => {
+      try {
+        const values = removeEmptyValues(data);
+        await api.tallennaProjekti(values);
+        await reloadProjekti();
+        showSuccessMessage(successMessage);
+      } catch (e) {
+        log.log("OnSubmit Error", e);
+      }
+    },
+    [api, reloadProjekti, showSuccessMessage]
+  );
+
   const onSubmit = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const values = removeEmptyValues(data);
-            await api.tallennaProjekti(values);
-            await reloadProjekti();
-            showSuccessMessage("Tallennus onnistui");
-          } catch (e) {
-            log.log("OnSubmit Error", e);
-          }
-        })()
-      ),
+    (data: KasittelynTilaFormValues) => withLoadingSpinner(save(data, "Tallennus onnistui")),
     [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
@@ -256,8 +268,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         (async () => {
           try {
             data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
-            await onSubmit(data);
-            showSuccessMessage("Jatkopäätös lisätty");
+            await save(data, "Jatkopäätös lisätty");
             await new Promise((resolve) => setTimeout(resolve, 1500));
             await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
@@ -266,7 +277,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           setOpenTallenna(false);
         })()
       ),
-    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+    [withLoadingSpinner, save, router, projekti.oid]
   );
 
   const handleClickOpenTallenna = () => {
@@ -286,8 +297,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         (async () => {
           try {
             data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
-            await onSubmit(data);
-            showSuccessMessage("Jatkopäätös lisätty");
+            await save(data, "Jatkopäätös lisätty");
             await new Promise((resolve) => setTimeout(resolve, 1500));
             await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
@@ -296,7 +306,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           setOpenTallenna2(false);
         })()
       ),
-    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+    [withLoadingSpinner, save, router, projekti.oid]
   );
 
   const handleClickOpenTallenna2 = () => {
@@ -327,8 +337,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhoon</ExtLink>.
           </p>
           <SectionContent>
-            {!isFormDisabled && <input type="hidden" {...register("oid")} />}
-            {!isFormDisabled && <input type="hidden" {...register("versio")} />}
+            {<input type="hidden" disabled={isFormDisabled} {...register("oid")} />}
+            {<input type="hidden" disabled={isFormDisabled} {...register("versio")} />}
             <H2>Suunnitelman tila</H2>
             <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon.</p>
             <HassuGrid cols={{ lg: 2 }}>

@@ -67,6 +67,9 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
 });
 
 function SelectHeader<T>(props: HeaderContext<T, unknown>) {
+  if (!props.table) {
+    return <></>;
+  }
   return (
     <Span
       sx={{
