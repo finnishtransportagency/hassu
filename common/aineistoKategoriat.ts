@@ -211,7 +211,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
         hakulauseet: ["Hallinnollis", "213", "2.2T", "R224"],
       },
       { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "214", "3T", "R213"] },
-      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T", "R214"] },
+      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T", "R214", "Y218"] },
       { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaus", "Poikkileikkaukset", "215", "4T"] },
       {
         id: "siltasuunnitelmat_ja_muut_taitorakenteet",
@@ -305,6 +305,12 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "330-1",
           "16T",
           "R313",
+          "Y341",
+          "Y342",
+          "Y351",
+          "Y361",
+          "Melukart",
+          "Tärinäkart",
         ],
       },
       {
@@ -326,6 +332,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "311",
           "6T",
           "R310",
+          "Y312",
           // Hakutermit ulkopuoliset rakenteet kategoriasta
           "Ulkopuolisten raken",
           "Ulkopuolisen raken",
