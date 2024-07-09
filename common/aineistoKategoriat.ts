@@ -307,14 +307,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
       {
         id: "ulkopuoliset_rakenteet",
         hakulauseet: [
-          "Ulkopuolisten raken",
-          "Ulkopuolisen raken",
-          "Ulkopuolisten omistamat raken",
-          "Ulkopuolisen omistamat raken",
-          "Ulkopuoliset raken",
-          "Ulkopuolinen raken",
-          "311",
-          "6T",
+          // Hakutermit siirretty katusuunnitelmat kategoriaan
         ],
       },
       { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T"] },
@@ -327,6 +320,15 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Pyöräteiden suunnitelm",
           "Jalkakäytävän suunnitelm",
           "Jalkakäytävien suunnitelm",
+          "311",
+          "6T",
+          // Hakutermit ulkopuoliset rakenteet kategoriasta
+          "Ulkopuolisten raken",
+          "Ulkopuolisen raken",
+          "Ulkopuolisten omistamat raken",
+          "Ulkopuolisen omistamat raken",
+          "Ulkopuoliset raken",
+          "Ulkopuolinen raken",
           "311",
           "6T",
         ],
