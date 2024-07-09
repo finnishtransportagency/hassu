@@ -314,6 +314,10 @@ export const aineistoKategoriat = new AineistoKategoriat([
         ],
       },
       {
+        id: "ys_osa_c_siltasuunnitelmat_ja_muut_taitorakenteet",
+        hakulauseet: ["Y321", "Y322", "Y331", "Y332", "Silto", "Silta", "Tunneli"],
+      },
+      {
         id: "ulkopuoliset_rakenteet",
         hakulauseet: [
           // Hakutermit siirretty katusuunnitelmat kategoriaan
