@@ -172,7 +172,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
       "Sisällysluettelo",
     ],
     alakategoriat: [
-      { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119"] },
+      { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119", "R120"] },
       {
         id: "suunnitteluprosessiin_liittyva_aineisto",
         hakulauseet: ["Suunnitteluprosessiin liittyvä aineisto", "Kuulutus", "Kutsu", "Esittely", "1.6T"],
@@ -208,14 +208,14 @@ export const aineistoKategoriat = new AineistoKategoriat([
       { id: "yleiskartat", hakulauseet: ["Yleiskartta", "Yleiskartat", "212", "2.1T"] },
       {
         id: "hallinnollisten_jarjestelyiden_kartat",
-        hakulauseet: ["Hallinnollis", "213", "2.2T"],
+        hakulauseet: ["Hallinnollis", "213", "2.2T", "R224"],
       },
-      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "214", "3T"] },
-      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T"] },
+      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "214", "3T", "R213"] },
+      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T", "R214"] },
       { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaus", "Poikkileikkaukset", "215", "4T"] },
       {
         id: "siltasuunnitelmat_ja_muut_taitorakenteet",
-        hakulauseet: ["Silta", "Silto", "Silla", "15T"],
+        hakulauseet: ["Silta", "Silto", "Silla", "15T", "Tunneli", "R217", "R218", "R219"],
       },
       {
         id: "ymparistorakenteet_esim_meluesteet",
@@ -252,6 +252,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Maantien toimenpi",
           "Liikennetekninen poikkileikkaus",
           "Liikennetekniset poikkileikkaukset",
+          "R216",
         ],
       },
       {
@@ -274,6 +275,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Yleiskartat rakentamisen ajaksi",
           "Käyttöoikeuskart",
           "217",
+          "R223",
         ],
       },
     ],
@@ -302,6 +304,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "330",
           "330-1",
           "16T",
+          "R313",
         ],
       },
       {
@@ -310,7 +313,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           // Hakutermit siirretty katusuunnitelmat kategoriaan
         ],
       },
-      { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T"] },
+      { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T", "R315"] },
       {
         id: "katusuunnitelmat",
         hakulauseet: [
@@ -322,6 +325,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Jalkakäytävien suunnitelm",
           "311",
           "6T",
+          "R310",
           // Hakutermit ulkopuoliset rakenteet kategoriasta
           "Ulkopuolisten raken",
           "Ulkopuolisen raken",
@@ -329,8 +333,6 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Ulkopuolisen omistamat raken",
           "Ulkopuoliset raken",
           "Ulkopuolinen raken",
-          "311",
-          "6T",
         ],
       },
       {
@@ -345,6 +347,7 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "Meluesteen periaatekuv",
           "Ympäristökuv",
           "7.4T",
+          "R312",
         ],
       },
       {
@@ -358,16 +361,17 @@ export const aineistoKategoriat = new AineistoKategoriat([
           "321",
           "322",
           "7.1T",
+          "R311",
         ],
       },
-      { id: "muut_selvitykset" },
+      { id: "muut_selvitykset", hakulauseet: ["R314"] },
       {
         id: "valaistuksen_ja_liikenteenohjauksen_yleiskartat",
         hakulauseet: ["Valaistu", "Liikenteenohjau", "Viitoitu", "312", "313", "11T", "12T"],
       },
       {
         id: "johtosiirrot_ja_kunnallistekniset_suunnitelmat",
-        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet", "6T"],
+        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet"],
       },
     ],
   },
