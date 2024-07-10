@@ -1,11 +1,12 @@
 import { describe, it } from "mocha";
-import { aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 
 import { expect } from "chai";
+import { ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 
 describe("AineistoKategoria", () => {
   it("should find correct kategoria based on matching", () => {
-    const aineistoKategoria = aineistoKategoriat.findKategoria(
+    const aineistoKategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria(
       "01 Prosessi/Yleiset/T100 Tiesuunnitelman selostusosa",
       "T119 Kaavakartat, määräykset ja merkinnät.txt"
     );
@@ -13,7 +14,7 @@ describe("AineistoKategoria", () => {
     expect(aineistoKategoria.parentKategoria?.id).to.eq("osa_a");
 
     expect(
-      aineistoKategoriat.findKategoria(
+      getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria(
         "06 Suunnitelma/Suunnitelmakokonaisuus/T300 Tiesuunnitelman informatiivinen aineisto",
         "T320 Ympäristösuunnitelma.txt"
       ).id
@@ -21,19 +22,19 @@ describe("AineistoKategoria", () => {
   });
 
   it("should return 'kategorisoimaton' when no matches to any other ylakategoria", () => {
-    const osaA = aineistoKategoriat.findKategoria("unknown", "unknown");
+    const osaA = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("unknown", "unknown");
     expect(osaA.id).to.eq(kategorisoimattomatId);
   });
 
   it("should match first matching ylakategoria", () => {
-    const osaA = aineistoKategoriat.findKategoria("t200 t100", "t200 t100");
+    const osaA = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t200 t100", "t200 t100");
     expect(osaA.id).to.eq("osa_a");
-    const osaB = aineistoKategoriat.findKategoria("t200 t300", "t200 t300");
+    const osaB = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t200 t300", "t200 t300");
     expect(osaB.id).to.eq("osa_b");
   });
 
   it("should match first matching alakategoria", () => {
-    const kaavakartta = aineistoKategoriat.findKategoria("t100 yva kaavakartta", "t100 yva kaavakartta");
+    const kaavakartta = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t100 yva kaavakartta", "t100 yva kaavakartta");
     expect(kaavakartta.id).to.eq("kaavakartat");
     expect(kaavakartta.parentKategoria?.id).to.eq("osa_a");
   });
@@ -41,7 +42,7 @@ describe("AineistoKategoria", () => {
   it("shouldn't match yva if it's surrounded by alphabet", () => {
     const stringsContainingYva = ["hyväksymispäätös", "hyvaksymispaatos"];
     stringsContainingYva.forEach((stringContainingYva) => {
-      const kategoria = aineistoKategoriat.findKategoria("t100", stringContainingYva);
+      const kategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t100", stringContainingYva);
       expect(kategoria.id).to.eq("osa_a");
     });
   });
@@ -58,7 +59,7 @@ describe("AineistoKategoria", () => {
       "ympäristövaikuksen arvionti (yva)",
     ];
     shouldMatchYva.forEach((stringMatchingYva) => {
-      const kategoria = aineistoKategoriat.findKategoria("t100", stringMatchingYva);
+      const kategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t100", stringMatchingYva);
       expect(kategoria.id).to.eq("yva");
       expect(kategoria.parentKategoria?.id).to.eq("osa_a");
     });
@@ -67,7 +68,7 @@ describe("AineistoKategoria", () => {
   it("should match osa_a if it's kuvaus directory path contains 'a' folder", () => {
     const kuvauksetContainingFolderA = ["a", "/a", "a/", "/a/", "tiesuunnitelma/a", "tiesuunnitelma/a/", "tiesuunnitelma/a/aineisto"];
     kuvauksetContainingFolderA.forEach((kuvausContainingFolderA) => {
-      const kategoria = aineistoKategoriat.findKategoria(kuvausContainingFolderA, "unknown");
+      const kategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria(kuvausContainingFolderA, "unknown");
       expect(kategoria.id).to.eq("osa_a");
     });
   });
@@ -85,7 +86,7 @@ describe("AineistoKategoria", () => {
       "a1",
     ];
     kuvauksetContainingCharacterA.forEach((kuvausContainingCharacterA) => {
-      const kategoria = aineistoKategoriat.findKategoria(kuvausContainingCharacterA, "unknown");
+      const kategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria(kuvausContainingCharacterA, "unknown");
       expect(kategoria.id).to.eq(kategorisoimattomatId);
     });
   });
@@ -102,18 +103,18 @@ describe("AineistoKategoria", () => {
       "ympäristövaikuksen arvionti (yva)",
     ];
     shouldMatchYva.forEach((stringMatchingYva) => {
-      const kategoria = aineistoKategoriat.findKategoria("t100", stringMatchingYva);
+      const kategoria = getAineistoKategoriat(ProjektiTyyppi.TIE).findKategoria("t100", stringMatchingYva);
       expect(kategoria.id).to.eq("yva");
       expect(kategoria.parentKategoria?.id).to.eq("osa_a");
     });
   });
 
   it("should find correct kategoria based on id", () => {
-    expect(aineistoKategoriat.findById("kaavakartat")?.id).to.eq("kaavakartat");
+    expect(getAineistoKategoriat(ProjektiTyyppi.TIE).findById("kaavakartat")?.id).to.eq("kaavakartat");
   });
 
   it("should list category tree successfully", () => {
-    expect(aineistoKategoriat.listKategoriat()).to.not.be.empty;
-    expect(aineistoKategoriat.listKategoriat()[0].alaKategoriat).to.not.be.empty;
+    expect(getAineistoKategoriat(ProjektiTyyppi.TIE).listKategoriat()).to.not.be.empty;
+    expect(getAineistoKategoriat(ProjektiTyyppi.TIE).listKategoriat()[0].alaKategoriat).to.not.be.empty;
   });
 });

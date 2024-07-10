@@ -4,9 +4,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { HyvaksymisPaatosVaihe } from "@services/api";
-import { aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { Key, useState } from "react";
+import React, { Key, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   combineOldAndNewAineistoWithCategories,
@@ -22,9 +22,10 @@ export interface AineistoLomakeProps {
   dialogInfoText: string;
   sectionSubtitle?: string;
   vaihe: HyvaksymisPaatosVaihe | null | undefined;
+  aineistoKategoriat: AineistoKategoriat;
 }
 
-export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe }: AineistoLomakeProps) {
+export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe, aineistoKategoriat }: Readonly<AineistoLomakeProps>) {
   const { watch, setValue, getValues } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
@@ -34,18 +35,28 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
 
+  const { findKategoria, kategoriaIds, kategoriat } = useMemo(() => {
+    return {
+      kategoriat: aineistoKategoriat.listKategoriat(true),
+      kategoriaIds: aineistoKategoriat.listKategoriaIds(),
+      findKategoria: aineistoKategoriat.findKategoria,
+    };
+  }, [aineistoKategoriat]);
   return (
     <Section>
       {sectionSubtitle && <h4 className="vayla-small-title mt-10">{sectionSubtitle}</h4>}
-      <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+      <AccordionToggleButton
+        expandedAineisto={expandedAineisto}
+        setExpandedAineisto={setExpandedAineisto}
+        aineistoKategoriaIds={kategoriaIds}
+      />
       <HassuAccordion
         expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
+        items={kategoriat.map((paakategoria) => ({
           title: (
-            <H4 className="vayla-small-title mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
-              aineistoNahtavillaFlat,
-              paakategoria
-            )})`}</H4>
+            <H4 className="vayla-small-title mb-0">{`${t(
+              `aineisto-kategoria-nimi.${paakategoria.id}`
+            )} (${getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})`}</H4>
           ),
           content: (
             <SectionContent largeGaps>
@@ -53,7 +64,7 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
                 aineisto={vaihe?.aineistoNahtavilla}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
-                dialogInfoText={dialogInfoText}
+                kaikkiKategoriat={kategoriat}
               />
             </SectionContent>
           ),
@@ -68,7 +79,7 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe 
         infoText={dialogInfoText}
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
-          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot);
+          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, findKategoria);
           const newAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
             oldAineisto: aineistoNahtavilla,
             newAineisto,

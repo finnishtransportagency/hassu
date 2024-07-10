@@ -40,7 +40,7 @@ async function handleNahtavillaoloZipping(ctx: ImportContext) {
   const aineistopakettiFullS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
   log.info("luodaan nähtävilläolon aineistopaiketti, key: " + aineistopakettiFullS3Key);
-  await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, ctx.projekti.velho?.tyyppi);
 
   const aineistopakettiRelativeS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
@@ -86,7 +86,7 @@ async function handleLausuntoPyyntoZipping(ctx: ImportContext, uuid: string) {
   const aineistopakettiFullS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoFullPath + "/aineisto.zip";
 
   log.info("luodaan lausuntopyynnön aineistopaketti, key: " + aineistopakettiFullS3Key);
-  await lausuntoPyyntoTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.uuid);
+  await lausuntoPyyntoTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.uuid, ctx.projekti.velho?.tyyppi);
   const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoPath + "/aineisto.zip";
 
   const lausuntoPyyntoWithAineistopaketti = { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };

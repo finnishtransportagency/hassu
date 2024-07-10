@@ -11,6 +11,7 @@ import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArra
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
 import AineistoSivunPainikkeet from "@components/projekti/AineistoSivunPainikkeet";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -32,7 +33,12 @@ interface MuokkausnakymaLomakeProps {
   projekti: ProjektiLisatiedolla;
 }
 
-function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
+function MuokkausnakymaLomake({ projekti }: Readonly<MuokkausnakymaLomakeProps>) {
+  const { aineistoKategoriat, kategoriaIds } = useMemo(() => {
+    const aineistoKategoriat = getAineistoKategoriat(projekti.velho.tyyppi);
+    return { aineistoKategoriat, kategoriaIds: aineistoKategoriat.listKategoriaIds() };
+  }, [projekti.velho.tyyppi]);
+
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
     const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
       projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
@@ -42,10 +48,10 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
     return {
       oid: projekti.oid,
       versio: projekti.versio,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla, kategoriaIds),
       poistetutAineistoNahtavilla,
     };
-  }, [projekti]);
+  }, [kategoriaIds, projekti]);
 
   const validationMode = useValidationMode();
 
@@ -72,7 +78,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   return (
     <FormProvider {...useFormReturn}>
       <form>
-        <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} />
+        <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} aineistoKategoriat={aineistoKategoriat} />
         <AineistoSivunPainikkeet
           siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
           muokkausTila={projekti.nahtavillaoloVaihe?.muokkausTila}

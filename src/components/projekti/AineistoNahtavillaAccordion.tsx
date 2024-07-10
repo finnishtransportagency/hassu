@@ -34,7 +34,7 @@ export const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAc
           title: (
             <span>
               {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
-              {" (" + getNestedAineistoMaaraForCategory(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
+              {" (" + getNestedAineistoMaaraForCategory(julkaisu.aineistoNahtavilla ?? [], kategoria) + ")"}
             </span>
           ),
           content: (
@@ -65,7 +65,7 @@ export const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAc
         })),
     [kategoriat, julkaisu, paakategoria, t]
   );
-  return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
+  return accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
 };
 
 const AineistoRow = styled("span")(sx({ display: "flex", gap: 3 }));

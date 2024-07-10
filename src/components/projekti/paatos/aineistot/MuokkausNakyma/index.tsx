@@ -18,6 +18,7 @@ import TiedostoLomake from "./TiedostoLomake";
 import { getDialogInfoText, getSectionInfoText, getSectionTitle } from "./textsForDifferentPaatos";
 import Section from "@components/layout/Section2";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -59,6 +60,14 @@ function MuokkausnakymaForm({
   paatosTyyppi,
   julkaisu,
 }: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu">) {
+  const { aineistoKategoriat, kategoriaIds } = useMemo(() => {
+    const aineistoKategoriat = getAineistoKategoriat(projekti.velho.tyyppi);
+    return {
+      aineistoKategoriat,
+      kategoriaIds: aineistoKategoriat.listKategoriaIds(),
+    };
+  }, [projekti.velho.tyyppi]);
+
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = handleAineistoArrayForDefaultValues(
       julkaisematonPaatos?.hyvaksymisPaatos,
@@ -72,7 +81,7 @@ function MuokkausnakymaForm({
     const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla, kategoriaIds),
       poistetutAineistoNahtavilla,
     };
 
@@ -82,7 +91,7 @@ function MuokkausnakymaForm({
     }
 
     return defaultFormValues;
-  }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
+  }, [julkaisematonPaatos, projekti.oid, projekti.versio, kategoriaIds]);
 
   const validationMode = useValidationMode();
 
@@ -104,6 +113,7 @@ function MuokkausnakymaForm({
   useLeaveConfirm(isDirty);
 
   const { reset } = useFormReturn;
+
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
@@ -117,7 +127,12 @@ function MuokkausnakymaForm({
             <p>{getSectionInfoText(paatosTyyppi)}</p>
             <AineistotSaavutettavuusOhje />
             <TiedostoLomake vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
-            <AineistoLomake dialogInfoText={getDialogInfoText(paatosTyyppi)} vaihe={julkaisematonPaatos} sectionSubtitle="Päätöksen liitteenä oleva aineisto"/>
+            <AineistoLomake
+              dialogInfoText={getDialogInfoText(paatosTyyppi)}
+              vaihe={julkaisematonPaatos}
+              sectionSubtitle="Päätöksen liitteenä oleva aineisto"
+              aineistoKategoriat={aineistoKategoriat}
+            />
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}

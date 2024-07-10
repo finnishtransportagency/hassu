@@ -1,4 +1,4 @@
-import { AineistoTila, Kieli, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Kieli, LadattuTiedostoTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { Aineisto, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { PathTuple } from "../../files/ProjektiPath";
 import { forEverySaameDo } from "../../projekti/adapter/common";
@@ -10,15 +10,18 @@ import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { nyt } from "../../util/dateUtil";
 import { deleteFile, persistLadattuTiedosto } from "../../files/persistFiles";
 import { translate } from "../../util/localization";
-import { AineistoKategoria, aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { AineistoKategoria, getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { omit } from "lodash";
 
-export function getZipFolder(kategoriaId: string | undefined | null): string | undefined {
+export function getZipFolder(
+  kategoriaId: string | undefined | null,
+  projektiTyyppi: ProjektiTyyppi | null | undefined
+): string | undefined {
   if (!kategoriaId) {
     return undefined;
   }
   let path = "";
-  let category: AineistoKategoria | undefined = aineistoKategoriat.findById(kategoriaId);
+  let category: AineistoKategoria | undefined = getAineistoKategoriat(projektiTyyppi).findById(kategoriaId);
   while (category) {
     path = translate("aineisto-kategoria-nimi." + category.id, Kieli.SUOMI) + "/" + path;
     category = category.parentKategoria;

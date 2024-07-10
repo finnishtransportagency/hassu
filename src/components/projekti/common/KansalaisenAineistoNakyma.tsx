@@ -11,10 +11,9 @@ import {
 } from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
+import { AineistoKategoria, getAineistoKategoriat } from "common/aineistoKategoriat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
-import { kuntametadata } from "hassu-common/kuntametadata";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
@@ -26,24 +25,18 @@ type Props = {
   paatos?: boolean;
 };
 
-export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudelleenKuulutus, paatos }: Props): ReactElement {
-  const { t, lang } = useTranslation("projekti");
+export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudelleenKuulutus, paatos }: Readonly<Props>): ReactElement {
+  const { t } = useTranslation("projekti");
 
   const [expandedToimeksiannot, setExpandedToimeksiannot] = useState<Key[]>([]);
   const areToimeksiannotExpanded = !!expandedToimeksiannot.length;
 
   const velho = projekti?.velho;
 
+  const aineistoKategoriat = useMemo(() => getAineistoKategoriat(velho.tyyppi).listKategoriat(), [velho.tyyppi]);
+
   if (!projekti || !kuulutus || !velho) {
     return <></>;
-  }
-
-  let sijainti = "";
-  if (velho.maakunnat) {
-    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
-  }
-  if (velho.kunnat) {
-    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const getAlaKategoryIds = (aineistoKategoriat: AineistoKategoria[]) => {
@@ -77,7 +70,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
             if (areToimeksiannotExpanded) {
               setExpandedToimeksiannot([]);
             } else {
-              setExpandedToimeksiannot(getAlaKategoryIds(aineistoKategoriat.listKategoriat()));
+              setExpandedToimeksiannot(getAlaKategoryIds(aineistoKategoriat));
             }
           }}
           iconComponent={
@@ -92,12 +85,12 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
       )}
       {!isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
         <AineistoKategoriaAccordion
-          aineistoKategoriat={aineistoKategoriat.listKategoriat()}
+          aineistoKategoriat={aineistoKategoriat}
           aineistot={kuulutus.aineistoNahtavilla}
           expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
           paakategoria
-          julkaisuPaiva={kuulutus.kuulutusPaiva || undefined}
-          alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
+          julkaisuPaiva={kuulutus.kuulutusPaiva ?? undefined}
+          alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva ?? undefined}
         />
       )}
     </SectionContent>
@@ -119,16 +112,12 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
   const aineistoKategoriaItems: AccordionItem[] = useMemo(() => {
     const aineistotKategorioittain =
       props.aineistoKategoriat?.reduce<{ kategoria: AineistoKategoria; aineisto: Aineisto[] }[]>((acc, kategoria) => {
-        const kategorianAineistot = props.aineistot?.filter(
-          (aineisto) =>
-            kategoria.id === aineisto.kategoriaId ||
-            kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-        );
+        const kategorianAineistot = props.aineistot?.filter(aineistoIsFromCategoryOrSubcategory(kategoria));
         if (props.paakategoria || !!kategorianAineistot?.length) {
-          acc.push({ kategoria, aineisto: kategorianAineistot || [] });
+          acc.push({ kategoria, aineisto: kategorianAineistot ?? [] });
         }
         return acc;
-      }, []) || [];
+      }, []) ?? [];
 
     return aineistotKategorioittain.map<AccordionItem>(({ kategoria, aineisto }) => {
       const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
@@ -203,3 +192,8 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
     </>
   );
 };
+
+function aineistoIsFromCategoryOrSubcategory(kategoria: AineistoKategoria): (value: Aineisto) => boolean {
+  return (aineisto) =>
+    kategoria.id === aineisto.kategoriaId || !!kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId);
+}
