@@ -34,7 +34,7 @@ export function adaptHyvaksymisEsitysToAPI(
   const hyvaksymisEsitys =
     muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY ? julkaistuHyvaksymisEsitys : muokattavaHyvaksymisEsitys;
   const julkaistu = muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY;
-  const aineistotHandledAt = julkaistu || projekti.aineistoHandledAt;
+  const aineistotHandledAt = projekti.aineistoHandledAt;
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
 
