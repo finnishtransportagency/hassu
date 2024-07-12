@@ -38,7 +38,9 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
     const uusiMuuAineistoVelhosta = muuAineistoVelhosta?.some(
       (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
     );
-    return uusiSuunnitelmaAineisto || uusiMuuAineistoVelhosta;
+    const suunnitelmaAineistojaTuomatta = hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((aineisto) => !aineisto.tuotu);
+    const velhoAineistojaTuomatta = hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((aineisto) => !aineisto.tuotu);
+    return uusiSuunnitelmaAineisto || uusiMuuAineistoVelhosta || suunnitelmaAineistojaTuomatta || velhoAineistojaTuomatta;
   }, [
     hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta,
     hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma,
