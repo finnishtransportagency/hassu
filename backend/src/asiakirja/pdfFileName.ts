@@ -135,6 +135,6 @@ export function createPDFFileName(
   if (kaannos) {
     return kaannos;
   } else {
-    throw new Error(`Puuttu käännös tiedostonimi.${pdfType}:lle`);
+    throw new Error(`Puuttuu käännös tiedostonimi.${pdfType}:lle`);
   }
 }

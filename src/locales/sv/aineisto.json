@@ -4,6 +4,7 @@
     "kaavakartat": "Plankartor",
     "suunnitteluprosessiin_liittyva_aineisto": "Material i anslutning till planeringsprocessen",
     "yva": "MKB",
+
     "osa_b": "Huvudritningar",
     "yleiskartat": "Översiktskartor",
     "hallinnollisten_jarjestelyiden_kartat": "Kartor över administrativa arrangemang",
@@ -18,9 +19,9 @@
     "maanteiden_liittyvat_toimenpiteet_ratasuunnitelmassa": "Vägrelaterade åtgärder i spårplanen",
     "rataan_liittyvat_toimenpiteet_tiesuunnitelmassa": "Spårrelaterade åtgärder i vägplanen",
     "muut_piirustukset_ja_kuvat": "Övriga ritningar och bilder",
+
     "osa_c": "Informativt material",
     "vaikutuksia_kuvaavat_selvitykset": "Utredningar som beskriver konsekvenserna",
-    "ulkopuoliset_rakenteet": "Utomstående konstruktioner",
     "tutkitut_vaihtoehdot": "Undersökta alternativ",
     "katusuunnitelmat": "Gatuplaner och övriga utomstående konstruktioner",
     "visualisointikuvat": "Visualiseringsbilder",
@@ -28,7 +29,10 @@
     "muut_selvitykset": "Övriga utredningar",
     "valaistuksen_ja_liikenteenohjauksen_yleiskartat": "Översiktskartor över belysning och trafikledning",
     "johtosiirrot_ja_kunnallistekniset_suunnitelmat": "Förflyttning av ledningar och kommunaltekniska planer",
-    "kategorisoimattomat": "Okategoriserad"
+
+    "kategorisoimattomat": "Okategoriserad",
+
+    "ulkopuoliset_rakenteet": "Utomstående konstruktioner"
   },
   "lisa-aineisto": "Ytterligare material bifogat utlåtandebegäran",
   "uusi-aineisto": "Nytt material",

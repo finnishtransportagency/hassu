@@ -5,14 +5,13 @@ import {
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
-  NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   Velho,
   VuorovaikutusKierros,
 } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
-import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { GenericDbKuulutusJulkaisu, findJulkaisuWithTila } from "../projektiUtil";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
@@ -31,7 +30,7 @@ type JulkaisunTarpeellisetTiedot = Pick<
 type NahtavillaoloVaiheenTarpeellisetTiedot = Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla">;
 type HyvaksymisVaiheenTarpeellisetTiedot = Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos">;
 type ProjektiForGetStatus = Pick<DBProjekti, "kielitiedot" | "euRahoitus" | "kayttoOikeudet" | "vahainenMenettely" | "kasittelynTila"> & {
-  velho?: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi" | "asiatunnusELY" | "asiatunnusVayla"> | null;
+  velho?: Pick<Velho, "suunnittelustaVastaavaViranomainen" | "nimi" | "asiatunnusELY" | "asiatunnusVayla" | "tyyppi"> | null;
   aloitusKuulutusJulkaisut?: Pick<AloitusKuulutusJulkaisu, "tila" | "kuulutusPaiva">[] | null;
   vuorovaikutusKierros?: Pick<VuorovaikutusKierros, "tila"> | null;
   nahtavillaoloVaihe?: NahtavillaoloVaiheenTarpeellisetTiedot | null;
@@ -61,13 +60,15 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
 
   const jatkoPaatos2Julkaisu = getJulkaisu(projekti.jatkoPaatos2VaiheJulkaisut);
 
-  if (projektiOnEpaAktiivinen3({ jatkoPaatos2Julkaisu })) {
+  if (projektiOnEpaAktiivinen3(jatkoPaatos2Julkaisu)) {
     return API.Status.EPAAKTIIVINEN_3;
   }
   const jatkoPaatos2Vaihe = projekti.jatkoPaatos2Vaihe;
 
+  const aineistoKategoriat = getAineistoKategoriat(projekti.velho?.tyyppi).listKategoriaIds();
+
   const jatkoPaatos2VaiheAineistoKunnossa =
-    aineistoNahtavillaIsOk(jatkoPaatos2Vaihe?.aineistoNahtavilla) && !!jatkoPaatos2Vaihe?.hyvaksymisPaatos?.length;
+    aineistoNahtavillaIsOk(jatkoPaatos2Vaihe?.aineistoNahtavilla, aineistoKategoriat) && !!jatkoPaatos2Vaihe?.hyvaksymisPaatos?.length;
 
   const kasittelynTila = projekti.kasittelynTila;
 
@@ -81,14 +82,14 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
 
   const jatkoPaatos1Julkaisu = getJulkaisu(projekti.jatkoPaatos1VaiheJulkaisut);
 
-  if (projektiOnVahintaanEpaAktiivinen2({ jatkoPaatos1Julkaisu })) {
+  if (projektiOnVahintaanEpaAktiivinen2(jatkoPaatos1Julkaisu)) {
     return API.Status.EPAAKTIIVINEN_2;
   }
 
   const jatkoPaatos1Vaihe = projekti.jatkoPaatos1Vaihe;
 
   const jatkoPaatos1VaiheAineistoKunnossa =
-    aineistoNahtavillaIsOk(jatkoPaatos1Vaihe?.aineistoNahtavilla) && !!jatkoPaatos1Vaihe?.hyvaksymisPaatos?.length;
+    aineistoNahtavillaIsOk(jatkoPaatos1Vaihe?.aineistoNahtavilla, aineistoKategoriat) && !!jatkoPaatos1Vaihe?.hyvaksymisPaatos?.length;
 
   if (projektinStatusOnVahintaanJatkoPaatos1({ kasittelynTila, jatkoPaatos1VaiheAineistoKunnossa })) {
     return API.Status.JATKOPAATOS_1;
@@ -98,7 +99,7 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
     return API.Status.JATKOPAATOS_1_AINEISTOT;
   }
 
-  if (projektinStatusOnVahintaanEpaAktiivinen1({ projekti })) {
+  if (projektinStatusOnVahintaanEpaAktiivinen1(projekti)) {
     return API.Status.EPAAKTIIVINEN_1;
   }
 
@@ -110,7 +111,7 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
       isDateTimeInThePast(nahtavillaoloVaihePaattyyPaiva, "end-of-day")) ||
     nahtavillaoloJulkaisunTila == API.KuulutusJulkaisuTila.MIGROITU;
   const hyvaksymisPaatosVaiheAineistoKunnossa =
-    aineistoNahtavillaIsOk(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla) &&
+    aineistoNahtavillaIsOk(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla, aineistoKategoriat) &&
     !!projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.length;
 
   if (
@@ -138,25 +139,34 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
     return API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT;
   }
 
-  if (projektinStatusOnVahintaanNahtavillaolo({ projekti })) {
+  if (
+    projektinStatusOnVahintaanNahtavillaolo({
+      nahtavillaoloVaihe: projekti.nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisu,
+      aineistoKategoriat,
+    })
+  ) {
     return API.Status.NAHTAVILLAOLO;
   }
 
-  if (projektinStatusOnVahintaanNahtavillaoloAineistot({ projekti })) {
+  if (projektinStatusOnVahintaanNahtavillaoloAineistot(projekti)) {
     return API.Status.NAHTAVILLAOLO_AINEISTOT;
   }
 
-  if (projektinStatusOnVahintaanSuunnittelu({ projekti })) {
+  if (projektinStatusOnVahintaanSuunnittelu(projekti)) {
     return API.Status.SUUNNITTELU;
   }
 
   return API.Status.ALOITUSKUULUTUS;
 }
 
-function aineistoNahtavillaIsOk(aineistoNahtavilla?: Aineisto[] | null | undefined): boolean {
+function aineistoNahtavillaIsOk(aineistoNahtavilla: Aineisto[] | null | undefined, aineistoKategoriat: string[]): boolean {
   return (
     !!aineistoNahtavilla?.length &&
-    !aineistoNahtavilla.some((aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId)
+    !aineistoNahtavilla.some(
+      (aineisto) =>
+        !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId || !aineistoKategoriat.includes(aineisto.kategoriaId)
+    )
   );
 }
 
@@ -218,11 +228,9 @@ async function projektinPerustiedoissaOnOngelma(projekti: ProjektiForGetStatus):
   return false;
 }
 
-function projektiOnEpaAktiivinen3({
-  jatkoPaatos2Julkaisu,
-}: {
-  jatkoPaatos2Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined;
-}): boolean {
+function projektiOnEpaAktiivinen3(
+  jatkoPaatos2Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
+): boolean {
   const jatkoPaatos2JulkaisunTila = jatkoPaatos2Julkaisu?.tila;
   const kuulutusJP2VaihePaattyyPaiva = jatkoPaatos2Julkaisu?.kuulutusVaihePaattyyPaiva;
   if (
@@ -269,11 +277,9 @@ function projektinStatusOnVahintaanJatkoPaatos2Aineistot({
   return false;
 }
 
-function projektiOnVahintaanEpaAktiivinen2({
-  jatkoPaatos1Julkaisu,
-}: {
-  jatkoPaatos1Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined;
-}): boolean {
+function projektiOnVahintaanEpaAktiivinen2(
+  jatkoPaatos1Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
+): boolean {
   const jatkoPaatos1JulkaisunTila = jatkoPaatos1Julkaisu?.tila;
   const kuulutusJP1VaihePaattyyPaiva = jatkoPaatos1Julkaisu?.kuulutusVaihePaattyyPaiva;
 
@@ -321,10 +327,8 @@ function projektinStatusOnVahintaanJatkoPaatos1Aineistot({
   return false;
 }
 
-function projektinStatusOnVahintaanEpaAktiivinen1({
-  projekti,
-}: {
-  projekti: { hyvaksymisPaatosVaiheJulkaisut?: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva">[] | null };
+function projektinStatusOnVahintaanEpaAktiivinen1(projekti: {
+  hyvaksymisPaatosVaiheJulkaisut?: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva">[] | null;
 }): boolean {
   const hyvaksymisPaatosJulkaisu = getJulkaisu(projekti.hyvaksymisPaatosVaiheJulkaisut);
   const hyvaksymisPaatosJulkaisunTila = hyvaksymisPaatosJulkaisu?.tila;
@@ -393,28 +397,29 @@ function projektinStatusOnVahintaanHyvaksymismenettelyssaAineistot({
 }
 
 function projektinStatusOnVahintaanNahtavillaolo({
-  projekti,
+  nahtavillaoloVaiheJulkaisu,
+  nahtavillaoloVaihe,
+  aineistoKategoriat,
 }: {
-  projekti: {
-    nahtavillaoloVaiheJulkaisut?: Record<string, any>[] | null;
-    nahtavillaoloVaihe?: Pick<NahtavillaoloVaihe, "aineistoNahtavilla"> | null;
-  };
+  nahtavillaoloVaiheJulkaisu: JulkaisunTarpeellisetTiedot | undefined;
+  nahtavillaoloVaihe: NahtavillaoloVaiheenTarpeellisetTiedot | null | undefined;
+  aineistoKategoriat: string[];
 }): boolean {
-  const nahtavillaoloVaiheAineistoKunnossa = aineistoNahtavillaIsOk(projekti.nahtavillaoloVaihe?.aineistoNahtavilla);
-  if (projekti.nahtavillaoloVaiheJulkaisut?.length || nahtavillaoloVaiheAineistoKunnossa) {
+  const nahtavillaoloVaiheAineistoKunnossa = aineistoNahtavillaIsOk(nahtavillaoloVaihe?.aineistoNahtavilla, aineistoKategoriat);
+  if (
+    nahtavillaoloVaiheJulkaisu?.tila === API.KuulutusJulkaisuTila.MIGROITU ||
+    (nahtavillaoloVaiheJulkaisu && nahtavillaoloVaiheAineistoKunnossa)
+  ) {
     return true;
   }
+
   return false;
 }
 
-function projektinStatusOnVahintaanNahtavillaoloAineistot({
-  projekti,
-}: {
-  projekti: {
-    aloitusKuulutusJulkaisut?: Record<string, any>[] | null;
-    vuorovaikutusKierros?: Pick<VuorovaikutusKierros, "tila"> | null;
-    vahainenMenettely?: boolean | null;
-  };
+function projektinStatusOnVahintaanNahtavillaoloAineistot(projekti: {
+  aloitusKuulutusJulkaisut?: Record<string, unknown>[] | null;
+  vuorovaikutusKierros?: Pick<VuorovaikutusKierros, "tila"> | null;
+  vahainenMenettely?: boolean | null;
 }): boolean {
   if (
     projekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.MIGROITU ||
@@ -426,13 +431,9 @@ function projektinStatusOnVahintaanNahtavillaoloAineistot({
   return false;
 }
 
-function projektinStatusOnVahintaanSuunnittelu({
-  projekti,
-}: {
-  projekti: {
-    aloitusKuulutusJulkaisut?: Record<string, any>[] | null;
-    vahainenMenettely?: boolean | null;
-  };
+function projektinStatusOnVahintaanSuunnittelu(projekti: {
+  aloitusKuulutusJulkaisut?: Record<string, unknown>[] | null;
+  vahainenMenettely?: boolean | null;
 }): boolean {
   if (!!projekti.aloitusKuulutusJulkaisut?.length && !projekti.vahainenMenettely) {
     return true;

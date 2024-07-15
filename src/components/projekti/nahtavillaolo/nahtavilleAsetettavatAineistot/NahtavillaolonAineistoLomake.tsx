@@ -35,13 +35,13 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
 
-  const { kategoriat, kategoriaIdt, findKategoria } = useMemo(() => {
-    return {
+  const { kategoriat, kategoriaIdt } = useMemo(
+    () => ({
       kategoriaIdt: aineistoKategoriat.listKategoriaIds(),
       kategoriat: aineistoKategoriat.listKategoriat(true),
-      findKategoria: aineistoKategoriat.findKategoria,
-    };
-  }, [aineistoKategoriat]);
+    }),
+    [aineistoKategoriat]
+  );
 
   return (
     <Section>
@@ -87,7 +87,7 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
         infoText={"Valitse tiedostot, jotka haluat tuoda nähtäville."}
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
-          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, findKategoria);
+          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, aineistoKategoriat);
           const uusiAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
             oldAineisto: aineistoNahtavilla,
             newAineisto,

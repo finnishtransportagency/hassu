@@ -3,10 +3,10 @@ import HassuAccordion from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
-import { HyvaksymisPaatosVaihe } from "@services/api";
+import { HyvaksymisPaatosVaihe, VelhoAineisto } from "@services/api";
 import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { Key, useMemo, useState } from "react";
+import React, { Key, useCallback, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   combineOldAndNewAineistoWithCategories,
@@ -35,13 +35,32 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe,
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
 
-  const { findKategoria, kategoriaIds, kategoriat } = useMemo(() => {
-    return {
+  const { kategoriaIds, kategoriat } = useMemo(
+    () => ({
       kategoriat: aineistoKategoriat.listKategoriat(true),
       kategoriaIds: aineistoKategoriat.listKategoriaIds(),
-      findKategoria: aineistoKategoriat.findKategoria,
-    };
-  }, [aineistoKategoriat]);
+    }),
+    [aineistoKategoriat]
+  );
+
+  const onSubmit = useCallback(
+    (valitutVelhoAineistot: VelhoAineisto[]): void => {
+      const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, aineistoKategoriat);
+      const newAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
+        oldAineisto: aineistoNahtavilla,
+        newAineisto,
+      });
+      setValue("aineistoNahtavilla", newAineistoNahtavilla, { shouldDirty: true });
+
+      const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);
+
+      if (kategorisoimattomat?.length && !expandedAineisto.includes(kategorisoimattomatId)) {
+        setExpandedAineisto([...expandedAineisto, kategorisoimattomatId]);
+      }
+    },
+    [aineistoNahtavilla, expandedAineisto, aineistoKategoriat, getValues, setValue]
+  );
+
   return (
     <Section>
       {sectionSubtitle && <h4 className="vayla-small-title mt-10">{sectionSubtitle}</h4>}
@@ -78,20 +97,7 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe,
         open={aineistoDialogOpen}
         infoText={dialogInfoText}
         onClose={() => setAineistoDialogOpen(false)}
-        onSubmit={(valitutVelhoAineistot) => {
-          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, findKategoria);
-          const newAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
-            oldAineisto: aineistoNahtavilla,
-            newAineisto,
-          });
-          setValue("aineistoNahtavilla", newAineistoNahtavilla, { shouldDirty: true });
-
-          const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);
-
-          if (kategorisoimattomat?.length && !expandedAineisto.includes(kategorisoimattomatId)) {
-            setExpandedAineisto([...expandedAineisto, kategorisoimattomatId]);
-          }
-        }}
+        onSubmit={onSubmit}
       />
     </Section>
   );

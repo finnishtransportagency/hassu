@@ -59,12 +59,12 @@ export function getAllOptionsForKategoriat({
 
 export function findKategoriaForVelhoAineisto(
   valitutVelhoAineistot: VelhoAineisto[],
-  findKategoria: AineistoKategoriat["findKategoria"]
+  aineistoKategoriat: AineistoKategoriat
 ): AineistoInput[] {
   return valitutVelhoAineistot.map<AineistoInput>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
-    kategoriaId: findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
+    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
     tila: AineistoTila.ODOTTAA_TUONTIA,
     uuid: uuid.v4(),
   }));

@@ -22,7 +22,6 @@
 
     "osa_c": "Informatiivinen aineisto",
     "vaikutuksia_kuvaavat_selvitykset": "Vaikutuksia kuvaavat selvitykset",
-    "ulkopuoliset_rakenteet": "Ulkopuoliset rakenteet",
     "tutkitut_vaihtoehdot": "Tutkitut vaihtoehdot",
     "katusuunnitelmat": "Katusuunnitelmat ja muut ulkopuoliset rakenteet",
     "visualisointikuvat": "Visualisointikuvat",
@@ -30,7 +29,10 @@
     "muut_selvitykset": "Muut selvitykset",
     "valaistuksen_ja_liikenteenohjauksen_yleiskartat": "Valaistuksen ja liikenteenohjauksen yleiskartat",
     "johtosiirrot_ja_kunnallistekniset_suunnitelmat": "Johtosiirrot ja kunnallistekniset suunnitelmat",
-    "kategorisoimattomat": "Kategorisoimattomat"
+
+    "kategorisoimattomat": "Kategorisoimattomat",
+
+    "ulkopuoliset_rakenteet": "Ulkopuoliset rakenteet"
   },
   "lisa-aineisto": "Lausuntopyyntöön liitetty lisäaineisto",
   "uusi-aineisto": "Uusi aineisto",
