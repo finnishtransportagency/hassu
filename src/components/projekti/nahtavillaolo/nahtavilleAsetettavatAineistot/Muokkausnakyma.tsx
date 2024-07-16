@@ -35,7 +35,11 @@ interface MuokkausnakymaLomakeProps {
 
 function MuokkausnakymaLomake({ projekti }: Readonly<MuokkausnakymaLomakeProps>) {
   const { aineistoKategoriat, kategoriaIds } = useMemo(() => {
-    const aineistoKategoriat = getAineistoKategoriat(projekti.velho.tyyppi);
+    const aineistoKategoriat = getAineistoKategoriat({
+      projektiTyyppi: projekti.velho.tyyppi,
+      showKategorisoimattomat: true,
+      hideDeprecated: true,
+    });
     return { aineistoKategoriat, kategoriaIds: aineistoKategoriat.listKategoriaIds() };
   }, [projekti.velho.tyyppi]);
 

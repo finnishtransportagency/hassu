@@ -8,6 +8,9 @@ type AineistoKategoriaProps = {
   hakulauseet?: string[];
   alakategoriat?: AineistoKategoriaProps[];
   projektiTyyppi?: ProjektiTyyppi;
+  // Kategorioita ei voida poistaa, koska tuotannossa on mahdollisesti aineistoja, jotka on kyseisessä kategoriassa.
+  // Deprekoituja kategorioita ei näytetä muokkaustilaisissa lomakkeissa
+  deprecated?: boolean;
 };
 
 export class AineistoKategoria {
@@ -46,8 +49,8 @@ export class AineistoKategoriat {
     this.ylaKategoriat = aineistoKategoriat.map((kategoria) => new AineistoKategoria(kategoria));
   }
 
-  public listKategoriat(showKategorioimattomat?: boolean): AineistoKategoria[] {
-    return this.ylaKategoriat.filter((ylakategoria) => ylakategoria !== this.getKategorisoimattomat() || showKategorioimattomat);
+  public listKategoriat(): AineistoKategoria[] {
+    return this.ylaKategoriat;
   }
 
   public getKategorisoimattomat(): AineistoKategoria {
@@ -313,7 +316,8 @@ const AINEISTO_KATEGORIA_PROPS: AineistoKategoriaProps[] = [
       },
       {
         id: "ulkopuoliset_rakenteet",
-        // hakulauseet siirretty katusuunnitelmat kategoriaan
+        // 'Poistettu' kategoria, hakulauseet siirretty katusuunnitelmat kategoriaan
+        deprecated: true,
       },
       { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T", "R315"] },
       {
@@ -329,7 +333,7 @@ const AINEISTO_KATEGORIA_PROPS: AineistoKategoriaProps[] = [
           "6T",
           "R310",
           "Y312",
-          // Hakutermit ulkopuoliset rakenteet kategoriasta
+          // Hakulauseet ulkopuoliset_rakenteet kategoriasta
           "Ulkopuolisten raken",
           "Ulkopuolisen raken",
           "Ulkopuolisten omistamat raken",
@@ -381,21 +385,28 @@ const AINEISTO_KATEGORIA_PROPS: AineistoKategoriaProps[] = [
   { id: kategorisoimattomatId },
 ];
 
-// Osa kategorioista on projektityyppikohtaisia.
-export const getAineistoKategoriat = (projektiTyyppi: ProjektiTyyppi | undefined | null) =>
-  new AineistoKategoriat(getProjektiTyyppiSpecificProps(AINEISTO_KATEGORIA_PROPS, projektiTyyppi));
+type GetAineistoKategoriatOptions = {
+  projektiTyyppi: ProjektiTyyppi | undefined | null;
+  showKategorisoimattomat?: boolean;
+  hideDeprecated?: boolean;
+};
+
+export const getAineistoKategoriat = (options: GetAineistoKategoriatOptions) =>
+  new AineistoKategoriat(getProjektiTyyppiSpecificProps(AINEISTO_KATEGORIA_PROPS, options));
 
 const getProjektiTyyppiSpecificProps = (
   aineistoKategoriaProps: AineistoKategoriaProps[],
-  projektiTyyppi: ProjektiTyyppi | null | undefined
+  options: GetAineistoKategoriatOptions
 ): AineistoKategoriaProps[] => {
-  if (!projektiTyyppi) {
+  if (!options.projektiTyyppi) {
     return aineistoKategoriaProps;
   }
   return aineistoKategoriaProps
-    .filter((ak) => !ak.projektiTyyppi || ak.projektiTyyppi === projektiTyyppi)
+    .filter((ak) => !ak.projektiTyyppi || ak.projektiTyyppi === options.projektiTyyppi)
+    .filter((ak) => ak.id !== kategorisoimattomatId || options.showKategorisoimattomat)
+    .filter((ak) => !ak.deprecated || !options.hideDeprecated)
     .map(({ alakategoriat, ...kategoria }) => ({
       ...kategoria,
-      alakategoriat: alakategoriat ? getProjektiTyyppiSpecificProps(alakategoriat, projektiTyyppi) : undefined,
+      alakategoriat: alakategoriat ? getProjektiTyyppiSpecificProps(alakategoriat, options) : undefined,
     }));
 };

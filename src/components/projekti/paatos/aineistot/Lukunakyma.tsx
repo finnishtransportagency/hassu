@@ -28,7 +28,10 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
   const paatosJulkaisuMenneisyydessa =
     julkaisu?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
 
-  const kategoriat = useMemo(() => getAineistoKategoriat(projekti.velho.tyyppi).listKategoriat(), [projekti.velho.tyyppi]);
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti.velho.tyyppi }).listKategoriat(),
+    [projekti.velho.tyyppi]
+  );
 
   if (!projekti || !julkaisu) {
     return null;

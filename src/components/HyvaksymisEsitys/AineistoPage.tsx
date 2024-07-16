@@ -55,7 +55,10 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
     : projektipaallikonYhteystiedot?.organisaatio;
 
-  const kategoriat = useMemo(() => getAineistoKategoriat(perustiedot.projektiTyyppi).listKategoriat(), [perustiedot.projektiTyyppi]);
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi }).listKategoriat(),
+    [perustiedot.projektiTyyppi]
+  );
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>

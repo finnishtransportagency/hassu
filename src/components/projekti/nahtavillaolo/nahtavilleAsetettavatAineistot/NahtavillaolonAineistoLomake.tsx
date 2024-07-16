@@ -38,7 +38,7 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
   const { kategoriat, kategoriaIdt } = useMemo(
     () => ({
       kategoriaIdt: aineistoKategoriat.listKategoriaIds(),
-      kategoriat: aineistoKategoriat.listKategoriat(true),
+      kategoriat: aineistoKategoriat.listKategoriat(),
     }),
     [aineistoKategoriat]
   );

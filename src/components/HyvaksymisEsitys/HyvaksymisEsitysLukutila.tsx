@@ -65,7 +65,7 @@ export default function HyvaksymisEsitysLukutila({
   }, [hyvaksymisEsitys?.muistutukset, perustiedot.kunnat]);
 
   const { kategoriat, kategoriaIdt } = useMemo(() => {
-    const kategoria = getAineistoKategoriat(perustiedot.projektiTyyppi);
+    const kategoria = getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi });
     return { kategoriat: kategoria.listKategoriat(), kategoriaIdt: kategoria.listKategoriaIds() };
   }, [perustiedot.projektiTyyppi]);
 

@@ -24,7 +24,10 @@ type Props = {
 export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): ReactElement {
   const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, projekti } = props;
 
-  const kategoriat = useMemo(() => getAineistoKategoriat(projekti?.velho.tyyppi).listKategoriat(), [projekti?.velho.tyyppi]);
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
+    [projekti?.velho.tyyppi]
+  );
 
   return (
     <>

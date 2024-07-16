@@ -37,7 +37,7 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe,
 
   const { kategoriaIds, kategoriat } = useMemo(
     () => ({
-      kategoriat: aineistoKategoriat.listKategoriat(true),
+      kategoriat: aineistoKategoriat.listKategoriat(),
       kategoriaIds: aineistoKategoriat.listKategoriaIds(),
     }),
     [aineistoKategoriat]

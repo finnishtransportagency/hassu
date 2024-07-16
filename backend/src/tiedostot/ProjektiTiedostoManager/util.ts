@@ -21,7 +21,7 @@ export function getZipFolder(
     return undefined;
   }
   let path = "";
-  let category: AineistoKategoria | undefined = getAineistoKategoriat(projektiTyyppi).findById(kategoriaId);
+  let category: AineistoKategoria | undefined = getAineistoKategoriat({ projektiTyyppi }).findById(kategoriaId);
   while (category) {
     path = translate("aineisto-kategoria-nimi." + category.id, Kieli.SUOMI) + "/" + path;
     category = category.parentKategoria;

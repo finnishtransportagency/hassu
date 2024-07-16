@@ -33,7 +33,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
 
   const velho = projekti?.velho;
 
-  const aineistoKategoriat = useMemo(() => getAineistoKategoriat(velho.tyyppi).listKategoriat(), [velho.tyyppi]);
+  const aineistoKategoriat = useMemo(() => getAineistoKategoriat({ projektiTyyppi: velho.tyyppi }).listKategoriat(), [velho.tyyppi]);
 
   if (!projekti || !kuulutus || !velho) {
     return <></>;

@@ -61,7 +61,11 @@ function MuokkausnakymaForm({
   julkaisu,
 }: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu">) {
   const { aineistoKategoriat, kategoriaIds } = useMemo(() => {
-    const aineistoKategoriat = getAineistoKategoriat(projekti.velho.tyyppi);
+    const aineistoKategoriat = getAineistoKategoriat({
+      projektiTyyppi: projekti.velho.tyyppi,
+      showKategorisoimattomat: true,
+      hideDeprecated: true,
+    });
     return {
       aineistoKategoriat,
       kategoriaIds: aineistoKategoriat.listKategoriaIds(),

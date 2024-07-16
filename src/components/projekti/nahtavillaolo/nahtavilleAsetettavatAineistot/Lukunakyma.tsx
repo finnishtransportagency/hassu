@@ -15,7 +15,10 @@ export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
 
   const julkaisu = useMemo(() => projekti?.nahtavillaoloVaiheJulkaisu, [projekti]);
-  const kategoriat = useMemo(() => getAineistoKategoriat(projekti?.velho.tyyppi).listKategoriat(), [projekti?.velho.tyyppi]);
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
+    [projekti?.velho.tyyppi]
+  );
 
   if (!projekti || !julkaisu) {
     return null;
