@@ -2086,6 +2086,18 @@ export class ProjektiFixture {
       ],
       nahtavillaoloVaihe: {
         id: 1,
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            jarjestys: 1,
+            kategoriaId: "osa_a",
+            nimi: "TYHJÄ.txt",
+            tiedosto: "/nahtavillaolo/1/TYHJÄ.txt",
+            tila: AineistoTila.VALMIS,
+            tuotu: "2020-01-01T00:00:00+02:00",
+            uuid: "foo4",
+          },
+        ],
         hankkeenKuvaus: {
           SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
         },
@@ -2103,7 +2115,18 @@ export class ProjektiFixture {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          aineistoNahtavilla: [],
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+              jarjestys: 1,
+              kategoriaId: "osa_a",
+              nimi: "TYHJÄ.txt",
+              tiedosto: "/nahtavillaolo/2/TYHJÄ.txt",
+              tila: AineistoTila.VALMIS,
+              tuotu: "2020-01-01T00:00:00+02:00",
+              uuid: "foo5",
+            },
+          ],
           hankkeenKuvaus: {
             SUOMI:
               "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
@@ -2213,7 +2236,7 @@ export class ProjektiFixture {
       aloitusKuulutus: {
         id: 6,
         ...projekti.aloitusKuulutus,
-        aloituskuulutusSaamePDFt:{
+        aloituskuulutusSaamePDFt: {
           POHJOISSAAME: {
             kuulutusPDF: {
               tiedosto: "/saamePDF",
@@ -2228,7 +2251,7 @@ export class ProjektiFixture {
               tila: LadattuTiedostoTila.VALMIS,
             },
           },
-        }
+        },
       },
       aloitusKuulutusJulkaisut: projekti.aloitusKuulutusJulkaisut?.map<AloitusKuulutusJulkaisu>((julkaisu) => ({
         ...julkaisu,
@@ -2247,7 +2270,8 @@ export class ProjektiFixture {
         aloituskuulutusSaamePDFt: {
           POHJOISSAAME: {
             kuulutusPDF: {
-              tiedosto: "/aloituskuulutus/1/POHJOISSAAME KUULUTUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti testiprojekti.pdf",
+              tiedosto:
+                "/aloituskuulutus/1/POHJOISSAAME KUULUTUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti testiprojekti.pdf",
               uuid: "uniikki",
               tila: LadattuTiedostoTila.VALMIS,
             },

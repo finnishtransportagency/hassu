@@ -39,7 +39,7 @@ async function handleNahtavillaoloZipping(ctx: ImportContext) {
   const nahtavillaoloVaiheTiedostoManager = manager.getNahtavillaoloVaihe();
   const aineistopakettiFullS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
-  log.info("luodaan nähtävilläolon aineistopaiketti, key: " + aineistopakettiFullS3Key);
+  log.info("luodaan nähtävilläolon aineistopaketti, key: " + aineistopakettiFullS3Key);
   await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, ctx.projekti.velho?.tyyppi);
 
   const aineistopakettiRelativeS3Key =

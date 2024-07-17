@@ -131,7 +131,7 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -151,6 +151,10 @@ describe("getProjektiStatus", () => {
           {
             tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
             kuulutusVaihePaattyyPaiva: "2000-01-01",
+            id: 1,
+            kuulutusYhteystiedot: {},
+            yhteystiedot: [],
+            velho: baseProjekti.velho,
           },
         ],
         hyvaksymisPaatosVaihe: {
@@ -190,6 +194,10 @@ describe("getProjektiStatus", () => {
           {
             tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
             kuulutusVaihePaattyyPaiva: "2000-01-01",
+            id: 1,
+            kuulutusYhteystiedot: {},
+            yhteystiedot: [],
+            velho: baseProjekti.velho,
           },
         ],
         hyvaksymisPaatosVaihe: {
@@ -220,6 +228,10 @@ describe("getProjektiStatus", () => {
           {
             tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
             kuulutusVaihePaattyyPaiva: "2000-01-01",
+            id: 1,
+            kuulutusYhteystiedot: {},
+            yhteystiedot: [],
+            velho: baseProjekti.velho,
           },
         ],
         hyvaksymisPaatosVaihe: {
@@ -230,7 +242,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -250,6 +262,10 @@ describe("getProjektiStatus", () => {
         nahtavillaoloVaiheJulkaisut: [
           {
             tila: API.KuulutusJulkaisuTila.MIGROITU,
+            id: 1,
+            kuulutusYhteystiedot: {},
+            yhteystiedot: [],
+            velho: baseProjekti.velho,
           },
         ],
         hyvaksymisPaatosVaihe: {
@@ -284,8 +300,13 @@ describe("getProjektiStatus", () => {
       ...baseProjekti,
       nahtavillaoloVaiheJulkaisut: [
         {
+          id: 1,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
+          kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined, projektinNimiVieraskielella: undefined },
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
         },
       ],
       hyvaksymisPaatosVaihe: {
@@ -304,7 +325,7 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -320,6 +341,10 @@ describe("getProjektiStatus", () => {
       nahtavillaoloVaiheJulkaisut: [
         {
           tila: API.KuulutusJulkaisuTila.MIGROITU,
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
         },
       ],
       hyvaksymisPaatosVaihe: {
@@ -338,7 +363,7 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -364,6 +389,10 @@ describe("getProjektiStatus", () => {
           {
             tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
             kuulutusVaihePaattyyPaiva: "2000-01-01",
+            id: 1,
+            kuulutusYhteystiedot: {},
+            yhteystiedot: [],
+            velho: baseProjekti.velho,
           },
         ],
         hyvaksymisPaatosVaihe: {
@@ -382,7 +411,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.ODOTTAA_TUONTIA,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -404,6 +433,10 @@ describe("getProjektiStatus", () => {
       nahtavillaoloVaiheJulkaisut: [
         {
           tila: API.KuulutusJulkaisuTila.MIGROITU,
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
         },
       ],
       hyvaksymisPaatosVaihe: {
@@ -422,7 +455,7 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -444,6 +477,10 @@ describe("getProjektiStatus", () => {
       nahtavillaoloVaiheJulkaisut: [
         {
           tila: API.KuulutusJulkaisuTila.MIGROITU,
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
         },
       ],
       hyvaksymisPaatosVaihe: {
@@ -462,12 +499,16 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.ODOTTAA_TUONTIA,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
       hyvaksymisPaatosVaiheJulkaisut: [
         {
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
         },
@@ -485,6 +526,10 @@ describe("getProjektiStatus", () => {
         {
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
         },
       ],
     };
@@ -503,6 +548,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos1Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -537,13 +583,14 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos1Vaihe: {
+        id: 1,
         aineistoNahtavilla: [
           {
             dokumenttiOid: "1",
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -563,6 +610,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos1Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -587,6 +635,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos1Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -601,20 +650,24 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
       jatkoPaatos1VaiheJulkaisut: [
         {
           tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           aineistoNahtavilla: [
             {
               dokumenttiOid: "1",
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -635,6 +688,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos1Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -649,13 +703,16 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
       jatkoPaatos1VaiheJulkaisut: [
         {
           id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           aineistoNahtavilla: [
@@ -664,7 +721,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -687,6 +744,9 @@ describe("getProjektiStatus", () => {
       jatkoPaatos1VaiheJulkaisut: [
         {
           id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
         },
@@ -706,6 +766,10 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos2Vaihe: {
+        id: 1,
+        kuulutusYhteystiedot: {},
+        yhteystiedot: [],
+        velho: baseProjekti.velho,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -739,13 +803,14 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos2Vaihe: {
+        id: 1,
         aineistoNahtavilla: [
           {
             dokumenttiOid: "1",
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
@@ -764,6 +829,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos2Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -789,6 +855,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos2Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -803,13 +870,16 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
       jatkoPaatos2VaiheJulkaisut: [
         {
           id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           hyvaksymisPaatos: [
@@ -826,7 +896,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -847,6 +917,7 @@ describe("getProjektiStatus", () => {
         },
       },
       jatkoPaatos2Vaihe: {
+        id: 1,
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "2",
@@ -861,13 +932,16 @@ describe("getProjektiStatus", () => {
             nimi: "Nimi",
             uuid: "1",
             tila: API.AineistoTila.VALMIS,
-            kategoriaId: "osa-a",
+            kategoriaId: "osa_a",
           },
         ],
       },
       jatkoPaatos2VaiheJulkaisut: [
         {
           id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           aineistoNahtavilla: [
@@ -876,7 +950,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },
@@ -899,6 +973,9 @@ describe("getProjektiStatus", () => {
       jatkoPaatos2VaiheJulkaisut: [
         {
           id: 1,
+          kuulutusYhteystiedot: {},
+          yhteystiedot: [],
+          velho: baseProjekti.velho,
           tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
           kuulutusVaihePaattyyPaiva: "2000-01-01",
           aineistoNahtavilla: [
@@ -907,7 +984,7 @@ describe("getProjektiStatus", () => {
               nimi: "Nimi",
               uuid: "1",
               tila: API.AineistoTila.VALMIS,
-              kategoriaId: "osa-a",
+              kategoriaId: "osa_a",
             },
           ],
         },

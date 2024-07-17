@@ -5,7 +5,7 @@ import { getZipFolder } from "../../../src/tiedostot/ProjektiTiedostoManager/uti
 describe("getZipFolder", () => {
   it("returns correct folder for 'rataan_liittyvat_toimenpiteet_tiesuunnitelmassa'", () => {
     const folder = getZipFolder("rataan_liittyvat_toimenpiteet_tiesuunnitelmassa", ProjektiTyyppi.TIE);
-    expect(folder).to.eql("Pääpiirustukset/Ratojen toimenpiteet tiesuunnitelmassa/");
+    expect(folder).to.eql("Pääpiirustukset/Rataan liittyvät toimenpiteet tiesuunnitelmassa/");
   });
   it("returns correct folder for 'vaikutuksia_kuvaavat_selvitykset'", () => {
     const folder = getZipFolder("vaikutuksia_kuvaavat_selvitykset", ProjektiTyyppi.TIE);

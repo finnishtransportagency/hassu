@@ -1,6 +1,5 @@
 import { api } from "../apiClient";
 import {
-  AloitusKuulutus,
   AloitusKuulutusJulkaisu,
   HyvaksymisPaatosVaiheJulkaisu,
   KuulutusJulkaisuTila,
