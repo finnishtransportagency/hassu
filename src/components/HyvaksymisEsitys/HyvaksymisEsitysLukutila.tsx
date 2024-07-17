@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja, Vaihe } from "@services/api";
+import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja } from "@services/api";
 import HyvaksyTaiPalautaPainikkeet from "./LomakeComponents/HyvaksyTaiPalautaPainikkeet";
 import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 import Section from "@components/layout/Section2";
@@ -80,7 +80,6 @@ export default function HyvaksymisEsitysLukutila({
   return (
     <ProjektiPageLayout
       title="Hyväksymisesitys"
-      vaihe={Vaihe.HYVAKSYMISPAATOS}
       contentAsideTitle={
         muokkauksenVoiAvata ? (
           <Button onClick={avaaMuokkaus} id="avaa_hyvaksymisesityksen_muokkaus_button">

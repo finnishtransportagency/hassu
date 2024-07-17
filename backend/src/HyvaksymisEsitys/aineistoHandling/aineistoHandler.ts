@@ -105,9 +105,9 @@ export async function tuoAineistot(oid: string) {
   if (!uudetAineistot.length) {
     log.info("Ei uusia aineistoja", "aineistoHandledAt viimeksi " + aineistoHandledAt);
   }
-  // Tuo aineistot
-  await Promise.all(
-    uudetAineistot.map(async (aineisto) => {
+  // Tuo aineistot EI rinnakkaisesti (jostain syystä rinnakkain ajettuna Promise.all:in sisällä ei ikinä resolvaantunut tai rejectannut)
+  await uudetAineistot
+    .map((aineisto) => async () => {
       const { contents } = await velho.getAineisto(aineisto.dokumenttiOid);
       await putFile({
         targetPath: `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${aineisto.avain}/${adaptFileName(aineisto.nimi)}`,
@@ -115,7 +115,7 @@ export async function tuoAineistot(oid: string) {
         contents,
       });
     })
-  );
+    .reduce<Promise<void>>((prev, tuoAineisto) => prev.then(tuoAineisto), Promise.resolve());
 
   await setAineistoHandledAt(oid, versio);
 }
