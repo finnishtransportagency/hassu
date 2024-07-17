@@ -27,14 +27,13 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
 
   const { withLoadingSpinner, isLoading } = useLoadingSpinner();
 
-  const flatAineistot = useMemo<VelhoAineisto[]>(() => {
-    if (!fetchedToimeksiannot) {
-      return [];
-    }
-    return fetchedToimeksiannot.flatMap((toimeksianto) =>
-      toimeksianto.aineistot.filter((aineisto) => !!selectedAineistot[toimeksianto.oid]?.[aineisto.oid])
-    );
-  }, [fetchedToimeksiannot, selectedAineistot]);
+  const flatAineistot = useMemo<VelhoAineisto[]>(
+    () =>
+      (fetchedToimeksiannot ?? [])
+        .flatMap((toimeksianto) => toimeksianto.aineistot.filter((aineisto) => !!selectedAineistot[toimeksianto.oid]?.[aineisto.oid]))
+        .sort((a, b) => a.tiedosto.localeCompare(b.tiedosto)),
+    [fetchedToimeksiannot, selectedAineistot]
+  );
 
   const api = useApi();
 
@@ -133,7 +132,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
           type="button"
           id="select_valitut_aineistot_button"
           onClick={() => {
-            onSubmit(flatAineistot);
+            onSubmit([...flatAineistot].sort((a, b) => a.tiedosto.localeCompare(b.tiedosto)));
             onClose?.({}, "escapeKeyDown");
           }}
         >
