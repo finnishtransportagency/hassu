@@ -27,6 +27,7 @@ describe("getProjektiStatus", () => {
       suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       nimi: "Nimi",
       asiatunnusVayla: "123",
+      tyyppi: API.ProjektiTyyppi.TIE,
     },
     kielitiedot: {
       ensisijainenKieli: API.Kieli.SUOMI,
@@ -138,6 +139,110 @@ describe("getProjektiStatus", () => {
     };
     const status = await GetProjektiStatus.getProjektiStatus(projekti);
     expect(status).to.eql(API.Status.NAHTAVILLAOLO);
+  });
+
+  it("returns NAHTAVILLAOLO_AINEISTOT if nahtavillaoloVaihe aineistoNahtavilla kategoria is kategorisoimattomat", async () => {
+    const projekti = {
+      ...baseProjekti,
+      vahainenMenettely: true,
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            kategoriaId: kategorisoimattomatId,
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
+  });
+
+  it("returns NAHTAVILLAOLO_AINEISTOT if nahtavillaoloVaihe aineistoNahtavilla kategoria is not found", async () => {
+    const projekti = {
+      ...baseProjekti,
+      vahainenMenettely: true,
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            kategoriaId: "unknown",
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
+  });
+
+  it("returns NAHTAVILLAOLO_AINEISTOT if nahtavillaoloVaihe aineistoNahtavilla kategoria does not exist for the type projektiTyyppi", async () => {
+    const projekti = {
+      ...baseProjekti,
+      vahainenMenettely: true,
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            kategoriaId: "ys_osa_c_siltasuunnitelmat_ja_muut_taitorakenteet",
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
+  });
+
+  it("returns NAHTAVILLAOLO_AINEISTOT if nahtavillaoloVaihe aineistoNahtavilla kategoria is 'deprecated'", async () => {
+    const projekti = {
+      ...baseProjekti,
+      vahainenMenettely: true,
+      aloitusKuulutusJulkaisut: [
+        {
+          tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1",
+            nimi: "Nimi",
+            uuid: "1",
+            tila: API.AineistoTila.ODOTTAA_TUONTIA,
+            kategoriaId: "ulkopuoliset_rakenteet",
+          },
+        ],
+      },
+    };
+    const status = await GetProjektiStatus.getProjektiStatus(projekti);
+    expect(status).to.eql(API.Status.NAHTAVILLAOLO_AINEISTOT);
   });
 
   it(
