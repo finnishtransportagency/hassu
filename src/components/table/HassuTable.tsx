@@ -146,11 +146,11 @@ export default function HassuTable<T>({ table }: HassuTableProps<T>) {
   }, [table.options.columns]);
 
   return (
-    <ContentSpacer gap={7} style={{marginTop: "24px"}}>
+    <ContentSpacer gap={7} style={{ marginTop: "24px" }}>
       {!isMedium && table.options.enableSorting && <TableMobileSorting table={table} />}
       <HassuTablePagination table={table} />
       <TableWrapper>
-        <StyledTable id={table.options.meta?.tableId}>
+        <StyledTable className="hassu-table" id={table.options.meta?.tableId}>
           {isMedium && <TableHead gridTemplateColumns={gridTemplateColumns} table={table} />}
           <TableBody table={table} gridTemplateColumns={gridTemplateColumns} />
         </StyledTable>
@@ -255,7 +255,7 @@ type TableHeadProps<T> = {
 
 function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
   return (
-    <Thead>
+    <Thead className="hassu-table-head">
       {table.getHeaderGroups().map((headerGroup) => (
         <Tr key={headerGroup.id} sx={{ gridTemplateColumns, alignItems: "end" }}>
           {headerGroup.headers.map((header) => {

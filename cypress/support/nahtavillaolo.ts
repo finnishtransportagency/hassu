@@ -63,12 +63,10 @@ type AineistoLisaysOptions = {
 type LisaaNahtavillaoloAineistotOptions = {
   oid: string;
   aineistoNahtavilla: AineistoLisaysOptions;
-  /**
-   * The URL to visit. Behaves the same as the `url` argument.
-   */
+  kategoria: string;
 };
 
-export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNahtavillaoloAineistotOptions) {
+export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, kategoria }: LisaaNahtavillaoloAineistotOptions) {
   // This test had to be inserted here and can not be done
   // after publishing test below
   cy.login("A1");
@@ -85,7 +83,7 @@ export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNa
   cy.get("#select_valitut_aineistot_button").click();
   cy.get("#kategorisoimattomat").click();
 
-  moveKategorisoimattomatToOsaA();
+  moveKategorisoimattomatToKategoria(kategoria);
 
   cy.get("#save_draft")
     .should("be.enabled")
@@ -98,15 +96,15 @@ type HyvaksyNahtavillaoloKuulutusOptions = {
   kuulutusPaivaInFuture?: boolean;
 };
 
-function moveKategorisoimattomatToOsaA() {
+function moveKategorisoimattomatToKategoria(kategoria: string) {
   cy.get("body").then(($body) => {
     const selector = "#kategorisoimattomat_table .category_selector select";
     if ($body.find(selector).length === 0) {
       return;
     }
-    cy.get(selector).first().select("osa_a");
+    cy.get(selector).first().select(kategoria);
     if ($body.find(selector).length > 0) {
-      moveKategorisoimattomatToOsaA();
+      moveKategorisoimattomatToKategoria(kategoria);
     }
   });
 }

@@ -60,7 +60,7 @@ export function selectAllAineistotFromCategory(accordion) {
 export function selectAineistotFromCategory(accordion: string, aineistojenNimet: string[]) {
   cy.get(accordion).click();
   aineistojenNimet.forEach((nimi) => {
-    cy.get("#table_body_Suunnitelma-aineisto")
+    cy.get("#aineisto_accordion_Suunnitelma-aineisto")
       .contains(nimi)
       .parentsUntil("div[data-index]")
       .find('input[name*="select_row_"]')
