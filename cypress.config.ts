@@ -6,7 +6,7 @@ export default defineConfig({
   defaultCommandTimeout: 30000,
   pageLoadTimeout: 300000,
   env: {
-    projektiNimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+    projektiNimi: "VLS-TESTI HASSU AUTOMAATTITESTIPROJEKTI1",
     oid: "1.2.246.578.5.1.2978288874.2711575506",
   },
   video: false,

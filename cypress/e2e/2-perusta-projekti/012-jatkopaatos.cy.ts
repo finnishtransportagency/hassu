@@ -142,13 +142,13 @@ describe("12 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     });
 
     const plus4years = dayjs().add(4, "year").year().toString();
-    selectFromDropdown("#jatkoPaatos1Vaihe\\.viimeinenVoimassaolovuosi", plus4years);
-    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#mui-component-select-jatkoPaatos1Vaihe\\.viimeinenVoimassaolovuosi", plus4years);
+    selectFromDropdown("#mui-component-select-paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click({ force: true });
-    cy.contains("Lähetys onnistui", { timeout: 30000 });
+    cy.contains("Tallennus ja hyväksyttäväksi lähettäminen onnistui", { timeout: 30000 });
 
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
     cy.get("#button_open_acceptance_dialog")
