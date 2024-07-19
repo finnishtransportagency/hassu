@@ -117,7 +117,7 @@ type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivE
   closeDialog: (isMapEdited: boolean) => void;
 };
 
-export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: StyledMapProps) => {
+export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti, closeDialog, ...props }: StyledMapProps) => {
   const isMapEditedByUserRef = useRef(false);
   const triggerMapEditedByUser = useCallback(() => {
     isMapEditedByUserRef.current = true;
@@ -302,7 +302,7 @@ export const StyledMap = styled(({ children, projekti, closeDialog, ...props }: 
   }, [isFullScreen, vectorSource]);
 
   return (
-    <div {...props} ref={mapElement}>
+    <div {...props} id="kiinteiston-omistaja-map" ref={mapElement}>
       {children}
     </div>
   );
@@ -666,10 +666,12 @@ export function getControls({
     onGeoJsonUpload: (features) => {
       const errors: Error[] = [];
       const featuresWithoutLines = features.filter((feat) => !(feat.getGeometry() instanceof LineString));
-      const linePolygons = features.filter((feat) => feat.getGeometry() instanceof LineString).map((feat) => {
-        const geom = feat.getGeometry() as LineString;
-        return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
-      });
+      const linePolygons = features
+        .filter((feat) => feat.getGeometry() instanceof LineString)
+        .map((feat) => {
+          const geom = feat.getGeometry() as LineString;
+          return format.readFeature(lineStringToPolygon(lineString(geom.getCoordinates())));
+        });
       const suodatetut = featuresWithoutLines.concat(linePolygons).filter((feat) => {
         try {
           validateSelection(feat.getGeometry());
@@ -735,16 +737,26 @@ export function getControls({
       buttons: [
         {
           handleClick: handleSave,
-          button: createElement(<Button title="Tallenna luonnos">Tallenna luonnos</Button>, "div").firstElementChild as HTMLButtonElement,
+          button: createElement(
+            <Button title="Tallenna luonnos" id="save_map_draft">
+              Tallenna luonnos
+            </Button>,
+            "div"
+          ).firstElementChild as HTMLButtonElement,
         },
         {
           handleClick: handleExit,
-          button: createElement(<Button title="Poistu">Poistu</Button>, "div").firstElementChild as HTMLButtonElement,
+          button: createElement(
+            <Button title="Poistu" id="exit_map">
+              Poistu
+            </Button>,
+            "div"
+          ).firstElementChild as HTMLButtonElement,
         },
         {
           handleClick: handleSaveAndSearch,
           button: createElement(
-            <Button title="Tallenna ja hae" primary>
+            <Button title="Tallenna ja hae" id="save_map_and_search" primary>
               Tallenna ja hae
             </Button>,
             "div"

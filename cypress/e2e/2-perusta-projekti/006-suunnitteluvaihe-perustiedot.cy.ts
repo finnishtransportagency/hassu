@@ -48,5 +48,6 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
     lahetaPalaute();
     cy.contains("Olemme vastaanottaneet viestisi");
+    cy.get("#close_thank_you_dialog").click();
   });
 });

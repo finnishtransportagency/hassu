@@ -2,7 +2,7 @@ import * as dayjs from "dayjs";
 import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory, selectFromDropdown } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
-describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
+describe("12 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
   const asianumero = "VÄYLÄ/1234/03.04.05/2023";
@@ -142,8 +142,8 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     });
 
     const plus4years = dayjs().add(4, "year").year().toString();
-    selectFromDropdown("#jatkoPaatos1Vaihe\\\.viimeinenVoimassaolovuosi", plus4years);
-    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#jatkoPaatos1Vaihe\\.viimeinenVoimassaolovuosi", plus4years);
+    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 

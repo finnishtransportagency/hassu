@@ -7,7 +7,6 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   if (uudelleenkuulutus) {
     cy.get("#uudelleenkuuluta_button").click();
     cy.get("#avaa_uudelleenkuulutettavaksi", { timeout: 15000 }).click();
-
     cy.get('[name="aloitusKuulutus.uudelleenKuulutus.selosteKuulutukselle.SUOMI"]', { timeout: 15000 }).type(
       "Selostetta kuulutukselle suomeksi"
     );
@@ -45,8 +44,10 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
     }
   });
 
-  cy.get("#add_new_viranomainen").click();
-  selectFromDropdown("#aloitusKuulutus\\\.ilmoituksenVastaanottajat\\\.viranomaiset\\\.0\\\.nimi", "Pirkanmaan ELY-keskus");
+  selectFromDropdown(
+    "#mui-component-select-aloitusKuulutus\\.ilmoituksenVastaanottajat\\.viranomaiset\\.0\\.nimi",
+    "Pirkanmaan ELY-keskus"
+  );
 
   cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
   cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");

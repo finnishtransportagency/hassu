@@ -3,7 +3,7 @@ import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import { CLEAR_ALL, formatDate, selectFromDropdown } from "../../support/util";
 
-describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
+describe("10 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
   const asianumero = "VÄYLÄ/1234/01.02.03/2022";

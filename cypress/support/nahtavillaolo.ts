@@ -85,15 +85,7 @@ export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNa
   cy.get("#select_valitut_aineistot_button").click();
   cy.get("#kategorisoimattomat").click();
 
-  cy.get("body").then(($body) => {
-    const selector = "#kategorisoimattomat_table .category_selector select";
-    const numberOfSelectElements = $body.find(selector).length;
-    if (numberOfSelectElements > 0) {
-      for (let i = 0; i < numberOfSelectElements; i++) {
-        cy.get(selector).first().select("osa_a");
-      }
-    }
-  });
+  moveKategorisoimattomatToOsaA();
 
   cy.get("#save_draft")
     .should("be.enabled")
@@ -106,11 +98,24 @@ type HyvaksyNahtavillaoloKuulutusOptions = {
   kuulutusPaivaInFuture?: boolean;
 };
 
+function moveKategorisoimattomatToOsaA() {
+  cy.get("body").then(($body) => {
+    const selector = "#kategorisoimattomat_table .category_selector select";
+    if ($body.find(selector).length === 0) {
+      return;
+    }
+    cy.get(selector).first().select("osa_a");
+    if ($body.find(selector).length > 0) {
+      moveKategorisoimattomatToOsaA();
+    }
+  });
+}
+
 export function hyvaksyNahtavillaoloKuulutus(
   { kuulutusPaivaInFuture }: HyvaksyNahtavillaoloKuulutusOptions = { kuulutusPaivaInFuture: false }
 ) {
   cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click();
-  cy.contains("Lähetys onnistui");
+  cy.contains("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
   cy.get("#button_open_acceptance_dialog")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 500, left: 0 } })

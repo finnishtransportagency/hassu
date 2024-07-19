@@ -70,13 +70,11 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.ensisijainenKieli}
           >
-            {kielioptions.map((option) => {
-              return (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+            {kielioptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </HassuMuiSelect>
           <HassuMuiSelect
             label="Toissijainen kieli "
@@ -86,13 +84,11 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.toissijainenKieli}
           >
-            {kielioptions2.map((option) => {
-              return (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+            {kielioptions2.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </HassuMuiSelect>
         </HassuGrid>
       </SectionContent>
