@@ -17,7 +17,7 @@ import { H1, H3 } from "@components/Headings";
 
 const SIVUN_KOKO = 10;
 
-const App = () => {
+const FrontPage = () => {
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const [maakuntaOptions, setMaakuntaOptions] = useState<SelectOption[]>([]);
 
@@ -50,9 +50,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   const [ladataan, setLadataan] = useState<boolean>(false);
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
 
-  const sivuMaara = useMemo(() => {
-    return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
-  }, [hakutulos]);
+  const sivuMaara = useMemo(() => Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO), [hakutulos]);
 
   const api = useApi();
 
@@ -113,7 +111,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   );
 }
 
-export default App;
+export default FrontPage;
 
 type HookProps = { kuntaOptions: SelectOption[]; maakuntaOptions: SelectOption[] };
 export type HookReturnType = {

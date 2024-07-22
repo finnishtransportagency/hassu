@@ -30,8 +30,8 @@ const Hakuohje = () => {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="search-guidance-content"
+          id="search-guidance-header"
           style={{
             height: desktop ? "48px" : "64px",
             backgroundColor: "#0064AF",
@@ -39,7 +39,7 @@ const Hakuohje = () => {
             alignItems: "center",
             fontWeight: "700",
             paddingLeft: 24,
-            marginBottom: desktop ? 0 : 16
+            marginBottom: desktop ? 0 : 16,
           }}
         >
           <h2 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h2>
