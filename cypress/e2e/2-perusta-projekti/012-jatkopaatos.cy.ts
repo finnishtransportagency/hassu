@@ -2,7 +2,7 @@ import * as dayjs from "dayjs";
 import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory, selectFromDropdown } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
-describe("12 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
+describe("12 - Projektin 1. jaktopäätöksen tiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
   const asianumero = "VÄYLÄ/1234/03.04.05/2023";
@@ -11,13 +11,13 @@ describe("12 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.abortEarly();
   });
 
-  it("Siirra projekti epaaktiiviseksi (hyvaksymispaatos vuosi menneisyyteen)", { scrollBehavior: "center" }, function () {
+  it("Siirra projekti epäaktiiviseksi (hyvaksymispaatos vuosi menneisyyteen)", { scrollBehavior: "center" }, function () {
     // Move hyvaksymispaatos to past +1 year
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).hyvaksymispaatosVuosiMenneisyyteen(), { timeout: 30000 });
     cy.contains("OK");
   });
 
-  it("Tallenna kasittelyn tilaan jatkopaatoksen pvm ja asiatunnus", { scrollBehavior: "center" }, function () {
+  it("Tallenna käsittelyn tilaan jatkopäätöksen päivämäärä ja asiatunnus", { scrollBehavior: "center" }, function () {
     cy.login("A1");
 
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetJatkopaatos1vaihe(), { timeout: 30000 });

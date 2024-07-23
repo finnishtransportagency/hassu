@@ -10,6 +10,7 @@ export default defineConfig({
     oid: "1.2.246.578.5.1.2978288874.2711575506",
   },
   video: false,
+  numTestsKeptInMemory: 10,
   reporter: "cypress-multi-reporters",
   reporterOptions: {
     configFile: "cypress-reporter-config.json",

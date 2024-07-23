@@ -29,7 +29,7 @@ describe("Kasittelyn tila", () => {
     cy.login("A1");
   });
 
-  it("Tayta ja tallenna avoimet kentat", () => {
+  it("Täytä ja tallenna avoimet kentät", () => {
     // Suunnitelman tila
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila");
     cy.contains("Käsittelyn tila");

@@ -39,7 +39,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise();
   });
 
-  it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja paivita julkaisua", { scrollBehavior: "center" }, function () {
+  it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja päivitä julkaisua", { scrollBehavior: "center" }, function () {
     muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua();
   });
 

@@ -115,7 +115,7 @@ describe("Kansalaisen haut", () => {
     cy.get("#mui-component-select-vaylamuoto").should("not.have.text", "Tie");
   });
 
-  it("Tarkista desktop sivutus", { scrollBehavior: "center" }, function () {
+  it("Tarkista desktop-sivutus", { scrollBehavior: "center" }, function () {
     cy.visit(Cypress.env("host"));
     cy.viewport("macbook-13");
 
@@ -132,7 +132,7 @@ describe("Kansalaisen haut", () => {
     });
   });
 
-  it("Tarkista mobiili sivutus", { scrollBehavior: "center" }, function () {
+  it("Tarkista mobiilisivutus", { scrollBehavior: "center" }, function () {
     cy.visit(Cypress.env("host"));
     cy.viewport("iphone-x");
 

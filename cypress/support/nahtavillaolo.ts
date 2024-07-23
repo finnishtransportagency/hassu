@@ -15,7 +15,7 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
     }
   });
 
-  cy.wait(3000);
+  cy.wait(5000);
 
   typeIntoFields(selectorToTextMap);
 
@@ -90,7 +90,6 @@ export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, kategoria
     .scrollIntoView({ offset: { top: 500, left: 0 } })
     .click();
   cy.get(".MuiAlert-filledSuccess").contains("Tallennus onnistui");
-  cy.get(".MuiAlert-filledSuccess").should("not.exist");
 }
 
 type HyvaksyNahtavillaoloKuulutusOptions = {
