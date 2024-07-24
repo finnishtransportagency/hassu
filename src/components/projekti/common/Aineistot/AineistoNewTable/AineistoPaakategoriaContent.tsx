@@ -1,4 +1,3 @@
-import { AineistoNew } from "@services/api";
 import { AineistoKategoria } from "common/aineistoKategoriat";
 import { useFormContext } from "react-hook-form";
 import { AineistoAlakategoriaAccordion, AineistoTable } from ".";
@@ -15,7 +14,6 @@ const kategoriaInfoText: Record<string, string> = {
 interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  aineisto: AineistoNew[] | undefined | null;
 }
 
 export function SuunnitelmaAineistoPaakategoriaContent(props: SuunnitelmaAineistoPaakategoriaContentProps) {
@@ -26,10 +24,9 @@ export function SuunnitelmaAineistoPaakategoriaContent(props: SuunnitelmaAineist
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!paaKategoriaAineisto?.length && <AineistoTable aineisto={props.aineisto} kategoriaId={props.paakategoria.id} />}
+      {!!paaKategoriaAineisto?.length && <AineistoTable kategoriaId={props.paakategoria.id} />}
       {props.paakategoria.alaKategoriat && (
         <AineistoAlakategoriaAccordion
-          aineisto={props.aineisto}
           alakategoriat={props.paakategoria.alaKategoriat}
           expandedAineistoState={props.expandedAineistoState}
         />

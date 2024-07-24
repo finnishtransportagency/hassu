@@ -1,5 +1,4 @@
 import HassuAccordion from "@components/HassuAccordion";
-import { AineistoNew } from "@services/api";
 import { AineistoKategoria, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import { useFormContext } from "react-hook-form";
@@ -9,7 +8,6 @@ import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsi
 interface AineistoAlakategoriaAccordionProps {
   alakategoriat: AineistoKategoria[];
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  aineisto: AineistoNew[] | undefined | null;
 }
 
 export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordionProps) => {
@@ -30,13 +28,7 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
       expandedstate={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
         title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria)})`,
-        content: (
-          <AineistoAlakategoriaContent
-            kategoria={alakategoria}
-            aineisto={props.aineisto}
-            expandedAineistoState={props.expandedAineistoState}
-          />
-        ),
+        content: <AineistoAlakategoriaContent kategoria={alakategoria} expandedAineistoState={props.expandedAineistoState} />,
         id: alakategoria.id,
       }))}
     />
@@ -46,7 +38,6 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
 interface AlakategoriaContentProps {
   kategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  aineisto: AineistoNew[] | undefined | null;
 }
 
 export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => {
@@ -54,17 +45,9 @@ export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => 
   const aineistot = watch(`muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoria.id}`);
   return (
     <>
-      {!!aineistot?.length ? (
-        <AineistoTable kategoriaId={props.kategoria.id} aineisto={props.aineisto} />
-      ) : (
-        <p>Kategoriaan ei ole asetettu aineistoa.</p>
-      )}
+      {!!aineistot?.length ? <AineistoTable kategoriaId={props.kategoria.id} /> : <p>Kategoriaan ei ole asetettu aineistoa.</p>}
       {!!props.kategoria.alaKategoriat?.length && (
-        <AineistoAlakategoriaAccordion
-          aineisto={props.aineisto}
-          expandedAineistoState={props.expandedAineistoState}
-          alakategoriat={props.kategoria.alaKategoriat}
-        />
+        <AineistoAlakategoriaAccordion expandedAineistoState={props.expandedAineistoState} alakategoriat={props.kategoria.alaKategoriat} />
       )}
     </>
   );

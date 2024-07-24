@@ -1,3 +1,4 @@
+import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import {
   AineistoInputNew,
   AineistoNew,
@@ -7,6 +8,7 @@ import {
   KunnallinenLadattuTiedostoInput,
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
+  TallennaHyvaksymisEsitysInput,
 } from "@services/api";
 import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 
@@ -16,7 +18,7 @@ export type HyvaksymisEsitysForm = {
   versio: number;
   muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
-    suunnitelma: { [key: string]: NonNullable<HyvaksymisEsitysInput["suunnitelma"]> };
+    suunnitelma: { [key: string]: FormAineistoNew[] };
   };
 };
 
@@ -74,10 +76,10 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
-function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined): { [key: string]: AineistoInputNew[] } {
+function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined): { [key: string]: FormAineistoNew[] } {
   const kategoriaIdt = aineistoKategoriat.listKategoriaIds();
 
-  const kategoriat = kategoriaIdt.reduce<{ [key: string]: AineistoInputNew[] }>((acc, kategoriaId) => {
+  const kategoriat = kategoriaIdt.reduce<{ [key: string]: FormAineistoNew[] }>((acc, kategoriaId) => {
     acc[kategoriaId] = [];
     return acc;
   }, {});
@@ -93,14 +95,18 @@ function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined
   }, kategoriat);
 }
 
-export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData: HyvaksymisEsitysForm) {
+export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
+  formData: HyvaksymisEsitysForm
+): TallennaHyvaksymisEsitysInput {
   const muistutukset = formData.muokattavaHyvaksymisEsitys.muistutukset;
   const suunnitelma = formData.muokattavaHyvaksymisEsitys.suunnitelma;
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
-      suunnitelma: Object.values(suunnitelma ?? {}).flat(),
+      suunnitelma: Object.values(suunnitelma ?? {})
+        .flat()
+        .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })),
       muistutukset: muistutukset
         ? Object.keys(muistutukset).reduce((acc, key) => {
             return acc.concat(muistutukset[key] ?? []);
@@ -141,12 +147,14 @@ function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): 
   return aineistot.map(adaptAineistoNewToInput);
 }
 
-function adaptAineistoNewToInput(aineisto: AineistoNew): AineistoInputNew {
-  const { dokumenttiOid, uuid, kategoriaId, nimi } = aineisto;
+function adaptAineistoNewToInput(aineisto: AineistoNew): FormAineistoNew {
+  const { dokumenttiOid, uuid, kategoriaId, nimi, tiedosto, tuotu, lisatty } = aineisto;
   return {
     dokumenttiOid,
     uuid,
     kategoriaId,
     nimi,
+    tuotu: tuotu && lisatty ? lisatty : undefined,
+    tiedosto,
   };
 }

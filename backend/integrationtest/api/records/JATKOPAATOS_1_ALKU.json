@@ -1490,11 +1490,11 @@
       "maakunnat": [
         1
       ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "nimi": "VLS-TESTI HASSU AUTOMAATTITESTIPROJEKTI1",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
       "tyyppi": "TIE",
-      "varahenkilonEmail": null,
-      "vastuuhenkilonEmail": "valhe.kouneli@cgi.com",
+      "varahenkilonEmail": "mikko.haapamaki102@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki101@cgi.com",
       "vaylamuoto": [
         "tie"
       ]

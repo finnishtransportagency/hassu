@@ -6,20 +6,15 @@ import { H3, H4 } from "@components/Headings";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import HassuAccordion from "@components/HassuAccordion";
-import { findKategoriaForVelhoAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
+import { findKategoriaForVelhoAineistoNew, FormAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import useTranslation from "next-translate/useTranslation";
 import SectionContent from "@components/layout/SectionContent";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoNewTable";
-import { AineistoInputNew, AineistoNew } from "@services/api";
 import find from "lodash/find";
 import remove from "lodash/remove";
 
-type Props = {
-  aineisto: AineistoNew[] | null | undefined;
-};
-
-export default function Suunnitelma(props: Readonly<Props>): ReactElement {
+export default function Suunnitelma(): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { watch, setValue } = useFormContext<HyvaksymisEsitysForm>();
   const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
@@ -49,7 +44,6 @@ export default function Suunnitelma(props: Readonly<Props>): ReactElement {
           content: (
             <SectionContent largeGaps>
               <SuunnitelmaAineistoPaakategoriaContent
-                aineisto={props.aineisto}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
               />
@@ -85,13 +79,13 @@ export const combineOldAndNewAineistoWithCategories = ({
   newAineisto,
 }: {
   oldAineisto: {
-    [kategoriaId: string]: AineistoInputNew[];
+    [kategoriaId: string]: FormAineistoNew[];
   };
-  newAineisto: AineistoInputNew[];
+  newAineisto: FormAineistoNew[];
 }) =>
   newAineisto.reduce<{
     aineisto: {
-      [kategoriaId: string]: AineistoInputNew[];
+      [kategoriaId: string]: FormAineistoNew[];
     };
     kategoriasWithChanges: string[];
   }>(

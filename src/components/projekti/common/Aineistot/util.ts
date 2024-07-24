@@ -19,7 +19,7 @@ export interface AineistoNahtavillaTableFormValuesInterface {
 export type FormAineisto = FieldArrayWithId<AineistoNahtavillaTableFormValuesInterface, `aineistoNahtavilla.${string}`, "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
-export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tuotu" | "tiedosto">;
+export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tiedosto"> & { tuotu: string | undefined };
 
 export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain | { [kategoriaId: string]: AineistoInputNew[] }): Key[] {
   const keyArray = [];
@@ -69,12 +69,14 @@ export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineis
   }));
 }
 
-export function findKategoriaForVelhoAineistoNew(valitutVelhoAineistot: VelhoAineisto[]): AineistoInputNew[] {
-  return valitutVelhoAineistot.map<AineistoInputNew>((velhoAineisto) => ({
+export function findKategoriaForVelhoAineistoNew(valitutVelhoAineistot: VelhoAineisto[]): FormAineistoNew[] {
+  return valitutVelhoAineistot.map<FormAineistoNew>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
     kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
     uuid: uuid.v4(),
+    tuotu: undefined,
+    tiedosto: undefined,
   }));
 }
 
