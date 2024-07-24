@@ -12,7 +12,7 @@ import {
 } from "@services/api";
 import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 
-export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
+export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] };
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
@@ -98,20 +98,17 @@ function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined
 export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
   formData: HyvaksymisEsitysForm
 ): TallennaHyvaksymisEsitysInput {
-  const muistutukset = formData.muokattavaHyvaksymisEsitys.muistutukset;
-  const suunnitelma = formData.muokattavaHyvaksymisEsitys.suunnitelma;
+  const muistutukset = Object.values(formData.muokattavaHyvaksymisEsitys.muistutukset).flat();
+  const suunnitelma = Object.values(formData.muokattavaHyvaksymisEsitys.suunnitelma)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
+
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
-      suunnitelma: Object.values(suunnitelma ?? {})
-        .flat()
-        .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })),
-      muistutukset: muistutukset
-        ? Object.keys(muistutukset).reduce((acc, key) => {
-            return acc.concat(muistutukset[key] ?? []);
-          }, [] as KunnallinenLadattuTiedostoInput[])
-        : [],
+      suunnitelma,
+      muistutukset,
     },
   };
 }

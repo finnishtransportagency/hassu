@@ -27,6 +27,7 @@ export type FileInfo = {
   valmis: boolean;
   tuotu?: string | undefined | null;
   kunta?: number | null;
+  kategoriaId?: string | null;
 };
 
 type ProjektinAineistot = {
@@ -93,13 +94,14 @@ export default function collectHyvaksymisEsitysAineistot(
     valmis: aineistoNewIsReady(tiedosto.lisatty, aineistoHandledAt),
   }));
   const muutAineistot: FileInfo[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
-  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map((aineisto) => {
+  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map<FileInfo>((aineisto) => {
     const kategoriaFolder = getZipFolder(aineisto.kategoriaId) ?? "Kategorisoimattomat";
     return {
       s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
       zipFolder: joinPath("Suunnitelma", kategoriaFolder),
       nimi: aineisto.nimi,
       tuotu: aineisto.lisatty,
+      kategoriaId: aineisto.kategoriaId,
       valmis: aineistoNewIsReady(aineisto.lisatty, aineistoHandledAt),
     };
   });
