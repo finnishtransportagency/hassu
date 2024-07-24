@@ -8,7 +8,7 @@ const kategoriaInfoText: Record<string, string> = {
   osa_b: "Pääpiirustusten alle tuodaan B- tai T200 -kansioiden aineistot.",
   osa_c: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
   kategorisoimattomat:
-    "Kategorisoimattomat alle tuodaan kaikki aineistot, joita ei pystytty automaattisesti kategorisoimaan. Aineistot tulee siirtää Selostusosan-, Pääpiirustukset- tai Informatiivinen aineisto -kategorioiden alle. Pääset siirtymään kuulutukselle vasta, kun aineistot on siirretty ja Kategorisoimattomat on tyhjä.",
+    "Kategorisoimattomat alle tuodaan kaikki aineistot, joita ei pystytty automaattisesti kategorisoimaan. Aineistot tulee siirtää Selostusosan-, Pääpiirustukset- tai Informatiivinen aineisto -kategorioiden alle.",
 };
 
 interface SuunnitelmaAineistoPaakategoriaContentProps {

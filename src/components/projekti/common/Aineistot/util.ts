@@ -21,7 +21,7 @@ export type FormAineisto = FieldArrayWithId<AineistoNahtavillaTableFormValuesInt
 
 export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tiedosto"> & { tuotu: string | undefined };
 
-export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain | { [kategoriaId: string]: AineistoInputNew[] }): Key[] {
+export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain | { [kategoriaId: string]: FormAineistoNew[] }): Key[] {
   const keyArray = [];
   const hasKategorisoimattomatAineisto = !!aineistot?.[kategorisoimattomatId]?.length;
   if (hasKategorisoimattomatAineisto) {
