@@ -32,9 +32,9 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const muuAineistoVelhosta = watch("muokattavaHyvaksymisEsitys.muuAineistoVelhosta");
 
   const lomakkeellaUusiaAineistoja = useMemo(() => {
-    const uusiSuunnitelmaAineisto = suunnitelma?.some(
-      (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((a) => a.uuid === aineisto.uuid)
-    );
+    const uusiSuunnitelmaAineisto = Object.values(suunnitelma)
+      .flat()
+      ?.some((aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((a) => a.uuid === aineisto.uuid));
     const uusiMuuAineistoVelhosta = muuAineistoVelhosta?.some(
       (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
     );

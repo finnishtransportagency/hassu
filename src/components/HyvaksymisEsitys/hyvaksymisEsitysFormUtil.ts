@@ -8,13 +8,15 @@ import {
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
 } from "@services/api";
+import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 
 export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
-  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset"> & {
+  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
+    suunnitelma: { [key: string]: NonNullable<HyvaksymisEsitysInput["suunnitelma"]> };
   };
 };
 
@@ -58,7 +60,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
         viitetieto: viitetieto ?? "",
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
-      suunnitelma: adaptAineistotNewToInput(suunnitelma),
+      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
@@ -72,12 +74,33 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
+function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined): { [key: string]: AineistoInputNew[] } {
+  const kategoriaIdt = aineistoKategoriat.listKategoriaIds();
+
+  const kategoriat = kategoriaIdt.reduce<{ [key: string]: AineistoInputNew[] }>((acc, kategoriaId) => {
+    acc[kategoriaId] = [];
+    return acc;
+  }, {});
+
+  if (!suunnitelma?.length) {
+    return kategoriat;
+  }
+
+  return suunnitelma.reduce((kategorisoidutAineistot, aineisto) => {
+    const kategoriaId = aineisto.kategoriaId && kategoriaIdt.includes(aineisto.kategoriaId) ? aineisto.kategoriaId : kategorisoimattomatId;
+    kategorisoidutAineistot[kategoriaId].push(adaptAineistoNewToInput(aineisto));
+    return kategorisoidutAineistot;
+  }, kategoriat);
+}
+
 export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData: HyvaksymisEsitysForm) {
   const muistutukset = formData.muokattavaHyvaksymisEsitys.muistutukset;
+  const suunnitelma = formData.muokattavaHyvaksymisEsitys.suunnitelma;
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
+      suunnitelma: Object.values(suunnitelma ?? {}).flat(),
       muistutukset: muistutukset
         ? Object.keys(muistutukset).reduce((acc, key) => {
             return acc.concat(muistutukset[key] ?? []);

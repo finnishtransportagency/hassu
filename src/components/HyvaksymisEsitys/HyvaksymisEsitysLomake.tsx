@@ -122,7 +122,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
                 <HyvaksymisEsitysTiedosto tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisEsitys} />
-                <Suunnitelma />
+                <Suunnitelma aineisto={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.suunnitelma} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset

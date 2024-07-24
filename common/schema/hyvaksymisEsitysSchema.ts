@@ -10,6 +10,8 @@ import {
 } from "./common";
 import { notInPastCheck, paivamaara } from "./paivamaaraSchema";
 import { mapValues } from "lodash";
+import { aineistoKategoriat } from "../aineistoKategoriat";
+import { ObjectShape } from "yup/lib/object";
 
 const getKunnallinenLadattuTiedostoSchema = () =>
   Yup.object().shape({
@@ -67,7 +69,6 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
       lausunnot: getLadatutTiedostotNewSchema().defined(),
       maanomistajaluettelo: getLadatutTiedostotNewSchema().defined(),
       muuAineistoKoneelta: getLadatutTiedostotNewSchema().defined(),
-      suunnitelma: getAineistotNewSchema(true).defined(),
       muuAineistoVelhosta: getAineistotNewSchema(false).defined(),
       vastaanottajat: Yup.array()
         .of(
@@ -89,12 +90,22 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
       is: isTestTypeFrontend,
       then: Yup.object().shape({
         muistutukset: Yup.lazy((obj) => Yup.object(mapValues(obj, () => getKunnallinenLadatutTiedostotSchema().defined()))),
+        suunnitelma: suunnitelmaFrontendSchema(),
       }),
     })
     .when("$testType", {
       is: isTestTypeBackend,
       then: Yup.object().shape({
         muistutukset: getKunnallinenLadatutTiedostotSchema().defined(),
+        suunnitelma: getAineistotNewSchema(true).defined(),
       }),
     }),
 });
+
+function suunnitelmaFrontendSchema() {
+  const kategorioittenSchema = aineistoKategoriat.listKategoriaIds().reduce<ObjectShape>((obj, id) => {
+    obj[id] = getAineistotNewSchema(true).defined();
+    return obj;
+  }, {});
+  return Yup.object().shape(kategorioittenSchema);
+}

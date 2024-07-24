@@ -1,5 +1,5 @@
 import { SelectOption } from "@components/form/Select";
-import { Aineisto, AineistoInput, AineistoTila, VelhoAineisto } from "@services/api";
+import { Aineisto, AineistoInput, AineistoInputNew, AineistoNew, AineistoTila, VelhoAineisto } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { AineistoKategoria, aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
@@ -19,7 +19,9 @@ export interface AineistoNahtavillaTableFormValuesInterface {
 export type FormAineisto = FieldArrayWithId<AineistoNahtavillaTableFormValuesInterface, `aineistoNahtavilla.${string}`, "id"> &
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
-export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain): Key[] {
+export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tuotu" | "tiedosto">;
+
+export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain | { [kategoriaId: string]: AineistoInputNew[] }): Key[] {
   const keyArray = [];
   const hasKategorisoimattomatAineisto = !!aineistot?.[kategorisoimattomatId]?.length;
   if (hasKategorisoimattomatAineisto) {
@@ -63,6 +65,15 @@ export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineis
     nimi: velhoAineisto.tiedosto,
     kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
     tila: AineistoTila.ODOTTAA_TUONTIA,
+    uuid: uuid.v4(),
+  }));
+}
+
+export function findKategoriaForVelhoAineistoNew(valitutVelhoAineistot: VelhoAineisto[]): AineistoInputNew[] {
+  return valitutVelhoAineistot.map<AineistoInputNew>((velhoAineisto) => ({
+    dokumenttiOid: velhoAineisto.oid,
+    nimi: velhoAineisto.tiedosto,
+    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
     uuid: uuid.v4(),
   }));
 }
