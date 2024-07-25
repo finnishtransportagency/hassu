@@ -20,6 +20,7 @@ import { TestType } from "hassu-common/schema/common";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 import dayjs from "dayjs";
+import { aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -117,5 +118,15 @@ function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys
     (!aineistotHandledAt || !aineistot.every((aineisto) => dayjs(aineistotHandledAt).isAfter(dayjs(aineisto.lisatty))))
   ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
+  }
+  if (
+    muokattavaHyvaksymisEsitys.suunnitelma?.some(
+      (aineisto) =>
+        !aineisto.kategoriaId ||
+        aineisto.kategoriaId === kategorisoimattomatId ||
+        !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
+    )
+  ) {
+    throw new IllegalArgumentError("Suunnitelma-aineistojen on oltava kategorisoituna, jotta hyväksymisesitys voidaan hyväksyä.");
   }
 }

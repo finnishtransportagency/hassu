@@ -12,7 +12,8 @@ type ErrorInfo = {
 };
 
 // Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille tuotanto- ja koulutusympäristöissä
-const showErrorDetails = (props: GenerateErrorMessageProps): boolean => (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
+const showErrorDetails = (props: GenerateErrorMessageProps): boolean =>
+  (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.
@@ -44,6 +45,10 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
       return errorResponse.operation.operationName === "TallennaKiinteistonOmistajat";
     },
     errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui.",
+  },
+  {
+    validator: ({ errorResponse }) => errorResponse.operation.operationName === "TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi",
+    errorMessage: () => "Hyväksymisesityksen hyväksyttäväksi lähetys epäonnistui.",
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoGeoJsonSizeExceededError"),
@@ -85,7 +90,7 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
     matchingErrorMessages.map((item) => item.errorMessage(props)).forEach((message) => (errorMessage += message));
   }
 
-  // Ei nayteta korrelaatio IDeita kansalaisille
+  // Ei näytetä korrelaatio IDeita kansalaisille
   if (showErrorDetails(props)) {
     errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
   }
@@ -119,7 +124,7 @@ const constructErrorClassSpecificErrorMessage = (props: GenerateErrorMessageProp
   let errorMessage = "";
   if (errorInfo) {
     errorMessage = message;
-    // Ei nayteta yksityiskohtia kansalaisille
+    // Ei näytetä yksityiskohtia kansalaisille
     if (showErrorDetails(props)) {
       errorMessage += " " + errorInfo.errorMessage + ".";
     }
