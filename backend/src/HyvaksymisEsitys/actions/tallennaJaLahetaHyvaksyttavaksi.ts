@@ -96,7 +96,7 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys
-  if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
+  if (projektiInDB.muokattavaHyvaksymisEsitys?.tila && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
     throw new IllegalArgumentError("Projektilla ei ole muokkaustilaista hyväksymisesitystä");
   }
   if (input.versio !== projektiInDB.versio) {
