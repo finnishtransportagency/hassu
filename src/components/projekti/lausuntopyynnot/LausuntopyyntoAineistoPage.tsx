@@ -40,7 +40,7 @@ export default function LausuntopyyntoAineistoPage(props: Props): ReactElement {
             välilehteen yksi kerrallaan tai ladata ne kaikki kerallaan omalle koneellesi.
           </Notification>
         )}
-        {aineistot?.length && <H2>Suunnitelma</H2>}
+        <H2>Suunnitelma</H2>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={aineistoKategoriat.listKategoriat()}
           aineistot={aineistot}

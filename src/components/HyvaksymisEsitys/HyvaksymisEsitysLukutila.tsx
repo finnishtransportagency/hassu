@@ -136,11 +136,11 @@ export default function HyvaksymisEsitysLukutila({
         <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
           <HassuGridItem colSpan={1}>
             <H5>Suunnitelman nimi</H5>
-            <p>{perustiedot.suunnitelmanNimi ?? "-"}</p>
+            <p>{perustiedot.suunnitelmanNimi || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Asiatunnus</H5>
-            <p>{perustiedot.asiatunnus ?? "-"}</p>
+            <p>{perustiedot.asiatunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>Vastuuorganisaatio</H5>
@@ -148,19 +148,19 @@ export default function HyvaksymisEsitysLukutila({
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{perustiedot.yTunnus ?? "-"}</p>
+            <p>{perustiedot.yTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
-            <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
+            <p>{laskutustiedot?.ovtTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Verkkolaskuoperaattorin välittäjätunnus</H5>
-            <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
+            <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={3}>
             <H5>Viitetieto</H5>
-            <p>{laskutustiedot?.viitetieto ?? "-"}</p>
+            <p>{laskutustiedot?.viitetieto || "-"}</p>
           </HassuGridItem>
         </HassuGrid>
       </Section>
