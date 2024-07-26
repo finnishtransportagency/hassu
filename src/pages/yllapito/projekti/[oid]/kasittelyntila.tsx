@@ -156,15 +156,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
     if (projekti.nykyinenKayttaja.onYllapitaja) {
       if (
-        isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) &&
-        isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1)
+        isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) &&
+        isStatusLessOrEqualTo(projekti.status, Status.JATKOPAATOS_1)
       ) {
         kasittelynTila.ensimmainenJatkopaatos = {
           paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
           asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
         };
       }
-      if (isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2)) {
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)) {
         kasittelynTila.toinenJatkopaatos = {
           paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
           asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
@@ -181,7 +181,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain ?? null;
       kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null;
       kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto ?? null;
-      if (isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)) {
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO)) {
         kasittelynTila.hallintoOikeus =
           projekti.kasittelynTila?.hallintoOikeus ??
           ({
@@ -255,7 +255,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const onSubmit = useCallback(
     (data: KasittelynTilaFormValues) => withLoadingSpinner(save(data, "Tallennus onnistui")),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [save, withLoadingSpinner]
   );
 
   useEffect(() => {
