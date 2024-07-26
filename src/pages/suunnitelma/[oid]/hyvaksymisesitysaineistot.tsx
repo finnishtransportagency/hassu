@@ -3,11 +3,11 @@ import { HyvaksymisEsityksenAineistot } from "@services/api";
 import { useHyvaksymisEsityksenAineistot } from "src/hooks/useHyvaksymisEsityksenAineistot";
 import HyvaksymisEsitysAineistoPage from "@components/HyvaksymisEsitys/AineistoPage";
 import VanhentunutAineistolinkki from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
+import EiHyvaksymisEsitysta from "@components/HyvaksymisEsitys/EiHyvaksymisEsitysta";
 
 export default function HyvaksymisesitysLinkki(): ReactElement {
   const data: null | undefined | HyvaksymisEsityksenAineistot = useHyvaksymisEsityksenAineistot().data;
-  const poistumisPaiva = data?.poistumisPaiva;
-  if (!(poistumisPaiva && data)) {
+  if (!data) {
     return <></>;
   }
 
@@ -18,6 +18,15 @@ export default function HyvaksymisesitysLinkki(): ReactElement {
         suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
         projarinYhteystiedot={data.projektipaallikonYhteystiedot}
         hyvaksymisesitys
+      />
+    );
+  }
+
+  if (data.eiOlemassa) {
+    return (
+      <EiHyvaksymisEsitysta
+        suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
+        projarinYhteystiedot={data.projektipaallikonYhteystiedot}
       />
     );
   }

@@ -1,4 +1,4 @@
-import { Autocomplete, DialogActions, DialogContent, styled, TextField, Typography } from "@mui/material";
+import { Autocomplete, DialogActions, DialogContent, styled, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
@@ -67,6 +67,8 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
 
 export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: Readonly<Props>): ReactElement {
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { t, lang } = useTranslation();
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
@@ -365,7 +367,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
           </Button>
         </ContentSpacer>
       </ContentSpacer>
-      <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} />
+      <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} isMobile={isMobile} />
       <HassuDialog open={sessioVanhentunut} title={t("common:istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
         <DialogContent>
           <p>{t("common:istunto_vanhentunut_teksti")}</p>
@@ -385,9 +387,10 @@ interface KiitosProps {
   onClose: () => void;
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
   projekti: ProjektiJulkinen;
+  isMobile: boolean;
 }
 
-export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: Readonly<KiitosProps>): ReactElement {
+export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<KiitosProps>): ReactElement {
   const { t } = useTranslation();
   const viranomaisenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
@@ -397,7 +400,15 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: Readon
     return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   return (
-    <HassuDialog scroll="body" open={open} title={t("projekti:muistutuslomake.kiitos_viestista")} onClose={onClose} maxWidth={"sm"}>
+    <HassuDialog
+      PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
+      scroll="paper"
+      fullScreen={isMobile}
+      open={open}
+      title={t("projekti:muistutuslomake.kiitos_viestista")}
+      onClose={onClose}
+      maxWidth={"sm"}
+    >
       <DialogContent>
         <p>
           {t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi", {

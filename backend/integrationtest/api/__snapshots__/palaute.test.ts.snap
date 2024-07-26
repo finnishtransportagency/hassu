@@ -117,9 +117,48 @@ Array [
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
+    "subject": "Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
+    "text": "Palaute vastaanotettu
+01.01.2023 00:00
+Nimi
+Matti Meikalainen
+Sähköposti
+test@vayla.fi
+Puhelinnumero
+123456
+
+Suunnitelman nimi
+HASSU AUTOMAATTITESTIPROJEKTI1
+Palaute
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Sähköpostiviestin liite
+logo.png
+",
+    "to": "test@vayla.fi",
+  },
+  Object {
     "subject": "Suunnitelmaan on tullut palautetta",
     "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
     "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "subject": "Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
+    "text": "Palaute vastaanotettu
+01.01.2023 00:00
+Nimi
+Joku Toinen
+Sähköposti
+test@vayla.fi
+Puhelinnumero
+123456
+
+Suunnitelman nimi
+HASSU AUTOMAATTITESTIPROJEKTI1
+Palaute
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+",
+    "to": "test@vayla.fi",
   },
   Object {
     "subject": "Suunnitelmaan on tullut palautetta",

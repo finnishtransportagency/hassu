@@ -8,7 +8,7 @@ import sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { Status } from "hassu-common/graphql/apiModel";
 import { api } from "./apiClient";
-import { IllegalAccessError } from "hassu-common/error";
+import { IllegalAccessError, NotActiveError } from "hassu-common/error";
 import {
   defaultMocks,
   expectJulkinenNotFound,
@@ -79,7 +79,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     jatkopaatosProjekti.paivitetty = "***unit test***";
     log.error("Jatkopäätöksen käyttöoikeudet", { kayttoOikeudet: jatkopaatosProjekti.kayttoOikeudet });
     expectToMatchSnapshot("jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen", jatkopaatosProjekti.kayttoOikeudet);
-    await expectJulkinenNotFound(oid, userFixture);
+    await expectJulkinenNotFound(oid, userFixture, NotActiveError);
 
     await recordProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU, oid);
   }
@@ -94,7 +94,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     // Kuulutusvaihepäättyypäivä yli vuosi menneisyyteen
     asetaAika("2027-02-02");
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
-    await expectJulkinenNotFound(oid, userFixture);
+    await expectJulkinenNotFound(oid, userFixture, NotActiveError);
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);

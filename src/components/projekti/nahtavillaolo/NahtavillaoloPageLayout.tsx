@@ -11,7 +11,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "@services/api";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
-import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "hassu-common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
@@ -40,7 +40,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
         },
       },
       label: <span>Nähtäville asetettavat aineistot</span>,
-      disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
+      disabled: !isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO_AINEISTOT),
       id: "aineisto_tab",
     };
     if (
@@ -61,7 +61,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
           },
         },
         label: <span>Kuulutuksen tiedot</span>,
-        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO),
+        disabled: !isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO),
         id: "kuulutuksentiedot_tab",
       },
     ];

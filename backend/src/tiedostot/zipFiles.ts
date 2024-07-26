@@ -5,11 +5,12 @@ import { Upload } from "@aws-sdk/lib-storage";
 import archiver from "archiver";
 import { getS3Client } from "../aws/client";
 import { config } from "../config";
+import { joinPath } from "./paths";
 
 function getFileName(s3Key: string, zipFolder?: string) {
   const fileName = s3Key.split("/").pop()!;
   if (!zipFolder) return fileName;
-  return zipFolder + fileName;
+  return joinPath(zipFolder, fileName);
 }
 
 const s3Client = getS3Client();
@@ -41,15 +42,8 @@ function getWritableStreamFromS3(bucket: string, zipFileS3Key: string) {
 }
 
 export type ZipSourceFile = { s3Key: string; zipFolder?: string };
-type S3DownloadStreamDetails = { stream: Readable; filename: string };
 export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFiles: ZipSourceFile[], zipFileS3Key: string) {
-  const readables: S3DownloadStreamDetails[] = [];
   try {
-    for (const zipSourceFile of zipSourceFiles) {
-      const s3ReadableStream = await getReadableStreamFromS3(bucket, zipSourceFile.s3Key);
-      readables.push({ stream: s3ReadableStream as Readable, filename: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
-    }
-
     const { passthrough, uploads } = getWritableStreamFromS3(bucket, zipFileS3Key);
     await new Promise((resolve, reject) => {
       const zip = archiver("zip");
@@ -59,10 +53,13 @@ export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFile
       passthrough.on("error", reject);
 
       zip.pipe(passthrough);
-      for (const file of readables) {
-        zip.append(file.stream, { name: file.filename });
-      }
-      zip.finalize();
+      Promise.all(
+        zipSourceFiles.map((zipSourceFile) =>
+          getReadableStreamFromS3(bucket, zipSourceFile.s3Key).then((s3ReadableStream) =>
+            zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) })
+          )
+        )
+      ).then(() => zip.finalize());
     }).catch((error: { code: string; message: string; data: string }) => {
       throw new Error(`${error.code} ${error.message} ${error.data}`);
     });

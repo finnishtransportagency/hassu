@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS, {
   TEST_HYVAKSYMISESITYS2,
@@ -19,15 +19,18 @@ import { EmailOptions } from "../../src/email/model/emailOptions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { parameters } from "../../src/aws/parameters";
 import MockDate from "mockdate";
+import { DeepReadonly } from "hassu-common/specialTypes";
 
-describe("Hyväksymisesityksen hyväksyminen", () => {
-  const userFixture = new UserFixture(userService);
-  setupLocalDatabase();
-  const oid = "Testi1";
-  let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
+const oid = "Testi1";
 
-  // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
-  const kayttoOikeudet = [
+const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
+  oid,
+  versio: 2,
+  vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+  asianhallinta: { inaktiivinen: true },
+  euRahoitus: false,
+  kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
+  kayttoOikeudet: [
     {
       etunimi: "Etunimi",
       sukunimi: "Sukunimi",
@@ -36,28 +39,41 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
       elyOrganisaatio: API.ELY.HAME_ELY,
       puhelinnumero: "0291234567",
+      organisaatio: "org1",
     },
     {
       etunimi: "Etunimi2",
       sukunimi: "Sukunimi2",
       email: "email2@email.com",
-      kayttajatunnus: "theadminuid",
+      kayttajatunnus: "thevarahenkilouid",
       tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+      puhelinnumero: "0291213",
+      organisaatio: "org2",
     },
     {
       etunimi: "Matti",
       sukunimi: "Muokkaaja",
       email: "muokkaaja@email.com",
       kayttajatunnus: "muokkaaja-oid",
+      puhelinnumero: "0291213",
+      organisaatio: "org2",
     },
-  ];
-
-  const velho = {
+  ],
+  velho: {
     nimi: "Projektin nimi",
     asiatunnusELY: "asiatunnusELY",
     suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
     kunnat: [91, 92],
-  };
+  },
+  salt: "suola",
+});
+
+describe("Hyväksymisesityksen hyväksyminen", () => {
+  const userFixture = new UserFixture(userService);
+  setupLocalDatabase();
+  let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
+
+  // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
@@ -108,24 +124,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot", async () => {
     MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
-      kayttoOikeudet,
-      velho,
     };
     await insertProjektiToDB(projektiBefore);
-    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
     expect({
       ...omit(projektiAfter, "paivitetty"),
       julkaistuHyvaksymisEsitys: omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva"),
     }).to.eql({
       ...projektiBefore,
-      versio: versio + 1,
+      versio: projektiBefore.versio + 1,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.HYVAKSYTTY, palautusSyy: null },
       julkaistuHyvaksymisEsitys: {
         ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
@@ -143,21 +159,37 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
   });
 
+  it("ei onnistu, jos projektin status on liian pieni", async () => {
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const { euRahoitus: _eu, kielitiedot: _kt, ...projekti } = getProjektiBase();
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...projekti,
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError, "Projektin hyväksymisesitysvaihe ei ole aktiivinen");
+  });
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sellainen tapahtuu", async () => {
     MockDate.set("2000-01-01");
     emailStub?.onFirstCall().throws();
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
-      kayttoOikeudet,
-      velho,
     };
     await insertProjektiToDB(projektiBefore);
-    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
     expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
       {
@@ -169,44 +201,17 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
     const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          organisaatio: "Pupulandia",
-          puhelinnumero: "0291234567",
-        },
-        {
-          etunimi: "Etunimi2",
-          sukunimi: "Sukunimi2",
-          email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-        },
-        {
-          etunimi: "Matti",
-          sukunimi: "Muokkaaja",
-          email: "muokkaaja@email.com",
-          kayttajatunnus: "muokkaaja-oid",
-        },
-      ],
       asianhallinta: {
         inaktiivinen: true,
-      },
-      velho: {
-        nimi: "Projektin nimi",
-        asiatunnusVayla: "asiatunnusVayla",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-        kunnat: [91, 92],
       },
     };
     await insertProjektiToDB(projektiBefore);
@@ -240,42 +245,15 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
     const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          elyOrganisaatio: API.ELY.HAME_ELY,
-          puhelinnumero: "0291234567",
-        },
-        {
-          etunimi: "Etunimi2",
-          sukunimi: "Sukunimi2",
-          email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-        },
-        {
-          etunimi: "Matti",
-          sukunimi: "Muokkaaja",
-          email: "muokkaaja@email.com",
-          kayttajatunnus: "muokkaaja-oid",
-        },
-      ],
-      velho: {
-        nimi: "Projektin nimi",
-        asiatunnusELY: "asiatunnusELY",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
-        kunnat: [91, 92],
-      },
       asianhallinta: {
         inaktiivinen: false,
         asiaId: 14,
@@ -332,25 +310,31 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
+          puhelinnumero: "0291234567",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "0291234567",
         },
       ],
       asianhallinta: {
         inaktiivinen: true,
       },
+      vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
+      euRahoitus: false,
+      kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI, toissijainenKieli: undefined },
       velho: {
         nimi: "Projektin nimi",
         asiatunnusELY: "asiatunnusELY",
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
         kunnat: [91, 92],
       },
+      salt: "suola",
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
@@ -367,17 +351,16 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Hämeen ELY-keskus")).to.be.true;
   });
 
-  it("näyttää oiketa tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
+  it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
     };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const { kayttoOikeudet: _ko, ...projektinen } = getProjektiBase();
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...projektinen,
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [
         {
@@ -393,89 +376,18 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "thevarahenkilouid",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-        },
-        {
-          etunimi: "Matti",
-          sukunimi: "Muokkaaja",
-          email: "muokkaaja@email.com",
-          kayttajatunnus: "muokkaaja-oid",
-        },
-      ],
-      velho: {
-        nimi: "Projektin nimi",
-        asiatunnusELY: "asiatunnusELY",
-        asiatunnusVayla: "asiatunnusVAYLA",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-        kunnat: [91, 92],
-      },
-      asianhallinta: {
-        inaktiivinen: false,
-        asiaId: "asiaId",
-      },
-    };
-    await insertProjektiToDB(projektiBefore);
-    await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
-
-    const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
-      const to = (call.firstArg as EmailOptions).to;
-      return Array.isArray(to) && to.includes("email@email.com") && to.includes("email2@email.com");
-    });
-    expect(ilmoitusProjarille).to.exist;
-    expect(
-      /getParameterValue_AshaBaseUrl\/group\/asianhallinta\/asianhallinta\/-\/case\/asiaId\/view/.test(
-        (ilmoitusProjarille?.firstArg as EmailOptions).text as string
-      )
-    ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
-
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
-      const to = (call.firstArg as EmailOptions).to;
-      return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
-    });
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Asiatunnus\n\nasiatunnusVAYLA")).to.be.true;
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nVäylävirasto")).to.be.true;
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Y-tunnus\n\n1010547-1")).to.be.true;
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Väylävirasto")).to.be.true;
-  });
-
-  it("näyttää oiketa tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
-    userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = {
-      ...TEST_HYVAKSYMISESITYS,
-      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
-      palautusSyy: "Virheitä",
-    };
-    const versio = 2;
-    const projektiBefore: DBProjekti = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitys as unknown as MuokattavaHyvaksymisEsitys,
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          organisaatio: "Väylävirasto",
           puhelinnumero: "0291234567",
-        },
-        {
-          etunimi: "Etunimi2",
-          sukunimi: "Sukunimi2",
-          email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-          organisaatio: "Organisaatio1",
+          organisaatio: "Väylävirasto",
         },
         {
           etunimi: "Matti",
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
-          organisaatio: "Organisaatio1",
+          puhelinnumero: "0291234567",
+          organisaatio: "Väylävirasto",
         },
       ],
       velho: {
@@ -490,6 +402,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         asiaId: 14,
       },
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     expect(emailStub?.callCount).to.eql(3);
@@ -509,8 +422,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Sähköpostin liitteenä on myös hyväksymisesitys"))
-      .to.be.true;
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Asiatunnus\n\nasiatunnusVAYLA")).to.be.true;
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nVäylävirasto")).to.be.true;
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Y-tunnus\n\n1010547-1")).to.be.true;
@@ -524,50 +435,13 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
       palautusSyy: "Virheitä",
+      hyvaksymisEsitys: null,
     };
-    const versio = 2;
-    const projektiBefore: DBProjekti = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys: { ...(muokattavaHyvaksymisEsitys as unknown as MuokattavaHyvaksymisEsitys), hyvaksymisEsitys: null },
-      kayttoOikeudet: [
-        {
-          etunimi: "Etunimi",
-          sukunimi: "Sukunimi",
-          email: "email@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          organisaatio: "Väylävirasto",
-          puhelinnumero: "0291234567",
-        },
-        {
-          etunimi: "Etunimi2",
-          sukunimi: "Sukunimi2",
-          email: "email2@email.com",
-          kayttajatunnus: "theadminuid",
-          tyyppi: API.KayttajaTyyppi.VARAHENKILO,
-          organisaatio: "Organisaatio 1",
-        },
-        {
-          etunimi: "Matti",
-          sukunimi: "Muokkaaja",
-          email: "muokkaaja@email.com",
-          kayttajatunnus: "muokkaaja-oid",
-          organisaatio: "Organisaatio 1",
-        },
-      ],
-      velho: {
-        nimi: "Projektin nimi",
-        asiatunnusELY: "asiatunnusELY",
-        asiatunnusVayla: "asiatunnusVAYLA",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-        kunnat: [91, 92],
-      },
-      asianhallinta: {
-        inaktiivinen: false,
-        asiaId: 14,
-      },
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     expect(emailStub?.callCount).to.eql(3);
@@ -577,12 +451,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       return Array.isArray(to) && to.includes("email@email.com") && to.includes("email2@email.com");
     });
     expect(ilmoitusProjarille).to.exist;
-    expect(
-      /getParameterValue_AshaBaseUrl\/group\/asianhallinta\/asianhallinta\/-\/case\/14\/view/.test(
-        (ilmoitusProjarille?.firstArg as EmailOptions).text as string
-      )
-    ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
-
     const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
@@ -593,16 +461,23 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("onnistuu projektipäälliköltä", async () => {
     const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
+    const projariAsVaylaDBUser: DBVaylaUser = {
       kayttajatunnus: projari.uid!,
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      puhelinnumero: "029213213",
+      email: "projari.projarinen@vayla.fi",
+      etunimi: "Projari",
+      sukunimi: "Projarinen",
+      organisaatio: "Väylävirasto",
     };
     userFixture.loginAs(projari);
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [
         projariAsVaylaDBUser,
@@ -611,26 +486,30 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           sukunimi: "Muokkaaja",
           email: "muokkaaja@email.com",
           kayttajatunnus: "muokkaaja-oid",
+          puhelinnumero: "029213213",
+          organisaatio: "Organisaatio 123",
         },
-      ], // Muokkaajan tiedot tarvitsee olla, jotta s.postia lähetettäessä ei tule virhettä logille
+      ],
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.fulfilled;
+    await expect(kutsu).to.be.eventually.be.fulfilled;
   });
 
   it("luo julkaistun hyväksymisesityksen muokattavan perusteella", async () => {
     MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys,
-      kayttoOikeudet,
-      velho,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
     };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const projektiAfter = await getProjektiFromDB(oid);
@@ -651,17 +530,23 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("poistaa vanhat julkaistut tiedostot ja kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const julkaistuHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, hyvaksyja: "theadminuid", hyvaksymisPaiva: "2022-01-01" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      hyvaksyja: "theadminuid",
+      hyvaksymisPaiva: "2022-01-01",
+      poistumisPaiva: "2033-01-01",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
-      kayttoOikeudet,
-      velho,
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     // Aseta julkaistulle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
@@ -694,15 +579,16 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle, kun julkaistaan ekaa kertaa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys,
-      kayttoOikeudet,
-      velho,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
     };
+    const projektiBefore = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
 
     await hyvaksyHyvaksymisEsitys({ oid, versio });
@@ -729,23 +615,34 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("ei onnistu projektihenkilöltä", async () => {
     const projari = UserFixture.pekkaProjari;
-    const projariAsVaylaDBUser: Partial<DBVaylaUser> = {
+    const projariAsVaylaDBUser: DBVaylaUser = {
       kayttajatunnus: projari.uid!,
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+      email: "projari@vayla.fi",
+      etunimi: "projari",
+      sukunimi: "projarinen",
+      organisaatio: "Väylävirasto",
     };
     const muokkaaja = UserFixture.manuMuokkaaja;
-    const muokkaajaAsVaylaDBUser: Partial<DBVaylaUser> = {
+    const muokkaajaAsVaylaDBUser: DBVaylaUser = {
       kayttajatunnus: muokkaaja.uid!,
+      email: "manumuokkaaja@vayla.fi",
+      etunimi: "manu",
+      sukunimi: "muokkaaja",
+      organisaatio: "Väylävirasto",
     };
     userFixture.loginAs(muokkaaja);
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
       kayttoOikeudet: [projariAsVaylaDBUser, muokkaajaAsVaylaDBUser],
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
     await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalAccessError);
@@ -753,60 +650,68 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("ei onnistu, jos muokattava hyväksymisesitys on hyväksytty-tilassa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.HYVAKSYTTY };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.MUOKKAUS };
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
     };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu, jos muokattavaa hyväksymisesitystä ei ole", async () => {
     userFixture.loginAsAdmin();
-    const versio = 2;
-    const projektiBefore = {
-      oid,
-      versio,
-    };
+    const projektiBefore = getProjektiBase();
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu jos poistumisPaiva on menneisyydessa", async () => {
     MockDate.set("2023-01-02");
     userFixture.loginAsAdmin();
-    const versio = 2;
-    const projektiBefore: DBProjekti = {
-      oid,
-      versio,
-      muokattavaHyvaksymisEsitys: {
-        ...(TEST_HYVAKSYMISESITYS as unknown as MuokattavaHyvaksymisEsitys),
-        tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
-        palautusSyy: "Virheitä",
-        poistumisPaiva: "2023-01-01",
-      },
-      kayttoOikeudet: kayttoOikeudet as unknown as DBVaylaUser[],
-      velho,
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+      poistumisPaiva: "2023-01-01",
     };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const hyvaksy = hyvaksyHyvaksymisEsitys({ oid, versio });
     await expect(hyvaksy).to.eventually.be.rejectedWith(

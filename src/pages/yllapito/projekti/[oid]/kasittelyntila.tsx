@@ -29,7 +29,7 @@ import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
-import { isProjektiStatusGreaterOrEqualTo, isProjektiStatusLessOrEqualTo } from "hassu-common/statusOrder";
+import { isStatusGreaterOrEqualTo, isStatusLessOrEqualTo } from "hassu-common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";
@@ -144,7 +144,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     !!projektiLoadError ||
     isLoadingProjekti ||
     isFormSubmitting ||
-    !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO);
+    !isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO);
 
   const defaultValues: KasittelynTilaFormValues = useMemo(() => {
     const kasittelynTila: KasittelyntilaInput = {
@@ -209,8 +209,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const isFormDisabled = disableAdminOnlyFields && hyvaksymispaatosDisabled;
   const ensimmainenJatkopaatosDisabled =
     disableAdminOnlyFields ||
-    !(isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) && isProjektiStatusLessOrEqualTo(projekti, Status.JATKOPAATOS_1));
-  const toinenJatkopaatosDisabled = disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2);
+    !(isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) && isStatusLessOrEqualTo(projekti.status, Status.JATKOPAATOS_1));
+  const toinenJatkopaatosDisabled = disableAdminOnlyFields || !isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2);
 
   const formOptions: UseFormProps<KasittelynTilaFormValues, ProjektiValidationContext> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
@@ -585,10 +585,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label={`1. jatkopäätöksen päivä ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
                 controllerProps={{ control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={ensimmainenJatkopaatosDisabled}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1)}
+                includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm)}
               />
-              {projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) ? (
+              {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) ? (
                 <TextInput
                   label={`Asiatunnus ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
                   {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
@@ -611,11 +611,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <DatePickerConditionallyInTheForm
                 label={`2. jatkopäätöksen päivä ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
                 disabled={toinenJatkopaatosDisabled}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2)}
+                includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)}
                 controllerProps={{ control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm)}
               />
-              {projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2) ? (
+              {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2) ? (
                 <TextInput
                   label={`Asiatunnus ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
                   {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
@@ -639,14 +639,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         <Section>
           <HallintoOikeus
             includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-            disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
+            disabled={disableAdminOnlyFields || !isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO)}
             projekti={projekti}
           />
         </Section>
         <Section>
           <KorkeinHallintoOikeus
             includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-            disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
+            disabled={disableAdminOnlyFields || !isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO)}
             projekti={projekti}
           />
         </Section>

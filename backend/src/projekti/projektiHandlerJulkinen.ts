@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import * as API from "hassu-common/graphql/apiModel";
 import { LataaProjektiJulkinenQueryVariables } from "hassu-common/graphql/apiModel";
-import { NotFoundError } from "hassu-common/error";
+import { NotActiveError, NotFoundError } from "hassu-common/error";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import assert from "assert";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
@@ -17,6 +17,7 @@ export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVar
     if (adaptedProjekti) {
       return adaptedProjekti;
     }
+    throw new NotActiveError("Projekti epäaktiivinen: " + oid);
   }
   throw new NotFoundError("Projektia ei löydy: " + oid);
 }

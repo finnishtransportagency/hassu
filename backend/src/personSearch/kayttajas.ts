@@ -22,7 +22,7 @@ export class Kayttajas {
     if (uid && this.personMap[uid]) {
       return adaptPerson(uid, this.personMap[uid]);
     } else {
-      log.error("person not found", uid);
+      log.error("person not found '" + uid + "'");
     }
   }
 

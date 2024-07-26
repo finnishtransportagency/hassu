@@ -21,7 +21,10 @@ import {
  * @returns Tiedot hyväksymisesityksestä varustettuna aineistojen sijaintitiedolla ja tiedolla siitä, onko aineistot tuotu
  */
 export function adaptHyvaksymisEsitysToAPI(
-  projekti: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt">
+  projekti: Pick<
+    DBProjekti,
+    "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt" | "hyvEsAineistoPaketti"
+  >
 ): API.HyvaksymisEsitys | undefined {
   const { oid, salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys } = projekti;
   if (!(muokattavaHyvaksymisEsitys || julkaistuHyvaksymisEsitys)) {
@@ -31,7 +34,7 @@ export function adaptHyvaksymisEsitysToAPI(
   const hyvaksymisEsitys =
     muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY ? julkaistuHyvaksymisEsitys : muokattavaHyvaksymisEsitys;
   const julkaistu = muokattavaHyvaksymisEsitys?.tila == API.HyvaksymisTila.HYVAKSYTTY;
-  const aineistotHandledAt = julkaistu || projekti.aineistoHandledAt;
+  const aineistotHandledAt = projekti.aineistoHandledAt;
 
   assertIsDefined(hyvaksymisEsitys, "jomman kumman olemassaolo on varmistettu aiemmin");
 
@@ -76,5 +79,8 @@ export function adaptHyvaksymisEsitysToAPI(
     tila: muokattavaHyvaksymisEsitys?.tila ?? API.HyvaksymisTila.MUOKKAUS,
     hash: createHyvaksymisEsitysHash(oid, hyvaksymisEsitys.versio, salt),
     palautusSyy: muokattavaHyvaksymisEsitys?.palautusSyy,
+    aineistopaketti: projekti.hyvEsAineistoPaketti
+      ? joinPath(getYllapitoPathForProjekti(projekti.oid), JULKAISTU_HYVAKSYMISESITYS_PATH, "aineisto.zip")
+      : undefined,
   };
 }

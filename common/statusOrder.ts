@@ -1,17 +1,14 @@
-import { Projekti, ProjektiJulkinen, Status } from "./graphql/apiModel";
+import { Status } from "./graphql/apiModel";
 
-type ProjektiStatusComparisonFunc = (
-  projekti: Pick<Projekti, "status"> | Pick<ProjektiJulkinen, "status">,
-  minimumStatus: Status
-) => boolean;
+type StatusComparisonFunc = (status: Status | null | undefined, minimumStatus: Status) => boolean;
 
-export const isProjektiStatusGreaterOrEqualTo: ProjektiStatusComparisonFunc = (projekti, minimumStatus) =>
-  !!projekti.status && statusOrder[projekti.status] >= statusOrder[minimumStatus];
+export const isStatusGreaterOrEqualTo: StatusComparisonFunc = (status, minimumStatus) =>
+  !!status && statusOrder[status] >= statusOrder[minimumStatus];
 
-export const isProjektiStatusLessOrEqualTo: ProjektiStatusComparisonFunc = (projekti, maximumStatus) =>
-  !!projekti.status && statusOrder[projekti.status] <= statusOrder[maximumStatus];
+export const isStatusLessOrEqualTo: StatusComparisonFunc = (status, maximumStatus) =>
+  !!status && statusOrder[status] <= statusOrder[maximumStatus];
 
-  export const statusOrder: Record<Status, number> = {
+export const statusOrder: Record<Status, number> = {
   EI_JULKAISTU_PROJEKTIN_HENKILOT: 0,
   EI_JULKAISTU: 1,
   ALOITUSKUULUTUS: 2,

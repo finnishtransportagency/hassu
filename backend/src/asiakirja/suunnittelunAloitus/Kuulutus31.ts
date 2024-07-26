@@ -9,7 +9,7 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
-  SUOMI: "KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA",
+  SUOMI: "Kuulutus suunnitelman nähtäville asettamisesta",
   RUOTSI: "Kungörelse om framläggandet av planen",
 };
 

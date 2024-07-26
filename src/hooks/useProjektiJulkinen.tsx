@@ -28,6 +28,7 @@ export function useProjektiJulkinen() {
   return useSWR([apiConfig.lataaProjekti.graphql, oid, langToKieli(lang)], projektiLoader, {
     revalidateOnReconnect: true,
     revalidateIfStale: true,
+    errorRetryCount: 0,
   });
 }
 
