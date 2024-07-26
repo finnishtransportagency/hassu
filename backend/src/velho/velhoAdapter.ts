@@ -278,6 +278,7 @@ async function persistGeoJsonFile(data: ProjektiProjekti) {
   const geoJSON = getGeoJSON(data);
   const fileName = "sijaintitieto/sijaintitieto.geojson";
   if (geoJSON) {
+    log.info("Tallennetaan sijaintitieto geoJSON-tiedostoon");
     await fileService.createFileToProjekti({
       oid: data.oid,
       fileName,
@@ -286,8 +287,9 @@ async function persistGeoJsonFile(data: ProjektiProjekti) {
       contentType: "application/geo+json",
     });
   } else {
+    log.info("Poistetaan sijaintitieto geoJSON-tiedosto");
     await fileService.deleteYllapitoFileFromProjekti({
-      filePathInProjekti: fileName,
+      filePathInProjekti: "/" + fileName,
       oid: data.oid,
       reason: "Velhossa ei ole sijaintitietoja",
     });

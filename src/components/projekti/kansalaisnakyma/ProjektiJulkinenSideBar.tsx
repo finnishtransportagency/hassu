@@ -32,6 +32,7 @@ const ProjektiSideNavigation = styled((props) => {
         const text = await response.data.text();
         setGeoJSON(text);
       } catch (e) {
+        setGeoJSON(null);
         // Ei tehdä mitään. Karttarajaustiedostoa ei toistaiseksi ole
       }
     };

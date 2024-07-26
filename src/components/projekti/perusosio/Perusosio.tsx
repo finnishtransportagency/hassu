@@ -44,6 +44,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
       } catch (e) {
         if (axios.isAxiosError(e) && e.response?.status === 404) {
           // Ei tehdä mitään. Karttarajaustiedostoa ei toistaiseksi ole
+          setGeoJSON(null);
         } else {
           console.log(e);
           showErrorMessage("Projektin sijaintitiedon lataaminen epäonnistui");
