@@ -8,7 +8,6 @@ import {
   SuunnittelustaVastaavaViranomainen,
 } from "@services/api";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Tabs from "@components/layout/tabs/Tabs";
 import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
@@ -31,8 +30,9 @@ import { formatDate, isValidDate } from "hassu-common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import VirkamiesEtusivuTabs from "../../components/layout/tabs/VirkamiesEtusivuTabs";
 
-const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
+const DEFAULT_TYYPPI = "Kaikki";
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
 const DEFAULT_JARJESTYS_KASVAVA = false;
 const PAGE_SIZE = 10;
@@ -179,6 +179,30 @@ const VirkamiesHomePage = () => {
     Status.HYVAKSYTTY,
   ];
 
+  const kategoriat = [
+    {
+      label: "Kaikki" + ` (${tuloksienMaarat[ProjektiTyyppi.TIE] + tuloksienMaarat[ProjektiTyyppi.RATA] + tuloksienMaarat[ProjektiTyyppi.YLEINEN]})`,
+      value: "Kaikki",
+    },
+    {
+      label: "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
+      value: ProjektiTyyppi.TIE,
+    },
+    {
+      label: "Ratasuunnitelmat" + (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})` : ""),
+      value: ProjektiTyyppi.RATA,
+    },
+    {
+      label:
+        "Yleissuunnitelmat" + (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
+      value: ProjektiTyyppi.YLEINEN,
+    },
+    {
+      label: "Epäaktiiviset" + (hakutulos?.hasOwnProperty("epaaktiivisetMaara") ? ` (${tuloksienMaarat.epaaktiiviset})` : ""),
+      value: "epaaktiiviset",
+    },
+  ];
+
   return (
     <>
       <h1 className="vayla-title">Projektit</h1>
@@ -254,41 +278,21 @@ const VirkamiesHomePage = () => {
       </form>
 
       <Section noDivider>
-        <Tabs
+        <VirkamiesEtusivuTabs
           value={aktiivinenTabi}
-          onChange={(_, value) => {
-            if (value === "epaaktiiviset") {
+          tabItems={kategoriat}
+          onChange={(_: any, value: any) => {
+            if (value === "kaikki") {
+              fetchProjektit({ ...searchInput, projektiTyyppi: undefined, epaaktiivinen: false, sivunumero: 0 });
+            } else if (value === "epaaktiiviset") {
               router.push({ query: { epaaktiivinen: "true" } }, undefined, { scroll: false });
-              fetchProjektit({ ...searchInput, projektiTyyppi: null, epaaktiivinen: true, sivunumero: 0 });
+              fetchProjektit({});
             } else {
               const projektiTyyppi = value as ProjektiTyyppi;
               router.push({ query: { projektiTyyppi: projektiTyyppi } }, undefined, { scroll: false });
               fetchProjektit({ ...searchInput, epaaktiivinen: false, projektiTyyppi, sivunumero: 0 });
             }
           }}
-          tabs={[
-            {
-              label:
-                "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
-              value: ProjektiTyyppi.TIE,
-            },
-            {
-              label:
-                "Ratasuunnitelmat" +
-                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})` : ""),
-              value: ProjektiTyyppi.RATA,
-            },
-            {
-              label:
-                "Yleissuunnitelmat" +
-                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
-              value: ProjektiTyyppi.YLEINEN,
-            },
-            {
-              label: "Epäaktiiviset" + (hakutulos?.hasOwnProperty("epaaktiivisetMaara") ? ` (${tuloksienMaarat.epaaktiiviset})` : ""),
-              value: "epaaktiiviset",
-            },
-          ]}
         />
         {hakutulos?.tulokset?.length ? (
           <FrontPageTable
