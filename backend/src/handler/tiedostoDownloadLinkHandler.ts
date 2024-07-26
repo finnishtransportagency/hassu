@@ -65,7 +65,7 @@ class TiedostoDownloadLinkHandler {
     if (projekti) {
       const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
       if (!lausuntoPyynnonTaydennys) {
-        throw new NotFoundError("Lausuntopyynnon täydennystä ei löydy");
+        throw new NotFoundError("Lausuntopyynnön täydennystä ei löydy");
       }
       // projekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
