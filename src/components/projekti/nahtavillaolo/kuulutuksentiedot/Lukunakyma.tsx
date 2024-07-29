@@ -135,24 +135,6 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
         ))}
       </Section>
-      <Section smallGaps>
-        <H3>Kuulutus julkisella puolella</H3>
-        {epaaktiivinen ? (
-          <p>
-            Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva)}—
-            {formatDate(nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
-          </p>
-        ) : (
-          <>
-            {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-            {published && (
-              <p>
-                <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
-              </p>
-            )}
-          </>
-        )}
-      </Section>
       <Section>
         {epaaktiivinen ? (
           <SectionContent>
