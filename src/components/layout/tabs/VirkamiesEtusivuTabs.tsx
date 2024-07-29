@@ -13,7 +13,7 @@ type VirkamiesEtusivuTabsProps = {
 const HassuTab = styled(Tab)({
   paddingLeft: 0,
   paddingRight: 0,
-  marginLeft: 60,
+  marginLeft: 0,
   marginRight: 60,
   color: "#0063af",
 });

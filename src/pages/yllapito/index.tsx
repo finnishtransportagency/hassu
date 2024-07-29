@@ -32,7 +32,7 @@ import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import VirkamiesEtusivuTabs from "../../components/layout/tabs/VirkamiesEtusivuTabs";
 
-const DEFAULT_TYYPPI = "Kaikki";
+const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
 const DEFAULT_JARJESTYS_KASVAVA = false;
 const PAGE_SIZE = 10;
@@ -181,10 +181,6 @@ const VirkamiesHomePage = () => {
 
   const kategoriat = [
     {
-      label: "Kaikki" + ` (${tuloksienMaarat[ProjektiTyyppi.TIE] + tuloksienMaarat[ProjektiTyyppi.RATA] + tuloksienMaarat[ProjektiTyyppi.YLEINEN]})`,
-      value: "Kaikki",
-    },
-    {
       label: "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
       value: ProjektiTyyppi.TIE,
     },
@@ -282,9 +278,9 @@ const VirkamiesHomePage = () => {
           value={aktiivinenTabi}
           tabItems={kategoriat}
           onChange={(_: any, value: any) => {
-            if (value === "kaikki") {
+            /*if (value === "kaikki") {
               fetchProjektit({ ...searchInput, projektiTyyppi: undefined, epaaktiivinen: false, sivunumero: 0 });
-            } else if (value === "epaaktiiviset") {
+            } else */ if (value === "epaaktiiviset") {
               router.push({ query: { epaaktiivinen: "true" } }, undefined, { scroll: false });
               fetchProjektit({});
             } else {
