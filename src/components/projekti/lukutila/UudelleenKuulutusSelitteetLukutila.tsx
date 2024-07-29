@@ -2,10 +2,10 @@ import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import Section from "@components/layout/Section";
 import { Kielitiedot, UudelleenKuulutus } from "@services/api";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import React, { VoidFunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { label } from "src/util/textUtil";
 
-export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
+export const UudelleenKuulutusSelitteetLukutila: FunctionComponent<{
   kielitiedot: Kielitiedot;
   uudelleenKuulutus: UudelleenKuulutus;
 }> = ({ uudelleenKuulutus, kielitiedot }) => {
