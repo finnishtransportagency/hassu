@@ -11,9 +11,7 @@ import Section from "@components/layout/Section";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
-import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
@@ -38,11 +36,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     return <></>;
   }
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
-
-  let aloitusKuulutusHref: string | undefined;
-  if (published) {
-    aloitusKuulutusHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/aloituskuulutus";
-  }
 
   const { ensisijainenKieli, toissijainenKieli } = kielitiedot;
 

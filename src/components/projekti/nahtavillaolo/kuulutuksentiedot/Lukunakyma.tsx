@@ -6,7 +6,6 @@ import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
-import ExtLink from "@components/ExtLink";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";

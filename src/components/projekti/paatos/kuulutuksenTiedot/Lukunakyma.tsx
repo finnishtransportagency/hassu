@@ -12,7 +12,6 @@ import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import ExtLink from "@components/ExtLink";
 import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
@@ -20,7 +19,6 @@ import DownloadLink from "@components/DownloadLink";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
-import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
@@ -162,27 +160,6 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
             <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
           ))}
         </SectionContent>
-      </Section>
-      <Section>
-        {epaaktiivinen ? (
-          <SectionContent>
-            <H3>Kuulutus julkisella puolella</H3>
-            <p>
-              Kuulutus on ollut nähtävillä julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
-              {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan.
-            </p>
-          </SectionContent>
-        ) : (
-          <SectionContent>
-            <H3>Kuulutus julkisella puolella</H3>
-            {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-            {published && (
-              <p>
-                <ExtLink href={hyvaksymisPaatosVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
-              </p>
-            )}
-          </SectionContent>
-        )}
       </Section>
       <Section>
         {epaaktiivinen ? (
