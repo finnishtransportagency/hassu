@@ -28,7 +28,6 @@ import Verkkotilaisuus from "./Verkkotilaisuus";
 import YleisoTilaisuus from "./Yleisotilaisuus";
 import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
-import EmailLink from "@components/EmailLink";
 import useValidationMode from "src/hooks/useValidationMode";
 import { TukiEmailLink } from "../../../../EiOikeuksia";
 

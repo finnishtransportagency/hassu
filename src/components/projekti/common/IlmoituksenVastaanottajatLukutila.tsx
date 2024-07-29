@@ -4,8 +4,6 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
 import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
-import StyledLink from "../../StyledLink";
-import EmailLink from "../../EmailLink";
 import { TukiEmailLink } from "../../EiOikeuksia";
 
 interface Props {
