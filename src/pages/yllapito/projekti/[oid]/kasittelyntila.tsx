@@ -155,10 +155,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     };
 
     if (projekti.nykyinenKayttaja.onYllapitaja) {
-      if (
-        isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) &&
-        isStatusLessOrEqualTo(projekti.status, Status.JATKOPAATOS_1)
-      ) {
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)) {
         kasittelynTila.ensimmainenJatkopaatos = {
           paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
           asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
