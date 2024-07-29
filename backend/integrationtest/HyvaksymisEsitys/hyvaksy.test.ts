@@ -65,6 +65,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
     suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
     kunnat: [91, 92],
   },
+  salt: "suola",
 });
 
 describe("Hyväksymisesityksen hyväksyminen", () => {
@@ -333,6 +334,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
         kunnat: [91, 92],
       },
+      salt: "suola",
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
