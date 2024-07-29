@@ -132,34 +132,14 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
-        <Section>
-          <div>
-            <H3>Kuulutuksen yhteystiedot</H3>
-            {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-              <p style={{ margin: 0 }} key={index}>
-                {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
-              </p>
-            ))}
-          </div>
-        </Section>
-        <SectionContent>
-          <H3>Kuulutus julkisella puolella</H3>
-          {epaaktiivinen ? (
-            <p>
-              Kuulutus on ollut nähtävillä palvelun julkisella puolella {formatDate(aloituskuulutusjulkaisu.kuulutusPaiva)}—
-              {formatDate(aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen)} välisen ajan.
+        <div>
+          <H3>Kuulutuksen yhteystiedot</H3>
+          {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
+            <p style={{ margin: 0 }} key={index}>
+              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
             </p>
-          ) : (
-            <>
-              {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
-              {published && (
-                <p>
-                  <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
-                </p>
-              )}
-            </>
-          )}
-        </SectionContent>
+          ))}
+        </div>
       </Section>
       <Section>
         {aloituskuulutusjulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY && (
