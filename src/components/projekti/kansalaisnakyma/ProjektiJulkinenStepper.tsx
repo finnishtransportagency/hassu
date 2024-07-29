@@ -230,7 +230,7 @@ export default function ProjektiJulkinenStepper({
             >
               <span className="step-name-label">{step.label}</span>
               {vertical && selectedStepIndex !== index && (
-                <span className="step-status-label">{index === activeStepIndex ? "Käynnissä" : "Valmis"}</span>
+                <span className="step-status-label">{index === activeStepIndex ? t("projekti-vaiheet-status.kaynnissa") : t("projekti-vaiheet-status.valmis")}</span>
               )}
             </HassuLabel>
           </HassuLink>
@@ -243,7 +243,7 @@ export default function ProjektiJulkinenStepper({
             selected={selectedStepIndex === index}
           >
             <span className="step-name-label">{step.label}</span>
-            {vertical && <span className="step-status-label">Ei vielä tarkasteltavissa</span>}
+            {vertical && <span className="step-status-label">{t("projekti-vaiheet-status.ei_tarkasteltavissa")}</span>}
           </HassuLabel>
         )}
       </HassuStep>
