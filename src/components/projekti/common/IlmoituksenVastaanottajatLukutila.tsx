@@ -4,6 +4,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
 import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
+import StyledLink from "../../StyledLink";
+import EmailLink from "../../EmailLink";
+import { TukiEmailLink } from "../../EiOikeuksia";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -37,7 +40,7 @@ export default function IlmoituksenVastaanottajat({
                 <p>
                   Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty,
                   tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon{" "}
-                  <a href="mailto:tuki.vayliensuunittelu@vayla.fi">tuki.vayliensuunittelu@vayla.fi</a>.
+                  <TukiEmailLink />.
                 </p>
                 <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
               </>
