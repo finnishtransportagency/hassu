@@ -21,6 +21,11 @@
     "hyvaksymismenettelyssa": "Godkännandeförfarande",
     "hyvaksytty": "Godkänd"
   },
+  "projekti-vaiheet-status": {
+    "valmis": "Färdig",
+    "kaynnissa": "Pågående",
+    "ei_tarkasteltavissa": "Ännu inte tillgänglig för granskning"
+  },
   "projekti-vayla-muoto": {
     "tie": "Väg",
     "rata": "Spår",
