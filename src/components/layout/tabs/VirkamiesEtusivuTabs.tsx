@@ -18,9 +18,7 @@ const HassuTab = styled(Tab)({
   color: "#0063af",
 });
 
-const HassuTabs = styled(Tabs)({
-  // boxSizing: "border-box",
-});
+const HassuTabs = styled(Tabs)({});
 
 const VirkamiesEtusivuTabs = ({ value, onChange, tabItems }: VirkamiesEtusivuTabsProps) => {
   return (

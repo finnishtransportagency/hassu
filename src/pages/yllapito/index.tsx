@@ -278,9 +278,7 @@ const VirkamiesHomePage = () => {
           value={aktiivinenTabi}
           tabItems={kategoriat}
           onChange={(_: any, value: any) => {
-            /*if (value === "kaikki") {
-              fetchProjektit({ ...searchInput, projektiTyyppi: undefined, epaaktiivinen: false, sivunumero: 0 });
-            } else */ if (value === "epaaktiiviset") {
+            if (value === "epaaktiiviset") {
               router.push({ query: { epaaktiivinen: "true" } }, undefined, { scroll: false });
               fetchProjektit({});
             } else {
