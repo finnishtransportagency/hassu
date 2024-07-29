@@ -2,25 +2,25 @@ import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, Nahtav
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
-import FormatDate from "@components/FormatDate";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { splitFilePath } from "../../../../util/fileUtil";
-import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
-import { ProjektiTestCommand } from "common/testUtil.dev";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import useTranslation from "next-translate/useTranslation";
-import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../../Headings";
+import KuulutuksenSisalto from "../../common/KuulutuksenSisalto";
+import { isAjansiirtoSallittu } from "../../../../util/isAjansiirtoSallittu";
+import { ButtonFlatWithIcon } from "../../../button/ButtonFlat";
+import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -35,11 +35,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
     return <></>;
   }
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
-  let nahtavillaoloVaiheHref: string | undefined;
-  if (published) {
-    nahtavillaoloVaiheHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
-  }
+  let { kuulutusPaiva } = examineKuulutusPaiva(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
 
   function getPdft(kieli: Kieli | undefined | null): KuulutusSaamePDF | NahtavillaoloPDF | null | undefined {
     if (isKieliTranslatable(kieli) && nahtavillaoloVaiheJulkaisu?.nahtavillaoloPDFt) {
@@ -59,15 +55,8 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
 
   return (
     <>
-      <H2>Kuulutuksen sisältö</H2>
-      <Section>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
-          <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-          <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-1 mb-0">
-            <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
-          </p>
+      <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva ?? ""}>
+        {isAjansiirtoSallittu() && (
           <div className="md:col-span-2 mb-0">
             {isAjansiirtoSallittu() && (
               <ButtonFlatWithIcon
@@ -80,9 +69,6 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               </ButtonFlatWithIcon>
             )}
           </div>
-        </div>
-        {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
-          <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
         <div>
           <p className="vayla-label">
@@ -126,7 +112,10 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             </PreWrapParagraph>
           </div>
         )}
-      </Section>
+      </KuulutuksenSisalto>
+      {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
+        <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
+      )}
       <Section smallGaps>
         <H3>Kuulutuksen yhteyshenkilöt</H3>
         <p></p>

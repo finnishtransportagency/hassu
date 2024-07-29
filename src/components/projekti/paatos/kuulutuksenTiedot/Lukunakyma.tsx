@@ -27,6 +27,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../../Headings";
+import KuulutuksenSisalto from "../../common/KuulutuksenSisalto";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -63,68 +64,45 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
-  let hyvaksymisPaatosVaiheHref: string | undefined;
-  if (published) {
-    hyvaksymisPaatosVaiheHref =
-      window.location.protocol +
-      "//" +
-      window.location.host +
-      "/suunnitelma/" +
-      projekti.oid +
-      (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
-        ? "/hyvaksymispaatos"
-        : paatosTyyppi === PaatosTyyppi.JATKOPAATOS1
-        ? "/jatkopaatos1"
-        : "/jatkopaatos2");
-  }
+  let { kuulutusPaiva } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
 
   return (
     <>
-      <Section>
-        <H2>Kuulutuksen sisältö</H2>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
-          <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-          <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-1 mb-0">
-            <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />
-          </p>
-          {isAjansiirtoSallittu() && (
-            <div className="md:col-span-2 mb-0">
-              <ButtonFlatWithIcon
-                icon="history"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
-                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1Menneisyyteen());
-                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2Menneisyyteen());
-                  }
-                }}
-              >
-                Siirrä päivän verran menneisyyteen (TESTAAJILLE)
-              </ButtonFlatWithIcon>
-              <ButtonFlatWithIcon
-                icon="history"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
-                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1VuosiMenneisyyteen());
-                  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2VuosiMenneisyyteen());
-                  }
-                }}
-              >
-                Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
-              </ButtonFlatWithIcon>
-            </div>
-          )}
-        </div>
+      <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={julkaisu.kuulutusVaihePaattyyPaiva ?? ""}>
+        {isAjansiirtoSallittu() && (
+          <div className="md:col-span-2 mb-0">
+            <ButtonFlatWithIcon
+              icon="history"
+              onClick={(e) => {
+                e.preventDefault();
+                if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosMenneisyyteen());
+                } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1Menneisyyteen());
+                } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2Menneisyyteen());
+                }
+              }}
+            >
+              Siirrä päivän verran menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
+            <ButtonFlatWithIcon
+              icon="history"
+              onClick={(e) => {
+                e.preventDefault();
+                if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).hyvaksymispaatosVuosiMenneisyyteen());
+                } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos1VuosiMenneisyyteen());
+                } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).jatkopaatos2VuosiMenneisyyteen());
+                }
+              }}
+            >
+              Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
           <p className="vayla-label md:col-span-3">Päätöksen asiatunnus</p>
@@ -141,7 +119,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         )}
 
         <p>Päätös ja sen liitteet löytyvät Päätös ja sen liitteenä oleva aineisto -välilehdeltä.</p>
-      </Section>
+      </KuulutuksenSisalto>
       {julkaisu.uudelleenKuulutus && (
         <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={julkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
       )}

@@ -22,6 +22,7 @@ import DownloadLink from "@components/DownloadLink";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../Headings";
+import KuulutuksenSisalto from "../common/KuulutuksenSisalto";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -87,16 +88,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
           </Notification>
         )}
-        <H2>Kuulutuksen sisältö</H2>
-        <Section>
-          <div className="grid grid-cols-1 md:grid-cols-4">
-            <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
-            <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
-            <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-            <p className="md:col-span-1 mb-0">
-              <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
-            </p>
-          </div>
+        <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen ?? ""}>
           {isKieliTranslatable(ensisijainenKieli) && (
             <div>
               <p className="vayla-label">
@@ -121,7 +113,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
-        </Section>
+        </KuulutuksenSisalto>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
