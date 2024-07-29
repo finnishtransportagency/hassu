@@ -27,6 +27,7 @@ import { translate } from "../util/localization";
 import * as API from "hassu-common/graphql/apiModel";
 import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
+import { createHyvaksymisEsitysHash } from "../HyvaksymisEsitys/latauslinkit/hash";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -265,10 +266,14 @@ ${projektiPaallikkoSuffix}`,
 }
 
 export function createHyvaksymisesitysViranomaisilleEmail(
-  projekti: Pick<DBProjekti, "velho" | "oid" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
+  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
 ): EmailOptions {
+  assertIsDefined(projekti.muokattavaHyvaksymisEsitys);
   const asiatunnus = getAsiatunnus(projekti.velho);
   const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
+  const url = new URL(`https://${domain}/suunnitelma/${projekti.oid}/hyvaksymisesitysaineistot`);
+  url.searchParams.append("hash", createHyvaksymisEsitysHash(projekti.oid, projekti.muokattavaHyvaksymisEsitys.versio, projekti.salt));
+
   return {
     subject: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}`,
     text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
@@ -277,9 +282,7 @@ ${
   projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
 } lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
       projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? " kiireellisenä" : ""
-    }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa https://${domain}/suunnitelma/${
-      projekti.oid
-    }/hyvaksymisesityksen-aineistot
+    }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa ${url.href}
 ${projekti.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys?.length ? `\nSähköpostin liitteenä on myös hyväksymisesitys.\n` : "\n"}
 Lisätiedot 
 
