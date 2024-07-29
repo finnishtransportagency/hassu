@@ -105,8 +105,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
   validateHash(oid: string, salt: string, givenHash: string, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennys) {
     const hash = LausuntoPyynnonTaydennysDownloadLinkService.createLausuntoPyynnonTaydennysHash(oid, lausuntoPyynnonTaydennys.uuid, salt);
     if (hash != givenHash) {
-      log.error("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
-      throw new IllegalAccessError("Lausuntopyynnon täydennyksen aineiston tarkistussumma ei täsmää");
+      log.error("Lausuntopyynnön täydennyksen aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
+      throw new IllegalAccessError("Lausuntopyynnön täydennyksen aineiston tarkistussumma ei täsmää");
     }
   }
 

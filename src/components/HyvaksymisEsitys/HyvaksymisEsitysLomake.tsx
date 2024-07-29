@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, Vaihe } from "@services/api";
+import { HyvaksymisEsityksenTiedot } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
@@ -62,7 +62,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${hyvaksymisEsityksenTiedot.oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash}`;
 
   return (
-    <ProjektiPageLayout title="Hyväksymisesitys" vaihe={Vaihe.HYVAKSYMISPAATOS} showInfo>
+    <ProjektiPageLayout title="Hyväksymisesitys" showInfo>
       {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>

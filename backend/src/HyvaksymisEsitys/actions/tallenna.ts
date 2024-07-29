@@ -17,6 +17,7 @@ import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { TestType } from "hassu-common/schema/common";
+import dayjs from "dayjs";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot.
@@ -70,7 +71,8 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     if (
       uusiaAineistoja(
         getHyvaksymisEsityksenAineistot(projektiInDB.muokattavaHyvaksymisEsitys),
-        getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys)
+        getHyvaksymisEsityksenAineistot(newMuokattavaHyvaksymisEsitys),
+        projektiInDB.aineistoHandledAt
       )
     ) {
       await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.TUO_HYV_ES_TIEDOSTOT, oid });
@@ -100,6 +102,15 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tall
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 
-function uusiaAineistoja(aineistotBefore: AineistoNew[], aineistotAfter: AineistoNew[]): boolean {
-  return aineistotAfter.some(({ uuid }) => !aineistotBefore.some(({ uuid: uuidBefore }) => uuidBefore == uuid));
+function uusiaAineistoja(
+  aineistotBefore: AineistoNew[],
+  aineistotAfter: AineistoNew[],
+  aineistoHandledAt: string | null | undefined
+): boolean {
+  return aineistotAfter.some(
+    ({ uuid, lisatty }) =>
+      !aineistoHandledAt ||
+      dayjs(aineistoHandledAt).isBefore(lisatty) ||
+      !aineistotBefore.some(({ uuid: uuidBefore }) => uuidBefore === uuid)
+  );
 }

@@ -8,7 +8,7 @@ import dayjs from "dayjs";
  *
  * @param {Object} parametrit
  * @param {AineistotNew[] | undefined | null} parametrit.aineistot adaptoitavat aineistot
- * @param {string | boolean | undefined | null} parametrit.aineistotHandledAt milloin projektin aineistot on viimeksi tuotu
+ * @param {string | undefined | null} parametrit.aineistotHandledAt milloin projektin aineistot on viimeksi tuotu
  * @param {string} parametrit.path polku S3:ssa tämän projektin tämän aineistokokonaisuuden aineistoihin
  * @returns {API.AineistoNew[] | undefined} aineistot varustettuna tuotu-tiedolla ja täydellä polulla aineistoon
  */
@@ -18,13 +18,13 @@ export function adaptAineistotToAPI({
   path,
 }: {
   aineistot: AineistoNew[] | undefined | null;
-  aineistotHandledAt: string | boolean | undefined | null;
+  aineistotHandledAt: string | undefined | null;
   path: string;
 }): API.AineistoNew[] | undefined {
   if (aineistot && aineistot.length > 0) {
     return [...aineistot].map((aineisto) => {
       const { dokumenttiOid, kategoriaId, nimi, lisatty, uuid } = aineisto;
-      const tuotu = aineistotHandledAt === true || !!(aineistotHandledAt && dayjs(aineistotHandledAt).isAfter(dayjs(lisatty)));
+      const tuotu = !!(aineistotHandledAt && dayjs(aineistotHandledAt).isAfter(dayjs(lisatty)));
       const apiAineisto: API.AineistoNew = {
         __typename: "AineistoNew",
         dokumenttiOid,
