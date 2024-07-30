@@ -17,6 +17,7 @@ import { formatDateTimeIfExistsAndValidOtherwiseDash } from "hassu-common/util/d
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
 import { H3, H4 } from "../../Headings";
+import { TukiEmailLink } from "../../EiOikeuksia";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -86,10 +87,13 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         )}
 
         {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-          <p>
-            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
-            sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
-          </p>
+          <>
+            <p>
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty, tarkasta
+              sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
+            </p>
+            <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+          </>
         )}
       </SectionContent>
 
