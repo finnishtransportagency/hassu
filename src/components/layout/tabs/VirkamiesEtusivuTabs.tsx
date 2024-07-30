@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
-import { boxSizing, fontWeight, styled } from "@mui/system";
+import { styled } from "@mui/system";
 
 type VirkamiesEtusivuTabsProps = {
   value: string | undefined;
