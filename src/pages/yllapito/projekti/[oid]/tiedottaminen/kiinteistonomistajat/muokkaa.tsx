@@ -1,4 +1,4 @@
-import React, { useState, VFC, useEffect } from "react";
+import React, { useState, FunctionComponent, useEffect } from "react";
 import Section from "@components/layout/Section2";
 import { H2, H3 } from "@components/Headings";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -17,7 +17,7 @@ export default function KiinteistonOmistajienMuokkausSivu() {
   );
 }
 
-const KiinteistonOmistajienMuokkaus: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
+const KiinteistonOmistajienMuokkaus: FunctionComponent<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [initialSearchResponses, setInitialSearchResponses] = useState<InitialSearchResponses | null>(null);
   const { withLoadingSpinner } = useLoadingSpinner();
   const api = useApi();

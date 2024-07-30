@@ -15,7 +15,7 @@ type MobileRatingProps = ResponsiveRatingProps & Omit<SliderProps, "value" | "on
 
 const DesktopRating = styled(({ onChange: onChangeProp, ...props }: DesktopRatingProps) => {
   const { t } = useTranslation("tietoa-palvelusta/palautetta-palvelusta-dialog");
-  const getLabelText: RatingProps["getLabelText"] = useCallback(
+  const getLabelText: NonNullable<RatingProps["getLabelText"]> = useCallback(
     (pistemaara) => t("minka-arvosanan-antaisit-palvelulle.pistearvio", { pistemaara }),
     [t]
   );

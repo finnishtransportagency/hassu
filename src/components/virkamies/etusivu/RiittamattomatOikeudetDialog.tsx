@@ -6,12 +6,11 @@ import { DialogActions, DialogContent } from "@mui/material";
 import { ProjektiHakutulosDokumentti } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { LinkProps } from "next/link";
-import React, { VFC, useCallback, useMemo } from "react";
+import React, { FunctionComponent, useCallback, useMemo } from "react";
 
-export const RiittamattomatOikeudetDialog: VFC<Omit<HassuDialogProps, "open"> & { projekti: ProjektiHakutulosDokumentti | null }> = ({
-  projekti,
-  ...props
-}) => {
+export const RiittamattomatOikeudetDialog: FunctionComponent<
+  Omit<HassuDialogProps, "open"> & { projekti: ProjektiHakutulosDokumentti | null }
+> = ({ projekti, ...props }) => {
   const sulje: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     props?.onClose?.({}, "escapeKeyDown");
   }, [props]);

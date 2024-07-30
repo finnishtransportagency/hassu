@@ -97,10 +97,10 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
   const {
     control,
     reset,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   useEffect(() => {
     reset(defaultValues);

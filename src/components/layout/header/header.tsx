@@ -10,7 +10,6 @@ import React, {
   useMemo,
   useRef,
   useState,
-  VoidFunctionComponent,
 } from "react";
 import { useRouter } from "next/router";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
@@ -340,7 +339,7 @@ export default function Header(): ReactElement {
   );
 }
 
-const AnnaPalvelustaPalautettaContent: VoidFunctionComponent = () => {
+const AnnaPalvelustaPalautettaContent: FunctionComponent = () => {
   const { t } = useTranslation("header");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 

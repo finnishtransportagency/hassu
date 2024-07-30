@@ -1,4 +1,4 @@
-import React, { useCallback, VFC } from "react";
+import React, { useCallback, FunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import Section from "@components/layout/Section2";
@@ -128,7 +128,7 @@ const columnsMuut: ColumnDef<Muistuttaja>[] = [
   },
 ];
 
-const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
+const MuistuttajatPage: FunctionComponent<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
 
   const api = useApi();
@@ -153,8 +153,8 @@ const MuistuttajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti })
           </Stack>
           <p>
             Tunnistautuneiden muistuttajien yhteystiedot kerätään järjestelmään ja heille lähetetään ilmoitus hyväksymispäätöksestä
-            järjestelmän kautta automaattisesti. Tämän sivun vastaanottajalista viedään automaattisesti asianhallintaan, kun
-            kuulutus hyväksytään julkaistavaksi. Tämä koskee myös tälle sivulle kerättyjen tunnistautumattomien muistuttajien tietoja.
+            järjestelmän kautta automaattisesti. Tämän sivun vastaanottajalista viedään automaattisesti asianhallintaan, kun kuulutus
+            hyväksytään julkaistavaksi. Tämä koskee myös tälle sivulle kerättyjen tunnistautumattomien muistuttajien tietoja.
           </p>
           <GrayBackgroundText>
             <p>

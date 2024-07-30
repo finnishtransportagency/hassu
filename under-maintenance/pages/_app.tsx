@@ -7,7 +7,7 @@ import React from "react";
 import HassuMuiThemeProvider from "../../src/components/layout/HassuMuiThemeProvider";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import { library } from "@fortawesome/fontawesome-svg-core";
+const { library } = require("@fortawesome/fontawesome-svg-core");
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 library.add(faExternalLinkAlt);
 
