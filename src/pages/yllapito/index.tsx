@@ -267,7 +267,7 @@ const VirkamiesHomePage = () => {
             </FormGroup>
           </HassuGrid>
 
-          <Button id="search" startIcon={"search"} primary type="submit">
+          <Button id="search" startIcon="search" primary type="submit">
             Hae
           </Button>
         </SearchSection>

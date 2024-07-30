@@ -41,12 +41,8 @@ export default function PalautaDialog({ open, onClose, oid, versio }: Props) {
     await api.palautaHyvaksymisEsitys({ oid, versio, syy: data.syy });
     onClose();
     await reloadData();
-    const siirtymaTimer = setTimeout(() => {
-      router.push(`/yllapito/projekti/${oid}`);
-    }, 1000);
-    return () => {
-      clearTimeout(siirtymaTimer);
-    };
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await router.push(`/yllapito/projekti/${oid}`);
   }, "Kuulutuksen palautus onnistui");
 
   return (

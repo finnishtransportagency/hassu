@@ -188,8 +188,8 @@ export default function AineistoSivunPainikkeet({
     [savePaatosAineisto, showSuccessMessage, withLoadingSpinner]
   );
 
-  const saveAndMoveToKuulutusPage = (formData: FormValues) =>
-    withLoadingSpinner(
+  const saveAndMoveToKuulutusPage = async (formData: FormValues) =>
+    await withLoadingSpinner(
       (async () => {
         const moveToKuulutusPage = async () => {
           const paatosPathnames: Record<SiirtymaTyyppi, string> = {

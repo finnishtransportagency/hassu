@@ -1,7 +1,7 @@
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
-import { FieldValues, SubmitHandler, UnpackNestedValue } from "react-hook-form";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { TallennaProjektiInput, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback, useMemo } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
@@ -20,7 +20,7 @@ import { isKuntatietoMissing } from "../../util/velhoUtils";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
-  preSubmitFunction: (formData: UnpackNestedValue<TFieldValues>) => Promise<TallennaProjektiInput>;
+  preSubmitFunction: (formData: TFieldValues) => Promise<TallennaProjektiInput>;
   kuntavastaanottajat: KuntaVastaanottajaInput[] | null | undefined;
   tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
 };
@@ -39,7 +39,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   preSubmitFunction,
   kuntavastaanottajat,
   tilasiirtymaTyyppi,
-}: Props<TFieldValues>) {
+}: Readonly<Props<TFieldValues>>) {
   const { showSuccessMessage } = useSnackbars();
 
   const { mutate: reloadProjekti } = useProjekti();

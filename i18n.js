@@ -15,6 +15,7 @@ module.exports = {
     "/suunnitelma/[oid]/hyvaksymispaatos": ["aineisto", "paatos"],
     "/suunnitelma/[oid]/jatkopaatos1": ["aineisto", "paatos"],
     "/suunnitelma/[oid]/jatkopaatos2": ["aineisto", "paatos"],
+    "/yllapito/perusta/[oid]": ["kartta"],
     "/yllapito/projekti/[oid]": ["kartta"],
     "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat": ["kartta"],
     "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": ["aineisto"],

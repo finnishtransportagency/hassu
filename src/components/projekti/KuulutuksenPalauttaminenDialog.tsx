@@ -68,17 +68,13 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
   );
 
   const palautaMuokattavaksiJaPoistu = useCallback(
-    (data: PalautusValues) =>
-      withLoadingSpinner(
+    async (data: PalautusValues) =>
+      await withLoadingSpinner(
         (async () => {
           log.debug("palauta muokattavaksi ja poistu: ", data);
           await palautaMuokattavaksi(data);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti?.oid}`);
-          }, 1000);
-          return () => {
-            clearTimeout(siirtymaTimer);
-          };
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await router.push(`/yllapito/projekti/${projekti?.oid}`);
         })()
       ),
     [withLoadingSpinner, palautaMuokattavaksi, router, projekti?.oid]
