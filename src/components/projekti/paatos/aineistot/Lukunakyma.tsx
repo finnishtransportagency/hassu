@@ -14,6 +14,7 @@ import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoM
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
 import { getVelhoUrl } from "../../../../util/velhoUtils";
+import { H2, H3 } from "../../../Headings";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -41,7 +42,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   return (
     <>
       <AineistoMuokkausSection projekti={projekti} julkaisu={julkaisu} tyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]} gap={4}>
-        <h4 className="vayla-smallest-title">Päätös ja sen liitteenä oleva aineisto</h4>
+        <H2>Päätös ja sen liitteenä oleva aineisto</H2>
         {paatosJulkaisuMenneisyydessa ? (
           <p>
             Aineistot ovat olleet nähtävillä palvelun julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
@@ -60,7 +61,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
         )}
         {!epaaktiivinen && (
           <>
-            <p>Päätös</p>
+            <H3>Päätös</H3>
             {julkaisu && julkaisu.hyvaksymisPaatos && (
               <Stack direction="column" rowGap={2}>
                 {julkaisu.hyvaksymisPaatos.map((aineisto) => (
@@ -77,7 +78,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
                 ))}
               </Stack>
             )}
-            <p className="mt-8">Päätöksen liitteenä oleva aineisto</p>
+            <H3 className="mt-8">Päätöksen liitteenä oleva aineisto</H3>
             <AineistoNahtavillaAccordion
               kategoriat={aineistoKategoriat.listKategoriat()}
               julkaisu={julkaisu as HyvaksymisPaatosVaiheJulkaisu}

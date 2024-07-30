@@ -10,6 +10,7 @@ import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoM
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
 import { getVelhoUrl } from "../../../../util/velhoUtils";
+import { H2 } from "../../../Headings";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -34,7 +35,7 @@ export default function Lukunakyma() {
   return (
     <>
       <AineistoMuokkausSection julkaisu={julkaisu} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} projekti={projekti} gap={4}>
-        <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
+        <H2>Nähtäville asetettu aineisto</H2>
         {nahtavillaoloMenneisyydessa ? (
           <p>
             Aineistot ovat olleet nähtävillä palvelun julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—

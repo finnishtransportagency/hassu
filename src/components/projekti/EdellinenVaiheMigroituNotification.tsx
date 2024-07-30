@@ -1,6 +1,7 @@
 import Notification, { NotificationType } from "@components/notification/Notification";
 import HassuLink from "@components/HassuLink";
 import React from "react";
+import { TukiEmailLink } from "../EiOikeuksia";
 
 export function EdellinenVaiheMigroituNotification(props: { oid: string | undefined }) {
   return (
@@ -16,7 +17,7 @@ export function EdellinenVaiheMigroituNotification(props: { oid: string | undefi
           Projektin henkilot
         </HassuLink>{" "}
         -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään{" "}
-        <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>.
+        <TukiEmailLink />.
       </div>
     </Notification>
   );

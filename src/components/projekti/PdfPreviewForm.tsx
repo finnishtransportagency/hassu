@@ -1,5 +1,5 @@
 import { AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
-import React, { useImperativeHandle, useRef, useState } from "react";
+import React, { useImperativeHandle, useRef } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 
@@ -15,19 +15,20 @@ const PdfPreviewForm: React.ForwardRefRenderFunction<PdfPreviewFormHandle, PdfPr
   const { showErrorMessage } = useSnackbars();
 
   const pdfFormRef = useRef<HTMLFormElement>(null);
-  const [serializedFormData, setSerializedFormData] = useState("{}");
-  const [asiakirjaTyyppiFormData, setAsiakirjaTyyppiFormData] = useState<AsiakirjaTyyppi | "">("");
+  const serializedFormDataRef = useRef<HTMLInputElement>(null);
+  const asiakirjaTyyppiFormDataRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(
     ref,
     () => ({
       esikatselePdf(formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) {
-        if (!pdfFormRef.current || !projekti?.oid) {
+        if (!pdfFormRef.current || !projekti?.oid || !serializedFormDataRef.current || !asiakirjaTyyppiFormDataRef.current) {
           showErrorMessage("Asiakirjan esikatselua ei voitu suorittaa");
           return;
         }
-        setSerializedFormData(JSON.stringify(formData));
-        setAsiakirjaTyyppiFormData(asiakirjaTyyppi);
+
+        serializedFormDataRef.current.value = JSON.stringify(formData);
+        asiakirjaTyyppiFormDataRef.current.value = asiakirjaTyyppi;
 
         pdfFormRef.current.action = `/api/projekti/${projekti.oid}/asiakirja/pdf` + "?kieli=" + kieli;
         pdfFormRef.current.submit();
@@ -38,8 +39,8 @@ const PdfPreviewForm: React.ForwardRefRenderFunction<PdfPreviewFormHandle, PdfPr
 
   return (
     <form ref={pdfFormRef} target="_blank" method="POST">
-      <input value={serializedFormData} type="hidden" name="tallennaProjektiInput" />
-      <input value={asiakirjaTyyppiFormData} type="hidden" name="asiakirjaTyyppi" />
+      <input ref={serializedFormDataRef} type="hidden" name="tallennaProjektiInput" />
+      <input ref={asiakirjaTyyppiFormDataRef} type="hidden" name="asiakirjaTyyppi" />
     </form>
   );
 };

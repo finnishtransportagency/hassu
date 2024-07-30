@@ -1,7 +1,7 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { LadattuTiedosto } from "@services/api";
-import React, { VFC } from "react";
+import React, { FunctionComponent } from "react";
 import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
 
 export type SaameKutsuTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
@@ -10,7 +10,7 @@ type Props = {
   kutsuTiedot: LadattuTiedosto | null | undefined;
 };
 
-const PohjoissaamenkielinenKutsuInput: VFC<Props> = ({ kutsuTiedot }) => {
+const PohjoissaamenkielinenKutsuInput: FunctionComponent<Props> = ({ kutsuTiedot }) => {
   return (
     <Section>
       <h4 className="vayla-small-title">Saamenkielinen kutsu vuorovaikutukseen *</h4>

@@ -1,7 +1,7 @@
 import Textarea from "@components/form/Textarea";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { Kielitiedot, TallennaProjektiInput, UudelleenKuulutus, UudelleenkuulutusTila } from "@services/api";
+import { Kielitiedot, TallennaProjektiInput, UudelleenKuulutus, UudelleenKuulutusInput, UudelleenkuulutusTila } from "@services/api";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import React from "react";
 import { useFormContext } from "react-hook-form";
@@ -20,11 +20,13 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
   const {
     register,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<{ [vaiheenAvain: string]: { uudelleenKuulutus: UudelleenKuulutusInput } }>();
   if (!kielitiedot) {
     return null;
   }
+
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot) || {};
+
   return (
     <>
       {uudelleenKuulutus && (
@@ -46,7 +48,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
                     required: true,
                   })}
                   {...register(`${vaiheenAvain}.uudelleenKuulutus.selosteKuulutukselle.${ensisijainenKaannettavaKieli}`)}
-                  error={(errors[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}
+                  error={(errors?.[vaiheenAvain]?.uudelleenKuulutus as any)?.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}
                   disabled={disabled}
                 />
               )}

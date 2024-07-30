@@ -1,7 +1,7 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { LadattuTiedosto } from "@services/api";
-import React, { VFC } from "react";
+import React, { FunctionComponent } from "react";
 import SaameTiedostoValitsin, { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 import { H2, H3 } from "../../Headings";
 
@@ -11,7 +11,11 @@ type Props = {
   kuulutusTiedot: LadattuTiedosto | null | undefined;
 };
 
-const PohjoissaamenkielinenKuulutusJaIlmoitusInput: VFC<Props> = ({ saamePdfAvain: vaiheAvain, ilmoitusTiedot, kuulutusTiedot }) => {
+const PohjoissaamenkielinenKuulutusJaIlmoitusInput: FunctionComponent<Props> = ({
+  saamePdfAvain: vaiheAvain,
+  ilmoitusTiedot,
+  kuulutusTiedot,
+}) => {
   return (
     <Section>
       <H2>Saamenkielinen kuulutus ja ilmoitus *</H2>

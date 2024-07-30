@@ -10,7 +10,6 @@ import React, {
   useMemo,
   useRef,
   useState,
-  VoidFunctionComponent,
 } from "react";
 import { useRouter } from "next/router";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
@@ -162,6 +161,8 @@ export default function Header(): ReactElement {
 
   const isResizing = useIsResizing();
 
+  const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
+
   useEffect(() => {
     const handleScrollProps: HandleScrollProps = {
       headerRef,
@@ -276,7 +277,7 @@ export default function Header(): ReactElement {
           </Container>
           {isMobile && (
             <Container
-              className="absolute left-0 right-0 top-50 bg-white w-full overflow-hidden transition-all duration-300"
+              className="absolute left-0 right-0 top-50 bg-white w-full overflow-hidden transition-all duration-300 h-auto"
               sx={{
                 maxHeight: isHamburgerOpen ? hamburgerMenuRef.current?.clientHeight : 0,
               }}
@@ -286,7 +287,7 @@ export default function Header(): ReactElement {
                 <Box sx={{ borderTopWidth: "1px", borderTopStyle: "solid", borderColor: "rgba(0, 0, 0, 0.1)" }}>
                   <Navigation navigationRoutes={navigationRoutes} mobile />
                 </Box>
-                {!isYllapito && (
+                {!isYllapito ? (
                   <Box
                     sx={{
                       paddingBottom: 5,
@@ -297,6 +298,15 @@ export default function Header(): ReactElement {
                     }}
                   >
                     <AnnaPalvelustaPalautettaContent />
+                  </Box>
+                ) : (
+                  <Box
+                  sx={{
+                    marginTop: 11,
+                  }}>
+                    <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
+                      Poistu Palvelusta
+                    </StyledLink>
                   </Box>
                 )}
               </Box>
@@ -329,7 +339,7 @@ export default function Header(): ReactElement {
   );
 }
 
-const AnnaPalvelustaPalautettaContent: VoidFunctionComponent = () => {
+const AnnaPalvelustaPalautettaContent: FunctionComponent = () => {
   const { t } = useTranslation("header");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
