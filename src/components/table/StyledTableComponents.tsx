@@ -1,3 +1,4 @@
+import { red } from "@mui/material/colors";
 import { styled, experimental_sx as sx } from "@mui/system";
 
 export const TableWrapper = styled("div")(
@@ -22,8 +23,12 @@ export const HeaderCell = styled(Cell)(({ onClick }) =>
     cursor: onClick ? "pointer" : undefined,
   })
 );
-export const DataCell = styled(Cell)(sx({alignContent: "center"}));
-export const DataCellContent = styled("div")({});
+export const DataCell = styled(Cell)(sx({ alignContent: "center" }));
+export const DataCellContent = styled("div")`
+  box-sizing: border-box;
+  max-width: fit-content;
+  border-bottom: 2px solid transparent;
+`;
 export const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
 export const HeaderCellContents = styled("div")(sx({}));
 
@@ -50,6 +55,11 @@ export const BodyTrWrapper = styled("div")(
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
     position: "relative",
+    ':hover': {
+      '> div > div:first-child > div': {
+        borderBottom: "2px solid #0064af"
+      },      
+    }
   })
 );
 export const BodyTr = styled(Tr)(sx({}));
