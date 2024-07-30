@@ -418,6 +418,11 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
             borderBottom: !isDragging ? "2px #49c2f1 solid" : "unset",
             zIndex: isDragging ? 1 : "unset",
             backgroundColor: !isDragging && index % 2 ? "#F8F8F8" : "#FFFFFF",
+            ':hover': {
+              '> div > div:first-child > div': {
+                borderBottom: "2px solid #0064af"
+              },      
+            }
           }}
           data-index={index}
           onClick={onClick}
@@ -433,7 +438,10 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
                 {!isMedium && <DataCellHeaderContent>{flexRender<any>(cell.column.columnDef.header, {})}</DataCellHeaderContent>}
-                <DataCellContent>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
+                <DataCellContent sx={{
+                    maxWidth: "fit-content",
+                    borderBottom: "2px solid transparent",
+                }}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
               </DataCell>
             ))}
           </BodyTr>
