@@ -50,11 +50,6 @@ export const BodyTrWrapper = styled("div")(
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
     position: "relative",
-    // ':hover': {
-    //   '> div > div:first-child > div': {
-    //     borderBottom: "2px solid #0064af"
-    //   },      
-    // }
   })
 );
 export const BodyTr = styled(Tr)(sx({}));
