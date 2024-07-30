@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
-import { styled } from "@mui/system";
+import { boxSizing, fontWeight, styled } from "@mui/system";
 
 type VirkamiesEtusivuTabsProps = {
   value: string | undefined;
@@ -11,11 +11,16 @@ type VirkamiesEtusivuTabsProps = {
 };
 
 const HassuTab = styled(Tab)({
-  paddingLeft: 0,
-  paddingRight: 0,
-  marginLeft: 0,
-  marginRight: 60,
+  paddingLeft: 30,
+  paddingRight: 30,
   color: "#0063af",
+  ":hover": {
+    backgroundColor: "#F8F8F8",
+  },
+  "@media (max-width: 900px)": {
+    marginRight: 30,
+    padding: 0,
+  },
 });
 
 const HassuTabs = styled(Tabs)({});
