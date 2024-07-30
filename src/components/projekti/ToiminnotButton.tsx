@@ -1,7 +1,7 @@
 import Button from "@components/button/Button";
 import { MenuItem, MenuList, styled, experimental_sx as sx, menuItemClasses } from "@mui/material";
 import { TilaSiirtymaInput, TilasiirtymaTyyppi } from "@services/api";
-import React, { useState, VoidFunctionComponent } from "react";
+import React, { useState, FunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { KeyedMutator } from "swr";
 import { SiirraModal } from "./SiirraButton";
@@ -9,7 +9,7 @@ import { UudelleenkuulutaModal } from "./UudelleenkuulutaButton";
 
 export type ToiminnotButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<TilaSiirtymaInput, "oid">;
 
-const ToiminnotButton: VoidFunctionComponent<ToiminnotButtonProps> = ({ oid, reloadProjekti }) => {
+const ToiminnotButton: FunctionComponent<ToiminnotButtonProps> = ({ oid, reloadProjekti }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUudelleenkuulutaModalOpen, setIsUudelleenkuulutaModalOpen] = useState(false);
   const [isSiirraModalOpen, setIsSiirraModalOpen] = useState(false);

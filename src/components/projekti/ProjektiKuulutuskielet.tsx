@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
 import { Kieli } from "@services/api";
@@ -11,6 +11,10 @@ import { isAllowedToChangeKielivalinta } from "hassu-common/util/operationValida
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
 import { H3 } from "../Headings";
+import { FormValues } from "@pages/yllapito/projekti/[oid]";
+
+const kielioptionsKaikki = Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }));
+const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.POHJOISSAAME);
 
 export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {
@@ -19,11 +23,8 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
     watch,
     setValue,
     control,
-  } = useFormContext(); // retrieve all hook methods
+  } = useFormContext<FormValues>();
 
-  const kielioptionsKaikki = Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }));
-
-  const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.POHJOISSAAME);
   const [kielioptions2, setKielioptions2] = useState(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI));
   const [vieraskieliEnsisijainen, setVieraskieliEnsisijainen] = useState("");
   const kieli1 = watch("kielitiedot.ensisijainenKieli");
@@ -44,15 +45,10 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kieli1]);
 
-  const hasVieraskieli = () => {
-    if (kieli1 && kieli1 === Kieli.RUOTSI) {
-      return true;
-    }
-    if (kieli2 && (kieli2 === Kieli.RUOTSI || kieli2 === Kieli.POHJOISSAAME)) {
-      return true;
-    }
-    return false;
-  };
+  const hasVieraskieli = useMemo(
+    () => [kieli1, kieli2].some((kieli) => kieli === Kieli.POHJOISSAAME || kieli === Kieli.RUOTSI),
+    [kieli1, kieli2]
+  );
 
   const kielivalintaaEiSaaMuuttaa = !isAllowedToChangeKielivalinta(projekti);
 
@@ -70,13 +66,11 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.ensisijainenKieli}
           >
-            {kielioptions.map((option) => {
-              return (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+            {kielioptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </HassuMuiSelect>
           <HassuMuiSelect
             label="Toissijainen kieli "
@@ -86,19 +80,17 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.toissijainenKieli}
           >
-            {kielioptions2.map((option) => {
-              return (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+            {kielioptions2.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </HassuMuiSelect>
         </HassuGrid>
       </SectionContent>
-      {hasVieraskieli() && (
+      {hasVieraskieli && (
         <TextInput
-          label={`Projektin nimi ${vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)}ksi *`}
+          label={`Projektin nimi ${vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2!)}ksi *`}
           error={errors.kielitiedot?.projektinNimiVieraskielella}
           {...register("kielitiedot.projektinNimiVieraskielella", { shouldUnregister: true })}
         />

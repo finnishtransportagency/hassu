@@ -80,10 +80,10 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
   const {
     control,
     reset,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   useEffect(() => {
     reset(defaultValues);
@@ -121,7 +121,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
             sisältö. Vie valmislausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
-          <div className="grid gap-4" >
+          <div className="grid gap-4">
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink

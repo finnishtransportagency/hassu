@@ -12,7 +12,8 @@ type ErrorInfo = {
 };
 
 // Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille tuotanto- ja koulutusympäristöissä
-const showErrorDetails = (props: GenerateErrorMessageProps): boolean => (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
+const showErrorDetails = (props: GenerateErrorMessageProps): boolean =>
+  (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.
@@ -44,15 +45,6 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
       return errorResponse.operation.operationName === "TallennaKiinteistonOmistajat";
     },
     errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui.",
-  },
-  {
-    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoGeoJsonSizeExceededError"),
-    errorMessage: (props) =>
-      constructErrorClassSpecificErrorMessage(
-        props,
-        "VelhoGeoJsonSizeExceededError",
-        "Projektivelhoon asetetut Projektin geometriat ylittävät VLS-järjestelmän 100kB maksimikoon. Yksinkertaista geometriaa ja yritä uudelleen."
-      ),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),

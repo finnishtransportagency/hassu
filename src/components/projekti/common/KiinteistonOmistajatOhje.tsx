@@ -109,7 +109,7 @@ export function KiinteistonOmistajatOhjeLukutila({
   if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
-        <h6 className="font-bold">Kiinteistönomistajat</h6>
+        <H3 variant="h5">Kiinteistönomistajat</H3>
         {uudelleenKuulutus?.tiedotaKiinteistonomistajia === false && (
           <p>{`Kiinteistönomistajia ei ${inPast ? "tiedotettu" : "tiedoteta"} uudelleenkuulutuksen yhteydessä.`}</p>
         )}
@@ -134,7 +134,7 @@ export function KiinteistonOmistajatOhjeLukutila({
   } else if (data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
     return (
       <SectionContent>
-        <h6 className="font-bold">Kiinteistönomistajat ja muistuttajat</h6>
+        <H3 variant="h5">Kiinteistönomistajat ja muistuttajat</H3>
         {uudelleenKuulutus?.tiedotaKiinteistonomistajia === false && (
           <p>{`Kiinteistönomistajia ja muistuttajia ei ${inPast ? "tiedotettu" : "tiedoteta"} uudelleenkuulutuksen yhteydessä.`}</p>
         )}

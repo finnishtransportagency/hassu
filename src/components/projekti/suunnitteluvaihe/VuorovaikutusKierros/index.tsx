@@ -195,7 +195,7 @@ function VuorovaikutusKierrosKutsu({
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
     reset,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     getValues,
     watch,
   } = useFormReturn;
@@ -203,7 +203,7 @@ function VuorovaikutusKierrosKutsu({
   const vuorovaikutustilaisuudet = watch("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
   const julkaisupaiva = watch("vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva");
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 

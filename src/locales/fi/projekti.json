@@ -21,6 +21,11 @@
     "hyvaksymismenettelyssa": "Hyväksymismenettelyssä",
     "hyvaksytty": "Hyväksytty"
   },
+  "projekti-vaiheet-status": {
+    "valmis": "Valmis",
+    "kaynnissa": "Käynnissä",
+    "ei_tarkasteltavissa": "Ei vielä tarkasteltavissa"
+  },
   "projekti-vayla-muoto": {
     "tie": "Tie",
     "rata": "Rata",

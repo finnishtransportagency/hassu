@@ -109,7 +109,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
   const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
   const {
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     reset,
     register,
   } = useFormReturn;
@@ -119,7 +119,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const { showSuccessMessage } = useSnackbars();
 
