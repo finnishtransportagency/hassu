@@ -119,10 +119,10 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
   const {
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const { reset } = useFormReturn;
   useEffect(() => {

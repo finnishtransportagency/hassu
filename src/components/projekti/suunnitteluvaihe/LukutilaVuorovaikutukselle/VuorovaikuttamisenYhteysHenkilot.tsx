@@ -1,11 +1,11 @@
 import Section from "@components/layout/Section2";
 import { VuorovaikutusKierrosJulkaisu } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
-import React, { VFC } from "react";
+import React, { FunctionComponent } from "react";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { H3 } from "../../../Headings";
 
-export const VuorovaikuttamisenYhteysHenkilot: VFC<{
+export const VuorovaikuttamisenYhteysHenkilot: FunctionComponent<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
 }> = ({ julkaisu }) => {
   const { t } = useTranslation("suunnittelu");

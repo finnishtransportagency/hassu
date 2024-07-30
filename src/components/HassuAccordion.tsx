@@ -16,7 +16,7 @@ const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
   <MuiAccordionSummary
-    expandIcon={<FontAwesomeIcon icon="angle-right" className="text-primary-dark" size="lg" style={{ margin: "auto", height: "100%" }} />}
+    expandIcon={<FontAwesomeIcon icon="angle-right" className="text-primary-dark m-auto h-full" size="lg" />}
     {...props}
   />
 ))(({ theme }) => ({

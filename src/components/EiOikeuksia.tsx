@@ -4,8 +4,11 @@ import { ExternalStyledLink } from "./StyledLink";
 import ContentSpacer from "./layout/ContentSpacer";
 import InfoCardPageLayout from "@components/layout/InfoCardPageLayout";
 import VaylaElyKuvat from "@components/VaylaElyKuvat";
-
 const tukiEmail = "tuki.vayliensuunnittelu@vayla.fi";
+
+const EmailLink = styled("a")({ fontWeight: 700 });
+
+export const TukiEmailLink = () => <EmailLink href={`mailto:${tukiEmail}`}>{tukiEmail}</EmailLink>
 
 export default function EiOikeuksiaSivu() {
   const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
@@ -35,5 +38,3 @@ export default function EiOikeuksiaSivu() {
     </InfoCardPageLayout>
   );
 }
-
-const EmailLink = styled("a")({ fontWeight: 700 });

@@ -160,13 +160,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
   const {
     register,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     reset,
     setValue,
     watch,
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const api = useApi();
 

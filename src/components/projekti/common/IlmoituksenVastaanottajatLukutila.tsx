@@ -5,6 +5,7 @@ import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
 import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
 import { H2 } from "../../Headings";
+import { TukiEmailLink } from "../../EiOikeuksia";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -33,23 +34,28 @@ export default function IlmoituksenVastaanottajat({
         <H2>Ilmoituksen vastaanottajat</H2>
         {!epaaktiivinen && (
           <>
-            <>
-              <p>
-                Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-                Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-                -painikkeella.
-              </p>
-              <p>
-                Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-                tiedot -sivulla Tuo tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
-              </p>
-            </>
-
-            {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <p>
-                Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’,
-                tarkasta sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
-              </p>
+            {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY ? (
+              <>
+                <p>
+                  Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty,
+                  tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon{" "}
+                  <TukiEmailLink />.
+                </p>
+                <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+                  Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
+                  -painikkeella.
+                </p>
+                <p>
+                  Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
+                  tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle
+                  automaattisesti.
+                </p>
+              </>
             )}
           </>
         )}

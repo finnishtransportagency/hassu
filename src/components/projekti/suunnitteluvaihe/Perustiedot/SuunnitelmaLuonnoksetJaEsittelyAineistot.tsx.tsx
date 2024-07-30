@@ -65,8 +65,8 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
           }}
           iconComponent={
             <span className="fa-layers">
-              <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
-              <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
+              <FontAwesomeIcon icon="chevron-down" transform="down-6" flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
+              <FontAwesomeIcon icon="chevron-up" transform="up-6" flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
             </span>
           }
         >
