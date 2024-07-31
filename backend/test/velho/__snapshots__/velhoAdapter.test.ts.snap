@@ -13,7 +13,6 @@ Object {
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,
-    "geoJSON": null,
     "kunnat": Array [
       49,
       91,
@@ -50,7 +49,6 @@ Object {
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,
-    "geoJSON": null,
     "kunnat": Array [
       49,
       91,
