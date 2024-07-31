@@ -1,17 +1,31 @@
-import { ReactElement, useState } from "react";
+import { Key, ReactElement, useState } from "react";
 import Button from "@components/button/Button";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
-import IconButton from "@components/button/IconButton";
-import { H4 } from "@components/Headings";
-import { adaptVelhoAineistoToAineistoInputNew } from "src/util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
-import { getNewAineistot } from "src/util/hyvaksymisesitys/getNewAineistot";
+import { H3, H4 } from "@components/Headings";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
+import HassuAccordion from "@components/HassuAccordion";
+import { findKategoriaForVelhoAineistoNew, FormAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
+import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
+import useTranslation from "next-translate/useTranslation";
+import SectionContent from "@components/layout/SectionContent";
+import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoNewTable";
+import find from "lodash/find";
+import remove from "lodash/remove";
 
-export default function Suunnitelma(): ReactElement {
+type Props = {
+  aineistoKategoriat: AineistoKategoriat;
+};
+
+export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { control } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, prepend } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.suunnitelma", control });
+  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm>();
+  const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
+  const { t } = useTranslation("aineisto");
+  const suunnitelmaFlat = Object.values(suunnitelma).flat();
+
+  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(suunnitelma));
 
   return (
     <>
@@ -21,32 +35,80 @@ export default function Suunnitelma(): ReactElement {
         informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä, siirtää alikansioista toiseen tai
         poistaa.
       </p>
-      {fields.map((aineisto) => (
-        <div key={aineisto.id}>
-          {aineisto.nimi}
-          <IconButton
-            type="button"
-            onClick={() => {
-              remove(fields.indexOf(aineisto));
-            }}
-            icon="trash"
-          />
-        </div>
-      ))}
+      <AccordionToggleButton
+        aineistoKategoriaIds={aineistoKategoriat.listKategoriaIds()}
+        expandedAineisto={expandedAineisto}
+        setExpandedAineisto={setExpandedAineisto}
+      />
+      <HassuAccordion
+        expandedstate={[expandedAineisto, setExpandedAineisto]}
+        items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
+          title: (
+            <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+              suunnitelmaFlat,
+              paakategoria
+            )})`}</H3>
+          ),
+          content: (
+            <SectionContent largeGaps>
+              <SuunnitelmaAineistoPaakategoriaContent
+                aineistoKategoriat={aineistoKategoriat}
+                paakategoria={paakategoria}
+                expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+              />
+            </SectionContent>
+          ),
+          id: paakategoria.id,
+        }))}
+      />
       <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo aineistot
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
-        infoText="TODO aseta info text"
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
-          const valitutAineistot = valitutVelhoAineistot.map(adaptVelhoAineistoToAineistoInputNew);
-          const newAineisto = getNewAineistot(fields, valitutAineistot);
-          const aineistotWithKategoria = newAineisto.map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" }));
-          prepend(aineistotWithKategoria);
+          const newAineisto = findKategoriaForVelhoAineistoNew(valitutVelhoAineistot, aineistoKategoriat);
+          const uusiAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
+            oldAineisto: suunnitelma,
+            newAineisto,
+          });
+          setValue("muokattavaHyvaksymisEsitys.suunnitelma", uusiAineistoNahtavilla.aineisto);
+          uusiAineistoNahtavilla.kategoriasWithChanges.forEach((kategoria) => {
+            setValue(`muokattavaHyvaksymisEsitys.suunnitelma.${kategoria}`, uusiAineistoNahtavilla.aineisto[kategoria]);
+          });
         }}
       />
     </>
   );
 }
+
+export const combineOldAndNewAineistoWithCategories = ({
+  oldAineisto,
+  newAineisto,
+}: {
+  oldAineisto: {
+    [kategoriaId: string]: FormAineistoNew[];
+  };
+  newAineisto: FormAineistoNew[];
+}) =>
+  newAineisto.reduce<{
+    aineisto: {
+      [kategoriaId: string]: FormAineistoNew[];
+    };
+    kategoriasWithChanges: string[];
+  }>(
+    (acc, velhoAineisto) => {
+      const existingAineisto = find(Object.values(acc.aineisto).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid });
+      const kategoriaId = (existingAineisto ? existingAineisto.kategoriaId : velhoAineisto.kategoriaId) ?? kategorisoimattomatId;
+      if (!acc.kategoriasWithChanges.includes(kategoriaId)) {
+        acc.kategoriasWithChanges.push(kategoriaId);
+      }
+      if (existingAineisto?.kategoriaId) {
+        remove(acc.aineisto[existingAineisto.kategoriaId], { dokumenttiOid: velhoAineisto.dokumenttiOid });
+      }
+      acc.aineisto[kategoriaId].push(velhoAineisto);
+      return acc;
+    },
+    { aineisto: oldAineisto, kategoriasWithChanges: [] }
+  );

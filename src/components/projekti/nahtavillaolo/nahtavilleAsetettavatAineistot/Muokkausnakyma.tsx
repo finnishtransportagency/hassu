@@ -25,7 +25,7 @@ type FormData = {
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
 
 export default function Muokkausnakyma(): ReactElement {
-  const { data: projekti } = useProjekti({ revalidateOnMount: true });
+  const { data: projekti } = useProjekti();
   return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
 }
 

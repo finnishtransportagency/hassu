@@ -41,7 +41,7 @@ export async function adaptFileInfoToLadattavaTiedosto(fileInfo: FileInfo): Prom
   } else {
     linkki = "";
   }
-  return { __typename: "LadattavaTiedosto", nimi: fileInfo.nimi, linkki, tuotu: fileInfo.tuotu };
+  return { __typename: "LadattavaTiedosto", nimi: fileInfo.nimi, linkki, kategoriaId: fileInfo.kategoriaId, tuotu: fileInfo.tuotu };
 }
 export async function adaptFileInfoToKunnallinenLadattavaTiedosto(fileInfo: FileInfo): Promise<API.KunnallinenLadattavaTiedosto> {
   let linkki;

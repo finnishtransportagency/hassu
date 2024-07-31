@@ -20,6 +20,7 @@ import { TestType } from "hassu-common/schema/common";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
 import dayjs from "dayjs";
+import { getAineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -43,7 +44,7 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   // Adaptoi muokattava hyvaksymisesitys
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
-  validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.aineistoHandledAt);
+  validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.aineistoHandledAt, projektiInDB.velho?.tyyppi);
   // Persistoi uudet tiedostot
   const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   if (uudetTiedostot.length) {
@@ -95,7 +96,7 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
   // Toiminnon tekijän on oltava projektihenkilö
   requirePermissionMuokkaa(projektiInDB);
   // Projektilla on oltava muokkaustilainen hyväksymisesitys
-  if (projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
+  if (projektiInDB.muokattavaHyvaksymisEsitys?.tila && projektiInDB.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
     throw new IllegalArgumentError("Projektilla ei ole muokkaustilaista hyväksymisesitystä");
   }
   if (input.versio !== projektiInDB.versio) {
@@ -109,13 +110,29 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 
-function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
+function validateUpcoming(
+  muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys,
+  aineistotHandledAt: string | undefined | null,
+  projektiTyyppi: API.ProjektiTyyppi | null | undefined
+) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
+  const handledAt = aineistotHandledAt ? dayjs(aineistotHandledAt) : null;
   if (
     aineistot.length > 0 &&
-    (!aineistotHandledAt || !aineistot.every((aineisto) => dayjs(aineistotHandledAt).isAfter(dayjs(aineisto.lisatty))))
+    (!handledAt || !aineistot.every((aineisto) => {
+      const lisattyDate = aineisto.lisatty ? dayjs(aineisto.lisatty) : null;
+      return handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate);
+    }))
   ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
+  }
+  const kategoriaIds = getAineistoKategoriat({ projektiTyyppi, hideDeprecated: true }).listKategoriaIds();
+  if (
+    muokattavaHyvaksymisEsitys.suunnitelma?.some(
+      (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId || !kategoriaIds.includes(aineisto.kategoriaId)
+    )
+  ) {
+    throw new IllegalArgumentError("Suunnitelma-aineistojen on oltava kategorisoituna, jotta hyväksymisesitys voidaan hyväksyä.");
   }
 }
