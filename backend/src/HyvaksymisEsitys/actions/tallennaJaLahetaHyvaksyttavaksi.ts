@@ -113,9 +113,13 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
 function validateUpcoming(muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys, aineistotHandledAt: string | undefined | null) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
+  const handledAt = aineistotHandledAt ? dayjs(aineistotHandledAt) : null;
   if (
     aineistot.length > 0 &&
-    (!aineistotHandledAt || !aineistot.every((aineisto) => dayjs(aineistotHandledAt).isAfter(dayjs(aineisto.lisatty))))
+    (!handledAt || !aineistot.every((aineisto) => {
+      const lisattyDate = aineisto.lisatty ? dayjs(aineisto.lisatty) : null;
+      return handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate);
+    }))
   ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }

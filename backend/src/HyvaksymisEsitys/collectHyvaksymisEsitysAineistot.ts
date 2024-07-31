@@ -41,7 +41,9 @@ type ProjektinAineistot = {
 };
 
 function aineistoNewIsReady(lisatty: string, aineistoHandledAt?: string | null): boolean {
-  return !!(aineistoHandledAt && dayjs(aineistoHandledAt).isAfter(dayjs(lisatty)));
+  const handledAt = aineistoHandledAt ? dayjs(aineistoHandledAt) : null;
+  const lisattyDate = lisatty ? dayjs(lisatty) : null;
+  return !!(handledAt && (handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate)));
 }
 
 /**
