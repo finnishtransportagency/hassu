@@ -23,13 +23,15 @@ const SuunnittelmaLadattavatTiedostotAccordion: FunctionComponent<AineistoNahtav
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
-        .filter((kategoria) =>
-          aineistot?.some(
-            (aineisto) =>
-              aineisto.kategoriaId === kategoria.id ||
-              (aineisto.kategoriaId &&
-                kategoria.alaKategoriat?.map((kategoria: AineistoKategoria) => kategoria.id)?.includes(aineisto.kategoriaId))
-          )
+        .filter(
+          (kategoria) =>
+            !kategoria.parentKategoria ||
+            aineistot?.some(
+              (aineisto) =>
+                aineisto.kategoriaId === kategoria.id ||
+                (aineisto.kategoriaId &&
+                  kategoria.alaKategoriat?.map((kategoria: AineistoKategoria) => kategoria.id)?.includes(aineisto.kategoriaId))
+            )
         )
         .map((kategoria) => ({ kategoria, Heading: kategoria.alaKategoriat ? H3 : H4 }))
         .map<AccordionItem>(({ kategoria, Heading }) => ({
@@ -42,7 +44,7 @@ const SuunnittelmaLadattavatTiedostotAccordion: FunctionComponent<AineistoNahtav
           ),
           content: (
             <>
-              {aineistot && (
+              {!!aineistot?.length ? (
                 <Stack direction="column" rowGap={2}>
                   {aineistot
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
@@ -52,8 +54,10 @@ const SuunnittelmaLadattavatTiedostotAccordion: FunctionComponent<AineistoNahtav
                       </span>
                     ))}
                 </Stack>
+              ) : (
+                "Ei aineistoja"
               )}
-              {kategoria.alaKategoriat && (
+              {!!kategoria.alaKategoriat?.length && (
                 <SuunnittelmaLadattavatTiedostotAccordion
                   kategoriat={kategoria.alaKategoriat}
                   aineistot={aineistot}

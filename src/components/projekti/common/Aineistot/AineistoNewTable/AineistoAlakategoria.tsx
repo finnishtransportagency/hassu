@@ -1,23 +1,20 @@
 import HassuAccordion from "@components/HassuAccordion";
-import { Aineisto } from "@services/api";
-import { AineistoKategoria, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import { AineistoKategoria, AineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import { useFormContext } from "react-hook-form";
-import { AineistoNahtavillaTableFormValuesInterface } from "../util";
 import { AineistoTable } from ".";
-import { SelectOption } from "@components/form/Select";
+import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 
 interface AineistoAlakategoriaAccordionProps {
+  aineistoKategoriat: AineistoKategoriat;
   alakategoriat: AineistoKategoria[];
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  aineisto: Aineisto[] | undefined | null;
-  allOptions: SelectOption[];
 }
 
 export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordionProps) => {
-  const { watch } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
+  const { watch } = useFormContext<HyvaksymisEsitysForm>();
   const { t } = useTranslation("aineisto");
-  const aineistot = watch("aineistoNahtavilla");
+  const aineistot = watch("muokattavaHyvaksymisEsitys.suunnitelma");
   const aineistotFlat = Object.values(aineistot || {}).flat();
   const aineistojenMaara = props.alakategoriat.reduce((acc, cur) => {
     return acc + getNestedAineistoMaaraForCategory(aineistotFlat, cur);
@@ -31,14 +28,12 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
     <HassuAccordion
       expandedstate={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
-        title:
-          t(`aineisto-kategoria-nimi.${alakategoria.id}`) + " (" + getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria) + ")",
+        title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria)})`,
         content: (
           <AineistoAlakategoriaContent
+            aineistoKategoriat={props.aineistoKategoriat}
             kategoria={alakategoria}
-            aineisto={props.aineisto}
             expandedAineistoState={props.expandedAineistoState}
-            allOptions={props.allOptions}
           />
         ),
         id: alakategoria.id,
@@ -48,29 +43,26 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
 };
 
 interface AlakategoriaContentProps {
+  aineistoKategoriat: AineistoKategoriat;
   kategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  aineisto: Aineisto[] | undefined | null;
-  allOptions: SelectOption[];
 }
 
 export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => {
-  const { watch } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
-  const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoria.id}`;
-  const aineistot = watch(aineistoRoute);
+  const { watch } = useFormContext<HyvaksymisEsitysForm>();
+  const aineistot = watch(`muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoria.id}`);
   return (
     <>
-      {aineistot?.length ? (
-        <AineistoTable kategoriaId={props.kategoria.id} aineisto={props.aineisto} allOptions={props.allOptions} />
+      {!!aineistot?.length ? (
+        <AineistoTable aineistoKategoriat={props.aineistoKategoriat} kategoriaId={props.kategoria.id} />
       ) : (
         <p>Kategoriaan ei ole asetettu aineistoa.</p>
       )}
       {!!props.kategoria.alaKategoriat?.length && (
         <AineistoAlakategoriaAccordion
-          aineisto={props.aineisto}
+          aineistoKategoriat={props.aineistoKategoriat}
           expandedAineistoState={props.expandedAineistoState}
           alakategoriat={props.kategoria.alaKategoriat}
-          allOptions={props.allOptions}
         />
       )}
     </>

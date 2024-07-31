@@ -1,9 +1,9 @@
 import ExtLink from "@components/ExtLink";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "@services/api";
+import { KuulutusJulkaisuTila } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
-import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import React, { useMemo } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
@@ -21,7 +21,7 @@ interface Props {
   paatosTyyppi: PaatosTyyppi;
 }
 
-export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
+export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) {
   const { julkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
@@ -29,10 +29,15 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   const paatosJulkaisuMenneisyydessa =
     julkaisu?.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
 
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti.velho.tyyppi }).listKategoriat(),
+    [projekti.velho.tyyppi]
+  );
+
   if (!projekti || !julkaisu) {
     return null;
   }
-  const velhoURL = getVelhoUrl(projekti.oid)
+  const velhoURL = getVelhoUrl(projekti.oid);
 
   const voiHyvaksya =
     julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
@@ -62,7 +67,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
         {!epaaktiivinen && (
           <>
             <H3>Päätös</H3>
-            {julkaisu && julkaisu.hyvaksymisPaatos && (
+            {julkaisu?.hyvaksymisPaatos && (
               <Stack direction="column" rowGap={2}>
                 {julkaisu.hyvaksymisPaatos.map((aineisto) => (
                   <span key={aineisto.dokumenttiOid}>
@@ -79,11 +84,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
               </Stack>
             )}
             <H3 className="mt-8">Päätöksen liitteenä oleva aineisto</H3>
-            <AineistoNahtavillaAccordion
-              kategoriat={aineistoKategoriat.listKategoriat()}
-              julkaisu={julkaisu as HyvaksymisPaatosVaiheJulkaisu}
-              paakategoria
-            />
+            <AineistoNahtavillaAccordion kategoriat={kategoriat} julkaisu={julkaisu} paakategoria />
           </>
         )}
       </AineistoMuokkausSection>

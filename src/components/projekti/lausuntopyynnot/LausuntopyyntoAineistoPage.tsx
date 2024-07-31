@@ -1,6 +1,6 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
-import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { LadattavaTiedosto, ProjektiJulkinen } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -21,8 +21,13 @@ type Props = {
   projekti: ProjektiJulkinen | ProjektiLisatiedolla | null | undefined;
 };
 
-export default function LausuntopyyntoAineistoPage(props: Props): ReactElement {
+export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): ReactElement {
   const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, projekti } = props;
+
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
+    [projekti?.velho.tyyppi]
+  );
 
   return (
     <>
@@ -40,12 +45,8 @@ export default function LausuntopyyntoAineistoPage(props: Props): ReactElement {
             välilehteen yksi kerrallaan tai ladata ne kaikki kerallaan omalle koneellesi.
           </Notification>
         )}
-        {aineistot?.length && <H2>Suunnitelma</H2>}
-        <SuunnittelmaLadattavatTiedostotAccordion
-          kategoriat={aineistoKategoriat.listKategoriat()}
-          aineistot={aineistot}
-          esikatselu={!!props.esikatselu}
-        />
+        <H2>Suunnitelma</H2>
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={aineistot} esikatselu={!!props.esikatselu} />
         {!!lisaAineistot?.length && (
           <ContentSpacer>
             <H2>Lisäaineistot</H2>
