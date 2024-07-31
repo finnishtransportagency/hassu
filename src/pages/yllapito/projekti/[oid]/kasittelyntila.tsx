@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState, useMemo, useEffect, VFC } from "react";
+import React, { ReactElement, useCallback, useState, useMemo, useEffect, FunctionComponent } from "react";
 import { KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -154,40 +154,47 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       },
     };
 
-    kasittelynTila.ensimmainenJatkopaatos = {
-      paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
-      asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
-    };
-    kasittelynTila.toinenJatkopaatos = {
-      paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
-      asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
-    };
-    kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
-    kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
-    kasittelynTila.ennakkoneuvotteluPaiva = projekti.kasittelynTila?.ennakkoneuvotteluPaiva ?? null;
-    kasittelynTila.valitustenMaara = projekti.kasittelynTila?.valitustenMaara ?? null;
-    kasittelynTila.lainvoimaAlkaen = projekti.kasittelynTila?.lainvoimaAlkaen ?? null;
-    kasittelynTila.lainvoimaPaattyen = projekti.kasittelynTila?.lainvoimaPaattyen ?? null;
-    kasittelynTila.ennakkotarkastus = projekti.kasittelynTila?.ennakkotarkastus ?? null;
-    kasittelynTila.toimitusKaynnistynyt = projekti.kasittelynTila?.toimitusKaynnistynyt ?? null;
-    kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain ?? null;
-    kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null;
-    kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto ?? null;
-    kasittelynTila.hallintoOikeus =
-      projekti.kasittelynTila?.hallintoOikeus ??
-      ({
-        valipaatos: null,
-        paatos: null,
-        hyvaksymisPaatosKumottu: undefined,
-      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
-    kasittelynTila.korkeinHallintoOikeus =
-      projekti.kasittelynTila?.korkeinHallintoOikeus ??
-      ({
-        valipaatos: null,
-        paatos: null,
-        hyvaksymisPaatosKumottu: undefined,
-      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
-
+    if (projekti.nykyinenKayttaja.onYllapitaja) {
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)) {
+        kasittelynTila.ensimmainenJatkopaatos = {
+          paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
+          asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
+        };
+      }
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)) {
+        kasittelynTila.toinenJatkopaatos = {
+          paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
+          asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
+        };
+      }
+      kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
+      kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
+      kasittelynTila.ennakkoneuvotteluPaiva = projekti.kasittelynTila?.ennakkoneuvotteluPaiva ?? null;
+      kasittelynTila.valitustenMaara = projekti.kasittelynTila?.valitustenMaara ?? null;
+      kasittelynTila.lainvoimaAlkaen = projekti.kasittelynTila?.lainvoimaAlkaen ?? null;
+      kasittelynTila.lainvoimaPaattyen = projekti.kasittelynTila?.lainvoimaPaattyen ?? null;
+      kasittelynTila.ennakkotarkastus = projekti.kasittelynTila?.ennakkotarkastus ?? null;
+      kasittelynTila.toimitusKaynnistynyt = projekti.kasittelynTila?.toimitusKaynnistynyt ?? null;
+      kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain ?? null;
+      kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null;
+      kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto ?? null;
+      if (isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO)) {
+        kasittelynTila.hallintoOikeus =
+          projekti.kasittelynTila?.hallintoOikeus ??
+          ({
+            valipaatos: null,
+            paatos: null,
+            hyvaksymisPaatosKumottu: undefined,
+          } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
+        kasittelynTila.korkeinHallintoOikeus =
+          projekti.kasittelynTila?.korkeinHallintoOikeus ??
+          ({
+            valipaatos: null,
+            paatos: null,
+            hyvaksymisPaatosKumottu: undefined,
+          } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
+      }
+    }
     const formValues: KasittelynTilaFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -207,7 +214,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    shouldUnregister: true, //<-
+    shouldUnregister: true,
     context: { projekti },
   };
 
@@ -217,7 +224,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     control,
     reset,
     watch,
@@ -225,25 +232,27 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     trigger,
   } = useFormReturn;
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const api = useApi();
 
+  const save = useCallback(
+    async (data: KasittelynTilaFormValues, successMessage: string) => {
+      try {
+        const values = removeEmptyValues(data);
+        await api.tallennaProjekti(values);
+        await reloadProjekti();
+        showSuccessMessage(successMessage);
+      } catch (e) {
+        log.log("OnSubmit Error", e);
+      }
+    },
+    [api, reloadProjekti, showSuccessMessage]
+  );
+
   const onSubmit = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const values = removeEmptyValues(data);
-            await api.tallennaProjekti(values);
-            await reloadProjekti();
-            showSuccessMessage("Tallennus onnistui");
-          } catch (e) {
-            log.log("OnSubmit Error", e);
-          }
-        })()
-      ),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    (data: KasittelynTilaFormValues) => withLoadingSpinner(save(data, "Tallennus onnistui")),
+    [save, withLoadingSpinner]
   );
 
   useEffect(() => {
@@ -251,24 +260,21 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [defaultValues, reset]);
 
   const avaaJatkopaatos = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
+    async (data: KasittelynTilaFormValues) =>
+      await withLoadingSpinner(
         (async () => {
           try {
             data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
-            await onSubmit(data);
-            showSuccessMessage("Jatkopäätös lisätty");
+            await save(data, "Jatkopäätös lisätty");
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
           setOpenTallenna(false);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          }, 1500);
-          return () => clearTimeout(siirtymaTimer);
         })()
       ),
-    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+    [withLoadingSpinner, save, router, projekti.oid]
   );
 
   const handleClickOpenTallenna = () => {
@@ -283,24 +289,21 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   }, [avaaJatkopaatos, handleSubmit]);
 
   const avaaJatkopaatos2 = useCallback(
-    (data: KasittelynTilaFormValues) =>
-      withLoadingSpinner(
+    async (data: KasittelynTilaFormValues) =>
+      await withLoadingSpinner(
         (async () => {
           try {
             data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
-            await onSubmit(data);
-            showSuccessMessage("Jatkopäätös lisätty");
+            await save(data, "Jatkopäätös lisätty");
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
           setOpenTallenna2(false);
-          const siirtymaTimer = setTimeout(() => {
-            router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          }, 1500);
-          return () => clearTimeout(siirtymaTimer);
         })()
       ),
-    [withLoadingSpinner, onSubmit, showSuccessMessage, router, projekti.oid]
+    [withLoadingSpinner, save, router, projekti.oid]
   );
 
   const handleClickOpenTallenna2 = () => {
@@ -331,8 +334,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta <ExtLink href={velhoURL}>Projektivelhoon</ExtLink>.
           </p>
           <SectionContent>
-            {!isFormDisabled && <input type="hidden" {...register("oid")} />}
-            {!isFormDisabled && <input type="hidden" {...register("versio")} />}
+            {<input type="hidden" disabled={isFormDisabled} {...register("oid")} />}
+            {<input type="hidden" disabled={isFormDisabled} {...register("versio")} />}
             <H2>Suunnitelman tila</H2>
             <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon.</p>
             <HassuGrid cols={{ lg: 2 }}>
@@ -672,12 +675,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   );
 }
 
-const DatePickerConditionallyInTheForm: VFC<HassuDatePickerWithControllerProps<KasittelynTilaFormValues> & { includeInForm: boolean }> = ({
-  controllerProps,
-  value,
-  includeInForm,
-  ...props
-}) => {
+const DatePickerConditionallyInTheForm: FunctionComponent<
+  HassuDatePickerWithControllerProps<KasittelynTilaFormValues> & { includeInForm: boolean }
+> = ({ controllerProps, value, includeInForm, ...props }) => {
   if (!includeInForm) {
     return <HassuDatePicker {...props} value={value} />;
   }

@@ -20,6 +20,7 @@ import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
 import StyledLink from "@components/StyledLink";
+import { isInFuture } from "hassu-common/util/dateUtils";
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -82,6 +83,9 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const hyvaksyttyJaJulkaistu =
+    projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    !isInFuture(projekti.nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
 
   const showUudelleenkuulutaButton =
     projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
@@ -118,7 +122,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
           <Section noDivider>
             {!epaaktiivinen && (
               <>
-                {projekti.nahtavillaoloVaiheJulkaisu && (
+                {projekti.nahtavillaoloVaiheJulkaisu && !hyvaksyttyJaJulkaistu && (
                   <KuulutusInfoElement
                     julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
                     edellinenVaiheMigroitu={projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU}

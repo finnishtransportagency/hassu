@@ -4,7 +4,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import StyledLink from "@components/StyledLink";
 import { DialogActions, DialogContent } from "@mui/material";
 import { Kielitiedot, VuorovaikutusKierrosJulkaisu, VuorovaikutusKierrosTila } from "@services/api";
-import React, { useCallback, useMemo, useState, VFC } from "react";
+import React, { useCallback, useMemo, useState, FunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import IlmoituksenVastaanottajatLukutila from "../../komponentit/IlmoituksenVastaanottajatLukutila";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
@@ -59,7 +59,7 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
   );
 }
 
-const AiempiJulkaisuLinkki: VFC<{
+const AiempiJulkaisuLinkki: FunctionComponent<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
   kielitiedot: Kielitiedot | null | undefined;
   projekti: ProjektiLisatiedolla;

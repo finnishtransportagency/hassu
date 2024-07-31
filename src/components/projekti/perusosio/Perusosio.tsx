@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProjektiPerustiedot from "./ProjektiPerustiedot";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import ProjektiKuntatiedot from "./ProjektiKuntatiedot";
@@ -11,6 +11,8 @@ import { FormState, UseFormRegister } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
 import { H3, H4 } from "../../Headings";
+import axios from "axios";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -23,6 +25,37 @@ interface ProjektinPerusosioProps extends PerusosioProps {
 }
 
 export default function ProjektinPerusosio({ projekti, register, formState, lukutila }: Readonly<ProjektinPerusosioProps>) {
+  const [geoJSON, setGeoJSON] = useState<string | null>(projekti.velho.geoJSON ?? null);
+  const { showErrorMessage } = useSnackbars();
+
+  useEffect(() => {
+    const updateGeoJson = async () => {
+      try {
+        const response = await axios.get(`/yllapito/tiedostot/projekti/${projekti.oid}/sijaintitieto/sijaintitieto.geojson`, {
+          responseType: "blob",
+          headers: { "Cache-Control": "no-cache", Pragma: "no-cache", Expires: "0" },
+        });
+
+        if (!(response.data instanceof Blob)) {
+          return;
+        }
+        const text = await response.data.text();
+        setGeoJSON(text);
+      } catch (e) {
+        if (axios.isAxiosError(e) && e.response?.status === 404) {
+          // Ei tehdä mitään. Karttarajaustiedostoa ei toistaiseksi ole
+          setGeoJSON(null);
+        } else {
+          console.log(e);
+          showErrorMessage("Projektin sijaintitiedon lataaminen epäonnistui");
+        }
+      }
+    };
+    if (!projekti.velho.geoJSON) {
+      updateGeoJson();
+    }
+  }, [projekti, showErrorMessage]);
+
   return (
     <>
       <Section>
@@ -33,7 +66,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
         <ProjektiKuntatiedot projekti={projekti} />
         <ContentSpacer>
           <H4 className="vayla-smallest-title">Projekti kartalla</H4>
-          <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+          <KarttaKansalaiselle geoJSON={geoJSON} />
         </ContentSpacer>
       </Section>
       {register && formState && (

@@ -19,8 +19,8 @@ export function AccordionToggleButton({ expandedAineisto, setExpandedAineisto, a
       }}
       iconComponent={
         <span className="fa-layers">
-          <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={expandedAineisto.length ? "vertical" : undefined} />
-          <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={expandedAineisto.length ? "vertical" : undefined} />
+          <FontAwesomeIcon icon="chevron-down" transform="down-6" flip={expandedAineisto.length ? "vertical" : undefined} />
+          <FontAwesomeIcon icon="chevron-up" transform="up-6" flip={expandedAineisto.length ? "vertical" : undefined} />
         </span>
       }
     >

@@ -109,12 +109,12 @@ function MuokkausnakymaForm({
 
   const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues, ProjektiValidationContext>(formOptions);
   const {
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
 
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const { reset } = useFormReturn;
 

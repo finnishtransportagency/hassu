@@ -1,4 +1,4 @@
-import React, { useMemo, useState, VFC } from "react";
+import React, { useMemo, useState, FunctionComponent } from "react";
 import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "hassu-common/util/dateUtils";
@@ -35,7 +35,7 @@ type OptionalNullableLadattuTiedosto = Partial<{
   [K in keyof LadattuTiedosto]: LadattuTiedosto[K] | null;
 }>;
 
-const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
+const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (props) => {
   const {
     field: { onChange, value },
     fieldState,

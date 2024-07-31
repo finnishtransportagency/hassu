@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, useEffect, useState } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
@@ -10,10 +10,37 @@ import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
+import axios from "axios";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
   const { data: projekti } = useProjektiJulkinen();
+
+  const [geoJSON, setGeoJSON] = useState<string | null>(projekti?.velho.geoJSON ?? null);
+
+  useEffect(() => {
+    const updateGeoJson = async (oid: string) => {
+      try {
+        const response = await axios.get(`/tiedostot/suunnitelma/${oid}/sijaintitieto/sijaintitieto.geojson`, {
+          responseType: "blob",
+          headers: { "Cache-Control": "no-cache", Pragma: "no-cache", Expires: "0" },
+        });
+
+        if (!(response.data instanceof Blob)) {
+          return;
+        }
+        const text = await response.data.text();
+        setGeoJSON(text);
+      } catch (e) {
+        setGeoJSON(null);
+        // Ei tehdä mitään. Karttarajaustiedostoa ei toistaiseksi ole
+      }
+    };
+    if (projekti?.oid && !projekti?.velho.geoJSON) {
+      updateGeoJson(projekti.oid);
+    }
+  }, [projekti]);
+
   if (!projekti) {
     return <></>;
   }
@@ -73,10 +100,10 @@ const ProjektiSideNavigation = styled((props) => {
         </SideCardContent>
       </SideCard>
       <SideCard>
-        {projekti.velho.geoJSON && (
+        {geoJSON && (
           <>
             <SideCardHeading>{t("suunnitelma_kartalla")}</SideCardHeading>
-            <KarttaKansalaiselle geoJSON={projekti.velho.geoJSON} />
+            <KarttaKansalaiselle geoJSON={geoJSON} />
           </>
         )}
       </SideCard>

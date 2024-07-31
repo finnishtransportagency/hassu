@@ -3,7 +3,7 @@ import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
 import { TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
 import log from "loglevel";
-import React, { useCallback, useState, VoidFunctionComponent } from "react";
+import React, { useCallback, useState, FunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -15,7 +15,7 @@ export type UudelleenkuulutaButtonProps = { reloadProjekti: KeyedMutator<Projekt
   "oid" | "tyyppi"
 >;
 
-const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps> = ({ oid, reloadProjekti, tyyppi }) => {
+const UudelleenkuulutaButton: FunctionComponent<UudelleenkuulutaButtonProps> = ({ oid, reloadProjekti, tyyppi }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -36,7 +36,7 @@ const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps>
   );
 };
 
-export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & UudelleenkuulutaButtonProps> = ({
+export const UudelleenkuulutaModal: FunctionComponent<DialogProps & UudelleenkuulutaButtonProps> = ({
   oid,
   reloadProjekti,
   tyyppi,

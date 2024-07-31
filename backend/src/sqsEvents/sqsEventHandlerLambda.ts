@@ -329,9 +329,18 @@ async function synchronizeKuntaLogo(ctx: ImportContext) {
   }
 }
 
+async function synchronizeSijaintitieto(ctx: ImportContext) {
+  const status = ctx.projektiStatus;
+  const projekti = ctx.projekti;
+  if (status && status !== API.Status.EI_JULKAISTU && status !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+    await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).sijaintitieto(), dayjs("2000-01-01"));
+  }
+}
+
 async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
   await synchronizeEULogot(ctx);
   await synchronizeKuntaLogo(ctx);
+  await synchronizeSijaintitieto(ctx);
 
   const manager: ProjektiTiedostoManager = ctx.manager;
   return (
