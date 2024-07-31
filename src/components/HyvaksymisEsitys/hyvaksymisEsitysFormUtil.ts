@@ -81,7 +81,7 @@ function adaptSuunnitelmaAineistot(
   suunnitelma: AineistoNew[] | null | undefined,
   projektiTyyppi: ProjektiTyyppi | null | undefined
 ): { [key: string]: FormAineistoNew[] } {
-  const kategoriaIdt = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true }).listKategoriaIds();
+  const kategoriaIdt = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true, hideDeprecated: true }).listKategoriaIds();
 
   const kategoriat = kategoriaIdt.reduce<{ [key: string]: FormAineistoNew[] }>((acc, kategoriaId) => {
     acc[kategoriaId] = [];

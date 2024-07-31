@@ -57,7 +57,12 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
   }, [useFormReturn, defaultValues]);
 
   const aineistoKategoriat = useMemo(
-    () => getAineistoKategoriat({ projektiTyyppi: hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi, showKategorisoimattomat: true }),
+    () =>
+      getAineistoKategoriat({
+        projektiTyyppi: hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi,
+        showKategorisoimattomat: true,
+        hideDeprecated: true,
+      }),
     [hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi]
   );
 
