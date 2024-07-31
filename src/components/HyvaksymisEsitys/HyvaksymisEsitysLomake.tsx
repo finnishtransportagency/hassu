@@ -28,6 +28,7 @@ import Suunnitelma from "./LomakeComponents/Suunnitelma";
 import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkeet";
 import useValidationMode from "src/hooks/useValidationMode";
 import { TestType } from "common/schema/common";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -54,6 +55,11 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
+
+  const aineistoKategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi, showKategorisoimattomat: true }),
+    [hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi]
+  );
 
   if (!hyvaksymisEsityksenTiedot) {
     return null;
@@ -122,7 +128,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <H3 variant="h2">Hyväksymisesitykseen liitettävä aineisto</H3>
                 <LinkkiHyvEsAineistoon hash={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash} oid={hyvaksymisEsityksenTiedot.oid} />
                 <HyvaksymisEsitysTiedosto tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisEsitys} />
-                <Suunnitelma />
+                <Suunnitelma aineistoKategoriat={aineistoKategoriat} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset
@@ -151,7 +157,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
               <Section>
                 <AineistonEsikatselu />
               </Section>
-              <MuokkausLomakePainikkeet hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
+              <MuokkausLomakePainikkeet aineistoKategoriat={aineistoKategoriat} hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
             </form>
           </FormProvider>
         )}

@@ -2,8 +2,8 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
 import { SubmitHandler, useFormContext } from "react-hook-form";
-import { TallennaHyvaksymisEsitysInput, HyvaksymisEsityksenTiedot } from "@services/api";
-import React, { useCallback, useMemo } from "react";
+import { TallennaHyvaksymisEsitysInput, HyvaksymisEsityksenTiedot, AineistoInputNew } from "@services/api";
+import React, { useCallback } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -12,17 +12,19 @@ import useApi from "src/hooks/useApi";
 import useHyvaksymisEsitys from "src/hooks/useHyvaksymisEsitys";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { AineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 
 type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
+  aineistoKategoriat: AineistoKategoriat;
 };
 
 const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymisEsitysInput = (data) => {
   return transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
 };
 
-export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
+export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKategoriat }: Props) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty, isSubmitting },
@@ -31,30 +33,6 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
 
   const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
   const muuAineistoVelhosta = watch("muokattavaHyvaksymisEsitys.muuAineistoVelhosta");
-
-  const lomakkeenAineistotKunnossa = useMemo(() => {
-    const uusiSuunnitelmaAineisto = Object.values(suunnitelma)
-      .flat()
-      ?.some((aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((a) => a.uuid === aineisto.uuid));
-    const uusiMuuAineistoVelhosta = muuAineistoVelhosta?.some(
-      (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
-    );
-    const suunnitelmaAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((aineisto) => !aineisto.tuotu);
-    const suunnitelmaAineistoKategorisoimatta = !!hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some(
-      (aineisto) =>
-        !aineisto.kategoriaId ||
-        aineisto.kategoriaId === kategorisoimattomatId ||
-        !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
-    );
-    const velhoAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((aineisto) => !aineisto.tuotu);
-    return (
-      uusiSuunnitelmaAineisto ||
-      uusiMuuAineistoVelhosta ||
-      suunnitelmaAineistojaTuomatta ||
-      velhoAineistojaTuomatta ||
-      suunnitelmaAineistoKategorisoimatta
-    );
-  }, [hyvaksymisesitys.hyvaksymisEsitys, muuAineistoVelhosta, suunnitelma]);
 
   const { mutate: reloadProjekti } = useHyvaksymisEsitys();
 
@@ -132,7 +110,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
         </Button>
         <Button
           type="button"
-          disabled={lomakkeenAineistotKunnossa}
+          disabled={lomakkeenAineistotEiKunnossa(suunnitelma, hyvaksymisesitys, muuAineistoVelhosta, aineistoKategoriat)}
           id="save_and_send_for_acceptance"
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}
@@ -141,5 +119,35 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
         </Button>
       </Stack>
     </Section>
+  );
+}
+
+function lomakkeenAineistotEiKunnossa(
+  suunnitelma: { [key: string]: FormAineistoNew[] },
+  hyvaksymisesitys: HyvaksymisEsityksenTiedot,
+  muuAineistoVelhosta: AineistoInputNew[] | null | undefined,
+  aineistoKategoriat: AineistoKategoriat
+): boolean {
+  const lomakkeenSuunnitelmaAineistoFlat = Object.values(suunnitelma).flat();
+  const uusiSuunnitelmaAineisto = lomakkeenSuunnitelmaAineistoFlat?.some(
+    (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((a) => a.uuid === aineisto.uuid)
+  );
+  const uusiMuuAineistoVelhosta = !!muuAineistoVelhosta?.some(
+    (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
+  );
+  const suunnitelmaAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.suunnitelma?.some((aineisto) => !aineisto.tuotu);
+  const suunnitelmaAineistoKategorisoimatta = lomakkeenSuunnitelmaAineistoFlat?.some(
+    (aineisto) =>
+      !aineisto.kategoriaId ||
+      aineisto.kategoriaId === kategorisoimattomatId ||
+      !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
+  );
+  const velhoAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((aineisto) => !aineisto.tuotu);
+  return (
+    uusiSuunnitelmaAineisto ||
+    uusiMuuAineistoVelhosta ||
+    suunnitelmaAineistojaTuomatta ||
+    velhoAineistojaTuomatta ||
+    suunnitelmaAineistoKategorisoimatta
   );
 }

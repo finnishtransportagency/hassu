@@ -1,4 +1,4 @@
-import { AineistoKategoria } from "common/aineistoKategoriat";
+import { AineistoKategoria, AineistoKategoriat } from "common/aineistoKategoriat";
 import { useFormContext } from "react-hook-form";
 import { AineistoAlakategoriaAccordion, AineistoTable } from ".";
 import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
@@ -12,6 +12,7 @@ const kategoriaInfoText: Record<string, string> = {
 };
 
 interface SuunnitelmaAineistoPaakategoriaContentProps {
+  aineistoKategoriat: AineistoKategoriat;
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
 }
@@ -24,9 +25,12 @@ export function SuunnitelmaAineistoPaakategoriaContent(props: SuunnitelmaAineist
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!paaKategoriaAineisto?.length && <AineistoTable kategoriaId={props.paakategoria.id} />}
+      {!!paaKategoriaAineisto?.length && (
+        <AineistoTable aineistoKategoriat={props.aineistoKategoriat} kategoriaId={props.paakategoria.id} />
+      )}
       {props.paakategoria.alaKategoriat && (
         <AineistoAlakategoriaAccordion
+          aineistoKategoriat={props.aineistoKategoriat}
           alakategoriat={props.paakategoria.alaKategoriat}
           expandedAineistoState={props.expandedAineistoState}
         />

@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { H3, H4 } from "@components/Headings";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
-import { aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import HassuAccordion from "@components/HassuAccordion";
 import { findKategoriaForVelhoAineistoNew, FormAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
@@ -14,7 +14,11 @@ import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/com
 import find from "lodash/find";
 import remove from "lodash/remove";
 
-export default function Suunnitelma(): ReactElement {
+type Props = {
+  aineistoKategoriat: AineistoKategoriat;
+};
+
+export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { watch, setValue } = useFormContext<HyvaksymisEsitysForm>();
   const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
@@ -31,10 +35,14 @@ export default function Suunnitelma(): ReactElement {
         informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä, siirtää alikansioista toiseen tai
         poistaa.
       </p>
-      <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+      <AccordionToggleButton
+        aineistoKategoriaIds={aineistoKategoriat.listKategoriaIds()}
+        expandedAineisto={expandedAineisto}
+        setExpandedAineisto={setExpandedAineisto}
+      />
       <HassuAccordion
         expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
+        items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
           title: (
             <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               suunnitelmaFlat,
@@ -44,6 +52,7 @@ export default function Suunnitelma(): ReactElement {
           content: (
             <SectionContent largeGaps>
               <SuunnitelmaAineistoPaakategoriaContent
+                aineistoKategoriat={aineistoKategoriat}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
               />
@@ -59,7 +68,7 @@ export default function Suunnitelma(): ReactElement {
         open={aineistoDialogOpen}
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
-          const newAineisto = findKategoriaForVelhoAineistoNew(valitutVelhoAineistot);
+          const newAineisto = findKategoriaForVelhoAineistoNew(valitutVelhoAineistot, aineistoKategoriat);
           const uusiAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
             oldAineisto: suunnitelma,
             newAineisto,

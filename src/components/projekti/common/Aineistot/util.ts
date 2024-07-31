@@ -72,7 +72,10 @@ export function findKategoriaForVelhoAineisto(
   }));
 }
 
-export function findKategoriaForVelhoAineistoNew(valitutVelhoAineistot: VelhoAineisto[]): FormAineistoNew[] {
+export function findKategoriaForVelhoAineistoNew(
+  valitutVelhoAineistot: VelhoAineisto[],
+  aineistoKategoriat: AineistoKategoriat
+): FormAineistoNew[] {
   return valitutVelhoAineistot.map<FormAineistoNew>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,

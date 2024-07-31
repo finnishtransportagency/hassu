@@ -8,9 +8,10 @@ import {
   KunnallinenLadattuTiedostoInput,
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
+  ProjektiTyyppi,
   TallennaHyvaksymisEsitysInput,
 } from "@services/api";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 
 export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] };
 export type HyvaksymisEsitysForm = {
@@ -62,7 +63,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
         viitetieto: viitetieto ?? "",
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
-      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma),
+      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, perustiedot.projektiTyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
@@ -76,8 +77,11 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
-function adaptSuunnitelmaAineistot(suunnitelma: AineistoNew[] | null | undefined): { [key: string]: FormAineistoNew[] } {
-  const kategoriaIdt = aineistoKategoriat.listKategoriaIds();
+function adaptSuunnitelmaAineistot(
+  suunnitelma: AineistoNew[] | null | undefined,
+  projektiTyyppi: ProjektiTyyppi | null | undefined
+): { [key: string]: FormAineistoNew[] } {
+  const kategoriaIdt = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true }).listKategoriaIds();
 
   const kategoriat = kategoriaIdt.reduce<{ [key: string]: FormAineistoNew[] }>((acc, kategoriaId) => {
     acc[kategoriaId] = [];

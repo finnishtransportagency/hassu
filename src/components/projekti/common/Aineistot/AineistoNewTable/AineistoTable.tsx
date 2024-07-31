@@ -3,7 +3,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import useTranslation from "next-translate/useTranslation";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useCallback, useMemo } from "react";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { AineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { ActionsColumn } from ".";
 import { FormAineistoNew, getAllOptionsForKategoriat } from "../util";
@@ -14,6 +14,7 @@ import { MenuItem } from "@mui/material";
 
 interface AineistoTableProps {
   kategoriaId: string;
+  aineistoKategoriat: AineistoKategoriat;
 }
 
 export function AineistoTable(props: AineistoTableProps) {
@@ -23,7 +24,10 @@ export function AineistoTable(props: AineistoTableProps) {
 
   const { t } = useTranslation("aineisto");
 
-  const allOptions = useMemo(() => getAllOptionsForKategoriat({ kategoriat: aineistoKategoriat.listKategoriat(true), t }), [t]);
+  const allOptions = useMemo(
+    () => getAllOptionsForKategoriat({ kategoriat: props.aineistoKategoriat.listKategoriat(), t }),
+    [props.aineistoKategoriat, t]
+  );
 
   const columns = useMemo<ColumnDef<FormAineistoNew>[]>(
     () => [

@@ -1,17 +1,11 @@
-import { ValidationModeState } from "../ProjektiValidationContext";
+import { ProjektiLisatiedolla, ValidationModeState } from "../ProjektiValidationContext";
 import * as Yup from "yup";
-import {
-  TestType,
-  getAineistotNewSchema,
-  getLadatutTiedostotNewSchema,
-  isTestTypeBackend,
-  isTestTypeFrontend,
-  isValidationModePublish,
-} from "./common";
+import { TestType, getAineistotNewSchema, getLadatutTiedostotNewSchema, isTestTypeBackend, isValidationModePublish } from "./common";
 import { notInPastCheck, paivamaara } from "./paivamaaraSchema";
 import { mapValues } from "lodash";
-import { aineistoKategoriat } from "../aineistoKategoriat";
-import { ObjectShape } from "yup/lib/object";
+import { getAineistoKategoriat } from "../aineistoKategoriat";
+import { ObjectShape, OptionalObjectSchema, AnyObject, TypeOfShape } from "yup/lib/object";
+import { ProjektiTyyppi } from "../graphql/apiModel";
 
 const getKunnallinenLadattuTiedostoSchema = () =>
   Yup.object().shape({
@@ -86,13 +80,19 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
         .min(1)
         .defined(),
     })
-    .when("$testType", {
-      is: isTestTypeFrontend,
-      then: Yup.object().shape({
-        muistutukset: Yup.lazy((obj) => Yup.object(mapValues(obj, () => getKunnallinenLadatutTiedostotSchema().defined()))),
-        suunnitelma: suunnitelmaFrontendSchema(),
-      }),
-    })
+    .when(
+      ["$testType", "$projekti"],
+      (
+        [testType, projekti]: [testType: TestType, projekti: ProjektiLisatiedolla],
+        schema: OptionalObjectSchema<ObjectShape, AnyObject, TypeOfShape<ObjectShape>>
+      ) =>
+        testType === TestType.FRONTEND
+          ? Yup.object().shape({
+              muistutukset: Yup.lazy((obj) => Yup.object(mapValues(obj, () => getKunnallinenLadatutTiedostotSchema().defined()))),
+              suunnitelma: suunnitelmaFrontendSchema(projekti.velho.tyyppi),
+            })
+          : schema
+    )
     .when("$testType", {
       is: isTestTypeBackend,
       then: Yup.object().shape({
@@ -102,10 +102,12 @@ export const hyvaksymisEsitysSchema = Yup.object().shape({
     }),
 });
 
-function suunnitelmaFrontendSchema() {
-  const kategorioittenSchema = aineistoKategoriat.listKategoriaIds().reduce<ObjectShape>((obj, id) => {
-    obj[id] = getAineistotNewSchema(true).defined();
-    return obj;
-  }, {});
+function suunnitelmaFrontendSchema(projektiTyyppi: ProjektiTyyppi | null | undefined) {
+  const kategorioittenSchema = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true })
+    .listKategoriaIds()
+    .reduce<ObjectShape>((obj, id) => {
+      obj[id] = getAineistotNewSchema(true).defined();
+      return obj;
+    }, {});
   return Yup.object().shape(kategorioittenSchema);
 }

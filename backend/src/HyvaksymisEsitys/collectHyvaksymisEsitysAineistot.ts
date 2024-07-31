@@ -96,7 +96,7 @@ export default function collectHyvaksymisEsitysAineistot(
     valmis: aineistoNewIsReady(tiedosto.lisatty, aineistoHandledAt),
   }));
   const muutAineistot: FileInfo[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
-  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map((aineisto) => {
+  const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map<FileInfo>((aineisto) => {
     const kategoriaFolder = getZipFolder(aineisto.kategoriaId, projekti.velho?.tyyppi) ?? "Kategorisoimattomat";
     return {
       s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
