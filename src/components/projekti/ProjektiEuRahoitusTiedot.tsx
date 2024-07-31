@@ -21,7 +21,10 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
 
   const kielitiedot = watch("kielitiedot");
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet({
+    ensisijainenKieli: kielitiedot.ensisijainenKieli ? kielitiedot.ensisijainenKieli : undefined,
+    toissijainenKieli: kielitiedot.toissijainenKieli ? kielitiedot.toissijainenKieli : undefined,
+  });
 
   if (!projekti) {
     return <></>;

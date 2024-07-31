@@ -23,11 +23,11 @@ export const SnackbarContext = createContext<SnackbarContextValue>({
   setMobileBottomOffset: () => undefined,
 });
 
-interface Props {
+type Props = {
   children?: ReactNode;
-}
+};
 
-function SnackbarProvider({ children }: Props) {
+function SnackbarProvider({ children }: Readonly<Props>) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [duration, setDuration] = useState<SnackbarProps["autoHideDuration"]>(2000);
@@ -68,14 +68,14 @@ function SnackbarProvider({ children }: Props) {
     };
   }, [mobileBotOffset]);
 
-  const handleSnackbarClose: SnackbarProps["onClose"] = useCallback((_event, closeReason) => {
+  const handleSnackbarClose: NonNullable<SnackbarProps["onClose"]> = useCallback((_event, closeReason) => {
     if (closeReason === "clickaway") {
       return;
     }
     setOpen(false);
   }, []);
 
-  const handleAlertClose: AlertProps["onClose"] = useCallback(() => {
+  const handleAlertClose: NonNullable<AlertProps["onClose"]> = useCallback(() => {
     setOpen(false);
   }, []);
 

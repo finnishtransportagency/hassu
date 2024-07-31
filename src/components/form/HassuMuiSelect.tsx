@@ -31,24 +31,22 @@ const HassuMuiSelect = (
         )}
         <Controller
           render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <Select<string>
-                MenuProps={{ sx: { maxHeight: 750 } }}
-                labelId={labelId}
-                label={label}
-                onChange={(...args) => {
-                  onChange(...args);
-                  onChangeProp?.(...args);
-                }}
-                onBlur={onBlur}
-                value={value === null ? "" : value}
-                ref={ref}
-                disabled={disabled}
-              >
-                {!noEmptyOption && <MenuItem value="">{t("valitse")}</MenuItem>}
-                {children}
-              </Select>
-            </>
+            <Select<string>
+              MenuProps={{ sx: { maxHeight: 750 } }}
+              labelId={labelId}
+              label={label}
+              onChange={(...args) => {
+                onChange(...args);
+                onChangeProp?.(...args);
+              }}
+              onBlur={onBlur}
+              value={value === null ? "" : value}
+              ref={ref}
+              disabled={disabled}
+            >
+              {!noEmptyOption && <MenuItem value="">{t("valitse")}</MenuItem>}
+              {children}
+            </Select>
           )}
           name={name}
           control={control}

@@ -16,9 +16,9 @@ export default function ButtonContent({ primary, startIcon, endIcon, disabled, c
   return (
     <div className={classNames(primary && !disabled && styles.overlay)}>
       <div className={styles.content}>
-        {startIcon && <FontAwesomeIcon icon={startIcon} className="mr-2 mb-px" />}
+        {startIcon && <FontAwesomeIcon icon={startIcon} className="mr-2" />}
         {children}
-        {endIcon && <FontAwesomeIcon icon={endIcon} className="ml-2 mb-px" />}
+        {endIcon && <FontAwesomeIcon icon={endIcon} className="ml-2" />}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, VFC, useMemo } from "react";
+import React, { useCallback, useState, useMemo, FunctionComponent } from "react";
 import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
@@ -143,7 +143,7 @@ const createPoistaColumn = (
             }}
             {...field}
           >
-            {value ? "Kumoa poisto" : <FontAwesomeIcon icon={"trash"} size="lg" />}
+            {value ? "Kumoa poisto" : <FontAwesomeIcon icon="trash" size="lg" />}
           </StyledIconButton>
         )}
       />
@@ -411,7 +411,7 @@ export type InitialSearchResponses = {
   lisatyt: KiinteistonOmistajat;
 };
 
-export const FormContents: VFC<{
+export const FormContents: FunctionComponent<{
   projekti: ProjektiLisatiedolla;
   initialSearchResponses: InitialSearchResponses;
 }> = ({ projekti, initialSearchResponses }) => {
@@ -428,10 +428,10 @@ export const FormContents: VFC<{
 
   const {
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     getValues,
   } = useFormReturn;
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const api = useApi();
@@ -486,8 +486,8 @@ export const FormContents: VFC<{
     [api, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
   );
 
-  const resetAndClose = useCallback(() => {
-    router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
+  const resetAndClose = useCallback(async () => {
+    await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
   }, [router, projekti.oid]);
 
   return (
@@ -685,6 +685,7 @@ const LisatytTaulukko = () => {
         onClick={() => {
           append({
             nimi: "",
+            maa: null,
             jakeluosoite: "",
             kiinteistotunnus: "",
             postinumero: "",

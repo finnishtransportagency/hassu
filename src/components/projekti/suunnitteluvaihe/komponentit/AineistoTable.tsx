@@ -195,10 +195,9 @@ const AineistoTable = ({
 
 type ActionColumnProps = {
   aineisto: FormAineisto;
-  appendToPoistetut: UseFieldArrayAppend<
-    SuunnittelunPerustiedotFormValues,
-    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset" | "vuorovaikutusKierros.poistetutEsittelyaineistot"
-  >;
+  appendToPoistetut:
+    | UseFieldArrayAppend<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset">
+    | UseFieldArrayAppend<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.poistetutEsittelyaineistot">;
   index: number;
   remove: UseFieldArrayRemove;
   updateFieldArray:

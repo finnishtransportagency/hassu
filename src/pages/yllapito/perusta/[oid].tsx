@@ -99,25 +99,25 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
 
   const {
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     register,
     reset,
   } = useFormReturn as UseFormReturn<FormValues>;
 
-  useLeaveConfirm(isDirty && !formIsSubmitting);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const api = useApi();
 
   const submitAndMoveToNewRoute = useCallback(
-    (formData: FormValues, newRoute: string) =>
-      withLoadingSpinner(
+    async (formData: FormValues, newRoute: string) =>
+      await withLoadingSpinner(
         (async () => {
           deleteFieldArrayIds(formData?.kayttoOikeudet);
           try {
             await api.tallennaProjekti(formData);
             await reloadProjekti();
             reset(formData);
-            router.push(newRoute);
+            await router.push(newRoute);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
@@ -127,11 +127,11 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
   );
 
   const submitCreateAnotherOne = async (formData: FormValues) => {
-    submitAndMoveToNewRoute(formData, "/yllapito/perusta");
+    await submitAndMoveToNewRoute(formData, "/yllapito/perusta");
   };
 
   const submitMoveToProject = async (formData: FormValues) => {
-    submitAndMoveToNewRoute(formData, `/yllapito/projekti/${projekti.oid}`);
+    await submitAndMoveToNewRoute(formData, `/yllapito/projekti/${projekti.oid}`);
   };
 
   const onKayttajatUpdate = useCallback(

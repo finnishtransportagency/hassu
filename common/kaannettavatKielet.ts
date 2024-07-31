@@ -18,7 +18,7 @@ export function isKieliSaame(kieli: API.Kieli | undefined | null): boolean {
   return Object.keys(SaameKieli).includes(kieli);
 }
 
-export function getKaannettavatKielet(kielitiedot: API.Kielitiedot | Kielitiedot | API.KielitiedotInput | undefined | null): {
+export function getKaannettavatKielet(kielitiedot: Partial<API.Kielitiedot | Kielitiedot | API.KielitiedotInput> | undefined | null): {
   ensisijainenKaannettavaKieli: KaannettavaKieli | null;
   toissijainenKaannettavaKieli: KaannettavaKieli | null;
 } {

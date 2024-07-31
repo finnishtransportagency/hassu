@@ -25,7 +25,7 @@ const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymi
 export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
   const { showSuccessMessage } = useSnackbars();
   const {
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
     watch,
   } = useFormContext<HyvaksymisEsitysForm>();
 
@@ -80,7 +80,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys }: Props) {
     [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const suljeMuokkaus = useCallback(
     () =>

@@ -14,9 +14,10 @@ export default function IlmoituksenVastaanottajatLukutila({ vuorovaikutus }: Pro
       <H3>Kutsun ilmoituksen vastaanottajat</H3>
       <SectionContent>
         <p>
-          Ilmoitus vuorovaikuttamisesta on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Ei
-          lähetetty’, tarkasta sähköpostiosoite. Olethan näissä tapauksissa yhteydessä myös Väyläviraston neuvontaan.
+          Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty, tarkasta
+          sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon tuki.vayliensuunittelu@vayla.fi.
         </p>
+        <p>Käythän varmistamassa vuorovaikutuksen alkamisen jälkeen, että kutsu on julkaistu myös kuntien omilla sivuilla.</p>
       </SectionContent>
       <IlmoituksenVastaanottajatCommon ilmoituksenVastaanottajat={vuorovaikutus?.ilmoituksenVastaanottajat} />
     </Section>

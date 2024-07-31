@@ -1,8 +1,7 @@
-import { styled, SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
 
-export const SuorakulmioIkoni = styled(({ children, ...props }: SvgIconProps) => (
-  <SvgIcon {...props}>
+export const SuorakulmioIkoni = () => (
+  <svg height="24" width="24" style={{ display: "inline-block" }}>
     <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Artboard" transform="translate(-11.000000, -107.000000)">
         <g id="icon/kartta4" transform="translate(13.000000, 108.000000)">
@@ -22,5 +21,5 @@ export const SuorakulmioIkoni = styled(({ children, ...props }: SvgIconProps) =>
         </g>
       </g>
     </g>
-  </SvgIcon>
-))({});
+  </svg>
+);

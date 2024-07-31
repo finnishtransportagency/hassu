@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode, useMemo, VoidFunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode, useMemo } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import { Tabs } from "@mui/material";
@@ -8,7 +8,11 @@ import { UrlObject } from "url";
 import { ProjektiJulkinen, Status } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
-const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode }> = ({ children, pageTitle, saameContent }) => {
+const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode; children?: React.ReactNode }> = ({
+  children,
+  pageTitle,
+  saameContent,
+}) => {
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti) {
@@ -28,7 +32,7 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: Re
   );
 };
 
-const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
+const PaatosPageTabs: FunctionComponent<{ projekti: ProjektiJulkinen }> = ({ projekti }) => {
   const router = useRouter();
   const { t } = useTranslation("paatos");
 
@@ -83,9 +87,11 @@ const PaatosPageTabs: VoidFunctionComponent<{ projekti: ProjektiJulkinen }> = ({
 
   return (
     <Tabs value={value}>
-      {tabProps.filter((t) => !t.disabled).map((tProps, index) => (
-        <LinkTab key={index} {...tProps} />
-      ))}
+      {tabProps
+        .filter((t) => !t.disabled)
+        .map((tProps, index) => (
+          <LinkTab key={index} {...tProps} />
+        ))}
     </Tabs>
   );
 };
