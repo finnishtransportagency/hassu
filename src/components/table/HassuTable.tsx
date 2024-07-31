@@ -199,7 +199,6 @@ export function BodyContent<T>(
     }
 ) {
   const actualRows = props.table.getRowModel().rows;
-
   const rowVirtualizer = props?.virtualizer;
 
   const virtualRows = rowVirtualizer?.getVirtualItems();
@@ -354,6 +353,7 @@ export const BasicRow = forwardRef(BasicRowWithoutStyles);
 function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: RowProps<T>, ref: ForwardedRef<HTMLDivElement>) {
   const meta = table.options.meta;
   const href = meta?.rowHref?.(row);
+  const additionalStyles = meta?.customRowStyles;
   const onClick: React.MouseEventHandler<HTMLDivElement> | undefined = useMemo(() => {
     return meta?.rowOnClick ? (event) => meta.rowOnClick?.(event, row) : undefined;
   }, [meta, row]);
@@ -396,6 +396,15 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
     [row.id, originalIndex, onDragAndDrop]
   );
 
+  const bodyTrWrapperStyles = {
+    boxShadow: isDragging
+      ? "inset -16px 0px 14px -8px #FFFFFF, inset 16px 0px 14px -8px #FFFFFF, inset 0px 11px 8px -10px #999999, inset 0px -11px 8px -10px #999999"
+      : undefined,
+    borderBottom: !isDragging ? "2px #49c2f1 solid" : "unset",
+    zIndex: isDragging ? 1 : "unset",
+    backgroundColor: !isDragging && index % 2 ? "#F8F8F8" : "#FFFFFF",
+  };
+
   return (
     <TableDragConnectSourceContext.Provider value={dragRef}>
       <ConditionalWrapper
@@ -411,19 +420,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
             previewRef(node);
             typeof ref === "function" && ref(node);
           }}
-          sx={{
-            boxShadow: isDragging
-              ? "inset -16px 0px 14px -8px #FFFFFF, inset 16px 0px 14px -8px #FFFFFF, inset 0px 11px 8px -10px #999999, inset 0px -11px 8px -10px #999999"
-              : undefined,
-            borderBottom: !isDragging ? "2px #49c2f1 solid" : "unset",
-            zIndex: isDragging ? 1 : "unset",
-            backgroundColor: !isDragging && index % 2 ? "#F8F8F8" : "#FFFFFF",
-            ':hover': {
-              '> div > div:first-child > div': {
-                borderBottom: "2px solid #0064af"
-              },      
-            }
-          }}
+          sx={!additionalStyles ? bodyTrWrapperStyles : { ...bodyTrWrapperStyles, ...additionalStyles }}
           data-index={index}
           onClick={onClick}
           as={href ? "a" : undefined}
@@ -438,10 +435,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
                 {!isMedium && <DataCellHeaderContent>{flexRender<any>(cell.column.columnDef.header, {})}</DataCellHeaderContent>}
-                <DataCellContent sx={{
-                    maxWidth: "fit-content",
-                    borderBottom: "2px solid transparent",
-                }}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
+                <DataCellContent>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
               </DataCell>
             ))}
           </BodyTr>

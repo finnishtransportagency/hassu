@@ -44,6 +44,7 @@ export const Tr = styled("div")(
     columnGap: 4,
   })
 );
+
 export const BodyTrWrapper = styled("div")(
   sx({
     display: "block",

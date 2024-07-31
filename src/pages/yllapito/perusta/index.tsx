@@ -207,6 +207,14 @@ const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
       rowHref: (projekti) => {
         return `/yllapito/perusta/${encodeURIComponent(projekti.original.oid)}`;
       },
+      customRowStyles: {
+        ":hover": {
+          "> div > div:nth-of-type(2) > div": {
+            textDecoration: "underline 2px #0064af",
+            textUnderlineOffset: "4px",
+          },
+        },
+      }
     },
   });
 
