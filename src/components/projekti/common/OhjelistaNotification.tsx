@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from "react";
+import React, { ReactNode, FunctionComponent } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
 import { Vaihe } from "@services/api";
@@ -23,7 +23,7 @@ const vaiheenVelhoToimeenpide: Record<Vaihe, string> = {
   JATKOPAATOS2: "Suunnitelman voimassaolon jatkaminen",
 };
 
-const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
+const AshaKuulutusToimenpideTeksti: FunctionComponent<{ vaihe: Vaihe }> = ({ vaihe }) => (
   <>
     Ennen {vaihe === Vaihe.SUUNNITTELU ? "kutsun" : "kuulutuksen"} täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä
     oikea toimenpide, joka on nimeltään {vaiheenVelhoToimeenpide[vaihe]}. {vaihe === Vaihe.SUUNNITTELU ? "Kutsun" : "Kuulutuksen"} julkaisu
@@ -31,7 +31,7 @@ const AshaKuulutusToimenpideTeksti: VFC<{ vaihe: Vaihe }> = ({ vaihe }) => (
   </>
 );
 
-export const OhjelistaNotification: VFC<Props> = ({ children, asianhallintaTiedot, open, onClose }) => {
+export const OhjelistaNotification: FunctionComponent<Props> = ({ children, asianhallintaTiedot, open, onClose }) => {
   const { data: nykyinenKayttaja } = useCurrentUser();
 
   const vaylaAsianhallinta = asianhallintaTiedot?.projekti && isVaylaAsianhallinta(asianhallintaTiedot.projekti);

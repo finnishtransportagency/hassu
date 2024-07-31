@@ -2,7 +2,7 @@ import { allowedFileTypes } from "common/fileValidationSettings";
 import { lataaTiedosto } from "../util/fileUtil";
 import { KunnallinenLadattuTiedostoInput, LadattuTiedostoInputNew } from "@services/api";
 import { uuid } from "common/util/uuid";
-import { FieldValues, Path, PathValue, UnpackNestedValue, useFormContext } from "react-hook-form";
+import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -70,7 +70,7 @@ export default function useHandleUploadedFiles<F extends FieldValues>(
 
             const oldFiles = (ladatutTiedostot ?? []) as LadattuTiedostoInputNew[];
             const newValue = settings?.allowOnlyOne ? tiedostoInputs : oldFiles.concat(tiedostoInputs);
-            setValue(keyToLadatutTiedostot, newValue as UnpackNestedValue<PathValue<F, Path<F>>>, {
+            setValue(keyToLadatutTiedostot, newValue as PathValue<F, Path<F>>, {
               shouldDirty: true,
             });
 

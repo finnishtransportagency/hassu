@@ -1,4 +1,4 @@
-import React, { useCallback, useState, VFC, useEffect } from "react";
+import React, { useCallback, useState, FunctionComponent, useEffect } from "react";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
 import { KiinteistonomistajaTiedottaminenMap } from "@components/projekti/common/KiinteistonOmistajaTiedottaminenMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
@@ -136,7 +136,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
   },
 ];
 
-const KiinteistonomistajatPage: VFC<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
+const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hakuKaynnissa, setHakuKaynnissa] = useState(false);
 

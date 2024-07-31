@@ -633,7 +633,10 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE],
+        [
+          API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        ],
         [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }

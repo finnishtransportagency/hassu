@@ -16,7 +16,8 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import { formatDateTimeIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
-import { H3, H4 } from "../../Headings";
+import { H2, H3, H4 } from "../../Headings";
+import { TukiEmailLink } from "../../EiOikeuksia";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -70,7 +71,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
   return (
     <Section>
       <SectionContent>
-        <H3>Ilmoituksen vastaanottajat</H3>
+        {!isReadonly ? <H3>Ilmoituksen vastaanottajat</H3> : <H2>Ilmoituksen vastaanottajat</H2>}
         {!isReadonly && (
           <>
             <p>
@@ -86,10 +87,13 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         )}
 
         {aloituskuulutusjulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-          <p>
-            Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on ‘Lähetysvirhe’, tarkasta
-            sähköpostiosoite. Ota tarvittaessa yhteys pääkäyttäjään.
-          </p>
+          <>
+            <p>
+              Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty, tarkasta
+              sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
+            </p>
+            <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+          </>
         )}
       </SectionContent>
 
@@ -179,7 +183,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       {isReadonly && (
         <SectionContent>
           <div className="grid grid-cols-4 gap-x-6 mb-4">
-            <h6 className="font-bold">Viranomaiset</h6>
+            <H3 variant="h5">Viranomaiset</H3>
             <p></p>
             <p style={{ color: "#7A7A7A" }}>Ilmoituksen tila</p>
             <p style={{ color: "#7A7A7A" }}>Lähetysaika</p>
@@ -200,7 +204,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
         </SectionContent>
       )}
       <SectionContent>
-        <H4>Kunnat</H4>
+        {isReadonly ? <H3 variant="h5">Kunnat</H3> : <H4>Kunnat</H4>}
         {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu Projektivelhoon.</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {

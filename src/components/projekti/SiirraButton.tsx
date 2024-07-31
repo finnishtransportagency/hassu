@@ -3,7 +3,7 @@ import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
 import { TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import log from "loglevel";
-import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
+import React, { useCallback, useEffect, useRef, useState, FunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -13,7 +13,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 export type SiirraButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<TilaSiirtymaInput, "oid">;
 
-const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = ({ oid, reloadProjekti }) => {
+const SiirraButton: FunctionComponent<SiirraButtonProps> = ({ oid, reloadProjekti }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -34,7 +34,7 @@ const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = ({ oid, reloadPro
   );
 };
 
-export const SiirraModal: VoidFunctionComponent<DialogProps & SiirraButtonProps> = ({ oid, reloadProjekti, onClose, ...dialogProps }) => {
+export const SiirraModal: FunctionComponent<DialogProps & SiirraButtonProps> = ({ oid, reloadProjekti, onClose, ...dialogProps }) => {
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
 
   const mountedRef = useRef(false);
@@ -53,7 +53,7 @@ export const SiirraModal: VoidFunctionComponent<DialogProps & SiirraButtonProps>
   const { withLoadingSpinner } = useLoadingSpinner();
 
   const siirraSuunnitteluun: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
+    async (event) => {
       const siirraTilaJaPaivitaSivu = async () => {
         try {
           await api.siirraTila({
@@ -70,7 +70,7 @@ export const SiirraModal: VoidFunctionComponent<DialogProps & SiirraButtonProps>
         }
         closeDialog(event);
       };
-      withLoadingSpinner(siirraTilaJaPaivitaSivu());
+      await withLoadingSpinner(siirraTilaJaPaivitaSivu());
     },
     [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, withLoadingSpinner]
   );

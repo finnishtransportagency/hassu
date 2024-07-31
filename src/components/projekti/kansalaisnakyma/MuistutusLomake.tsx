@@ -152,7 +152,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
 
   const [inputValue, setInputValue] = React.useState("");
 
-  const constructErrorMessage = useCallback((msg) => t(`common:virheet.${msg}`), [t]);
+  const constructErrorMessage = useCallback((msg: string) => t(`common:virheet.${msg}`), [t]);
 
   const countryCodesSorted = useMemo(
     () =>

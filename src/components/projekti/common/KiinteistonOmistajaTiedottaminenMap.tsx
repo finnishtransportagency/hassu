@@ -725,7 +725,10 @@ export function getControls({
         label: createElement(<SuorakulmioIkoni />, "span"),
         tipLabel: "Piirrä suorakulmio",
       },
-      undo: { label: createElement(<KumoaIkoni fontSize="small" />, "span"), tipLabel: "Kumoa" },
+      undo: {
+        label: createElement(<KumoaIkoni />, "span"),
+        tipLabel: "Kumoa",
+      },
       removeFeature: {
         label: createIconSpan("trash"),
         tipLabel: "Poista valittu rajaus",

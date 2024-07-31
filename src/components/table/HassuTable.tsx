@@ -67,6 +67,9 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
 });
 
 function SelectHeader<T>(props: HeaderContext<T, unknown>) {
+  if (!props.table) {
+    return <></>;
+  }
   return (
     <Span
       sx={{
@@ -429,7 +432,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
           >
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
-                {!isMedium && <DataCellHeaderContent>{flexRender(cell.column.columnDef.header, cell.getContext())}</DataCellHeaderContent>}
+                {!isMedium && <DataCellHeaderContent>{flexRender<any>(cell.column.columnDef.header, {})}</DataCellHeaderContent>}
                 <DataCellContent>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
               </DataCell>
             ))}

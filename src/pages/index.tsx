@@ -66,7 +66,6 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           maakunta: maakunta ? [Number(maakunta)] : undefined,
           vaylamuoto: vaylamuoto ? [vaylamuoto] : undefined,
         });
-        log.info("listProjektit:", result);
         setHakutulos(result);
         setLadataan(false);
       } catch (e: any) {

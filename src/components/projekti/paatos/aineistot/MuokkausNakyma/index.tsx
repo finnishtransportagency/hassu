@@ -96,12 +96,12 @@ function MuokkausnakymaForm({
 
   const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues, ProjektiValidationContext>(formOptions);
   const {
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useFormReturn;
 
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
-  useLeaveConfirm(isDirty);
+  useLeaveConfirm(!isSubmitting && isDirty);
 
   const { reset } = useFormReturn;
   useEffect(() => {
@@ -117,7 +117,11 @@ function MuokkausnakymaForm({
             <p>{getSectionInfoText(paatosTyyppi)}</p>
             <AineistotSaavutettavuusOhje />
             <TiedostoLomake vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
-            <AineistoLomake dialogInfoText={getDialogInfoText(paatosTyyppi)} vaihe={julkaisematonPaatos} sectionSubtitle="Päätöksen liitteenä oleva aineisto"/>
+            <AineistoLomake
+              dialogInfoText={getDialogInfoText(paatosTyyppi)}
+              vaihe={julkaisematonPaatos}
+              sectionSubtitle="Päätöksen liitteenä oleva aineisto"
+            />
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}

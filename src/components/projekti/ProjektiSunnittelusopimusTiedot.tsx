@@ -42,7 +42,10 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
   const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
 
   const kielitiedot = watch("kielitiedot");
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet({
+    ensisijainenKieli: kielitiedot.ensisijainenKieli ? kielitiedot.ensisijainenKieli : undefined,
+    toissijainenKieli: kielitiedot.toissijainenKieli ? kielitiedot.toissijainenKieli : undefined,
+  });
 
   return (
     <Section smallGaps>
