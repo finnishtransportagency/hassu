@@ -21,7 +21,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { lahetysTila } from "src/util/aloitusKuulutusUtil";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import HassuTable from "@components/table/HassuTable";
-import { aineistoKategoriat } from "common/aineistoKategoriat";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import ExtLink from "@components/ExtLink";
@@ -63,6 +63,11 @@ export default function HyvaksymisEsitysLukutila({
       return acc;
     }, {});
   }, [hyvaksymisEsitys?.muistutukset, perustiedot.kunnat]);
+
+  const { kategoriat, kategoriaIdt } = useMemo(() => {
+    const kategoria = getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi });
+    return { kategoriat: kategoria.listKategoriat(), kategoriaIdt: kategoria.listKategoriaIds() };
+  }, [perustiedot.projektiTyyppi]);
 
   if (!hyvaksymisEsitys) {
     return null;
@@ -179,9 +184,13 @@ export default function HyvaksymisEsitysLukutila({
         {hyvaksymisEsitys.suunnitelma && (
           <>
             <H3>Suunnitelma</H3>
-            <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+            <AccordionToggleButton
+              expandedAineisto={expandedAineisto}
+              setExpandedAineisto={setExpandedAineisto}
+              aineistoKategoriaIds={kategoriaIdt}
+            />
             <NestedAineistoAccordion
-              kategoriat={aineistoKategoriat.listKategoriat()}
+              kategoriat={kategoriat}
               aineisto={hyvaksymisEsitys.suunnitelma}
               paakategoria
               expandedState={[expandedAineisto, setExpandedAineisto]}

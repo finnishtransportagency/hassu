@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
-import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { HyvaksymisEsityksenAineistot, LadattavaTiedosto } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -57,6 +57,10 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
 
   const muistutusMaara = useMemo(() => Object.values(muistutukset).flat().length ?? 0, [muistutukset]);
 
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi }).listKategoriat(),
+    [perustiedot.projektiTyyppi]
+  );
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
@@ -147,11 +151,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           <div>Ei aineistoja</div>
         )}
         <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
-        <SuunnittelmaLadattavatTiedostotAccordion
-          kategoriat={aineistoKategoriat.listKategoriat()}
-          aineistot={suunnitelma}
-          esikatselu={!!props.esikatselu}
-        />
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={!!props.esikatselu} />
       </Section>
       <Section>
         <H2>Vuorovaikutus</H2>
