@@ -5,11 +5,13 @@ import useTranslation from "next-translate/useTranslation";
 import { useFormContext } from "react-hook-form";
 import { AineistoNahtavillaTableFormValuesInterface } from "../util";
 import { AineistoTable } from ".";
+import { SelectOption } from "@components/form/Select";
 
 interface AineistoAlakategoriaAccordionProps {
   alakategoriat: AineistoKategoria[];
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
   aineisto: Aineisto[] | undefined | null;
+  allOptions: SelectOption[];
 }
 
 export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordionProps) => {
@@ -29,12 +31,14 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
     <HassuAccordion
       expandedstate={props.expandedAineistoState}
       items={props.alakategoriat.map((alakategoria) => ({
-        title: `${t(`aineisto-kategoria-nimi.${alakategoria.id}`)} (${getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria)})`,
+        title:
+          t(`aineisto-kategoria-nimi.${alakategoria.id}`) + " (" + getNestedAineistoMaaraForCategory(aineistotFlat, alakategoria) + ")",
         content: (
           <AineistoAlakategoriaContent
             kategoria={alakategoria}
             aineisto={props.aineisto}
             expandedAineistoState={props.expandedAineistoState}
+            allOptions={props.allOptions}
           />
         ),
         id: alakategoria.id,
@@ -47,6 +51,7 @@ interface AlakategoriaContentProps {
   kategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
   aineisto: Aineisto[] | undefined | null;
+  allOptions: SelectOption[];
 }
 
 export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => {
@@ -55,8 +60,8 @@ export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => 
   const aineistot = watch(aineistoRoute);
   return (
     <>
-      {!!aineistot?.length ? (
-        <AineistoTable kategoriaId={props.kategoria.id} aineisto={props.aineisto} />
+      {aineistot?.length ? (
+        <AineistoTable kategoriaId={props.kategoria.id} aineisto={props.aineisto} allOptions={props.allOptions} />
       ) : (
         <p>Kategoriaan ei ole asetettu aineistoa.</p>
       )}
@@ -65,6 +70,7 @@ export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => 
           aineisto={props.aineisto}
           expandedAineistoState={props.expandedAineistoState}
           alakategoriat={props.kategoria.alaKategoriat}
+          allOptions={props.allOptions}
         />
       )}
     </>

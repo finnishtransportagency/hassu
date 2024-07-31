@@ -2,8 +2,10 @@ import { Aineisto } from "@services/api";
 import { AineistoKategoria } from "common/aineistoKategoriat";
 import { useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
-import { AineistoNahtavillaTableFormValuesInterface } from "../util";
+import { AineistoNahtavillaTableFormValuesInterface, getAllOptionsForKategoriat } from "../util";
 import { AineistoAlakategoriaAccordion, AineistoTable } from ".";
+import { useMemo } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 const kategoriaInfoText: Record<string, string> = {
   osa_a: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
@@ -16,27 +18,32 @@ const kategoriaInfoText: Record<string, string> = {
 interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
-  dialogInfoText: string;
   aineisto: Aineisto[] | undefined | null;
+  kaikkiKategoriat: AineistoKategoria[];
 }
 
-export function SuunnitelmaAineistoPaakategoriaContent(props: SuunnitelmaAineistoPaakategoriaContentProps) {
+export function SuunnitelmaAineistoPaakategoriaContent(props: Readonly<SuunnitelmaAineistoPaakategoriaContentProps>) {
   const { data: projekti } = useProjekti();
   const { watch: aineistoWatch } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
 
   const aineisto = aineistoWatch("aineistoNahtavilla");
 
+  const { t } = useTranslation("aineisto");
+
+  const allOptions = useMemo(() => getAllOptionsForKategoriat({ kategoriat: props.kaikkiKategoriat, t }), [props.kaikkiKategoriat, t]);
+
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
       {!!projekti?.oid && !!aineisto?.[props.paakategoria.id]?.length && (
-        <AineistoTable aineisto={props.aineisto} kategoriaId={props.paakategoria.id} />
+        <AineistoTable aineisto={props.aineisto} kategoriaId={props.paakategoria.id} allOptions={allOptions} />
       )}
       {props.paakategoria.alaKategoriat && (
         <AineistoAlakategoriaAccordion
           aineisto={props.aineisto}
           alakategoriat={props.paakategoria.alaKategoriat}
           expandedAineistoState={props.expandedAineistoState}
+          allOptions={allOptions}
         />
       )}
     </>

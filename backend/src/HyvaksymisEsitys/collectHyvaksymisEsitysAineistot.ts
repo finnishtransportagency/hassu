@@ -17,7 +17,7 @@ import { getZipFolder } from "../tiedostot/ProjektiTiedostoManager/util";
 
 type TarvittavatTiedot = Pick<
   DBProjekti,
-  "oid" | "kielitiedot" | "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut" | "nahtavillaoloVaiheJulkaisut"
+  "oid" | "kielitiedot" | "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut" | "nahtavillaoloVaiheJulkaisut" | "velho"
 >;
 
 export type FileInfo = {
@@ -94,7 +94,7 @@ export default function collectHyvaksymisEsitysAineistot(
   }));
   const muutAineistot: FileInfo[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
   const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map((aineisto) => {
-    const kategoriaFolder = getZipFolder(aineisto.kategoriaId) ?? "Kategorisoimattomat";
+    const kategoriaFolder = getZipFolder(aineisto.kategoriaId, projekti.velho?.tyyppi) ?? "Kategorisoimattomat";
     return {
       s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
       zipFolder: joinPath("Suunnitelma", kategoriaFolder),

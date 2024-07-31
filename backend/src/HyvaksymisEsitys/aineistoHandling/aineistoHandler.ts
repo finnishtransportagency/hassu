@@ -158,6 +158,7 @@ type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
   | "nahtavillaoloVaiheJulkaisut"
   | "muokattavaHyvaksymisEsitys"
   | "aineistoHandledAt"
+  | "velho"
 >;
 
 async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
@@ -173,7 +174,8 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<Z
       "vuorovaikutusKierrosJulkaisut, " +
       "nahtavillaoloVaiheJulkaisut, " +
       "muokattavaHyvaksymisEsitys, " +
-      "aineistoHandledAt",
+      "aineistoHandledAt, " +
+      "velho",
   });
 
   try {

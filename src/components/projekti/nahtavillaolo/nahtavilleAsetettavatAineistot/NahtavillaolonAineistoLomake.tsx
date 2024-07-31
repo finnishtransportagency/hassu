@@ -4,9 +4,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { NahtavillaoloVaihe } from "@services/api";
-import { aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { Key, useState } from "react";
+import React, { Key, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoTable";
 import {
@@ -21,9 +21,10 @@ import { H2, H3 } from "../../../Headings";
 
 export interface SuunnitelmatJaAineistotProps {
   vaihe: NahtavillaoloVaihe | null | undefined;
+  aineistoKategoriat: AineistoKategoriat;
 }
 
-export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineistotProps) {
+export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: Readonly<SuunnitelmatJaAineistotProps>) {
   const { watch, setValue, getValues } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
@@ -33,6 +34,14 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
   const { t } = useTranslation("aineisto");
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+
+  const { kategoriat, kategoriaIdt } = useMemo(
+    () => ({
+      kategoriaIdt: aineistoKategoriat.listKategoriaIds(),
+      kategoriat: aineistoKategoriat.listKategoriat(),
+    }),
+    [aineistoKategoriat]
+  );
 
   return (
     <Section>
@@ -44,23 +53,26 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
         julkaisupäivänä.
       </p>
       <AineistotSaavutettavuusOhje />
-      <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+      <AccordionToggleButton
+        expandedAineisto={expandedAineisto}
+        setExpandedAineisto={setExpandedAineisto}
+        aineistoKategoriaIds={kategoriaIdt}
+      />
       <HassuAccordion
         expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
+        items={kategoriat.map((paakategoria) => ({
           title: (
-            <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
-              aineistoNahtavillaFlat,
-              paakategoria
-            )})`}</H3>
+            <H3 className="mb-0">
+              {t(`aineisto-kategoria-nimi.${paakategoria.id}`)} ({getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})
+            </H3>
           ),
           content: (
             <SectionContent largeGaps>
               <SuunnitelmaAineistoPaakategoriaContent
                 aineisto={vaihe?.aineistoNahtavilla}
                 paakategoria={paakategoria}
+                kaikkiKategoriat={kategoriat}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
-                dialogInfoText={"Valitse tiedostot, jotka haluat tuoda nähtäville."}
               />
             </SectionContent>
           ),
@@ -75,7 +87,7 @@ export default function SuunnitelmatJaAineistot({ vaihe }: SuunnitelmatJaAineist
         infoText={"Valitse tiedostot, jotka haluat tuoda nähtäville."}
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
-          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot);
+          const newAineisto = findKategoriaForVelhoAineisto(valitutVelhoAineistot, aineistoKategoriat);
           const uusiAineistoNahtavilla = combineOldAndNewAineistoWithCategories({
             oldAineisto: aineistoNahtavilla,
             newAineisto,

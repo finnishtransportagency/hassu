@@ -1,7 +1,7 @@
 import { SelectOption } from "@components/form/Select";
 import { Aineisto, AineistoInput, AineistoTila, VelhoAineisto } from "@services/api";
 import { uuid } from "common/util/uuid";
-import { AineistoKategoria, aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { AineistoKategoria, AineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import { Translate } from "next-translate";
 import { Key } from "react";
@@ -57,7 +57,10 @@ export function getAllOptionsForKategoriat({
   return kategoriaIds;
 }
 
-export function findKategoriaForVelhoAineisto(valitutVelhoAineistot: VelhoAineisto[]): AineistoInput[] {
+export function findKategoriaForVelhoAineisto(
+  valitutVelhoAineistot: VelhoAineisto[],
+  aineistoKategoriat: AineistoKategoriat
+): AineistoInput[] {
   return valitutVelhoAineistot.map<AineistoInput>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
@@ -82,7 +85,7 @@ export function combineOldAndNewAineistoWithCategories({
       if (velhoAineisto.kategoriaId && !combinedNewAndOld[velhoAineisto.kategoriaId]) {
         combinedNewAndOld[velhoAineisto.kategoriaId] = [];
       }
-      const kategorianAineistot = combinedNewAndOld[velhoAineisto.kategoriaId || kategorisoimattomatId];
+      const kategorianAineistot = combinedNewAndOld[velhoAineisto.kategoriaId ?? kategorisoimattomatId];
       kategorianAineistot.push({ ...velhoAineisto, jarjestys: kategorianAineistot.length });
     }
     return combinedNewAndOld;
