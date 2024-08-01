@@ -18,6 +18,48 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
+import Notification, { NotificationType } from "../../notification/Notification";
+
+type AccordioHeaderProps = {
+  titleText: string;
+  paakategoria?: boolean;
+  tooltipText?: string;
+};
+
+const AccordioHeader = ({ titleText, paakategoria, tooltipText }: AccordioHeaderProps) => {
+  const [showTooltip, setShowTooltip] = useState(titleText == "Selostusosa (0)" ? true : false);
+  const Heading = paakategoria ? H4 : H5;
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="flex flex-row items-center justify-between max-w-md">
+        <Heading variant="h5" sx={{ margin: 0, alignSelf: "baseline" }}>
+          {titleText}
+        </Heading>
+        {tooltipText && (
+          <FontAwesomeIcon
+            color="rgb(0, 100, 175)"
+            size="lg"
+            icon="info-circle"
+            type={NotificationType.INFO_GRAY}
+            cursor="pointer"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          />
+        )}
+      </div>
+      <Notification
+        type={NotificationType.INFO_GRAY}
+        className="mt-4"
+        open={showTooltip}
+        onClose={() => setShowTooltip(false)}
+        closable
+        style={{ maxWidth: "40rem" }}
+      >
+        <p>{tooltipText}</p>
+      </Notification>
+    </div>
+  );
+};
 
 type Props = {
   projekti: ProjektiJulkinen;
@@ -132,13 +174,9 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
 
     return aineistotKategorioittain.map<AccordionItem>(({ kategoria, aineisto }) => {
       const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
-      const Heading = props.paakategoria ? H4 : H5;
+      const tooltipText = props.paakategoria ? t(`aineisto-kategoria-tooltip.${kategoria.id}`) : undefined;
       return {
-        title: (
-          <Heading variant="h5" sx={{ margin: 0 }}>
-            {titleText}
-          </Heading>
-        ),
+        title: <AccordioHeader titleText={titleText} paakategoria={props.paakategoria} tooltipText={tooltipText} />,
         content: (
           <SuunnitelmaAineistoKategoriaContent
             aineistot={aineisto}

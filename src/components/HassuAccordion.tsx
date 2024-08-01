@@ -45,6 +45,7 @@ export interface AccordionItem {
   title: string | JSX.Element;
   content: ReactNode | string;
   id?: Key;
+  tooltip?: JSX.Element;
 }
 
 type Props = {

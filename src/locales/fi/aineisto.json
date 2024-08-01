@@ -31,6 +31,11 @@
     "johtosiirrot_ja_kunnallistekniset_suunnitelmat": "Johtosiirrot ja kunnallistekniset suunnitelmat",
     "kategorisoimattomat": "Kategorisoimattomat"
   },
+  "aineisto-kategoria-tooltip": {
+    "osa_a": "Selostusosaan sisältyy suunnitelman lähtökohtia ja sisältöä sekä suunnitelman arvioituja vaikutuksia kuvaavia asiakirjoja. Kansio sisältää mm. sisällysluettelon ja suunnitelmaselostuksen, joka on tiivis kuvaus suunnittelun lähtökohdista, sen vaiheista ja tuloksista. Selostuksessa kuvataan kaikki suunnitelmaan perehtymisen ja käsittelyn kannalta olennaiset asiat. Osasta suunnitelmista löytyy myös hyväksymisehdotus, josta selviää yksityiskohtaisesti mitä ehdotetaan hyväksyttäväksi.",
+    "osa_b": "Pääpiirustuksissa esitetään suunnitelman hyväksyttäväksi ehdotettava sisältö karttamuodossa. Kartoissa esitellään suunnitelman yksityiskohdat ja pituus- sekä poikkileikkaukset.",
+    "osa_c": "Informatiivista aineistoa ei hyväksytä, mutta se täydentää, havainnollistaa ja perustelee hyväksyttäväksi esitettyä suunnitelmaratkaisua ja sen avulla kuvataan suunnitelman vaikutuksia. Aineistokokonaisuus sisältää erityyppisiä informatiivisia piirustuksia ja selvityksiä, kuten ympäristösuunnitelmat, vaikutusselvitykset ja selvitykset tutkituista vaihtoehdoista."
+  },
   "lisa-aineisto": "Lausuntopyyntöön liitetty lisäaineisto",
   "uusi-aineisto": "Uusi aineisto",
   "sulje_kaikki": "Sulje kaikki kategoriat",
