@@ -132,7 +132,15 @@ const ActionsColumn = styled(({ index, remove, aineisto, appendToPoistetut, ...p
         }}
         icon="trash"
       />
-      {!isTouch && <IconButton type="button" icon="equals" ref={dragRef} />}
+      {!isTouch && (
+        <IconButton
+          type="button"
+          icon="equals"
+          ref={(el) => {
+            dragRef?.(el);
+          }}
+        />
+      )}
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));

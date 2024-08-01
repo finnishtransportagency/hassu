@@ -301,9 +301,10 @@ export default function Header(): ReactElement {
                   </Box>
                 ) : (
                   <Box
-                  sx={{
-                    marginTop: 11,
-                  }}>
+                    sx={{
+                      marginTop: 11,
+                    }}
+                  >
                     <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
                       Poistu Palvelusta
                     </StyledLink>
@@ -393,11 +394,9 @@ const Navigation: FunctionComponent<{ navigationRoutes: (NavigationRoute | Navig
 const SivustoLogo = styled(({ className, href }: { className?: string; href: string }) => {
   const { t } = useTranslation();
   return (
-    <Link href={href}>
-      <a className={classNames(className, "flex flex-col uppercase hassu-header-text hover:cursor-pointer")}>
-        <span className="font-bold">{t("commonFI:sivustonimi")}</span>
-        <span>{t("commonSV:sivustonimi")}</span>
-      </a>
+    <Link href={href} className={classNames(className, "flex flex-col uppercase hassu-header-text hover:cursor-pointer")}>
+      <span className="font-bold">{t("commonFI:sivustonimi")}</span>
+      <span>{t("commonSV:sivustonimi")}</span>
     </Link>
   );
 })(({ theme }) => ({
@@ -413,12 +412,10 @@ const HamburgerButton: FunctionComponent<{ isHamburgerOpen: boolean; onClick: Co
   onClick,
 }) => {
   return (
-    <>
-      <div>
-        <button className="text-primary-dark h-9 w-11 focus:outline focus:outline-2 focus:outline-primary-dark" onClick={onClick}>
-          <FontAwesomeIcon size="lg" className="" icon={isHamburgerOpen ? "times" : "bars"} />
-        </button>
-      </div>
-    </>
+    <div>
+      <button className="text-primary-dark h-9 w-11 focus:outline focus:outline-2 focus:outline-primary-dark" onClick={onClick}>
+        <FontAwesomeIcon size="lg" className="" icon={isHamburgerOpen ? "times" : "bars"} />
+      </button>
+    </div>
   );
 };

@@ -88,19 +88,21 @@ function setupLocalDevelopmentMode(config, env) {
         ...lyhytOsoiteRedirects,
       ];
     },
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-      // Important: return the modified config
-      config.plugins.push(
+    webpack: (webpackConfig, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      webpackConfig.resolve.alias["react/jsx-runtime.js"] = "react/jsx-runtime";
+      webpackConfig.resolve.alias["react/jsx-dev-runtime.js"] = "react/jsx-dev-runtime";
+      webpackConfig.plugins.push(
         new CopyPlugin({
           patterns: [
             {
               from: "backend/developer/playground.html",
-              to: config.output.path + "/../static/graphql-playground/index.html",
+              to: webpackConfig.output.path + "/../static/graphql-playground/index.html",
             },
           ],
         })
       );
-      return config;
+      // Important: return the modified config
+      return webpackConfig;
     },
   };
   return config;

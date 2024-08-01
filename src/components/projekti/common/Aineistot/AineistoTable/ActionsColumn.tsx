@@ -36,7 +36,13 @@ export const ActionsColumn = styled(
           }}
           icon="trash"
         />
-        <IconButton type="button" icon="equals" ref={dragRef} />
+        <IconButton
+          type="button"
+          icon="equals"
+          ref={(el) => {
+            dragRef?.(el);
+          }}
+        />
       </div>
     );
   }
