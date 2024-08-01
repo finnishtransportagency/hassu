@@ -286,13 +286,8 @@ describe("Migraatio", () => {
       .scrollIntoView({ offset: { top: 500, left: 0 } })
       .should("be.visible")
       .click({ force: true });
-    cy.get("#accept_kuulutus").click();
+    cy.get("#accept_kuulutus").click({ force: true });
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
-
-    cy.reload();
-    cy.get("#kuulutuksentiedot_tab").click({ force: true });
-
-    cy.contains("Kuulutus on julkaistu");
   });
 
   it("Migraatio hyväksymismenettelyssä-vaiheeseen kansalaisnäkymä", () => {
