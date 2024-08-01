@@ -30,7 +30,7 @@ const AccordioHeader = ({ titleText, paakategoria, tooltipText }: AccordioHeader
   const [showTooltip, setShowTooltip] = useState(titleText == "Selostusosa (0)" ? true : false);
   const Heading = paakategoria ? H4 : H5;
   return (
-    <div style={{ width: "100%" }}>
+    <div className="w-full">
       <div className="flex flex-row items-center justify-between max-w-md">
         <Heading variant="h5" sx={{ margin: 0, alignSelf: "baseline" }}>
           {titleText}
