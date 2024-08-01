@@ -29,12 +29,12 @@ describe("Kasittelyn tila", () => {
     cy.login("A1");
   });
 
-  it("Tayta ja tallenna avoimet kentat", () => {
+  it("Täytä ja tallenna avoimet kentät", () => {
     // Suunnitelman tila
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila");
     cy.contains("Käsittelyn tila");
     cy.contains(projektiNimi);
-    selectFromDropdown("#kasittelynTila\\\.suunnitelmanTila", "Suunnittelu käynnissä");
+    selectFromDropdown("#mui-component-select-kasittelynTila\\.suunnitelmanTila", "Suunnittelu käynnissä");
 
     // Hyvaksymiskasittelyn tila
     cy.get('[name="kasittelynTila.ennakkotarkastus"]')
@@ -129,7 +129,7 @@ describe("Kasittelyn tila", () => {
 
   it("Tarkista tallennetut tiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila");
-    selectFromDropdown("#kasittelynTila\\\.suunnitelmanTila", "Suunnittelu käynnissä");
+    selectFromDropdown("#mui-component-select-kasittelynTila\\.suunnitelmanTila", "Suunnittelu käynnissä");
 
     cy.get('[name="kasittelynTila.ennakkotarkastus"]').should("have.value", enakkotarkasutsPvm);
     cy.get('[name="kasittelynTila.ennakkoneuvotteluPaiva"]').should("have.value", neuvotteluPvm);

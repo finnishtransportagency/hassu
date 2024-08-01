@@ -39,6 +39,7 @@ const HassuMuiSelect = (
                 onChange(...args);
                 onChangeProp?.(...args);
               }}
+              name={name}
               onBlur={onBlur}
               value={value === null ? "" : value}
               ref={ref}

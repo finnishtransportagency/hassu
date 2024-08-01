@@ -10,6 +10,7 @@ import { CLEAR_ALL, formatDate, selectFromDropdown, typeIntoFields } from "../..
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import * as dayjs from "dayjs";
+import { lisaaKarttarajaus } from "../../support/kiinteistonOmistajat";
 
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
@@ -147,7 +148,7 @@ describe("Migraatio", () => {
       .should("be.enabled")
       .click();
     cy.get("#accept_and_publish_vuorovaikutus").click();
-    cy.contains("Hyväksyminen onnistui");
+    cy.contains("Lähetys onnistui");
   });
 
   it("Migraatio suunnitteluvaiheeseen kansalaisnäkymä", () => {
@@ -183,12 +184,15 @@ describe("Migraatio", () => {
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
     );
 
+    lisaaKarttarajaus(oid);
+
     // Täytä nähtävilläolovaihe
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
 
     lisaaNahtavillaoloAineistot({
       oid,
       aineistoNahtavilla: { toimeksianto: "Toimeksianto1" },
+      kategoria: "osa_a",
     });
     const today = formatDate(dayjs());
     const selectorToTextMap = {
@@ -247,6 +251,8 @@ describe("Migraatio", () => {
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
     );
 
+    lisaaKarttarajaus(oid);
+
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
 
     cy.contains("Kuulutus hyväksymispäätöksestä");
@@ -268,12 +274,12 @@ describe("Migraatio", () => {
       waitForAnimations: true,
     });
 
-    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#mui-component-select-paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click({ force: true });
-    cy.contains("Lähetys onnistui", { timeout: 30000 });
+    cy.contains("Tallennus ja hyväksyttäväksi lähettäminen onnistui", { timeout: 30000 });
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")

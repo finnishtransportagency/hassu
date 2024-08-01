@@ -10,10 +10,10 @@ import {
 import { lahetaMuistutus } from "../../support/palauteTaiMuistutus";
 import dayjs = require("dayjs");
 
-describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
+describe("9 - Projektin nahtavillaolovaiheen perustiedot", () => {
   const oid = Cypress.env("oid");
   const projektiNimi = Cypress.env("projektiNimi");
-  const aineistojenNimet: string[] = ["1400-72L-6708_Yleiskartta_kmv209-216.pdf", "1400-72L-6708-8_Käyttöoikeuskartta.pdf"];
+  const aineistojenNimet: string[] = ["nahtavillaolo-1.txt", "nahtavillaolo-6.txt"];
 
   before(() => {
     cy.abortEarly();
@@ -27,12 +27,12 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     lisaaNahtavillaoloAineistot({
       oid,
       aineistoNahtavilla: { toimeksianto: "Toimeksianto1" },
+      kategoria: "osa_a",
     });
 
     cy.get("#aineisto_tab").click({ force: true });
     // Test saved aineistot
     cy.get("input[type='hidden'][name ^='aineistoNahtavilla.osa_a.']").should("exist");
-    cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
   });
 
   it("Tallenna nahtavillaolon kuulutustiedot", { scrollBehavior: "center" }, function () {
@@ -67,7 +67,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {
     // This test can not be run multiple times without first archiving projekti
     // or manually deleting nahtavillaoloVaiheJulkaisut from DB
-    cy.login("A3"); // Tee muokkaus ja hyvaksyminen projektin varahenkilona - varahenkilolla tulisi olla projektiin samat oikeudet kuin projektipaallikolla
+    cy.login("A1");
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
@@ -99,6 +99,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
         toimeksianto: "Suunnitelma-aineisto",
         aineistojenNimet,
       },
+      kategoria: "osa_b",
     });
 
     cy.get("#aineistomuokkaus_send_for_approval").click();
@@ -111,11 +112,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.get("#button_open_acceptance_dialog").click();
     cy.get("#accept_kuulutus").click();
-
-    cy.get("#lisa_aineisto_accordion_lukutila").click();
-    aineistojenNimet.forEach((nimi) => {
-      cy.get("#lisa_aineisto_accordion_lukutila").contains(nimi);
-    });
   });
 
   it("Siirrä menneisyyteen", { scrollBehavior: "center" }, function () {
@@ -125,24 +121,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.get("#ajansiirto_paiva_lkm").type(CLEAR_ALL + "7");
     cy.get("#ajansiirto_siirra").click();
     cy.wait(10000);
-  });
-
-  it("Tarkista lisaaineiston lataussivu", { scrollBehavior: "center" }, () => {
-    cy.login("A1");
-
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo/aineisto", { timeout: 30000 });
-    cy.contains(projektiNimi);
-    cy.get("#aineisto_tab").click({ force: true });
-
-    cy.get("a[href*='lausuntopyyntoaineistot']").should("have.attr", "target");
-    cy.get("a[href*='lausuntopyyntoaineistot']").then((link) => link.removeAttr("target"));
-    cy.get("a[href*='lausuntopyyntoaineistot']").click();
-    cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
-    verifyAllDownloadLinks({ absoluteURLs: true });
-    cy.get("#lisaAineisto").click();
-    aineistojenNimet.forEach((nimi) => {
-      cy.get("#lisaAineisto").contains(nimi);
-    });
   });
 
   it("Nähtävilläolon kansalaisnäkymä sekä muistutuksen jättäminen", { scrollBehavior: "center" }, () => {

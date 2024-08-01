@@ -40,7 +40,7 @@ function DisabledIntegraatioYhteys() {
   );
 }
 
-function AshaIntegraatioYhteys({ formDisabled }: Props) {
+function AshaIntegraatioYhteys({ formDisabled }: Readonly<Props>) {
   const { control } = useFormContext<FormValues>();
   return (
     <Controller

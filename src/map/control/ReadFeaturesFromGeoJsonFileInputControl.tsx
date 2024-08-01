@@ -4,7 +4,7 @@ import Geometry from "ol/geom/Geometry";
 import VectorSource from "ol/source/Vector";
 import { addIsLoadingPropertyChangeListenerForButtonDisabling } from "./loadingStateForControls";
 import Feature from "ol/Feature";
-import { EPSG_3067 } from "@components/projekti/common/StyledMap";
+import { EPSG_3067 } from "@components/projekti/common/KiinteistonOmistajaTiedottaminenMap";
 
 export type ReadFeaturesFromGeoJsonFileInputControlOptions = Options & {
   source: VectorSource<Geometry>;
@@ -96,7 +96,10 @@ class ReadFeaturesFromGeoJsonFileInputControl extends Control {
       }
       const str = typeof result === "string" ? result : this.decodeBuffer(result);
       const obj = JSON.parse(str);
-      const features = this.geoJSON.readFeatures(obj, { dataProjection: obj.crs?.properties?.name ?? EPSG_3067, featureProjection: EPSG_3067 });
+      const features = this.geoJSON.readFeatures(obj, {
+        dataProjection: obj.crs?.properties?.name ?? EPSG_3067,
+        featureProjection: EPSG_3067,
+      });
 
       this.onGeoJsonUpload(features);
     } catch (e) {

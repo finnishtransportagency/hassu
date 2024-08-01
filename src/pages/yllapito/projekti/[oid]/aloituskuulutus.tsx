@@ -11,6 +11,7 @@ import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
   Kielitiedot,
+  KirjaamoOsoite,
   KuulutusJulkaisuTila,
   LaskuriTyyppi,
   MuokkausTila,
@@ -86,8 +87,19 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 
 export default function AloituskuulutusPage(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
+
   return (
-    <>{projekti && <AloituskuulutusForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />}</>
+    <>
+      {projekti && kirjaamoOsoitteet && (
+        <AloituskuulutusForm
+          projekti={projekti}
+          projektiLoadError={projektiLoadError}
+          reloadProjekti={reloadProjekti}
+          kirjaamoOsoitteet={kirjaamoOsoitteet}
+        />
+      )}
+    </>
   );
 }
 
@@ -95,9 +107,10 @@ interface AloituskuulutusFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  kirjaamoOsoitteet: KirjaamoOsoite[];
 }
 
-function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
+function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirjaamoOsoitteet }: AloituskuulutusFormProps): ReactElement {
   const { isLoading: isFormSubmitting } = useLoadingSpinner();
 
   const validationMode = useValidationMode();
@@ -105,7 +118,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
-  const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
   const defaultValues: FormValues = useMemo(() => {
     const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
     const tallentamisTiedot: FormValues = {

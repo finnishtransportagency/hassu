@@ -35,11 +35,11 @@ type Props = {
   query: HookReturnType;
 };
 
-export default function HakulomakeWrapper({ hakutulostenMaara, maakuntaOptions, kuntaOptions, query }: Props) {
-  if (!query) {
+export default function HakulomakeWrapper(props: Props) {
+  if (!props.query) {
     return null;
   }
-  return <Hakulomake hakutulostenMaara={hakutulostenMaara} maakuntaOptions={maakuntaOptions} kuntaOptions={kuntaOptions} query={query} />;
+  return <Hakulomake {...props} />;
 }
 
 function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }: Props) {
@@ -51,10 +51,14 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   const { t } = useTranslation("etusivu");
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = query;
-  const vaylamuotoOptions = ["tie", "rata"].map((muoto) => ({
-    label: t(`projekti:projekti-vayla-muoto.${muoto}`),
-    value: muoto,
-  }));
+  const vaylamuotoOptions = useMemo(
+    () =>
+      ["tie", "rata"].map((muoto) => ({
+        label: t(`projekti:projekti-vayla-muoto.${muoto}`),
+        value: muoto,
+      })),
+    [t]
+  );
 
   const defaultValues: HakulomakeFormValues = useMemo(
     () => ({
@@ -158,18 +162,15 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
         <FormProvider {...useFormReturn}>
           <form className="mt-4">
             <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-              {" "}
               <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
                 <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} id="vapaasanahaku" />
               </HassuGridItem>
               <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
-                {kuntaOptions.map((option) => {
-                  return (
-                    <MenuItem key={option.label} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  );
-                })}
+                {kuntaOptions.map((option) => (
+                  <MenuItem key={option.label} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </HassuMuiSelect>
             </HassuGrid>
 
@@ -184,24 +185,20 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
             {lisaaHakuehtojaState && (
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 <HassuMuiSelect name="maakunta" label={t("maakunta")} control={control} defaultValue="">
-                  {maakuntaOptions.map((option) => {
-                    return (
-                      <MenuItem key={option.label} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    );
-                  })}
+                  {maakuntaOptions.map((option) => (
+                    <MenuItem key={option.label} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </HassuMuiSelect>
                 <HassuMuiSelect name="vaylamuoto" label={t("vaylamuoto")} control={control} defaultValue="">
                   {vaylamuotoOptions
                     .filter((option) => option.value !== "")
-                    .map((option) => {
-                      return (
-                        <MenuItem key={option.label} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      );
-                    })}
+                    .map((option) => (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
                 </HassuMuiSelect>
               </HassuGrid>
             )}
@@ -220,7 +217,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
           </form>
         </FormProvider>
       </SearchSection>
-      {hakutulostenMaara != undefined && (
+      {hakutulostenMaara !== undefined && (
         <HakutulosInfo>
           <p id="hakutulosmaara" style={{ marginBottom: "0.5rem" }}>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />

@@ -43,11 +43,11 @@ const HakulomakeMobile = ({
 
   return (
     <div role="navigation" className={`${styles["side-nav"]} mb-4`}>
-      <Accordion style={{ margin: 0}}>
+      <Accordion style={{ margin: 0 }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="search-accordion-content"
+          id="search-accordion-header"
           style={{
             height: "64px",
             backgroundColor: "#0064AF",
@@ -65,7 +65,6 @@ const HakulomakeMobile = ({
             <FormProvider {...useFormReturn}>
               <form className="mt-4">
                 <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-                  {" "}
                   <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
                     <TextInput
                       label={t("vapaasanahaku")}
@@ -75,35 +74,29 @@ const HakulomakeMobile = ({
                     />
                   </HassuGridItem>
                   <HassuMuiSelect name="kunta" label={t("kunta")} control={useFormReturn.control} defaultValue="">
-                    {kuntaOptions.map((option) => {
-                      return (
-                        <MenuItem key={option.label} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      );
-                    })}
+                    {kuntaOptions.map((option) => (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
                   </HassuMuiSelect>
                 </HassuGrid>
                 <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                   <HassuMuiSelect name="maakunta" label={t("maakunta")} control={useFormReturn.control} defaultValue="">
-                    {maakuntaOptions.map((option) => {
-                      return (
-                        <MenuItem key={option.label} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      );
-                    })}
+                    {maakuntaOptions.map((option) => (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
                   </HassuMuiSelect>
                   <HassuMuiSelect name="vaylamuoto" label={t("vaylamuoto")} control={useFormReturn.control} defaultValue="">
                     {vaylamuotoOptions
                       .filter((option) => option.value !== "")
-                      .map((option) => {
-                        return (
-                          <MenuItem key={option.label} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        );
-                      })}
+                      .map((option) => (
+                        <MenuItem key={option.label} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                   </HassuMuiSelect>
                 </HassuGrid>
                 <Button
@@ -123,8 +116,8 @@ const HakulomakeMobile = ({
         </AccordionDetails>
       </Accordion>
       {hakutulostenMaara != undefined && (
-        <HakutulosInfo className={'mobiili p-4'}>
-          <p id="hakutulosmaara" style={{ marginBottom: "0.5rem"}}>
+        <HakutulosInfo className={"mobiili p-4"}>
+          <p id="hakutulosmaara" style={{ marginBottom: "0.5rem" }}>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
           </p>
           <button id="nollaa_hakuehdot_button" onClick={nollaaHakuehdot}>

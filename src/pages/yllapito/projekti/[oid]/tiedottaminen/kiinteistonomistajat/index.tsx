@@ -1,6 +1,6 @@
 import React, { useCallback, useState, FunctionComponent, useEffect } from "react";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, styled } from "@mui/material";
-import { StyledMap } from "@components/projekti/common/StyledMap";
+import { KiinteistonomistajaTiedottaminenMap } from "@components/projekti/common/KiinteistonOmistajaTiedottaminenMap";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import Button from "@components/button/Button";
@@ -66,9 +66,9 @@ const KarttaDialogi = styled(
     return (
       <>
         <Dialog fullScreen onClose={handleMainDialogOnClose} {...props}>
-          <StyledMap projekti={projekti} closeDialog={handleMainDialogOnClose}>
+          <KiinteistonomistajaTiedottaminenMap projekti={projekti} closeDialog={handleMainDialogOnClose}>
             {children}
-          </StyledMap>
+          </KiinteistonomistajaTiedottaminenMap>
         </Dialog>
         <HassuDialog maxWidth="sm" open={isConfirmationOpen} title="Poistu karttatyökalusta" onClose={closeConfirmation}>
           <DialogContent>
@@ -194,7 +194,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
             Kiinteistörekisteristä. Jos alueelle osuu paljon kiinteistönomistajia, voi haussa kestää hetki.
           </p>
           <p>Karttarajaustyökalu avautuu uuteen ikkunaan.</p>
-          <Button onClick={open} type="button">
+          <Button onClick={open} type="button" id="create-map-selection">
             {projekti.omistajahaku?.status ? "Muokkaa karttarajausta" : "Luo karttarajaus"}
           </Button>
           <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} />
@@ -249,6 +249,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
         maxWidth="sm"
         hideCloseButton
         contentAsideTitle={<CircularProgress />}
+        id="processing-kiinteistonomistajat-dialog"
       >
         <DialogContent>
           <p>Tietojen hakuaika kiinteistöjen osalta vaihtelee kartan alueen laajuuden mukaan. Älä sulje selainta tai selainikkunaa.</p>

@@ -1,4 +1,4 @@
-describe("Projektin kuulutus", () => {
+describe("11 - Projektin kuulutus", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
 
