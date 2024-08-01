@@ -11,7 +11,6 @@ export default defineConfig({
   },
   video: false,
   numTestsKeptInMemory: 10,
-  retries: 2,
   reporter: "cypress-multi-reporters",
   reporterOptions: {
     configFile: "cypress-reporter-config.json",
