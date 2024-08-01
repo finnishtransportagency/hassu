@@ -21,12 +21,14 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   />
 ))(({ theme }) => ({
   flexDirection: "row-reverse",
+  alignItems: "start",
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(90deg)",
   },
   "& .MuiAccordionSummary-expandIconWrapper": {
     width: "24px",
     height: "24px",
+    marginTop: "12px",
   },
   padding: 0,
   "& .MuiAccordionSummary-content": {
