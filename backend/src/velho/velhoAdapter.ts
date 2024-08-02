@@ -255,7 +255,7 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
     kayttoOikeudet: [],
   };
 
-  const asiaId = (process.env.MIGRATION_CLI !== "true" && await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
+  const asiaId = (process.env.MIGRATION_CLI === "true" || await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
 
   await persistGeoJsonFile(data);
 
@@ -266,9 +266,9 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
 
 async function haeAsiaId(projekti: DBProjekti) {
   try {
-    return await asianhallintaService.getAsiaId(projekti.oid);
+    return await asianhallintaService.getAsiaIdByProjekti(projekti);
   } catch (e) {
-    log.info(e, "asiaId:tä ei voitu hakea");
+    log.info("asiaId:tä ei voitu hakea", { error: e });
     return undefined;
   }
 }
