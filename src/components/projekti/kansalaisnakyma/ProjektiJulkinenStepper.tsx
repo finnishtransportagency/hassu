@@ -262,7 +262,7 @@ export default function ProjektiJulkinenStepper({
       {vertical && (
         <div>
           <Accordion sx={{ border: "grey 1px solid" }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="stepper-accordion-content" id="stepper-accordion-header">
               <Typography>Navigoi vaiheita</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: "1rem", borderTop: "1px grey solid" }}>

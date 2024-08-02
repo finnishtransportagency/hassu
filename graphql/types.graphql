@@ -447,6 +447,7 @@ type ProjektinPerustiedot {
   vastuuorganisaatio: String
   yTunnus: String
   kunnat: [Int!]
+  projektiTyyppi: ProjektiTyyppi
 }
 
 type Laskutustiedot {

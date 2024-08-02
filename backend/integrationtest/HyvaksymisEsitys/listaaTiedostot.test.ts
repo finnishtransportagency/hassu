@@ -120,7 +120,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     const ladattavatTiedostot = await listaaHyvaksymisEsityksenTiedostot({ oid, listaaHyvaksymisEsityksenTiedostotInput: { hash } });
     const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
       if (Array.isArray(value)) {
-        acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
+        acc.push(...value);
       }
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
@@ -141,7 +141,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     const ladattavatTiedostot = await listaaHyvaksymisEsityksenTiedostot({ oid, listaaHyvaksymisEsityksenTiedostotInput: { hash } });
     const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
       if (Array.isArray(value)) {
-        acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
+        acc.push(...value);
       }
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
@@ -198,7 +198,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     const ladattavatTiedostot = await listaaHyvaksymisEsityksenTiedostot({ oid, listaaHyvaksymisEsityksenTiedostotInput: { hash } });
     const ladattavatTiedostotList = Object.values(ladattavatTiedostot).reduce((acc, value) => {
       if (Array.isArray(value)) {
-        acc.push(...(value as API.LadattavaTiedosto[] | API.KunnallinenLadattavaTiedosto[]));
+        acc.push(...value);
       }
       return acc;
     }, [] as (API.LadattavaTiedosto | API.KunnallinenLadattavaTiedosto)[]);
@@ -259,6 +259,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         suunnitelmanNimi: "Projektin nimi",
         vastuuorganisaatio: "VAYLAVIRASTO",
         yTunnus: "1010547-1",
+        projektiTyyppi: API.ProjektiTyyppi.TIE,
       },
       projektipaallikonYhteystiedot: {
         __typename: "ProjektiKayttajaJulkinen",
@@ -294,6 +295,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         suunnitelmanNimi: "Projektin nimi",
         vastuuorganisaatio: "VAYLAVIRASTO",
         yTunnus: "1010547-1",
+        projektiTyyppi: API.ProjektiTyyppi.TIE,
       },
       projektipaallikonYhteystiedot: {
         __typename: "ProjektiKayttajaJulkinen",

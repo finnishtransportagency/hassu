@@ -50,7 +50,6 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
-        infoText="TODO aseta info text"
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
           const valitutAineistot = valitutVelhoAineistot.map(adaptVelhoAineistoToAineistoInputNew);

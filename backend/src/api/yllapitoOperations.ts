@@ -97,65 +97,65 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
 
   switch (event.info.fieldName) {
     case apiConfig.listaaProjektit.name:
-      return listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
+      return await listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.listaaVelhoProjektit.name:
-      return listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
+      return await listaaVelhoProjektit(event.arguments as ListaaVelhoProjektitQueryVariables);
     case apiConfig.listaaVelhoProjektiAineistot.name:
-      return velhoDocumentHandler.listaaVelhoProjektiAineistot((event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid);
+      return await velhoDocumentHandler.listaaVelhoProjektiAineistot((event.arguments as ListaaVelhoProjektiAineistotQueryVariables).oid);
     case apiConfig.haeVelhoProjektiAineistoLinkki.name:
-      return velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables);
+      return await velhoDocumentHandler.haeVelhoProjektiAineistoLinkki(event.arguments as HaeVelhoProjektiAineistoLinkkiQueryVariables);
     case apiConfig.haeProjektiMuutoksetVelhosta.name:
-      return findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
+      return await findUpdatesFromVelho((event.arguments as HaeProjektiMuutoksetVelhostaQueryVariables).oid);
     case apiConfig.synkronoiProjektiMuutoksetVelhosta.name:
-      return synchronizeUpdatesFromVelho((event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid);
+      return await synchronizeUpdatesFromVelho((event.arguments as SynkronoiProjektiMuutoksetVelhostaMutationVariables).oid);
     case apiConfig.nykyinenKayttaja.name:
-      return getCurrentUser();
+      return await getCurrentUser();
     case apiConfig.listaaKayttajat.name:
-      return listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
+      return await listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
     case apiConfig.lataaProjekti.name:
-      return loadProjektiYllapito((event.arguments as LataaProjektiQueryVariables).oid);
+      return await loadProjektiYllapito((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.projektinTila.name:
-      return projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
+      return await projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:
-      return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
+      return await createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.tallennaJaSiirraTilaa.name:
-      return tallennaJaSiirraTilaa(event.arguments as TallennaJaSiirraTilaaMutationVariables);
+      return await tallennaJaSiirraTilaa(event.arguments as TallennaJaSiirraTilaaMutationVariables);
     case apiConfig.tallennaHyvaksymisesitys.name:
-      return tallennaHyvaksymisEsitys((event.arguments as TallennaHyvaksymisesitysMutationVariables).input);
+      return await tallennaHyvaksymisEsitys((event.arguments as TallennaHyvaksymisesitysMutationVariables).input);
     case apiConfig.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi.name:
-      return tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(
+      return await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(
         (event.arguments as TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksiMutationVariables).input
       );
     case apiConfig.palautaHyvaksymisEsitys.name:
-      return palautaHyvaksymisEsitys((event.arguments as PalautaHyvaksymisEsitysMutationVariables).input);
+      return await palautaHyvaksymisEsitys((event.arguments as PalautaHyvaksymisEsitysMutationVariables).input);
     case apiConfig.hyvaksyHyvaksymisEsitys.name:
-      return hyvaksyHyvaksymisEsitys((event.arguments as HyvaksyHyvaksymisEsitysMutationVariables).input);
+      return await hyvaksyHyvaksymisEsitys((event.arguments as HyvaksyHyvaksymisEsitysMutationVariables).input);
     case apiConfig.avaaHyvaksymisEsityksenMuokkaus.name:
-      return avaaHyvaksymisEsityksenMuokkaus((event.arguments as AvaaHyvaksymisEsityksenMuokkausMutationVariables).input);
+      return await avaaHyvaksymisEsityksenMuokkaus((event.arguments as AvaaHyvaksymisEsityksenMuokkausMutationVariables).input);
     case apiConfig.suljeHyvaksymisEsityksenMuokkaus.name:
-      return suljeHyvaksymisEsityksenMuokkaus((event.arguments as SuljeHyvaksymisEsityksenMuokkausMutationVariables).input);
+      return await suljeHyvaksymisEsityksenMuokkaus((event.arguments as SuljeHyvaksymisEsityksenMuokkausMutationVariables).input);
     case apiConfig.esikatseleAsiakirjaPDF.name:
-      return lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
+      return await lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:
-      return calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
+      return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:
-      return tilaHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
+      return await tilaHandler.siirraTila((event.arguments as SiirraTilaMutationVariables).tilasiirtyma);
     case apiConfig.paivitaVuorovaikutusta.name:
-      return updateVuorovaikutus((event.arguments as PaivitaVuorovaikutustaMutationVariables).input);
+      return await updateVuorovaikutus((event.arguments as PaivitaVuorovaikutustaMutationVariables).input);
     case apiConfig.paivitaPerustietoja.name:
-      return updatePerustiedot((event.arguments as PaivitaPerustietojaMutationVariables).input);
+      return await updatePerustiedot((event.arguments as PaivitaPerustietojaMutationVariables).input);
     case apiConfig.arkistoiProjekti.name:
-      return arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
+      return await arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
     case apiConfig.asetaPalauteVastattu.name:
-      return palauteHandler.asetaPalauteVastattu(event.arguments as AsetaPalauteVastattuMutationVariables);
+      return await palauteHandler.asetaPalauteVastattu(event.arguments as AsetaPalauteVastattuMutationVariables);
     case apiConfig.listKirjaamoOsoitteet.name:
-      return listKirjaamoOsoitteet();
+      return await listKirjaamoOsoitteet();
     case apiConfig.lisaaMuistutus.name:
-      return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
+      return await muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaPalautteet.name:
-      return palauteHandler.listaaPalautteet((event.arguments as ListaaPalautteetQueryVariables).oid);
+      return await palauteHandler.listaaPalautteet((event.arguments as ListaaPalautteetQueryVariables).oid);
     case apiConfig.lataaPalautteetPDF.name:
-      return palauteHandler.lataaPalautteetPDF((event.arguments as LataaPalautteetPDFQueryVariables).oid);
+      return await palauteHandler.lataaPalautteetPDF((event.arguments as LataaPalautteetPDFQueryVariables).oid);
     case apiConfig.suoritaTestiKomento.name:
       await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
       return "";

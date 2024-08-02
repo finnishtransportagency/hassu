@@ -339,7 +339,7 @@ export function KiitosDialogi({ open, onClose, isMobile }: Readonly<KiitosProps>
         <p>{t("projekti:palautelomake.jos_toivoit_yhteydenottoa")}</p>
       </DialogContent>
       <DialogActions className={isMobile ? "sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}>
-        <Button onClick={onClose} primary>
+        <Button onClick={onClose} primary id="close_thank_you_dialog">
           {t("common:sulje")}
         </Button>
       </DialogActions>

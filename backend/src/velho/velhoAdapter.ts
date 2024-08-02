@@ -29,7 +29,6 @@ import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
-import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 
 let metaDataJSON: any;
 
@@ -294,7 +293,6 @@ async function persistGeoJsonFile(data: ProjektiProjekti) {
       reason: "Velhossa ei ole sijaintitietoja",
     });
   }
-  await eventSqsClient.synchronizeAineisto(data.oid);
 }
 
 function getGeoJSON(data: ProjektiProjekti): string | null {

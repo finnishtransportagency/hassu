@@ -39,7 +39,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise();
   });
 
-  it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja paivita julkaisua", { scrollBehavior: "center" }, function () {
+  it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja päivitä julkaisua", { scrollBehavior: "center" }, function () {
     muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua();
   });
 
@@ -48,5 +48,6 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
     lahetaPalaute();
     cy.contains("Olemme vastaanottaneet viestisi");
+    cy.get("#close_thank_you_dialog").click();
   });
 });

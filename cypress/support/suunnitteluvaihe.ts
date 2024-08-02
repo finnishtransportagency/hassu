@@ -166,7 +166,7 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
   cy.get("#save_and_publish").click();
   cy.get("#accept_and_publish_vuorovaikutus").click();
 
-  cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
+  cy.contains("Lähetys onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
 }
 
 export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua() {

@@ -13,8 +13,9 @@ describe("Projektin perustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
     cy.contains(projektiNimi);
     cy.wait(1000);
-    selectFromDropdown("#kielitiedot\\.ensisijainenKieli", "suomi");
-    selectFromDropdown("#kielitiedot\\.toissijainenKieli", "ruotsi");
+    cy.get('input[name="kustannuspaikka"]').type(CLEAR_ALL + "TESTIVIITE");
+    selectFromDropdown("#mui-component-select-kielitiedot\\.ensisijainenKieli", "suomi");
+    selectFromDropdown("#mui-component-select-kielitiedot\\.toissijainenKieli", "ruotsi");
     cy.get('input[name="kielitiedot.projektinNimiVieraskielella"]').type(CLEAR_ALL + projektiNimi + " ruotsiksi");
 
     cy.get('input[name="suunnittelusopimusprojekti"][value="true"]').check();
@@ -89,6 +90,8 @@ describe("Projektin perustiedot", () => {
           mimeType: "image/jpg",
         });
       });
+
+    cy.get("input[name='asianhallinta.inaktiivinen']").uncheck();
 
     cy.get('textarea[name="muistiinpano"]').type(CLEAR_ALL + "Testimuistiinpano");
     cy.get("#save").click();

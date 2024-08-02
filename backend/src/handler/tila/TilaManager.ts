@@ -86,7 +86,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
         throw new Error("hylkaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
       } else {
         if (!syy) {
-          throw new Error("Aineitomuokkauksen hylkäämiseltä puuttuu syy!");
+          throw new Error("Aineistomuokkauksen hylkäämiseltä puuttuu syy!");
         }
         await this.rejectAndPeruAineistoMuokkausInternal(projekti, syy);
       }
@@ -94,7 +94,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       throw new Error("Tuntematon toiminto");
     }
 
-    return Promise.resolve(undefined);
+    return undefined;
   }
 
   private async palaaInternal(projekti: DBProjekti) {

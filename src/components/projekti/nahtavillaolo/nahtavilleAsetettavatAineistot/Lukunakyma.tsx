@@ -1,7 +1,7 @@
 import ExtLink from "@components/ExtLink";
 import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
-import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import React, { useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDate } from "hassu-common/util/dateUtils";
@@ -16,6 +16,10 @@ export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
 
   const julkaisu = useMemo(() => projekti?.nahtavillaoloVaiheJulkaisu, [projekti]);
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
+    [projekti?.velho.tyyppi]
+  );
 
   if (!projekti || !julkaisu) {
     return null;
@@ -49,9 +53,7 @@ export default function Lukunakyma() {
             saakka.
           </p>
         )}
-        {!epaaktiivinen && (
-          <AineistoNahtavillaAccordion kategoriat={aineistoKategoriat.listKategoriat()} julkaisu={julkaisu} paakategoria />
-        )}
+        {!epaaktiivinen && <AineistoNahtavillaAccordion kategoriat={kategoriat} julkaisu={julkaisu} paakategoria />}
       </AineistoMuokkausSection>
       {!epaaktiivinen && voiHyvaksya && (
         <HyvaksyJaPalautaPainikkeet julkaisu={julkaisu} projekti={projekti} tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} />

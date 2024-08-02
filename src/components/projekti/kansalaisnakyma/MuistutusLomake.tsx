@@ -422,7 +422,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
         </p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} primary>
+        <Button onClick={onClose} primary id="close_kiitos_viestista">
           {t("common:sulje")}
         </Button>
       </DialogActions>

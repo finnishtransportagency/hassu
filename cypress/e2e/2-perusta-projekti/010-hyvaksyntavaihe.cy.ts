@@ -3,7 +3,7 @@ import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import { CLEAR_ALL, formatDate, selectFromDropdown } from "../../support/util";
 
-describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
+describe("10 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
   const asianumero = "VÄYLÄ/1234/01.02.03/2022";
@@ -36,7 +36,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.contains("Suunnitelma on siirtynyt viimeistelyyn ja hyväksymiseen");
   });
 
-  it("Lisaa paatos ja aineistot", { scrollBehavior: "center" }, () => {
+  it("Lisaa päätös ja aineistot", { scrollBehavior: "center" }, () => {
     lisaaPaatosJaAineistot(oid, projektiNimi);
   });
 
@@ -57,7 +57,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       waitForAnimations: true,
     });
 
-    selectFromDropdown("#paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
+    selectFromDropdown("#mui-component-select-paatos\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]')
       .first()
       .should("be.disabled")
@@ -65,7 +65,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       .parent()
       .siblings()
       .invoke("text")
-      .should("eq", "A-tunnus1 Hassu, A000112, (Alajärvi), 0291111111, mikko.haapamki@cgi.com");
+      .should("eq", "A-tunnus1 Hassu, A000112, (Alajärvi), 0291111111, mikko.haapamki101@cgi.com");
     cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]').last().should("not.be.disabled").should("not.be.checked");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
@@ -75,7 +75,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
       .click({ force: true });
-    cy.contains("Lähetys onnistui", { timeout: 30000 });
+    cy.contains("Tallennus ja hyväksyttäväksi lähettäminen onnistui", { timeout: 30000 });
     cy.get("#kuulutuksentiedot_tab").click();
     cy.get("#button_open_acceptance_dialog")
       .should("be.enabled")

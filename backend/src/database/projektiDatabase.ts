@@ -282,7 +282,7 @@ export class ProjektiDatabase {
       TableName: this.projektiTableName,
       Item: projekti,
     });
-    return getDynamoDBDocumentClient().send(params);
+    return await getDynamoDBDocumentClient().send(params);
   }
 
   async scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
