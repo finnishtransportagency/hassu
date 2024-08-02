@@ -23,6 +23,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
     asiatunnusVayla: "asiatunnus",
     suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     kunnat: [91, 92],
+    tyyppi: API.ProjektiTyyppi.TIE,
   },
   vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
   asianhallinta: { inaktiivinen: true },
@@ -191,6 +192,7 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
       vastuuorganisaatio: "VAYLAVIRASTO",
       kunnat: [91, 92],
       yTunnus: "1010547-1",
+      projektiTyyppi: API.ProjektiTyyppi.TIE,
     });
   });
 

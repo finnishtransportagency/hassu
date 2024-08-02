@@ -809,6 +809,18 @@ Object {
     "toissijainenKieli": "POHJOISSAAME",
   },
   "nahtavillaoloVaihe": Object {
+    "aineistoNahtavilla": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+        "uuid": "foo4",
+      },
+    ],
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
     },
@@ -865,7 +877,18 @@ Object {
   },
   "nahtavillaoloVaiheJulkaisut": Array [
     Object {
-      "aineistoNahtavilla": Array [],
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+          "uuid": "foo5",
+        },
+      ],
       "hankkeenKuvaus": Object {
         "SUOMI": "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
       },

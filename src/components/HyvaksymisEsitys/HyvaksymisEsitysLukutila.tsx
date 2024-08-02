@@ -21,7 +21,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { lahetysTila } from "src/util/aloitusKuulutusUtil";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import HassuTable from "@components/table/HassuTable";
-import { aineistoKategoriat } from "common/aineistoKategoriat";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import ExtLink from "@components/ExtLink";
@@ -63,6 +63,11 @@ export default function HyvaksymisEsitysLukutila({
       return acc;
     }, {});
   }, [hyvaksymisEsitys?.muistutukset, perustiedot.kunnat]);
+
+  const { kategoriat, kategoriaIdt } = useMemo(() => {
+    const kategoria = getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi });
+    return { kategoriat: kategoria.listKategoriat(), kategoriaIdt: kategoria.listKategoriaIds() };
+  }, [perustiedot.projektiTyyppi]);
 
   if (!hyvaksymisEsitys) {
     return null;
@@ -136,11 +141,11 @@ export default function HyvaksymisEsitysLukutila({
         <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
           <HassuGridItem colSpan={1}>
             <H5>Suunnitelman nimi</H5>
-            <p>{perustiedot.suunnitelmanNimi ?? "-"}</p>
+            <p>{perustiedot.suunnitelmanNimi || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Asiatunnus</H5>
-            <p>{perustiedot.asiatunnus ?? "-"}</p>
+            <p>{perustiedot.asiatunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>Vastuuorganisaatio</H5>
@@ -148,19 +153,19 @@ export default function HyvaksymisEsitysLukutila({
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Y-tunnus</H5>
-            <p>{perustiedot.yTunnus ?? "-"}</p>
+            <p>{perustiedot.yTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={1}>
             <H5>OVT-tunnus</H5>
-            <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
+            <p>{laskutustiedot?.ovtTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={2}>
             <H5>Verkkolaskuoperaattorin välittäjätunnus</H5>
-            <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
+            <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus || "-"}</p>
           </HassuGridItem>
           <HassuGridItem colSpan={3}>
             <H5>Viitetieto</H5>
-            <p>{laskutustiedot?.viitetieto ?? "-"}</p>
+            <p>{laskutustiedot?.viitetieto || "-"}</p>
           </HassuGridItem>
         </HassuGrid>
       </Section>
@@ -179,9 +184,13 @@ export default function HyvaksymisEsitysLukutila({
         {hyvaksymisEsitys.suunnitelma && (
           <>
             <H3>Suunnitelma</H3>
-            <AccordionToggleButton expandedAineisto={expandedAineisto} setExpandedAineisto={setExpandedAineisto} />
+            <AccordionToggleButton
+              expandedAineisto={expandedAineisto}
+              setExpandedAineisto={setExpandedAineisto}
+              aineistoKategoriaIds={kategoriaIdt}
+            />
             <NestedAineistoAccordion
-              kategoriat={aineistoKategoriat.listKategoriat()}
+              kategoriat={kategoriat}
               aineisto={hyvaksymisEsitys.suunnitelma}
               paakategoria
               expandedState={[expandedAineisto, setExpandedAineisto]}

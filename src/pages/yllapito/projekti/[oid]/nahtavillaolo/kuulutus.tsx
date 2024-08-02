@@ -1,6 +1,5 @@
 import React, { ReactElement } from "react";
 import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
-import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
@@ -9,7 +8,6 @@ import NahtavillaoloPageLayout from "@components/projekti/nahtavillaolo/Nahtavil
 import { MuokkausTila } from "@services/api";
 
 export default function NahtavillaoloKuulutusWrapper() {
-  useProjekti({ revalidateOnMount: true });
   return (
     <ProjektiConsumerComponent useProjektiOptions={{ revalidateOnMount: true }}>
       {(projekti) => <NahtavillaoloKuulutus projekti={projekti} />}

@@ -129,6 +129,7 @@ describe("projektiValidator", () => {
           tiedosto: "/nahtavillaolo/1/T113 TS Esite.txt",
           tila: AineistoTila.VALMIS,
           tuotu: "***unittest***",
+          uuid: "uuid1",
         },
       ],
     };
@@ -177,6 +178,7 @@ describe("projektiValidator", () => {
       tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
       tila: AineistoTila.VALMIS,
       tuotu: "***unittest***",
+      uuid: "uuid2",
     };
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     projekti.hyvaksymisPaatosVaihe = {
@@ -215,6 +217,7 @@ describe("projektiValidator", () => {
       nimi: "T113 TS Esite.txt",
       tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
       tila: AineistoTila.VALMIS,
+      uuid: "uuid3",
       tuotu: "***unittest***",
     };
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();

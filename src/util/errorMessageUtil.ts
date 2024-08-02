@@ -47,6 +47,10 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui.",
   },
   {
+    validator: ({ errorResponse }) => errorResponse.operation.operationName === "TallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi",
+    errorMessage: () => "Hyväksymisesityksen hyväksyttäväksi lähetys epäonnistui.",
+  },
+  {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
     errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä."),
   },
@@ -77,7 +81,7 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
     matchingErrorMessages.map((item) => item.errorMessage(props)).forEach((message) => (errorMessage += message));
   }
 
-  // Ei nayteta korrelaatio IDeita kansalaisille
+  // Ei näytetä korrelaatio IDeita kansalaisille
   if (showErrorDetails(props)) {
     errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
   }
@@ -111,7 +115,7 @@ const constructErrorClassSpecificErrorMessage = (props: GenerateErrorMessageProp
   let errorMessage = "";
   if (errorInfo) {
     errorMessage = message;
-    // Ei nayteta yksityiskohtia kansalaisille
+    // Ei näytetä yksityiskohtia kansalaisille
     if (showErrorDetails(props)) {
       errorMessage += " " + errorInfo.errorMessage + ".";
     }
