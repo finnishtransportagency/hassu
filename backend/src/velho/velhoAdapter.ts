@@ -255,7 +255,7 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
     kayttoOikeudet: [],
   };
 
-  const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
+  const asiaId = (process.env.MIGRATION_CLI !== "true" && await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
 
   await persistGeoJsonFile(data);
 
