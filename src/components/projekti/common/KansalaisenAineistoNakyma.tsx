@@ -31,7 +31,7 @@ const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: Accord
   const Heading = paakategoria ? H4 : H5;
   return (
     <div className="w-full">
-      <div className="flex flex-row items-center justify-between max-w-md">
+      <div className="flex flex-row items-center justify-between max-w-sm">
         <Heading variant="h5" sx={{ margin: 0, alignSelf: "baseline" }}>
           {titleText}
         </Heading>
