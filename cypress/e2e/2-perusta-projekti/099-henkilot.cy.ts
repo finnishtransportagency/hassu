@@ -1,7 +1,7 @@
 describe("Projektin henkilot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
-  const muuTunnus = "A-tunnus2 Hassu";
+  const muuTunnus = "A-tunnus3 Hassu";
   const muuNumero = "029123456";
 
   beforeEach(() => {
@@ -29,21 +29,21 @@ describe("Projektin henkilot", () => {
     }); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
   });
 
-  it("Tarkista projektin henkilot velhosta", () => {
+  it("Tarkista projektin henkilöt velhosta", () => {
     cy.login("A1");
     //projektipaallikko
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.contains("Projektin henkilöt");
     cy.contains(projektiNimi);
-    cy.get('input[name="kayttoOikeudet.0.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamki@cgi.com");
+    cy.get('input[name="kayttoOikeudet.0.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamki101@cgi.com");
     cy.get('input[name="kayttoOikeudet.0.yleinenYhteystieto"').should("be.disabled").should("be.checked");
 
     //varahenkilo
-    cy.get('input[name="kayttoOikeudet.1.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamaki02@cgi.com");
+    cy.get('input[name="kayttoOikeudet.1.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamaki102@cgi.com");
     cy.get('input[name="kayttoOikeudet.1.varahenkiloValinta"').should("be.disabled").should("be.checked");
   });
 
-  it("Lisaa muu henkilo", () => {
+  it("Lisää muu henkilö", () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("#lisaa_uusi_kayttaja").click();
@@ -63,10 +63,10 @@ describe("Projektin henkilot", () => {
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
     cy.contains("A-tunnus1 Hassu");
     cy.get("#yhteystiedot").contains(muuTunnus);
-    cy.contains("A-tunnus3 Hassu").should("not.exist"); // varahenkilo
+    cy.contains("A-tunnus2 Hassu").should("not.exist"); // varahenkilo
   });
 
-  it("Vaihda muu henkilo kunnan edustajaksi", () => {
+  it("Vaihda muu henkilö kunnan edustajaksi", () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("input[name $='yleinenYhteystieto']").last().uncheck({ force: true });

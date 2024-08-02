@@ -6,7 +6,8 @@ import FormGroup from "./FormGroup";
 
 type Props = {
   name: string;
-  label: string;
+  label?: string;
+  noEmptyOption?: boolean;
   control: any;
   defaultValue: string;
   children: ReactNode;
@@ -15,7 +16,7 @@ type Props = {
 } & Pick<SelectProps<string>, "onChange">;
 
 const HassuMuiSelect = (
-  { name, label, control, defaultValue, children, disabled, error, onChange: onChangeProp, ...props }: Props,
+  { name, label, control, defaultValue, children, disabled, error, onChange: onChangeProp, noEmptyOption, ...props }: Props,
   ref: React.ForwardedRef<HTMLSelectElement>
 ) => {
   const { t } = useTranslation("common");
@@ -23,9 +24,11 @@ const HassuMuiSelect = (
   return (
     <FormGroup errorMessage={error?.message}>
       <FormControl sx={{ paddingTop: "3px" }} {...props}>
-        <InputLabel id={labelId} htmlFor={name}>
-          {capitalize(label)}
-        </InputLabel>
+        {label && (
+          <InputLabel id={labelId} htmlFor={name}>
+            {capitalize(label)}
+          </InputLabel>
+        )}
         <Controller
           render={({ field: { onChange, onBlur, value } }) => (
             <Select<string>
@@ -36,12 +39,13 @@ const HassuMuiSelect = (
                 onChange(...args);
                 onChangeProp?.(...args);
               }}
+              name={name}
               onBlur={onBlur}
               value={value === null ? "" : value}
               ref={ref}
               disabled={disabled}
             >
-              <MenuItem value="">{t("valitse")}</MenuItem>
+              {!noEmptyOption && <MenuItem value="">{t("valitse")}</MenuItem>}
               {children}
             </Select>
           )}

@@ -71,7 +71,7 @@ describe("Nähtävilläolovaihe", () => {
             : []) as AineistoInput[]
         ).concat([
           {
-            kategoriaId: "FOO",
+            kategoriaId: "osa_a",
             nimi: "foo.pdf",
             dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
             tila: AineistoTila.ODOTTAA_TUONTIA,

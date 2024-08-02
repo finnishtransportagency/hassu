@@ -1,4 +1,4 @@
-import { AineistoTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, LadattuTiedostoTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { TiedostoManager, AineistoPathsPair, NahtavillaoloVaiheTiedostoManager, getZipFolder } from ".";
 import { config } from "../../config";
 import { LausuntoPyynto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
@@ -64,7 +64,11 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
     return [];
   }
 
-  async createZipOfAineisto(zipFileS3Key: string, lausuntoPyyntoUuid: string): Promise<LausuntoPyynto | undefined> {
+  async createZipOfAineisto(
+    zipFileS3Key: string,
+    lausuntoPyyntoUuid: string,
+    projektityyppi: ProjektiTyyppi | null | undefined
+  ): Promise<LausuntoPyynto | undefined> {
     const lausuntoPyynto = this.vaihe?.find((lausuntoPyynto) => lausuntoPyynto.uuid === lausuntoPyyntoUuid);
     if (!lausuntoPyynto) {
       return;
@@ -86,7 +90,7 @@ export class LausuntoPyyntoTiedostoManager extends TiedostoManager<LausuntoPyynt
       .flatMap((aineistot) => aineistot.aineisto ?? [])
       .filter((aineisto) => aineisto.tila === AineistoTila.VALMIS)
       .forEach((aineisto) => {
-        const zipFolder = getZipFolder(aineisto.kategoriaId);
+        const zipFolder = getZipFolder(aineisto.kategoriaId, projektityyppi);
         filesToZip.push({ s3Key: yllapitoPath + aineisto.tiedosto, zipFolder });
       });
 

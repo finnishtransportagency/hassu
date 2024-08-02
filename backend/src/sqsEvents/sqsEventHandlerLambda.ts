@@ -39,8 +39,8 @@ async function handleNahtavillaoloZipping(ctx: ImportContext) {
   const nahtavillaoloVaiheTiedostoManager = manager.getNahtavillaoloVaihe();
   const aineistopakettiFullS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoFullPath + "/aineisto.zip";
-  log.info("luodaan nähtävilläolon aineistopaiketti, key: " + aineistopakettiFullS3Key);
-  await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key);
+  log.info("luodaan nähtävilläolon aineistopaketti, key: " + aineistopakettiFullS3Key);
+  await nahtavillaoloVaiheTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, ctx.projekti.velho?.tyyppi);
 
   const aineistopakettiRelativeS3Key =
     new ProjektiPaths(oid).nahtavillaoloVaihe(ctx.projekti.nahtavillaoloVaihe).yllapitoPath + "/aineisto.zip";
@@ -86,7 +86,7 @@ async function handleLausuntoPyyntoZipping(ctx: ImportContext, uuid: string) {
   const aineistopakettiFullS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoFullPath + "/aineisto.zip";
 
   log.info("luodaan lausuntopyynnön aineistopaketti, key: " + aineistopakettiFullS3Key);
-  await lausuntoPyyntoTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.uuid);
+  await lausuntoPyyntoTiedostoManager.createZipOfAineisto(aineistopakettiFullS3Key, lausuntoPyynto.uuid, ctx.projekti.velho?.tyyppi);
   const aineistopakettiRelativeS3Key = new ProjektiPaths(oid).lausuntoPyynto(lausuntoPyynto).yllapitoPath + "/aineisto.zip";
 
   const lausuntoPyyntoWithAineistopaketti = { ...lausuntoPyynto, aineistopaketti: "/" + aineistopakettiRelativeS3Key };
@@ -329,9 +329,18 @@ async function synchronizeKuntaLogo(ctx: ImportContext) {
   }
 }
 
+async function synchronizeSijaintitieto(ctx: ImportContext) {
+  const status = ctx.projektiStatus;
+  const projekti = ctx.projekti;
+  if (status && status !== API.Status.EI_JULKAISTU && status !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+    await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).sijaintitieto(), dayjs("2000-01-01"));
+  }
+}
+
 async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
   await synchronizeEULogot(ctx);
   await synchronizeKuntaLogo(ctx);
+  await synchronizeSijaintitieto(ctx);
 
   const manager: ProjektiTiedostoManager = ctx.manager;
   return (

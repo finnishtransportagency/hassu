@@ -11,6 +11,7 @@ import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArra
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
 import AineistoSivunPainikkeet from "@components/projekti/AineistoSivunPainikkeet";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -24,7 +25,7 @@ type FormData = {
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
 
 export default function Muokkausnakyma(): ReactElement {
-  const { data: projekti } = useProjekti({ revalidateOnMount: true });
+  const { data: projekti } = useProjekti();
   return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
 }
 
@@ -32,7 +33,16 @@ interface MuokkausnakymaLomakeProps {
   projekti: ProjektiLisatiedolla;
 }
 
-function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
+function MuokkausnakymaLomake({ projekti }: Readonly<MuokkausnakymaLomakeProps>) {
+  const { aineistoKategoriat, kategoriaIds } = useMemo(() => {
+    const aineistoKategoriat = getAineistoKategoriat({
+      projektiTyyppi: projekti.velho.tyyppi,
+      showKategorisoimattomat: true,
+      hideDeprecated: true,
+    });
+    return { aineistoKategoriat, kategoriaIds: aineistoKategoriat.listKategoriaIds() };
+  }, [projekti.velho.tyyppi]);
+
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
     const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
       projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
@@ -42,10 +52,10 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
     return {
       oid: projekti.oid,
       versio: projekti.versio,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla, kategoriaIds),
       poistetutAineistoNahtavilla,
     };
-  }, [projekti]);
+  }, [kategoriaIds, projekti]);
 
   const validationMode = useValidationMode();
 
@@ -72,7 +82,7 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   return (
     <FormProvider {...useFormReturn}>
       <form>
-        <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} />
+        <SuunnitelmatJaAineistot vaihe={projekti.nahtavillaoloVaihe} aineistoKategoriat={aineistoKategoriat} />
         <AineistoSivunPainikkeet
           siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
           muokkausTila={projekti.nahtavillaoloVaihe?.muokkausTila}

@@ -113,6 +113,10 @@ export class ProjektiPaths extends PathTuple {
     return new EULogotPaths(this);
   }
 
+  sijaintitieto(): PathTuple {
+    return new SijaintitietoPaths(this);
+  }
+
   karttarajaus(): PathTuple {
     return new KarttarajausPaths(this);
   }
@@ -171,6 +175,16 @@ class EULogotPaths extends SimpleRootPath {
 
   get rootPath(): string {
     return "euLogot";
+  }
+}
+
+class SijaintitietoPaths extends SimpleRootPath {
+  constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  get rootPath(): string {
+    return "sijaintitieto";
   }
 }
 

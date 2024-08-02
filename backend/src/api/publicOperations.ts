@@ -32,29 +32,29 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
   }
   switch (event.info.fieldName) {
     case apiConfig.listaaProjektitJulkinen.name:
-      return projektiSearchService.searchJulkinen((event.arguments as ListaaProjektitQueryVariables).hakuehto);
+      return await projektiSearchService.searchJulkinen((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.lataaProjektiJulkinen.name:
-      return loadProjektiJulkinen(event.arguments as LataaProjektiJulkinenQueryVariables);
+      return await loadProjektiJulkinen(event.arguments as LataaProjektiJulkinenQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
-      return createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
+      return await createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.lisaaPalaute.name:
-      return palauteHandlerJulkinen.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
+      return await palauteHandlerJulkinen.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
     case apiConfig.lisaaMuistutus.name:
-      return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
+      return await muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:
-      return lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
+      return await lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
     case apiConfig.annaPalautettaPalvelusta.name:
-      return palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
+      return await palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
     case apiConfig.nykyinenSuomifiKayttaja.name:
-      return getSuomiFiKayttaja();
+      return await getSuomiFiKayttaja();
     case apiConfig.listaaLausuntoPyynnonTiedostot.name:
-      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot(event.arguments as ListaaLausuntoPyynnonTiedostotQueryVariables);
+      return await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTiedostot(event.arguments as ListaaLausuntoPyynnonTiedostotQueryVariables);
     case apiConfig.listaaLausuntoPyynnonTaydennyksenTiedostot.name:
-      return tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot(
+      return await tiedostoDownloadLinkHandler.listaaLausuntoPyynnonTaydennysTiedostot(
         event.arguments as ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables
       );
     case apiConfig.listaaHyvaksymisEsityksenTiedostot.name:
-      return listaaHyvaksymisEsityksenTiedostot(event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
+      return await listaaHyvaksymisEsityksenTiedostot(event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
     default:
       return null;
   }

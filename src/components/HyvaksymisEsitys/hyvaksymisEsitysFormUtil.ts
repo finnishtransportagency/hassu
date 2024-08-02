@@ -1,3 +1,4 @@
+import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import {
   AineistoInputNew,
   AineistoNew,
@@ -7,14 +8,18 @@ import {
   KunnallinenLadattuTiedostoInput,
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
+  ProjektiTyyppi,
+  TallennaHyvaksymisEsitysInput,
 } from "@services/api";
+import { getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 
-export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] | null };
+export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] };
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
-  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset"> & {
+  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
+    suunnitelma: { [key: string]: FormAineistoNew[] };
   };
 };
 
@@ -58,7 +63,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
         viitetieto: viitetieto ?? "",
       },
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
-      suunnitelma: adaptAineistotNewToInput(suunnitelma),
+      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, perustiedot.projektiTyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
@@ -72,17 +77,42 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
-export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData: HyvaksymisEsitysForm) {
-  const muistutukset = formData.muokattavaHyvaksymisEsitys.muistutukset;
+function adaptSuunnitelmaAineistot(
+  suunnitelma: AineistoNew[] | null | undefined,
+  projektiTyyppi: ProjektiTyyppi | null | undefined
+): { [key: string]: FormAineistoNew[] } {
+  const kategoriaIdt = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true, hideDeprecated: true }).listKategoriaIds();
+
+  const kategoriat = kategoriaIdt.reduce<{ [key: string]: FormAineistoNew[] }>((acc, kategoriaId) => {
+    acc[kategoriaId] = [];
+    return acc;
+  }, {});
+
+  if (!suunnitelma?.length) {
+    return kategoriat;
+  }
+
+  return suunnitelma.reduce((kategorisoidutAineistot, aineisto) => {
+    const kategoriaId = aineisto.kategoriaId && kategoriaIdt.includes(aineisto.kategoriaId) ? aineisto.kategoriaId : kategorisoimattomatId;
+    kategorisoidutAineistot[kategoriaId].push(adaptAineistoNewToInput(aineisto));
+    return kategorisoidutAineistot;
+  }, kategoriat);
+}
+
+export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
+  formData: HyvaksymisEsitysForm
+): TallennaHyvaksymisEsitysInput {
+  const muistutukset = Object.values(formData.muokattavaHyvaksymisEsitys.muistutukset).flat();
+  const suunnitelma = Object.values(formData.muokattavaHyvaksymisEsitys.suunnitelma)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
+
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
-      muistutukset: muistutukset
-        ? Object.keys(muistutukset).reduce((acc, key) => {
-            return acc.concat(muistutukset[key] ?? []);
-          }, [] as KunnallinenLadattuTiedostoInput[])
-        : [],
+      suunnitelma,
+      muistutukset,
     },
   };
 }
@@ -118,12 +148,14 @@ function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): 
   return aineistot.map(adaptAineistoNewToInput);
 }
 
-function adaptAineistoNewToInput(aineisto: AineistoNew): AineistoInputNew {
-  const { dokumenttiOid, uuid, kategoriaId, nimi } = aineisto;
+function adaptAineistoNewToInput(aineisto: AineistoNew): FormAineistoNew {
+  const { dokumenttiOid, uuid, kategoriaId, nimi, tiedosto, tuotu, lisatty } = aineisto;
   return {
     dokumenttiOid,
     uuid,
     kategoriaId,
     nimi,
+    tuotu: tuotu && lisatty ? lisatty : undefined,
+    tiedosto,
   };
 }

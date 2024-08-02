@@ -22,11 +22,13 @@ import difference from "lodash/difference";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
 import { assertIsDefined } from "../util/assertions";
-import { IllegalArgumentError, VelhoGeoJsonSizeExceededError } from "hassu-common/error";
+import { IllegalArgumentError } from "hassu-common/error";
 import { parseDate } from "../util/dateUtil";
 import isEqual from "lodash/isEqual";
 import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
+import { fileService } from "../files/fileService";
+import { ProjektiPaths } from "../files/ProjektiPath";
 
 let metaDataJSON: any;
 
@@ -177,7 +179,11 @@ function getKunnat(data: ProjektiProjekti): number[] | undefined {
     return kunnat.sort(numberSorter);
   }
   try {
-    return data.ominaisuudet["muu-kunta"]?.split(",").map(s => s.trim()).map(kuntametadata.idForKuntaName).sort();
+    return data.ominaisuudet["muu-kunta"]
+      ?.split(",")
+      .map((s) => s.trim())
+      .map(kuntametadata.idForKuntaName)
+      .sort();
   } catch (e) {
     log.error("Virheellinen muu-kunta: '" + data.ominaisuudet["muu-kunta"] + "'");
     return undefined;
@@ -198,7 +204,11 @@ function getMaakunnat(data: ProjektiProjekti) {
     return maakunnat.sort(numberSorter);
   }
   try {
-    return data.ominaisuudet["muu-maakunta"]?.split(",").map(s => s.trim()).map(kuntametadata.idForMaakuntaName).sort();
+    return data.ominaisuudet["muu-maakunta"]
+      ?.split(",")
+      .map((s) => s.trim())
+      .map(kuntametadata.idForMaakuntaName)
+      .sort();
   } catch (e) {
     log.error("Virheellinen muu-maakunta: '" + data.ominaisuudet["muu-maakunta"] + "'");
     return undefined;
@@ -240,13 +250,14 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
       asiatunnusVayla: data.ominaisuudet["asiatunnus-vaylavirasto"],
       asiatunnusELY: data.ominaisuudet["asiatunnus-ely"],
       linkitetytProjektit: linkitetytProjektit ? getLinkitetytProjektit(linkitetytProjektit) : null,
-      geoJSON: getGeoJSON(data),
     },
     kasittelynTila: adaptKasittelynTilaFromVelho(data.ominaisuudet),
     kayttoOikeudet: [],
   };
 
   const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
+
+  await persistGeoJsonFile(data);
 
   projekti.asianhallinta = { inaktiivinen: false, asiaId };
 
@@ -262,10 +273,29 @@ async function haeAsiaId(projekti: DBProjekti) {
   }
 }
 
-// 100KB
-const MAX_GEOJSON_SIZE = 100 * 1000;
+async function persistGeoJsonFile(data: ProjektiProjekti) {
+  const geoJSON = getGeoJSON(data);
+  const fileName = "sijaintitieto/sijaintitieto.geojson";
+  if (geoJSON) {
+    log.info("Tallennetaan sijaintitieto geoJSON-tiedostoon");
+    await fileService.createFileToProjekti({
+      oid: data.oid,
+      fileName,
+      path: new ProjektiPaths(data.oid),
+      contents: Buffer.from(geoJSON, "utf-8"),
+      contentType: "application/geo+json",
+    });
+  } else {
+    log.info("Poistetaan sijaintitieto geoJSON-tiedosto");
+    await fileService.deleteYllapitoFileFromProjekti({
+      filePathInProjekti: "/" + fileName,
+      oid: data.oid,
+      reason: "Velhossa ei ole sijaintitietoja",
+    });
+  }
+}
 
-function getGeoJSON(data: ProjektiProjekti) {
+function getGeoJSON(data: ProjektiProjekti): string | null {
   const geometrycollection = data.geometrycollection?.geometries;
   const geometriaEiOleKeskipiste = (geometry: ProjektiProjektiLuontiMitattugeometriaGeometria): boolean =>
     !isEqual(geometry, data.keskipiste?.["geometria-wgs84"]);
@@ -290,10 +320,6 @@ function getGeoJSON(data: ProjektiProjekti) {
   };
 
   const geoJsonString = JSON.stringify(geoJSON);
-
-  if (new Blob([geoJsonString]).size > MAX_GEOJSON_SIZE) {
-    throw new VelhoGeoJsonSizeExceededError("Velhoon asetetut projektin geometriat ylittävät 100kB maksimikoon");
-  }
 
   return geoJsonString;
 }

@@ -1,29 +1,27 @@
 import { AineistoInput } from "@services/api";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { kategorisoimattomatId } from "common/aineistoKategoriat";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
 }
 
-export const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] | undefined | null) => {
-  const kategoriaIds = aineistoKategoriat.listKategoriaIds();
-  const initialAineistoKategorias = aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((acc, kategoriaId) => {
+export const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] | undefined | null, kategoriaIds: string[]) => {
+  const initialAineistoKategorias = kategoriaIds.reduce<AineistoNahtavilla>((acc, kategoriaId) => {
     acc[kategoriaId] = [];
     return acc;
   }, {});
 
   return (
     aineistot?.reduce<AineistoNahtavilla>((aineistoNahtavilla, aineisto) => {
-      if (aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId)) {
-        const aineistoToAdd =
-          typeof aineisto.jarjestys !== "number" ? { ...aineisto, jarjestys: aineistoNahtavilla[aineisto.kategoriaId].length } : aineisto;
-        aineistoNahtavilla[aineisto.kategoriaId].push(aineistoToAdd);
-      } else {
-        const aineistoToAdd =
-          typeof aineisto.jarjestys !== "number" ? { ...aineisto, jarjestys: aineistoNahtavilla[kategorisoimattomatId].length } : aineisto;
-        aineistoNahtavilla[kategorisoimattomatId].push(aineistoToAdd);
-      }
+      const kategoriaId =
+        aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId) ? aineisto.kategoriaId : kategorisoimattomatId;
+      const aineistoToAdd: AineistoInput = {
+        ...aineisto,
+        jarjestys: typeof aineisto.jarjestys === "number" ? aineisto.jarjestys : aineistoNahtavilla[kategoriaId].length,
+        kategoriaId,
+      };
+      aineistoNahtavilla[kategoriaId].push(aineistoToAdd);
       return aineistoNahtavilla;
-    }, initialAineistoKategorias) || initialAineistoKategorias
+    }, initialAineistoKategorias) ?? initialAineistoKategorias
   );
 };

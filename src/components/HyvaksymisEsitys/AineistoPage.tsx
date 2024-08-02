@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
-import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import { HyvaksymisEsityksenAineistot, LadattavaTiedosto } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -55,6 +55,12 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
     : projektipaallikonYhteystiedot?.organisaatio;
 
+  const muistutusMaara = useMemo(() => Object.values(muistutukset).flat().length ?? 0, [muistutukset]);
+
+  const kategoriat = useMemo(
+    () => getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi }).listKategoriat(),
+    [perustiedot.projektiTyyppi]
+  );
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
@@ -87,11 +93,11 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
             <HassuGridItem colSpan={1}>
               <H4>Suunnitelman nimi</H4>
-              <p>{suunnitelmanNimi ?? "-"}</p>
+              <p>{suunnitelmanNimi || "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Asiatunnus</H4>
-              <p>{asiatunnus ?? "-"}</p>
+              <p>{asiatunnus || "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={1}>
               <H4>Vastuuorganisaatio</H4>
@@ -99,19 +105,19 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Y-tunnus</H4>
-              <p>{yTunnus ?? "-"}</p>
+              <p>{yTunnus || "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={1}>
               <H4>OVT-tunnus</H4>
-              <p>{laskutustiedot?.ovtTunnus ?? "-"}</p>
+              <p>{laskutustiedot?.ovtTunnus || "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={2}>
               <H4>Verkkolaskuoperaattorin välittäjätunnus</H4>
-              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus ?? "-"}</p>
+              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus || "-"}</p>
             </HassuGridItem>
             <HassuGridItem colSpan={3}>
               <H4>Viitetieto</H4>
-              <p>{laskutustiedot?.viitetieto ?? "-"}</p>
+              <p>{laskutustiedot?.viitetieto || "-"}</p>
             </HassuGridItem>
           </HassuGrid>
         </SectionContent>
@@ -132,7 +138,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
 
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
-        <H3>Hyväksymisesitys</H3>
+        <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
             {hyvaksymisEsitys?.map((tiedosto, index) => (
@@ -144,12 +150,8 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
         ) : (
           <div>Ei aineistoja</div>
         )}
-        <H3>Suunnitelma</H3>
-        <SuunnittelmaLadattavatTiedostotAccordion
-          kategoriat={aineistoKategoriat.listKategoriat()}
-          aineistot={suunnitelma}
-          esikatselu={!!props.esikatselu}
-        />
+        <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={!!props.esikatselu} />
       </Section>
       <Section>
         <H2>Vuorovaikutus</H2>
@@ -157,12 +159,12 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           items={[
             {
               id: "1",
-              title: <H3 sx={{ margin: 0 }}>Muistutukset</H3>,
+              title: <H3 sx={{ margin: 0 }}>{`Muistutukset (${muistutusMaara})`}</H3>,
               content: (
                 <div>
                   {Object.keys(muistutukset).map((kunta) => (
                     <div key={kunta} style={{ marginTop: "1em" }}>
-                      <H5>{kuntametadata.nameForKuntaId(parseInt(kunta), "fi")}</H5>
+                      <H5>{kuntametadata.nameForKuntaId(parseInt(kunta), "fi") + ` (${muistutukset[kunta]?.length ?? 0})`}</H5>
                       {muistutukset[kunta]?.length ? (
                         <ul style={{ listStyle: "none" }}>
                           {muistutukset[kunta]?.map((tiedosto, index) => (
@@ -181,7 +183,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             },
             {
               id: "2",
-              title: <H3 sx={{ margin: 0 }}>Lausunnot</H3>,
+              title: <H3 sx={{ margin: 0 }}>{`Lausunnot (${lausunnot?.length ?? 0})`}</H3>,
               content: lausunnot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {lausunnot?.map((tiedosto, index) => (
@@ -196,7 +198,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             },
             {
               id: "3",
-              title: <H3 sx={{ margin: 0 }}>Maanomistajaluettelo</H3>,
+              title: <H3 sx={{ margin: 0 }}>{`Maanomistajaluettelo (${maanomistajaluettelo?.length ?? 0})`}</H3>,
               content: maanomistajaluettelo?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {maanomistajaluettelo?.map((tiedosto, index) => (
@@ -211,7 +213,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
             },
             {
               id: "4",
-              title: <H3 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H3>,
+              title: <H3 sx={{ margin: 0 }}>{`Kuulutukset ja kutsu vuorovaikutukseen (${kuulutuksetJaKutsu?.length ?? 0})`}</H3>,
               content: kuulutuksetJaKutsu?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {kuulutuksetJaKutsu?.map((tiedosto, index) => (
@@ -232,7 +234,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           items={[
             {
               id: "3",
-              title: <H2 sx={{ margin: 0 }}>Muu tekninen aineisto</H2>,
+              title: <H2 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H2>,
               content: muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (

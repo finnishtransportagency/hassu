@@ -22,9 +22,11 @@ export function adaptAineistotToAPI({
   path: string;
 }): API.AineistoNew[] | undefined {
   if (aineistot && aineistot.length > 0) {
+    const handledAt = aineistotHandledAt ? dayjs(aineistotHandledAt) : null;
     return [...aineistot].map((aineisto) => {
       const { dokumenttiOid, kategoriaId, nimi, lisatty, uuid } = aineisto;
-      const tuotu = !!(aineistotHandledAt && dayjs(aineistotHandledAt).isAfter(dayjs(lisatty)));
+      const lisattyDate = lisatty ? dayjs(lisatty) : null;
+      const tuotu = !!(handledAt && (handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate)));
       const apiAineisto: API.AineistoNew = {
         __typename: "AineistoNew",
         dokumenttiOid,

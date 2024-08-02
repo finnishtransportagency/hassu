@@ -1,31 +1,27 @@
 import HassuTable from "@components/table/HassuTable";
 import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import useTranslation from "next-translate/useTranslation";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useCallback, useEffect, useMemo } from "react";
-import { aineistoKategoriat } from "common/aineistoKategoriat";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { formatDateTime } from "common/util/dateUtils";
-import Select from "@components/form/Select";
+import Select, { SelectOption } from "@components/form/Select";
 import find from "lodash/find";
 import { ActionsColumn } from ".";
-import { FormAineisto, AineistoNahtavillaTableFormValuesInterface, getAllOptionsForKategoriat } from "../util";
+import { FormAineisto, AineistoNahtavillaTableFormValuesInterface } from "../util";
 
 interface AineistoTableProps {
   kategoriaId: string;
   aineisto: Aineisto[] | undefined | null;
+  allOptions: SelectOption[];
 }
 
-export function AineistoTable(props: AineistoTableProps) {
+export function AineistoTable(props: Readonly<AineistoTableProps>) {
   const { control, formState, register, getValues, setValue, watch } = useFormContext<AineistoNahtavillaTableFormValuesInterface>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
   const { fields, remove, update: updateFieldArray, move, replace } = useFieldArray({ name: aineistoRoute, control });
 
   const { append: appendToPoistetut } = useFieldArray({ name: "poistetutAineistoNahtavilla", control });
-  const { t } = useTranslation("aineisto");
-
-  const allOptions = useMemo(() => getAllOptionsForKategoriat({ kategoriat: aineistoKategoriat.listKategoriat(true), t }), [t]);
 
   const aineistotInCategory = watch(aineistoRoute);
 
@@ -81,7 +77,7 @@ export function AineistoTable(props: AineistoTableProps) {
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
               <Select
-                options={allOptions}
+                options={props.allOptions}
                 defaultValue={props.kategoriaId}
                 className="category_selector"
                 onChange={(event) => {
@@ -135,7 +131,7 @@ export function AineistoTable(props: AineistoTableProps) {
       formState.errors.aineistoNahtavilla,
       register,
       aineistoRoute,
-      allOptions,
+      props.allOptions,
       getValues,
       remove,
       setValue,

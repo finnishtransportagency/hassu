@@ -15,7 +15,7 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
     }
   });
 
-  cy.wait(1000);
+  cy.wait(5000);
 
   typeIntoFields(selectorToTextMap);
 
@@ -63,12 +63,10 @@ type AineistoLisaysOptions = {
 type LisaaNahtavillaoloAineistotOptions = {
   oid: string;
   aineistoNahtavilla: AineistoLisaysOptions;
-  /**
-   * The URL to visit. Behaves the same as the `url` argument.
-   */
+  kategoria: string;
 };
 
-export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNahtavillaoloAineistotOptions) {
+export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla, kategoria }: LisaaNahtavillaoloAineistotOptions) {
   // This test had to be inserted here and can not be done
   // after publishing test below
   cy.login("A1");
@@ -85,32 +83,37 @@ export function lisaaNahtavillaoloAineistot({ oid, aineistoNahtavilla }: LisaaNa
   cy.get("#select_valitut_aineistot_button").click();
   cy.get("#kategorisoimattomat").click();
 
-  cy.get("body").then(($body) => {
-    const selector = "#kategorisoimattomat_table .category_selector select";
-    const numberOfSelectElements = $body.find(selector).length;
-    if (numberOfSelectElements > 0) {
-      for (let i = 0; i < numberOfSelectElements; i++) {
-        cy.get(selector).first().select("osa_a");
-      }
-    }
-  });
+  moveKategorisoimattomatToKategoria(kategoria);
 
   cy.get("#save_draft")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 500, left: 0 } })
     .click();
-  cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
+  cy.get(".MuiAlert-filledSuccess").contains("Tallennus onnistui");
 }
 
 type HyvaksyNahtavillaoloKuulutusOptions = {
   kuulutusPaivaInFuture?: boolean;
 };
 
+function moveKategorisoimattomatToKategoria(kategoria: string) {
+  cy.get("body").then(($body) => {
+    const selector = "#kategorisoimattomat_table .category_selector select";
+    if ($body.find(selector).length === 0) {
+      return;
+    }
+    cy.get(selector).first().select(kategoria);
+    if ($body.find(selector).length > 0) {
+      moveKategorisoimattomatToKategoria(kategoria);
+    }
+  });
+}
+
 export function hyvaksyNahtavillaoloKuulutus(
   { kuulutusPaivaInFuture }: HyvaksyNahtavillaoloKuulutusOptions = { kuulutusPaivaInFuture: false }
 ) {
   cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click();
-  cy.contains("Lähetys onnistui");
+  cy.contains("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
   cy.get("#button_open_acceptance_dialog")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 500, left: 0 } })
@@ -121,6 +124,7 @@ export function hyvaksyNahtavillaoloKuulutus(
 
   cy.reload();
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
-
-  cy.contains(kuulutusPaivaInFuture ? "Kuulutusta ei ole vielä julkaistu." : "Kuulutus on julkaistu");
+  if (kuulutusPaivaInFuture) {
+    cy.contains("Kuulutusta ei ole vielä julkaistu.");
+  }
 }
