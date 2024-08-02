@@ -433,6 +433,14 @@ const FrontPageTable = (props: FrontPageTableProps) => {
           props.openUnauthorizedDialog(projekti);
         }
       },
+      customRowStyles: {
+        ":hover": {
+          "> div > div:nth-of-type(1) > div": {
+            textDecoration: "underline 2px #0064af",
+            textUnderlineOffset: "4px",
+          },
+        },
+      },
     },
   });
 
