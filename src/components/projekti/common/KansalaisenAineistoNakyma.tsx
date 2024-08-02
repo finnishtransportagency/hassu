@@ -27,7 +27,7 @@ type AccordioSummaryContentProps = {
 };
 
 const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: AccordioSummaryContentProps) => {
-  const [showTooltip, setShowTooltip] = useState(titleText == "Selostusosa (0)" ? true : false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const Heading = paakategoria ? H4 : H5;
   return (
     <div className="w-full">
