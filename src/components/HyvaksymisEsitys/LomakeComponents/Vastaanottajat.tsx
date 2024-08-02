@@ -14,8 +14,6 @@ export default function Vastaanottajat(): ReactElement {
 
   const addNew = useCallback(() => append({ sahkoposti: "" }), [append]);
 
-  const isMobile = useIsBelowBreakpoint("md");
-
   return (
     <>
       <H3 variant="h2">Hyväksymisesityksen vastaanottajat</H3>

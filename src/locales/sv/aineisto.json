@@ -30,9 +30,9 @@
     "kategorisoimattomat": "Okategoriserad"
   },
   "aineisto-kategoria-tooltip": {
-    "osa_a": "Selostusosaan sisältyy suunnitelman lähtökohtia ja sisältöä sekä suunnitelman arvioituja vaikutuksia kuvaavia asiakirjoja. Kansio sisältää mm. sisällysluettelon ja suunnitelmaselostuksen, joka on tiivis kuvaus suunnittelun lähtökohdista, sen vaiheista ja tuloksista. Selostuksessa kuvataan kaikki suunnitelmaan perehtymisen ja käsittelyn kannalta olennaiset asiat. Osasta suunnitelmista löytyy myös hyväksymisehdotus, josta selviää yksityiskohtaisesti mitä ehdotetaan hyväksyttäväksi.",
-    "osa_b": "Pääpiirustuksissa esitetään suunnitelman hyväksyttäväksi ehdotettava sisältö karttamuodossa. Kartoissa esitellään suunnitelman yksityiskohdat ja pituus- sekä poikkileikkaukset.",
-    "osa_c": "Informatiivista aineistoa ei hyväksytä, mutta se täydentää, havainnollistaa ja perustelee hyväksyttäväksi esitettyä suunnitelmaratkaisua ja sen avulla kuvataan suunnitelman vaikutuksia. Aineistokokonaisuus sisältää erityyppisiä informatiivisia piirustuksia ja selvityksiä, kuten ympäristösuunnitelmat, vaikutusselvitykset ja selvitykset tutkituista vaihtoehdoista."
+    "osa_a": "Beskrivningsdelen innehåller bl.a. en innehållsförteckning och en planbeskrivning. Planbeskrivningen är en kortfattad beskrivning av utgångspunkterna för planeringen, dess faser och resultat. I beskrivningen beskrivs alla frågor som är väsentliga med tanke på planens innehåll och behandling. I denna del finns också ett förslag till godkännande där detaljerna i den plan som ska godkännas presenteras.",
+    "osa_b": "I huvudritningarna presenteras det innehåll som föreslås för godkännande på plankartor och olika ritningar. I dokumenten presenteras planens detaljer, höjdläge och utrymmesbehov.",
+    "osa_c": "Det informativa materialet ska inte godkännas. Detta material kompletterar, åskådliggör och motiverar den planlösning som föreslagits för godkännande. I det informativa materialet beskrivs bl.a. planens effekter. Materialhelheten innehåller olika typer av ritningar och utredningar. Dessa är bland annat miljöplaner, konsekvensutredningar och utredningar av undersökta alternativ. Det väsentliga i utredningarna beskrivs i korthet i planbeskrivningen."
   },
   "lisa-aineisto": "Ytterligare material bifogat utlåtandebegäran",
   "uusi-aineisto": "Nytt material",

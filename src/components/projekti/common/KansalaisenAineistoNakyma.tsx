@@ -36,15 +36,16 @@ const AccordioHeader = ({ titleText, paakategoria, tooltipText }: AccordioHeader
           {titleText}
         </Heading>
         {tooltipText && (
-          <FontAwesomeIcon
-            color="rgb(0, 100, 175)"
-            size="lg"
-            icon="info-circle"
-            type={NotificationType.INFO_GRAY}
-            cursor="pointer"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          />
+            <FontAwesomeIcon
+              color="rgb(0, 100, 175)"
+              size={"lg"}
+              icon="info-circle"
+              type={NotificationType.INFO_GRAY}
+              cursor="pointer"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+              onClick={(event) => {event.stopPropagation(), setShowTooltip(true)}}
+            />
         )}
       </div>
       <Notification
