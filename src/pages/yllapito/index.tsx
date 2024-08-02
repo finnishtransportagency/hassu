@@ -280,7 +280,7 @@ const VirkamiesHomePage = () => {
           onChange={(_: any, value: any) => {
             if (value === "epaaktiiviset") {
               router.push({ query: { epaaktiivinen: "true" } }, undefined, { scroll: false });
-              fetchProjektit({});
+              fetchProjektit({ ...searchInput, projektiTyyppi: null, epaaktiivinen: true, sivunumero: 0 });
             } else {
               const projektiTyyppi = value as ProjektiTyyppi;
               router.push({ query: { projektiTyyppi: projektiTyyppi } }, undefined, { scroll: false });
