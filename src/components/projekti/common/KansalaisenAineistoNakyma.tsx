@@ -20,13 +20,13 @@ import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import Notification, { NotificationType } from "../../notification/Notification";
 
-type AccordioHeaderProps = {
+type AccordioSummaryContentProps = {
   titleText: string;
   paakategoria?: boolean;
   tooltipText?: string;
 };
 
-const AccordioHeader = ({ titleText, paakategoria, tooltipText }: AccordioHeaderProps) => {
+const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: AccordioSummaryContentProps) => {
   const [showTooltip, setShowTooltip] = useState(titleText == "Selostusosa (0)" ? true : false);
   const Heading = paakategoria ? H4 : H5;
   return (
@@ -177,7 +177,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
       const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
       const tooltipText = props.paakategoria ? t(`aineisto-kategoria-tooltip.${kategoria.id}`) : undefined;
       return {
-        title: <AccordioHeader titleText={titleText} paakategoria={props.paakategoria} tooltipText={tooltipText} />,
+        title: <AccordioSummaryContent titleText={titleText} paakategoria={props.paakategoria} tooltipText={tooltipText} />,
         content: (
           <SuunnitelmaAineistoKategoriaContent
             aineistot={aineisto}

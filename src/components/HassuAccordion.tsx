@@ -83,7 +83,6 @@ export default function CustomizedAccordions(props: Props) {
           >
             <AccordionSummary sx={{pointerEvents: "auto"}}>
               {typeof item.title === "string" ? <h5 className="vayla-smallest-title mb-0">{item.title}</h5> : item.title}
-              {/* <div style={{ pointerEvents: "auto" }}>moikka moi</div> */}
             </AccordionSummary>
             <AccordionDetails>{item.content}</AccordionDetails>
           </Accordion>
