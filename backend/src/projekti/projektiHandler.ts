@@ -120,7 +120,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
 
 export async function arkistoiProjekti(oid: string): Promise<string> {
   requireAdmin();
-  return projektiArchive.archiveProjekti(oid);
+  return await projektiArchive.archiveProjekti(oid);
 }
 
 export async function tallennaJaSiirraTilaa({ projekti, tilasiirtyma }: TallennaJaSiirraTilaaMutationVariables): Promise<string> {
@@ -389,6 +389,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
     };
 
     await projektiDatabase.saveProjektiWithoutLocking(dbProjekti);
+    await eventSqsClient.synchronizeAineisto(oid);
     return adaptVelhoToAPI(updatedFields);
   } catch (e) {
     log.error(e);

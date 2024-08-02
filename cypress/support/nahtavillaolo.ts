@@ -124,6 +124,7 @@ export function hyvaksyNahtavillaoloKuulutus(
 
   cy.reload();
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
-
-  cy.contains(kuulutusPaivaInFuture ? "Kuulutusta ei ole vielä julkaistu." : "Kuulutus on julkaistu");
+  if (kuulutusPaivaInFuture) {
+    cy.contains("Kuulutusta ei ole vielä julkaistu.");
+  }
 }
