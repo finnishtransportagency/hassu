@@ -1,3 +1,4 @@
+import { CSSObject } from "@emotion/react";
 import "@tanstack/react-table";
 
 declare module "@tanstack/table-core" {
@@ -34,5 +35,6 @@ declare module "@tanstack/table-core" {
     rowOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, row: Row<TData>) => void;
     rowHref?: (row: Row<TData>) => string;
     virtualization?: TableWindowVirtualization | TableScrollElementVirtualization;
+    customRowStyles?: CSSObject
   }
 }

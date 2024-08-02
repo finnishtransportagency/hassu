@@ -22,8 +22,8 @@ export const HeaderCell = styled(Cell)(({ onClick }) =>
     cursor: onClick ? "pointer" : undefined,
   })
 );
-export const DataCell = styled(Cell)(sx({alignContent: "center"}));
-export const DataCellContent = styled("div")({});
+export const DataCell = styled(Cell)(sx({ alignContent: "center" }));
+export const DataCellContent = styled("div")(sx({}));
 export const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
 export const HeaderCellContents = styled("div")(sx({}));
 
@@ -44,6 +44,7 @@ export const Tr = styled("div")(
     columnGap: 4,
   })
 );
+
 export const BodyTrWrapper = styled("div")(
   sx({
     display: "block",
