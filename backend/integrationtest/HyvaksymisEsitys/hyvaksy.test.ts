@@ -528,7 +528,46 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
   });
 
+  it("tallentaa lähetetyn s.postin s3:een", async () => {
+    MockDate.set("2000-01-01");
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      hyvaksyja: "theadminuid",
+      hyvaksymisPaiva: "2022-01-01",
+      poistumisPaiva: "2033-01-01",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    const versio = projektiBefore.versio;
+    await insertProjektiToDB(projektiBefore);
+    // Aseta julkaistulle hyväksymisesitykselle tiedostoja S3:een
+    await Promise.all(
+      TEST_HYVAKSYMISESITYS_FILES2.map(async ({ path }) => {
+        const fullpath = `yllapito/tiedostot/projekti/${oid}/hyvaksymisesitys/${path}`;
+        await insertYllapitoFileToS3(fullpath);
+      })
+    );
+
+    const emailFilesBefore = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}/hyvaksymisesityksen_spostit/`);
+    expect(emailFilesBefore).to.eql([]);
+    await hyvaksyHyvaksymisEsitys({ oid, versio });
+    const emailFilesAfter = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}/hyvaksymisesityksen_spostit/`);
+    expect(emailFilesAfter).to.eql([
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
+    ]);
+  });
+
   it("poistaa vanhat julkaistut tiedostot ja kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle", async () => {
+    MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -558,6 +597,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
     expect(files).to.eql([
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
@@ -578,6 +618,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle, kun julkaistaan ekaa kertaa", async () => {
+    MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -594,6 +635,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
     expect(files).to.eql([
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",

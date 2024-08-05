@@ -6,7 +6,13 @@ import { omit } from "lodash";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName } from "../../tiedostot/paths";
+import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  adaptFileName,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
@@ -18,9 +24,12 @@ import {
 } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { fileService } from "../../files/fileService";
+import { S3_METADATA_ASIAKIRJATYYPPI, S3_METADATA_FILE_TYPE, fileService } from "../../files/fileService";
 import Mail from "nodemailer/lib/mailer";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
+import { EmailOptions } from "../../email/model/emailOptions";
+import { emailOptionsToEml } from "../../email/emailUtil";
+import putFile from "../s3Calls/putFile";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -46,9 +55,9 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-
     try {
       await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+      await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
     } catch (e) {
       lahetysvirhe = true;
       log.error("Sähköpostin lähettäminen vastaanottajille ei onnistunut", (e as Error).message);
@@ -131,4 +140,23 @@ async function copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid: string, muoka
   const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(muokattavaHyvaksymisEsitys);
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   await copyFilesFromVaiheToAnother(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, JULKAISTU_HYVAKSYMISESITYS_PATH, [...tiedostot, ...aineistot]);
+}
+
+export async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise<string> {
+  const filename = `${nyt().format()}_hyvaksymisesitys.eml`;
+  const contents = await emailOptionsToEml(emailOptions);
+  const targetPath = joinPath(getYllapitoPathForProjekti(oid), "hyvaksymisesityksen_spostit", adaptFileName(filename));
+  const contentType = "message/rfc822";
+  const asiakirjaTyyppi = API.AsiakirjaTyyppi.HYVAKSYMISESITYS_SAHKOPOSTI;
+  const metadata = {
+    [S3_METADATA_ASIAKIRJATYYPPI]: asiakirjaTyyppi,
+    [S3_METADATA_FILE_TYPE]: contentType,
+  };
+  await putFile({
+    contents,
+    filename,
+    targetPath,
+    metadata,
+  });
+  return targetPath;
 }

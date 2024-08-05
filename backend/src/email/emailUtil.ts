@@ -37,7 +37,7 @@ export async function saveEmailAsFile(
   };
 }
 
-async function emailOptionsToEml(emailOptions: EmailOptions): Promise<Buffer> {
+export async function emailOptionsToEml(emailOptions: EmailOptions): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const mail = new MailComposer(emailOptions);
     mail.compile().build(function (err, message) {
