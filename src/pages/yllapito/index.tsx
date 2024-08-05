@@ -8,7 +8,6 @@ import {
   SuunnittelustaVastaavaViranomainen,
 } from "@services/api";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Tabs from "@components/layout/tabs/Tabs";
 import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
@@ -31,6 +30,7 @@ import { formatDate, isValidDate } from "hassu-common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import VirkamiesEtusivuTabs from "../../components/layout/tabs/VirkamiesEtusivuTabs";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -179,6 +179,26 @@ const VirkamiesHomePage = () => {
     Status.HYVAKSYTTY,
   ];
 
+  const kategoriat = [
+    {
+      label: "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
+      value: ProjektiTyyppi.TIE,
+    },
+    {
+      label: "Ratasuunnitelmat" + (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})` : ""),
+      value: ProjektiTyyppi.RATA,
+    },
+    {
+      label:
+        "Yleissuunnitelmat" + (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
+      value: ProjektiTyyppi.YLEINEN,
+    },
+    {
+      label: "Epäaktiiviset" + (hakutulos?.hasOwnProperty("epaaktiivisetMaara") ? ` (${tuloksienMaarat.epaaktiiviset})` : ""),
+      value: "epaaktiiviset",
+    },
+  ];
+
   return (
     <>
       <h1 className="vayla-title">Projektit</h1>
@@ -254,9 +274,10 @@ const VirkamiesHomePage = () => {
       </form>
 
       <Section noDivider>
-        <Tabs
+        <VirkamiesEtusivuTabs
           value={aktiivinenTabi}
-          onChange={(_, value) => {
+          tabItems={kategoriat}
+          onChange={(_: any, value: any) => {
             if (value === "epaaktiiviset") {
               router.push({ query: { epaaktiivinen: "true" } }, undefined, { scroll: false });
               fetchProjektit({ ...searchInput, projektiTyyppi: null, epaaktiivinen: true, sivunumero: 0 });
@@ -266,29 +287,6 @@ const VirkamiesHomePage = () => {
               fetchProjektit({ ...searchInput, epaaktiivinen: false, projektiTyyppi, sivunumero: 0 });
             }
           }}
-          tabs={[
-            {
-              label:
-                "Tiesuunnitelmat" + (hakutulos?.hasOwnProperty("tiesuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TIE]})` : ""),
-              value: ProjektiTyyppi.TIE,
-            },
-            {
-              label:
-                "Ratasuunnitelmat" +
-                (hakutulos?.hasOwnProperty("ratasuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.RATA]})` : ""),
-              value: ProjektiTyyppi.RATA,
-            },
-            {
-              label:
-                "Yleissuunnitelmat" +
-                (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
-              value: ProjektiTyyppi.YLEINEN,
-            },
-            {
-              label: "Epäaktiiviset" + (hakutulos?.hasOwnProperty("epaaktiivisetMaara") ? ` (${tuloksienMaarat.epaaktiiviset})` : ""),
-              value: "epaaktiiviset",
-            },
-          ]}
         />
         {hakutulos?.tulokset?.length ? (
           <FrontPageTable
@@ -432,6 +430,14 @@ const FrontPageTable = (props: FrontPageTableProps) => {
           event.preventDefault();
           props.openUnauthorizedDialog(projekti);
         }
+      },
+      customRowStyles: {
+        ":hover": {
+          "> div > div:nth-of-type(1) > div": {
+            textDecoration: "underline 2px #0064af",
+            textUnderlineOffset: "4px",
+          },
+        },
       },
     },
   });
