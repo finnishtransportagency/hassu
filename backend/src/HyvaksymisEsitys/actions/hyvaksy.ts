@@ -142,7 +142,7 @@ async function copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid: string, muoka
   await copyFilesFromVaiheToAnother(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, JULKAISTU_HYVAKSYMISESITYS_PATH, [...tiedostot, ...aineistot]);
 }
 
-export async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise<string> {
+async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise<string> {
   const filename = `${nyt().format()}_hyvaksymisesitys.eml`;
   const contents = await emailOptionsToEml(emailOptions);
   const targetPath = joinPath(getYllapitoPathForProjekti(oid), "hyvaksymisesityksen_spostit", adaptFileName(filename));
