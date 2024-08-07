@@ -31,10 +31,7 @@ import { EmailOptions } from "../../email/model/emailOptions";
 import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
-<<<<<<< HEAD
 import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
-=======
->>>>>>> a34dbf2c (Tsekkaa jokaiselle vastaanottajalle erikseen, onko s.posti lähtenyt, ja tallenna tieto, mm. messageId.)
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
