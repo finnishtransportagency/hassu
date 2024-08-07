@@ -70,6 +70,20 @@ export function examineEmailSentResults(
   }
 }
 
+export function isEmailSent(email: string, sentMessageInfo: SMTPTransport.SentMessageInfo | undefined): boolean {
+  if (!sentMessageInfo) {
+    return false;
+  }
+
+  if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending?.find((pending) => pending == email)) {
+    return true;
+  }
+  if (sentMessageInfo?.rejected.find((rejected) => rejected == email)) {
+    return false;
+  }
+  throw new Error(`Annettua sähköpostia ${email} ei löydy sentMessageInfosta`);
+}
+
 // eslint-disable-next-line no-useless-escape
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 export function isValidEmail(email: string): boolean {

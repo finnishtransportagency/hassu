@@ -28,8 +28,9 @@ import { S3_METADATA_ASIAKIRJATYYPPI, fileService } from "../../files/fileServic
 import Mail from "nodemailer/lib/mailer";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { EmailOptions } from "../../email/model/emailOptions";
-import { emailOptionsToEml } from "../../email/emailUtil";
+import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -45,7 +46,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
 
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
-  let lahetysvirhe: boolean = false;
+  let messageInfo: SMTPTransport.SentMessageInfo | undefined;
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
     const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
@@ -55,23 +56,29 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-    try {
-      await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
-      const messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
-      if (messageInfo?.rejected || messageInfo?.pending) {
-        throw new Error(
-          `Sähköpostin lähetys kaikille vastaanottajille ei onnistunut. Onnistuneet lähetykset: ${
-            messageInfo.accepted.length ? messageInfo.accepted.map((acc) => acc.toString()).join(", ") : "-"
-          }`
-        );
-      }
-    } catch (e) {
-      lahetysvirhe = true;
-      log.error("Sähköpostin lähettäminen vastaanottajille ei onnistunut", (e as Error).message);
-    }
+    await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
+    messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
+
+  const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
+    if (isEmailSent(vo.sahkoposti, messageInfo)) {
+      return {
+        ...vo,
+        lahetetty: nyt().format(),
+        messageId: messageInfo?.messageId,
+      };
+    } else {
+      if (messageInfo) {
+        log.error(`Sähköpostin lähettäminen vastaanottajalle ${vo.sahkoposti} ei onnistunut`);
+      }
+      return {
+        ...vo,
+        lahetysvirhe: true,
+      };
+    }
+  });
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
   // Vastaanottajiin lisätään lähetystieto.
@@ -81,11 +88,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
-    vastaanottajat: projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => ({
-      ...vo,
-      lahetetty: lahetysvirhe ? undefined : nyt().format(),
-      lahetysvirhe,
-    })),
+    vastaanottajat,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
 
