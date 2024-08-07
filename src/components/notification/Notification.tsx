@@ -49,16 +49,6 @@ interface Props {
   onClose?: MouseEventHandler;
 }
 
-type Tprops = {
-  children?: ReactNode;
-  type?: NotificationType;
-  icon?: IconProp;
-  hideIcon?: boolean;
-  closable?: boolean;
-  open?: boolean;
-  onClose?: (event: Event) => void | (() => void);
-}
-
 const NotificationContent = styled("div")(
   sx({
     display: "flex",
