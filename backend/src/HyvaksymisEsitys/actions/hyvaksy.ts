@@ -57,7 +57,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-    await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
+    await saveEmailAsFile(oid, emailOptions);
     messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
