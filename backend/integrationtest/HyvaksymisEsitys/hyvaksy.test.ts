@@ -80,7 +80,17 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
 
     // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail");
+    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
+      messageId: "messageId123",
+      accepted: ["vastaanottaja@sahkoposti.fi"],
+      rejected: [],
+      pending: [],
+      envelope: {
+        from: false,
+        to: [],
+      },
+      response: "response",
+    });
 
     // Stubataan parametrien hakeminen aws:stä
     const getParameterStub = sinon.stub(parameters, "getParameter");
@@ -149,7 +159,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         vastaanottajat: [
           {
             lahetetty: "2000-01-01T02:00:00+02:00",
-            lahetysvirhe: false,
+            messageId: "messageId123",
             sahkoposti: "vastaanottaja@sahkoposti.fi",
           },
         ],
@@ -175,9 +185,20 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     await expect(kutsu).to.eventually.be.rejectedWith(IllegalArgumentError, "Projektin hyväksymisesitysvaihe ei ole aktiivinen");
   });
+
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sellainen tapahtuu", async () => {
     MockDate.set("2000-01-01");
-    emailStub?.onFirstCall().throws();
+    emailStub?.onFirstCall().resolves({
+      messageId: "messageId123",
+      accepted: [],
+      rejected: ["vastaanottaja@sahkoposti.fi"],
+      pending: [],
+      envelope: {
+        from: false,
+        to: [],
+      },
+      response: "response",
+    });
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -194,6 +215,77 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja@sahkoposti.fi",
+        lahetysvirhe: true,
+      },
+    ]);
+  });
+
+  it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
+    MockDate.set("2000-01-01");
+    emailStub?.onFirstCall().resolves(undefined);
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+      {
+        sahkoposti: "vastaanottaja@sahkoposti.fi",
+        lahetysvirhe: true,
+      },
+    ]);
+  });
+
+  it("hallitsee tilanteen, jossa yksi s.posti onnistuu ja toinen ei", async () => {
+    MockDate.set("2000-01-01");
+    emailStub?.onFirstCall().resolves({
+      messageId: "messageId123",
+      accepted: ["vastaanottaja1@sahkoposti.fi"],
+      rejected: ["vastaanottaja2@sahkoposti.fi"],
+      pending: [],
+      envelope: {
+        from: false,
+        to: [],
+      },
+      response: "response",
+    });
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      vastaanottajat: [
+        {
+          sahkoposti: `vastaanottaja1@sahkoposti.fi`,
+        },
+        {
+          sahkoposti: `vastaanottaja2@sahkoposti.fi`,
+        },
+      ],
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+      {
+        sahkoposti: "vastaanottaja1@sahkoposti.fi",
+        lahetetty: "2000-01-01T02:00:00+02:00",
+        messageId: "messageId123",
+      },
+      {
+        sahkoposti: "vastaanottaja2@sahkoposti.fi",
         lahetysvirhe: true,
       },
     ]);
