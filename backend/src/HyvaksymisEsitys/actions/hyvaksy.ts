@@ -32,6 +32,9 @@ import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { uuid } from "hassu-common/util/uuid";
+import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -48,6 +51,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
   let messageInfo: SMTPTransport.SentMessageInfo | undefined;
+  let s3PathForEmail: string | undefined;
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
     const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
@@ -57,10 +61,30 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-    await saveEmailAsFile(oid, emailOptions);
+    // Tallenna s.posti S3:een
+    s3PathForEmail = await saveEmailAsFile(oid, emailOptions);
     messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
+  }
+
+  const asiatunnus = projektiInDB.velho?.asiatunnusVayla ?? projektiInDB.velho?.asiatunnusELY;
+  assertIsDefined(asiatunnus, "Joko väylä- tai ELY-asiatunnus on olemassa");
+
+  let asianhallintaEventId: string | undefined;
+  if (s3PathForEmail) {
+    // Laita synkronointi-event ashaan
+    asianhallintaEventId = uuid.v4();
+    await asianhallintaService.saveAndEnqueueSynchronization(oid, {
+      asiatunnus,
+      asianhallintaEventId,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projektiInDB),
+      dokumentit: [
+        {
+          s3Path: s3PathForEmail,
+        },
+      ],
+    });
   }
 
   const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
@@ -90,6 +114,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
     vastaanottajat,
+    asianhallintaEventId,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
 

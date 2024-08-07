@@ -20,6 +20,8 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { parameters } from "../../src/aws/parameters";
 import MockDate from "mockdate";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { asianhallintaService } from "../../src/asianhallinta/asianhallintaService";
+import { uuid } from "hassu-common/util/uuid";
 
 const oid = "Testi1";
 
@@ -27,7 +29,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
   vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
-  asianhallinta: { inaktiivinen: true },
+  asianhallinta: { inaktiivinen: false },
   euRahoitus: false,
   kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
   kayttoOikeudet: [
@@ -72,7 +74,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
   let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
-
+  let ashaStub: sinon.SinonStub<[oid: string, asianhallintaEventId: string], Promise<void>> | undefined;
   // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
 
   before(async () => {
@@ -91,6 +93,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       }
       return Promise.resolve("getParameterValue_" + paramName);
     });
+    ashaStub = sinon.stub(asianhallintaService, "enqueueSynchronization");
+    sinon.stub(uuid, "v4").returns("uuid123");
   });
 
   beforeEach(async () => {
@@ -103,16 +107,18 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     );
 
     // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
-      messageId: "messageId123",
-      accepted: ["vastaanottaja@sahkoposti.fi"],
-      rejected: [],
-      pending: [],
-      envelope: {
-        from: false,
-        to: [],
-      },
-      response: "response",
+    emailStub = sinon.stub(emailClient, "sendEmail").callsFake(async () => {
+      return Promise.resolve({
+        messageId: "messageId123",
+        accepted: ["vastaanottaja@sahkoposti.fi"],
+        rejected: [],
+        pending: [],
+        envelope: {
+          from: false,
+          to: [],
+        },
+        response: "response",
+      });
     });
   });
 
@@ -125,6 +131,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     emailStub?.reset();
     emailStub?.restore();
     MockDate.reset();
+    ashaStub?.reset();
   });
 
   after(() => {
@@ -132,7 +139,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     sinon.restore();
   });
 
-  it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot", async () => {
+  it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot ja lisää ashasynkronoinnin", async () => {
     MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
@@ -155,6 +162,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       versio: projektiBefore.versio + 1,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.HYVAKSYTTY, palautusSyy: null },
       julkaistuHyvaksymisEsitys: {
+        asianhallintaEventId: "uuid123",
         ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
         hyvaksyja: "theadminuid",
         vastaanottajat: [
@@ -165,9 +173,24 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           },
         ],
       },
+      synkronoinnit: {
+        uuid123: {
+          asianhallintaEventId: "uuid123",
+          asiatunnus: "asiatunnusELY",
+          dokumentit: [
+            {
+              s3Path: "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml",
+            },
+          ],
+          vaylaAsianhallinta: false,
+        },
+      },
     });
     expect(projektiAfter.paivitetty).to.exist;
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
+
+    expect(ashaStub?.calledOnce).to.be.true;
+    expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123"]);
   });
 
   it("ei onnistu, jos projektin status on liian pieni", async () => {
@@ -631,6 +654,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const projektiAfter = await getProjektiFromDB(oid);
     expect(omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva")).to.eql({
+      asianhallintaEventId: "uuid123",
       ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
       hyvaksyja: "theadminuid",
       vastaanottajat: [
