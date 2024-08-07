@@ -79,6 +79,19 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
 
+    // Stubataan sähköpostin lähettäminen
+    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
+      messageId: "messageId123",
+      accepted: ["vastaanottaja@sahkoposti.fi"],
+      rejected: [],
+      pending: [],
+      envelope: {
+        from: false,
+        to: [],
+      },
+      response: "response",
+    });
+
     // Stubataan parametrien hakeminen aws:stä
     const getParameterStub = sinon.stub(parameters, "getParameter");
 
@@ -200,6 +213,30 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       },
       response: "response",
     });
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+      {
+        sahkoposti: "vastaanottaja@sahkoposti.fi",
+        lahetysvirhe: true,
+      },
+    ]);
+  });
+
+  it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
+    MockDate.set("2000-01-01");
+    emailStub?.onFirstCall().resolves(undefined);
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
