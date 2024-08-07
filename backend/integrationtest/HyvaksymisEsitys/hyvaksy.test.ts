@@ -561,9 +561,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(emailFilesBefore).to.eql([]);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const emailFilesAfter = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}/hyvaksymisesityksen_spostit/`);
-    expect(emailFilesAfter).to.eql([
-      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
-    ]);
+    expect(emailFilesAfter).to.eql(["yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml"]);
   });
 
   it("poistaa vanhat julkaistut tiedostot ja kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle", async () => {
@@ -597,7 +595,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
     expect(files).to.eql([
-      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
@@ -635,7 +633,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const files = await getYllapitoFilesUnderPath(`yllapito/tiedostot/projekti/${oid}`);
     expect(files).to.eql([
-      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/2000-01-01T02_00_00_02_00_hyvaksymisesitys.eml",
+      "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
       "yllapito/tiedostot/projekti/Testi1/hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
