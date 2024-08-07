@@ -31,6 +31,7 @@ import { EmailOptions } from "../../email/model/emailOptions";
 import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -156,7 +157,7 @@ async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise
   const filename = `${nyt().format("YYYYMMDD-HHmmss")}_hyvaksymisesitys.eml`;
   const contents = await emailOptionsToEml(emailOptions);
   const targetPath = joinPath(getYllapitoPathForProjekti(oid), "hyvaksymisesityksen_spostit", adaptFileName(filename));
-  const asiakirjaTyyppi = API.AsiakirjaTyyppi.HYVAKSYMISESITYS_SAHKOPOSTI;
+  const asiakirjaTyyppi: AsiakirjaTyyppi = API.AsiakirjaTyyppi.HYVAKSYMISESITYS_SAHKOPOSTI;
   const metadata = {
     [S3_METADATA_ASIAKIRJATYYPPI]: asiakirjaTyyppi,
   };
