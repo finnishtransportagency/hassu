@@ -7,7 +7,6 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontaw
 import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
-import { useRouter } from "next/router";
 import { H2 } from "../Headings";
 import { useYllapito } from "../../hooks/useYllapito";
 
