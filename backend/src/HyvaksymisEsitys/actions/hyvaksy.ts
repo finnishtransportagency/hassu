@@ -57,7 +57,14 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     }
     try {
       await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
-      await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+      const messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+      if (messageInfo?.rejected || messageInfo?.pending) {
+        throw new Error(
+          `Sähköpostin lähetys kaikille vastaanottajille ei onnistunut. Onnistuneet lähetykset: ${
+            messageInfo.accepted.length ? messageInfo.accepted.map((acc) => acc.toString()).join(", ") : "-"
+          }`
+        );
+      }
     } catch (e) {
       lahetysvirhe = true;
       log.error("Sähköpostin lähettäminen vastaanottajille ei onnistunut", (e as Error).message);
