@@ -9,6 +9,7 @@ import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
 import { useRouter } from "next/router";
 import { H2 } from "../Headings";
+import { useYllapito } from "../../hooks/useYllapito";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -77,9 +78,7 @@ export const Footer = () => {
   const { t, lang } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const router = useRouter();
-  const isYllapito = router.asPath.startsWith("/yllapito");
-  console.log("ylläpito: ", isYllapito);
+  const isYllapito = useYllapito()
 
   return (
     <footer className="py-16 bg-gray-lightest w-full mt-auto">
