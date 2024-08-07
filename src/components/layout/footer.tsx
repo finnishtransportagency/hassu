@@ -77,7 +77,7 @@ export const Footer = () => {
   const { t, lang } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const isYllapito = useYllapito()
+  const isYllapito = useYllapito();
 
   return (
     <footer className="py-16 bg-gray-lightest w-full mt-auto">
@@ -145,24 +145,20 @@ export const Footer = () => {
             </ContentSpacer>
           ) : (
             <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
-              <ContentSpacer sx={{ textAlign: { xs: "center", lg: "start" } }} gap={0}>
-                <H2 variant={"plain"} sx={{ fontSize: { xs: "1.5rem", lg: "1rem" }, marginBottom: { xs: "1rem", lg: "0" } }}>
-                  {t("linkki.ohjeet")}
-                </H2>
+              <LinkkiListaGroup gap={0}>
+                <LinkkilistaTitle variant="plain">{t("linkki.ohjeet")}</LinkkilistaTitle>
                 <LinkkilistaVertical style={{ rowGap: 0 }}>
                   <FooterLinkkiEl href={t("linkki.ohjeluettelo.linkki")} teksti={t("linkki.ohjeluettelo.teksti")} />
                   <FooterLinkkiEl href={t("linkki.projektivelhon_ohjeet.linkki")} teksti={t("linkki.projektivelhon_ohjeet.teksti")} />
                 </LinkkilistaVertical>
-              </ContentSpacer>
-              <ContentSpacer sx={{ textAlign: { xs: "center", lg: "start" } }} gap={0}>
-                <H2 variant={"plain"} sx={{ fontSize: { xs: "1.5rem", lg: "1rem" }, marginBottom: { xs: "1rem", lg: "0" } }}>
-                  {t("linkki.oikopolut")}
-                </H2>
+              </LinkkiListaGroup>
+              <LinkkiListaGroup gap={0}>
+                <LinkkilistaTitle variant="plain">{t("linkki.oikopolut")}</LinkkilistaTitle>
                 <LinkkilistaVertical style={{ rowGap: 0 }}>
                   <FooterLinkkiEl href={t("linkki.etakaytto.linkki")} teksti={t("linkki.etakaytto.teksti")} />
                   <FooterLinkkiEl href={t("linkki.projektivelho.linkki")} teksti={t("linkki.projektivelho.teksti")} />
                 </LinkkilistaVertical>
-              </ContentSpacer>
+              </LinkkiListaGroup>
             </ContentSpacer>
           )}
           <Linkkilista2>
@@ -253,5 +249,18 @@ const LinkkilistaVertical = styled("ul")(
     display: "flex",
     flexWrap: "wrap",
     flexDirection: "column",
+  })
+);
+
+const LinkkilistaTitle = styled(H2)(
+  sx({
+    fontSize: { xs: "1.5rem", lg: "1rem" },
+    marginBottom: { xs: "1rem", lg: "0" },
+  })
+);
+
+const LinkkiListaGroup = styled(ContentSpacer)(
+  sx({
+    textAlign: { xs: "center", lg: "start" },
   })
 );
