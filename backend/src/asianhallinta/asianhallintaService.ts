@@ -30,7 +30,7 @@ import { getVaylaUser } from "../user";
 class AsianhallintaService { //NOSONAR
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
     const projekti = await this.haeProjekti(oid);
-    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) { 
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
