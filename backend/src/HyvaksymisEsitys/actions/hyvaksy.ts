@@ -73,7 +73,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
 
   let asianhallintaEventId: string | undefined;
   if (s3PathForEmail) {
-    // Laita synkronointi-event ashaan
+    // Laita synkronointi-event ashaan ja tietokantaan
     asianhallintaEventId = uuid.v4();
     await asianhallintaService.saveAndEnqueueSynchronization(oid, {
       asiatunnus,
@@ -86,6 +86,9 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
       ],
     });
   }
+
+  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
+  // Vastaanottajiin lisätään lähetystieto.
 
   const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
     if (isEmailSent(vo.sahkoposti, messageInfo)) {
@@ -105,8 +108,6 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     }
   });
 
-  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
-  // Vastaanottajiin lisätään lähetystieto.
   assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
   const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
     ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "vastaanottajat"]),
