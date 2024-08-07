@@ -42,7 +42,6 @@ const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: Accord
               type={NotificationType.INFO_GRAY}
               cursor="pointer"
               onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
               onClick={(event) => {event.stopPropagation(), setShowTooltip(true)}}
             />
         )}
@@ -51,7 +50,7 @@ const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: Accord
         type={NotificationType.INFO_GRAY}
         className="mt-4"
         open={showTooltip}
-        onClose={() => setShowTooltip(false)}
+        onClose={(event) => {event.stopPropagation(), setShowTooltip(false)}}
         closable
         style={{ maxWidth: "40rem" }}
       >
