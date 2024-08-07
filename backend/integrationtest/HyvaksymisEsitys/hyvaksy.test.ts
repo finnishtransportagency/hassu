@@ -79,19 +79,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
 
-    // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
-      messageId: "messageId123",
-      accepted: ["vastaanottaja@sahkoposti.fi"],
-      rejected: [],
-      pending: [],
-      envelope: {
-        from: false,
-        to: [],
-      },
-      response: "response",
-    });
-
     // Stubataan parametrien hakeminen aws:stä
     const getParameterStub = sinon.stub(parameters, "getParameter");
 
@@ -114,6 +101,19 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         await insertYllapitoFileToS3(fullpath);
       })
     );
+
+    // Stubataan sähköpostin lähettäminen
+    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
+      messageId: "messageId123",
+      accepted: ["vastaanottaja@sahkoposti.fi"],
+      rejected: [],
+      pending: [],
+      envelope: {
+        from: false,
+        to: [],
+      },
+      response: "response",
+    });
   });
 
   afterEach(async () => {
@@ -123,6 +123,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await removeProjektiFromDB(oid);
     userFixture.logout();
     emailStub?.reset();
+    emailStub?.restore();
     MockDate.reset();
   });
 
@@ -611,7 +612,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       vastaanottajat: [
         {
           lahetetty: "2000-01-01T02:00:00+02:00",
-          lahetysvirhe: false,
+          messageId: "messageId123",
           sahkoposti: "vastaanottaja@sahkoposti.fi",
         },
       ],
