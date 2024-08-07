@@ -7,6 +7,8 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontaw
 import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
+import { useRouter } from "next/router";
+import { H2 } from "../Headings";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -75,6 +77,9 @@ export const Footer = () => {
   const { t, lang } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
+  const router = useRouter();
+  const isYllapito = router.asPath.startsWith("/yllapito");
+  console.log("ylläpito: ", isYllapito);
 
   return (
     <footer className="py-16 bg-gray-lightest w-full mt-auto">
@@ -109,36 +114,59 @@ export const Footer = () => {
           </div>
         </div>
         <div style={{ width: "100%" }}>
-          <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
-            <ContentSpacer gap={4}>
-              <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
-              <SocialMediaLinkList>
-                {vaylaSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-                  <SocialMediaLink
-                    key={title}
-                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.vayla.etuliite_genetiivi")} ${
-                      lang == "fi" ? titleIllatiivi : title
-                    }`}
-                    {...socialMedia}
-                  />
-                ))}
-              </SocialMediaLinkList>
+          {!isYllapito ? (
+            <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
+              <ContentSpacer gap={4}>
+                <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
+                <SocialMediaLinkList>
+                  {vaylaSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+                    <SocialMediaLink
+                      key={title}
+                      title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.vayla.etuliite_genetiivi")} ${
+                        lang == "fi" ? titleIllatiivi : title
+                      }`}
+                      {...socialMedia}
+                    />
+                  ))}
+                </SocialMediaLinkList>
+              </ContentSpacer>
+              <ContentSpacer gap={4}>
+                <p>{t("sosiaalinen_media.ely.otsikko")}</p>
+                <SocialMediaLinkList>
+                  {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+                    <SocialMediaLink
+                      key={title}
+                      title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
+                        lang == "fi" ? titleIllatiivi : title
+                      }`}
+                      {...socialMedia}
+                    />
+                  ))}
+                </SocialMediaLinkList>
+              </ContentSpacer>
             </ContentSpacer>
-            <ContentSpacer gap={4}>
-              <p>{t("sosiaalinen_media.ely.otsikko")}</p>
-              <SocialMediaLinkList>
-                {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-                  <SocialMediaLink
-                    key={title}
-                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
-                      lang == "fi" ? titleIllatiivi : title
-                    }`}
-                    {...socialMedia}
-                  />
-                ))}
-              </SocialMediaLinkList>
+          ) : (
+            <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
+              <ContentSpacer sx={{ textAlign: { xs: "center", lg: "start" } }} gap={0}>
+                <H2 variant={"plain"} sx={{ fontSize: { xs: "1.5rem", lg: "1rem" }, marginBottom: { xs: "1rem", lg: "0" } }}>
+                  {t("linkki.ohjeet")}
+                </H2>
+                <LinkkilistaVertical style={{ rowGap: 0 }}>
+                  <FooterLinkkiEl href={t("linkki.ohjeluettelo.linkki")} teksti={t("linkki.ohjeluettelo.teksti")} />
+                  <FooterLinkkiEl href={t("linkki.projektivelhon_ohjeet.linkki")} teksti={t("linkki.projektivelhon_ohjeet.teksti")} />
+                </LinkkilistaVertical>
+              </ContentSpacer>
+              <ContentSpacer sx={{ textAlign: { xs: "center", lg: "start" } }} gap={0}>
+                <H2 variant={"plain"} sx={{ fontSize: { xs: "1.5rem", lg: "1rem" }, marginBottom: { xs: "1rem", lg: "0" } }}>
+                  {t("linkki.oikopolut")}
+                </H2>
+                <LinkkilistaVertical style={{ rowGap: 0 }}>
+                  <FooterLinkkiEl href={t("linkki.etakaytto.linkki")} teksti={t("linkki.etakaytto.teksti")} />
+                  <FooterLinkkiEl href={t("linkki.projektivelho.linkki")} teksti={t("linkki.projektivelho.teksti")} />
+                </LinkkilistaVertical>
+              </ContentSpacer>
             </ContentSpacer>
-          </ContentSpacer>
+          )}
           <Linkkilista2>
             <li>
               <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta">
@@ -219,5 +247,13 @@ const Linkkilista2 = styled("ul")(
     marginTop: 15,
     flexDirection: { xs: "column", lg: "row" },
     textAlign: { xs: "center", lg: null },
+  })
+);
+
+const LinkkilistaVertical = styled("ul")(
+  sx({
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
   })
 );
