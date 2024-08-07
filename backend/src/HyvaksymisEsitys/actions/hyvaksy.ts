@@ -24,7 +24,7 @@ import {
 } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { S3_METADATA_ASIAKIRJATYYPPI, S3_METADATA_FILE_TYPE, fileService } from "../../files/fileService";
+import { S3_METADATA_ASIAKIRJATYYPPI, fileService } from "../../files/fileService";
 import Mail from "nodemailer/lib/mailer";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { EmailOptions } from "../../email/model/emailOptions";
@@ -146,11 +146,9 @@ async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise
   const filename = `${nyt().format()}_hyvaksymisesitys.eml`;
   const contents = await emailOptionsToEml(emailOptions);
   const targetPath = joinPath(getYllapitoPathForProjekti(oid), "hyvaksymisesityksen_spostit", adaptFileName(filename));
-  const contentType = "message/rfc822";
   const asiakirjaTyyppi = API.AsiakirjaTyyppi.HYVAKSYMISESITYS_SAHKOPOSTI;
   const metadata = {
     [S3_METADATA_ASIAKIRJATYYPPI]: asiakirjaTyyppi,
-    [S3_METADATA_FILE_TYPE]: contentType,
   };
   await putFile({
     contents,
