@@ -79,19 +79,6 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projektin tiedostot testisetin alussa
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
 
-    // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
-      messageId: "messageId123",
-      accepted: ["vastaanottaja@sahkoposti.fi"],
-      rejected: [],
-      pending: [],
-      envelope: {
-        from: false,
-        to: [],
-      },
-      response: "response",
-    });
-
     // Stubataan parametrien hakeminen aws:stä
     const getParameterStub = sinon.stub(parameters, "getParameter");
 
