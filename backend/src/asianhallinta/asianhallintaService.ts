@@ -75,7 +75,7 @@ class AsianhallintaService { //NOSONAR
     log.info("enqueueAsianhallintaSynchronization", { result });
   }
 
-  async checkAsianhallintaState(oid: string, vaihe: Vaihe): Promise<AsianTila | undefined> {
+  async checkAsianhallintaState(oid: string, vaihe: Vaihe | "HYVAKSYMISESITYS"): Promise<AsianTila | undefined> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
@@ -164,7 +164,7 @@ class AsianhallintaService { //NOSONAR
   }
 }
 
-const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
+const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe | "HYVAKSYMISESITYS", AsiakirjaTyyppi> = {
   ALOITUSKUULUTUS: "ALOITUSKUULUTUS",
   SUUNNITTELU: "YLEISOTILAISUUS_KUTSU",
   NAHTAVILLAOLO: "NAHTAVILLAOLOKUULUTUS",
