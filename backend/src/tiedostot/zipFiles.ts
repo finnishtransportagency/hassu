@@ -1,4 +1,4 @@
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, NoSuchKey, S3Client } from "@aws-sdk/client-s3";
 import { log } from "../logger";
 import { PassThrough, Readable } from "stream";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -19,8 +19,15 @@ async function getReadableStreamFromS3(bucket: string, s3Key: string) {
     Bucket: bucket,
     Key: s3Key,
   });
-  const response = await s3Client.send(command);
-  return response.Body;
+  try {
+    const response = await s3Client.send(command);
+    return response.Body;
+  } catch (e) {
+    log.error("S3 tiedoston haku epäonnistui zippauksessa", { bucket, s3Key, error: e });
+    if (!(e instanceof NoSuchKey)) {
+      throw e;
+    }
+  }
 }
 
 function getWritableStreamFromS3(bucket: string, zipFileS3Key: string) {
@@ -55,8 +62,11 @@ export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFile
       zip.pipe(passthrough);
       Promise.all(
         zipSourceFiles.map((zipSourceFile) =>
-          getReadableStreamFromS3(bucket, zipSourceFile.s3Key).then((s3ReadableStream) =>
-            zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) })
+          getReadableStreamFromS3(bucket, zipSourceFile.s3Key).then((s3ReadableStream) => {
+            if (s3ReadableStream) {
+              zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
+            }
+          }
           )
         )
       ).then(() => zip.finalize());

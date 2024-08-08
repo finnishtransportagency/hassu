@@ -67,7 +67,7 @@ export abstract class TiedostoManager<T> {
       if (!element.tiedostot) {
         return true;
       }
-      return element.tiedostot?.every((a) => a.tila == LadattuTiedostoTila.VALMIS || a.tiedosto);
+      return element.tiedostot?.every((a) => a.tila == LadattuTiedostoTila.VALMIS);
     }
 
     let ready = true;
