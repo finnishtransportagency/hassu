@@ -153,6 +153,11 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.Ny
   }
   // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
   await validateVaiheOnAktiivinen(projektiInDB);
+  // Asianhallinnan on oltava oikeassa tilassa, jos asha-integraatio on käytössä
+  const asianhallinnanTila = await asianhallintaService.checkAsianhallintaState(projektiInDB.oid, API.Vaihe.HYVAKSYMISESITYS);
+  if (asianhallinnanTila && asianhallinnanTila !== API.AsianTila.VALMIS_VIENTIIN) {
+    throw new IllegalArgumentError(`Suunnitelman asia ei ole valmis vientiin. Vaihe: hyväksymisesitys, tila: ${asianhallinnanTila}`);
+  }
   return nykyinenKayttaja;
 }
 
