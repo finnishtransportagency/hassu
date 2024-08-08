@@ -22,6 +22,7 @@ import MockDate from "mockdate";
 import { DeepReadonly } from "hassu-common/specialTypes";
 import { asianhallintaService } from "../../src/asianhallinta/asianhallintaService";
 import { uuid } from "hassu-common/util/uuid";
+import * as lambda from "../../src/aws/lambda";
 
 const oid = "Testi1";
 
@@ -73,9 +74,13 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
 describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
+  // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
   let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
   let ashaStub: sinon.SinonStub<[oid: string, asianhallintaEventId: string], Promise<void>> | undefined;
-  // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
+  // Lambda, jolla kysytään ashan tilaa
+  let ashaLambdaStub:
+    | sinon.SinonStub<[functionName: string, asynchronousCall: boolean, payload?: string | undefined], Promise<string | undefined>>
+    | undefined;
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
@@ -95,9 +100,11 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     });
     ashaStub = sinon.stub(asianhallintaService, "enqueueSynchronization");
     sinon.stub(uuid, "v4").returns("uuid123");
+    ashaLambdaStub = sinon.stub(lambda, "invokeLambda");
   });
 
   beforeEach(async () => {
+    ashaLambdaStub?.resolves(`{ "synkronointiTila": "VALMIS_VIENTIIN" }`);
     // Aseta muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
       TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
@@ -191,6 +198,27 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
     expect(ashaStub?.calledOnce).to.be.true;
     expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123"]);
+  });
+
+  it("ei onnistu, jos asha on väärässä tilassa", async () => {
+    MockDate.set("2000-01-01");
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    ashaLambdaStub?.resolves(`{ "synkronointiTila": "ASIANHALLINTA_VAARASSA_TILASSA" }`);
+    const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    await expect(kutsu).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Suunnitelman asia ei ole valmis vientiin. Vaihe: hyväksymisesitys, tila: ASIANHALLINTA_VAARASSA_TILASSA"
+    );
   });
 
   it("ei onnistu, jos projektin status on liian pieni", async () => {
