@@ -11,16 +11,19 @@ import { config } from "../../config";
  * @param param0.contents Tiedosto Buffer-muodossa
  * @param param0.filename Filename loppupäätteineen. Saa sisältää erikoismerkkejä.
  * @param param0.targetPath Polku, johon tiedosto luodaan ylläpito-bucketissa. Ei saa alkaa /-merkillä.
+ * @param param0.metadata Metadata. Ei pakollinen.
  */
 
 export default async function putFile({
   contents,
   filename,
   targetPath,
+  metadata,
 }: {
   contents: Buffer;
   filename: string;
   targetPath: string;
+  metadata?: { [p: string]: string };
 }): Promise<void> {
   try {
     const contentDisposition = "inline; filename*=UTF-8''" + encodeURIComponent(adaptFileName(filename));
@@ -32,6 +35,7 @@ export default async function putFile({
         Key: targetPath,
         ContentType: contentType || "application/octet-stream",
         ContentDisposition: contentDisposition,
+        Metadata: metadata ?? {},
       })
     );
     log.info(`Created file ${config.yllapitoBucketName}/${targetPath}`);

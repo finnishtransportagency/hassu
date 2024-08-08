@@ -100,7 +100,7 @@ export enum FileType {
 
 const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
-const S3_METADATA_FILE_TYPE = "filetype";
+export const S3_METADATA_FILE_TYPE = "filetype";
 export const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
 export const S3_METADATA_KIELI = "kieli";
 
