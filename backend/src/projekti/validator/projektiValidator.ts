@@ -17,7 +17,6 @@ import { validateHyvaksymisPaatosJatkoPaatos } from "./validateHyvaksymisPaatosJ
 import { validateKayttoOikeusElyOrganisaatio } from "./validateKayttoOikeusElyOrganisaatio";
 import { validateAloituskuulutus } from "./validateAloituskuulutus";
 import { validateAsianhallinnanAktivointikytkin } from "./validateAsianhallintaAktivointikytkin";
-import { validateHyvaksymisEsitys } from "./validateHyvaksymisEsitys";
 
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
@@ -34,7 +33,6 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateNahtavillaoloVaihe(projekti, apiProjekti, input);
   validateLausuntoPyynnot(projekti, input);
   validateLausuntoPyyntojenTaydennykset(projekti, input);
-  validateHyvaksymisEsitys(projekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   validateAsianhallinnanAktivointikytkin(apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);

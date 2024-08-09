@@ -80,7 +80,7 @@ async function cleanupAloitusKuulutusBeforeApproval(projekti: DBProjekti, aloitu
   }
 }
 
-function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: AloitusKuulutus) {
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined | null, vaihe: AloitusKuulutus) {
   if (isKieliSaame(toissijainenKieli)) {
     assertIsDefined(toissijainenKieli);
     const saamePDFt = vaihe?.aloituskuulutusSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];

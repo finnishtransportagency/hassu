@@ -151,7 +151,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   }
 
   validateSaamePDFsExistIfRequired(
-    toissijainenKieli: Kieli | undefined,
+    toissijainenKieli: Kieli | undefined | null,
     hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt | undefined | null
   ): void {
     if (isKieliSaame(toissijainenKieli)) {

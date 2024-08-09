@@ -110,6 +110,10 @@ class AsianhallintaService { //NOSONAR
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
+    return await this.getAsiaIdByProjekti(projekti);
+  }
+
+  async getAsiaIdByProjekti(projekti: DBProjekti): Promise<number | undefined> {
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
     if (!asiatunnus) {

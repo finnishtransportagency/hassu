@@ -394,7 +394,7 @@ async function createVuorovaikutusKierrosPDF(
   return { ...pdf, fullFilePathInProjekti };
 }
 
-function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: VuorovaikutusKierrosJulkaisu) {
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined | null, vaihe: VuorovaikutusKierrosJulkaisu) {
   if (isKieliSaame(toissijainenKieli)) {
     assertIsDefined(toissijainenKieli);
     const saamePDFt = vaihe?.vuorovaikutusSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];

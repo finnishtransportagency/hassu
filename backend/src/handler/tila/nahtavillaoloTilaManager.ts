@@ -387,7 +387,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 }
 
-function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: NahtavillaoloVaihe) {
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined | null, vaihe: NahtavillaoloVaihe) {
   if (isKieliSaame(toissijainenKieli)) {
     assertIsDefined(toissijainenKieli);
     const saamePDFt = vaihe?.nahtavillaoloSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];

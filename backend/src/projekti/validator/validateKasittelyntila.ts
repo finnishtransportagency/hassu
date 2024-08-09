@@ -27,7 +27,9 @@ export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projek
       // ignore aktiivinen
       return (
         has(input.kasittelynTila, key) &&
+        // @ts-expect-error ignore
         (!isEqual(input.kasittelynTila?.hyvaksymispaatos?.asianumero, projekti.kasittelynTila?.hyvaksymispaatos?.asianumero) ||
+        // @ts-expect-error ignore
           !isEqual(input.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm, projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm))
       );
     };
