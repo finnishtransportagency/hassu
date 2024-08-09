@@ -39,6 +39,11 @@
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
   
+  body :is(a):focus-visible {
+    outline: 2px #0063B5 solid;
+    outline-offset: 0px;    
+  }
+
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus-visible.hassu-input {
     outline: 2px #0063B5 solid;
     outline-offset: -2px;    
