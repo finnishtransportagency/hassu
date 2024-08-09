@@ -37,7 +37,7 @@ export async function saveEmailAsFile(
   };
 }
 
-async function emailOptionsToEml(emailOptions: EmailOptions): Promise<Buffer> {
+export async function emailOptionsToEml(emailOptions: EmailOptions): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const mail = new MailComposer(emailOptions);
     mail.compile().build(function (err, message) {
@@ -68,6 +68,20 @@ export function examineEmailSentResults(
     log.info("Email lähetysvirhe", { rejectedEmail: email });
     vastaanottaja.lahetysvirhe = true;
   }
+}
+
+export function isEmailSent(email: string, sentMessageInfo: SMTPTransport.SentMessageInfo | undefined): boolean {
+  if (!sentMessageInfo) {
+    return false;
+  }
+
+  if (sentMessageInfo?.accepted.find((accepted) => accepted == email) || sentMessageInfo?.pending?.find((pending) => pending == email)) {
+    return true;
+  }
+  if (sentMessageInfo?.rejected.find((rejected) => rejected == email)) {
+    return false;
+  }
+  throw new Error(`Annettua sähköpostia ${email} ei löydy sentMessageInfosta`);
 }
 
 // eslint-disable-next-line no-useless-escape

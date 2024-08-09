@@ -1,6 +1,6 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../config";
-import { DBProjekti, HyvaksymisPaatosVaihe, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
 import { ProjektiDatabase } from "../database/projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";

@@ -6,7 +6,13 @@ import { omit } from "lodash";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
-import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH, adaptFileName } from "../../tiedostot/paths";
+import {
+  JULKAISTU_HYVAKSYMISESITYS_PATH,
+  MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+  adaptFileName,
+  getYllapitoPathForProjekti,
+  joinPath,
+} from "../../tiedostot/paths";
 import { deleteFilesUnderSpecifiedVaihe } from "../s3Calls/deleteFiles";
 import { copyFilesFromVaiheToAnother } from "../s3Calls/copyFiles";
 import { assertIsDefined } from "../../util/assertions";
@@ -18,9 +24,14 @@ import {
 } from "../../email/emailTemplates";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { fileService } from "../../files/fileService";
+import { S3_METADATA_ASIAKIRJATYYPPI, fileService } from "../../files/fileService";
 import Mail from "nodemailer/lib/mailer";
 import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
+import { EmailOptions } from "../../email/model/emailOptions";
+import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
+import putFile from "../s3Calls/putFile";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -36,7 +47,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
 
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
-  let lahetysvirhe: boolean = false;
+  let messageInfo: SMTPTransport.SentMessageInfo | undefined;
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
     const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
@@ -46,16 +57,29 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-
-    try {
-      await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
-    } catch (e) {
-      lahetysvirhe = true;
-      log.error("Sähköpostin lähettäminen vastaanottajille ei onnistunut", (e as Error).message);
-    }
+    await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
+    messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
+
+  const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
+    if (isEmailSent(vo.sahkoposti, messageInfo)) {
+      return {
+        ...vo,
+        lahetetty: nyt().format(),
+        messageId: messageInfo?.messageId,
+      };
+    } else {
+      if (messageInfo) {
+        log.error(`Sähköpostin lähettäminen vastaanottajalle ${vo.sahkoposti} ei onnistunut`);
+      }
+      return {
+        ...vo,
+        lahetysvirhe: true,
+      };
+    }
+  });
 
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
   // Vastaanottajiin lisätään lähetystieto.
@@ -65,11 +89,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
-    vastaanottajat: projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => ({
-      ...vo,
-      lahetetty: lahetysvirhe ? undefined : nyt().format(),
-      lahetysvirhe,
-    })),
+    vastaanottajat,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
 
@@ -131,4 +151,21 @@ async function copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid: string, muoka
   const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(muokattavaHyvaksymisEsitys);
   const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   await copyFilesFromVaiheToAnother(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, JULKAISTU_HYVAKSYMISESITYS_PATH, [...tiedostot, ...aineistot]);
+}
+
+async function saveEmailAsFile(oid: string, emailOptions: EmailOptions): Promise<string> {
+  const filename = `${nyt().format("YYYYMMDD-HHmmss")}_hyvaksymisesitys.eml`;
+  const contents = await emailOptionsToEml(emailOptions);
+  const targetPath = joinPath(getYllapitoPathForProjekti(oid), "hyvaksymisesityksen_spostit", adaptFileName(filename));
+  const asiakirjaTyyppi: AsiakirjaTyyppi = API.AsiakirjaTyyppi.HYVAKSYMISESITYS_SAHKOPOSTI;
+  const metadata = {
+    [S3_METADATA_ASIAKIRJATYYPPI]: asiakirjaTyyppi,
+  };
+  await putFile({
+    contents,
+    filename,
+    targetPath,
+    metadata,
+  });
+  return targetPath;
 }
