@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot } from "@services/api";
+import { HyvaksymisEsityksenTiedot, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
@@ -29,6 +29,8 @@ import MuokkausLomakePainikkeet from "./LomakeComponents/MuokkausLomakePainikkee
 import useValidationMode from "src/hooks/useValidationMode";
 import { TestType } from "common/schema/common";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
+import { KatsoTarkemmatASHAOhjeetLink } from "@components/projekti/common/KatsoTarkemmatASHAOhjeetLink";
+import useCurrentUser from "src/hooks/useCurrentUser";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -39,6 +41,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     () => getDefaultValuesForForm(hyvaksymisEsityksenTiedot),
     [hyvaksymisEsityksenTiedot]
   );
+  const { data: nykyinenKayttaja } = useCurrentUser();
 
   const validationMode = useValidationMode();
 
@@ -88,6 +91,14 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
             <form>
               <Section>
                 <OhjelistaNotification onClose={ohjeetOnClose} open={ohjeetOpen}>
+                  {hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO &&
+                    nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
+                      <li>
+                        Ennen Hyväksymisesityksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide,
+                        joka on nimeltään Hyväksymisesityksen lähettäminen Traficomiin. Hyväksymisesityken lähettäminen ei ole mahdollista,
+                        jos asianhallintajärjestelmässä on väärä toimenpide auki. <KatsoTarkemmatASHAOhjeetLink />
+                      </li>
+                    )}
                   <li>
                     Tällä sivulla luodaan hyväksymisesityksenä lähetettävän suunnitelman aineiston sisältö ja määritellään sen
                     vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkistä pääsee

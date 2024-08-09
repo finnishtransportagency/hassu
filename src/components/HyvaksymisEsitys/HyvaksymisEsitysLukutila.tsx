@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja } from "@services/api";
+import { AsianTila, HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja } from "@services/api";
 import HyvaksyTaiPalautaPainikkeet from "./LomakeComponents/HyvaksyTaiPalautaPainikkeet";
 import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 import Section from "@components/layout/Section2";
@@ -39,6 +39,8 @@ export default function HyvaksymisEsitysLukutila({
   const invalidPoistumisPaiva =
     !hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.poistumisPaiva ||
     parseDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day");
+  const asianhallintaVaarassaTilassa =
+    !hyvaksymisEsityksenTiedot.asianhallinta?.inaktiivinen && hyvaksymisEsityksenTiedot.ashaTila !== AsianTila.VALMIS_VIENTIIN;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
@@ -348,6 +350,7 @@ export default function HyvaksymisEsitysLukutila({
           versio={versio}
           vastaanottajat={hyvaksymisEsitys.vastaanottajat!}
           invalidPoistumisPaiva={invalidPoistumisPaiva}
+          asianhallintaVaarassaTilassa={asianhallintaVaarassaTilassa}
         />
       )}
     </ProjektiPageLayout>

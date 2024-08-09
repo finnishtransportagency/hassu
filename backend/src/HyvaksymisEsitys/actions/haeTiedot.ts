@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import heVaiheOnAktiivinen from "../vaiheOnAktiivinen";
 import { getKutsut, getMaanomistajaLuettelo } from "../collectHyvaksymisEsitysAineistot";
 import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattavatTiedostot";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { adaptAsianhallintaToAPI } from "../adaptToApi/adaptAsianhallintaToAPI";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -39,6 +41,8 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    ashaTila: await asianhallintaService.checkAsianhallintaStateForKnownProjekti(dbProjekti, "HYVAKSYMISESITYS"),
+    asianhallinta: await adaptAsianhallintaToAPI(dbProjekti),
   };
 }
 

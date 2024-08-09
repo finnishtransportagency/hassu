@@ -105,6 +105,35 @@ class AsianhallintaService { //NOSONAR
     }
   }
 
+  async checkAsianhallintaStateForKnownProjekti(projekti: Pick<DBProjekti, "oid" | "velho" | "asianhallinta">, vaihe: Vaihe | "HYVAKSYMISESITYS"): Promise<AsianTila | undefined> {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+      return; 
+    }
+    assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    if (!asiatunnus) {
+      return;
+    }
+    assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
+    const body: CheckAsianhallintaStateCommand = {
+      asiatunnus,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
+      asiakirjaTyyppi: vaiheSpecificAsiakirjaTyyppi[vaihe],
+      correlationId: getCorrelationId() ?? uuid.v4(),
+    };
+    log.info("checkAsianhallintaState", { body });
+    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "CHECK"));
+    if (result) {
+      const response: CheckAsianhallintaStateResponse = JSON.parse(result);
+      log.info("checkAsianhallintaState", { response });
+      if (response.synkronointiTila) {
+        return synkronointiTilaToAsianTilaMap[response.synkronointiTila];
+      } else {
+        log.error("checkAsianhallintaState", { response });
+      }
+    }
+  }
+
   async getAsiaId(oid: string): Promise<number | undefined> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {

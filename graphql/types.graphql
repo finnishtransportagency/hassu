@@ -221,6 +221,12 @@ type Asianhallinta {
   linkkiAsianhallintaan: String
 }
 
+type AsianhallintaNew {
+  inaktiivinen: Boolean!
+  aktivoitavissa: Boolean!
+  linkkiAsianhallintaan: String
+}
+
 type AktiivisenVaiheenAsianhallinnanTila {
   vaihe: Vaihe
   tila: AsianTila
@@ -434,6 +440,8 @@ type HyvaksymisEsityksenTiedot {
   vaiheOnAktiivinen: Boolean!
   perustiedot: ProjektinPerustiedot!
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  ashaTila: AsianTila
+  asianhallinta: AsianhallintaNew!
 }
 
 type HyvaksymisEsityksenTuodutTiedostot {
@@ -444,7 +452,7 @@ type HyvaksymisEsityksenTuodutTiedostot {
 type ProjektinPerustiedot {
   suunnitelmanNimi: String!
   asiatunnus: String
-  vastuuorganisaatio: String
+  vastuuorganisaatio: SuunnittelustaVastaavaViranomainen
   yTunnus: String
   kunnat: [Int!]
   projektiTyyppi: ProjektiTyyppi
