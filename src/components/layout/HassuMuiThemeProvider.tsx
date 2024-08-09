@@ -382,6 +382,9 @@ export const createLocalizedTheme = (locale: Localization) =>
           },
         },
         MuiTab: {
+          defaultProps: {
+            disableRipple: true,
+          },
           styleOverrides: {
             root: {
               paddingTop: "18px",
@@ -396,6 +399,10 @@ export const createLocalizedTheme = (locale: Localization) =>
               opacity: 1,
               "&.Mui-selected:not(.Mui-disabled)": {
                 color: "#0064AF",
+              },
+              ":focus-visible": {
+                outline: "2px #0063B5 solid",
+                outlineOffset: "-2px",
               },
             },
           },
@@ -503,7 +510,6 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-focused:not(.Mui-error)": {
                 "& fieldset.MuiOutlinedInput-notchedOutline": {
                   borderColor: "#0064AF",
-                  // borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 2",
                 },
                 "& .MuiIconButton-root": {
                   color: "#0064AF",
