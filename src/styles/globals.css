@@ -38,10 +38,19 @@
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):active.hassu-input {
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
+  
+  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus-visible.hassu-input {
+    outline: 2px #0063B5 solid;
+    outline-offset: -2px;    
+  }
   /* body
     :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled):not(.error).hassu-input {
     @apply border-primary;
   } */
+   /* body :focus-visible {
+    outline: 2px #0063B5 solid;
+    outline-offset: 0px;
+   } */
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):disabled.hassu-input {
     @apply border-gray-dark bg-gray-light;
   }
@@ -388,6 +397,14 @@
   }
   .btn-primary {
     @apply btn bg-primary-dark text-white;
+  }
+  .btn-primary:focus {
+    outline: 2px #FFFFFF solid;
+    outline-offset: -3px;
+  } 
+  .btn:focus {
+    outline: 2px #0064AF solid;
+    outline-offset: -3px;
   }
   .btn-remove-red {
     @apply btn text-red border-red;
