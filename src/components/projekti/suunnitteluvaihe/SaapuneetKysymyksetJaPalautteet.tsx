@@ -15,9 +15,10 @@ import { H3 } from "../../Headings";
 
 interface Props {
   projekti: Projekti;
+  lukutila: boolean;
 }
 
-export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): ReactElement {
+export default function SaapuneetKysymyksetJaPalautteet({ projekti, lukutila }: Readonly<Props>): ReactElement {
   const [palautteet, setPalautteet] = useState<Palaute[]>();
 
   const api = useApi();
@@ -51,7 +52,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
       {
         header: "Vastattu",
         accessorFn: (palaute: Palaute) => (
-          <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} />
+          <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} lukutila={lukutila} />
         ),
         id: "vastattu",
       },
@@ -113,13 +114,11 @@ function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }
   );
 }
 
-function KysymysTaiPalaute({ palaute }: PalauteProps): ReactElement {
+function KysymysTaiPalaute({ palaute }: Readonly<PalauteProps>): ReactElement {
   return (
-    <>
-      <div>
-        <p style={{ whiteSpace: "pre-line" }}>{palaute.kysymysTaiPalaute}</p>
-      </div>
-    </>
+    <div>
+      <p style={{ whiteSpace: "pre-line" }}>{palaute.kysymysTaiPalaute}</p>
+    </div>
   );
 }
 
@@ -127,9 +126,10 @@ interface KasittelePalauteCheckboxProps {
   palaute: Palaute;
   oid: string;
   paivitaPalautteet: () => Promise<void>;
+  lukutila: boolean;
 }
 
-function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
+function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet, lukutila }: Readonly<KasittelePalauteCheckboxProps>): ReactElement {
   const { showSuccessMessage } = useSnackbars();
 
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -181,10 +181,10 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     [merkitseEiVastatuksi, merkitseVastatuksi, palaute]
   );
 
-  return <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} />;
+  return <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} disabled={lukutila} />;
 }
 
-function YhteydenottopyyntoSolu({ palaute }: PalauteProps): ReactElement {
+function YhteydenottopyyntoSolu({ palaute }: Readonly<PalauteProps>): ReactElement {
   return (
     <div>
       {!palaute.yhteydenottotapaPuhelin && !palaute.yhteydenottotapaEmail && <div>Ei</div>}
