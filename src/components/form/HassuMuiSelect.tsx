@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { capitalize, FormControl, InputLabel, MenuItem, Select, SelectProps, styled } from "@mui/material";
+import { capitalize, FormControl, InputLabel, MenuItem, Select, SelectProps } from "@mui/material";
 import { Controller, FieldError } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import FormGroup from "./FormGroup";
