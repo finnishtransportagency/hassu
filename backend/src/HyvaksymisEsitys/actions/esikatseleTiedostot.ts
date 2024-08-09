@@ -30,5 +30,6 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
     poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
     projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
     lisatiedot: muokattavaHyvaksymisEsitys.lisatiedot,
+    kiireellinen: muokattavaHyvaksymisEsitys.kiireellinen,
   };
 }

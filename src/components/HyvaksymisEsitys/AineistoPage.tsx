@@ -21,7 +21,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     aineistopaketti,
     suunnitelma,
     poistumisPaiva,
-    pyydetaanKiireellistaKasittelya,
+    kiireellinen,
     lisatiedot,
     laskutustiedot,
     projektipaallikonYhteystiedot,
@@ -78,7 +78,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
         </p>
         <SectionContent>
-          <H4>Pyydetään kiireellistä käsittelyä: {pyydetaanKiireellistaKasittelya ? "KYLLÄ" : "EI"}</H4>
+          <H4>Pyydetään kiireellistä käsittelyä: {kiireellinen ? "KYLLÄ" : "EI"}</H4>
         </SectionContent>
         {!!lisatiedot && (
           <SectionContent>

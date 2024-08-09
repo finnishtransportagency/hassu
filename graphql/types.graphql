@@ -1242,7 +1242,7 @@ type LadattavatTiedostot {
 type HyvaksymisEsityksenAineistot {
   perustiedot: ProjektinPerustiedot!
   poistumisPaiva: String
-  pyydetaanKiireellistaKasittelya: Boolean
+  kiireellinen: Boolean
   eiOlemassa: Boolean
   linkkiVanhentunut: Boolean
   lisatiedot: String
