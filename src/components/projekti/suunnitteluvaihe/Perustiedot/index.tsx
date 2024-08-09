@@ -544,7 +544,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         </form>
       </FormProvider>
 
-      <SaapuneetKysymyksetJaPalautteet projekti={projekti} />
+      <SaapuneetKysymyksetJaPalautteet projekti={projekti} lukutila={false} />
       <HassuDialog open={isOpenHyvaksy} title="Suunnitteluvaiheen perustietojen päivitys" onClose={closeHyvaksy}>
         <form style={{ display: "contents" }}>
           <DialogContent>

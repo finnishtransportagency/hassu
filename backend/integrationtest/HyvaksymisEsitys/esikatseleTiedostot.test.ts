@@ -307,4 +307,30 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     expect(tiedot.lisatiedot).to.eql("Kissa"); // Sama kuin inputissa
     expect(omit(tiedot.laskutustiedot, "__typename")).to.eql(TEST_HYVAKSYMISESITYS.laskutustiedot);
   });
+
+  it("antaa oikean kiireellisyystiedon hyväksymisesitykselle", async () => {
+    const projektiInDB = {
+      ...TEST_PROJEKTI,
+      muokattavaHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        tila: API.HyvaksymisTila.MUOKKAUS,
+      },
+      julkaistuHyvaksymisEsitys: {
+        ...TEST_HYVAKSYMISESITYS,
+        /**
+         * Laitetaan eri poistumospäivä julkaistulle kuin muokattavalle
+         */
+        poistumisPaiva: "2099-01-01",
+        hyvaksyja: "theadminuid",
+        hyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    await insertProjektiToDB(projektiInDB);
+    userFixture.loginAsAdmin();
+    const input: API.HyvaksymisEsitysInput = {
+      ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO,
+    };
+    const tiedot = await esikatseleHyvaksymisEsityksenTiedostot({ oid, hyvaksymisEsitys: input });
+    expect(tiedot.kiireellinen).to.be.true;
+  });
 });
