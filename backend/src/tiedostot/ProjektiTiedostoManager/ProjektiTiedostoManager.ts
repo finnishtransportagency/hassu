@@ -25,7 +25,9 @@ export class ProjektiTiedostoManager {
       this.getNahtavillaoloVaihe().isReady() &&
       this.getHyvaksymisPaatosVaihe().isReady() &&
       this.getJatkoPaatos1Vaihe().isReady() &&
-      this.getJatkoPaatos2Vaihe().isReady()
+      this.getJatkoPaatos2Vaihe().isReady() &&
+      this.getLausuntoPyynnot().isReady() &&
+      this.getLausuntoPyynnonTaydennykset().isReady()
     );
   }
 
