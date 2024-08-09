@@ -28,4 +28,5 @@ export type JulkaistuHyvaksymisEsitys = {
   poistumisPaiva: string;
   hyvaksyja?: string | null;
   hyvaksymisPaiva?: string | null;
+  asianhallintaEventId?: string | null;
 } & IHyvaksymisEsitys;

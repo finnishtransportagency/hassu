@@ -30,7 +30,7 @@ import { getVaylaUser } from "../user";
 class AsianhallintaService { //NOSONAR
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
     const projekti = await this.haeProjekti(oid);
-    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) { 
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
@@ -75,7 +75,7 @@ class AsianhallintaService { //NOSONAR
     log.info("enqueueAsianhallintaSynchronization", { result });
   }
 
-  async checkAsianhallintaState(oid: string, vaihe: Vaihe): Promise<AsianTila | undefined> {
+  async checkAsianhallintaState(oid: string, vaihe: Vaihe | "HYVAKSYMISESITYS"): Promise<AsianTila | undefined> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
@@ -160,10 +160,11 @@ class AsianhallintaService { //NOSONAR
   }
 }
 
-const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
+const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe | "HYVAKSYMISESITYS", AsiakirjaTyyppi> = {
   ALOITUSKUULUTUS: "ALOITUSKUULUTUS",
   SUUNNITTELU: "YLEISOTILAISUUS_KUTSU",
   NAHTAVILLAOLO: "NAHTAVILLAOLOKUULUTUS",
+  HYVAKSYMISESITYS: "HYVAKSYMISESITYS_SAHKOPOSTI",
   HYVAKSYMISPAATOS: "HYVAKSYMISPAATOSKUULUTUS",
   JATKOPAATOS: "JATKOPAATOSKUULUTUS",
   JATKOPAATOS2: "JATKOPAATOSKUULUTUS2",

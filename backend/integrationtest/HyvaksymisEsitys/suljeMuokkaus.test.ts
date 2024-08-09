@@ -137,6 +137,7 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, lisatiedot: "Muokattava", tila: API.HyvaksymisTila.MUOKKAUS };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
+      asianhallintaId: "uuid123",
       lisatiedot: "Julkaistu",
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
@@ -155,7 +156,7 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
       ...projektiBefore,
       versio: 3,
       muokattavaHyvaksymisEsitys: {
-        ...omit(julkaistuHyvaksymisEsitys, ["hyvaksymisPaiva", "hyvaksyja"]),
+        ...omit(julkaistuHyvaksymisEsitys, ["hyvaksymisPaiva", "hyvaksyja", "asianhallintaId"]),
         muokkaaja: "theadminuid",
         tila: API.HyvaksymisTila.HYVAKSYTTY,
       },
