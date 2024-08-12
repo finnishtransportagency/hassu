@@ -361,7 +361,7 @@
       "kappale2": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd {{kuulutusNahtavillaAika}}. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale2_ui": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd <strong>{{kuulutusNahtavillaAika}}</strong>. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras {{kuulutusPaiva}} på adressen {{linkki_paatos}}.",
-      "kappale4": "Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
+      "kappale4": "Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
@@ -372,7 +372,7 @@
       "kappale2": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd {{kuulutusNahtavillaAika}}. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale2_ui": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd <strong>{{kuulutusNahtavillaAika}}</strong>. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras {{kuulutusPaiva}} på adressen {{linkki_paatos}}.",
-      "kappale4": "Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
+      "kappale4": "Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
