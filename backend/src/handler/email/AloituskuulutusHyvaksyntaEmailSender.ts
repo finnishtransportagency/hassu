@@ -122,7 +122,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFRuotsi);
       }
 
-      const saameLanguages = projectLanguages.filter((language) => language !== undefined && saamet.includes(language)) as SaameLanguage[];
+      const saameLanguages = projectLanguages.filter((language) => language !== undefined && language !== null && saamet.includes(language)) as SaameLanguage[];
 
       if (saameLanguages) {
         for (const saameLanguage of saameLanguages) {
