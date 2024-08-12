@@ -27,7 +27,7 @@ export type SaameLocalizedMap<T> = { [key in SaameKieli]?: T } | null;
 
 export type Kielitiedot = {
   ensisijainenKieli: Kieli;
-  toissijainenKieli?: Kieli;
+  toissijainenKieli?: Kieli | null;
   projektinNimiVieraskielella?: string;
 };
 
