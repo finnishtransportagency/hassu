@@ -3,10 +3,22 @@ import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
-import HassuTable from "@components/table/HassuTable";
+import { DEFAULT_COL_MIN_WIDTH, DEFAULT_COL_WIDTH_FRACTIONS, TableHead } from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import {
+  BodyTr,
+  BodyTrWrapper,
+  DataCell,
+  DataCellContent,
+  StyledTable,
+  TableWrapper,
+  Tbody,
+  TbodyWrapper,
+} from "@components/table/StyledTableComponents";
+import { useIsAboveBreakpoint } from "src/hooks/useIsSize";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
@@ -96,7 +108,7 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
       },
     ];
     return cols;
-  }, [fieldState.error?.message, onChange, value]);
+  }, [fieldState.error?.message, value]);
 
   const table = useReactTable({
     columns,
@@ -105,9 +117,69 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
     state: { pagination: undefined },
     getCoreRowModel: getCoreRowModel(),
   });
-
+  const gridTemplateColumns = useMemo(() => {
+    return table.options.columns
+      .map<string>((column) => {
+        const minWidth = column.meta?.minWidth ?? DEFAULT_COL_MIN_WIDTH;
+        const fractions = column.meta?.widthFractions ?? DEFAULT_COL_WIDTH_FRACTIONS;
+        return `minmax(${minWidth}px, ${fractions}fr)`;
+      })
+      .join(" ");
+  }, [table.options.columns]);
+  const isMedium = useIsAboveBreakpoint("md");
   return value ? (
-    <HassuTable table={table} />
+    <ContentSpacer gap={7} style={{ marginTop: "24px" }}>
+      <TableWrapper>
+        <StyledTable className="hassu-table" id={table.options.meta?.tableId}>
+          {isMedium && <TableHead gridTemplateColumns={gridTemplateColumns} table={table} />}
+          <TbodyWrapper>
+            <Tbody>
+              <BodyTrWrapper
+                sx={{
+                  borderBottom: "2px #49c2f1 solid",
+                  backgroundColor: "#FFFFFF",
+                }}
+                data-index={0}
+              >
+                <BodyTr
+                  sx={{
+                    gridTemplateColumns,
+                    opacity: 1,
+                  }}
+                >
+                  <DataCell key="tiedosto">
+                    <DataCellContent>
+                      {typeof value === "string" ? (
+                        <ExternalStyledLink href={value}>
+                          <>{value.substring(value.lastIndexOf("/") + 1)}</>
+                        </ExternalStyledLink>
+                      ) : (
+                        tiedosto?.nimi
+                      )}
+                    </DataCellContent>
+                  </DataCell>
+                  <DataCell key="tuotu">
+                    <DataCellContent>{tiedosto?.tuotu ? formatDateTime(tiedosto.tuotu) : "-"}</DataCellContent>
+                  </DataCell>
+                  <DataCell key="actions">
+                    <DataCellContent>
+                      <IconButton
+                        type="button"
+                        onClick={() => {
+                          onChange(null);
+                          setUusiTiedosto(null);
+                        }}
+                        icon="trash"
+                      />
+                    </DataCellContent>
+                  </DataCell>
+                </BodyTr>
+              </BodyTrWrapper>
+            </Tbody>
+          </TbodyWrapper>
+        </StyledTable>
+      </TableWrapper>
+    </ContentSpacer>
   ) : (
     <FileInput
       noDropzone
