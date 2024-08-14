@@ -95,7 +95,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                     nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
                       <li>
                         Ennen Hyväksymisesityksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide,
-                        joka on nimeltään Hyväksymisesityksen lähettäminen Traficomiin. Hyväksymisesityken lähettäminen ei ole mahdollista,
+                        joka on nimeltään Hyväksymisesityksen lähettäminen Traficomiin. Hyväksymisesityksen lähettäminen ei ole mahdollista,
                         jos asianhallintajärjestelmässä on väärä toimenpide auki. <KatsoTarkemmatASHAOhjeetLink />
                       </li>
                     )}

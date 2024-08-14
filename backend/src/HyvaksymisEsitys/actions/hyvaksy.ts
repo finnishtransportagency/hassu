@@ -31,10 +31,11 @@ import { EmailOptions } from "../../email/model/emailOptions";
 import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
+import { AsiakirjaTyyppi, ToimenpideTyyppi } from "@hassu/asianhallinta";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { uuid } from "hassu-common/util/uuid";
 import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
+import { getAsiatunnus } from "../../projekti/projektiUtil";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -68,15 +69,17 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
 
-  const asiatunnus = projektiInDB.velho?.asiatunnusVayla ?? projektiInDB.velho?.asiatunnusELY;
+  const asiatunnus = getAsiatunnus(projektiInDB.velho);
   assertIsDefined(asiatunnus, "Joko väylä- tai ELY-asiatunnus on olemassa");
 
   let asianhallintaEventId: string | undefined;
   if (s3PathForEmail) {
+    const toimenpideTyyppi: ToimenpideTyyppi = "ENSIMMAINEN_VERSIO";
     // Laita synkronointi-event ashaan ja tietokantaan
     asianhallintaEventId = uuid.v4();
     await asianhallintaService.saveAndEnqueueSynchronization(oid, {
       asiatunnus,
+      toimenpideTyyppi,
       asianhallintaEventId,
       vaylaAsianhallinta: isVaylaAsianhallinta(projektiInDB),
       dokumentit: [

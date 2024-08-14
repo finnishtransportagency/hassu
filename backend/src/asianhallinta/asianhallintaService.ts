@@ -85,7 +85,6 @@ class AsianhallintaService { //NOSONAR
     if (!asiatunnus) {
       return;
     }
-    assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
     const body: CheckAsianhallintaStateCommand = {
       asiatunnus,
       vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
