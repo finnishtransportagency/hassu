@@ -196,7 +196,9 @@
     "jata_muistutus_mennessa": "Muistutus suunnitelmasta tulee jättää {{pvm}} mennessä. Muistutuksen jättäminen edellyttää vahvaa tunnistautumista.",
     "muistutus_info_1": "Muistutus on vapaamuotoinen kirjallinen kannanotto suunnitelmasta sen laatimisesta vastaavalle viranomaiselle.  Vastaus muistutukseen annetaan Liikenne- ja viestintäviraston suunnitelmaa koskevassa hyväksymispäätöksessä.",
     "muistutus_info_2": "Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä.",
-    "lue_lisaa": "Lue lisää"
+    "lue_lisaa": "Lue lisää",
+    "epaonnistui": "Muistutuksen jättäminen epäonnistui",
+    "epaonnistui_viesti": "Muistutuksen jättäminen epäonnistui. Voit kokeilla lähettää muistutuksen uudelleen tai laittaa sähköpostia {{viranomainen}} Kirjaamoon."
   },
   "asiakirja": {
     "aloituskuulutus": {
