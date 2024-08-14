@@ -456,6 +456,7 @@ type ProjektinPerustiedot {
   yTunnus: String
   kunnat: [Int!]
   projektiTyyppi: ProjektiTyyppi
+  kayttoOikeudet: [ProjektiKayttaja]
 }
 
 type Laskutustiedot {
