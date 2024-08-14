@@ -37,10 +37,11 @@ export async function persistLadattuTiedosto({
 }
 
 export async function deleteFile({ oid, tiedosto }: { oid: string; tiedosto: LadattuTiedosto }) {
-  assertIsDefined(tiedosto.tiedosto, "poistettavalla tiedostolla on oltava tiedosto tiedossa");
-  await fileService.deleteYllapitoFileFromProjekti({
-    oid,
-    filePathInProjekti: tiedosto.tiedosto,
-    reason: "Käyttäjä poisti tiedoston",
-  });
+  if (tiedosto.tiedosto) {
+    await fileService.deleteYllapitoFileFromProjekti({
+      oid,
+      filePathInProjekti: tiedosto.tiedosto,
+      reason: "Käyttäjä poisti tiedoston",
+    });
+  }
 }
