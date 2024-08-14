@@ -189,6 +189,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
               s3Path: "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml",
             },
           ],
+          toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
           vaylaAsianhallinta: false,
         },
       },
