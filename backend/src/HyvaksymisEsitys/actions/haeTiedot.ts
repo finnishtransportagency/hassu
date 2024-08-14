@@ -1,7 +1,6 @@
-import { adaptHyvaksymisEsitysToAPI } from "../../projekti/adapter/adaptToAPI";
+import { adaptDBVaylaUsertoAPIProjektiKayttaja, adaptHyvaksymisEsitysToAPI } from "../../projekti/adapter/adaptToAPI";
 import { requirePermissionLuku } from "../../user";
 import * as API from "hassu-common/graphql/apiModel";
-import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase from "../dynamoKutsut";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
@@ -12,6 +11,7 @@ import { getKutsut, getMaanomistajaLuettelo } from "../collectHyvaksymisEsitysAi
 import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattavatTiedostot";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { adaptAsianhallintaToAPI } from "../adaptToApi/adaptAsianhallintaToAPI";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -43,6 +43,7 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     },
     ashaTila: await asianhallintaService.checkAsianhallintaStateForKnownProjekti(dbProjekti, "HYVAKSYMISESITYS"),
     asianhallinta: await adaptAsianhallintaToAPI(dbProjekti),
+    kayttoOikeudet: adaptDBVaylaUsertoAPIProjektiKayttaja(dbProjekti.kayttoOikeudet),
   };
 }
 

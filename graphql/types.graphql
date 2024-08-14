@@ -442,6 +442,7 @@ type HyvaksymisEsityksenTiedot {
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
   ashaTila: AsianTila
   asianhallinta: AsianhallintaNew!
+  kayttoOikeudet: [ProjektiKayttaja!]
 }
 
 type HyvaksymisEsityksenTuodutTiedostot {
@@ -456,7 +457,6 @@ type ProjektinPerustiedot {
   yTunnus: String
   kunnat: [Int!]
   projektiTyyppi: ProjektiTyyppi
-  kayttoOikeudet: [ProjektiKayttaja]
 }
 
 type Laskutustiedot {

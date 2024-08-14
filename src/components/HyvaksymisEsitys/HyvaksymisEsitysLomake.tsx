@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, SuunnittelustaVastaavaViranomainen } from "@services/api";
+import { HyvaksymisEsityksenTiedot, HyvaksymisTila, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
@@ -31,6 +31,7 @@ import { TestType } from "common/schema/common";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { KatsoTarkemmatASHAOhjeetLink } from "@components/projekti/common/KatsoTarkemmatASHAOhjeetLink";
 import useCurrentUser from "src/hooks/useCurrentUser";
+import AsianhallintaStatusNotification from "./LomakeComponents/AsianhallintaStatusNotification";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -77,6 +78,14 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
 
   return (
     <ProjektiPageLayout title="Hyväksymisesitys" showInfo>
+      <AsianhallintaStatusNotification
+        asianhallinta={hyvaksymisEsityksenTiedot.asianhallinta}
+        ashaTila={hyvaksymisEsityksenTiedot.ashaTila}
+        sivunVaiheOnAktiivinen={hyvaksymisEsityksenTiedot.vaiheOnAktiivinen}
+        vaiheOnMuokkaustilassa={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS}
+        kayttoOikeudet={hyvaksymisEsityksenTiedot.kayttoOikeudet}
+        suunnittelustaVastaavaViranomainen={hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio}
+      />
       {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>

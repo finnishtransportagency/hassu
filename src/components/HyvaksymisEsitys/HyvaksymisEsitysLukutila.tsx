@@ -29,6 +29,7 @@ import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/Ladattav
 import { nyt, parseDate } from "backend/src/util/dateUtil";
 import ButtonLink from "@components/button/ButtonLink";
 import DownloadIcon from "@mui/icons-material/Download";
+import AsianhallintaStatusNotification from "./LomakeComponents/AsianhallintaStatusNotification";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
@@ -92,6 +93,14 @@ export default function HyvaksymisEsitysLukutila({
         )
       }
     >
+      <AsianhallintaStatusNotification
+        asianhallinta={hyvaksymisEsityksenTiedot.asianhallinta}
+        ashaTila={hyvaksymisEsityksenTiedot.ashaTila}
+        sivunVaiheOnAktiivinen={hyvaksymisEsityksenTiedot.vaiheOnAktiivinen}
+        vaiheOnMuokkaustilassa={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS}
+        kayttoOikeudet={hyvaksymisEsityksenTiedot.kayttoOikeudet}
+        suunnittelustaVastaavaViranomainen={hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio}
+      />
       {hyvaksymisEsitys.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>

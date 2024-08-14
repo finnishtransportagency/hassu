@@ -5,8 +5,8 @@ import { requirePermissionLuku, requirePermissionMuokkaa } from "../../user";
 import { adaptProjektiKayttajaJulkinen } from "../../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
-import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import projektiDatabase, { ProjektiTiedostoineen } from "../dynamoKutsut";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function esikatseleHyvaksymisEsityksenTiedostot({
   oid,
