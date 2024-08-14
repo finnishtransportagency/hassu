@@ -255,7 +255,7 @@ type TableHeadProps<T> = {
   gridTemplateColumns: string;
 };
 
-export function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
+function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
   return (
     <Thead className="hassu-table-head">
       {table.getHeaderGroups().map((headerGroup) => (
