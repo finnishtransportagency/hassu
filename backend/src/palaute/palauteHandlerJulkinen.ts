@@ -31,6 +31,9 @@ class PalauteHandlerJulkinen {
         oid,
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
+      if (!liite) {
+        throw new NotFoundError("Liitettä ei löydy");
+      }
       palaute.liite = liite;
       await virusScanService.runScanOnFile(
         config.yllapitoBucketName,
