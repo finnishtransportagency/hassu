@@ -97,7 +97,7 @@ export const HYVAKSYMISESITYS_ROUTE: Route = {
   id: "hyvaksymisesitys",
   requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
   pathname: `/yllapito/projekti/[oid]/hyvaksymisesitys`,
-  visible: false,
+  visible: true,
 };
 
 export const LAUSUNTOPYYNNOT_ROUTE: Route = {
@@ -201,6 +201,7 @@ const routes: Route[] = [
   NAHTAVILLAOLO_ROUTE,
   NAHTAVILLAOLO_AINEISTOT_ROUTE,
   NAHTAVILLAOLO_KUULUTUS_ROUTE,
+  HYVAKSYMISESITYS_ROUTE,
   HYVAKSYMINEN_ROUTE,
   HYVAKSYMINEN_AINEISTO_ROUTE,
   HYVAKSYMINEN_KUULUTUS_ROUTE,
@@ -217,6 +218,7 @@ export const projektinVaiheetNavigaatiossa: Route[] = [
   SUUNNITTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
   LAUSUNTOPYYNNOT_MAIN_ROUTE,
+  HYVAKSYMISESITYS_ROUTE,
   HYVAKSYMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_ROUTE,
   TOINEN_JATKAMINEN_ROUTE,
