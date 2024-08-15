@@ -1,12 +1,27 @@
-import React, { useMemo, useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent } from "react";
 import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
-import HassuTable from "@components/table/HassuTable";
+import { DEFAULT_COL_MIN_WIDTH, DEFAULT_COL_WIDTH_FRACTIONS } from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
-import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import {
+  BodyTr,
+  BodyTrWrapper,
+  DataCell,
+  DataCellContent,
+  HeaderCell,
+  HeaderCellContents,
+  StyledTable,
+  TableWrapper,
+  Tbody,
+  TbodyWrapper,
+  Thead,
+  Tr,
+} from "@components/table/StyledTableComponents";
+import { useIsAboveBreakpoint } from "src/hooks/useIsSize";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
@@ -47,67 +62,98 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
 
   const tiedosto: OptionalNullableLadattuTiedosto | null | undefined = showUusiTiedosto ? uusiTiedosto : props.tiedosto;
 
-  const columns: ColumnDef<OptionalNullableLadattuTiedosto>[] = useMemo(() => {
-    const cols: ColumnDef<OptionalNullableLadattuTiedosto>[] = [
-      {
-        accessorKey: "nimi",
-        cell: (info) => {
-          const errorMessage = fieldState.error?.message;
-          return (
-            <>
-              {typeof value === "string" ? (
-                <ExternalStyledLink href={value}>
-                  <>{info.getValue()}</>
-                </ExternalStyledLink>
-              ) : (
-                info.getValue()
-              )}
-              {errorMessage && <p className="text-red">{errorMessage}</p>}
-            </>
-          );
-        },
-        header: "Tiedosto",
-        id: "tiedosto",
-        meta: {
-          widthFractions: 3,
-        },
+  const columns = [
+    {
+      header: "Tiedosto",
+      id: "tiedosto",
+      meta: {
+        widthFractions: 3,
+        minWidth: undefined,
       },
-      {
-        accessorFn: (tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined),
-        header: "Tuotu",
-        id: "tuotu",
-        meta: { widthFractions: 3 },
-      },
-      {
-        header: "",
-        id: "actions",
-        cell: () => {
-          return (
-            <IconButton
-              type="button"
-              onClick={() => {
-                onChange(null);
-                setUusiTiedosto(null);
-              }}
-              icon="trash"
-            />
-          );
-        },
-      },
-    ];
-    return cols;
-  }, [fieldState.error?.message, onChange, value]);
+    },
+    {
+      header: "Tuotu",
+      id: "tuotu",
+      meta: { widthFractions: 3 },
+    },
+    {
+      header: "",
+      id: "actions",
+    },
+  ];
 
-  const table = useReactTable({
-    columns,
-    data: tiedosto ? [tiedosto] : [],
-    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-    state: { pagination: undefined },
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const gridTemplateColumns = columns
+    .map<string>((column) => {
+      const minWidth = column.meta?.minWidth ?? DEFAULT_COL_MIN_WIDTH;
+      const fractions = column.meta?.widthFractions ?? DEFAULT_COL_WIDTH_FRACTIONS;
+      return `minmax(${minWidth}px, ${fractions}fr)`;
+    })
+    .join(" ");
 
+  const isMedium = useIsAboveBreakpoint("md");
   return value ? (
-    <HassuTable table={table} />
+    <ContentSpacer gap={7} style={{ marginTop: "24px" }}>
+      <TableWrapper>
+        <StyledTable className="hassu-table" id="saametable">
+          {isMedium && (
+            <Thead className="hassu-table-head">
+              <Tr sx={{ gridTemplateColumns, alignItems: "end" }}>
+                {columns.map((header) => (
+                  <HeaderCell key={header.id}>
+                    <HeaderCellContents>{header.header}</HeaderCellContents>
+                  </HeaderCell>
+                ))}
+              </Tr>
+            </Thead>
+          )}
+          <TbodyWrapper>
+            <Tbody>
+              <BodyTrWrapper
+                sx={{
+                  borderBottom: "2px #49c2f1 solid",
+                  backgroundColor: "#FFFFFF",
+                }}
+                data-index={0}
+              >
+                <BodyTr
+                  sx={{
+                    gridTemplateColumns,
+                    opacity: 1,
+                  }}
+                >
+                  <DataCell key="tiedosto">
+                    <DataCellContent>
+                      {typeof value === "string" ? (
+                        <ExternalStyledLink href={value}>
+                          <>{value.substring(value.lastIndexOf("/") + 1)}</>
+                        </ExternalStyledLink>
+                      ) : (
+                        tiedosto?.nimi
+                      )}
+                    </DataCellContent>
+                  </DataCell>
+                  <DataCell key="tuotu">
+                    <DataCellContent>{tiedosto?.tuotu ? formatDateTime(tiedosto.tuotu) : "-"}</DataCellContent>
+                  </DataCell>
+                  <DataCell key="actions">
+                    <DataCellContent>
+                      <IconButton
+                        type="button"
+                        onClick={() => {
+                          onChange(null);
+                          setUusiTiedosto(null);
+                        }}
+                        icon="trash"
+                      />
+                    </DataCellContent>
+                  </DataCell>
+                </BodyTr>
+              </BodyTrWrapper>
+            </Tbody>
+          </TbodyWrapper>
+        </StyledTable>
+      </TableWrapper>
+    </ContentSpacer>
   ) : (
     <FileInput
       noDropzone
