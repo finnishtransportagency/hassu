@@ -81,5 +81,13 @@ export default function AsianhallintaStatusNotification({
     sivunVaiheOnAktiivinen &&
     !asianhallinta?.inaktiivinen &&
     tilakohtainenVaroitus(ashaTila, kayttajaOnProjariTaiVarahenkilo, vaiheOnMuokkaustilassa, suunnittelustaVastaavaViranomainen);
-  return <>{varoitus && <Notification type={NotificationType.WARN}>{varoitus}</Notification>}</>;
+  return (
+    <>
+      {varoitus && (
+        <Notification type={NotificationType.WARN} className="mt-6">
+          {varoitus}
+        </Notification>
+      )}
+    </>
+  );
 }
