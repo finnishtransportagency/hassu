@@ -1,7 +1,6 @@
-import { adaptHyvaksymisEsitysToAPI } from "../../projekti/adapter/adaptToAPI";
+import { adaptDBVaylaUsertoAPIProjektiKayttaja, adaptHyvaksymisEsitysToAPI } from "../../projekti/adapter/adaptToAPI";
 import { requirePermissionLuku } from "../../user";
 import * as API from "hassu-common/graphql/apiModel";
-import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import { assertIsDefined } from "../../util/assertions";
 import projektiDatabase from "../dynamoKutsut";
 import getHyvaksymisEsityksenAineistot from "../getAineistot";
@@ -10,6 +9,9 @@ import dayjs from "dayjs";
 import heVaiheOnAktiivinen from "../vaiheOnAktiivinen";
 import { getKutsut, getMaanomistajaLuettelo } from "../collectHyvaksymisEsitysAineistot";
 import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattavatTiedostot";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { adaptAsianhallintaToAPI } from "../adaptToApi/adaptAsianhallintaToAPI";
+import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -39,6 +41,9 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    ashaTila: await asianhallintaService.checkAsianhallintaStateForKnownProjekti(dbProjekti, "HYVAKSYMISESITYS"),
+    asianhallinta: await adaptAsianhallintaToAPI(dbProjekti),
+    kayttoOikeudet: adaptDBVaylaUsertoAPIProjektiKayttaja(dbProjekti.kayttoOikeudet),
   };
 }
 

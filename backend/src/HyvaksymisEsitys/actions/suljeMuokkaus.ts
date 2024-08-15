@@ -25,7 +25,7 @@ export default async function suljeHyvaksymisEsityksenMuokkaus(input: API.TilaMu
   // – tiedostojen polkuja ei tarvitse päivittää.
   // Tiputa vastaanottajista pois sähköpostin lähetystiedot.
   const muokattavaHyvaksymisEsitys = {
-    ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "vastaanottajat"]),
+    ...omit(projektiInDB.julkaistuHyvaksymisEsitys, ["hyvaksyja", "hyvaksymisPaiva", "vastaanottajat", "asianhallintaId"]),
     tila: API.HyvaksymisTila.HYVAKSYTTY,
     versio: projektiInDB.julkaistuHyvaksymisEsitys.versio,
     vastaanottajat: projektiInDB.julkaistuHyvaksymisEsitys.vastaanottajat?.map((vo) => ({
