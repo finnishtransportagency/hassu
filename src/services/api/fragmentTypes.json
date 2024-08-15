@@ -152,6 +152,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "AsianhallintaNew",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "AsianTila",
         "possibleTypes": null,
