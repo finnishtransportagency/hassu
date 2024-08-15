@@ -18,7 +18,6 @@ import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
 import { ErrorSpan } from "@components/form/FormGroup";
 import useSnackbars from "src/hooks/useSnackbars";
-import log from "loglevel";
 import Section from "@components/layout/Section2";
 import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 import useApi from "src/hooks/useApi";
@@ -38,6 +37,7 @@ import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
 import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
+import dayjs from "dayjs";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -72,6 +72,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
   const { t, lang } = useTranslation();
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [sessioVanhentunut, setSessioVanhentunut] = useState(false);
+  const [epaonnistuiDialogiOpen, setEpaonnistuiDialogiOpen] = useState(false);
   const closeSessioDialog = useCallback(() => {
     setSessioVanhentunut(false);
     router.push(getSuomiFiLogoutURL());
@@ -134,7 +135,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
             setKiitosDialogiOpen(true);
             reset();
           } catch (e) {
-            log.log("OnSubmit Error", e);
+            setEpaonnistuiDialogiOpen(true);
           }
         })()
       ),
@@ -142,6 +143,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
   );
 
   const close = useCallback(() => setKiitosDialogiOpen(false), []);
+  const closeEpaonnistui = useCallback(() => setEpaonnistuiDialogiOpen(false), []);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -351,6 +353,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                   // Clear input value so onchange will trigger for the same file
                   inputRef.current.value = "";
                 }
+                useFormReturn.trigger();
               }}
             />
             <Button
@@ -362,12 +365,13 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               {t("common:hae_tiedosto")}
             </Button>
           </ContentSpacer>
-          <Button className="ml-auto" id="submit_feedback" type="button" primary onClick={handleSubmit(save)}>
+          <Button className="ml-auto" id="submit_feedback" type="button" disabled={!formState.isValid} primary onClick={handleSubmit(save)}>
             {t("common:laheta")}
           </Button>
         </ContentSpacer>
       </ContentSpacer>
       <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} isMobile={isMobile} />
+      <EpaonnistuiDialogi open={epaonnistuiDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={closeEpaonnistui} isMobile={isMobile} />
       <HassuDialog open={sessioVanhentunut} title={t("common:istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
         <DialogContent>
           <p>{t("common:istunto_vanhentunut_teksti")}</p>
@@ -382,7 +386,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
 
 const FileDiv = styled("div")({ display: "flex", justifyContent: "space-between", alignItems: "center" });
 
-interface KiitosProps {
+interface DialogProps {
   open: boolean;
   onClose: () => void;
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -390,7 +394,7 @@ interface KiitosProps {
   isMobile: boolean;
 }
 
-export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<KiitosProps>): ReactElement {
+export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<DialogProps>): ReactElement {
   const { t } = useTranslation();
   const viranomaisenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
@@ -399,6 +403,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
     }
     return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
+  const paattyyPvm = dayjs(nahtavillaolo.muistutusoikeusPaattyyPaiva).endOf("date");
   return (
     <HassuDialog
       PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
@@ -417,12 +422,47 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
         </p>
         <p>
           {t("projekti:muistutuslomake.voit_antaa_muistutuksia", {
-            pvm: formatDateTime(nahtavillaolo.muistutusoikeusPaattyyPaiva),
+            pvm: formatDateTime(paattyyPvm),
           })}
         </p>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} primary id="close_kiitos_viestista">
+          {t("common:sulje")}
+        </Button>
+      </DialogActions>
+    </HassuDialog>
+  );
+}
+
+function EpaonnistuiDialogi({ open, onClose, projekti, isMobile }: Readonly<DialogProps>): ReactElement {
+  const { t } = useTranslation();
+  const viranomaisenText = useMemo(() => {
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    if (!viranomainen) {
+      return "<Viranomaistieto puuttuu>";
+    }
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
+  }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
+  return (
+    <HassuDialog
+      PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
+      scroll="paper"
+      fullScreen={isMobile}
+      open={open}
+      title={t("projekti:muistutuslomake.epaonnistui")}
+      onClose={onClose}
+      maxWidth={"sm"}
+    >
+      <DialogContent>
+        <p>
+          {t("projekti:muistutuslomake.epaonnistui_viesti", {
+            viranomainen: viranomaisenText,
+          })}
+        </p>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} primary id="close_epaonnistui">
           {t("common:sulje")}
         </Button>
       </DialogActions>
