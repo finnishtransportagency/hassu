@@ -391,7 +391,7 @@ function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
       ["lahetekirje", "kuulutusPDF", "kuulutusIlmoitusPDF"].includes(key) &&
       typeof value == "object"
     ) {
-      if (!value.uuid) {
+      if (!value?.uuid) {
         return { ...value, uuid: uuid.v4() };
       } else {
         return value;

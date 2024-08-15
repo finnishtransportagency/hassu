@@ -83,3 +83,4 @@ testpdf.pdf
 backend/test/asiakirja/lambda/*.pdf
 backend/test/mml/maanomistajaluettelo_hyvaksymispaatos.xlsx
 backend/test/mml/maanomistajaluettelo_nahtavillaolo.xlsx
+.vscode/launch.json

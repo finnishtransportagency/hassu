@@ -1,4 +1,4 @@
-import { HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja } from "@services/api";
+import { AsianTila, HyvaksymisEsityksenTiedot, HyvaksymisTila, LadattuTiedostoNew, SahkopostiVastaanottaja } from "@services/api";
 import HyvaksyTaiPalautaPainikkeet from "./LomakeComponents/HyvaksyTaiPalautaPainikkeet";
 import useKayttoOikeudet from "src/hooks/useKayttoOikeudet";
 import Section from "@components/layout/Section2";
@@ -29,6 +29,7 @@ import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/Ladattav
 import { nyt, parseDate } from "backend/src/util/dateUtil";
 import ButtonLink from "@components/button/ButtonLink";
 import DownloadIcon from "@mui/icons-material/Download";
+import AsianhallintaStatusNotification from "./LomakeComponents/AsianhallintaStatusNotification";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
@@ -39,6 +40,8 @@ export default function HyvaksymisEsitysLukutila({
   const invalidPoistumisPaiva =
     !hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.poistumisPaiva ||
     parseDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day");
+  const asianhallintaVaarassaTilassa =
+    !hyvaksymisEsityksenTiedot.asianhallinta?.inaktiivinen && hyvaksymisEsityksenTiedot.ashaTila !== AsianTila.VALMIS_VIENTIIN;
   const { data: nykyinenKayttaja } = useKayttoOikeudet();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
   const api = useApi();
@@ -90,6 +93,14 @@ export default function HyvaksymisEsitysLukutila({
         )
       }
     >
+      <AsianhallintaStatusNotification
+        asianhallinta={hyvaksymisEsityksenTiedot.asianhallinta}
+        ashaTila={hyvaksymisEsityksenTiedot.ashaTila}
+        sivunVaiheOnAktiivinen={hyvaksymisEsityksenTiedot.vaiheOnAktiivinen}
+        vaiheOnMuokkaustilassa={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS}
+        kayttoOikeudet={hyvaksymisEsityksenTiedot.kayttoOikeudet}
+        suunnittelustaVastaavaViranomainen={hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio}
+      />
       {hyvaksymisEsitys.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>
@@ -348,6 +359,7 @@ export default function HyvaksymisEsitysLukutila({
           versio={versio}
           vastaanottajat={hyvaksymisEsitys.vastaanottajat!}
           invalidPoistumisPaiva={invalidPoistumisPaiva}
+          asianhallintaVaarassaTilassa={asianhallintaVaarassaTilassa}
         />
       )}
     </ProjektiPageLayout>
