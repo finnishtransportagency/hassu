@@ -6,14 +6,26 @@ import * as API from "hassu-common/graphql/apiModel";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
 import { haeHyvaksymisEsityksenTiedot } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
-import { DBProjekti } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { TEST_PROJEKTI, TEST_PROJEKTI_FILES } from "./TEST_PROJEKTI";
 import { deleteYllapitoFiles, insertYllapitoFileToS3 } from "./util";
 import axios from "axios";
 import { DeepReadonly } from "hassu-common/specialTypes";
 import { parameters } from "../../src/aws/parameters";
+import * as lambda from "../../src/aws/lambda";
+import omit from "lodash/omit";
 
 const oid = "Testi1";
+const projariAsVaylaDBUser: DBVaylaUser = {
+  kayttajatunnus: "projariuid",
+  tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
+  email: "test@test.fi",
+  organisaatio: "Org",
+  etunimi: "Pekka",
+  sukunimi: "Sukunimi",
+  puhelinnumero: "029123",
+};
+
 const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
@@ -33,22 +45,32 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
     toissijainenKieli: API.Kieli.RUOTSI,
     projektinNimiVieraskielella: "Ruotsinkielinen nimi",
   },
-  kayttoOikeudet: [],
+  kayttoOikeudet: [projariAsVaylaDBUser],
 });
 
 describe("HaeHyvaksymisEsityksenTiedot", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
+  let ashaLambdaStub:
+    | sinon.SinonStub<[functionName: string, asynchronousCall: boolean, payload?: string | undefined], Promise<string | undefined>>
+    | undefined;
+  let ashaParamStub: sinon.SinonStub<[], Promise<boolean>> | undefined;
 
   before(() => {
-    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(parameters, "getAshaBaseUrl").resolves("ashabaseurl");
+  });
+
+  beforeEach(() => {
+    ashaParamStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   afterEach(async () => {
     // Poista projekti joka testin päätteeksi
     await removeProjektiFromDB(oid);
     userFixture.logout();
+    ashaLambdaStub?.restore();
+    ashaParamStub?.restore();
   });
 
   after(async () => {
@@ -79,6 +101,78 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
     await insertProjektiToDB(projektiBefore);
     const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
     expect(tiedot.muokkauksenVoiAvata).to.be.true;
+  });
+
+  it("palauttaa tiedon ashan ja asha-synkronisaation tilasta hyväksymisesityksen suhteen", async () => {
+    ashaLambdaStub = sinon.stub(lambda, "invokeLambda").resolves(`{ "synkronointiTila": "VALMIS_VIENTIIN" }`);
+    ashaParamStub?.restore();
+    ashaParamStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(true);
+
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      poistumisPaiva: "2033-01-02",
+    };
+
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      asianhallinta: { inaktiivinen: false, asiaId: 123 },
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
+    expect(tiedot.ashaTila).to.eql(API.AsianTila.VALMIS_VIENTIIN);
+    expect(omit(tiedot.asianhallinta, "__typename")).to.eql({
+      aktivoitavissa: true,
+      inaktiivinen: false,
+      linkkiAsianhallintaan: "ashabaseurl/group/asianhallinta/asianhallinta/-/case/123/view",
+    });
+  });
+
+  it("palauttaa käyttöoikeustiedon", async () => {
+    ashaLambdaStub = sinon.stub(lambda, "invokeLambda").resolves(`{ "synkronointiTila": "VALMIS_VIENTIIN" }`);
+    ashaParamStub?.restore();
+    ashaParamStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(true);
+
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.HYVAKSYTTY,
+    };
+    const julkaistuHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      hyvaksymisPaiva: "2022-01-01",
+      hyvaksyja: "oid",
+      poistumisPaiva: "2033-01-02",
+    };
+
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      asianhallinta: { inaktiivinen: false, asiaId: 123 },
+      muokattavaHyvaksymisEsitys,
+      julkaistuHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    const tiedot = await haeHyvaksymisEsityksenTiedot(oid);
+    expect(tiedot.kayttoOikeudet).to.eql([
+      {
+        __typename: "ProjektiKayttaja",
+        sukunimi: "Sukunimi",
+        kayttajatunnus: "projariuid",
+        organisaatio: "Org",
+        puhelinnumero: "029123",
+        tyyppi: "PROJEKTIPAALLIKKO",
+        email: "test@test.fi",
+        etunimi: "Pekka",
+      },
+    ]);
   });
 
   it("palauttaa tiedostot siinä järjestyksessä kuin ne ovat tietokannassa", async () => {

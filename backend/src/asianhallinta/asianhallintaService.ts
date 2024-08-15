@@ -30,7 +30,7 @@ import { getVaylaUser } from "../user";
 class AsianhallintaService { //NOSONAR
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
     const projekti = await this.haeProjekti(oid);
-    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) { 
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
@@ -75,10 +75,38 @@ class AsianhallintaService { //NOSONAR
     log.info("enqueueAsianhallintaSynchronization", { result });
   }
 
-  async checkAsianhallintaState(oid: string, vaihe: Vaihe): Promise<AsianTila | undefined> {
+  async checkAsianhallintaState(oid: string, vaihe: Vaihe | "HYVAKSYMISESITYS"): Promise<AsianTila | undefined> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
+    }
+    assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    if (!asiatunnus) {
+      return;
+    }
+    const body: CheckAsianhallintaStateCommand = {
+      asiatunnus,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
+      asiakirjaTyyppi: vaiheSpecificAsiakirjaTyyppi[vaihe],
+      correlationId: getCorrelationId() ?? uuid.v4(),
+    };
+    log.info("checkAsianhallintaState", { body });
+    const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "CHECK"));
+    if (result) {
+      const response: CheckAsianhallintaStateResponse = JSON.parse(result);
+      log.info("checkAsianhallintaState", { response });
+      if (response.synkronointiTila) {
+        return synkronointiTilaToAsianTilaMap[response.synkronointiTila];
+      } else {
+        log.error("checkAsianhallintaState", { response });
+      }
+    }
+  }
+
+  async checkAsianhallintaStateForKnownProjekti(projekti: Pick<DBProjekti, "oid" | "velho" | "asianhallinta">, vaihe: Vaihe | "HYVAKSYMISESITYS"): Promise<AsianTila | undefined> {
+    if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+      return; 
     }
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
@@ -110,6 +138,10 @@ class AsianhallintaService { //NOSONAR
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
     }
+    return await this.getAsiaIdByProjekti(projekti);
+  }
+
+  async getAsiaIdByProjekti(projekti: DBProjekti): Promise<number | undefined> {
     assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
     const asiatunnus = getAsiatunnus(projekti.velho);
     if (!asiatunnus) {
@@ -160,10 +192,11 @@ class AsianhallintaService { //NOSONAR
   }
 }
 
-const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe, AsiakirjaTyyppi> = {
+const vaiheSpecificAsiakirjaTyyppi: Record<Vaihe | "HYVAKSYMISESITYS", AsiakirjaTyyppi> = {
   ALOITUSKUULUTUS: "ALOITUSKUULUTUS",
   SUUNNITTELU: "YLEISOTILAISUUS_KUTSU",
   NAHTAVILLAOLO: "NAHTAVILLAOLOKUULUTUS",
+  HYVAKSYMISESITYS: "HYVAKSYMISESITYS_SAHKOPOSTI",
   HYVAKSYMISPAATOS: "HYVAKSYMISPAATOSKUULUTUS",
   JATKOPAATOS: "JATKOPAATOSKUULUTUS",
   JATKOPAATOS2: "JATKOPAATOSKUULUTUS2",
