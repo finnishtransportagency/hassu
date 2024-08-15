@@ -197,7 +197,7 @@
     "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
     "lue_lisaa": "Läs mer",
     "epaonnistui": "(sv) Muistutuksen jättäminen epäonnistui",
-    "epaonnistui_viesti": "(sv) Muistutuksen jättäminen epäonnistui. Voit kokeilla lähettää muistutuksen uudelleen tai laittaa sähköpostia {{viranomainen}} Kirjaamoon."
+    "epaonnistui_viesti": "(sv) Muistutuksen lähetys ei onnistunut. Yritä lähettää muistutus uudelleen tai lähetä se liitteineen sähköpostitse suoraan {{viranomainen}} Kirjaamoon."
   },
   "asiakirja": {
     "aloituskuulutus": {
