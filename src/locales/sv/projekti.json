@@ -196,8 +196,8 @@
     "muistutus_info_1": "Anmärkningen är ett fritt formulerat skriftligt ställningstagande till den myndighet som ansvarar för utarbetandet av planen. Svaret på anmärkningen ges i Transport- och kommunikationsverkets beslut om godkännande av planen.",
     "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
     "lue_lisaa": "Läs mer",
-    "epaonnistui": "Det gick inte att skicka en påminnelse",
-    "epaonnistui_viesti": "Du kan försöka skicka påminnelsen igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
+    "epaonnistui": "Det gick inte att skicka en anmärkning",
+    "epaonnistui_viesti": "Du kan försöka skicka anmärkningen igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
   },
   "asiakirja": {
     "aloituskuulutus": {
