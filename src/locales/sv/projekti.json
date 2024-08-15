@@ -189,15 +189,15 @@
     "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till anmärkningen.",
     "muistutuksen_liitteet": "Bilagor till anmärkningen",
     "tuetut_tiedostomuodot_ovat": "Filformat som stöds är pdf, jpg, png, doc, docx, txt. Den största tillåtna storleken på en fil är 25 MB.",
-    "olemme_vastaanottaneet_viestisi": "Vi har mottagit din anmärkning och förmedlar den till Registratorskontoret vid {{viranomainen}}.",
+    "olemme_vastaanottaneet_viestisi": "Vi har mottagit din anmärkning och förmedlar den till registratorskontoret vid {{viranomainen}}.",
     "voit_antaa_muistutuksia": "Du kan ge anmärkningar om planeringsprojektet fram till {{pvm}}.",
     "jata_muistutus": "Lämna en anmärkning",
     "jata_muistutus_mennessa": "Anmärkningar på planen ska lämnas in senast {{pvm}}. För att lämna en anmärkning krävs stark autentisering.",
     "muistutus_info_1": "Anmärkningen är ett fritt formulerat skriftligt ställningstagande till den myndighet som ansvarar för utarbetandet av planen. Svaret på anmärkningen ges i Transport- och kommunikationsverkets beslut om godkännande av planen.",
     "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
     "lue_lisaa": "Läs mer",
-    "epaonnistui": "(sv) Muistutuksen jättäminen epäonnistui",
-    "epaonnistui_viesti": "(sv) Muistutuksen lähetys ei onnistunut. Yritä lähettää muistutus uudelleen tai lähetä se liitteineen sähköpostitse suoraan {{viranomainen}} Kirjaamoon."
+    "epaonnistui": "Det gick inte att skicka en påminnelse",
+    "epaonnistui_viesti": "Du kan försöka skicka påminnelsen igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
   },
   "asiakirja": {
     "aloituskuulutus": {

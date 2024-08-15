@@ -37,6 +37,7 @@ import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
 import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
+import dayjs from "dayjs";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -402,6 +403,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
     }
     return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
+  const paattyyPvm = dayjs(nahtavillaolo.muistutusoikeusPaattyyPaiva).endOf("date");
   return (
     <HassuDialog
       PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
@@ -420,7 +422,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
         </p>
         <p>
           {t("projekti:muistutuslomake.voit_antaa_muistutuksia", {
-            pvm: formatDateTime(nahtavillaolo.muistutusoikeusPaattyyPaiva),
+            pvm: formatDateTime(paattyyPvm),
           })}
         </p>
       </DialogContent>

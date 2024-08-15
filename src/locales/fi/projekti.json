@@ -190,7 +190,7 @@
     "muistutuksen_liitteet": "Muistutuksen liitteet",
     "voit_myos_jattaa": "Voit myös jättää muistutuksen erillisenä tiedostona tai lisätä muistutukseen liitteitä.",
     "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat pdf, jpg, png, doc, docx, txt. Yhden tiedoston suurin sallittu koko on 25 Mt.",
-    "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään  {{viranomainen}} Kirjaamoon.",
+    "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään {{viranomainen}} kirjaamoon.",
     "voit_antaa_muistutuksia": "Voit antaa muistutuksia suunnitteluhankkeesta {{pvm}} asti.",
     "jata_muistutus": "Jätä muistutus",
     "jata_muistutus_mennessa": "Muistutus suunnitelmasta tulee jättää {{pvm}} mennessä. Muistutuksen jättäminen edellyttää vahvaa tunnistautumista.",
@@ -198,7 +198,7 @@
     "muistutus_info_2": "Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä.",
     "lue_lisaa": "Lue lisää",
     "epaonnistui": "Muistutuksen jättäminen epäonnistui",
-    "epaonnistui_viesti": "Muistutuksen lähetys ei onnistunut. Yritä lähettää muistutus uudelleen tai lähetä se liitteineen sähköpostitse suoraan {{viranomainen}} Kirjaamoon."
+    "epaonnistui_viesti": "Voit kokeilla lähettää muistutuksen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."
   },
   "asiakirja": {
     "aloituskuulutus": {
