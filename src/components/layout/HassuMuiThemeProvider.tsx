@@ -447,6 +447,10 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .MuiTouchRipple-child": {
                 color: "rgba(0, 153, 255, 1)",
               },
+              "&:focus-visible": {
+                outline: "2px #FFFFFF solid",
+                outlineOffset: "-3px",
+              },
             },
             colorPrimary: {
               color: "#0064AF",
@@ -457,6 +461,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 color: "rgba(0, 153, 255, 1)",
               },
             },
+            
           },
         },
         MuiInputBase: {

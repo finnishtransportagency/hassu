@@ -52,10 +52,14 @@
     :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled):not(.error).hassu-input {
     @apply border-primary;
   } */
-   /* body :focus-visible {
+   body :is(button):focus-visible {
     outline: 2px #0063B5 solid;
-    outline-offset: 0px;
-   } */
+    outline-offset: -2px;
+   }
+  body :is(li):focus-visible {
+    outline: 2px #0063B5 solid;
+    outline-offset: -2px;
+  }
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):disabled.hassu-input {
     @apply border-gray-dark bg-gray-light;
   }
@@ -403,7 +407,7 @@
   .btn-primary {
     @apply btn bg-primary-dark text-white;
   }
-  .btn-primary:focus {
+  .btn-primary:focus-visible {
     outline: 2px #FFFFFF solid;
     outline-offset: -3px;
   } 

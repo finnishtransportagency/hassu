@@ -264,7 +264,7 @@ function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
             const isSorted = header.column.getIsSorted();
             const canSort = table.options.enableSorting && header.column.getCanSort();
             return (
-              <HeaderCell key={header.id}>
+              <HeaderCell key={header.id} >
                 <HeaderCellContents
                   as={canSort ? "button" : undefined}
                   onClick={canSort ? header.column.getToggleSortingHandler() : undefined}

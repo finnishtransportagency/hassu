@@ -181,6 +181,10 @@ const SocialMediaLink = styled(({ icon, ref, ...props }: Omit<SocialMediaLinkPro
   alignItems: "center",
   borderRadius: "50%",
   background: theme.palette.primary.dark,
+  "&:focus-visible": {
+    outline: "2px #FFFFFF solid",
+    outlineOffset: "-3px",  
+  },
 }));
 
 const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX.Element => (
