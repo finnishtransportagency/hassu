@@ -12,7 +12,6 @@ import HassuLink from "@components/HassuLink";
 import { Status } from "@services/api";
 import { UrlObject } from "url";
 import classNames from "classnames";
-import { focusStyle } from "../../layout/HassuMuiThemeProvider";
 interface Props {
   oid: string;
   activeStep: Status | null | undefined;
@@ -23,7 +22,6 @@ interface Props {
 }
 
 const HassuStep = styled(Step)<StepProps>(({}) => ({
-  ":hover": focusStyle,
   [`&.${stepClasses.horizontal}`]: {
     flex: "1 1 0px",
     width: "0",

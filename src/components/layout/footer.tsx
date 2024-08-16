@@ -7,6 +7,7 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontaw
 import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
+import { focusStyleSecondary } from "./HassuMuiThemeProvider";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -181,10 +182,7 @@ const SocialMediaLink = styled(({ icon, ref, ...props }: Omit<SocialMediaLinkPro
   alignItems: "center",
   borderRadius: "50%",
   background: theme.palette.primary.dark,
-  "&:focus-visible": {
-    outline: "2px #FFFFFF solid",
-    outlineOffset: "-3px",  
-  },
+  "&:focus-visible": focusStyleSecondary,
 }));
 
 const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX.Element => (
