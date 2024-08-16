@@ -29,6 +29,7 @@ import {
   findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu,
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
 } from "../util/lausuntoPyyntoUtil";
+import { velho } from "../velho/velhoClient";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -119,7 +120,7 @@ async function handleLausuntoPyynnonTaydennyksetZipping(ctx: ImportContext) {
   );
   log.info(
     "paivitetaan dbprojekti lausuntoPyyntojenTaydennysten aineistopaketti-tiedolla: " +
-      lausuntoPyynnonTaydennykset.map((lausuntoPyynto) => lausuntoPyynto.aineistopaketti).toString()
+    lausuntoPyynnonTaydennykset.map((lausuntoPyynto) => lausuntoPyynto.aineistopaketti).toString()
   );
   await projektiDatabase.saveProjektiWithoutLocking({
     oid,
@@ -448,6 +449,14 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           } else {
             log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia ja muistuttajia");
           }
+        } else if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+          // Vaihdetaan suunnitelman tila Suunnittelu käynnissä tilaan
+          if (!projekti.kasittelynTila) {
+            projekti.kasittelynTila = {};
+          }
+          projekti.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil13";
+          await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, kasittelynTila: projekti.kasittelynTila });
+          await velho.saveProjektiSuunnitelmanTila(projekti.oid, projekti.kasittelynTila.suunnitelmanTila);
         }
       }
       if (!successfulSynchronization) {

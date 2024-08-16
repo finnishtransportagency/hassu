@@ -11,6 +11,7 @@ import {
   adaptSearchResults,
   applyAloitusKuulutusPaivaToVelho,
   applyKasittelyntilaToVelho,
+  applySuunnittelunTilaToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "hassu-common/error";
@@ -25,6 +26,7 @@ import { VelhoUnavailableError } from "hassu-common/error/velhoUnavailableError"
 
 import NodeCache from "node-cache";
 import { isEmpty } from "lodash";
+import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 
 const accessTokenCache = new NodeCache({
   stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
@@ -236,6 +238,13 @@ export class VelhoClient {
   public async saveProjektiAloituskuulutusPaiva(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): Promise<void> {
     await this.saveProjekti(oid, (projekti) =>
       applyAloitusKuulutusPaivaToVelho(projekti, aloitusKuulutusJulkaisu.kuulutusPaiva ?? undefined)
+    );
+  }
+
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidGet")
+  public async saveProjektiSuunnitelmanTila(oid: string, tila: keyof typeof suunnitelmanTilat): Promise<void> {
+    await this.saveProjekti(oid, (projekti) =>
+      applySuunnittelunTilaToVelho(projekti, tila)
     );
   }
 
