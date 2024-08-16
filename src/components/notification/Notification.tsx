@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactElement, ReactNode, useCallback, useState } from "react";
+import React, { ComponentProps, MouseEventHandler, ReactElement, ReactNode, useCallback, useState } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import CloseIcon from "@mui/icons-material/Close";
@@ -46,7 +46,7 @@ interface Props {
   hideIcon?: boolean;
   closable?: boolean;
   open?: boolean;
-  onClose?: () => void;
+  onClose?: MouseEventHandler;
 }
 
 const NotificationContent = styled("div")(

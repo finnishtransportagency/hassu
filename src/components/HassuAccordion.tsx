@@ -21,12 +21,14 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   />
 ))(({ theme }) => ({
   flexDirection: "row-reverse",
+  alignItems: "start",
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(90deg)",
   },
   "& .MuiAccordionSummary-expandIconWrapper": {
-    width: "24px",
-    height: "24px",
+    minWidth: "24px",
+    minHeight: "24px",
+    marginTop: "12px",
   },
   padding: 0,
   "& .MuiAccordionSummary-content": {
@@ -45,6 +47,7 @@ export interface AccordionItem {
   title: string | JSX.Element;
   content: ReactNode | string;
   id?: Key;
+  tooltip?: JSX.Element;
 }
 
 type Props = {
@@ -78,7 +81,7 @@ export default function CustomizedAccordions(props: Props) {
             expanded={expanded.includes(key)}
             onChange={handleChange(key)}
           >
-            <AccordionSummary>
+            <AccordionSummary sx={{pointerEvents: "auto"}}>
               {typeof item.title === "string" ? <h5 className="vayla-smallest-title mb-0">{item.title}</h5> : item.title}
             </AccordionSummary>
             <AccordionDetails>{item.content}</AccordionDetails>

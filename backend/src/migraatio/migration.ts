@@ -36,7 +36,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   if (!projekti.velho) {
     throw new Error("Projektille ei saatu ladattua tietoja Projektivelhosta: " + oid);
   }
-  const kielitiedot = { ensisijainenKieli: Kieli.SUOMI };
+  const kielitiedot = { ensisijainenKieli: Kieli.SUOMI, toissijainenKieli: null };
   projekti.kielitiedot = kielitiedot;
   projekti.euRahoitus = false; // TODO selvitä mikä on sopiva oletusarvo vai haetaanko excelistä
 

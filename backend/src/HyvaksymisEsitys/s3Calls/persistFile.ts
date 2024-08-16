@@ -5,6 +5,7 @@ import { CopyObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../../config";
 import { log } from "../../logger";
 import { assertIsDefined } from "../../util/assertions";
+import { NotFoundError } from "hassu-common/error";
 
 /**
  * Persistoi yksittäisen tiedoston, joka on tallennettu uploads-kansioon, annetun vaiheen alle ylläpito-bucketiin
@@ -29,6 +30,9 @@ export async function persistFile({
   const { tiedosto, nimi, avain } = ladattuTiedosto;
   assertIsDefined(tiedosto, "Tiedoston on oltava  määritelty");
   const sourceFileProperties = await getUploadedSourceFileInformation(tiedosto);
+  if (!sourceFileProperties) {
+    throw new NotFoundError(`Tiedostoa ${tiedosto} ei löydy`);
+  }
   const targetPath = joinPath(getYllapitoPathForProjekti(oid), vaihePrefix, avain, adaptFileName(nimi));
   try {
     await getS3Client().send(

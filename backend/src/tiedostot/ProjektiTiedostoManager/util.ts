@@ -98,7 +98,8 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
     }
   );
   await Promise.all(poistettavat.map((tiedosto) => deleteFile({ oid, tiedosto })));
-  const persistoidutTiedostot = await Promise.all(
+  // ignoorataan virheelliset latausviittaukset jotta ei aiheuta projektin lukitusta 4 päiväksi kun sanoman käsittely ei onnistu
+  const persistoidutTiedostot = (await Promise.all(
     persistoitavat.map((tiedosto) =>
       persistLadattuTiedosto({
         oid,
@@ -106,7 +107,7 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
         targetFilePathInProjekti: paths.yllapitoPath,
       })
     )
-  );
+  )).filter(t => t !== undefined);
   tiedostot.push(...valmiit.concat(persistoidutTiedostot).sort((a, b) => (a.jarjestys ?? 0) - (b.jarjestys ?? 0)));
   if (poistettavat.length || persistoitavat.length) {
     return true;

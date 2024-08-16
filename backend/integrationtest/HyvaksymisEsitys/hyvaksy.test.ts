@@ -20,6 +20,9 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { parameters } from "../../src/aws/parameters";
 import MockDate from "mockdate";
 import { DeepReadonly } from "hassu-common/specialTypes";
+import { asianhallintaService } from "../../src/asianhallinta/asianhallintaService";
+import { uuid } from "hassu-common/util/uuid";
+import * as lambda from "../../src/aws/lambda";
 
 const oid = "Testi1";
 
@@ -27,7 +30,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
   oid,
   versio: 2,
   vuorovaikutusKierros: { tila: API.VuorovaikutusKierrosTila.MIGROITU, vuorovaikutusNumero: 1 },
-  asianhallinta: { inaktiivinen: true },
+  asianhallinta: { inaktiivinen: false },
   euRahoitus: false,
   kielitiedot: { ensisijainenKieli: API.Kieli.SUOMI },
   kayttoOikeudet: [
@@ -71,9 +74,13 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
 describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
-  let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
-
   // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
+  let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
+  let ashaStub: sinon.SinonStub<[oid: string, asianhallintaEventId: string], Promise<void>> | undefined;
+  // Lambda, jolla kysytään ashan tilaa
+  let ashaLambdaStub:
+    | sinon.SinonStub<[functionName: string, asynchronousCall: boolean, payload?: string | undefined], Promise<string | undefined>>
+    | undefined;
 
   before(async () => {
     // Poista projektin tiedostot testisetin alussa
@@ -91,9 +98,13 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       }
       return Promise.resolve("getParameterValue_" + paramName);
     });
+    ashaStub = sinon.stub(asianhallintaService, "enqueueSynchronization");
+    sinon.stub(uuid, "v4").returns("uuid123");
+    ashaLambdaStub = sinon.stub(lambda, "invokeLambda");
   });
 
   beforeEach(async () => {
+    ashaLambdaStub?.resolves(`{ "synkronointiTila": "VALMIS_VIENTIIN" }`);
     // Aseta muokattavalle hyväksymisesitykselle tiedostoja S3:een
     await Promise.all(
       TEST_HYVAKSYMISESITYS_FILES.map(async ({ path }) => {
@@ -103,16 +114,18 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     );
 
     // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail").resolves({
-      messageId: "messageId123",
-      accepted: ["vastaanottaja@sahkoposti.fi"],
-      rejected: [],
-      pending: [],
-      envelope: {
-        from: false,
-        to: [],
-      },
-      response: "response",
+    emailStub = sinon.stub(emailClient, "sendEmail").callsFake(async () => {
+      return Promise.resolve({
+        messageId: "messageId123",
+        accepted: ["vastaanottaja@sahkoposti.fi"],
+        rejected: [],
+        pending: [],
+        envelope: {
+          from: false,
+          to: [],
+        },
+        response: "response",
+      });
     });
   });
 
@@ -125,6 +138,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     emailStub?.reset();
     emailStub?.restore();
     MockDate.reset();
+    ashaStub?.reset();
   });
 
   after(() => {
@@ -132,7 +146,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     sinon.restore();
   });
 
-  it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot", async () => {
+  it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot ja lisää ashasynkronoinnin", async () => {
     MockDate.set("2000-01-01");
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
@@ -155,6 +169,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       versio: projektiBefore.versio + 1,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.HYVAKSYTTY, palautusSyy: null },
       julkaistuHyvaksymisEsitys: {
+        asianhallintaEventId: "uuid123",
         ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
         hyvaksyja: "theadminuid",
         vastaanottajat: [
@@ -165,9 +180,46 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           },
         ],
       },
+      synkronoinnit: {
+        uuid123: {
+          asianhallintaEventId: "uuid123",
+          asiatunnus: "asiatunnusELY",
+          dokumentit: [
+            {
+              s3Path: "yllapito/tiedostot/projekti/Testi1/hyvaksymisesityksen_spostit/20000101-020000_hyvaksymisesitys.eml",
+            },
+          ],
+          toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+          vaylaAsianhallinta: false,
+        },
+      },
     });
     expect(projektiAfter.paivitetty).to.exist;
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
+
+    expect(ashaStub?.calledOnce).to.be.true;
+    expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123"]);
+  });
+
+  it("ei onnistu, jos asha on väärässä tilassa", async () => {
+    MockDate.set("2000-01-01");
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    ashaLambdaStub?.resolves(`{ "synkronointiTila": "ASIANHALLINTA_VAARASSA_TILASSA" }`);
+    const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    await expect(kutsu).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Suunnitelman asia ei ole valmis vientiin. Vaihe: hyväksymisesitys, tila: ASIANHALLINTA_VAARASSA_TILASSA"
+    );
   });
 
   it("ei onnistu, jos projektin status on liian pieni", async () => {
@@ -200,6 +252,30 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       },
       response: "response",
     });
+    userFixture.loginAsAdmin();
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+      palautusSyy: "Virheitä",
+    };
+    const projektiBefore: DeepReadonly<DBProjekti> = {
+      ...getProjektiBase(),
+      muokattavaHyvaksymisEsitys,
+    };
+    await insertProjektiToDB(projektiBefore);
+    await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
+    const projektiAfter = await getProjektiFromDB(oid);
+    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+      {
+        sahkoposti: "vastaanottaja@sahkoposti.fi",
+        lahetysvirhe: true,
+      },
+    ]);
+  });
+
+  it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
+    MockDate.set("2000-01-01");
+    emailStub?.onFirstCall().resolves(undefined);
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -607,6 +683,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const projektiAfter = await getProjektiFromDB(oid);
     expect(omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva")).to.eql({
+      asianhallintaEventId: "uuid123",
       ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
       hyvaksyja: "theadminuid",
       vastaanottajat: [

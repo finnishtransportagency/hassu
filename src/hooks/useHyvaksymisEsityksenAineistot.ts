@@ -11,7 +11,7 @@ export function useHyvaksymisEsityksenAineistot() {
   const oid = typeof query.oid === "string" ? query.oid : undefined;
   const hash = typeof query.hash === "string" ? query.hash : undefined;
 
-  const lisaAineistoLoader = useMemo(() => {
+  const hyvEsLoader = useMemo(() => {
     return getHyvaksymisEsityksenAineistotLoader(api);
   }, [api]);
 
@@ -19,7 +19,7 @@ export function useHyvaksymisEsityksenAineistot() {
     return [apiConfig.listaaHyvaksymisEsityksenTiedostot.graphql, oid, hash];
   }, [hash, oid]);
 
-  return useSWR(paramArray, lisaAineistoLoader);
+  return useSWR(paramArray, hyvEsLoader);
 }
 
 const getHyvaksymisEsityksenAineistotLoader = (api: API) => async (_query: string, oid: string | undefined, hash: string | undefined) => {

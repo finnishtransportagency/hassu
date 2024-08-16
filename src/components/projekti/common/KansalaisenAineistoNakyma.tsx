@@ -17,6 +17,48 @@ import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
+import Notification, { NotificationType } from "../../notification/Notification";
+
+type AccordioSummaryContentProps = {
+  titleText: string;
+  paakategoria?: boolean;
+  tooltipText?: string;
+};
+
+const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: AccordioSummaryContentProps) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const Heading = paakategoria ? H4 : H5;
+  return (
+    <div className="w-full">
+      <div className="flex flex-row items-center justify-between max-w-sm">
+        <Heading variant="h5" sx={{ margin: 0, alignSelf: "baseline" }}>
+          {titleText}
+        </Heading>
+        {tooltipText && (
+            <FontAwesomeIcon
+              color="rgb(0, 100, 175)"
+              size={"lg"}
+              icon="info-circle"
+              type={NotificationType.INFO_GRAY}
+              cursor="pointer"
+              onMouseEnter={() => setShowTooltip(true)}
+              onClick={(event) => {event.stopPropagation(); setShowTooltip(true)}}
+            />
+        )}
+      </div>
+      <Notification
+        type={NotificationType.INFO_GRAY}
+        className="mt-4"
+        open={showTooltip}
+        onClose={(event) => {event.stopPropagation(); setShowTooltip(false)}}
+        closable
+        style={{ maxWidth: "40rem" }}
+      >
+        <p>{tooltipText}</p>
+      </Notification>
+    </div>
+  );
+};
 
 type Props = {
   projekti: ProjektiJulkinen;
@@ -121,13 +163,9 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
 
     return aineistotKategorioittain.map<AccordionItem>(({ kategoria, aineisto }) => {
       const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
-      const Heading = props.paakategoria ? H4 : H5;
+      const tooltipText = props.paakategoria ? t(`aineisto-kategoria-tooltip.${kategoria.id}`) : undefined;
       return {
-        title: (
-          <Heading variant="h5" sx={{ margin: 0 }}>
-            {titleText}
-          </Heading>
-        ),
+        title: <AccordioSummaryContent titleText={titleText} paakategoria={props.paakategoria} tooltipText={tooltipText} />,
         content: (
           <SuunnitelmaAineistoKategoriaContent
             aineistot={aineisto}
