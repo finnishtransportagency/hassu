@@ -374,10 +374,10 @@ export const createLocalizedTheme = (locale: Localization) =>
                 "&:hover": {
                   backgroundColor: "rgba(60,210,255,0.15)",
                 },
-                "&.Mui-focusVisible": {
-                  backgroundColor: "rgba(60,210,255,0.20)",
-                },
               },
+              "&:focus": {
+                backgroundColor: "transparent"
+              }
             },
           },
         },
