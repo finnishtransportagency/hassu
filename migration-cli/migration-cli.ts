@@ -28,6 +28,7 @@ dayjs.extend(customParseFormat);
 const TIMEZONE = "Europe/Helsinki";
 dayjs.tz.setDefault(TIMEZONE);
 process.env.TZ = TIMEZONE;
+process.env.MIGRATION_CLI = "true";
 
 AWSXRay.middleware.disableCentralizedSampling();
 

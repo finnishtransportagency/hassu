@@ -119,12 +119,17 @@ class MuistutusHandler {
 
     return await Promise.all(
       liitteet.map(
-        async (liite) =>
-          await fileService.persistFileToProjekti({
+        async (liite) => {
+          const tiedosto = await fileService.persistFileToProjekti({
             uploadedFileSource: liite,
             oid,
             targetFilePathInProjekti: "muistutukset/" + muistutusId,
-          })
+          });
+          if (!tiedosto) {
+            throw new NotFoundError("Liitettä ei löydy");
+          }
+          return tiedosto;
+        }
       )
     );
   }

@@ -36,8 +36,8 @@ export type HassuTableProps<T> = {
   table: Table<T>;
 };
 
-const DEFAULT_COL_MIN_WIDTH = 180;
-const DEFAULT_COL_WIDTH_FRACTIONS = 1;
+export const DEFAULT_COL_MIN_WIDTH = 180;
+export const DEFAULT_COL_WIDTH_FRACTIONS = 1;
 
 const Span = styled("span")(sx({}));
 

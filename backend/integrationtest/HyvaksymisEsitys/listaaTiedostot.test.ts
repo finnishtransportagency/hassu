@@ -20,6 +20,7 @@ import MockDate from "mockdate";
 import omit from "lodash/omit";
 import { DBVaylaUser } from "../../src/database/model";
 import GetProjektiStatus from "../../src/projekti/status/getProjektiStatus";
+import { parameters } from "../../src/aws/parameters";
 
 describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)", () => {
   const userFixture = new UserFixture(userService);
@@ -43,6 +44,9 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
   };
   const projektiInDB = {
     ...TEST_PROJEKTI,
+    asianhallinta: {
+      inaktiivinen: true,
+    },
     muokattavaHyvaksymisEsitys: {
       ...TEST_HYVAKSYMISESITYS2,
       tila: API.HyvaksymisTila.MUOKKAUS,
@@ -61,6 +65,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     await deleteYllapitoFiles(`yllapito/tiedostot/projekti/${oid}/`);
     // Before eachissä haetaan projektin tiedot, mitä varten tarvitaan getProjektiStatusta
     sinon.stub(GetProjektiStatus, "getProjektiStatus").resolves(API.Status.NAHTAVILLAOLO);
+    sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(async () => {

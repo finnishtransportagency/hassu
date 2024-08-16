@@ -31,7 +31,11 @@ import { EmailOptions } from "../../email/model/emailOptions";
 import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
+import { AsiakirjaTyyppi, ToimenpideTyyppi } from "@hassu/asianhallinta";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { uuid } from "hassu-common/util/uuid";
+import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
+import { getAsiatunnus } from "../../projekti/projektiUtil";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -48,6 +52,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email vastaanottajille
   const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
   let messageInfo: SMTPTransport.SentMessageInfo | undefined;
+  let s3PathForEmail: string | undefined;
   if (emailOptions.to) {
     // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
     const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
@@ -57,11 +62,36 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     if (attachments.find((a) => !a)) {
       log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
     }
-    await saveEmailAsFile(oid, emailOptions); // TODO: nappaa polku talteen ja tee asianhallintasynkronointihommat
+    // Tallenna s.posti S3:een
+    s3PathForEmail = await saveEmailAsFile(oid, emailOptions);
     messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
+
+  const asiatunnus = getAsiatunnus(projektiInDB.velho);
+  assertIsDefined(asiatunnus, "Joko väylä- tai ELY-asiatunnus on olemassa");
+
+  let asianhallintaEventId: string | undefined;
+  if (s3PathForEmail) {
+    const toimenpideTyyppi: ToimenpideTyyppi = "ENSIMMAINEN_VERSIO";
+    // Laita synkronointi-event ashaan ja tietokantaan
+    asianhallintaEventId = uuid.v4();
+    await asianhallintaService.saveAndEnqueueSynchronization(oid, {
+      asiatunnus,
+      toimenpideTyyppi,
+      asianhallintaEventId,
+      vaylaAsianhallinta: isVaylaAsianhallinta(projektiInDB),
+      dokumentit: [
+        {
+          s3Path: s3PathForEmail,
+        },
+      ],
+    });
+  }
+
+  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
+  // Vastaanottajiin lisätään lähetystieto.
 
   const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
     if (isEmailSent(vo.sahkoposti, messageInfo)) {
@@ -81,8 +111,6 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     }
   });
 
-  // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
-  // Vastaanottajiin lisätään lähetystieto.
   assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
   const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
     ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "vastaanottajat"]),
@@ -90,6 +118,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     hyvaksymisPaiva: nyt().format(),
     hyvaksyja: nykyinenKayttaja.uid,
     vastaanottajat,
+    asianhallintaEventId,
   };
   await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
 
@@ -127,6 +156,11 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.Ny
   }
   // Vaiheen on oltava vähintään NAHTAVILLAOLO_AINEISTOT
   await validateVaiheOnAktiivinen(projektiInDB);
+  // Asianhallinnan on oltava oikeassa tilassa, jos asha-integraatio on käytössä
+  const asianhallinnanTila = await asianhallintaService.checkAsianhallintaStateForKnownProjekti(projektiInDB, "HYVAKSYMISESITYS");
+  if (asianhallinnanTila && asianhallinnanTila !== API.AsianTila.VALMIS_VIENTIIN) {
+    throw new IllegalArgumentError(`Suunnitelman asia ei ole valmis vientiin. Vaihe: hyväksymisesitys, tila: ${asianhallinnanTila}`);
+  }
   return nykyinenKayttaja;
 }
 

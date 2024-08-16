@@ -16,14 +16,17 @@ export async function persistLadattuTiedosto({
   targetFilePathInProjekti: string;
   asiakirjaTyyppi?: AsiakirjaTyyppi;
   kieli?: Kieli;
-}): Promise<LadattuTiedosto> {
-  const uploadedFile: string = await fileService.persistFileToProjekti({
+}): Promise<LadattuTiedosto | undefined> {
+  const uploadedFile = await fileService.persistFileToProjekti({
     uploadedFileSource: ladattuTiedosto.tiedosto,
     oid,
     targetFilePathInProjekti,
     asiakirjaTyyppi,
     kieli,
   });
+  if (!uploadedFile) {
+    return;
+  }
 
   const fileName = uploadedFile.split("/").pop();
   assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
@@ -37,10 +40,11 @@ export async function persistLadattuTiedosto({
 }
 
 export async function deleteFile({ oid, tiedosto }: { oid: string; tiedosto: LadattuTiedosto }) {
-  assertIsDefined(tiedosto.tiedosto, "poistettavalla tiedostolla on oltava tiedosto tiedossa");
-  await fileService.deleteYllapitoFileFromProjekti({
-    oid,
-    filePathInProjekti: tiedosto.tiedosto,
-    reason: "Käyttäjä poisti tiedoston",
-  });
+  if (tiedosto.tiedosto) {
+    await fileService.deleteYllapitoFileFromProjekti({
+      oid,
+      filePathInProjekti: tiedosto.tiedosto,
+      reason: "Käyttäjä poisti tiedoston",
+    });
+  }
 }

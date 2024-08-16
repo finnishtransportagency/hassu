@@ -149,10 +149,12 @@ export class FileService {
   /**
    * Moves a file from temporary upload location to a permanent location under a projekti
    */
-  async persistFileToProjekti(param: PersistFileProperties): Promise<string> {
+  async persistFileToProjekti(param: PersistFileProperties): Promise<string | undefined> {
     const filePath = FileService.removePrefixFromFile(param.uploadedFileSource);
     const sourceFileProperties = await getUploadedSourceFileInformation(filePath);
-
+    if (!sourceFileProperties) {
+      return;
+    }
     const fileNameFromUpload = removeBucketFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
@@ -707,7 +709,7 @@ export class FileService {
   }
 }
 
-export async function getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
+export async function getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string } | undefined> {
   if (!config.uploadBucketName) {
     throw new Error("config.uploadBucketName määrittelemättä");
   }
@@ -724,8 +726,12 @@ export async function getUploadedSourceFileInformation(uploadedFileSource: strin
       CopySource: encodeURIComponent(config.uploadBucketName + "/" + uploadedFileSource),
     };
   } catch (e) {
-    log.error(e);
-    throw new NotFoundError("Uploaded file " + uploadedFileSource + " not found.");
+    if (e instanceof NotFound) {
+      log.error("Uploaded file " + uploadedFileSource + " not found.");
+    } else {
+      log.error("Getting uploaded file " + uploadedFileSource + " failed", { error: e });
+      throw e; 
+    }
   }
 }
 

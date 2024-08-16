@@ -470,6 +470,9 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
+    if (!input.suunnitteluSopimus.logo.SUOMI) {
+      throw new NotFoundError("Logoa ei löydy");
+    }
   }
 
   if (input.suunnitteluSopimus?.logo?.RUOTSI) {
@@ -478,6 +481,9 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
+    if (!input.suunnitteluSopimus.logo.RUOTSI) {
+      throw new NotFoundError("Logoa ei löydy");
+    }
   }
 }
 
@@ -505,6 +511,9 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
           asiakirjaTyyppi: asiakirjaTyypit[i],
           kieli: kielet[i],
         });
+        if (!palautus[key]) {
+          throw new NotFoundError("Tiedostoa ei löydy");
+        }
         break;
       case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
         await deleteFile({
@@ -560,6 +569,9 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
             asiakirjaTyyppi: API.AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
             kieli: API.Kieli.POHJOISSAAME,
           });
+          if (!dbProjekti.vuorovaikutusKierros.vuorovaikutusSaamePDFt[kieli]) {
+            throw new NotFoundError("Tiedostoa ei löydy");
+          }
           break;
         case API.LadattuTiedostoTila.ODOTTAA_POISTOA:
           await deleteFile({
@@ -675,6 +687,9 @@ async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/FI",
     });
+    if (!input.euRahoitusLogot.SUOMI) {
+      throw new NotFoundError("Logoa ei löydy");
+    }
   }
 
   if (input.euRahoitusLogot?.RUOTSI) {
@@ -683,6 +698,9 @@ async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/SV",
     });
+    if (!input.euRahoitusLogot.RUOTSI) {
+      throw new NotFoundError("Logoa ei löydy");
+    }
   }
 }
 
