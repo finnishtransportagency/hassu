@@ -9,6 +9,16 @@ import React, { ReactNode, useMemo } from "react";
 
 type Props = { children?: ReactNode };
 
+export const focusStyle = {
+  outline: "2px #0063B5 solid",
+  outlineOffset: "-2px",
+}
+
+export const focusStyleSecondary = {
+  outline: "2px #FFFFFF solid",
+  outlineOffset: "-3px",
+}
+
 export const breakpointOptions: BreakpointsOptions = {
   values: {
     xs: 0,
@@ -67,7 +77,19 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiStep: {
+          styleOverrides: {
+            root: {
+              '&.MuiStep-horizontal': {
+                '&.Mui-focusVisible': focusStyle,
+              }
+            }
+          }
+        },
         MuiSwitch: {
+          defaultProps: {
+            disableRipple: true,
+          },
           styleOverrides: {
             root: {
               width: "72px",
@@ -91,6 +113,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                     border: 0,
                   },
                 },
+                '&.Mui-focusVisible': focusStyle,
                 "&.Mui-disabled + .MuiSwitch-track": {
                   opacity: 1,
                   backgroundColor: "#C7C7C7",
@@ -376,8 +399,8 @@ export const createLocalizedTheme = (locale: Localization) =>
                 },
               },
               "&:focus": {
-                backgroundColor: "transparent"
-              }
+                backgroundColor: "transparent",
+              },
             },
           },
         },
@@ -400,10 +423,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-selected:not(.Mui-disabled)": {
                 color: "#0064AF",
               },
-              ":focus-visible": {
-                outline: "2px #0063B5 solid",
-                outlineOffset: "-2px",
-              },
+              ":focus-visible": focusStyle,
             },
           },
         },
@@ -447,10 +467,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .MuiTouchRipple-child": {
                 color: "rgba(0, 153, 255, 1)",
               },
-              "&:focus-visible": {
-                outline: "2px #FFFFFF solid",
-                outlineOffset: "-3px",
-              },
+              "&:focus-visible": focusStyleSecondary,
             },
             colorPrimary: {
               color: "#0064AF",
@@ -461,7 +478,6 @@ export const createLocalizedTheme = (locale: Localization) =>
                 color: "rgba(0, 153, 255, 1)",
               },
             },
-            
           },
         },
         MuiInputBase: {
