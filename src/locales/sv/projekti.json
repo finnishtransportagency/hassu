@@ -287,7 +287,7 @@
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Planen hålls framlagd {{kuulutusNahtavillaAika}} på adressen {{nahtavillaoloUrl}}.",
       "kappale3_ui": "Planen hålls framlagd <strong>{{kuulutusNahtavillaAika}}</strong> på adressen {{nahtavillaoloUrl}}.",
-      "kappale4": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. ({{lakiviite}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.\n\nAnmärkningen kan göras på adressen {{nahtavillaoloUrl}} eller genom att skicka den till {{tilaajaGenetiivi}} registratorskontor på adressen {{kirjaamo}}. Till en anmärkning som skickas till registratorskontoret ska {{asiatunnus}} bifogas.",
+      "kappale4": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. ({{lakiviite}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.\n\nAnmärkningen kan göras på adressen {{nahtavillaoloUrl}} eller genom att skicka den till {{tilaajaGenetiivi}} registratorskontor på adressen {{kirjaamo}}. I anmärkningen hänvisas till diarienummer {{asiatunnus}}.",
       "kappale4_vahainen_menettely": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen ({{lakiviite_vahainen_menettely}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.",
       "lakiviite_ilmoitus_tie": "27 § i lagen om trafiksystem och landsvägar",
       "lakiviite_ilmoitus_rata": "22 § 1 mom. i banlagen",
@@ -361,7 +361,7 @@
       "kappale2": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd {{kuulutusNahtavillaAika}}. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale2_ui": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd <strong>{{kuulutusNahtavillaAika}}</strong>. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras {{kuulutusPaiva}} på adressen {{linkki_paatos}}.",
-      "kappale4": "Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
+      "kappale4": "Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
@@ -372,7 +372,7 @@
       "kappale2": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd {{kuulutusNahtavillaAika}}. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale2_ui": "Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd <strong>{{kuulutusNahtavillaAika}}</strong>. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras {{kuulutusPaiva}} på adressen {{linkki_paatos}}.",
-      "kappale4": "Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
+      "kappale4": "Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos {{hallinto_oikeus_genetiivi}} förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
