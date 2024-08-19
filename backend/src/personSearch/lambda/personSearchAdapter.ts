@@ -1,6 +1,7 @@
 import { Person } from "../kayttajas";
 
 export type PersonFromResponse = {
+  ObjectID: string[];
   FirstName: string[];
   LastName: string[];
   AccountName: string[];
@@ -10,10 +11,15 @@ export type PersonFromResponse = {
   Accounttype: string[];
 };
 
-export function adaptPersonSearchResult(personsFromResponse: PersonFromResponse[] | undefined, personMap: Record<string, Person>): void {
+export type MemberFromResponse = {
+  Value: string[];
+}
+
+export function adaptPersonSearchResult(personsFromResponse: PersonFromResponse[] | undefined, personMap: Record<string, Person>, members: string[] | undefined): void {
   personsFromResponse?.forEach((person: PersonFromResponse) => {
     const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
-    if (uid) {
+    const id = getFirstElementFromArrayOrEmpty(person.ObjectID);
+    if (uid && (members === undefined || members.includes(id))) {
       const email = getFirstElementFromArrayOrEmpty(person.Email).toLowerCase().trim();
 
       if (personMap[uid]) {
