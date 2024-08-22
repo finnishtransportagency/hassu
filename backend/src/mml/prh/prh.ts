@@ -1,4 +1,6 @@
-import { createClientAsync, GetCompaniesResponse, ServiceClient } from "./service";
+import { auditLog } from "../../logger";
+import { GetCompaniesResponse } from "./service";
+import { createClientAsync, ServiceClient } from "./service/client";
 
 export type PrhConfig = {
   endpoint: string;
@@ -16,7 +18,7 @@ export type Options = {
 
 export type PrhClient = {
   haeYritykset: (ytunnus: string[]) => Promise<GetCompaniesResponse>;
-  getSoapClient: () => ServiceClient;
+  getSoapClient?: () => ServiceClient;
 };
 
 export async function getPrhClient(options: Options): Promise<PrhClient> {
@@ -35,7 +37,7 @@ export async function getPrhClient(options: Options): Promise<PrhClient> {
   });
   return {
     haeYritykset: (ytunnus) => {
-      return haeYritykset(client, ytunnus, options);
+      return haeYritykset(client, ytunnus);
     },
     getSoapClient: () => {
       return client;
@@ -43,7 +45,8 @@ export async function getPrhClient(options: Options): Promise<PrhClient> {
   };
 }
 
-async function haeYritykset(client: ServiceClient, ytunnus: string[], options: Options): Promise<GetCompaniesResponse> {
+async function haeYritykset(client: ServiceClient, ytunnus: string[]): Promise<GetCompaniesResponse> {
+  auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus });
   const response = await client.GetCompaniesAsync({
     request: {
       companiesQuery: {

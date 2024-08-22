@@ -19,6 +19,7 @@ import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { parameters } from "../../src/aws/parameters";
 import sinon from "sinon";
 import MockDate from "mockdate";
+import { PrhClient } from "../../src/mml/prh/prh";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -132,14 +133,18 @@ const mockMmlClient: MmlClient = {
   },
 };
 
+const mockPrhClient: PrhClient = {
+  haeYritykset: () => Promise.resolve({ response: {} }),
+}
+
 describe("kiinteistoHandler", () => {
   const time = "2024-02-23T12:32:54+02:00";
   after(() => {
-    setClient(undefined);
+    setClient(undefined, undefined);
   });
 
   before(() => {
-    setClient(mockMmlClient);
+    setClient(mockMmlClient, mockPrhClient);
     MockDate.set(time);
   });
 

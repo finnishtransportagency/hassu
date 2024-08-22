@@ -1449,7 +1449,7 @@ euWestSSMClient
     }
   })
   .then((response: GetCompaniesResponse | undefined) => {
-    if (process.argv.includes("--debug")) {
+    if (process.argv.includes("--debug") && soapClient?.getSoapClient) {
       console.log("XML Request: " + soapClient?.getSoapClient().lastRequest);
       console.log("XML Response: " + soapClient?.getSoapClient().lastResponse);
     }
