@@ -425,16 +425,17 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
 
 async function updatePRHAddress(kiinteistot: MmlKiinteisto[]) {
   const client = await getClient2();
-  const omistajat = kiinteistot.flatMap(k => k.omistajat).filter(o => o.ytunnus); 
+  const omistajat = kiinteistot.flatMap(k => k.omistajat).filter(o => o.ytunnus);
   const ytunnus = [...new Set(omistajat.map(o => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus);
   resp.response?.GetCompaniesResult?.Companies?.Company?.forEach(c => {
     omistajat.filter(o => o.ytunnus === c.BusinessId).forEach(o => {
       if (c.PostalAddress?.DomesticAddress?.PostalCodeActive) {
         o.nimi = c.TradeName?.Name ?? o.nimi;
+        const street = [c.PostalAddress.DomesticAddress.Street, c.PostalAddress.DomesticAddress.BuildingNumber, c.PostalAddress.DomesticAddress.Entrance, c.PostalAddress.DomesticAddress.ApartmentNumber].filter(a => a).join(" ");
         o.yhteystiedot = {
           postinumero: c.PostalAddress.DomesticAddress.PostalCode,
-          jakeluosoite: c.PostalAddress.DomesticAddress.Street,
+          jakeluosoite: street,
           paikkakunta: c.PostalAddress.DomesticAddress.City,
           maakoodi: "FI",
         };
