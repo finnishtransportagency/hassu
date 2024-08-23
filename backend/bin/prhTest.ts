@@ -1,7 +1,7 @@
 import { SSM } from "@aws-sdk/client-ssm";
 import express from "express";
 import { getPrhClient, PrhClient, PrhConfig } from "../src/mml/prh/prh";
-import { GetCompaniesResponse } from "../src/mml/prh/service";
+import { Omistaja } from "../src/mml/mmlClient";
 
 const app = express();
 const port = 8081;
@@ -54,7 +54,7 @@ app.post("/", (_req, res) => {
                       <!--Zero or more repetitions:-->
                       <v1:Company>
                         <!--Optional:-->
-                        <v1:BusinessId>y1</v1:BusinessId>
+                        <v1:BusinessId>7022977-5</v1:BusinessId>
                         <!--Optional:-->
                         <v1:Person>
                             <!--Optional:-->
@@ -89,7 +89,7 @@ app.post("/", (_req, res) => {
                         <!--Optional:-->
                         <v1:TradeName>
                             <!--Optional:-->
-                            <v1:Name>?</v1:Name>
+                            <v1:Name>Aalmar Testifirma</v1:Name>
                             <!--Optional:-->
                             <v1:Validity>
                               <!--Optional:-->
@@ -803,21 +803,21 @@ app.post("/", (_req, res) => {
                               <!--Optional:-->
                               <v1:CareOf>?</v1:CareOf>
                               <!--Optional:-->
-                              <v1:Street>?</v1:Street>
+                              <v1:Street>Mannerheimintie</v1:Street>
                               <!--Optional:-->
                               <v1:PostOfficeBox>?</v1:PostOfficeBox>
                               <!--Optional:-->
-                              <v1:BuildingNumber>?</v1:BuildingNumber>
+                              <v1:BuildingNumber>55</v1:BuildingNumber>
                               <!--Optional:-->
-                              <v1:Entrance>?</v1:Entrance>
+                              <v1:Entrance>B</v1:Entrance>
                               <!--Optional:-->
-                              <v1:ApartmentNumber>?</v1:ApartmentNumber>
+                              <v1:ApartmentNumber>25</v1:ApartmentNumber>
                               <!--Optional:-->
                               <v1:ApartmentIDSuffix>?</v1:ApartmentIDSuffix>
                               <!--Optional:-->
-                              <v1:PostalCode>?</v1:PostalCode>
+                              <v1:PostalCode>00250</v1:PostalCode>
                               <!--Optional:-->
-                              <v1:City>?</v1:City>
+                              <v1:City>HELSINKI</v1:City>
                               <!--Optional:-->
                               <v1:Language>
                                   <!--Optional:-->
@@ -857,7 +857,7 @@ app.post("/", (_req, res) => {
                                   </v1:Descriptions>
                               </v1:Type>
                               <!--Optional:-->
-                              <v1:PostalCodeActive>?</v1:PostalCodeActive>
+                              <v1:PostalCodeActive>true</v1:PostalCodeActive>
                               <!--Optional:-->
                               <v1:Validity>
                                   <!--Optional:-->
@@ -1448,14 +1448,12 @@ euWestSSMClient
       });
     }
   })
-  .then((response: GetCompaniesResponse | undefined) => {
+  .then((response: Omistaja[] | undefined) => {
     if (process.argv.includes("--debug") && soapClient?.getSoapClient) {
       console.log("XML Request: " + soapClient?.getSoapClient().lastRequest);
       console.log("XML Response: " + soapClient?.getSoapClient().lastResponse);
     }
-    if (response) {
-      console.log("ytunnus", response.response?.GetCompaniesResult?.Companies?.Company?.map(c => c.BusinessId));
-    }
+    console.log("Response", response);
     process.exit(0);
   })
   .catch((e) => {

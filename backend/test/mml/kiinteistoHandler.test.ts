@@ -134,7 +134,11 @@ const mockMmlClient: MmlClient = {
 };
 
 const mockPrhClient: PrhClient = {
-  haeYritykset: () => Promise.resolve({ response: {} }),
+  haeYritykset: () => Promise.resolve([{
+    nimi: "Yritys Oy Ab",
+    ytunnus: "123-456",
+    yhteystiedot: { jakeluosoite: "Yritysosoite 2", postinumero: "01002", paikkakunta: "Vantaa", maakoodi: "FI" },
+  }]),
 }
 
 describe("kiinteistoHandler", () => {

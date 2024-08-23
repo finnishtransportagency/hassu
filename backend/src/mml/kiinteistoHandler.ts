@@ -428,26 +428,18 @@ async function updatePRHAddress(kiinteistot: MmlKiinteisto[]) {
   const omistajat = kiinteistot.flatMap(k => k.omistajat).filter(o => o.ytunnus);
   const ytunnus = [...new Set(omistajat.map(o => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus);
-  resp.response?.GetCompaniesResult?.Companies?.Company?.forEach(c => {
-    omistajat.filter(o => o.ytunnus === c.BusinessId).forEach(o => {
-      if (c.PostalAddress?.DomesticAddress?.PostalCodeActive) {
-        o.nimi = c.TradeName?.Name ?? o.nimi;
-        const street = [c.PostalAddress.DomesticAddress.Street, c.PostalAddress.DomesticAddress.BuildingNumber, c.PostalAddress.DomesticAddress.Entrance, c.PostalAddress.DomesticAddress.ApartmentNumber].filter(a => a).join(" ");
-        o.yhteystiedot = {
-          postinumero: c.PostalAddress.DomesticAddress.PostalCode,
-          jakeluosoite: street,
-          paikkakunta: c.PostalAddress.DomesticAddress.City,
-          maakoodi: "FI",
-        };
-      } else if (c.PostalAddress?.ForeignAddress?.Country?.PrimaryCode) {
-        o.nimi = c.TradeName?.Name ?? o.nimi;
-        o.yhteystiedot = {
-          postinumero: c.PostalAddress.ForeignAddress.AddressPart1,
-          jakeluosoite: c.PostalAddress.ForeignAddress.AddressPart2,
-          paikkakunta: c.PostalAddress.ForeignAddress.AddressPart3,
-          maakoodi: c.PostalAddress.ForeignAddress.Country.PrimaryCode,
-        };
-      }
+  log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
+  resp.forEach(c => {
+    omistajat.filter(o => o.ytunnus === c.ytunnus).forEach(o => {
+        o.nimi = c.nimi ?? o.nimi;
+        if (c.yhteystiedot) {
+          o.yhteystiedot = {
+            postinumero: c.yhteystiedot.postinumero,
+            jakeluosoite: c.yhteystiedot.jakeluosoite,
+            paikkakunta: c.yhteystiedot.paikkakunta,
+            maakoodi: c.yhteystiedot.maakoodi,
+          };
+        }
     });
   });
 }
