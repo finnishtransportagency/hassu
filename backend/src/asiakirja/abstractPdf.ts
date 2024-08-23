@@ -238,7 +238,7 @@ export abstract class AbstractPdf {
     return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
   }
 
-  protected appendHeader(asiaTunnusX = 400, logoX = 19) {
+  protected appendHeader(asiaTunnusX = 350, logoX = 19) {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, logoX, 32, { height: 75 });
     this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), asiaTunnusX, 64);
