@@ -72,6 +72,14 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     if (nahtavillakuulutusIlmoitusPDFToinenKieli) {
       lahetekirje.attachments.push(nahtavillakuulutusIlmoitusPDFToinenKieli);
     }
+    const pdfSaamePath = this.julkaisu.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto;
+    if (pdfSaamePath) {
+      const saamePDF = await fileService.getFileAsAttachment(oid, pdfSaamePath);
+      if (!saamePDF) {
+        throw new Error("NahtavillaKuulutusIlmoitusPDFSaame:n saaminen epäonnistui");
+      }
+      lahetekirje.attachments.push(saamePDF);
+    }
     return lahetekirje;
   }
 }
