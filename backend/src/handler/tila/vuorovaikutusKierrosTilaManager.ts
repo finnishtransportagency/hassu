@@ -275,6 +275,15 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
 
+    const pdfSaamePath = julkaisu.vuorovaikutusSaamePDFt?.[Kieli.POHJOISSAAME]?.tiedosto;
+    if (pdfSaamePath) {
+      const saamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+      if (!saamePDF) {
+        throw new Error("Vuorovaikutuskutsu saame pdf:n saaminen epäonnistui");
+      }
+      attachments.push(saamePDF);
+    }
+
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
     assert(
       isKieliTranslatable(projekti.kielitiedot.ensisijainenKieli),
