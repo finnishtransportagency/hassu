@@ -179,7 +179,12 @@ const columns: ColumnDef<VelhoAineisto>[] = [
     },
   },
   { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2 } },
-  { header: "Koko (kB)", accessorKey: "koko", meta: { minWidth: 55, widthFractions: 1 } },
+  {
+    header: "Koko (kB)",
+    accessorKey: "koko",
+    meta: { minWidth: 55, widthFractions: 1 },
+    cell: (aineisto) => Math.round((aineisto.getValue() as number) / 1024),
+  },
   selectColumnDef(),
 ];
 
