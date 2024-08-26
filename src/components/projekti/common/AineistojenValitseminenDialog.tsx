@@ -183,7 +183,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
     header: "Koko (kB)",
     accessorKey: "koko",
     meta: { minWidth: 55, widthFractions: 1 },
-    cell: (aineisto) => Math.round((aineisto.getValue() as number) / 1024),
+    cell: (aineisto) => Math.ceil((aineisto.getValue() as number) / 1024),
   },
   selectColumnDef(),
 ];
