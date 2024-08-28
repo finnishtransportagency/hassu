@@ -3,6 +3,8 @@ import * as Yup from "yup";
 import { phoneNumberRegex } from "hassu-common/schema/puhelinNumero";
 
 export const muistutusSchema = Yup.object().shape({
+  etunimi: Yup.string().required("etunimi_on_pakollinen"),
+  sukunimi: Yup.string().required("sukunimi_on_pakollinen"),
   katuosoite: Yup.string().required("katuosoite_on_pakollinen").max(100, "katuosoite_max_100"),
   postinumero: Yup.string().required("postinumero_on_pakollinen").max(30, "postinumero_max_30"),
   postitoimipaikka: Yup.string().required("postitoimipaikka_on_pakollinen").max(30, "postitoimipaikka_max_30"),

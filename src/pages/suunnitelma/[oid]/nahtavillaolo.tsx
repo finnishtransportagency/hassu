@@ -197,7 +197,7 @@ export default function Nahtavillaolo(): ReactElement {
           </Notification>
           {!!authUrl && !!kayttaja && (
             <>
-              {kayttaja.tunnistautunut ? (
+              {kayttaja.tunnistautunut || kayttaja.suomifiEnabled === false ? (
                 <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
               ) : (
                 <JataPalautettaNappi
