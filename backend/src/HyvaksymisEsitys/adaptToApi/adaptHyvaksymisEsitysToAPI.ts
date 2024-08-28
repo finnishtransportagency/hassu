@@ -60,7 +60,7 @@ export function adaptHyvaksymisEsitysToAPI(
     lausunnot: adaptLadatutTiedostotToApi({ tiedostot: hyvaksymisEsitys.lausunnot, path: joinPath(path, "lausunnot") }),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
       tiedostot: hyvaksymisEsitys.kuulutuksetJaKutsu,
-      path: joinPath(path, "kuulutuksenJaKutsu"),
+      path: joinPath(path, "kuulutuksetJaKutsu"),
     }),
     muuAineistoVelhosta: adaptAineistotToAPI({
       aineistot: hyvaksymisEsitys.muuAineistoVelhosta,
