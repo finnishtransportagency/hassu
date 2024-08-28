@@ -181,7 +181,7 @@ export default function Nahtavillaolo(): ReactElement {
             )}
           </H3>
           <p>
-            <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
+            <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}{kayttaja?.suomifiEnabled ? " " + t("muistutuslomake.jata_vahva") : ""}</strong>
           </p>
 
           <Notification
@@ -197,7 +197,7 @@ export default function Nahtavillaolo(): ReactElement {
           </Notification>
           {!!authUrl && !!kayttaja && (
             <>
-              {kayttaja.tunnistautunut ? (
+              {kayttaja.tunnistautunut || kayttaja.suomifiEnabled === false ? (
                 <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
               ) : (
                 <JataPalautettaNappi
