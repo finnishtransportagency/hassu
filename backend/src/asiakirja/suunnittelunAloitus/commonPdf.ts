@@ -159,7 +159,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
         this.doc.text(lahettaja.nimi, x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
         this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
         this.doc.text(`${lahettaja.postinumero} ${lahettaja.postitoimipaikka}`, undefined, undefined, { width: toPdfPoints(72) });
-        this.doc.image(this.iPostLogo(), toPdfPoints(58), toPdfPoints(18), { fit: [70, 58], valign: "bottom" });
+        this.doc.image(this.iPostLogo(), toPdfPoints(58), toPdfPoints(17), { fit: [70, 58], valign: "bottom" });
       } else {
         this.doc.image(this.iPostLogo(), x, toPdfPoints(20), { fit: [100, 35], valign: "bottom" });
         this.doc.text(lahettaja.nimi, x, toPdfPoints(32), { width: toPdfPoints(72), baseline: "top" });
