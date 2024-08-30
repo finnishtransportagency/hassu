@@ -13,7 +13,6 @@ import {
   TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
-import { data } from "node-persist";
 
 export type OmistajaKey = {
   oid: string;
@@ -102,9 +101,10 @@ class OmistajaDatabase {
         ExclusiveStartKey: lastEvaluatedKey,
       });
       data = await getDynamoDBDocumentClient().send(command);
-      lastEvaluatedKey = data.LastEvaluatedKey;
-      omistajat.push(...data.Items as DBOmistaja[])
-    } while (lastEvaluatedKey !== undefined && data.Items && data.Items.length !== 0);
+      lastEvaluatedKey = data?.LastEvaluatedKey;
+      omistajat.push(...data?.Items as DBOmistaja[] ?? []);
+      log.info("haeProjektinKaytossaolevatOmistajat", { lastEvaluatedKey: lastEvaluatedKey ?? null, items: data?.Items?.length });
+    } while (lastEvaluatedKey !== undefined);
     return omistajat;
   }
 
