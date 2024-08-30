@@ -13,6 +13,7 @@ import {
   TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
+import { data } from "node-persist";
 
 export type OmistajaKey = {
   oid: string;
@@ -82,21 +83,29 @@ class OmistajaDatabase {
   }
 
   async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "#oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": oid,
-        ":kaytossa": true,
-      },
-      ExpressionAttributeNames: {
-        "#oid": "oid",
-        "#kaytossa": "kaytossa",
-      },
-      FilterExpression: "#kaytossa = :kaytossa",
-    });
-    const data = await getDynamoDBDocumentClient().send(command);
-    return (data?.Items ?? []) as DBOmistaja[];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+    const omistajat: DBOmistaja[] = [];
+    let data;
+    do {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      data = await getDynamoDBDocumentClient().send(command);
+      lastEvaluatedKey = data.LastEvaluatedKey;
+      omistajat.push(...data.Items as DBOmistaja[])
+    } while (lastEvaluatedKey !== undefined && data.Items && data.Items.length !== 0);
+    return omistajat;
   }
 
   async poistaOmistajaKaytosta(oid: string, id: string): Promise<void> {

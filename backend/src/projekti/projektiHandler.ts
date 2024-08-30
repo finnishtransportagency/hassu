@@ -51,8 +51,8 @@ import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorova
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
-import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
+import { omistajaDatabase } from "../database/omistajaDatabase";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -84,14 +84,12 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
         oid,
       };
     }
-
-    const { kiinteistotunnusMaara, omistajaMaara } = await omistajaSearchService.getOmistajaJaKiinteistotunnusMaarat(oid);
-
+    const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid);
     return {
       __typename: "ProjektinTiedottaminen",
       omistajahakuTila,
-      kiinteistonomistajaMaara: omistajaMaara ?? null,
-      kiinteistotunnusMaara: kiinteistotunnusMaara ?? null,
+      kiinteistonomistajaMaara: omistajat.length ?? null,
+      kiinteistotunnusMaara: new Set(omistajat.map(o => o.kiinteistotunnus)).size,
       muistuttajaMaara,
       oid,
     };

@@ -28,6 +28,7 @@ import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
+import { adaptOmistajaToIndex } from "../projektiSearch/omistajaSearch/kiinteistonomistajaSearchAdapter";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -400,7 +401,29 @@ async function haeSailytettavatKiinteistonOmistajat(
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
   await getProjektiAndCheckPermissions(variables.oid);
   log.info("Haetaan kiinteistönomistajatiedot", variables);
-  const kiinteistonOmistajatResponse = await omistajaSearchService.searchOmistajat(variables);
+  let kiinteistonOmistajatResponse: KiinteistonOmistajat;
+  if (variables.query) {
+    kiinteistonOmistajatResponse = await omistajaSearchService.searchOmistajat(variables);
+  } else {
+    const omistajatKaytossa = (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(variables.oid))
+      .sort((a, b) => (a.kiinteistotunnus ?? "").localeCompare(b.kiinteistotunnus ?? ""))
+      .filter(o => o.suomifiLahetys === !variables.muutOmistajat)
+      .filter((o) => {
+        if (variables.onlyUserCreated) {
+          return o.userCreated === true;
+        } else if (variables.filterUserCreated) {
+          return !o.userCreated;
+        } else {
+          return true;
+        }
+      });
+    const omistajat = omistajatKaytossa.slice(variables.from ?? 0, (variables.from ?? 0) + (variables.size ?? 25))
+    kiinteistonOmistajatResponse = {
+      __typename: "KiinteistonOmistajat",
+      hakutulosMaara: omistajatKaytossa.length,
+      omistajat: omistajat.map((o) => { return { ...adaptOmistajaToIndex(o), id: o.id, __typename: "Omistaja" }; }),
+    };
+  }
   kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
   return kiinteistonOmistajatResponse;
 }
