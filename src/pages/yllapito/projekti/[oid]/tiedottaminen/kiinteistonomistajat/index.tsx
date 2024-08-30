@@ -19,6 +19,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import ButtonLink from "@components/button/ButtonLink";
+import dayjs from "dayjs";
 
 export default function Kiinteistonomistajat() {
   return (
@@ -108,31 +109,17 @@ const readColumns: ColumnDef<Omistaja>[] = [
     },
   },
   {
-    header: "Postiosoite",
+    header: "Osoite",
     accessorKey: "jakeluosoite",
-    id: "postiosoite",
+    id: "osoite",
     meta: {
       widthFractions: 3,
-      minWidth: 200,
+      minWidth: 400,
     },
-  },
-  {
-    header: "Postinumero",
-    accessorKey: "postinumero",
-    id: "postinumero",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
-    id: "postitoimipaikka",
-    meta: {
-      widthFractions: 2,
-      minWidth: 180,
-    },
+    cell: (c) => {
+      const value = [c.getValue() ?? "", c.row.original.postinumero ?? "", c.row.original.paikkakunta ?? ""].join(" ").trim();
+      return value || "-";
+    }
   },
 ];
 
@@ -221,7 +208,23 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
             filterText="Suodata kiinteistönomistajia"
             showLessText="Näytä vähemmän kiinteistönomistajia"
             showMoreText="Näytä enemmän kiinteistönomistajia"
-            columns={readColumns}
+            columns={[
+              ...readColumns,
+              {
+                header: "Viimeisin lähetysaika",
+                accessorKey: "viimeisinLahetysaika",
+                id: "viimeisinlahetysaika",
+                meta: {
+                  widthFractions: 2,
+                  minWidth: 180,
+                },
+                cell: (c) => {
+                  const value = c.getValue() as string | null;
+                  const tila = c.row.original.viimeisinTila;
+                  return value ? dayjs(value).format("DD.MM.YYYY HH:mm") + " " + tila : "-";
+                },
+              },
+            ]}
             getTiedotettavatCallback={getKiinteistonOmistajatCallback}
             muutTiedotettavat={false}
             excelDownloadHref={`/api/projekti/${projekti.oid}/excel?kiinteisto=true&suomifi=true`}
