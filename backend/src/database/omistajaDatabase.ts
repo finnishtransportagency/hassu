@@ -82,21 +82,30 @@ class OmistajaDatabase {
   }
 
   async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "#oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": oid,
-        ":kaytossa": true,
-      },
-      ExpressionAttributeNames: {
-        "#oid": "oid",
-        "#kaytossa": "kaytossa",
-      },
-      FilterExpression: "#kaytossa = :kaytossa",
-    });
-    const data = await getDynamoDBDocumentClient().send(command);
-    return (data?.Items ?? []) as DBOmistaja[];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+    const omistajat: DBOmistaja[] = [];
+    let data;
+    do {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      data = await getDynamoDBDocumentClient().send(command);
+      lastEvaluatedKey = data?.LastEvaluatedKey;
+      omistajat.push(...data?.Items as DBOmistaja[] ?? []);
+      log.info("haeProjektinKaytossaolevatOmistajat", { lastEvaluatedKey: lastEvaluatedKey ?? null, items: data?.Items?.length });
+    } while (lastEvaluatedKey !== undefined);
+    return omistajat;
   }
 
   async poistaOmistajaKaytosta(oid: string, id: string): Promise<void> {
