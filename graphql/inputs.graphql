@@ -460,6 +460,8 @@ input PalauteInput {
 }
 
 input MuistutusInput {
+  etunimi: String!
+  sukunimi: String!
   katuosoite: String!
   postinumero: String!
   postitoimipaikka: String!
