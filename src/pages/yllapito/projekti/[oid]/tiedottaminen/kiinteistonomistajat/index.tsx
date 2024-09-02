@@ -19,8 +19,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import ButtonLink from "@components/button/ButtonLink";
-import dayjs from "dayjs";
-
+import { PaivamaaraTila } from "@components/PaivamaaraTila";
 export default function Kiinteistonomistajat() {
   return (
     <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
@@ -119,7 +118,7 @@ const readColumns: ColumnDef<Omistaja>[] = [
     cell: (c) => {
       const value = [c.getValue() ?? "", c.row.original.postinumero ?? "", c.row.original.paikkakunta ?? ""].join(" ").trim();
       return value || "-";
-    }
+    },
   },
 ];
 
@@ -221,7 +220,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
                 cell: (c) => {
                   const value = c.getValue() as string | null;
                   const tila = c.row.original.viimeisinTila;
-                  return value ? dayjs(value).format("DD.MM.YYYY HH:mm") + " " + tila : "-";
+                  return <PaivamaaraTila pvm={value} tila={tila} />;
                 },
               },
             ]}

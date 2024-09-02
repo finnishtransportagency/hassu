@@ -244,16 +244,18 @@ export function getMmlClient(options: MmlOptions): MmlClient {
           const tiekunnat = [...tiekuntaMap.values()];
           tiekunnat.shift();
           for (const omistaja of tiekunnat) {
-            // tiekunnan nimi sulkuihin
-            omistaja.nimi = feat.properties?.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
-            omistaja.yhteystiedot = {
-              jakeluosoite: feat.properties?.yhteyshenkilo[0].osoite[0]?.osoite,
-              postinumero: feat.properties?.yhteyshenkilo[0].osoite[0]?.postinumero,
-              paikkakunta: feat.properties?.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
-              maakoodi: feat.properties?.yhteyshenkilo[0].osoite[0]?.valtio
-                ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
-                : undefined,
-            };
+            if (!omistaja.yhteystiedot) {
+              // tiekunnan nimi sulkuihin
+              omistaja.nimi = feat.properties?.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
+              omistaja.yhteystiedot = {
+                jakeluosoite: feat.properties?.yhteyshenkilo[0].osoite[0]?.osoite,
+                postinumero: feat.properties?.yhteyshenkilo[0].osoite[0]?.postinumero,
+                paikkakunta: feat.properties?.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
+                maakoodi: feat.properties?.yhteyshenkilo[0].osoite[0]?.valtio
+                  ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
+                  : undefined,
+              };
+            }
           }
         } else {
           geojson = response.data as FeatureCollection | undefined;

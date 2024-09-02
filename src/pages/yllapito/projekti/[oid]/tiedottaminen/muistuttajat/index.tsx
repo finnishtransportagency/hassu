@@ -14,7 +14,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import ButtonLink from "@components/button/ButtonLink";
-import dayjs from "dayjs";
+import { PaivamaaraTila } from "@components/PaivamaaraTila";
 
 export default function Muistuttajat() {
   return (
@@ -67,7 +67,7 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     cell: (c) => {
       const value = c.getValue() as string | null;
       const tila = c.row.original.viimeisinTila;
-      return value ? dayjs(value).format("DD.MM.YYYY HH:mm") + " " + tila : "-";
+      return <PaivamaaraTila pvm={value} tila={tila} />
     },
   },
 ];
