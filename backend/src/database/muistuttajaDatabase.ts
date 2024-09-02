@@ -48,21 +48,28 @@ class MuistuttajaDatabase {
   }
 
   async haeProjektinKaytossaolevatMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "#oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": oid,
-        ":kaytossa": true,
-      },
-      ExpressionAttributeNames: {
-        "#oid": "oid",
-        "#kaytossa": "kaytossa",
-      },
-      FilterExpression: "#kaytossa = :kaytossa",
-    });
-    const data = await getDynamoDBDocumentClient().send(command);
-    return (data?.Items ?? []) as DBMuistuttaja[];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+    const muistuttajat: DBMuistuttaja[] = [];
+    do {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      const data = await getDynamoDBDocumentClient().send(command);
+      lastEvaluatedKey = data.LastEvaluatedKey;
+      muistuttajat.push(...data?.Items as DBMuistuttaja[] ?? []);
+    } while (lastEvaluatedKey !== undefined);
+    return muistuttajat;
   }
 
   async poistaMuistuttajaKaytosta(oid: string, id: string): Promise<void> {
