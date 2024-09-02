@@ -81,7 +81,7 @@ class OmistajaDatabase {
     }
   }
 
-  async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
+  async haeProjektinKaytossaolevatOmistajat(oid: string, expression?: string): Promise<DBOmistaja[]> {
     let lastEvaluatedKey: Record<string, any> | undefined;
     const omistajat: DBOmistaja[] = [];
     let data;
@@ -99,6 +99,7 @@ class OmistajaDatabase {
         },
         FilterExpression: "#kaytossa = :kaytossa",
         ExclusiveStartKey: lastEvaluatedKey,
+        ProjectionExpression: expression,
       });
       data = await getDynamoDBDocumentClient().send(command);
       lastEvaluatedKey = data?.LastEvaluatedKey;

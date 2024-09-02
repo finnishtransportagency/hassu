@@ -84,7 +84,7 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
         oid,
       };
     }
-    const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid);
+    const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid, "kiinteistotunnus");
     return {
       __typename: "ProjektinTiedottaminen",
       omistajahakuTila,
