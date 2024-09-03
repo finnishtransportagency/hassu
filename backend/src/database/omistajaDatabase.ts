@@ -185,19 +185,26 @@ class OmistajaDatabase {
 
   async deleteOmistajatByOid(oid: string) {
     if (config.env !== "prod") {
-      const command = new QueryCommand({
-        TableName: this.tableName,
-        KeyConditionExpression: "#oid = :oid",
-        ExpressionAttributeValues: {
-          ":oid": oid,
-        },
-        ExpressionAttributeNames: {
-          "#oid": "oid",
-        },
-        ProjectionExpression: "id",
-      });
-      const data = await getDynamoDBDocumentClient().send(command);
-      for (const chunk of chunkArray(data?.Items ?? [], 25)) {
+      let lastEvaluatedKey: Record<string, any> | undefined;
+      const omistajat: Record<string, any>[] = [];
+      do {
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          KeyConditionExpression: "#oid = :oid",
+          ExpressionAttributeValues: {
+            ":oid": oid,
+          },
+          ExpressionAttributeNames: {
+            "#oid": "oid",
+          },
+          ProjectionExpression: "id",
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+        const data = await getDynamoDBDocumentClient().send(command);
+        lastEvaluatedKey = data.LastEvaluatedKey;
+        omistajat.push(...(data.Items ?? []));
+      } while(lastEvaluatedKey !== undefined);
+      for (const chunk of chunkArray(omistajat, 25)) {
         const deleteRequests = chunk.map((omistaja) => ({
           DeleteRequest: {
             Key: { oid, id: omistaja.id },
