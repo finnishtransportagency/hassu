@@ -89,7 +89,7 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
       __typename: "ProjektinTiedottaminen",
       omistajahakuTila,
       kiinteistonomistajaMaara: omistajat.length ?? null,
-      kiinteistotunnusMaara: new Set(omistajat.map(o => o.kiinteistotunnus)).size,
+      kiinteistotunnusMaara: new Set(omistajat.filter(o => o.kiinteistotunnus).map(o => o.kiinteistotunnus)).size,
       muistuttajaMaara,
       oid,
     };
