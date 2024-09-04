@@ -64,7 +64,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     }
     // Tallenna s.posti S3:een
     s3PathForEmail = await saveEmailAsFile(oid, emailOptions);
-    messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+    messageInfo = await emailClient.sendTurvapostiEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
@@ -125,7 +125,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email hyväksymisesityksen laatijalle
   const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
   if (emailOptions2.to) {
-    await emailClient.sendEmail(emailOptions2);
+    await emailClient.sendTurvapostiEmail(emailOptions2);
   } else {
     log.error("Ilmoitukselle ei loytynyt laatijan sahkopostiosoitetta");
   }
@@ -133,7 +133,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email projarille ja varahenkilöille
   const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
   if (emailOptions3.to) {
-    await emailClient.sendEmail(emailOptions3);
+    await emailClient.sendTurvapostiEmail(emailOptions3);
   } else {
     log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
   }

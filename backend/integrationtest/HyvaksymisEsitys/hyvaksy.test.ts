@@ -114,7 +114,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     );
 
     // Stubataan sähköpostin lähettäminen
-    emailStub = sinon.stub(emailClient, "sendEmail").callsFake(async () => {
+    emailStub = sinon.stub(emailClient, "sendTurvapostiEmail").callsFake(async () => {
       return Promise.resolve({
         messageId: "messageId123",
         accepted: ["vastaanottaja@sahkoposti.fi"],
