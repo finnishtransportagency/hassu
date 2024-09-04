@@ -63,8 +63,7 @@ import Collection from "ol/Collection";
 import { MonikulmioIkoni } from "src/svg/MonikulmioIkoni";
 import { SuorakulmioIkoni } from "src/svg/SuorakulmioIkoni";
 import { KumoaIkoni } from "src/svg/KumoaIkoni";
-import { OmistajahakuTila } from "@services/api";
-import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
+import { OmistajahakuTila, ProjektinTiedottaminen } from "@services/api";
 
 export const EPSG_3067 = "EPSG:3067";
 const DATA_PROJ = EPSG_3067;
@@ -115,9 +114,10 @@ export type CustomOptions = Options & { activeTipLabel?: string; inactiveTipLabe
 type StyledMapProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
   projekti: ProjektiLisatiedolla;
   closeDialog: (isMapEdited: boolean) => void;
+  setProjektinTiedottaminen: (tiedottaminen: ProjektinTiedottaminen | undefined) => void
 };
 
-export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti, closeDialog, ...props }: StyledMapProps) => {
+export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti, closeDialog, setProjektinTiedottaminen, ...props }: StyledMapProps) => {
   const isMapEditedByUserRef = useRef(false);
   const triggerMapEditedByUser = useCallback(() => {
     isMapEditedByUserRef.current = true;
@@ -129,8 +129,6 @@ export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti,
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { isLoading, withLoadingSpinner } = useLoadingSpinner();
-
-  const { mutate } = useProjektinTiedottaminen();
 
   const [geoJSON, setGeoJSON] = useState<string | null>(null);
 
@@ -224,16 +222,7 @@ export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti,
                 clearMapEditedByUser();
                 showSuccessMessage("Karttarajaus tallennettu. Kiinteistönomistajatietoja haetaan.");
                 closeDialog(isMapEditedByUserRef.current);
-                mutate((old) => {
-                  if (!old) {
-                    return null;
-                  }
-                  return {
-                    ...old,
-                    omistajahakuTila: OmistajahakuTila.KAYNNISSA,
-                    omistajahakuKiinteistotunnusMaara: kiinteistoTunnukset.length,
-                  };
-                });
+                setProjektinTiedottaminen({ __typename: "ProjektinTiedottaminen", omistajahakuTila: OmistajahakuTila.KAYNNISSA, kiinteistotunnusMaara: kiinteistoTunnukset.length });
               } catch {
                 showErrorMessage("Karttajarajauksen tallentaminen ja hakeminen epäonnistui");
               }
@@ -257,7 +246,6 @@ export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti,
     api,
     clearMapEditedByUser,
     closeDialog,
-    mutate,
     projekti.oid,
     showErrorMessage,
     showSuccessMessage,
@@ -266,6 +254,7 @@ export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti,
     vectorSource,
     withLoadingSpinner,
     projekti.status,
+    setProjektinTiedottaminen,
   ]);
 
   useEffect(() => {

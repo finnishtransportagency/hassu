@@ -10,11 +10,11 @@ import { TiedottaminenPageLayout } from "@components/projekti/tiedottaminen/Tied
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
-import { Omistaja, OmistajahakuTila } from "@services/api";
+import { Omistaja, OmistajahakuTila, ProjektinTiedottaminen } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import { GrayBackgroundText } from "../../../../../../components/projekti/GrayBackgroundText";
 import { useProjekti } from "src/hooks/useProjekti";
-import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
+import { useProjektinTiedottaminenReady } from "src/hooks/useProjektinTiedottaminen";
 import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
@@ -33,10 +33,12 @@ const KarttaDialogi = styled(
     children,
     projekti,
     onClose,
+    setProjektinTiedottaminen,
     ...props
   }: DialogProps &
     Required<Pick<DialogProps, "onClose">> & {
       projekti: ProjektiLisatiedolla;
+      setProjektinTiedottaminen: (tiedottaminen: ProjektinTiedottaminen | undefined) => void;
     }) => {
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
     const closeConfirmation = useCallback(() => {
@@ -66,7 +68,11 @@ const KarttaDialogi = styled(
     return (
       <>
         <Dialog fullScreen onClose={handleMainDialogOnClose} {...props}>
-          <KiinteistonomistajaTiedottaminenMap projekti={projekti} closeDialog={handleMainDialogOnClose}>
+          <KiinteistonomistajaTiedottaminenMap
+            projekti={projekti}
+            closeDialog={handleMainDialogOnClose}
+            setProjektinTiedottaminen={setProjektinTiedottaminen}
+          >
             {children}
           </KiinteistonomistajaTiedottaminenMap>
         </Dialog>
@@ -128,7 +134,8 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
 
   const { showErrorMessage } = useSnackbars();
   const { mutate } = useProjekti();
-  const { data: projektinTiedottaminen } = useProjektinTiedottaminen();
+  const [projektinTiedottaminen, setProjektinTiedottaminen] = useState<ProjektinTiedottaminen>();
+  useProjektinTiedottaminenReady(projekti.oid, projektinTiedottaminen, setProjektinTiedottaminen);
   const api = useApi();
 
   const close = useCallback(() => {
@@ -183,7 +190,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
           <Button onClick={open} type="button" id="create-map-selection">
             {projekti.omistajahaku?.status ? "Muokkaa karttarajausta" : "Luo karttarajaus"}
           </Button>
-          <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} />
+          <KarttaDialogi projekti={projekti} open={isOpen} onClose={close} setProjektinTiedottaminen={setProjektinTiedottaminen} />
         </ContentSpacer>
       </Section>
       <Section noDivider>
