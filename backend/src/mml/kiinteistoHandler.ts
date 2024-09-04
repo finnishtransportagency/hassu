@@ -102,10 +102,15 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const kiinteistot = responses[0];
         const yhteystiedot = responses[1];
         const tiekunnat = responses[2];
-        log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
-        log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
-        log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a)");
-
+        let kiinteistoOmistajaCount = 0;
+        kiinteistot.forEach(k => kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length); 
+        let yhteystietoOmistajaCount = 0;
+        yhteystiedot.forEach(k => yhteystietoOmistajaCount = yhteystietoOmistajaCount + k.omistajat.length);
+        let tiekuntaOmistajaCount = 0;
+        tiekunnat.forEach(k => tiekuntaOmistajaCount = tiekuntaOmistajaCount + k.omistajat.length);
+        log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
