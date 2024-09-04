@@ -125,7 +125,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email hyväksymisesityksen laatijalle
   const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
   if (emailOptions2.to) {
-    await emailClient.sendTurvapostiEmail(emailOptions2);
+    await emailClient.sendEmail(emailOptions2);
   } else {
     log.error("Ilmoitukselle ei loytynyt laatijan sahkopostiosoitetta");
   }
@@ -133,7 +133,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   // Lähetä email projarille ja varahenkilöille
   const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
   if (emailOptions3.to) {
-    await emailClient.sendTurvapostiEmail(emailOptions3);
+    await emailClient.sendEmail(emailOptions3);
   } else {
     log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
   }
