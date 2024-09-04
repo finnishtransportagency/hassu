@@ -4,8 +4,9 @@ import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { focusStyle } from "./layout/HassuMuiThemeProvider";
 
-const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
+export const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
   "&:not(:last-child)": {
     borderBottom: 0,
   },
@@ -14,7 +15,7 @@ const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters
   },
 });
 
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
+export const AccordionSummary = styled((props: AccordionSummaryProps) => (
   <MuiAccordionSummary
     expandIcon={<FontAwesomeIcon icon="angle-right" className="text-primary-dark m-auto h-full" size="lg" />}
     {...props}
@@ -25,6 +26,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(90deg)",
   },
+  "&:focus": focusStyle,
+  "&.Mui-focusVisible": { backgroundColor: "initial" },
   "& .MuiAccordionSummary-expandIconWrapper": {
     minWidth: "24px",
     minHeight: "24px",
@@ -36,7 +39,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   },
 }));
 
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+export const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(3),
   paddingLeft: theme.spacing(9),
@@ -56,7 +59,7 @@ type Props = {
   expandedstate?: [Key[], Dispatch<Key[]>];
 } & ComponentProps<"div">;
 
-export default function CustomizedAccordions(props: Props) {
+export default function HassuAccordion(props: Props) {
   const { items, singular, ...rest } = props;
   const uncontrolledExpanded = useState<Key[]>([]);
 
@@ -81,7 +84,7 @@ export default function CustomizedAccordions(props: Props) {
             expanded={expanded.includes(key)}
             onChange={handleChange(key)}
           >
-            <AccordionSummary sx={{pointerEvents: "auto"}}>
+            <AccordionSummary sx={{ pointerEvents: "auto" }}>
               {typeof item.title === "string" ? <h5 className="vayla-smallest-title mb-0">{item.title}</h5> : item.title}
             </AccordionSummary>
             <AccordionDetails>{item.content}</AccordionDetails>

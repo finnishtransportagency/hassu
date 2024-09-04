@@ -9,13 +9,13 @@ import HassuGridItem from "@components/HassuGridItem";
 import MenuItem from "@mui/material/MenuItem";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTranslation from "next-translate/useTranslation";
 import { HakulomakeFormValues } from "./Hakulomake";
 import { SelectOption } from "../form/Select";
 import { HakutulosInfo } from "./TyylitellytKomponentit";
 import Trans from "next-translate/Trans";
+import { focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 
 type HakulomakeProps = {
   useFormReturn: UseFormReturn<HakulomakeFormValues, object>;
@@ -42,22 +42,25 @@ const HakulomakeMobile = ({
   const { t } = useTranslation("etusivu");
 
   return (
-    <div role="navigation" className={`${styles["side-nav"]} mb-4`}>
-      <Accordion style={{ margin: 0 }}>
+    <div role="navigation" className="bg-gray-lightest mb-4">
+      <Accordion sx={{ margin: 0 }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
           aria-controls="search-accordion-content"
           id="search-accordion-header"
-          style={{
+          sx={{
             height: "64px",
             backgroundColor: "#0064AF",
             color: "white",
             alignItems: "center",
             fontWeight: "700",
-            paddingLeft: 24,
+            paddingLeft: 8,
+            "&:focus": { ...focusStyleSecondary, backgroundColor: "#0064AF" },
           }}
         >
-          <h2 className={styles["search-guide-title"]}>{t("suunnitelmien-haku")}</h2>
+          <H2 sx={{ fontWeight: "normal", fontSize: "1rem", lineHeight: 1.1, color: "white", marginBottom: 0 }}>
+            {t("suunnitelmien-haku")}
+          </H2>
         </AccordionSummary>
         <AccordionDetails className="p-0">
           <SearchSection noDivider className="mt-0 mb-0">

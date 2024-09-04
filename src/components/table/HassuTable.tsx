@@ -31,6 +31,7 @@ import {
   DataCellHeaderContent,
   DataCellContent,
 } from "./StyledTableComponents";
+import { focusStyle, focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 
 export type HassuTableProps<T> = {
   table: Table<T>;
@@ -239,9 +240,13 @@ function HassuTablePagination<T>({ table }: PaginationProps<T>) {
           color="primary"
           sx={{
             ".MuiPagination-ul": { justifyContent: "flex-end" },
-            ".MuiPaginationItem-root.Mui-selected": {
-              color: "#ffffff",
-              backgroundColor: "#0064af",
+            ".MuiPaginationItem-root": {
+              "&.Mui-focusVisible": focusStyle,
+              "&.Mui-selected": {
+                "&.Mui-focusVisible": focusStyleSecondary,
+                color: "#ffffff",
+                backgroundColor: "#0064af",
+              },
             },
           }}
         />
@@ -264,7 +269,7 @@ function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
             const isSorted = header.column.getIsSorted();
             const canSort = table.options.enableSorting && header.column.getCanSort();
             return (
-              <HeaderCell key={header.id} >
+              <HeaderCell key={header.id}>
                 <HeaderCellContents
                   as={canSort ? "button" : undefined}
                   onClick={canSort ? header.column.getToggleSortingHandler() : undefined}

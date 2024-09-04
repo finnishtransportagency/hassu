@@ -12,6 +12,7 @@ import HassuLink from "@components/HassuLink";
 import { Status } from "@services/api";
 import { UrlObject } from "url";
 import classNames from "classnames";
+import { focusStyle } from "@components/layout/HassuMuiThemeProvider";
 interface Props {
   oid: string;
   activeStep: Status | null | undefined;
@@ -21,12 +22,16 @@ interface Props {
   vahainenMenettely?: boolean | null;
 }
 
-const HassuStep = styled(Step)<StepProps>(({}) => ({
+const HassuStep = styled(Step)<StepProps>({
   [`&.${stepClasses.horizontal}`]: {
     flex: "1 1 0px",
     width: "0",
   },
-}));
+  "& > a": {
+    display: "block",
+    "&:focus": focusStyle,
+  },
+});
 
 const HassuLabel = styled(StepLabel)<{
   active?: boolean;
@@ -124,7 +129,7 @@ const HassuStepIconRoot = styled("div")<{
 }>(({ ownerState }) => ({
   backgroundColor: "#D8D8D8",
   zIndex: 1,
-  color: "#fff",
+  color: "#ffffff",
   width: 30,
   height: 30,
   display: "flex",
@@ -230,7 +235,9 @@ export default function ProjektiJulkinenStepper({
             >
               <span className="step-name-label">{step.label}</span>
               {vertical && selectedStepIndex !== index && (
-                <span className="step-status-label">{index === activeStepIndex ? t("projekti-vaiheet-status.kaynnissa") : t("projekti-vaiheet-status.valmis")}</span>
+                <span className="step-status-label">
+                  {index === activeStepIndex ? t("projekti-vaiheet-status.kaynnissa") : t("projekti-vaiheet-status.valmis")}
+                </span>
               )}
             </HassuLabel>
           </HassuLink>

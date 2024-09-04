@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
 import { styled, useMediaQuery } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
@@ -7,6 +6,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/material/styles";
+import { focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
+import { H2 } from "@components/Headings";
 
 const Hakuohje = () => {
   const theme = useTheme();
@@ -26,23 +27,24 @@ const Hakuohje = () => {
   }));
 
   return (
-    <div role="navigation" className={styles["side-nav"]}>
+    <div role="navigation">
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
           aria-controls="search-guidance-content"
           id="search-guidance-header"
-          style={{
+          sx={{
             height: desktop ? "48px" : "64px",
             backgroundColor: "#0064AF",
             color: "white",
             alignItems: "center",
             fontWeight: "700",
-            paddingLeft: 24,
-            marginBottom: desktop ? 0 : 16,
+            paddingLeft: "24px",
+            marginBottom: desktop ? 0 : 4,
+            "&:focus": { ...focusStyleSecondary, backgroundColor: "#0064AF" },
           }}
         >
-          <h2 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h2>
+          <H2 sx={{ fontWeight: "normal", fontSize: "1rem", lineHeight: 1.1, color: "white", marginBottom: 0 }}>{t(`hakuohje-otsikko`)}</H2>
         </AccordionSummary>
         <AccordionDetails>
           <p>{t(`hakuohje1`)}</p>
