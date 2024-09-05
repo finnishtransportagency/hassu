@@ -61,6 +61,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
       poistumisPaiva: hyvaksymisEsitys.poistumisPaiva,
       projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
       lisatiedot: hyvaksymisEsitys.lisatiedot,
+      kiireellinen: hyvaksymisEsitys.kiireellinen,
     };
   } else {
     throw new NotFoundError(`Projektia ${oid} ei löydy`);

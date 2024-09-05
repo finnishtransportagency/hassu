@@ -7,7 +7,7 @@ import {
   tuoKarttarajausJaTallennaKiinteistotunnukset,
 } from "../../src/mml/kiinteistoHandler";
 import { MmlClient } from "../../src/mml/mmlClient";
-import { BatchWriteCommand, DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand, QueryCommand, TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { assert, expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
 import { setLogContextOid } from "../../src/logger";
@@ -157,11 +157,11 @@ describe("kiinteistoHandler", () => {
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
     const dbMock = mockClient(DynamoDBDocumentClient);
     await handleEvent({ Records: [record] });
-    dbMock.on(BatchWriteCommand).resolves({});
-    expect(dbMock.commandCalls(BatchWriteCommand).length).to.be.equal(1);
-    const writeCommand = dbMock.commandCalls(BatchWriteCommand)[0];
-    assert(writeCommand.args[0].input.RequestItems);
-    expect(writeCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].length).to.be.equal(6);
+    dbMock.on(TransactWriteCommand).resolves({});
+    expect(dbMock.commandCalls(TransactWriteCommand).length).to.be.equal(1);
+    const writeCommand = dbMock.commandCalls(TransactWriteCommand)[0];
+    assert(writeCommand.args[0].input.TransactItems);
+    expect(writeCommand.args[0].input.TransactItems.length).to.be.equal(6);
     expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(2);
     const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
     const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
@@ -174,8 +174,8 @@ describe("kiinteistoHandler", () => {
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajahaku"].kaynnistetty).to.be.equal(null);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajahaku"].kiinteistotunnusMaara).to.be.equal(null);
     const snapshot: DBOmistaja[] = [];
-    writeCommand.args[0].input.RequestItems[config.kiinteistonomistajaTableName].forEach((c, i) => {
-      snapshot.push({ ...c.PutRequest?.Item, id: `${i}`, lisatty: "", expires: 0 } as DBOmistaja);
+    writeCommand.args[0].input.TransactItems.forEach((c, i) => {
+      snapshot.push({ ...c.Put?.Item, id: `${i}`, lisatty: "", expires: 0 } as DBOmistaja);
     });
     expect(snapshot).toMatchSnapshot();
   });

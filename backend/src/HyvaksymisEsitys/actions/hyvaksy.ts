@@ -64,7 +64,7 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     }
     // Tallenna s.posti S3:een
     s3PathForEmail = await saveEmailAsFile(oid, emailOptions);
-    messageInfo = await emailClient.sendEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+    messageInfo = await emailClient.sendTurvapostiEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
   } else {
     log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
   }
