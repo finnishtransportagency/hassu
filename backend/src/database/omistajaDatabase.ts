@@ -158,23 +158,19 @@ class OmistajaDatabase {
           await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
-
-      const omistajatChunks = chunkArray(lisattavatOmistajat, 25);
-
-      for (const chunk of omistajatChunks) {
-        const putRequests = chunk.map((omistaja) => ({
-          PutRequest: {
-            Item: { ...omistaja },
-          },
-        }));
-        log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
-        await getDynamoDBDocumentClient().send(
-          new BatchWriteCommand({
-            RequestItems: {
-              [this.tableName]: putRequests,
-            },
-          })
-        );
+      log.info("Lisätään " + lisattavatOmistajat.length + " omistaja(a)");
+      const newTransactItems = lisattavatOmistajat.map<TransactionItem>((item) => ({
+        Put: {
+          TableName: this.tableName,
+          Item: item,
+        },
+      }));
+      const newOmistajatChunks = chunkArray(newTransactItems, 25);
+      for (const chunk of newOmistajatChunks) {
+        const transactCommand = new TransactWriteCommand({
+          TransactItems: chunk,
+        });
+        await getDynamoDBDocumentClient().send(transactCommand);
       }
     } catch (error) {
       log.error("Projektin kiinteistönomistajien korvaaminen epäonnistui");
