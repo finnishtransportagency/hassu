@@ -519,6 +519,11 @@ export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuu
   return projekti;
 }
 
+export function applySuunnittelunTilaToVelho(projekti: ProjektiProjekti, suunnitelmanTila: string): ProjektiProjekti {
+  projekti.ominaisuudet["suunnitelman-tila"] = stringToObject(suunnitelmanTila);
+  return projekti;
+}
+
 function toLocalDate(date: string) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return parseDate(date).startOf("day").format() as unknown as object;
