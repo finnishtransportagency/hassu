@@ -9,7 +9,7 @@ export const RectangleButton = styled("button")({
     padding: "4px 12px",
     overflowWrap: "anywhere",
     hyphens: "auto",
-    "&:focus": focusStyleSecondary,
+    "&:focus-visible": focusStyleSecondary,
     "&:disabled": {
       border: "1px solid #999999",
       color: "#242222",

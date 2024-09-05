@@ -55,7 +55,7 @@ const HakulomakeMobile = ({
             alignItems: "center",
             fontWeight: "700",
             paddingLeft: 8,
-            "&:focus": { ...focusStyleSecondary, backgroundColor: "#0064AF" },
+            "&:focus-visible": { ...focusStyleSecondary, backgroundColor: "#0064AF" },
           }}
         >
           <H2 sx={{ fontWeight: "normal", fontSize: "1rem", lineHeight: 1.1, color: "white", marginBottom: 0 }}>

@@ -548,6 +548,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-focused:not(.Mui-error)": {
                 "& fieldset.MuiOutlinedInput-notchedOutline": {
                   borderColor: "#0064AF",
+                  borderImage: "linear-gradient(117deg, #009ae0, #49c2f1) 2",
                 },
                 "& .MuiIconButton-root": {
                   color: "#0064AF",

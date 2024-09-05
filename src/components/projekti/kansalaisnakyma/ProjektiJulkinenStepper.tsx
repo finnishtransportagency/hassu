@@ -29,7 +29,7 @@ const HassuStep = styled(Step)<StepProps>({
   },
   "& > a": {
     display: "block",
-    "&:focus": focusStyle,
+    "&:focus-visible": focusStyle,
   },
 });
 

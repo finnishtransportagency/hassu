@@ -61,7 +61,7 @@ const StyledButton = styled(
   [theme.breakpoints.up("sm")]: {
     visibility: hide ? "hidden" : "visible",
   },
-  "&:focus": focusStyleSecondary,
+  "&:focus-visible": focusStyleSecondary,
 }));
 
 export default ScrollToTopButton;
