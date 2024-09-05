@@ -82,21 +82,30 @@ class OmistajaDatabase {
   }
 
   async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "#oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": oid,
-        ":kaytossa": true,
-      },
-      ExpressionAttributeNames: {
-        "#oid": "oid",
-        "#kaytossa": "kaytossa",
-      },
-      FilterExpression: "#kaytossa = :kaytossa",
-    });
-    const data = await getDynamoDBDocumentClient().send(command);
-    return (data?.Items ?? []) as DBOmistaja[];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+    const omistajat: DBOmistaja[] = [];
+    let data;
+    do {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      data = await getDynamoDBDocumentClient().send(command);
+      lastEvaluatedKey = data?.LastEvaluatedKey;
+      omistajat.push(...data?.Items as DBOmistaja[] ?? []);
+      log.info("haeProjektinKaytossaolevatOmistajat", { lastEvaluatedKey: lastEvaluatedKey ?? null, items: data?.Items?.length });
+    } while (lastEvaluatedKey !== undefined);
+    return omistajat;
   }
 
   async poistaOmistajaKaytosta(oid: string, id: string): Promise<void> {
@@ -149,23 +158,19 @@ class OmistajaDatabase {
           await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
-
-      const omistajatChunks = chunkArray(lisattavatOmistajat, 25);
-
-      for (const chunk of omistajatChunks) {
-        const putRequests = chunk.map((omistaja) => ({
-          PutRequest: {
-            Item: { ...omistaja },
-          },
-        }));
-        log.info("Tallennetaan " + putRequests.length + " omistaja(a)");
-        await getDynamoDBDocumentClient().send(
-          new BatchWriteCommand({
-            RequestItems: {
-              [this.tableName]: putRequests,
-            },
-          })
-        );
+      log.info("Lisätään " + lisattavatOmistajat.length + " omistaja(a)");
+      const newTransactItems = lisattavatOmistajat.map<TransactionItem>((item) => ({
+        Put: {
+          TableName: this.tableName,
+          Item: item,
+        },
+      }));
+      const newOmistajatChunks = chunkArray(newTransactItems, 25);
+      for (const chunk of newOmistajatChunks) {
+        const transactCommand = new TransactWriteCommand({
+          TransactItems: chunk,
+        });
+        await getDynamoDBDocumentClient().send(transactCommand);
       }
     } catch (error) {
       log.error("Projektin kiinteistönomistajien korvaaminen epäonnistui");

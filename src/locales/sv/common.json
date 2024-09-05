@@ -172,8 +172,8 @@
     "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte"
   },
   "ilmoitukset": {
-    "tallennus_onnistui": "RUOTSIKSI Tallennus onnistui",
-    "tallennuksessa_tapahtui_virhe": "RUOTSIKSI Tallennuksessa tapahtui virhe"
+    "tallennus_onnistui": "Sparningen lyckades",
+    "tallennuksessa_tapahtui_virhe": "Ett fel inträffade vid sparningen"
   },
   "etunimi": "Förnamn",
   "sukunimi": "Efternamn",

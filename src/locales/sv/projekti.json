@@ -397,7 +397,7 @@
       "lakiviite_kuulutuksesta_ilmoittaminen_rata": "90 § i banlagen och 62 a § i förvaltningslagen",
       "kuulutuksesta_ilmoittaminen_kappale2": "Kungörelsen finns till påseende {{kuulutusNahtavillaAika}} på adressen {{linkki_paatos}}.",
       "kuulutuksesta_ilmoittaminen_kappale3": "{{viranomainenLyhyt}} ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.",
-      "lausunnonantajille_kappale1": "{{viranomainenLyhyt}} meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt en {{suunnitelma}} enligt {{lain}} : {{suunnitelman_nimi}}.",
+      "lausunnonantajille_kappale1": "{{viranomainenLyhyt}} meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt en {{suunnitelma}} enligt {{lain}} : {{suunnitelman_nimi}} med fyra år fram till utgången av år {{viimeinen_voimassaolovuosi}}.",
       "lakiviite_muistuttajille_tie": "104 § i lagen om trafiksystem och landsvägar",
       "lakiviite_muistuttajille_rata": "91 § i banlagen"
     },
