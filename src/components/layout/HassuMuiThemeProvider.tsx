@@ -283,12 +283,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 background: "#0064AF",
               },
               "&.Mui-focusVisible": {
-                "::before": {
-                  content: "''",
-                  position: "absolute",
-                  inset: "0px",
-                  ...focusStyle,
-                },
+                ...focusStyle,
                 "& .hassu-checkbox-icon-unchecked": {
                   border: "2px solid transparent",
                   backgroundClip: "padding-box",
@@ -401,14 +396,27 @@ export const createLocalizedTheme = (locale: Localization) =>
           defaultProps: { disableRipple: true },
           styleOverrides: {
             root: {
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
               "&.Mui-selected": {
                 backgroundColor: "rgba(60,210,255,0.10)",
-                "&:hover": {
-                  backgroundColor: "rgba(60,210,255,0.15)",
-                },
               },
-              "&:focus": {
+              "&.Mui-focusVisible": {
+                ...focusStyle,
                 backgroundColor: "transparent",
+              },
+              "&.Mui-selected:hover": {
+                backgroundColor: "rgba(60,210,255,0.15)",
+              },
+              "&.Mui-selected.Mui-focusVisible": {
+                backgroundColor: "rgba(60,210,255,0.10)",
+              },
+              "&.Mui-focusVisible:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+              "&.Mui-focusVisible.Mui-selected:hover": {
+                backgroundColor: "rgba(60,210,255,0.15)",
               },
             },
           },
@@ -476,7 +484,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .MuiTouchRipple-child": {
                 color: "rgba(0, 153, 255, 1)",
               },
-              "&:focus-visible": focusStyleSecondary,
+              "&:focus-visible": focusStyle,
             },
             colorPrimary: {
               color: "#0064AF",
