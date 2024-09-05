@@ -580,7 +580,7 @@ const PaginatedTaulukko = ({
   fieldArrayName: "muutOmistajat" | "suomifiOmistajat";
   columns: ColumnDef<OmistajaRow>[];
 }) => {
-  const { control } = useFormContext<KiinteistonOmistajatFormFields>();
+  const { control, reset, formState: { isDirty } } = useFormContext<KiinteistonOmistajatFormFields>();
   const [hakutulosMaara, setHakutulosMaara] = useState<number>(initialHakutulosMaara);
   const [sliceAt, setSliceAt] = useState(PAGE_SIZE);
   const { append: appendMuut, fields } = useFieldArray({ control, name: fieldArrayName, keyName: "fieldId" });
@@ -604,11 +604,14 @@ const PaginatedTaulukko = ({
               .map(mapOmistajaToOmistajaRow(...resettableFields));
             setSliceAt(Math.ceil((from + size) / PAGE_SIZE) * PAGE_SIZE);
             appendMuut(toBeAdded);
+            if (!isDirty) {
+              reset(undefined, { keepValues: true });
+            }
           } catch {}
         })()
       );
     },
-    [api, appendMuut, fieldArrayName, fields, oid, withLoadingSpinner]
+    [api, appendMuut, fieldArrayName, fields, oid, withLoadingSpinner, isDirty, reset]
   );
 
   const showLess = useCallback(() => {
