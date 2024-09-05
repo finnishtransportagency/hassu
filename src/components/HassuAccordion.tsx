@@ -27,9 +27,9 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
     transform: "rotate(90deg)",
   },
   "&.Mui-focusVisible": {
-    ...focusStyle,
     backgroundColor: "initial",
   },
+  "&:focus-visible": focusStyle,
   "& .MuiAccordionSummary-expandIconWrapper": {
     minWidth: "24px",
     minHeight: "24px",
