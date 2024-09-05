@@ -75,6 +75,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   const userFixture = new UserFixture(userService);
   setupLocalDatabase();
   // Sähköpostin lähettämistä varten projektilla on oltava kayttoOikeudet ja velho
+  let emailStubTurvaposti: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
   let emailStub: sinon.SinonStub<[options: EmailOptions], Promise<SMTPTransport.SentMessageInfo | undefined>> | undefined;
   let ashaStub: sinon.SinonStub<[oid: string, asianhallintaEventId: string], Promise<void>> | undefined;
   // Lambda, jolla kysytään ashan tilaa
@@ -114,6 +115,19 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     );
 
     // Stubataan sähköpostin lähettäminen
+    emailStubTurvaposti = sinon.stub(emailClient, "sendTurvapostiEmail").callsFake(async () => {
+      return Promise.resolve({
+        messageId: "messageId123",
+        accepted: ["vastaanottaja@sahkoposti.fi"],
+        rejected: [],
+        pending: [],
+        envelope: {
+          from: false,
+          to: [],
+        },
+        response: "response",
+      });
+    });
     emailStub = sinon.stub(emailClient, "sendEmail").callsFake(async () => {
       return Promise.resolve({
         messageId: "messageId123",
@@ -135,6 +149,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     // Poista projekti joka testin päätteeksi
     await removeProjektiFromDB(oid);
     userFixture.logout();
+    emailStubTurvaposti?.reset();
+    emailStubTurvaposti?.restore();
     emailStub?.reset();
     emailStub?.restore();
     MockDate.reset();
@@ -241,7 +257,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sellainen tapahtuu", async () => {
     MockDate.set("2000-01-01");
-    emailStub?.onFirstCall().resolves({
+    emailStubTurvaposti?.onFirstCall().resolves({
       messageId: "messageId123",
       accepted: [],
       rejected: ["vastaanottaja@sahkoposti.fi"],
@@ -275,7 +291,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
     MockDate.set("2000-01-01");
-    emailStub?.onFirstCall().resolves(undefined);
+    emailStubTurvaposti?.onFirstCall().resolves(undefined);
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -299,7 +315,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
     MockDate.set("2000-01-01");
-    emailStub?.onFirstCall().resolves(undefined);
+    emailStubTurvaposti?.onFirstCall().resolves(undefined);
     userFixture.loginAsAdmin();
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
@@ -323,7 +339,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("hallitsee tilanteen, jossa yksi s.posti onnistuu ja toinen ei", async () => {
     MockDate.set("2000-01-01");
-    emailStub?.onFirstCall().resolves({
+    emailStubTurvaposti?.onFirstCall().resolves({
       messageId: "messageId123",
       accepted: ["vastaanottaja1@sahkoposti.fi"],
       rejected: ["vastaanottaja2@sahkoposti.fi"],
@@ -386,7 +402,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
 
-    expect(emailStub?.callCount).to.eql(3);
+    expect(emailStubTurvaposti?.callCount).to.eql(1);
+    expect(emailStub?.callCount).to.eql(2);
 
     const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
@@ -402,7 +419,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusMuokkaajalle).to.exist;
     expect(ilmoitusMuokkaajalle?.firstArg).toMatchSnapshot();
 
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+    const ilmoitusVastaanottajille = emailStubTurvaposti?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
@@ -430,7 +447,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
+    expect(emailStubTurvaposti?.callCount).to.eql(1);
+    expect(emailStub?.callCount).to.eql(2);
 
     const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
@@ -448,7 +466,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusMuokkaajalle).to.exist;
     expect(ilmoitusMuokkaajalle?.firstArg).toMatchSnapshot();
 
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+    const ilmoitusVastaanottajille = emailStubTurvaposti?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
@@ -507,9 +525,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
+    expect(emailStubTurvaposti?.callCount).to.eql(1);
+    expect(emailStub?.callCount).to.eql(2);
 
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+    const ilmoitusVastaanottajille = emailStubTurvaposti?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
@@ -574,7 +593,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
+    expect(emailStubTurvaposti?.callCount).to.eql(1);
+    expect(emailStub?.callCount).to.eql(2);
 
     const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
@@ -587,7 +607,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       )
     ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
 
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+    const ilmoitusVastaanottajille = emailStubTurvaposti?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
@@ -613,14 +633,15 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
-    expect(emailStub?.callCount).to.eql(3);
+    expect(emailStubTurvaposti?.callCount).to.eql(1);
+    expect(emailStub?.callCount).to.eql(2);
 
     const ilmoitusProjarille = emailStub?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("email@email.com") && to.includes("email2@email.com");
     });
     expect(ilmoitusProjarille).to.exist;
-    const ilmoitusVastaanottajille = emailStub?.getCalls().find((call) => {
+    const ilmoitusVastaanottajille = emailStubTurvaposti?.getCalls().find((call) => {
       const to = (call.firstArg as EmailOptions).to;
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
