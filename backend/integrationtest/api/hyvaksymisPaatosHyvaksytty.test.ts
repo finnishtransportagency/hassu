@@ -84,7 +84,10 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     await recordProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU, oid);
   }
 
-  it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
+  it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     asetaAika("2025-01-02");

@@ -293,7 +293,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
             const kaannos = translate(`viranomainen.${yhteystieto.elyOrganisaatio}`, this.kieli);
             organisaatio = ` (${kaannos ?? yhteystieto.organisaatio})`;
           } else if (yhteystieto.organisaatio) {
-            organisaatio = ` (${yhteystieto.organisaatio})`;
+            const orgKey = yhteystieto.organisaatio.toUpperCase().replace(/Ä/g, "A").replace(/Ö/g, "O").replace(/ /g, "_");
+            const kaannos = translate(`viranomainen.${orgKey}`, this.kieli);
+            organisaatio = ` (${kaannos ?? yhteystieto.organisaatio})`;
           }
           this.doc.text(`${etunimi} ${sukunimi}${organisaatio},\n${this.kutsuAdapter.localizedPuh} ${puhelinnumero}`, { baseline });
         });

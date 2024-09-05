@@ -40,8 +40,8 @@ export default function KuulutuksetJaKutsu({
       </p>
       <ul style={{ listStyle: "none" }} className="mt-4">
         {!!tuodut?.length &&
-          tuodut.map((tiedosto) => (
-            <li key={tiedosto.nimi}>
+          tuodut.map((tiedosto, i) => (
+            <li key={tiedosto.nimi + i}>
               <LadattavaTiedostoComponent tiedosto={tiedosto} />
             </li>
           ))}

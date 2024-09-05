@@ -188,6 +188,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "SCALAR",
+        "name": "Float",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "HallintoOikeus",
         "possibleTypes": null,

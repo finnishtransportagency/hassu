@@ -54,6 +54,8 @@ const countryCodes = lookup.countries.map((country) => country.iso2);
 const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => MuistutusInputForm = (kayttaja: SuomifiKayttaja | undefined) => {
   const maa = lookup.byIso(kayttaja?.maakoodi ?? "FI")?.iso2 ?? "FI";
   return {
+    etunimi: kayttaja?.etunimi ?? "",
+    sukunimi: kayttaja?.sukunimi ?? "",
     katuosoite: kayttaja?.osoite ?? "",
     postinumero: kayttaja?.postinumero ?? "",
     postitoimipaikka: kayttaja?.postitoimipaikka ?? "",
@@ -209,8 +211,18 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         <ContentSpacer gap={8} as="form">
           <HassuStack>
             <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>
-              <TextField disabled name="etunimi" value={kayttaja?.etunimi ?? ""} label={t("common:etunimi")} />
-              <TextField disabled name="sukunimi" value={kayttaja?.sukunimi ?? ""} label={t("common:sukunimi")} />
+              <TextFieldWithController
+                required
+                disabled={kayttaja?.suomifiEnabled}
+                controllerProps={{ control, name: "etunimi", constructErrorMessage }}
+                label={t("common:etunimi")}
+              />
+              <TextFieldWithController
+                disabled={kayttaja?.suomifiEnabled}
+                required
+                controllerProps={{ control, name: "sukunimi", constructErrorMessage }}
+                label={t("common:sukunimi")}
+              />
               <TextFieldWithController
                 required
                 controllerProps={{ control, name: "katuosoite", constructErrorMessage }}
@@ -371,7 +383,13 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         </ContentSpacer>
       </ContentSpacer>
       <KiitosDialogi open={kiitosDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={close} isMobile={isMobile} />
-      <EpaonnistuiDialogi open={epaonnistuiDialogiOpen} projekti={projekti} nahtavillaolo={nahtavillaolo} onClose={closeEpaonnistui} isMobile={isMobile} />
+      <EpaonnistuiDialogi
+        open={epaonnistuiDialogiOpen}
+        projekti={projekti}
+        nahtavillaolo={nahtavillaolo}
+        onClose={closeEpaonnistui}
+        isMobile={isMobile}
+      />
       <HassuDialog open={sessioVanhentunut} title={t("common:istunto_vanhentunut")} maxWidth="sm" onClose={closeSessioDialog}>
         <DialogContent>
           <p>{t("common:istunto_vanhentunut_teksti")}</p>
