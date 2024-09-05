@@ -158,7 +158,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
 describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
   let parameterStub: sinon.SinonStub;
   before(() => {
-    parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled");
+    parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled");
     mockClient(SSM)
       .on(GetParameterCommand, { Name: "/kirjaamoOsoitteet" })
       .resolves({ Parameter: { Value: JSON.stringify(kirjaamoOsoitteet) } });

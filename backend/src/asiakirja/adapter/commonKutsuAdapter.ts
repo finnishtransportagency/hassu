@@ -523,6 +523,12 @@ export class CommonKutsuAdapter {
       if (kaannos) {
         organisaatioTeksti = kaannos;
       }
+    } else {
+      const orgKey = organisaatioTeksti.toUpperCase().replace(/Ä/g, "A").replace(/Ö/g, "O").replace(/ /g, "_");
+      const kaannos = translate(`viranomainen.${orgKey}`, this.kieli);
+      if (kaannos) {
+        organisaatioTeksti = kaannos;
+      }
     }
 
     return {

@@ -11,6 +11,7 @@ import { formatNimi } from "../../util/userUtil";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import { formatDate } from "../asiakirjaUtil";
+import { Kieli } from "hassu-common/graphql/apiModel";
 
 export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusPaiva: string;
@@ -80,8 +81,14 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
         if (kaannos) {
           organisaatio = kaannos;
         }
+      } else if (organisaatio) {
+        const orgKey = organisaatio.toUpperCase().replace(/Ä/g, "A").replace(/Ö/g, "O").replace(/ /g, "_");
+        const kaannos = translate(`viranomainen.${orgKey}`, this.kieli);
+        if (kaannos) {
+          organisaatio = kaannos;
+        }
       }
-      return `${organisaatio ? organisaatio + ", " : ""}${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`;
+      return `${organisaatio ? organisaatio + ", " : ""}${formatNimi(y)}, ${this.kieli === Kieli.RUOTSI ? "tel" : "puh"}. ${y.puhelinnumero}, ${y.sahkoposti}`;
     });
   }
 }

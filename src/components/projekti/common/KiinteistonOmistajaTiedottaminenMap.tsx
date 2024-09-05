@@ -616,7 +616,7 @@ export function createVectorLayer(source: VectorSource<Geometry>): VectorLayer<V
   });
 }
 
-const MAXIMUM_AREA = 9999999;
+const MAXIMUM_AREA = 99999999;
 const validateSelection = (geom: Geometry | undefined): geom is Polygon => {
   if (!(geom instanceof Polygon || geom instanceof MultiPolygon)) {
     throw new UnsupportedGeometryTypeError("Lisätty ei tuettu geometria. Tuetut geometriatyypit: Polygon ja MultiPolygon");

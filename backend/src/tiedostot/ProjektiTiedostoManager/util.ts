@@ -51,14 +51,17 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
   }
   let hasChanges = false;
   // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  const poistettavat: Aineisto[] = [];
+  const persistoitavat: Aineisto[] = [];
   const originalAineistot = aineistot.splice(0, aineistot.length);
   for (const aineisto of originalAineistot) {
     if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA) {
-      await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+      poistettavat.push(aineisto);
       hasChanges = true;
     } else if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
-      await importAineisto(aineisto, oid, paths);
-      aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
+      const persistoitava = omit(aineisto, "kategoriaMuuttunut");
+      persistoitavat.push(persistoitava);
+      aineistot.push(persistoitava);
       hasChanges = true;
     } else if (aineisto.kategoriaMuuttunut) {
       aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
@@ -66,6 +69,12 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
     } else {
       aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
     }
+  }
+  for (const aineisto of poistettavat) {
+    await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+  }
+  for (const aineisto of persistoitavat) {
+    await importAineisto(aineisto, oid, paths);
   }
 
   return hasChanges;

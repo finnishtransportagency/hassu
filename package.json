@@ -301,6 +301,7 @@
     "log:backend:julkinen": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-julkinen-$ENVIRONMENT",
     "log:backend:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-dev",
     "log:sqseventhandler": "aws logs tail --follow --since 1h /aws/lambda/hassu-sqs-event-handler-$ENVIRONMENT",
+    "log:eventhandler": "aws logs tail --follow --since 1h /aws/lambda/hassu-hyvaksymisesitys-aineisto-handler-$ENVIRONMENT",
     "log:sqseventhandler:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-sqs-event-handler-dev",
     "log:pdfgenerator": "aws logs tail --follow --since 1h /aws/lambda/hassu-pdf-generator-$ENVIRONMENT",
     "log:pdfgenerator:dev": "aws logs tail --follow --since 1h /aws/lambda/hassu-pdf-generator-dev",

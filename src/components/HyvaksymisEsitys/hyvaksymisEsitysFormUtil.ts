@@ -106,13 +106,14 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
   const suunnitelma = Object.values(formData.muokattavaHyvaksymisEsitys.suunnitelma)
     .flat()
     .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
-
+  const muuAineistoVelhosta = formData.muokattavaHyvaksymisEsitys.muuAineistoVelhosta?.map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
       suunnitelma,
       muistutukset,
+      muuAineistoVelhosta,
     },
   };
 }
