@@ -224,7 +224,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           nimi: "kuulutuksetJaKutsu äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "kuulutuksetJaKutsu-uuid",
-          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/kuulutuksenJaKutsu/kuulutuksetJaKutsu_aoa_.png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_.png",
         },
       ],
       muuAineistoVelhosta: [

@@ -136,7 +136,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
 describe("pdfGeneratorHandlerAloituskuulutus", () => {
   let parameterStub: sinon.SinonStub;
   before(() => {
-    parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled");
+    parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled");
     sinon.stub(bankHolidaysClient, "getBankHolidays").resolves(new BankHolidays([]));
     mockClient(SSM)
       .on(GetParameterCommand, { Name: "/kirjaamoOsoitteet" })

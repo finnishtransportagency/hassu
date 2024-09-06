@@ -57,7 +57,7 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
     Yup.object().shape({
       tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
       nimi: lokalisoituTekstiEiPakollinen({
-        additionalStringValidations: (schema) => schema.max(100, `Nimi voi olla maksimissaan 100 merkkiä`),
+        additionalStringValidations: (schema) => schema.max(150, `Nimi voi olla maksimissaan 150 merkkiä`),
       }).nullable(),
       paivamaara: paivamaara({ preventPast: true }).required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa"),
       alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
@@ -127,7 +127,7 @@ export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
       nimi: lokalisoituTekstiEiPakollinen({
-        additionalStringValidations: (schema) => schema.max(100, `Nimi voi olla maksimissaan 100 merkkiä`),
+        additionalStringValidations: (schema) => schema.max(150, `Nimi voi olla maksimissaan 150 merkkiä`),
       }).nullable(),
       kaytettavaPalvelu: Yup.string()
         .when("tyyppi", {

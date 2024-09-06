@@ -107,7 +107,7 @@ export class AsiakirjaService {
     linkkiAsianhallintaan,
     osoite,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
-    const suomiFiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+    const suomiFiEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
       nahtavillaoloVaihe,
@@ -157,7 +157,7 @@ export class AsiakirjaService {
       linkkiAsianhallintaan,
       osoite,
     );
-    const suomiFiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+    const suomiFiEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     if (
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE

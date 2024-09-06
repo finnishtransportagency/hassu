@@ -102,7 +102,7 @@ describe("suomifiHandler", () => {
   });
 
   it("muistuttajan sähköposti annettu", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(false);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(false);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -204,7 +204,7 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan sähköpostia ei annettu", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(false);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(false);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -230,7 +230,6 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan viesti suomi.fi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -258,7 +257,6 @@ describe("suomifiHandler", () => {
     sinon.restore();
   });
   it("muistuttajan viesti suomi.fi paperiposti", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -292,7 +290,6 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -348,7 +345,6 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi ruotsi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -403,7 +399,7 @@ describe("suomifiHandler", () => {
     sinon.restore();
   });
   it("omistajan pdf viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -460,7 +456,7 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("omistajan pdf viesti suomi.fi nähtävilläolo", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -535,7 +531,7 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("omistajan pdf viesti suomi.fi hyväksymispäätös", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -610,7 +606,7 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("omistajan pdf viesti suomi.fi epäonnistui", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -670,7 +666,6 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {

@@ -255,6 +255,7 @@ export type SaveProjektiToVelhoMocks = {
 export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
   const saveKasittelynTilaStub = sinon.stub(velho, "saveKasittelynTila");
   const saveProjektiAloituskuulutusPaivaStub = sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
+  const saveProjektiSuunnitelmanTilaStub = sinon.stub(velho, "saveProjektiSuunnitelmanTila");
   mocha.afterEach(() => {
     if (saveKasittelynTilaStub.getCalls().length > 0) {
       expect({
@@ -266,8 +267,14 @@ export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
         "velho.saveProjektiAloituskuulutusPaiva": saveProjektiAloituskuulutusPaivaStub.getCalls().map((call) => call.args),
       }).toMatchSnapshot();
     }
+    if (saveProjektiSuunnitelmanTilaStub.getCalls().length > 0) {
+      expect({
+        "velho.saveProjektiSuunnitelmanTila": saveProjektiSuunnitelmanTilaStub.getCalls().map((call) => call.args),
+      }).toMatchSnapshot();
+    }
     saveProjektiAloituskuulutusPaivaStub.reset();
     saveKasittelynTilaStub.reset();
+    saveProjektiSuunnitelmanTilaStub.reset();
   });
   return { saveKasittelynTilaStub, saveProjektiAloituskuulutusPaivaStub };
 }
