@@ -1,4 +1,5 @@
 import { styled, experimental_sx as sx } from "@mui/system";
+import { focusStyle } from "../layout/HassuMuiThemeProvider";
 
 export const TableWrapper = styled("div")(
   sx({
@@ -51,6 +52,7 @@ export const BodyTrWrapper = styled("div")(
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
     position: "relative",
+    '&:focus-visible': focusStyle,
   })
 );
 export const BodyTr = styled(Tr)(sx({}));

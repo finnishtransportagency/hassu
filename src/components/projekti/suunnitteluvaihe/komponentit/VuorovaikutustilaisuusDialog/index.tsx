@@ -30,6 +30,7 @@ import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
 import useValidationMode from "src/hooks/useValidationMode";
 import { TukiEmailLink } from "../../../../EiOikeuksia";
+import { focusStyle } from "@components/layout/HassuMuiThemeProvider";
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
@@ -239,8 +240,7 @@ export default function VuorovaikutusDialog({
                 <p>
                   Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
                   tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
-                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä{" "}
-                  <TukiEmailLink />.
+                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä <TukiEmailLink />.
                 </p>
               ) : (
                 <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
@@ -415,6 +415,7 @@ const HassuChip = styled(Chip)(() => ({
       boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
     },
   },
+  ["&.Mui-focusVisible"]: focusStyle,
   [`&.Mui-disabled`]: {
     opacity: 100,
     background: "#999999",

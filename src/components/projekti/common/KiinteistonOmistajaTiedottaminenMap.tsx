@@ -320,6 +320,9 @@ export const KiinteistonomistajaTiedottaminenMap = styled(({ children, projekti,
       boxShadow: "0 4px 4px 1px rgb(0 0 0 / 0.2)",
       width: "40px",
       height: "40px",
+      ":focus-visible": {
+        outlineOffset: "-3px",
+      },
       "& svg": {
         color: "#0063AF",
       },

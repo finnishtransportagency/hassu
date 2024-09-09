@@ -190,7 +190,7 @@ const NavigointiNappiMobiiliTyylit = sx({
 
 export const NavigointiNappiMobiili = styled(NavigointiNappi)(NavigointiNappiMobiiliTyylit);
 
-export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiMobiiliTyylit);
+export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(NavigointiNappiMobiiliTyylit, { color: "#242222" });
 
 export const HakuehtoNappi = styled("button")(
   sx({
