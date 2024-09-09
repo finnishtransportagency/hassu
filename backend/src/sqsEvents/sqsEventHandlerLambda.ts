@@ -18,10 +18,10 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
-import { LausuntoPyynnonTaydennys } from "../database/model";
+import { DBProjekti, LausuntoPyynnonTaydennys } from "../database/model";
 import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/ProjektiTiedostoManager/LausuntoPyynnonTaydennysTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
-import { PublishOrExpireEventType } from "./projektiScheduleManager";
+import { HYVAKSYMISPAATOS_VAIHE_PAATTYY, PublishOrExpireEventType } from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
 import { emailClient } from "../email/email";
 import { createKuukausiEpaaktiiviseenEmail } from "../email/emailTemplates";
@@ -30,6 +30,7 @@ import {
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
 } from "../util/lausuntoPyyntoUtil";
 import { velho } from "../velho/velhoClient";
+import { linkHyvaksymisPaatos } from "hassu-common/links";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -457,6 +458,9 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           projekti.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil13";
           await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, kasittelynTila: projekti.kasittelynTila });
           await velho.saveProjektiSuunnitelmanTila(projekti.oid, projekti.kasittelynTila.suunnitelmanTila);
+        } else if (sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE && sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY) {
+          // sähköposti Traficomille
+          await lahetaSahkopostiTraficom(projekti);
         }
       }
       if (!successfulSynchronization) {
@@ -474,3 +478,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", handlerFactory(event));
 };
+
+async function lahetaSahkopostiTraficom(projekti: DBProjekti) {
+  log.info("Lähetetään sähköposti Traficomille");
+  const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
+  const text = `Hei,
+Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} hyväksymispäätöksen (${projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
+Linkki kuulutukseen Valtion liikenneväylin suunnittelu -palvelussa: ${linkHyvaksymisPaatos(projekti, API.Kieli.SUOMI)}`;
+  await emailClient.sendEmail({ to: "kirjaamo@traficom.fi", subject: "Hyväksymispäätöksen nähtävilläoloaika päättynyt", text })
+}
