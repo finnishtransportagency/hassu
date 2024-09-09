@@ -35,22 +35,25 @@ const AccordioSummaryContent = ({ titleText, paakategoria, tooltipText }: Accord
           {titleText}
         </Heading>
         {tooltipText && (
-            <FontAwesomeIcon
-              color="rgb(0, 100, 175)"
-              size={"lg"}
-              icon="info-circle"
-              type={NotificationType.INFO_GRAY}
-              cursor="pointer"
-              onMouseEnter={() => setShowTooltip(true)}
-              onClick={(event) => {event.stopPropagation(); setShowTooltip(true)}}
-            />
+          <button
+            onMouseEnter={() => setShowTooltip(true)}
+            onClick={(event) => {
+              event.stopPropagation();
+              setShowTooltip(!showTooltip);
+            }}
+          >
+            <FontAwesomeIcon color="rgb(0, 100, 175)" size="lg" icon="info-circle" type={NotificationType.INFO_GRAY} cursor="pointer" />
+          </button>
         )}
       </div>
       <Notification
         type={NotificationType.INFO_GRAY}
         className="mt-4"
         open={showTooltip}
-        onClose={(event) => {event.stopPropagation(); setShowTooltip(false)}}
+        onClose={(event) => {
+          event.stopPropagation();
+          setShowTooltip(false);
+        }}
         closable
         style={{ maxWidth: "40rem" }}
       >

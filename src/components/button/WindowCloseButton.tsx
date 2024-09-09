@@ -8,6 +8,7 @@ function WindowCloseButton(
 ): ReactElement {
   return (
     <IconButton
+      disableFocusRipple
       ref={ref}
       onClick={(e) => {
         onClick?.(e);

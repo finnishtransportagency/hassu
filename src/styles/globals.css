@@ -38,10 +38,11 @@
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):active.hassu-input {
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
-  /* body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):not(:disabled):not(.error).hassu-input {
-    @apply border-primary;
-  } */
+  body :is(a):focus-visible {
+    outline: 2px #0063b5 solid;
+    outline-offset: 0px;
+  }
+
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):disabled.hassu-input {
     @apply border-gray-dark bg-gray-light;
   }
@@ -49,21 +50,24 @@
     @apply border-red;
   }
   body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus-visible:not(
       .error
     ).hassu-input {
-    @apply border-primary;
-    @apply ring-1;
-  }
-  body
-    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(
-      .error
-    ).hassu-input {
-    @apply ring-1 ring-primary;
+    outline: 2px #0063b5 solid;
+    outline-offset: -2px;
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error.hassu-input:focus {
-    @apply ring-red;
+  body
+    :is(
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      input[type="date"],
+      textarea,
+      select
+    ).error.hassu-input:focus-visible {
+    outline: 2px #f10e0e solid;
+    outline-offset: -2px;
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
   body select.hassu-input {
@@ -389,38 +393,54 @@
   .btn-primary {
     @apply btn bg-primary-dark text-white;
   }
+  .btn-primary:focus-visible {
+    outline: 2px #ffffff solid;
+    outline-offset: -3px;
+  }
+  .btn:focus-visible {
+    outline: 2px #0064af solid;
+    outline-offset: -3px;
+  }
   .btn-remove-red {
     @apply btn text-red border-red;
   }
   .btn-small {
-    color: #0064AF;
-    background-color: #FFFFFF;
+    color: #0064af;
+    background-color: #ffffff;
     font-size: 1rem;
     border: 3px solid;
     text-transform: none;
-    border-color: #0064AF;
+    border-color: #0064af;
     border-image: linear-gradient(117deg, #009ae0, #49c2f1) 2;
     border-radius: 0;
     font-weight: 700;
   }
   .btn-small:disabled {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     color: #242222;
     border: 3px solid #e5e5e5;
   }
   .btn-small-primary {
-    border: 3px solid #0064AF;
+    border: 3px solid #0064af;
     border-radius: 0;
     font-size: 1rem;
     text-transform: none;
     font-weight: 700;
-    background-color: #0064AF;
-    color: #FFFFFF;
+    background-color: #0064af;
+    color: #ffffff;
   }
   .btn-small-primary:disabled {
     background-color: #e5e5e5;
     color: #242222;
     border: 3px solid #e5e5e5;
+  }
+  .btn-small:focus-visible {
+    outline: 2px #0064af solid;
+    outline-offset: -3px;
+  }
+  .btn-small-primary:focus-visible {
+    outline: 2px #ffffff solid;
+    outline-offset: -3px;
   }
   .alert {
     @apply border py-2 px-3 bg-gray-lightest border-gray;
