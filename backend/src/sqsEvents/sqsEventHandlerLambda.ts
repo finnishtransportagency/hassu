@@ -484,6 +484,6 @@ async function lahetaSahkopostiTraficom(projekti: DBProjekti) {
   const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
   const text = `Hei,
 Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} hyväksymispäätöksen (${projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
-Linkki kuulutukseen Valtion liikenneväylin suunnittelu -palvelussa: ${linkHyvaksymisPaatos(projekti, API.Kieli.SUOMI)}`;
+Linkki kuulutukseen Valtion liikenneväylien suunnittelu -palvelussa: ${linkHyvaksymisPaatos(projekti, API.Kieli.SUOMI)}`;
   await emailClient.sendEmail({ to: "kirjaamo@traficom.fi", subject: "Hyväksymispäätöksen nähtävilläoloaika päättynyt", text })
 }
