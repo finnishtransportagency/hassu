@@ -41,6 +41,7 @@ import {
   SuljeHyvaksymisEsityksenMuokkausMutationVariables,
   HaeHyvaksymisEsityksenTiedotQueryVariables,
   HaeKayttoOikeudetQueryVariables,
+  EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -84,6 +85,7 @@ import {
   tallennaHyvaksymisEsitys,
   tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi,
   esikatseleHyvaksymisEsityksenTiedostot,
+  esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot,
   haeHyvaksymisEsityksenTiedot,
 } from "../HyvaksymisEsitys/actions";
 import haeKayttoOikeudet from "../user/haeKayttoOikeudet";
@@ -173,6 +175,10 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       );
     case apiConfig.esikatseleHyvaksymisEsityksenTiedostot.name:
       return await esikatseleHyvaksymisEsityksenTiedostot(event.arguments as EsikatseleHyvaksymisEsityksenTiedostotQueryVariables);
+    case apiConfig.esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot.name:
+      return await esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot(
+        event.arguments as EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables
+      );
     case apiConfig.haeHyvaksymisEsityksenTiedot.name:
       return await haeHyvaksymisEsityksenTiedot((event.arguments as HaeHyvaksymisEsityksenTiedotQueryVariables).oid);
     case apiConfig.tallennaKiinteistonOmistajat.name:

@@ -5,7 +5,7 @@ import hyvaksyHyvaksymisEsitys from "./hyvaksy";
 import palautaHyvaksymisEsitys from "./palauta";
 import suljeHyvaksymisEsityksenMuokkaus from "./suljeMuokkaus";
 import listaaHyvaksymisEsityksenTiedostot from "./listaaTiedostot";
-import esikatseleHyvaksymisEsityksenTiedostot from "./esikatseleTiedostot";
+import { esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot, esikatseleHyvaksymisEsityksenTiedostot } from "./esikatseleTiedostot";
 import haeHyvaksymisEsityksenTiedot from "./haeTiedot";
 
 export {
@@ -17,5 +17,6 @@ export {
   suljeHyvaksymisEsityksenMuokkaus,
   listaaHyvaksymisEsityksenTiedostot,
   esikatseleHyvaksymisEsityksenTiedostot,
+  esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot,
   haeHyvaksymisEsityksenTiedot,
 };
