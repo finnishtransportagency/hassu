@@ -3,6 +3,7 @@ import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import ButtonLink from "@components/button/ButtonLink";
 import { RectangleButton } from "@components/button/RectangleButton";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 import HassuTable from "@components/table/HassuTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionSummary, TextField } from "@mui/material";
@@ -67,7 +68,7 @@ const TableAccordionSummary = styled(AccordionSummary)({
   backgroundColor: "#0164AF",
   "&.Mui-focusVisible": {
     backgroundColor: "#0164AF",
-    outline: "2px solid black",
+    ...focusStyleSecondary,
   },
   color: "#FFFFFF",
   fontWeight: 700,

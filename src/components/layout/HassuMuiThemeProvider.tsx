@@ -9,6 +9,16 @@ import React, { ReactNode, useMemo } from "react";
 
 type Props = { children?: ReactNode };
 
+export const focusStyle = {
+  outline: "2px #0063B5 solid",
+  outlineOffset: "-2px",
+};
+
+export const focusStyleSecondary = {
+  outline: "2px #FFFFFF solid",
+  outlineOffset: "-3px",
+};
+
 export const breakpointOptions: BreakpointsOptions = {
   values: {
     xs: 0,
@@ -67,7 +77,19 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiStep: {
+          styleOverrides: {
+            root: {
+              "&.MuiStep-horizontal": {
+                "&.Mui-focusVisible": focusStyle,
+              },
+            },
+          },
+        },
         MuiSwitch: {
+          defaultProps: {
+            disableRipple: true,
+          },
           styleOverrides: {
             root: {
               width: "72px",
@@ -85,12 +107,14 @@ export const createLocalizedTheme = (locale: Localization) =>
                 padding: "13px",
                 "&.Mui-checked": {
                   transform: "translateX(27px)",
+                  "&.Mui-focusVisible + .MuiSwitch-track": focusStyleSecondary,
                   "& + .MuiSwitch-track": {
                     backgroundColor: "#0064AF",
                     opacity: 1,
                     border: 0,
                   },
                 },
+                "&.Mui-focusVisible + .MuiSwitch-track": focusStyle,
                 "&.Mui-disabled + .MuiSwitch-track": {
                   opacity: 1,
                   backgroundColor: "#C7C7C7",
@@ -215,6 +239,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 />
               </span>
             ),
+            disableRipple: true,
             checkedIcon: (
               <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
                 <FontAwesomeIcon
@@ -257,29 +282,32 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .hassu-checkbox-icon-checked": {
                 background: "#0064AF",
               },
-              "&.Mui-focusVisible .hassu-checkbox-icon-unchecked": {
-                border: "2px solid transparent",
-                backgroundClip: "padding-box",
-                transformStyle: "preserve-3d",
-              },
-              "&.Mui-focusVisible .hassu-checkbox-icon-unchecked::after": {
-                position: "absolute",
-                top: "-2px",
-                bottom: "-2px",
-                left: "-2px",
-                right: "-2px",
-                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
-                content: '""',
-                transform: "translateZ(-1px)",
-                borderRadius: "4px",
+              "&.Mui-focusVisible": {
+                ...focusStyle,
+                "& .hassu-checkbox-icon-unchecked": {
+                  border: "2px solid transparent",
+                  backgroundClip: "padding-box",
+                  transformStyle: "preserve-3d",
+                },
+                "& .hassu-checkbox-icon-unchecked::after": {
+                  position: "absolute",
+                  top: "-2px",
+                  bottom: "-2px",
+                  left: "-2px",
+                  right: "-2px",
+                  background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+                  content: '""',
+                  transform: "translateZ(-1px)",
+                  borderRadius: "4px",
+                },
+                "& .hassu-checkbox-icon-checked": {
+                  background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+                },
               },
               "&.Mui-disabled .hassu-checkbox-icon": {
                 background: "#C7C7C7",
                 boxShadow: "none",
                 border: "none",
-              },
-              "&.Mui-focusVisible .hassu-checkbox-icon-checked": {
-                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
               },
             },
           },
@@ -368,19 +396,35 @@ export const createLocalizedTheme = (locale: Localization) =>
           defaultProps: { disableRipple: true },
           styleOverrides: {
             root: {
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
               "&.Mui-selected": {
                 backgroundColor: "rgba(60,210,255,0.10)",
-                "&:hover": {
-                  backgroundColor: "rgba(60,210,255,0.15)",
-                },
-                "&.Mui-focusVisible": {
-                  backgroundColor: "rgba(60,210,255,0.20)",
-                },
+              },
+              "&.Mui-focusVisible": {
+                ...focusStyle,
+                backgroundColor: "transparent",
+              },
+              "&.Mui-selected:hover": {
+                backgroundColor: "rgba(60,210,255,0.15)",
+              },
+              "&.Mui-selected.Mui-focusVisible": {
+                backgroundColor: "rgba(60,210,255,0.10)",
+              },
+              "&.Mui-focusVisible:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+              "&.Mui-focusVisible.Mui-selected:hover": {
+                backgroundColor: "rgba(60,210,255,0.15)",
               },
             },
           },
         },
         MuiTab: {
+          defaultProps: {
+            disableRipple: true,
+          },
           styleOverrides: {
             root: {
               paddingTop: "18px",
@@ -396,6 +440,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-selected:not(.Mui-disabled)": {
                 color: "#0064AF",
               },
+              ":focus-visible": focusStyle,
             },
           },
         },
@@ -439,6 +484,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "& .MuiTouchRipple-child": {
                 color: "rgba(0, 153, 255, 1)",
               },
+              "&:focus-visible": focusStyle,
             },
             colorPrimary: {
               color: "#0064AF",

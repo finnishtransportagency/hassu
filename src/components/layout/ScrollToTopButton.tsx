@@ -5,6 +5,7 @@ import throttle from "lodash/throttle";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useEffect, useState, ComponentProps } from "react";
 import { animateScroll as scroll } from "react-scroll";
+import { focusStyleSecondary } from "./HassuMuiThemeProvider";
 
 const SCROLL_OFFSET = 200;
 const ScrollToTopButton: FunctionComponent = () => {
@@ -60,6 +61,7 @@ const StyledButton = styled(
   [theme.breakpoints.up("sm")]: {
     visibility: hide ? "hidden" : "visible",
   },
+  "&:focus-visible": focusStyleSecondary,
 }));
 
 export default ScrollToTopButton;
