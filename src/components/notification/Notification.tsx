@@ -6,6 +6,7 @@ import classNames from "classnames";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { experimental_sx as sx, styled } from "@mui/system";
 import useTranslation from "next-translate/useTranslation";
+import { IconButton } from "@mui/material";
 
 export enum NotificationType {
   DEFAULT = "default",
@@ -103,9 +104,9 @@ const Notification = styled(
     return (
       <div {...props} className={classNames(className, type)}>
         {closable && (
-          <CloseButton type="button" onClick={onClose} aria-label={t("common:sulje")}>
+          <IconButton sx={{ float: "right" }} type="button" onClick={onClose} aria-label={t("common:sulje")}>
             <CloseIcon />
-          </CloseButton>
+          </IconButton>
         )}
         <NotificationContent>
           {!hideIcon && iconComponent}
@@ -171,7 +172,5 @@ const Notification = styled(
     },
   })
 );
-
-const CloseButton = styled("button")(sx({ float: "right", display: "block" }));
 
 export default Notification;
