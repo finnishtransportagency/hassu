@@ -197,66 +197,68 @@ export function getMmlClient(options: MmlOptions): MmlClient {
       const chunks = chunkArray(kiinteistotunnukset, MAX);
       const tiekuntaMap = new Map<number, Omistaja>();
       for (const kyselytunnukset of chunks) {
-        let url =
+        const url =
           options.ogcEndpoint +
           "/collections/KayttooikeusyksikonPerustiedot/items?kiinteistotunnus=" +
           kyselytunnukset.join(",") +
           "&tiekunnallisuus=1";
         auditLog.info("Tiekuntien haku", { kiinteistotunnukset: kyselytunnukset });
-        let response = await axios.get(url, {
+        const response = await axios.get(url, {
           headers: { "x-api-key": options.ogcApiKey, enduserid: uid },
           timeout: TIMEOUT,
         });
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        let geojson = response.data as FeatureCollection | undefined;
-        const ids: number[] = [];
+        const geojson = response.data as FeatureCollection | undefined;
         for (const feat of geojson?.features ?? []) {
           if (feat.properties?.tiekunta) {
             feat.properties.tiekunta.forEach((t: { nimi: string; id: number }) => {
               const omistaja = { id: t.id, nimi: t.nimi, kayttooikeusyksikkotunnus: feat.properties?.kayttooikeusyksikkotunnus };
-              if (!tiekuntaMap.has(t.id)) {
-                tiekuntaMap.set(t.id, omistaja);
-                ids.push(t.id);
-              }
+              tiekuntaMap.set(t.id, omistaja);
             });
           }
         }
-        if (options.ogcApiExamples === "true") {
-          // haetaan vain joku yhteystieto, id listalla ei voi hakea esimerkeistä kun palauttaa HTTP 400
-          // lisäksi jos hakee sellaisella id:llä jota ei löydy tulee HTTP 400
-          url = (options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items/94615362").replace("/features/", "/examples/");
-        } else {
-          url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + ids.join(",");
-        }
-        auditLog.info("Tiekuntien yhteystietojen haku", { ids, url });
-        response = await axios.get(url, {
+      }
+      if (options.ogcApiExamples === "true") {
+        const url = (options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items/94615362").replace("/features/", "/examples/");
+        auditLog.info("Tiekuntien yhteystietojen haku", { url });
+        const response = await axios.get(url, {
           headers: { "x-api-key": options.ogcApiKey, enduserid: uid },
           timeout: TIMEOUT,
         });
         if (debug) {
           console.log("rawdata: %s", JSON.stringify(response.data));
         }
-        if (options.ogcApiExamples === "true") {
-          const feat = response.data as Feature;
-          // jätetään ensimmäinen tiekunta ilman yhteyshenkilöä
-          const tiekunnat = [...tiekuntaMap.values()];
-          tiekunnat.shift();
-          for (const omistaja of tiekunnat) {
-            // tiekunnan nimi sulkuihin
-            omistaja.nimi = feat.properties?.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
-            omistaja.yhteystiedot = {
-              jakeluosoite: feat.properties?.yhteyshenkilo[0].osoite[0]?.osoite,
-              postinumero: feat.properties?.yhteyshenkilo[0].osoite[0]?.postinumero,
-              paikkakunta: feat.properties?.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
-              maakoodi: feat.properties?.yhteyshenkilo[0].osoite[0]?.valtio
-                ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
-                : undefined,
-            };
+        const feat = response.data as Feature;
+        // jätetään ensimmäinen tiekunta ilman yhteyshenkilöä
+        const tiekunnat = [...tiekuntaMap.values()];
+        tiekunnat.shift();
+        for (const omistaja of tiekunnat) {
+          // tiekunnan nimi sulkuihin
+          omistaja.nimi = feat.properties?.yhteyshenkilo[0].nimi + (omistaja.nimi ? " (" + omistaja.nimi + ")" : "");
+          omistaja.yhteystiedot = {
+            jakeluosoite: feat.properties?.yhteyshenkilo[0].osoite[0]?.osoite,
+            postinumero: feat.properties?.yhteyshenkilo[0].osoite[0]?.postinumero,
+            paikkakunta: feat.properties?.yhteyshenkilo[0].osoite[0]?.postitoimipaikka,
+            maakoodi: feat.properties?.yhteyshenkilo[0].osoite[0]?.valtio
+              ? lookup.byIso(feat.properties.yhteyshenkilo[0].osoite[0].valtio)?.iso2
+              : undefined,
+          };
+        }
+      } else {
+        const ids = [...tiekuntaMap.keys()];
+        for (const kyselyids of chunkArray(ids, MAX)) {
+          const url = options.ogcEndpoint + "/collections/TiekunnanYhteystiedot/items?id=" + kyselyids.join(",");
+          auditLog.info("Tiekuntien yhteystietojen haku", { ids, url });
+          const response = await axios.get(url, {
+            headers: { "x-api-key": options.ogcApiKey, enduserid: uid },
+            timeout: TIMEOUT,
+          });
+          if (debug) {
+            console.log("rawdata: %s", JSON.stringify(response.data));
           }
-        } else {
-          geojson = response.data as FeatureCollection | undefined;
+          const geojson = response.data as FeatureCollection | undefined;
           for (const feat of geojson?.features ?? []) {
             if (feat?.properties?.yhteyshenkilo[0]) {
               const omistaja = tiekuntaMap.get(feat.id as number);

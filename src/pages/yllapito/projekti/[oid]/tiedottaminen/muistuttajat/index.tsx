@@ -14,6 +14,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "common/util/dateUtils";
 import ButtonLink from "@components/button/ButtonLink";
+import { PaivamaaraTila } from "@components/PaivamaaraTila";
 
 export default function Muistuttajat() {
   return (
@@ -34,30 +35,16 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     },
   },
   {
-    header: "Postiosoite",
+    header: "Osoite",
     accessorKey: "jakeluosoite",
     id: "postiosoite",
     meta: {
       widthFractions: 3,
-      minWidth: 160,
+      minWidth: 400,
     },
-  },
-  {
-    header: "Postinumero",
-    accessorKey: "postinumero",
-    id: "postinumero",
-    meta: {
-      widthFractions: 2,
-      minWidth: 140,
-    },
-  },
-  {
-    header: "Postitoimipaikka",
-    accessorKey: "paikkakunta",
-    id: "postitoimipaikka",
-    meta: {
-      widthFractions: 3,
-      minWidth: 160,
+    cell: (c) => {
+      const value = [c.getValue() ?? "", c.row.original.postinumero ?? "", c.row.original.paikkakunta ?? ""].join(" ").trim();
+      return value || "-";
     },
   },
   {
@@ -67,6 +54,20 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     meta: {
       widthFractions: 3,
       minWidth: 140,
+    },
+  },
+  {
+    header: "Viimeisin lähetysaika",
+    accessorKey: "viimeisinLahetysaika",
+    id: "viimeisinlahetysaika",
+    meta: {
+      widthFractions: 2,
+      minWidth: 180,
+    },
+    cell: (c) => {
+      const value = c.getValue() as string | null;
+      const tila = c.row.original.viimeisinTila;
+      return <PaivamaaraTila pvm={value} tila={tila} />
     },
   },
 ];

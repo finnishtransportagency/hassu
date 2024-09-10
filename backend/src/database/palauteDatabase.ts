@@ -54,24 +54,30 @@ class FeedbackDatabase {
   }
 
   async listFeedback(oid: string): Promise<Palaute[] | undefined> {
+    const kaikkiPalautteet: Palaute[] = [];
     try {
-      const params = new QueryCommand({
-        TableName: feedbackTableName,
-        KeyConditionExpression: "#oid = :oid",
-        ExpressionAttributeNames: {
-          "#oid": "oid",
-        },
-        ExpressionAttributeValues: {
-          ":oid": oid,
-        },
-      });
-      const data = await getDynamoDBDocumentClient().send(params);
-      const palautteet = data.Items as Palaute[];
-      const migratedPalautteet = palautteet.map(migrateFromOldSchema);
-      return sortBy(migratedPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
+      let lastEvaluatedKey: Record<string, any> | undefined;
+      do {
+        const params = new QueryCommand({
+          TableName: feedbackTableName,
+          KeyConditionExpression: "#oid = :oid",
+          ExpressionAttributeNames: {
+            "#oid": "oid",
+          },
+          ExpressionAttributeValues: {
+            ":oid": oid,
+          },
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+        const data = await getDynamoDBDocumentClient().send(params);
+        lastEvaluatedKey = data.LastEvaluatedKey;
+        const palautteet = data.Items as Palaute[];
+        kaikkiPalautteet.push(...palautteet.map(migrateFromOldSchema));
+      } while (lastEvaluatedKey !== undefined);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);
     }
+    return sortBy(kaikkiPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
   }
 }
 

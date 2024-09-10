@@ -28,6 +28,11 @@ export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessag
   const correlationId: string | undefined = Array.isArray(error)
     ? (error?.[0] as any)?.errorInfo?.correlationId
     : (error as any)?.errorInfo?.correlationId;
+
+  if (!correlationId) {
+    return message;
+  }
+
   return message.concat(" ", `Välitä tunnistetieto '${correlationId}' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.`);
 };
 

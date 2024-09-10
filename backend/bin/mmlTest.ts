@@ -84,5 +84,5 @@ Promise.all([
       }
     }
   })
-  .then((response) => console.log("response: %s", JSON.stringify(sort(response), null, "  ")))
+  .then((response) => console.log("response: %s \n\nitems: %d", JSON.stringify(sort(response), null, "  "), response?.length))
   .catch((e) => console.error(e));

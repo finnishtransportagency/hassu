@@ -16,7 +16,12 @@ import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/Ladattav
 import HassuAccordion from "@components/HassuAccordion";
 import { kuntametadata } from "common/kuntametadata";
 
-export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: boolean }): ReactElement {
+export enum EsikatseluMode {
+  ESIKATSELU = "ESIKATSELU",
+  ESIKATSELU_AINEISTOLINKEILLA = "ESIKATSELU_AINEISTOLINKEILLA",
+}
+
+export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: EsikatseluMode }): ReactElement {
   const {
     aineistopaketti,
     suunnitelma,
@@ -61,6 +66,9 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     () => getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi }).listKategoriat(),
     [perustiedot.projektiTyyppi]
   );
+
+  const tiedostotEiLadattavissa = props.esikatselu === EsikatseluMode.ESIKATSELU;
+
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
@@ -69,8 +77,8 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       </H2>
       {props.esikatselu && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Esikatselutilassa voit nähdä, miltä linkin sisältö näyttää vastaanottajille. Varsinaisessa linkissä voi avata aineistoja uuteen
-          välilehteen yksi kerrallaan.
+          Esikatselutilassa voit nähdä, miltä linkin sisältö näyttää vastaanottajille.
+          {tiedostotEiLadattavissa && " Varsinaisessa linkissä voi avata aineistoja uuteen välilehteen yksi kerrallaan."}
         </Notification>
       )}
       <Section noDivider>
@@ -143,7 +151,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           <ul style={{ listStyle: "none" }}>
             {hyvaksymisEsitys?.map((tiedosto, index) => (
               <li key={index}>
-                <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
               </li>
             ))}
           </ul>
@@ -151,7 +159,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           <div>Ei aineistoja</div>
         )}
         <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
-        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={!!props.esikatselu} />
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={tiedostotEiLadattavissa} />
       </Section>
       <Section>
         <H2>Vuorovaikutus</H2>
@@ -169,7 +177,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                         <ul style={{ listStyle: "none" }}>
                           {muistutukset[kunta]?.map((tiedosto, index) => (
                             <li key={index}>
-                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
                             </li>
                           ))}
                         </ul>
@@ -188,7 +196,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {lausunnot?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
                     </li>
                   ))}
                 </ul>
@@ -203,7 +211,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {maanomistajaluettelo?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
                     </li>
                   ))}
                 </ul>
@@ -218,7 +226,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {kuulutuksetJaKutsu?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
                     </li>
                   ))}
                 </ul>
@@ -239,7 +247,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={props.esikatselu} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
                     </li>
                   ))}
                 </ul>
@@ -250,9 +258,9 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           ]}
         />
       </Section>
-      {aineistopaketti && (
+      {(aineistopaketti || tiedostotEiLadattavissa) && (
         <Section noDivider>
-          <ButtonLink disabled={props.esikatselu} href={aineistopaketti}>
+          <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
             Lataa kaikki
             <DownloadIcon className="ml-2" />
           </ButtonLink>
