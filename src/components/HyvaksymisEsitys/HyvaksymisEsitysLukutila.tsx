@@ -359,7 +359,11 @@ export default function HyvaksymisEsitysLukutila({
         <Section>
           <H2>Hyväksymisesityksen sisällön esikatselu</H2>
           <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen hyväksymistä.</Notification>
-          <ButtonLink target="_blank" href={`/yllapito/projekti/${oid}/esikatsele-hyvaksyttava-hyvaksymisesitys`}>
+          <ButtonLink
+            target="_blank"
+            href={`/yllapito/projekti/${oid}/esikatsele-hyvaksyttava-hyvaksymisesitys`}
+            endIcon="external-link-alt"
+          >
             Aineiston esikatselu
           </ButtonLink>
         </Section>

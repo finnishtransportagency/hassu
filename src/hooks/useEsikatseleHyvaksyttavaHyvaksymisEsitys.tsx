@@ -11,9 +11,6 @@ export function useEsikatseleHyvaksyttavaHyvaksymisEsitys() {
 
   const esikatseleHyvaksymisEsitysLoader = getEsikatseleHyvaksymisEsitysLoader(api);
 
-  console.log("bong");
-  console.log("oid:" + oid);
-
   return useSWR([apiConfig.esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot.graphql, oid], esikatseleHyvaksymisEsitysLoader);
 }
 
