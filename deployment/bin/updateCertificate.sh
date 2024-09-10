@@ -1,7 +1,7 @@
 # Usage: ./deployment/bin/updateCertificate.sh [aws profile] [environment name e.g. dev] <intermediate certificate filename> <pfx filename>
 # For example ./deployment/bin/updateCertificate.sh my_aws_profile dev ../Intermediate.crt somecertificate.pfx
 set -e
-AWS_PROFILE=$1
+export AWS_PROFILE=$1
 ENV=$2
 INTERMEDIATE=$3
 INPUT_FILE=$4

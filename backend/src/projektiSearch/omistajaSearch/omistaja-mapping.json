@@ -63,6 +63,14 @@
     },
     "kaytossa": {
       "type": "boolean"
+    },
+    "viimeisinLahetysaika": {
+      "type": "date"
+    },
+    "viimeisinTila": {
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "standard"
     }
   }
 }

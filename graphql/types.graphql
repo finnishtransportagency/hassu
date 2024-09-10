@@ -1392,6 +1392,8 @@ type Omistaja {
   paikkakunta: String
   maakoodi: String
   maa: String
+  viimeisinLahetysaika: String
+  viimeisinTila: String
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1416,6 +1418,8 @@ type Muistuttaja {
   tiedotustapa: String
   sahkoposti: String
   paivitetty: String
+  viimeisinLahetysaika: String
+  viimeisinTila: String
 }
 
 type Muistuttajat {
