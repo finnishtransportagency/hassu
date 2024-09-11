@@ -244,6 +244,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         const values = removeEmptyValues(data);
         await api.tallennaProjekti(values);
         await reloadProjekti();
+        // varmistetaan että isDirty menee false:ksi
+        reset(undefined, { keepValues: true });
         showSuccessMessage(successMessage);
       } catch (e) {
         log.log("OnSubmit Error", e);
