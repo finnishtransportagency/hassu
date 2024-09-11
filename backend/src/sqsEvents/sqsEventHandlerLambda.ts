@@ -120,7 +120,7 @@ async function handleLausuntoPyynnonTaydennyksetZipping(ctx: ImportContext) {
   );
   log.info(
     "paivitetaan dbprojekti lausuntoPyyntojenTaydennysten aineistopaketti-tiedolla: " +
-    lausuntoPyynnonTaydennykset.map((lausuntoPyynto) => lausuntoPyynto.aineistopaketti).toString()
+      lausuntoPyynnonTaydennykset.map((lausuntoPyynto) => lausuntoPyynto.aineistopaketti).toString()
   );
   await projektiDatabase.saveProjektiWithoutLocking({
     oid,
