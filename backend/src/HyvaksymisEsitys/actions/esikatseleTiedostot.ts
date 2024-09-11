@@ -7,23 +7,31 @@ import { assertIsDefined } from "../../util/assertions";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 import projektiDatabase, { ProjektiTiedostoineen } from "../dynamoKutsut";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
+import { getYllapitoPathForProjekti, joinPath, JULKAISTU_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
+import { IllegalArgumentError } from "hassu-common/error";
 
-export default async function esikatseleHyvaksymisEsityksenTiedostot({
+export async function esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot({
   oid,
-  hyvaksymisEsitys: hyvaksymisEsitysInput,
-}: API.EsikatseleHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.HyvaksymisEsityksenAineistot> {
-  requirePermissionLuku();
-  const dbProjekti: ProjektiTiedostoineen = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
-  requirePermissionMuokkaa(dbProjekti);
-  const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitysInput);
+}: API.EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables) {
+  const dbProjekti: ProjektiTiedostoineen = await validateProjektiPermissions(oid);
+  const projari = validateProjari(dbProjekti);
+  assertIsDefined(dbProjekti.velho, "Projektilta puuttuu Projektivelhotiedot");
+
+  const muokattavaHyvaksymisEsitys = dbProjekti.muokattavaHyvaksymisEsitys;
+
+  if (muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA) {
+    throw new IllegalArgumentError(`Hyväksymisesitys ei odota hyväksyntää. Esikatselua ei voi tehdä tällä hetkellä.`);
+  }
+
+  const aineistopaketti = dbProjekti.hyvEsAineistoPaketti
+    ? "/" + joinPath(getYllapitoPathForProjekti(dbProjekti.oid), JULKAISTU_HYVAKSYMISESITYS_PATH, "aineisto.zip")
+    : undefined;
+
   const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
-  const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
-  assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
-  assertIsDefined(dbProjekti.velho, "projektilla tulee olla velho");
 
   return {
     __typename: "HyvaksymisEsityksenAineistot",
-    aineistopaketti: "(esikatselu)",
+    aineistopaketti,
     ...ladattavatTiedostot,
     perustiedot: adaptVelhoToProjektinPerustiedot(dbProjekti.velho),
     laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
@@ -32,4 +40,45 @@ export default async function esikatseleHyvaksymisEsityksenTiedostot({
     lisatiedot: muokattavaHyvaksymisEsitys.lisatiedot,
     kiireellinen: muokattavaHyvaksymisEsitys.kiireellinen,
   };
+}
+
+export async function esikatseleHyvaksymisEsityksenTiedostot({
+  oid,
+  hyvaksymisEsitys: hyvaksymisEsitysInput,
+}: API.EsikatseleHyvaksymisEsityksenTiedostotQueryVariables): Promise<API.HyvaksymisEsityksenAineistot> {
+  const dbProjekti: ProjektiTiedostoineen = await validateProjektiPermissions(oid);
+  const projari = validateProjari(dbProjekti);
+  assertIsDefined(dbProjekti.velho, "Projektilta puuttuu Projektivelhotiedot");
+
+  if (!dbProjekti.muokattavaHyvaksymisEsitys?.tila && dbProjekti.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
+    throw new IllegalArgumentError(`Hyväksymisesitys ei ole muokattavissa. Esikatselua ei voi tehdä tällä hetkellä.`);
+  }
+
+  const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitysInput);
+
+  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
+  return {
+    __typename: "HyvaksymisEsityksenAineistot",
+    aineistopaketti: undefined,
+    ...ladattavatTiedostot,
+    perustiedot: adaptVelhoToProjektinPerustiedot(dbProjekti.velho),
+    laskutustiedot: adaptLaskutustiedotToAPI(muokattavaHyvaksymisEsitys.laskutustiedot),
+    poistumisPaiva: muokattavaHyvaksymisEsitys.poistumisPaiva,
+    projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+    lisatiedot: muokattavaHyvaksymisEsitys.lisatiedot,
+    kiireellinen: muokattavaHyvaksymisEsitys.kiireellinen,
+  };
+}
+
+function validateProjari(dbProjekti: ProjektiTiedostoineen) {
+  const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+  assertIsDefined(projari, "Projektilta puuttuu projektipäällikkö");
+  return projari;
+}
+
+async function validateProjektiPermissions(oid: string) {
+  requirePermissionLuku();
+  const dbProjekti: ProjektiTiedostoineen = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
+  requirePermissionMuokkaa(dbProjekti);
+  return dbProjekti;
 }

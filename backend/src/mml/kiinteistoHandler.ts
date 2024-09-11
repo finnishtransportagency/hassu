@@ -28,6 +28,7 @@ import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
+import { adaptOmistajaToIndex } from "../projektiSearch/omistajaSearch/kiinteistonomistajaSearchAdapter";
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -101,10 +102,15 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const kiinteistot = responses[0];
         const yhteystiedot = responses[1];
         const tiekunnat = responses[2];
-        log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä)");
-        log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a)");
-        log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a)");
-
+        let kiinteistoOmistajaCount = 0;
+        kiinteistot.forEach(k => kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length); 
+        let yhteystietoOmistajaCount = 0;
+        yhteystiedot.forEach(k => yhteystietoOmistajaCount = yhteystietoOmistajaCount + k.omistajat.length);
+        let tiekuntaOmistajaCount = 0;
+        tiekunnat.forEach(k => tiekuntaOmistajaCount = tiekuntaOmistajaCount + k.omistajat.length);
+        log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
@@ -400,7 +406,29 @@ async function haeSailytettavatKiinteistonOmistajat(
 export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
   await getProjektiAndCheckPermissions(variables.oid);
   log.info("Haetaan kiinteistönomistajatiedot", variables);
-  const kiinteistonOmistajatResponse = await omistajaSearchService.searchOmistajat(variables);
+  let kiinteistonOmistajatResponse: KiinteistonOmistajat;
+  if (variables.query) {
+    kiinteistonOmistajatResponse = await omistajaSearchService.searchOmistajat(variables);
+  } else {
+    const omistajatKaytossa = (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(variables.oid))
+      .sort((a, b) => (a.kiinteistotunnus ?? "").localeCompare(b.kiinteistotunnus ?? ""))
+      .filter(o => o.suomifiLahetys === !variables.muutOmistajat)
+      .filter((o) => {
+        if (variables.onlyUserCreated) {
+          return o.userCreated === true;
+        } else if (variables.filterUserCreated) {
+          return !o.userCreated;
+        } else {
+          return true;
+        }
+      });
+    const omistajat = omistajatKaytossa.slice(variables.from ?? 0, (variables.from ?? 0) + (variables.size ?? 25))
+    kiinteistonOmistajatResponse = {
+      __typename: "KiinteistonOmistajat",
+      hakutulosMaara: omistajatKaytossa.length,
+      omistajat: omistajat.map((o) => { return { ...adaptOmistajaToIndex(o), id: o.id, __typename: "Omistaja" }; }),
+    };
+  }
   kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
   return kiinteistonOmistajatResponse;
 }

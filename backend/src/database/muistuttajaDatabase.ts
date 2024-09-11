@@ -48,21 +48,28 @@ class MuistuttajaDatabase {
   }
 
   async haeProjektinKaytossaolevatMuistuttajat(oid: string): Promise<DBMuistuttaja[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "#oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": oid,
-        ":kaytossa": true,
-      },
-      ExpressionAttributeNames: {
-        "#oid": "oid",
-        "#kaytossa": "kaytossa",
-      },
-      FilterExpression: "#kaytossa = :kaytossa",
-    });
-    const data = await getDynamoDBDocumentClient().send(command);
-    return (data?.Items ?? []) as DBMuistuttaja[];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+    const muistuttajat: DBMuistuttaja[] = [];
+    do {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: "#oid = :oid",
+        ExpressionAttributeValues: {
+          ":oid": oid,
+          ":kaytossa": true,
+        },
+        ExpressionAttributeNames: {
+          "#oid": "oid",
+          "#kaytossa": "kaytossa",
+        },
+        FilterExpression: "#kaytossa = :kaytossa",
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      const data = await getDynamoDBDocumentClient().send(command);
+      lastEvaluatedKey = data.LastEvaluatedKey;
+      muistuttajat.push(...data?.Items as DBMuistuttaja[] ?? []);
+    } while (lastEvaluatedKey !== undefined);
+    return muistuttajat;
   }
 
   async poistaMuistuttajaKaytosta(oid: string, id: string): Promise<void> {
@@ -103,19 +110,26 @@ class MuistuttajaDatabase {
 
   async deleteMuistuttajatByOid(oid: string) {
     if (config.env !== "prod") {
-      const command = new QueryCommand({
-        TableName: this.tableName,
-        KeyConditionExpression: "#oid = :oid",
-        ExpressionAttributeValues: {
-          ":oid": oid,
-        },
-        ExpressionAttributeNames: {
-          "#oid": "oid",
-        },
-        ProjectionExpression: "id",
-      });
-      const data = await getDynamoDBDocumentClient().send(command);
-      for (const chunk of chunkArray(data?.Items ?? [], 25)) {
+      let lastEvaluatedKey: Record<string, any> | undefined;
+      const muistuttajat: Record<string, any>[] = [];
+      do {
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          KeyConditionExpression: "#oid = :oid",
+          ExpressionAttributeValues: {
+            ":oid": oid,
+          },
+          ExpressionAttributeNames: {
+            "#oid": "oid",
+          },
+          ProjectionExpression: "id",
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+        const data = await getDynamoDBDocumentClient().send(command);
+        lastEvaluatedKey = data.LastEvaluatedKey;
+        muistuttajat.push(...(data.Items ?? []));
+      } while(lastEvaluatedKey !== undefined);
+      for (const chunk of chunkArray(muistuttajat, 25)) {
         const deleteRequests = chunk.map((muistuttaja) => ({
           DeleteRequest: {
             Key: { oid, id: muistuttaja.id },
