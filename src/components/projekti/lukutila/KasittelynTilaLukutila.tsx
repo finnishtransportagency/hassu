@@ -11,8 +11,7 @@ interface Props {
   projekti: ProjektiLisatiedolla;
 }
 
-// TODO: projektin tilan tietojen nayttaminen, nyt paaosin placeholdereita
-export default function KasittelynTilaLukutila({ projekti }: Props): ReactElement {
+export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): ReactElement {
   const { t } = useTranslation("projekti");
 
   return (
@@ -78,7 +77,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
           <p className="vayla-label md:col-span-4">Toimitus käynnistynyt</p>
           <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toimitusKaynnistynyt)}</p>
         </div>
-        <h3 className="vayla-subtitle">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h3>
+        <h3 className="vayla-subtitle">Liikenteelleluovutus</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Osaluovutus</p>
           <p className="md:col-span-4 mb-0">
@@ -89,6 +88,19 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
           <p className="vayla-label md:col-span-4">Kokoluovutus</p>
           <p className="md:col-span-4 mb-0">
             {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.liikenteeseenluovutusKokonaan)}
+          </p>
+        </div>
+        <h3 className="vayla-subtitle">Ratasuunnitelman toteutusilmoitus</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4">
+          <p className="vayla-label md:col-span-4">Osatoteutus</p>
+          <p className="md:col-span-4 mb-0">
+            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusOsittain)}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4">
+          <p className="vayla-label md:col-span-4">Kokototeutus</p>
+          <p className="md:col-span-4 mb-0">
+            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}
           </p>
         </div>
       </Section>

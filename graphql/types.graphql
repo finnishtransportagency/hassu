@@ -1327,6 +1327,8 @@ type KasittelynTila {
   lisatieto: String
   hallintoOikeus: OikeudenPaatos
   korkeinHallintoOikeus: OikeudenPaatos
+  toteutusilmoitusOsittain: String
+  toteutusilmoitusKokonaan: String
 }
 
 type OikeudenPaatos {
