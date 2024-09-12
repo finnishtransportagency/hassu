@@ -3,8 +3,10 @@ import { experimental_sx as sx, styled } from "@mui/material";
 export const Tagi = styled("div")(
   sx({
     backgroundColor: "white",
-    color: "#0063AF",
-    border: "1px solid #0063AF",
+    color: "primary.dark",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "primary.dark",
     textAlign: "center",
     display: "inline-block",
     paddingLeft: "1rem",

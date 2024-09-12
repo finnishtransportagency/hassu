@@ -64,13 +64,13 @@ const TableAccordion = styled(Accordion)(({ theme }) => ({
   },
 }));
 
-const TableAccordionSummary = styled(AccordionSummary)({
-  backgroundColor: "#0164AF",
+const TableAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.dark,
   "&.Mui-focusVisible": {
-    backgroundColor: "#0164AF",
+    backgroundColor: theme.palette.primary.dark,
     ...focusStyleSecondary,
   },
-  color: "#FFFFFF",
+  color: theme.palette.primary.contrastText,
   fontWeight: 700,
   fontSize: "1.4375rem",
   lineHeight: 1.174,
@@ -82,7 +82,7 @@ const TableAccordionSummary = styled(AccordionSummary)({
   "& .MuiAccordionSummary-expandIconWrapper > svg": {
     fontSize: "1.75rem",
   },
-});
+}));
 
 type TiedotettavaHaitariForm = {
   query: string;
