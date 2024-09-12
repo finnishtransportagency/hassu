@@ -458,7 +458,7 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           projekti.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil13";
           await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, kasittelynTila: projekti.kasittelynTila });
           await velho.saveProjektiSuunnitelmanTila(projekti.oid, projekti.kasittelynTila.suunnitelmanTila);
-        } else if (sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE && sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY) {
+        } else if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE && sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY) {
           // sähköposti Traficomille
           await lahetaSahkopostiTraficom(projekti);
         }
