@@ -1,6 +1,7 @@
 export * from "./lisaaTypename";
 export * from "./adaptLadattuTiedostoToAPI";
 export * from "./adaptKuulutusSaamePDFtToAPI";
+export * from "./adaptTiedotettavaKuulutusSaamePDFtToAPI";
 export * from "./adaptLokalisoituTekstiToAPI";
 export * from "./adaptPakotettuLokalisoituTekstiToAPI";
 export * from "./adaptLogotToAPI";

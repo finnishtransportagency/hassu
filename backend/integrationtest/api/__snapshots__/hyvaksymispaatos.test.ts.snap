@@ -6,7 +6,7 @@ Object {
   "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
+      "__typename": "TiedotettavaKuulutusSaamePDF",
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -26,7 +26,7 @@ Object {
         "uuid": "00000003-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "KuulutusSaamePDFt",
+    "__typename": "TiedotettavaKuulutusSaamePDFt",
   },
 }
 `;
@@ -56,7 +56,7 @@ Object {
   "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
+      "__typename": "TiedotettavaKuulutusSaamePDF",
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -76,7 +76,7 @@ Object {
         "uuid": "00000003-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "KuulutusSaamePDFt",
+    "__typename": "TiedotettavaKuulutusSaamePDFt",
   },
 }
 `;
@@ -581,7 +581,7 @@ Object {
       },
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -601,7 +601,7 @@ Object {
             "uuid": "00000008-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
@@ -789,7 +789,7 @@ Object {
       },
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -809,7 +809,7 @@ Object {
             "uuid": "00000008-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "hyvaksymisPaiva": "***unittest***",
       "id": 2,
@@ -993,7 +993,7 @@ Object {
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -1013,7 +1013,7 @@ Object {
             "uuid": "00000008-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
@@ -1237,7 +1237,7 @@ Object {
   "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
+      "__typename": "TiedotettavaKuulutusSaamePDF",
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -1257,7 +1257,7 @@ Object {
         "uuid": "00000008-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "KuulutusSaamePDFt",
+    "__typename": "TiedotettavaKuulutusSaamePDFt",
   },
 }
 `;

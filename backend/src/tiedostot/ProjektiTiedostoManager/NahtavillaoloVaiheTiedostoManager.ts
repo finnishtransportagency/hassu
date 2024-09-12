@@ -1,6 +1,6 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getTiedotettavaKuulutusSaamePDFt } from ".";
+import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu, TiedotettavaKuulutusSaamePDFt } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
@@ -11,6 +11,7 @@ import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 import { SisainenProjektiPaths } from "../../files/ProjektiPath";
+import { forEverySaameDoAsync } from "../../projekti/adapter/adaptToDB";
 
 export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getAineistot(vaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): AineistoPathsPair[] {
@@ -20,7 +21,7 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
 
   getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedostoPathsPair[] {
     const paths = this.projektiPaths.nahtavillaoloVaihe(vaihe);
-    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt), paths }];
+    return [{ tiedostot: getTiedotettavaKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt), paths }];
   }
 
   async synchronize(): Promise<boolean> {
@@ -87,6 +88,21 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
       Promise.resolve(new Set<NahtavillaoloVaiheJulkaisu>())
     );
     return Array.from(julkaisutSet.values());
+  }
+
+  async deleteKuulutusSaamePDFtWhenEpaaktiivinen(saamePDFt: TiedotettavaKuulutusSaamePDFt | undefined | null): Promise<boolean> {
+    let modified = false;
+    if (saamePDFt) {
+      await forEverySaameDoAsync(async (kieli) => {
+        const saamePDF = saamePDFt?.[kieli];
+        if (saamePDF) {
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusPDF)) || modified;
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusIlmoitusPDF)) || modified;
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kirjeTiedotettavillePDF)) || modified;
+        }
+      });
+    }
+    return modified;
   }
 
   getAsianhallintaSynkronointi(

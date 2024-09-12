@@ -5,7 +5,7 @@ import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import {
   adaptUudelleenKuulutusToAPI,
-  adaptKuulutusSaamePDFtToAPI,
+  adaptTiedotettavaKuulutusSaamePDFtToAPI,
   adaptAineistoMuokkausToAPI,
   adaptLokalisoituTekstiToAPI,
   adaptAineistotToAPI,
@@ -41,7 +41,7 @@ export function adaptNahtavillaoloVaiheToAPI(
       __typename: "NahtavillaoloVaihe",
       ...rest,
       aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      nahtavillaoloSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus ?? undefined),
@@ -119,7 +119,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      nahtavillaoloSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelhoToAPI(velho),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),

@@ -7,9 +7,10 @@ import {
   adaptIlmoituksenVastaanottajatToSave,
   adaptStandardiYhteystiedotToSave,
   getId,
+  adaptUudelleenKuulutusToSave,
+  adaptTiedotettavaKuulutusSaamePDFtInput,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptNahtavillaoloVaiheToSave(
@@ -59,7 +60,7 @@ export function adaptNahtavillaoloVaiheToSave(
   }
 
   if (nahtavillaoloSaamePDFt) {
-    uusiNahtavillaolovaihe.nahtavillaoloSaamePDFt = adaptKuulutusSaamePDFtInput(
+    uusiNahtavillaolovaihe.nahtavillaoloSaamePDFt = adaptTiedotettavaKuulutusSaamePDFtInput(
       dbNahtavillaoloVaihe?.nahtavillaoloSaamePDFt,
       nahtavillaoloSaamePDFt
     );

@@ -9,7 +9,7 @@ import {
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
-  KuulutusSaamePDFt,
+  TiedotettavaKuulutusSaamePDFt,
 } from ".";
 import { HallintoOikeus, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
@@ -20,7 +20,7 @@ export type HyvaksymisPaatosVaihe = {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   hallintoOikeus?: HallintoOikeus | null;
-  hyvaksymisPaatosVaiheSaamePDFt?: KuulutusSaamePDFt | null;
+  hyvaksymisPaatosVaiheSaamePDFt?: TiedotettavaKuulutusSaamePDFt | null;
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
@@ -42,7 +42,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   kuulutusYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
-  hyvaksymisPaatosVaiheSaamePDFt?: KuulutusSaamePDFt | null;
+  hyvaksymisPaatosVaiheSaamePDFt?: TiedotettavaKuulutusSaamePDFt | null;
   lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;

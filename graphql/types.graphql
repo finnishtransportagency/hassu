@@ -342,7 +342,7 @@ type NahtavillaoloVaihe {
   hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
+  nahtavillaoloSaamePDFt: TiedotettavaKuulutusSaamePDFt
   palautusSyy: String
   muokkausTila: MuokkausTila!
   uudelleenKuulutus: UudelleenKuulutus
@@ -357,7 +357,7 @@ type HyvaksymisPaatosVaihe {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   hallintoOikeus: HallintoOikeus
-  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
+  hyvaksymisPaatosVaiheSaamePDFt: TiedotettavaKuulutusSaamePDFt
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
@@ -380,7 +380,7 @@ type NahtavillaoloVaiheJulkaisu {
   kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
-  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
+  nahtavillaoloSaamePDFt: TiedotettavaKuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
@@ -485,7 +485,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
-  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
+  hyvaksymisPaatosVaiheSaamePDFt: TiedotettavaKuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
@@ -951,6 +951,12 @@ type KuulutusSaamePDF {
   kuulutusIlmoitusPDF: LadattuTiedosto
 }
 
+type TiedotettavaKuulutusSaamePDF {
+  kuulutusPDF: LadattuTiedosto
+  kuulutusIlmoitusPDF: LadattuTiedosto
+  kirjeTiedotettavillePDF: LadattuTiedosto
+}
+
 type AloitusKuulutusPDFt {
   SUOMI: AloitusKuulutusPDF!
   RUOTSI: AloitusKuulutusPDF
@@ -958,6 +964,10 @@ type AloitusKuulutusPDFt {
 
 type KuulutusSaamePDFt {
   POHJOISSAAME: KuulutusSaamePDF
+}
+
+type TiedotettavaKuulutusSaamePDFt {
+  POHJOISSAAME: TiedotettavaKuulutusSaamePDF
 }
 
 type KuulutusPDFJulkinen {

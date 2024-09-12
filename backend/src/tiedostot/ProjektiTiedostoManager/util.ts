@@ -1,5 +1,5 @@
 import { AineistoTila, Kieli, LadattuTiedostoTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
-import { Aineisto, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
+import { Aineisto, KuulutusSaamePDFt, TiedotettavaKuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { PathTuple } from "../../files/ProjektiPath";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 import { fileService } from "../../files/fileService";
@@ -39,6 +39,25 @@ export function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undef
       }
       if (pdft?.kuulutusIlmoitusPDF) {
         tiedostot.push(pdft.kuulutusIlmoitusPDF);
+      }
+    });
+  }
+  return tiedostot;
+}
+
+export function getTiedotettavaKuulutusSaamePDFt(saamePDFt: TiedotettavaKuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
+  const tiedostot: LadattuTiedosto[] = [];
+  if (saamePDFt) {
+    forEverySaameDo((kieli) => {
+      const pdft = saamePDFt[kieli];
+      if (pdft?.kuulutusPDF) {
+        tiedostot.push(pdft.kuulutusPDF);
+      }
+      if (pdft?.kuulutusIlmoitusPDF) {
+        tiedostot.push(pdft.kuulutusIlmoitusPDF);
+      }
+      if (pdft?.kirjeTiedotettavillePDF) {
+        tiedostot.push(pdft.kirjeTiedotettavillePDF);
       }
     });
   }
@@ -108,15 +127,17 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
   );
   await Promise.all(poistettavat.map((tiedosto) => deleteFile({ oid, tiedosto })));
   // ignoorataan virheelliset latausviittaukset jotta ei aiheuta projektin lukitusta 4 päiväksi kun sanoman käsittely ei onnistu
-  const persistoidutTiedostot = (await Promise.all(
-    persistoitavat.map((tiedosto) =>
-      persistLadattuTiedosto({
-        oid,
-        ladattuTiedosto: tiedosto,
-        targetFilePathInProjekti: paths.yllapitoPath,
-      })
+  const persistoidutTiedostot = (
+    await Promise.all(
+      persistoitavat.map((tiedosto) =>
+        persistLadattuTiedosto({
+          oid,
+          ladattuTiedosto: tiedosto,
+          targetFilePathInProjekti: paths.yllapitoPath,
+        })
+      )
     )
-  )).filter(t => t !== undefined);
+  ).filter((t): t is LadattuTiedosto => t !== undefined);
   tiedostot.push(...valmiit.concat(persistoidutTiedostot).sort((a, b) => (a.jarjestys ?? 0) - (b.jarjestys ?? 0)));
   if (poistettavat.length || persistoitavat.length) {
     return true;

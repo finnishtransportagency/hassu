@@ -1,5 +1,5 @@
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
+import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getTiedotettavaKuulutusSaamePDFt } from ".";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
@@ -23,7 +23,7 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
 
   getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedostoPathsPair[] {
     const paths = this.projektiPaths.hyvaksymisPaatosVaihe(vaihe);
-    return [{ tiedostot: getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt), paths }];
+    return [{ tiedostot: getTiedotettavaKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt), paths }];
   }
 
   async synchronize(): Promise<boolean> {

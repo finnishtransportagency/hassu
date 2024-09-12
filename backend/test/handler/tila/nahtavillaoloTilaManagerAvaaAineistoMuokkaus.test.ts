@@ -8,14 +8,14 @@ import {
   Aineisto,
   DBProjekti,
   Kielitiedot,
-  KuulutusSaamePDFt,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
+  TiedotettavaKuulutusSaamePDFt,
   UudelleenkuulutusTila,
 } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoTila, Kieli, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Kieli, KuulutusJulkaisuTila, LadattuTiedostoTila } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 
 import { expect } from "chai";
@@ -82,19 +82,24 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         tiedosto: "nahtavillaolo/1/tiedostoA.pdf",
+        uuid: "uuid-0x",
       },
     ];
-    const nahtavillaoloSaamePDFt: KuulutusSaamePDFt = {
+    const nahtavillaoloSaamePDFt: TiedotettavaKuulutusSaamePDFt = {
       POHJOISSAAME: {
         kuulutusPDF: {
           tiedosto: "nahtavillaolo/1/tiedosto1.pdf",
           nimi: "Tiedosto 1",
           tuotu: "2022-06-05",
+          tila: LadattuTiedostoTila.VALMIS,
+          uuid: "uuid-1x",
         },
         kuulutusIlmoitusPDF: {
           tiedosto: "nahtavillaolo/1/tiedosto2.pdf",
           nimi: "Tiedosto 2",
           tuotu: "2022-06-05",
+          tila: LadattuTiedostoTila.VALMIS,
+          uuid: "uuid-2x",
         },
       },
     };
@@ -124,19 +129,24 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         nimi: "Aineistonimi",
         tila: AineistoTila.VALMIS,
         tiedosto: "nahtavillaolo/2/tiedostoA.pdf",
+        uuid: "uuid-0x",
       },
     ];
-    const nahtavillaoloSaamePDFtUusi: KuulutusSaamePDFt = {
+    const nahtavillaoloSaamePDFtUusi: TiedotettavaKuulutusSaamePDFt = {
       POHJOISSAAME: {
         kuulutusPDF: {
           tiedosto: "nahtavillaolo/2/tiedosto1.pdf",
           nimi: "Tiedosto 1",
           tuotu: "2022-06-05",
+          tila: LadattuTiedostoTila.VALMIS,
+          uuid: "uuid-1x",
         },
         kuulutusIlmoitusPDF: {
           tiedosto: "nahtavillaolo/2/tiedosto2.pdf",
           nimi: "Tiedosto 2",
           tuotu: "2022-06-05",
+          tila: LadattuTiedostoTila.VALMIS,
+          uuid: "uuid-2x",
         },
       },
     };

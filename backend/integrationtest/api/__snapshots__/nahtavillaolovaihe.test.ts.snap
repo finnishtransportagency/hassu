@@ -6,7 +6,7 @@ Object {
   "mockedtime": "2040-01-01T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
+      "__typename": "TiedotettavaKuulutusSaamePDF",
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -26,7 +26,7 @@ Object {
         "uuid": "00000003-2631-4d4f-9d26-c792007df5d2",
       },
     },
-    "__typename": "KuulutusSaamePDFt",
+    "__typename": "TiedotettavaKuulutusSaamePDFt",
   },
 }
 `;
@@ -56,7 +56,7 @@ Object {
   "mockedtime": "2040-01-01T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
+      "__typename": "TiedotettavaKuulutusSaamePDF",
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -76,7 +76,7 @@ Object {
         "uuid": "00000003-2631-4d4f-9d26-c792007df5d2",
       },
     },
-    "__typename": "KuulutusSaamePDFt",
+    "__typename": "TiedotettavaKuulutusSaamePDFt",
   },
 }
 `;
@@ -590,7 +590,7 @@ Object {
       },
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -610,7 +610,7 @@ Object {
             "uuid": "00000008-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -803,7 +803,7 @@ Object {
       },
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -823,7 +823,7 @@ Object {
             "uuid": "00000008-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -985,7 +985,7 @@ Object {
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "KuulutusSaamePDF",
+          "__typename": "TiedotettavaKuulutusSaamePDF",
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -1005,7 +1005,7 @@ Object {
             "uuid": "00000008-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "KuulutusSaamePDFt",
+        "__typename": "TiedotettavaKuulutusSaamePDFt",
       },
       "uudelleenKuulutus": null,
     },

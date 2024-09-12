@@ -13,7 +13,6 @@ import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import {
   adaptUudelleenKuulutusToAPI,
-  adaptKuulutusSaamePDFtToAPI,
   adaptAineistoMuokkausToAPI,
   adaptAineistotToAPI,
   adaptIlmoituksenVastaanottajatToAPI,
@@ -25,6 +24,7 @@ import {
 } from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
+import { adaptTiedotettavaKuulutusSaamePDFtToAPI } from "./common/adaptTiedotettavaKuulutusSaamePDFtToAPI";
 
 export function adaptHyvaksymisPaatosVaiheToAPI(
   kayttoOikeudet: DBVaylaUser[],
@@ -52,7 +52,7 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
     ...rest,
     aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
     hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
-    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm ?? undefined,
@@ -130,7 +130,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
-    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
     hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
