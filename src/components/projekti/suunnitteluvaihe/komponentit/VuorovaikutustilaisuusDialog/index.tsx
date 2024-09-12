@@ -385,7 +385,7 @@ const HassuBadge = styled(Badge)(() => ({
   },
 }));
 
-const HassuChip = styled(Chip)(() => ({
+const HassuChip = styled(Chip)(({ theme }) => ({
   paddingRight: 4,
   paddingLeft: 4,
   [`&.${chipClasses.root}`]: {
@@ -393,11 +393,13 @@ const HassuChip = styled(Chip)(() => ({
     borderRadius: "20px",
   },
   [`&.${chipClasses.clickable}`]: {
-    border: "1px solid rgb(0, 100, 175)",
-    background: "white",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: theme.palette.primary.dark,
+    background: theme.palette.common.white,
     margin: 4,
     [`> .${svgIconClasses.root}`]: {
-      color: "rgb(0, 100, 175)",
+      color: theme.palette.primary.dark,
     },
     "&:hover": {
       background: "#e2eff8",
@@ -405,7 +407,7 @@ const HassuChip = styled(Chip)(() => ({
     },
   },
   [`&.clicked`]: {
-    background: "rgb(0, 100, 175)",
+    background: theme.palette.primary.dark,
     color: "#e2eff8",
     [`> .${svgIconClasses.root}`]: {
       color: "#e2eff8",
@@ -447,15 +449,15 @@ function VerkkoTilaisuusNappi({
 }) {
   return (
     <HassuChip
-      className={countTilaisuudet ? "clicked" : ""}
+      className={countTilaisuudet ? "clicked" : undefined}
       disabled={mostlyDisabled}
       icon={icon}
       clickable={!mostlyDisabled}
       onClick={onClick}
       id={id}
       label={label}
-      onDelete={onClick}
-      deleteIcon={<HassuBadge className={countTilaisuudet ? "clicked" : ""} badgeContent={countTilaisuudet || "0"} color={"primary"} />}
+      onDelete={countTilaisuudet ? onClick : undefined}
+      deleteIcon={countTilaisuudet ? <HassuBadge className="clicked" badgeContent={countTilaisuudet} color="primary" /> : undefined}
     />
   );
 }
