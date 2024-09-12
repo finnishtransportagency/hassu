@@ -576,7 +576,7 @@ async function handleSqsEvent(event: SQSEvent) {
         log.error("Suomi.fi sanoma virheellinen", { sanoma: msg });
       }
     } catch (e) {
-      log.error("Suomi.fi viestin käsittely epäonnistui: " + e);
+      log.error("Suomi.fi viestin käsittely epäonnistui", { error: e });
       throw e;
     }
   }
