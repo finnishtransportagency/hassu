@@ -11,6 +11,7 @@ import {
 import { testProjektiDatabase } from "../database/testProjektiDatabase";
 import { log } from "../logger";
 import { projektiSchedulerService } from "../sqsEvents/projektiSchedulerService";
+import { HYVAKSYMISPAATOS_VAIHE_PAATTYY, PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 
 class DateMoverTool {
   async ajansiirto(params: Pick<TestiKomentoInput, "oid" | "vaihe" | "ajansiirtoPaivina">) {
@@ -33,7 +34,8 @@ class DateMoverTool {
     if (deltaInDays !== 0) {
       siirraProjektinAikaa(projekti, deltaInDays);
       await testProjektiDatabase.saveProjekti(projekti);
-      await projektiSchedulerService.synchronizeProjektiFiles(params.oid);
+      const sendTraficomMessage = params.vaihe === TestiKomentoVaihe.HYVAKSYMISVAIHE;
+      await projektiSchedulerService.synchronizeProjektiFiles(params.oid, PublishOrExpireEventType.EXPIRE, sendTraficomMessage ? HYVAKSYMISPAATOS_VAIHE_PAATTYY : undefined);
     }
   }
 

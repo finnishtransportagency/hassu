@@ -260,12 +260,14 @@ abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheSchedul
   }
 }
 
+const HYVAKSYMISPAATOS_VAIHE = "HyvaksymisPaatosVaihe";
+
 export class HyvaksymisPaatosVaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     return getPublishExpireScheduleForVaiheJulkaisut(
       julkaisut,
-      "HyvaksymisPaatosVaihe",
+      HYVAKSYMISPAATOS_VAIHE,
       "HYVAKSYMISPAATOSVAIHE",
       HYVAKSYMISPAATOS_DURATION
     );
@@ -285,6 +287,9 @@ export class JatkoPaatos2VaiheScheduleManager extends AbstractHyvaksymisPaatosVa
     return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "JatkoPaatos2Vaihe", "JATKOPAATOS2VAIHE", JATKOPAATOS_DURATION);
   }
 }
+
+const KUULUTUSVAIHE_PAATTYY = " kuulutusvaihe päättyy";
+export const HYVAKSYMISPAATOS_VAIHE_PAATTYY = HYVAKSYMISPAATOS_VAIHE + KUULUTUSVAIHE_PAATTYY;
 
 function getPublishExpireScheduleForVaiheJulkaisut(
   julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
@@ -306,7 +311,7 @@ function getPublishExpireScheduleForVaiheJulkaisut(
       const kuulutusVaihePaattyyPaiva = parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva);
       if (kuulutusVaihePaattyyPaiva) {
         events.push({
-          reason: description + " kuulutusvaihe päättyy",
+          reason: description + KUULUTUSVAIHE_PAATTYY,
           type: PublishOrExpireEventType.EXPIRE,
           date: kuulutusVaihePaattyyPaiva.endOf("day"),
         });
