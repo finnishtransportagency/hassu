@@ -16,7 +16,8 @@ import Lukunakyma from "./Lukunakyma";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForUudelleenKuulutus";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
@@ -53,10 +54,12 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
-        hankkeenKuvaus:
-          poistaTypeNameJaTurhatKielet(projekti.nahtavillaoloVaihe?.hankkeenKuvaus, projekti.kielitiedot) || // vaiheen oma tallennettu tieto
-          poistaTypeNameJaTurhatKielet(projekti.vuorovaikutusKierros?.hankkeenKuvaus, projekti.kielitiedot) || // edellisen vaiheen tieto
-          poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot), // aloituskuulutuksen tieto esim. vahaisen menettelyn projektilla
+        hankkeenKuvaus: getDefaultValuesForLokalisoituText(
+          projekti.kielitiedot,
+          projekti.nahtavillaoloVaihe?.hankkeenKuvaus ??
+            projekti.vuorovaikutusKierros?.hankkeenKuvaus ??
+            projekti.aloitusKuulutus?.hankkeenKuvaus
+        ),
         kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
