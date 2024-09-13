@@ -13,7 +13,7 @@ export function validateKielivalinta(dbProjekti: DBProjekti, projekti: Projekti,
     (input.kielitiedot?.ensisijainenKieli === undefined ||
       dbProjekti.kielitiedot?.ensisijainenKieli === input.kielitiedot?.ensisijainenKieli) &&
     (input.kielitiedot?.toissijainenKieli === undefined ||
-      dbProjekti.kielitiedot?.toissijainenKieli === input.kielitiedot?.toissijainenKieli)
+      (dbProjekti.kielitiedot?.toissijainenKieli ?? null) === input.kielitiedot?.toissijainenKieli)
   );
 
   const allowedToChangeKielivalinta = isAllowedToChangeKielivalinta(projekti);
