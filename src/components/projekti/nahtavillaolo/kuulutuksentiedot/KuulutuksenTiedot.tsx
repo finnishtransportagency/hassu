@@ -21,7 +21,7 @@ import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesFor
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
-import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput";
 import useValidationMode from "src/hooks/useValidationMode";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
@@ -69,11 +69,13 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME || {};
+      const { kuulutusIlmoitusPDF, kuulutusPDF, kirjeTiedotettavillePDF } =
+        projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME || {};
       tallentamisTiedot.nahtavillaoloVaihe.nahtavillaoloSaamePDFt = {
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
           kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+          kirjeTiedotettavillePDFPath: kirjeTiedotettavillePDF?.tiedosto || null!,
         },
       };
     }
@@ -136,10 +138,11 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}
               {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
-                <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                <PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput
                   saamePdfAvain="nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
                   ilmoitusTiedot={projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
                   kuulutusTiedot={projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                  kirjeTiedotettavilleTiedot={projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDF}
                 />
               )}
               <Painikkeet projekti={projekti} />

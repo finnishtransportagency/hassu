@@ -222,6 +222,19 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
           throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
         }
         emailToProjektiPaallikko.attachments.push(hyvaksyttyKuulutusSaamePDF);
+
+        const kirjeTiedotettavilleSaamePath =
+          julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kirjeTiedotettavillePDF?.tiedosto;
+        if (!kirjeTiedotettavilleSaamePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kirjeTiedotettavillePDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const kirjeTiedotettavilleSaamePDF = await fileService.getFileAsAttachment(projekti.oid, kirjeTiedotettavilleSaamePath);
+        if (!kirjeTiedotettavilleSaamePDF) {
+          throw new Error("kirjeTiedotettavilleSaamePDF:n saaminen epäonnistui");
+        }
+        emailToProjektiPaallikko.attachments.push(kirjeTiedotettavilleSaamePDF);
       }
 
       await emailClient.sendEmail(emailToProjektiPaallikko);

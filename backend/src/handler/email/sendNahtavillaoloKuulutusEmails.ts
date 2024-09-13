@@ -118,6 +118,19 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
           throw new Error("NahtavillaKuulutusSaamePDF:n saaminen epäonnistui");
         }
         hyvaksyttyEmail.attachments.push(nahtavillaKuulutusSaamePDF);
+
+        const pdfSaameTiedotettavaKirjePath =
+          nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kirjeTiedotettavillePDF?.tiedosto;
+        if (!pdfSaameTiedotettavaKirjePath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kirjeTiedotettavillePDF?.tiedosto on määrittelemättä`
+          );
+        }
+        const kirjeTiedotettavilleSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaameTiedotettavaKirjePath);
+        if (!kirjeTiedotettavilleSaamePDF) {
+          throw new Error("kirjeTiedotettavilleSaamePDF:n saaminen epäonnistui");
+        }
+        hyvaksyttyEmail.attachments.push(kirjeTiedotettavilleSaamePDF);
       }
 
       await emailClient.sendEmail(hyvaksyttyEmail);

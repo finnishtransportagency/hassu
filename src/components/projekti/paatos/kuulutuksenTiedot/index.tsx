@@ -21,9 +21,9 @@ import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesF
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput";
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
-import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
+import { TiedotettavaKuulutusTiedostotPrefix } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import useValidationMode from "src/hooks/useValidationMode";
 import { getPaatosSpecificData, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -131,7 +131,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameKuulutusTiedostotMetodi {
+  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): TiedotettavaKuulutusTiedostotPrefix {
     switch (paatosTyyppi) {
       case PaatosTyyppi.HYVAKSYMISPAATOS:
         return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
@@ -169,10 +169,11 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}
               {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
-                <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                <PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput
                   saamePdfAvain={saamePdfAvain(paatosTyyppi)}
                   ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
                   kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                  kirjeTiedotettavilleTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDF}
                 />
               )}
               <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
@@ -181,14 +182,12 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         </FormProvider>
       )}
       {!voiMuokata && projekti && julkaisu && (
-        <>
-          <FormProvider {...useFormReturn}>
-            <form>
-              <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
-              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
-            </form>
-          </FormProvider>
-        </>
+        <FormProvider {...useFormReturn}>
+          <form>
+            <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
+            <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
+          </form>
+        </FormProvider>
       )}
       <PdfPreviewForm ref={pdfFormRef} />
     </>

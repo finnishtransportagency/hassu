@@ -24,7 +24,7 @@ export function adaptTiedotettavaKuulutusSaamePDFtToAPI(
         kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(projektiPath, kuulutusIlmoitus.kuulutusIlmoitusPDF, julkinen);
       }
       if (kuulutusIlmoitus.kirjeTiedotettavillePDF) {
-        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(
+        kuulutusIlmoitusPDFt.kirjeTiedotettavillePDF = adaptLadattuTiedostoToAPI(
           projektiPath,
           kuulutusIlmoitus.kirjeTiedotettavillePDF,
           julkinen

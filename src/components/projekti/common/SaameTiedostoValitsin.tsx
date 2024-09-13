@@ -5,7 +5,7 @@ import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
 import { DEFAULT_COL_MIN_WIDTH, DEFAULT_COL_WIDTH_FRACTIONS } from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
-import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { KuulutusPDFInput, TiedotettavaKuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import {
   BodyTr,
@@ -28,18 +28,20 @@ type KuulutustenLuonnosVaiheet = Pick<
   "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "vuorovaikutusKierros"
 >;
 
-export type SaameKutsuTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
+export type SaameKutsuTiedostoPrefix = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
 
-export type SaameKuulutusTiedostotMetodi =
-  | "aloitusKuulutus.aloituskuulutusSaamePDFt"
+export type AloituskuulutusTiedostotPrefix = "aloitusKuulutus.aloituskuulutusSaamePDFt";
+
+export type TiedotettavaKuulutusTiedostotPrefix =
   | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
   | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
 type SaameTiedostoLomakePolku =
-  | `${SaameKuulutusTiedostotMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`
-  | `${SaameKutsuTiedostoMetodi}.POHJOISSAAME`;
+  | `${AloituskuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
+  | `${TiedotettavaKuulutusTiedostotPrefix}.POHJOISSAAME.${keyof TiedotettavaKuulutusPDFInput}`
+  | `${SaameKutsuTiedostoPrefix}.POHJOISSAAME`;
 
 type SaameTiedostoValitsinProps = {
   name: SaameTiedostoLomakePolku;

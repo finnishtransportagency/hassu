@@ -46,6 +46,18 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       if (paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
         paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
+
+      const pohjoisSaameKirjeTiedotettavillePdf = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
+        ?.kirjeTiedotettavillePDFPath as unknown as File | undefined | string;
+
+      if (
+        paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDFPath &&
+        pohjoisSaameKirjeTiedotettavillePdf instanceof File
+      ) {
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await talletaTiedosto(
+          pohjoisSaameKirjeTiedotettavillePdf
+        );
+      }
       const convertedFormData = convertFormDataToTallennaProjektiInput(formData, paatosTyyppi);
       const convertedPaatosVaihe = convertedFormData[paatosVaiheAvain];
       if (convertedPaatosVaihe) {

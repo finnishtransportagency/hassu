@@ -28,6 +28,6 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
       kuulutusVaihePaattyyPaiva: paivamaara(),
       muistutusoikeusPaattyyPaiva: paivamaara(),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
-      nahtavillaoloSaamePDFt: kuulutusSaamePDFtInput(),
+      nahtavillaoloSaamePDFt: kuulutusSaamePDFtInput(true),
     }),
 });

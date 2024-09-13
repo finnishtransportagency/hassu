@@ -1,4 +1,11 @@
-import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, Vaihe } from "@services/api";
+import {
+  Kieli,
+  KuulutusJulkaisuTila,
+  TiedotettavaKuulutusSaamePDF,
+  NahtavillaoloPDF,
+  NahtavillaoloVaiheJulkaisu,
+  Vaihe,
+} from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -37,7 +44,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
 
   let { kuulutusPaiva } = examineKuulutusPaiva(nahtavillaoloVaiheJulkaisu.kuulutusPaiva);
 
-  function getPdft(kieli: Kieli | undefined | null): KuulutusSaamePDF | NahtavillaoloPDF | null | undefined {
+  function getPdft(kieli: Kieli | undefined | null): TiedotettavaKuulutusSaamePDF | NahtavillaoloPDF | null | undefined {
     if (isKieliTranslatable(kieli) && nahtavillaoloVaiheJulkaisu?.nahtavillaoloPDFt) {
       return nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt[kieli];
     }
@@ -198,7 +205,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                         </div>
                       </>
                     )}
-                    {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
+                    {toissijaisetPDFt.__typename === "TiedotettavaKuulutusSaamePDF" && (
                       <>
                         <div>
                           <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
@@ -206,6 +213,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                         <div>
                           <DownloadLink href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}>
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
+                          </DownloadLink>
+                        </div>
+                        <div>
+                          <DownloadLink href={toissijaisetPDFt.kirjeTiedotettavillePDF?.tiedosto}>
+                            {toissijaisetPDFt.kirjeTiedotettavillePDF?.nimi}
                           </DownloadLink>
                         </div>
                       </>

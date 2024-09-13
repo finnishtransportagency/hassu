@@ -252,6 +252,11 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
                           </DownloadLink>
                         </div>
+                        <div>
+                          <DownloadLink href={toissijaisetPDFt.kirjeTiedotettavillePDF?.tiedosto}>
+                            {toissijaisetPDFt.kirjeTiedotettavillePDF?.nimi}
+                          </DownloadLink>
+                        </div>
                       </>
                     )}
                   </div>
