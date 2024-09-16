@@ -3,6 +3,7 @@ import { LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/mode
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import mergeWith from "lodash/mergeWith";
 import { LausuntoPyynnotDB, adaptTiedostotToSave } from "./common";
+import { log } from "../../../logger";
 
 export function adaptLausuntoPyynnotToSave(
   dbLausuntoPyynnot: LausuntoPyynto[] | undefined | null,
@@ -50,12 +51,18 @@ export function adaptLausuntoPyyntoToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
+  if (lausuntoPyyntoInput.poistetaan) {
+    projektiAdaptationResult.filesChanged();
+  }
+  if (!dbLausuntoPyynto && !lausuntoPyyntoInput.lisaAineistot?.length) {
+    log.info("Lausuntopyyntö luodaan ja lisäaineistoa ei ole. Laukaistaan tiedoston muutoksella zip-paketin (pakettien) luominen.");
+    projektiAdaptationResult.zipLausuntopyynnot();
+  }
   const { lisaAineistot: dbLisaAineistot, ...restDbLP } = dbLausuntoPyynto ?? {};
   const { lisaAineistot, ...rest } = lausuntoPyyntoInput;
   const lisaAineistotAdapted = lausuntoPyyntoInput
     ? adaptTiedostotToSave(dbLisaAineistot, lisaAineistot, projektiAdaptationResult)
     : undefined;
-  if (lausuntoPyyntoInput.poistetaan) projektiAdaptationResult.filesChanged();
   return mergeWith({}, { ...restDbLP }, { ...rest, lisaAineistot: lisaAineistotAdapted });
 }
 
