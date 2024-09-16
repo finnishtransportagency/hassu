@@ -259,12 +259,16 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
     },
   };
   if (saamePdfKey) {
-    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
-    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const kuulutusIlmoitusPDFPath = await tallennaEULogo("saameilmoitus.pdf");
+    const kuulutusPDFPath = await tallennaEULogo("saamekuulutus.pdf");
+    const POHJOISSAAME =
+      saamePdfKey === "aloituskuulutusSaamePDFt"
+        ? { kuulutusPDFPath, kuulutusIlmoitusPDFPath }
+        : { kuulutusPDFPath, kuulutusIlmoitusPDFPath, kirjeTiedotettavillePDFPath: await tallennaEULogo("saamekirjetiedotettaville.pdf") };
     input[luonnosKey] = {
       ...input[luonnosKey],
       [saamePdfKey]: {
-        POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+        POHJOISSAAME,
       },
     };
   }
