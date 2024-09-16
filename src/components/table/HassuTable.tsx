@@ -175,11 +175,11 @@ const BodyContentVirElement = dynamic(() => import("./BodyContentVirtualElement"
 
 function TableBody<T>({ gridTemplateColumns, table }: HassuTableProps<T> & { gridTemplateColumns: string }) {
   const virtualizationOptions = table.options.meta?.virtualization;
-
-  if (virtualizationOptions?.type === "window") {
+  const useVirtualization = table.getRowModel().rows.length > 100;
+  if (useVirtualization && virtualizationOptions?.type === "window") {
     const BodyContentVirtualWindow = BodyContentVirWindow as React.ComponentType<BodyContentVirtualWindowProps<T>>;
     return <BodyContentVirtualWindow table={table} gridTemplateColumns={gridTemplateColumns} />;
-  } else if (virtualizationOptions?.type === "scrollElement" && virtualizationOptions?.getScrollElement) {
+  } else if (useVirtualization && virtualizationOptions?.type === "scrollElement" && virtualizationOptions?.getScrollElement) {
     const BodyContentVirtualWindow = BodyContentVirElement as React.ComponentType<BodyContentVirtualElementProps<T>>;
     return (
       <BodyContentVirtualWindow
