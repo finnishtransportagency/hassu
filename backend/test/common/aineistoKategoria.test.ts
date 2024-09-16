@@ -147,4 +147,10 @@ describe("AineistoKategoria", () => {
     expect(getAineistoKategoriat({ projektiTyyppi: ProjektiTyyppi.TIE, showKategorisoimattomat: true }).listKategoriat()[0].alaKategoriat)
       .to.not.be.empty;
   });
+
+  it("should not list kategorisoimattomat if projektityyppi === null and showKategorisoimattomat === false", () => {
+    const paakategoriat = getAineistoKategoriat({ projektiTyyppi: null, showKategorisoimattomat: false }).listKategoriat();
+    expect(paakategoriat.length).to.eq(3);
+    expect(paakategoriat.some((kategoria) => kategoria.id === kategorisoimattomatId)).to.be.false;
+  });
 });
