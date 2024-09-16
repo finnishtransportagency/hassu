@@ -115,6 +115,8 @@ export const kasittelynTilaSchema = Yup.object().shape({
     toimitusKaynnistynyt: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable(),
+    toteutusilmoitusOsittain: paivamaara().notRequired().nullable(),
+    toteutusilmoitusKokonaan: paivamaara().notRequired().nullable(),
     lisatieto: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable(),
     hallintoOikeus: oikeusSchema().test((value: any, context: any) => {
       const khoPaatosGiven =

@@ -509,6 +509,8 @@ input KasittelyntilaInput {
   lisatieto: String
   hallintoOikeus: OikeudenPaatosInput
   korkeinHallintoOikeus: OikeudenPaatosInput
+  toteutusilmoitusOsittain: String
+  toteutusilmoitusKokonaan: String
 }
 
 input OikeudenPaatosInput {

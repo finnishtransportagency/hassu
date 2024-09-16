@@ -386,7 +386,14 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
     ominaisuudet.liikenteeseenluovutus?.kokonaan,
     (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
   );
-
+  setIfDefined(
+    ominaisuudet.toteutusilmoitus?.osittain,
+    (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value))
+  );
+  setIfDefined(
+    ominaisuudet.toteutusilmoitus?.kokonaan,
+    (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value))
+  );
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
   setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
 
@@ -499,6 +506,12 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
     ominaisuudet.liikenteeseenluovutus = {
       osittain: params.liikenteeseenluovutusOsittain ? toLocalDate(params.liikenteeseenluovutusOsittain) : null,
       kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
+    };
+  }
+  if (params.toteutusilmoitusOsittain || params.toteutusilmoitusKokonaan) {
+    ominaisuudet.toteutusilmoitus = {
+      osittain: params.toteutusilmoitusOsittain ? toLocalDate(params.toteutusilmoitusOsittain) : null,
+      kokonaan: params.toteutusilmoitusKokonaan ? toLocalDate(params.toteutusilmoitusKokonaan) : null,
     };
   }
   setIfDefined(params.lisatieto, (value) => (ominaisuudet.lisatiedot = value));

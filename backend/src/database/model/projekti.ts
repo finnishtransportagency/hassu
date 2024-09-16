@@ -119,6 +119,8 @@ export type KasittelynTila = {
   lisatieto?: string;
   ennakkotarkastus?: string;
   toimitusKaynnistynyt?: string;
+  toteutusilmoitusOsittain?: string;
+  toteutusilmoitusKokonaan?: string;
 };
 
 export type OikeudenPaatos = {
