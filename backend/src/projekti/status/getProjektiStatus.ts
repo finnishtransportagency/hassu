@@ -18,6 +18,7 @@ import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot
 import { ValidationError } from "yup";
 import { adaptAsianhallinta } from "../adapter/adaptAsianhallinta";
 import { adaptDBVaylaUsertoAPIProjektiKayttaja } from "../adapter/adaptToAPI";
+import { log } from "../../logger";
 
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
@@ -242,6 +243,7 @@ async function projektinPerustiedoissaOnOngelma(projekti: ProjektiForGetStatus):
     });
   } catch (e) {
     if (e instanceof ValidationError) {
+      log.info("Projektin perustiedot virheelliset", { error: e.message });
       return true;
     } else {
       throw e;
