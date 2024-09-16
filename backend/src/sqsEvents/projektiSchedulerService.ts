@@ -19,8 +19,8 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType } from "./projektiScheduleManager";
 
 class ProjektiSchedulerService {
-  async synchronizeProjektiFiles(oid: string, approvalType?: PublishOrExpireEventType) {
-    await eventSqsClient.synchronizeAineisto(oid, approvalType);
+  async synchronizeProjektiFiles(oid: string, approvalType?: PublishOrExpireEventType, reason?: string) {
+    await eventSqsClient.synchronizeAineisto(oid, approvalType, reason);
   }
 
   public async updateProjektiSynchronizationSchedule(oid: string) {

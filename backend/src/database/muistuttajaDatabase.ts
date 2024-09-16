@@ -24,7 +24,7 @@ export type DBMuistuttaja = {
   vastaanotettu?: string | null;
   muistutus?: string | null;
   oid: string;
-  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
+  lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[];
   liitteet?: string[] | null;
   maakoodi?: string | null;
   suomifiLahetys?: boolean;
@@ -67,7 +67,7 @@ class MuistuttajaDatabase {
       });
       const data = await getDynamoDBDocumentClient().send(command);
       lastEvaluatedKey = data.LastEvaluatedKey;
-      muistuttajat.push(...data?.Items as DBMuistuttaja[] ?? []);
+      muistuttajat.push(...((data?.Items as DBMuistuttaja[]) ?? []));
     } while (lastEvaluatedKey !== undefined);
     return muistuttajat;
   }
@@ -128,7 +128,7 @@ class MuistuttajaDatabase {
         const data = await getDynamoDBDocumentClient().send(command);
         lastEvaluatedKey = data.LastEvaluatedKey;
         muistuttajat.push(...(data.Items ?? []));
-      } while(lastEvaluatedKey !== undefined);
+      } while (lastEvaluatedKey !== undefined);
       for (const chunk of chunkArray(muistuttajat, 25)) {
         const deleteRequests = chunk.map((muistuttaja) => ({
           DeleteRequest: {

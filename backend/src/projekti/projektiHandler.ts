@@ -775,6 +775,13 @@ export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationR
   );
 
   await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.ZIP_LAUSUNTOPYYNNOT),
+    async (oid) => {
+      return await eventSqsClient.zipLausuntoPyyntoAineisto(oid);
+    }
+  );
+
+  await projektiAdaptationResult.onEvents(
     (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.LOGO_FILES_CHANGED),
     async (oid) => {
       return await eventSqsClient.synchronizeAineisto(oid);
