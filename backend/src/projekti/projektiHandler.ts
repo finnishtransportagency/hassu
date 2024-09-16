@@ -89,7 +89,7 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
       __typename: "ProjektinTiedottaminen",
       omistajahakuTila,
       kiinteistonomistajaMaara: omistajat.length ?? null,
-      kiinteistotunnusMaara: new Set(omistajat.filter(o => o.kiinteistotunnus).map(o => o.kiinteistotunnus)).size,
+      kiinteistotunnusMaara: new Set(omistajat.filter((o) => o.kiinteistotunnus).map((o) => o.kiinteistotunnus)).size,
       muistuttajaMaara,
       oid,
     };
@@ -771,6 +771,13 @@ export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationR
       !events.some((event) => event.eventType === ProjektiEventType.AINEISTO_CHANGED),
     async (oid) => {
       return await eventSqsClient.handleChangedTiedostot(oid);
+    }
+  );
+
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.ZIP_LAUSUNTOPYYNNOT),
+    async (oid) => {
+      return await eventSqsClient.zipLausuntoPyyntoAineisto(oid);
     }
   );
 

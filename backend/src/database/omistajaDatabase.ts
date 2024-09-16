@@ -38,7 +38,7 @@ export type DBOmistaja = {
   expires?: number;
   kaytossa: boolean;
   suomifiLahetys?: boolean;
-  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
+  lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[];
   userCreated?: boolean;
 };
 
@@ -103,7 +103,7 @@ class OmistajaDatabase {
       });
       data = await getDynamoDBDocumentClient().send(command);
       lastEvaluatedKey = data?.LastEvaluatedKey;
-      omistajat.push(...data?.Items as DBOmistaja[] ?? []);
+      omistajat.push(...((data?.Items as DBOmistaja[]) ?? []));
     } while (lastEvaluatedKey !== undefined);
     return omistajat;
   }
@@ -197,7 +197,7 @@ class OmistajaDatabase {
         const data = await getDynamoDBDocumentClient().send(command);
         lastEvaluatedKey = data.LastEvaluatedKey;
         omistajat.push(...(data.Items ?? []));
-      } while(lastEvaluatedKey !== undefined);
+      } while (lastEvaluatedKey !== undefined);
       for (const chunk of chunkArray(omistajat, 25)) {
         const deleteRequests = chunk.map((omistaja) => ({
           DeleteRequest: {

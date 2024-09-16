@@ -7,6 +7,7 @@ export enum ProjektiEventType {
   RESET_KAYTTOOIKEUDET = "RESET_KAYTTOOIKEUDET",
   SAVE_PROJEKTI_TO_VELHO = "SAVE_PROJEKTI_TO_VELHO",
   FILES_CHANGED = "FILES_CHANGED",
+  ZIP_LAUSUNTOPYYNNOT = "ZIP_LAUSUNTOPYYNNOT",
 }
 
 export type VuorovaikutusPublishedEvent = {
@@ -19,6 +20,7 @@ export type logoFilesChangedEvent = { eventType: ProjektiEventType.LOGO_FILES_CH
 export type ResetKayttooikeudetEvent = { eventType: ProjektiEventType.RESET_KAYTTOOIKEUDET };
 export type SaveProjektiToVelhoEvent = { eventType: ProjektiEventType.SAVE_PROJEKTI_TO_VELHO };
 export type FilesChangedEvent = { eventType: ProjektiEventType.FILES_CHANGED };
+export type ZipLausuntopyynnotEvent = { eventType: ProjektiEventType.ZIP_LAUSUNTOPYYNNOT };
 
 export type ProjektiEvent =
   | VuorovaikutusPublishedEvent
@@ -26,7 +28,8 @@ export type ProjektiEvent =
   | ResetKayttooikeudetEvent
   | SaveProjektiToVelhoEvent
   | logoFilesChangedEvent
-  | FilesChangedEvent;
+  | FilesChangedEvent
+  | ZipLausuntopyynnotEvent;
 
 export class ProjektiAdaptationResult {
   private dbProjekti: DBProjekti;
@@ -81,6 +84,13 @@ export class ProjektiAdaptationResult {
   filesChanged(): void {
     const newEvent: FilesChangedEvent = {
       eventType: ProjektiEventType.FILES_CHANGED,
+    };
+    this.pushEvent(newEvent);
+  }
+
+  zipLausuntopyynnot(): void {
+    const newEvent: ZipLausuntopyynnotEvent = {
+      eventType: ProjektiEventType.ZIP_LAUSUNTOPYYNNOT,
     };
     this.pushEvent(newEvent);
   }

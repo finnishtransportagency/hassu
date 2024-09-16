@@ -398,9 +398,6 @@ const getProjektiTyyppiSpecificProps = (
   aineistoKategoriaProps: AineistoKategoriaProps[],
   options: GetAineistoKategoriatOptions
 ): AineistoKategoriaProps[] => {
-  if (!options.projektiTyyppi) {
-    return aineistoKategoriaProps;
-  }
   return aineistoKategoriaProps
     .filter((ak) => !ak.projektiTyyppi || ak.projektiTyyppi === options.projektiTyyppi)
     .filter((ak) => ak.id !== kategorisoimattomatId || options.showKategorisoimattomat)
