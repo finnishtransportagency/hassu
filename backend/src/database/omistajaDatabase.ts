@@ -38,7 +38,7 @@ export type DBOmistaja = {
   expires?: number;
   kaytossa: boolean;
   suomifiLahetys?: boolean;
-  lahetykset?: [{ tila: "OK" | "VIRHE"; lahetysaika: string }];
+  lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[];
   userCreated?: boolean;
 };
 
@@ -81,7 +81,7 @@ class OmistajaDatabase {
     }
   }
 
-  async haeProjektinKaytossaolevatOmistajat(oid: string): Promise<DBOmistaja[]> {
+  async haeProjektinKaytossaolevatOmistajat(oid: string, expression?: string): Promise<DBOmistaja[]> {
     let lastEvaluatedKey: Record<string, any> | undefined;
     const omistajat: DBOmistaja[] = [];
     let data;
@@ -99,11 +99,11 @@ class OmistajaDatabase {
         },
         FilterExpression: "#kaytossa = :kaytossa",
         ExclusiveStartKey: lastEvaluatedKey,
+        ProjectionExpression: expression,
       });
       data = await getDynamoDBDocumentClient().send(command);
       lastEvaluatedKey = data?.LastEvaluatedKey;
-      omistajat.push(...data?.Items as DBOmistaja[] ?? []);
-      log.info("haeProjektinKaytossaolevatOmistajat", { lastEvaluatedKey: lastEvaluatedKey ?? null, items: data?.Items?.length });
+      omistajat.push(...((data?.Items as DBOmistaja[]) ?? []));
     } while (lastEvaluatedKey !== undefined);
     return omistajat;
   }
@@ -154,7 +154,6 @@ class OmistajaDatabase {
           const transactCommand = new TransactWriteCommand({
             TransactItems: chunk,
           });
-          log.info("Päivitetään " + chunk.length + " omistaja(a)");
           await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
@@ -180,19 +179,26 @@ class OmistajaDatabase {
 
   async deleteOmistajatByOid(oid: string) {
     if (config.env !== "prod") {
-      const command = new QueryCommand({
-        TableName: this.tableName,
-        KeyConditionExpression: "#oid = :oid",
-        ExpressionAttributeValues: {
-          ":oid": oid,
-        },
-        ExpressionAttributeNames: {
-          "#oid": "oid",
-        },
-        ProjectionExpression: "id",
-      });
-      const data = await getDynamoDBDocumentClient().send(command);
-      for (const chunk of chunkArray(data?.Items ?? [], 25)) {
+      let lastEvaluatedKey: Record<string, any> | undefined;
+      const omistajat: Record<string, any>[] = [];
+      do {
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          KeyConditionExpression: "#oid = :oid",
+          ExpressionAttributeValues: {
+            ":oid": oid,
+          },
+          ExpressionAttributeNames: {
+            "#oid": "oid",
+          },
+          ProjectionExpression: "id",
+          ExclusiveStartKey: lastEvaluatedKey,
+        });
+        const data = await getDynamoDBDocumentClient().send(command);
+        lastEvaluatedKey = data.LastEvaluatedKey;
+        omistajat.push(...(data.Items ?? []));
+      } while (lastEvaluatedKey !== undefined);
+      for (const chunk of chunkArray(omistajat, 25)) {
         const deleteRequests = chunk.map((omistaja) => ({
           DeleteRequest: {
             Key: { oid, id: omistaja.id },

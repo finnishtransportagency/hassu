@@ -6,7 +6,7 @@ import React, { ReactNode } from "react";
 export const ButtonFlat = styled("button")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
-  color: "#0064AF",
+  color: theme.palette.primary.dark,
   alignItems: "center",
   gap: theme.spacing(2),
   ":hover": {

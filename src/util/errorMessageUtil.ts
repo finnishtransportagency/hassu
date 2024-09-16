@@ -24,6 +24,18 @@ const showErrorDetails = (props: GenerateErrorMessageProps): boolean =>
 const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage }[] = [
   {
     validator: ({ errorResponse }) => {
+      return (
+        errorResponse.operation.operationName === "EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot" ||
+        errorResponse.operation.operationName === "EsikatseleHyvaksymisEsityksenTiedostot"
+      );
+    },
+    errorMessage: ({ errorResponse }) => {
+      const errorMsg = errorResponse.graphQLErrors?.[0].message ? " " + errorResponse.graphQLErrors?.[0].message : "";
+      return "Esikatselussa tapahtui virhe.".concat(errorMsg);
+    },
+  },
+  {
+    validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "AnnaPalautettaPalvelusta";
     },
     errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),

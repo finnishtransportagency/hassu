@@ -2,9 +2,14 @@ import React, { ReactElement } from "react";
 import { HyvaksymisEsityksenAineistot } from "@services/api";
 import { PreviewExpiredError } from "common/error/PreviewExpiredError";
 import { useEsikatseleHyvaksymisEsitys } from "src/hooks/useEsikatseleHyvaksymisEsitys";
-import HyvaksymisEsitysAineistoPage from "@components/HyvaksymisEsitys/AineistoPage";
+import HyvaksymisEsitysAineistoPage, { EsikatseluMode } from "@components/HyvaksymisEsitys/AineistoPage";
+import dynamic from "next/dynamic";
 
-export default function EsikatseleHyvaksymisEsitys(): ReactElement {
+export default dynamic(() => Promise.resolve(EsikatseleHyvaksymisEsitys), {
+  ssr: false,
+});
+
+function EsikatseleHyvaksymisEsitys(): ReactElement {
   const data: null | undefined | HyvaksymisEsityksenAineistot | PreviewExpiredError = useEsikatseleHyvaksymisEsitys().data;
 
   if (data instanceof PreviewExpiredError) {
@@ -15,5 +20,5 @@ export default function EsikatseleHyvaksymisEsitys(): ReactElement {
     return <></>;
   }
 
-  return <HyvaksymisEsitysAineistoPage {...data} esikatselu />;
+  return <HyvaksymisEsitysAineistoPage {...data} esikatselu={EsikatseluMode.ESIKATSELU} />;
 }

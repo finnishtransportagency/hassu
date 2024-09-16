@@ -3,6 +3,7 @@ import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import ButtonLink from "@components/button/ButtonLink";
 import { RectangleButton } from "@components/button/RectangleButton";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 import HassuTable from "@components/table/HassuTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Accordion, AccordionDetails, AccordionDetailsProps, AccordionSummary, TextField } from "@mui/material";
@@ -63,13 +64,13 @@ const TableAccordion = styled(Accordion)(({ theme }) => ({
   },
 }));
 
-const TableAccordionSummary = styled(AccordionSummary)({
-  backgroundColor: "#0164AF",
+const TableAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.dark,
   "&.Mui-focusVisible": {
-    backgroundColor: "#0164AF",
-    outline: "2px solid black",
+    backgroundColor: theme.palette.primary.dark,
+    ...focusStyleSecondary,
   },
-  color: "#FFFFFF",
+  color: theme.palette.primary.contrastText,
   fontWeight: 700,
   fontSize: "1.4375rem",
   lineHeight: 1.174,
@@ -81,7 +82,7 @@ const TableAccordionSummary = styled(AccordionSummary)({
   "& .MuiAccordionSummary-expandIconWrapper > svg": {
     fontSize: "1.75rem",
   },
-});
+}));
 
 type TiedotettavaHaitariForm = {
   query: string;

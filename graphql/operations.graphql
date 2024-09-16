@@ -31,7 +31,8 @@ type Query {
   ): HyvaksymisEsityksenAineistot!
   esikatseleLausuntoPyynnonTiedostot(oid: String!, lausuntoPyynto: LausuntoPyyntoInput): LadattavatTiedostot!
   esikatseleLausuntoPyynnonTaydennysTiedostot(oid: String!, lausuntoPyynnonTaydennys: LausuntoPyynnonTaydennysInput): LadattavatTiedostot!
-  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): HyvaksymisEsityksenAineistot!
+  esikatseleHyvaksymisEsityksenTiedostot(oid: String!, hyvaksymisEsitys: HyvaksymisEsitysInput!): HyvaksymisEsityksenAineistot
+  esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot(oid: String!): HyvaksymisEsityksenAineistot
   haeHyvaksymisEsityksenTiedot(oid: String!): HyvaksymisEsityksenTiedot!
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF

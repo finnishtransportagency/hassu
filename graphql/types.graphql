@@ -1327,6 +1327,8 @@ type KasittelynTila {
   lisatieto: String
   hallintoOikeus: OikeudenPaatos
   korkeinHallintoOikeus: OikeudenPaatos
+  toteutusilmoitusOsittain: String
+  toteutusilmoitusKokonaan: String
 }
 
 type OikeudenPaatos {
@@ -1392,6 +1394,8 @@ type Omistaja {
   paikkakunta: String
   maakoodi: String
   maa: String
+  viimeisinLahetysaika: String
+  viimeisinTila: String
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1416,6 +1420,8 @@ type Muistuttaja {
   tiedotustapa: String
   sahkoposti: String
   paivitetty: String
+  viimeisinLahetysaika: String
+  viimeisinTila: String
 }
 
 type Muistuttajat {

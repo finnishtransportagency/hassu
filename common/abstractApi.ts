@@ -95,6 +95,7 @@ import {
   HaeKayttoOikeudetQueryVariables,
   KayttoOikeusTiedot,
   HyvaksymisEsityksenAineistot,
+  EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -359,6 +360,12 @@ export const apiConfig: ApiConfig = {
     name: "esikatseleHyvaksymisEsityksenTiedostot",
     operationType: OperationType.Query,
     graphql: queries.esikatseleHyvaksymisEsityksenTiedostot,
+    isYllapitoOperation: true,
+  },
+  esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot: {
+    name: "esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot,
     isYllapitoOperation: true,
   },
   haeHyvaksymisEsityksenTiedot: {
@@ -733,6 +740,12 @@ export abstract class AbstractApi {
       oid,
       hyvaksymisEsitys,
     } as EsikatseleHyvaksymisEsityksenTiedostotQueryVariables);
+  }
+
+  async esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot(oid: string): Promise<HyvaksymisEsityksenAineistot> {
+    return await this.callYllapitoAPI(apiConfig.esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot, {
+      oid,
+    } as EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables);
   }
 
   async suoritaTestiKomento(testiKomento: TestiKomentoInput): Promise<string> {

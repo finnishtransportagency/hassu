@@ -29,7 +29,10 @@ export function useEsikatseleHyvaksymisEsitys() {
 
   const esikatseleHyvaksymisEsitysLoader = getEsikatseleHyvaksymisEsitysLoader(api);
 
-  const data = useSWR([apiConfig.esikatseleLausuntoPyynnonTiedostot.graphql, oid, hyvaksymisEsitysInput], esikatseleHyvaksymisEsitysLoader);
+  const data = useSWR(
+    [apiConfig.esikatseleHyvaksymisEsityksenTiedostot.graphql, oid, hyvaksymisEsitysInput],
+    esikatseleHyvaksymisEsitysLoader
+  );
   return hyvaksymisEsitysInput instanceof PreviewExpiredError ? { data: hyvaksymisEsitysInput } : data;
 }
 
