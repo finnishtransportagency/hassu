@@ -187,7 +187,7 @@ const AineistoTable = ({
     getRowId: (row) => row.id,
     state: { pagination: undefined },
     enableSorting: false,
-    meta: { onDragAndDrop, findRowIndex, virtualization: { type: "window" } },
+    meta: { onDragAndDrop, findRowIndex },
   });
 
   return <HassuTable table={table} />;

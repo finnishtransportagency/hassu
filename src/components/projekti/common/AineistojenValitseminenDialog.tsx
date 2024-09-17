@@ -178,7 +178,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
       widthFractions: 2,
     },
   },
-  { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2 } },
+  { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2, minWidth: 160 } },
   {
     header: "Koko (kB)",
     accessorKey: "koko",
@@ -198,7 +198,6 @@ const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange, scrollEl
     state: { pagination: undefined, rowSelection },
     enableRowSelection: true,
     enableSorting: false,
-    meta: { virtualization: { type: "scrollElement", getScrollElement: () => scrollElement.current } },
   });
 
   return <HassuTable table={table} />;
