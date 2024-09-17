@@ -11,6 +11,7 @@ import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavi
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import * as dayjs from "dayjs";
 import { lisaaKarttarajaus } from "../../support/kiinteistonOmistajat";
+import { disableAsianhallintaIntegration } from "../../support/disableAsianhallintaIntegration";
 
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
@@ -173,6 +174,7 @@ describe("Migraatio", () => {
     cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
+    disableAsianhallintaIntegration(oid);
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains(
@@ -233,6 +235,7 @@ describe("Migraatio", () => {
     cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
+    disableAsianhallintaIntegration(oid);
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains(

@@ -171,7 +171,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
-        hankkeenKuvaus: getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus),
         arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
           projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta
@@ -268,7 +267,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
-          hankkeenKuvaus: getDefaultValuesForLokalisoituText(projekti.kielitiedot, formData.vuorovaikutusKierros.hankkeenKuvaus),
           arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
