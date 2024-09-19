@@ -43,7 +43,7 @@ export default function Lukunakyma() {
         {nahtavillaoloMenneisyydessa ? (
           <p>
             Aineistot ovat olleet nähtävillä palvelun julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
-            {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan. Nähtävilleasetetut aineistot löytyvät
+            {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan. Nähtävilleasetetut aineistot löytyvät{" "}
             <ExtLink href={velhoURL}>Projektivelhosta</ExtLink>.
           </p>
         ) : (
