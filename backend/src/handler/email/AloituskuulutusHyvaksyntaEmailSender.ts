@@ -47,7 +47,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         const aloituskuulutusRuotsiPDF = await this.getMandatoryProjektiFileAsAttachment(
           aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusPDFPath,
           projekti,
-          `aloituskuulutusPDFPath SUOMI`
+          `aloituskuulutusPDFPath RUOTSI`
         );
         aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusRuotsiPDF);
       }

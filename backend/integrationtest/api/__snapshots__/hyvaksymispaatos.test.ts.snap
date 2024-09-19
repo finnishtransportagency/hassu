@@ -52,6 +52,7 @@ Object {
     "/1/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
@@ -163,6 +164,7 @@ Object {
     "/1/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
@@ -284,6 +286,7 @@ Object {
     "/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
@@ -1418,6 +1421,7 @@ Object {
     "/1/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
@@ -1482,6 +1486,7 @@ Object {
     "/2/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
@@ -1603,6 +1608,7 @@ Object {
     "/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2039-01-02T00:00:00+02:00",
     },

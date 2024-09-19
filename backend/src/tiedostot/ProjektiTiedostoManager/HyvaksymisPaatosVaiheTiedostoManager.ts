@@ -111,7 +111,11 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
 
     forEverySaameDo((kieli) => {
       const pdf = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
-      s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
+      s3Paths.pushYllapitoFilesIfDefined(
+        pdf?.kuulutusPDF?.tiedosto,
+        pdf?.kuulutusIlmoitusPDF?.tiedosto,
+        pdf?.kirjeTiedotettavillePDF?.tiedosto
+      );
     });
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);

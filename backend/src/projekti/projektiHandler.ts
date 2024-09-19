@@ -599,8 +599,12 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
         ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
-        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        [
+          API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        ],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -623,8 +627,9 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         [
           API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
           API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         ],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -643,7 +648,7 @@ async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
         [
           API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
           API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
@@ -667,7 +672,7 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
+        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
         [
           API.AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2,
           API.AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
