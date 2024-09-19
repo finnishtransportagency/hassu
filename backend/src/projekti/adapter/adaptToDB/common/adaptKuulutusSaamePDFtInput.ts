@@ -25,6 +25,10 @@ export function adaptKuulutusSaamePDFtInput(
 
       dbPDFt.kuulutusPDF = adaptLadattuTiedostoToSave(dbPDFt.kuulutusPDF, kuulutusPDFInputForKieli.kuulutusPDFPath);
       dbPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToSave(dbPDFt.kuulutusIlmoitusPDF, kuulutusPDFInputForKieli.kuulutusIlmoitusPDFPath);
+      dbPDFt.kirjeTiedotettavillePDF = adaptLadattuTiedostoToSave(
+        dbPDFt.kirjeTiedotettavillePDF,
+        kuulutusPDFInputForKieli.kirjeTiedotettavillePDFPath
+      );
     }
   });
 

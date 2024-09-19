@@ -5,7 +5,7 @@ import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
 import { DEFAULT_COL_MIN_WIDTH, DEFAULT_COL_WIDTH_FRACTIONS } from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
-import { KuulutusPDFInput, TiedotettavaKuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import {
   BodyTr,
@@ -30,17 +30,18 @@ type KuulutustenLuonnosVaiheet = Pick<
 
 export type SaameKutsuTiedostoPrefix = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
 
-export type AloituskuulutusTiedostotPrefix = "aloitusKuulutus.aloituskuulutusSaamePDFt";
-
-export type TiedotettavaKuulutusTiedostotPrefix =
-  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
-  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
+export type KuulutusTiedostotPrefix =
+  | "aloitusKuulutus.aloituskuulutusSaamePDFt"
   | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
+export type TiedotettavaKuulutusTiedostotPrefix =
+  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
+  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
+
 type SaameTiedostoLomakePolku =
-  | `${AloituskuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
-  | `${TiedotettavaKuulutusTiedostotPrefix}.POHJOISSAAME.${keyof TiedotettavaKuulutusPDFInput}`
+  | `${KuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
+  | `${TiedotettavaKuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
   | `${SaameKutsuTiedostoPrefix}.POHJOISSAAME`;
 
 type SaameTiedostoValitsinProps = {

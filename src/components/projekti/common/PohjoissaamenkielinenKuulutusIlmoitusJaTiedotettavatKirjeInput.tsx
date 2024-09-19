@@ -12,7 +12,7 @@ type Props = {
   kirjeTiedotettavilleTiedot: LadattuTiedosto | null | undefined;
 };
 
-const PohjoissaamenkielinenKuulutusJaIlmoitusInput: FunctionComponent<Props> = ({
+const PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput: FunctionComponent<Props> = ({
   saamePdfAvain: vaiheAvain,
   ilmoitusTiedot,
   kuulutusTiedot,
@@ -42,4 +42,4 @@ const PohjoissaamenkielinenKuulutusJaIlmoitusInput: FunctionComponent<Props> = (
     </Section>
   );
 };
-export default PohjoissaamenkielinenKuulutusJaIlmoitusInput;
+export default PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput;

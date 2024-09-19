@@ -8,7 +8,7 @@ import {
   adaptStandardiYhteystiedotToSave,
   getId,
   adaptUudelleenKuulutusToSave,
-  adaptTiedotettavaKuulutusSaamePDFtInput,
+  adaptKuulutusSaamePDFtInput,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
@@ -60,7 +60,7 @@ export function adaptNahtavillaoloVaiheToSave(
   }
 
   if (nahtavillaoloSaamePDFt) {
-    uusiNahtavillaolovaihe.nahtavillaoloSaamePDFt = adaptTiedotettavaKuulutusSaamePDFtInput(
+    uusiNahtavillaolovaihe.nahtavillaoloSaamePDFt = adaptKuulutusSaamePDFtInput(
       dbNahtavillaoloVaihe?.nahtavillaoloSaamePDFt,
       nahtavillaoloSaamePDFt
     );

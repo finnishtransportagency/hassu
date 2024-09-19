@@ -1,5 +1,5 @@
 import { AineistoTila, Kieli, LadattuTiedostoTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
-import { Aineisto, KuulutusSaamePDFt, TiedotettavaKuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
+import { Aineisto, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { PathTuple } from "../../files/ProjektiPath";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 import { fileService } from "../../files/fileService";
@@ -30,22 +30,6 @@ export function getZipFolder(
 }
 
 export function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
-  const tiedostot: LadattuTiedosto[] = [];
-  if (saamePDFt) {
-    forEverySaameDo((kieli) => {
-      const pdft = saamePDFt[kieli];
-      if (pdft?.kuulutusPDF) {
-        tiedostot.push(pdft.kuulutusPDF);
-      }
-      if (pdft?.kuulutusIlmoitusPDF) {
-        tiedostot.push(pdft.kuulutusIlmoitusPDF);
-      }
-    });
-  }
-  return tiedostot;
-}
-
-export function getTiedotettavaKuulutusSaamePDFt(saamePDFt: TiedotettavaKuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
   const tiedostot: LadattuTiedosto[] = [];
   if (saamePDFt) {
     forEverySaameDo((kieli) => {

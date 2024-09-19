@@ -7,7 +7,6 @@ import {
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   SaameKieli,
-  TiedotettavaKuulutusSaamePDFt,
 } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -34,7 +33,6 @@ import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjekti
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
-import { forEverySaameDo } from "../../projekti/adapter/common";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -221,30 +219,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
-  }
-
-  protected updateKuulutusSaamePDFtForUudelleenkuulutus(
-    saamePDFt: TiedotettavaKuulutusSaamePDFt | undefined,
-    oldPathPrefix: string,
-    newPathPrefix: string
-  ): TiedotettavaKuulutusSaamePDFt | null | undefined {
-    if (saamePDFt) {
-      forEverySaameDo((kieli) => {
-        let pdf = saamePDFt[kieli]?.kuulutusIlmoitusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-        pdf = saamePDFt[kieli]?.kuulutusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-        pdf = saamePDFt[kieli]?.kirjeTiedotettavillePDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-      });
-      return saamePDFt;
-    }
   }
 
   getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: NahtavillaoloVaiheJulkaisu): NahtavillaoloVaihe {

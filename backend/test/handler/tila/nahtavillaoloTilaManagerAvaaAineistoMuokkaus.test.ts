@@ -10,7 +10,7 @@ import {
   Kielitiedot,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
-  TiedotettavaKuulutusSaamePDFt,
+  KuulutusSaamePDFt,
   UudelleenkuulutusTila,
 } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
@@ -85,7 +85,7 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         uuid: "uuid-0x",
       },
     ];
-    const nahtavillaoloSaamePDFt: TiedotettavaKuulutusSaamePDFt = {
+    const nahtavillaoloSaamePDFt: KuulutusSaamePDFt = {
       POHJOISSAAME: {
         kuulutusPDF: {
           tiedosto: "nahtavillaolo/1/tiedosto1.pdf",
@@ -132,7 +132,7 @@ describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
         uuid: "uuid-0x",
       },
     ];
-    const nahtavillaoloSaamePDFtUusi: TiedotettavaKuulutusSaamePDFt = {
+    const nahtavillaoloSaamePDFtUusi: KuulutusSaamePDFt = {
       POHJOISSAAME: {
         kuulutusPDF: {
           tiedosto: "nahtavillaolo/2/tiedosto1.pdf",

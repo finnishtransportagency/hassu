@@ -4,7 +4,7 @@ import {
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
-  TiedotettavaKuulutusSaamePDFt,
+  KuulutusSaamePDFt,
   LocalizedMap,
   SaameKieli,
 } from "../../database/model";
@@ -22,7 +22,6 @@ import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/proj
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
-import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
@@ -140,30 +139,6 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     }
   }
 
-  protected updateKuulutusSaamePDFtForUudelleenkuulutus(
-    saamePDFt: TiedotettavaKuulutusSaamePDFt | undefined,
-    oldPathPrefix: string,
-    newPathPrefix: string
-  ): TiedotettavaKuulutusSaamePDFt | null | undefined {
-    if (saamePDFt) {
-      forEverySaameDo((kieli) => {
-        let pdf = saamePDFt[kieli]?.kuulutusIlmoitusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-        pdf = saamePDFt[kieli]?.kuulutusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-        pdf = saamePDFt[kieli]?.kirjeTiedotettavillePDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-      });
-      return saamePDFt;
-    }
-  }
-
   getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihe {
     const {
       yhteystiedot: _yhteystiedot,
@@ -177,7 +152,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
 
   validateSaamePDFsExistIfRequired(
     toissijainenKieli: Kieli | undefined | null,
-    hyvaksymisPaatosVaiheSaamePDFt: TiedotettavaKuulutusSaamePDFt | undefined | null
+    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt | undefined | null
   ): void {
     if (isKieliSaame(toissijainenKieli)) {
       assertIsDefined(toissijainenKieli);

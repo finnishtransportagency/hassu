@@ -6,7 +6,7 @@ import {
   adaptIlmoituksenVastaanottajatToSave,
   adaptStandardiYhteystiedotToSave,
   adaptUudelleenKuulutusToSave,
-  adaptTiedotettavaKuulutusSaamePDFtInput,
+  adaptKuulutusSaamePDFtInput,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
@@ -58,7 +58,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
   };
 
   if (hyvaksymisPaatosVaiheSaamePDFt) {
-    newChanges.hyvaksymisPaatosVaiheSaamePDFt = adaptTiedotettavaKuulutusSaamePDFtInput(
+    newChanges.hyvaksymisPaatosVaiheSaamePDFt = adaptKuulutusSaamePDFtInput(
       dbHyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt,
       hyvaksymisPaatosVaiheSaamePDFt
     );

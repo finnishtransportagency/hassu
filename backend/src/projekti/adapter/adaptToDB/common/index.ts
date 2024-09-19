@@ -11,5 +11,4 @@ export * from "./getId";
 export * from "./forEverySaameDoAsync";
 export * from "./adaptLadattuTiedostoToSave";
 export * from "./adaptKuulutusSaamePDFtInput";
-export * from "./adaptTiedotettavaKuulutusSaamePDFtInput";
 export * from "./adaptUudelleenKuulutusToSave";

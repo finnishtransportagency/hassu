@@ -2,7 +2,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
-import { DBProjekti, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, TiedotettavaKuulutusSaamePDF } from "../../database/model";
+import { DBProjekti, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { NahtavillaoloEmailCreator } from "../../email/nahtavillaoloEmailCreator";
@@ -78,7 +78,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
       }
 
       if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-        const saamePdfKeys: (keyof TiedotettavaKuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
+        const saamePdfKeys: (keyof KuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
         const attachments = await Promise.all(
           saamePdfKeys.map(
             async (key) =>

@@ -1098,30 +1098,6 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "TiedotettavaKuulutusPDFInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TiedotettavaKuulutusSaamePDF",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TiedotettavaKuulutusSaamePDFt",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "TiedotettavaKuulutusSaamePDFtInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
         "name": "TilaMuutosInput",
         "possibleTypes": null,
         "__typename": "__Type"

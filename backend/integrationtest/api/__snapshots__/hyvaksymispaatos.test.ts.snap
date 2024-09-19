@@ -6,7 +6,7 @@ Object {
   "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "TiedotettavaKuulutusSaamePDF",
+      "__typename": "KuulutusSaamePDF",
       "kirjeTiedotettavillePDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -35,7 +35,7 @@ Object {
         "uuid": "00000004-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "TiedotettavaKuulutusSaamePDFt",
+    "__typename": "KuulutusSaamePDFt",
   },
 }
 `;
@@ -70,7 +70,7 @@ Object {
   "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "TiedotettavaKuulutusSaamePDF",
+      "__typename": "KuulutusSaamePDF",
       "kirjeTiedotettavillePDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -99,7 +99,7 @@ Object {
         "uuid": "00000004-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "TiedotettavaKuulutusSaamePDFt",
+    "__typename": "KuulutusSaamePDFt",
   },
 }
 `;
@@ -183,6 +183,15 @@ Object {
     "hyvaksymisPaatosVaiheSaamePDFt": Object {
       "POHJOISSAAME": Object {
         "__typename": "KuulutusSaamePDF",
+        "kirjeTiedotettavillePDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saamekirjetiedotettaville.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/hyvaksymispaatos/saamekirjetiedotettaville.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-06-09T00:00",
+          "uuid": "00000006-6d14-4058-82a9-99a4c224524a",
+        },
         "kuulutusIlmoitusPDF": Object {
           "__typename": "LadattuTiedosto",
           "jarjestys": undefined,
@@ -339,6 +348,15 @@ Object {
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
           "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekirjetiedotettaville.pdf",
+            "tiedosto": "/tiedostot/suunnitelma/3/hyvaksymispaatos/saamekirjetiedotettaville.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-06-09T00:00",
+            "uuid": "00000006-6d14-4058-82a9-99a4c224524a",
+          },
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -615,7 +633,7 @@ Object {
       },
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -644,7 +662,7 @@ Object {
             "uuid": "0000000b-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
@@ -832,7 +850,7 @@ Object {
       },
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -861,7 +879,7 @@ Object {
             "uuid": "0000000b-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "hyvaksymisPaiva": "***unittest***",
       "id": 2,
@@ -1045,7 +1063,7 @@ Object {
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -1074,7 +1092,7 @@ Object {
             "uuid": "0000000b-6d14-4058-82a9-99a4c224524a",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
@@ -1181,6 +1199,15 @@ Object {
       "hyvaksymisPaatosVaiheSaamePDFt": Object {
         "POHJOISSAAME": Object {
           "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekirjetiedotettaville.pdf",
+            "tiedosto": "/tiedostot/suunnitelma/3/hyvaksymispaatos/saamekirjetiedotettaville.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2039-01-02T00:00",
+            "uuid": "0000000d-6d14-4058-82a9-99a4c224524a",
+          },
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -1298,7 +1325,7 @@ Object {
   "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "TiedotettavaKuulutusSaamePDF",
+      "__typename": "KuulutusSaamePDF",
       "kirjeTiedotettavillePDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -1327,7 +1354,7 @@ Object {
         "uuid": "0000000b-6d14-4058-82a9-99a4c224524a",
       },
     },
-    "__typename": "TiedotettavaKuulutusSaamePDFt",
+    "__typename": "KuulutusSaamePDFt",
   },
 }
 `;
@@ -1475,6 +1502,15 @@ Object {
     "hyvaksymisPaatosVaiheSaamePDFt": Object {
       "POHJOISSAAME": Object {
         "__typename": "KuulutusSaamePDF",
+        "kirjeTiedotettavillePDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saamekirjetiedotettaville.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/hyvaksymispaatos/saamekirjetiedotettaville.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2039-01-02T00:00",
+          "uuid": "0000000d-6d14-4058-82a9-99a4c224524a",
+        },
         "kuulutusIlmoitusPDF": Object {
           "__typename": "LadattuTiedosto",
           "jarjestys": undefined,

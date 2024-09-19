@@ -78,7 +78,7 @@ input KuulutusPDFInput {
   kuulutusIlmoitusPDFPath: String
 }
 
-input TiedotettavaKuulutusPDFInput {
+input KuulutusPDFInput {
   kuulutusPDFPath: String
   kuulutusIlmoitusPDFPath: String
   kirjeTiedotettavillePDFPath: String
@@ -86,10 +86,6 @@ input TiedotettavaKuulutusPDFInput {
 
 input KuulutusSaamePDFtInput {
   POHJOISSAAME: KuulutusPDFInput
-}
-
-input TiedotettavaKuulutusSaamePDFtInput {
-  POHJOISSAAME: TiedotettavaKuulutusPDFInput
 }
 
 input UudelleenKuulutusInput {
@@ -241,7 +237,7 @@ input NahtavillaoloVaiheInput {
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  nahtavillaoloSaamePDFt: TiedotettavaKuulutusSaamePDFtInput
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 
@@ -297,7 +293,7 @@ input HyvaksymisPaatosVaiheInput {
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   viimeinenVoimassaolovuosi: String
-  hyvaksymisPaatosVaiheSaamePDFt: TiedotettavaKuulutusSaamePDFtInput
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 

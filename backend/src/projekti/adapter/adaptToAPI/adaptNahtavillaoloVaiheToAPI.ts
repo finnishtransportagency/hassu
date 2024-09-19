@@ -5,7 +5,6 @@ import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import {
   adaptUudelleenKuulutusToAPI,
-  adaptTiedotettavaKuulutusSaamePDFtToAPI,
   adaptAineistoMuokkausToAPI,
   adaptLokalisoituTekstiToAPI,
   adaptAineistotToAPI,
@@ -15,6 +14,7 @@ import {
   adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptKielitiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
+  adaptKuulutusSaamePDFtToAPI,
 } from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../../util/assertions";
@@ -41,7 +41,7 @@ export function adaptNahtavillaoloVaiheToAPI(
       __typename: "NahtavillaoloVaihe",
       ...rest,
       aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
-      nahtavillaoloSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus ?? undefined),
@@ -119,7 +119,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
-      nahtavillaoloSaamePDFt: adaptTiedotettavaKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFtToAPI(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelhoToAPI(velho),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),

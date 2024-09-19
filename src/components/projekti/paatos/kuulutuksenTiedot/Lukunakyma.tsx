@@ -4,7 +4,7 @@ import {
   HyvaksymisPaatosVaihePDF,
   Kieli,
   KuulutusJulkaisuTila,
-  TiedotettavaKuulutusSaamePDF,
+  KuulutusSaamePDF,
   Vaihe,
 } from "@services/api";
 import replace from "lodash/replace";
@@ -42,7 +42,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
     [paatosTyyppi]
   );
 
-  const getPdft = (kieli: Kieli | undefined | null): TiedotettavaKuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
+  const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
       return julkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
     }
@@ -242,7 +242,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                       </>
                     )}
 
-                    {toissijaisetPDFt.__typename === "TiedotettavaKuulutusSaamePDF" && (
+                    {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
                       <>
                         <div>
                           <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
@@ -252,11 +252,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
                           </DownloadLink>
                         </div>
-                        <div>
-                          <DownloadLink href={toissijaisetPDFt.kirjeTiedotettavillePDF?.tiedosto}>
-                            {toissijaisetPDFt.kirjeTiedotettavillePDF?.nimi}
-                          </DownloadLink>
-                        </div>
+                        {toissijaisetPDFt.kirjeTiedotettavillePDF && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.kirjeTiedotettavillePDF.tiedosto}>
+                              {toissijaisetPDFt.kirjeTiedotettavillePDF.nimi}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

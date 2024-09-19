@@ -9,7 +9,7 @@ import {
   Velho,
   Yhteystieto,
   AineistoMuokkaus,
-  TiedotettavaKuulutusSaamePDFt,
+  KuulutusSaamePDFt,
 } from ".";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
@@ -23,7 +23,7 @@ export type NahtavillaoloVaihe = {
   hankkeenKuvaus?: LocalizedMap<string>;
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  nahtavillaoloSaamePDFt?: TiedotettavaKuulutusSaamePDFt | null;
+  nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   palautusSyy?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   aineistoMuokkaus?: AineistoMuokkaus | null;
@@ -42,7 +42,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   yhteystiedot: Yhteystieto[];
   kuulutusYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  nahtavillaoloSaamePDFt?: TiedotettavaKuulutusSaamePDFt | null;
+  nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
   lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;

@@ -4,7 +4,7 @@ export const jatkopaatos1KuulutusSaamePDFtSchema = Yup.object().shape({
   jatkoPaatos1Vaihe: Yup.object()
     .required()
     .shape({
-      hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(true),
+      hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(false),
       viimeinenVoimassaolovuosi: Yup.string().required("Päätöksen viimeinen voimassaolovuosi annettava"),
     }),
 });

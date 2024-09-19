@@ -261,10 +261,10 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
   if (saamePdfKey) {
     const kuulutusIlmoitusPDFPath = await tallennaEULogo("saameilmoitus.pdf");
     const kuulutusPDFPath = await tallennaEULogo("saamekuulutus.pdf");
-    const POHJOISSAAME =
-      saamePdfKey === "aloituskuulutusSaamePDFt"
-        ? { kuulutusPDFPath, kuulutusIlmoitusPDFPath }
-        : { kuulutusPDFPath, kuulutusIlmoitusPDFPath, kirjeTiedotettavillePDFPath: await tallennaEULogo("saamekirjetiedotettaville.pdf") };
+    const kuulutusKeysWithTiedotus: LuonnosKey[] = ["nahtavillaoloVaihe", "hyvaksymisPaatosVaihe"];
+    const POHJOISSAAME = kuulutusKeysWithTiedotus.includes(luonnosKey)
+      ? { kuulutusPDFPath, kuulutusIlmoitusPDFPath, kirjeTiedotettavillePDFPath: await tallennaEULogo("saamekirjetiedotettaville.pdf") }
+      : { kuulutusPDFPath, kuulutusIlmoitusPDFPath };
     input[luonnosKey] = {
       ...input[luonnosKey],
       [saamePdfKey]: {

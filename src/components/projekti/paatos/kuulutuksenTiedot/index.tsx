@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -22,8 +22,8 @@ import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudel
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
-import { TiedotettavaKuulutusTiedostotPrefix } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import useValidationMode from "src/hooks/useValidationMode";
 import { getPaatosSpecificData, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -83,7 +83,8 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const { kuulutusIlmoitusPDF, kuulutusPDF } = julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
+      const { kuulutusIlmoitusPDF, kuulutusPDF, kirjeTiedotettavillePDF } =
+        julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
 
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
       const formValuePaatosVaihe = formValues[paatosVaiheAvain];
@@ -91,6 +92,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
           kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+          kirjeTiedotettavillePDFPath: kirjeTiedotettavillePDF?.tiedosto || null,
         },
       };
     }
@@ -131,17 +133,6 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): TiedotettavaKuulutusTiedostotPrefix {
-    switch (paatosTyyppi) {
-      case PaatosTyyppi.HYVAKSYMISPAATOS:
-        return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
-      case PaatosTyyppi.JATKOPAATOS1:
-        return "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
-      case PaatosTyyppi.JATKOPAATOS2:
-        return "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
-    }
-  }
-
   return (
     <>
       {voiMuokata && (
@@ -169,12 +160,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}
               {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
-                <PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput
-                  saamePdfAvain={saamePdfAvain(paatosTyyppi)}
-                  ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
-                  kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
-                  kirjeTiedotettavilleTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDF}
-                />
+                <PaatoksenPohjoissaamiTiedostot projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisematonPaatos={julkaisematonPaatos} />
               )}
               <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
             </fieldset>
@@ -192,4 +178,40 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
       <PdfPreviewForm ref={pdfFormRef} />
     </>
   );
+}
+
+type PaatoksenPohjoissaamiTiedostotProps = {
+  projekti: ProjektiLisatiedolla;
+  paatosTyyppi: PaatosTyyppi;
+  julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;
+};
+
+function PaatoksenPohjoissaamiTiedostot(props: PaatoksenPohjoissaamiTiedostotProps) {
+  if (props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return (
+      <PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput
+        saamePdfAvain="hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+        kirjeTiedotettavilleTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDF}
+      />
+    );
+  } else if (props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    return (
+      <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+        saamePdfAvain="jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+      />
+    );
+  } else if (props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+    return (
+      <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+        saamePdfAvain="jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+      />
+    );
+  }
+  return null;
 }

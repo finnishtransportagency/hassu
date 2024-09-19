@@ -3,7 +3,7 @@ import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, TiedotettavaKuulutusSaamePDF } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { HyvaksymisPaatosEmailCreator } from "../../email/hyvaksymisPaatosEmailCreator";
@@ -150,7 +150,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
         }, Promise.resolve([]));
 
       if (projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME) {
-        const pdfKeys: (keyof TiedotettavaKuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
+        const pdfKeys: (keyof KuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
         const attachments = await Promise.all(
           pdfKeys.map(
             async (key) =>

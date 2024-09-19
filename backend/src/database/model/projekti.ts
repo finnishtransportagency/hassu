@@ -53,14 +53,10 @@ export type AloitusKuulutusPDF = {
 };
 
 export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;
-export type TiedotettavaKuulutusSaamePDFt = SaameLocalizedMap<TiedotettavaKuulutusSaamePDF>;
 
 export type KuulutusSaamePDF = {
   kuulutusPDF?: LadattuTiedosto | null;
   kuulutusIlmoitusPDF?: LadattuTiedosto | null;
-};
-
-export type TiedotettavaKuulutusSaamePDF = KuulutusSaamePDF & {
   kirjeTiedotettavillePDF?: LadattuTiedosto | null;
 };
 

@@ -33,6 +33,7 @@ export const FileInput = ({
     multiple,
     noClick,
     maxSize,
+    accept,
     ...otherDropzoneOptions,
   });
 

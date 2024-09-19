@@ -6,7 +6,7 @@ Object {
   "mockedtime": "2040-01-01T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "TiedotettavaKuulutusSaamePDF",
+      "__typename": "KuulutusSaamePDF",
       "kirjeTiedotettavillePDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -35,7 +35,7 @@ Object {
         "uuid": "00000004-2631-4d4f-9d26-c792007df5d2",
       },
     },
-    "__typename": "TiedotettavaKuulutusSaamePDFt",
+    "__typename": "KuulutusSaamePDFt",
   },
 }
 `;
@@ -70,7 +70,7 @@ Object {
   "mockedtime": "2040-01-01T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
-      "__typename": "TiedotettavaKuulutusSaamePDF",
+      "__typename": "KuulutusSaamePDF",
       "kirjeTiedotettavillePDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -99,7 +99,7 @@ Object {
         "uuid": "00000004-2631-4d4f-9d26-c792007df5d2",
       },
     },
-    "__typename": "TiedotettavaKuulutusSaamePDFt",
+    "__typename": "KuulutusSaamePDFt",
   },
 }
 `;
@@ -173,6 +173,15 @@ Object {
   "obj": Object {
     "POHJOISSAAME": Object {
       "__typename": "KuulutusSaamePDF",
+      "kirjeTiedotettavillePDF": Object {
+        "__typename": "LadattuTiedosto",
+        "jarjestys": undefined,
+        "nimi": "saamekirjetiedotettaville.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/3/nahtavillaolo/saamekirjetiedotettaville.pdf",
+        "tila": "VALMIS",
+        "tuotu": "2040-01-01T00:00",
+        "uuid": "00000006-2631-4d4f-9d26-c792007df5d2",
+      },
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "jarjestys": undefined,
@@ -333,6 +342,15 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
           "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekirjetiedotettaville.pdf",
+            "tiedosto": "/tiedostot/suunnitelma/3/nahtavillaolo/saamekirjetiedotettaville.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2040-01-01T00:00",
+            "uuid": "00000006-2631-4d4f-9d26-c792007df5d2",
+          },
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -624,7 +642,7 @@ Object {
       },
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -653,7 +671,7 @@ Object {
             "uuid": "0000000b-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -846,7 +864,7 @@ Object {
       },
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -875,7 +893,7 @@ Object {
             "uuid": "0000000b-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -1037,7 +1055,7 @@ Object {
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
-          "__typename": "TiedotettavaKuulutusSaamePDF",
+          "__typename": "KuulutusSaamePDF",
           "kirjeTiedotettavillePDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
@@ -1066,7 +1084,7 @@ Object {
             "uuid": "0000000b-2631-4d4f-9d26-c792007df5d2",
           },
         },
-        "__typename": "TiedotettavaKuulutusSaamePDFt",
+        "__typename": "KuulutusSaamePDFt",
       },
       "uudelleenKuulutus": null,
     },
@@ -1141,6 +1159,15 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       "nahtavillaoloSaamePDFt": Object {
         "POHJOISSAAME": Object {
           "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekirjetiedotettaville.pdf",
+            "tiedosto": "/tiedostot/suunnitelma/3/nahtavillaolo/saamekirjetiedotettaville.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2040-01-01T00:00",
+            "uuid": "0000000d-2631-4d4f-9d26-c792007df5d2",
+          },
           "kuulutusIlmoitusPDF": Object {
             "__typename": "LadattuTiedosto",
             "jarjestys": undefined,
