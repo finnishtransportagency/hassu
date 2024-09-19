@@ -95,7 +95,7 @@ export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe 
     },
     getRowId: (row) => row.id,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-    meta: { findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { findRowIndex, onDragAndDrop },
   });
   return <HassuTable table={tableProps} />;
 }
