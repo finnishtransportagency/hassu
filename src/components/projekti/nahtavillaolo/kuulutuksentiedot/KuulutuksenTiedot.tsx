@@ -73,9 +73,9 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME || {};
       tallentamisTiedot.nahtavillaoloVaihe.nahtavillaoloSaamePDFt = {
         POHJOISSAAME: {
-          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
-          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
-          kirjeTiedotettavillePDFPath: kirjeTiedotettavillePDF?.tiedosto || null!,
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null,
+          kirjeTiedotettavillePDFPath: kirjeTiedotettavillePDF?.tiedosto || null,
         },
       };
     }

@@ -1,5 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import {
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheInput,
+  KirjaamoOsoite,
+  KuulutusPDFInput,
+  MuokkausTila,
+  TallennaProjektiInput,
+} from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -88,12 +95,15 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
       const formValuePaatosVaihe = formValues[paatosVaiheAvain];
+      const POHJOISSAAME: KuulutusPDFInput = {
+        kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null,
+        kuulutusPDFPath: kuulutusPDF?.tiedosto || null,
+      };
+      if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+        POHJOISSAAME.kirjeTiedotettavillePDFPath = kirjeTiedotettavillePDF?.tiedosto || null;
+      }
       formValuePaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
-        POHJOISSAAME: {
-          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
-          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
-          kirjeTiedotettavillePDFPath: kirjeTiedotettavillePDF?.tiedosto || null,
-        },
+        POHJOISSAAME,
       };
     }
 

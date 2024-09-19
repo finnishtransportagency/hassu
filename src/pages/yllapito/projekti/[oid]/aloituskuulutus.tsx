@@ -137,8 +137,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
       const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
       tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
         POHJOISSAAME: {
-          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
-          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null,
         },
       };
     }
