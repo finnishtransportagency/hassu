@@ -208,7 +208,6 @@ const VirkamiesHomePage = () => {
           <HassuGrid cols={{ xs: 1, md: 2, lg: 3, xl: 4 }}>
             <TextInput label="Projektin nimi" {...register("nimi")} />
             <TextInput label="Asiatunnus" {...register("asiatunnus")} />
-            <Select label="Maakunta" disabled options={[]} emptyOption="Valitse" />
             <HassuMuiSelect name="vaylamuoto" label="Väylämuoto" control={control} defaultValue="">
               {["tie", "rata"].map((option) => {
                 return (

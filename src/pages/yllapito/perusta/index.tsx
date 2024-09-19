@@ -116,7 +116,6 @@ export default function Perusta() {
               yhteys pääkäyttäjään. Huomioithan, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä
               perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
             </p>
-            <TextInput className="md:max-w-xs" label="Asiatunnus" disabled />
             <TextInput
               error={errors.name}
               className="md:max-w-xs"
