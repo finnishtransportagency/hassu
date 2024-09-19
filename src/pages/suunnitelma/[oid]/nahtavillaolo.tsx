@@ -119,7 +119,7 @@ export default function Nahtavillaolo(): ReactElement {
         )}
         <ContentSpacer>
           {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
-            <p key={index}>{renderTextAsHTML(teksti)}</p>
+            <p key={index}>{renderTextAsHTML(teksti.replaceAll("*", ""))}</p>
           ))}
           {kuulutusTekstit?.kuvausTekstit?.map((teksti, index) => (
             <p key={index}>{renderTextAsHTML(teksti)}</p>
