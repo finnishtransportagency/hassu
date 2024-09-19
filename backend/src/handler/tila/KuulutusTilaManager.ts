@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
+import { Aineisto, DBProjekti, KuulutusSaamePDF, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin, requirePermissionMuokkaa } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import {
@@ -208,14 +208,13 @@ export abstract class KuulutusTilaManager<
   ): KuulutusSaamePDFt | null | undefined {
     if (saamePDFt) {
       forEverySaameDo((kieli) => {
-        let pdf = saamePDFt[kieli]?.kuulutusIlmoitusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
-        pdf = saamePDFt[kieli]?.kuulutusPDF;
-        if (pdf) {
-          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
-        }
+        const keys: (keyof KuulutusSaamePDF)[] = ["kirjeTiedotettavillePDF", "kuulutusIlmoitusPDF", "kuulutusPDF"];
+        keys.forEach((key) => {
+          const pdf = saamePDFt[kieli]?.[key];
+          if (pdf?.tiedosto) {
+            pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
+          }
+        });
       });
       return saamePDFt;
     }

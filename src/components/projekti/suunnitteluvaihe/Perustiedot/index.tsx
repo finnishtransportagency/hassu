@@ -36,7 +36,6 @@ import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
-import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
@@ -48,6 +47,7 @@ import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useValidationMode from "src/hooks/useValidationMode";
 import { H2, H3 } from "../../../Headings";
+import { getDefaultValuesForLokalisoituLinkkiLista } from "src/util/getDefaultValuesForLokalisoituLinkkiLista";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -171,9 +171,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
-        ...(!projekti.vuorovaikutusKierros?.hankkeenKuvaus && {
-          hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
-        }),
         arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
           projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta
@@ -270,7 +267,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
-          hankkeenKuvaus: poistaTypeNameJaTurhatKielet(formData.vuorovaikutusKierros.hankkeenKuvaus, projekti.kielitiedot),
           arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
@@ -284,9 +280,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
           ),
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
-          videot: formData.vuorovaikutusKierros.videot
-            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
-            .filter((video) => video) as LokalisoituLinkkiInput[],
+          videot: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, formData.vuorovaikutusKierros.videot),
           suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
         },
       };
@@ -319,14 +313,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
           }
           // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
-          const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
-          let suunnittelumateriaali: LokalisoituLinkkiInput[] | undefined = undefined;
-          if (formDataSuunnitteluMateriaali) {
-            suunnittelumateriaali =
-              (formDataSuunnitteluMateriaali
-                .map((link) => poistaTypeNameJaTurhatKielet(link, projekti.kielitiedot))
-                .filter((link) => link) as LokalisoituLinkkiInput[]) || undefined;
-          }
+          const suunnittelumateriaali = getDefaultValuesForLokalisoituLinkkiLista(
+            projekti.kielitiedot,
+            formData.vuorovaikutusKierros.suunnittelumateriaali
+          );
           formData = {
             ...formData,
             vuorovaikutusKierros: {
@@ -340,9 +330,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                 formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
               ),
               // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
-              videot: formData.vuorovaikutusKierros.videot
-                ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
-                .filter((video) => video) as LokalisoituLinkkiInput[],
+              videot: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, formData.vuorovaikutusKierros.videot),
               suunnittelumateriaali,
             },
           };

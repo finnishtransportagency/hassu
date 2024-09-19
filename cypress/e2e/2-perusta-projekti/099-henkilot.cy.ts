@@ -1,7 +1,7 @@
 describe("Projektin henkilot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
   const oid = Cypress.env("oid");
-  const muuTunnus = "A-tunnus3 Hassu";
+  const muuTunnus = "A-Tunnus Hassu";
   const muuNumero = "029123456";
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe("Projektin henkilot", () => {
     cy.get('input[name="kayttoOikeudet.0.yleinenYhteystieto"').should("be.disabled").should("be.checked");
 
     //varahenkilo
-    cy.get('input[name="kayttoOikeudet.1.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamaki102@cgi.com");
+    cy.get('input[name="kayttoOikeudet.1.sahkoposti"').should("be.disabled").should("have.value", "mikko.haapamaki103@cgi.com");
     cy.get('input[name="kayttoOikeudet.1.varahenkiloValinta"').should("be.disabled").should("be.checked");
   });
 

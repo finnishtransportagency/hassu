@@ -75,6 +75,7 @@ export abstract class VaiheTiedostoManager<T, J> extends TiedostoManager<T> {
         if (saamePDF) {
           modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusPDF)) || modified;
           modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusIlmoitusPDF)) || modified;
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kirjeTiedotettavillePDF)) || modified;
         }
       });
     }

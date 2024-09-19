@@ -789,6 +789,7 @@ Object {
     "aloituskuulutusSaamePDFt": Object {
       "POHJOISSAAME": Object {
         "__typename": "KuulutusSaamePDF",
+        "kirjeTiedotettavillePDF": undefined,
         "kuulutusIlmoitusPDF": undefined,
         "kuulutusPDF": undefined,
       },
@@ -1026,6 +1027,7 @@ Object {
       "aloituskuulutusSaamePDFt": Object {
         "POHJOISSAAME": Object {
           "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": undefined,
           "kuulutusIlmoitusPDF": undefined,
           "kuulutusPDF": undefined,
         },
