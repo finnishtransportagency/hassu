@@ -162,6 +162,7 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
       noDropzone
       error={fieldState.error}
       maxFiles={1}
+      accept="application/pdf"
       buttonText="Hae tiedosto"
       onDrop={(files) => {
         const tiedosto = files[0];
