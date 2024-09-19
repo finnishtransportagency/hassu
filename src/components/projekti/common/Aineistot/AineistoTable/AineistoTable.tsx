@@ -167,7 +167,7 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
     },
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     getRowId: (row) => row.id,
-    meta: { tableId: `${props.kategoriaId}_table`, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { tableId: `${props.kategoriaId}_table`, findRowIndex, onDragAndDrop },
   });
   return <HassuTable table={table} />;
 }

@@ -1,12 +1,11 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
-import { DialogActions, DialogContent, Divider, Stack, styled } from "@mui/material";
+import { DialogProps, DialogActions, DialogContent, Divider, Stack, styled } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
 import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "hassu-common/util/dateUtils";
-import { DialogProps } from "@mui/material";
 import HassuTable, { selectColumnDef } from "@components/table/HassuTable";
 import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
 import useApi from "src/hooks/useApi";
@@ -178,7 +177,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
       widthFractions: 2,
     },
   },
-  { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2 } },
+  { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2, minWidth: 160 } },
   {
     header: "Koko (kB)",
     accessorKey: "koko",
@@ -188,7 +187,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
   selectColumnDef(),
 ];
 
-const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange, scrollElement }: AineistoTableProps) => {
+const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange }: AineistoTableProps) => {
   const table = useReactTable({
     columns,
     data,
@@ -198,7 +197,6 @@ const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange, scrollEl
     state: { pagination: undefined, rowSelection },
     enableRowSelection: true,
     enableSorting: false,
-    meta: { virtualization: { type: "scrollElement", getScrollElement: () => scrollElement.current } },
   });
 
   return <HassuTable table={table} />;
