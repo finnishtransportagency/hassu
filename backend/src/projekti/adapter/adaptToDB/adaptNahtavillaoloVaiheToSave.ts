@@ -7,9 +7,10 @@ import {
   adaptIlmoituksenVastaanottajatToSave,
   adaptStandardiYhteystiedotToSave,
   getId,
+  adaptUudelleenKuulutusToSave,
+  adaptKuulutusSaamePDFtInput,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptNahtavillaoloVaiheToSave(

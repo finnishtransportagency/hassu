@@ -78,6 +78,12 @@ input KuulutusPDFInput {
   kuulutusIlmoitusPDFPath: String
 }
 
+input KuulutusPDFInput {
+  kuulutusPDFPath: String
+  kuulutusIlmoitusPDFPath: String
+  kirjeTiedotettavillePDFPath: String
+}
+
 input KuulutusSaamePDFtInput {
   POHJOISSAAME: KuulutusPDFInput
 }

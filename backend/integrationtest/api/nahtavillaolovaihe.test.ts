@@ -59,6 +59,7 @@ describe("Nähtävilläolovaihe", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const uploadedKirje = await tallennaEULogo("saamekirjetiedotettaville.pdf");
     const aineistoNahtavillaVanha = dbProjekti.nahtavillaoloVaihe?.aineistoNahtavilla;
     await api.tallennaProjekti({
       oid,
@@ -79,7 +80,11 @@ describe("Nähtävilläolovaihe", () => {
           },
         ]),
         nahtavillaoloSaamePDFt: {
-          POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+          POHJOISSAAME: {
+            kuulutusPDFPath: uploadedKuulutus,
+            kuulutusIlmoitusPDFPath: uploadedIlmoitus,
+            kirjeTiedotettavillePDFPath: uploadedKirje,
+          },
         },
       },
     });

@@ -1,5 +1,5 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
+import { Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusSaamePDFt, SaameKieli } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -18,6 +18,8 @@ import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { fileService } from "../../files/fileService";
 import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
+import { isKieliSaame } from "hassu-common/kaannettavatKielet";
+import { assertIsDefined } from "../../util/assertions";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   constructor() {
@@ -204,6 +206,21 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: projekti.hyvaksymisPaatosVaihe,
     });
+  }
+
+  validateSaamePDFsExistIfRequired(
+    toissijainenKieli: Kieli | undefined | null,
+    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt | undefined | null
+  ): void {
+    if (isKieliSaame(toissijainenKieli)) {
+      assertIsDefined(toissijainenKieli);
+      const saamePDFt = hyvaksymisPaatosVaiheSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
+      if (saamePDFt) {
+        if (!saamePDFt.kuulutusIlmoitusPDF || !saamePDFt.kuulutusPDF || !saamePDFt.kirjeTiedotettavillePDF) {
+          throw new IllegalArgumentError("Saamenkieliset PDFt puuttuvat");
+        }
+      }
+    }
   }
 
   async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti> {

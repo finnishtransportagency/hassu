@@ -598,9 +598,13 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
+        [
+          API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        ],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -619,12 +623,13 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
         [
           API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
           API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         ],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });

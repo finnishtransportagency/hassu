@@ -259,12 +259,16 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
     },
   };
   if (saamePdfKey) {
-    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
-    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const kuulutusIlmoitusPDFPath = await tallennaEULogo("saameilmoitus.pdf");
+    const kuulutusPDFPath = await tallennaEULogo("saamekuulutus.pdf");
+    const kuulutusKeysWithTiedotus: LuonnosKey[] = ["nahtavillaoloVaihe", "hyvaksymisPaatosVaihe"];
+    const POHJOISSAAME = kuulutusKeysWithTiedotus.includes(luonnosKey)
+      ? { kuulutusPDFPath, kuulutusIlmoitusPDFPath, kirjeTiedotettavillePDFPath: await tallennaEULogo("saamekirjetiedotettaville.pdf") }
+      : { kuulutusPDFPath, kuulutusIlmoitusPDFPath };
     input[luonnosKey] = {
       ...input[luonnosKey],
       [saamePdfKey]: {
-        POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+        POHJOISSAAME,
       },
     };
   }
