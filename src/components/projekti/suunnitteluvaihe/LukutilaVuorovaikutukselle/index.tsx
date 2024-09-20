@@ -97,7 +97,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   }
 
   let setOpenVuorovaikutustilaisuus;
-  if (projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
+  if (projekti.nykyinenKayttaja.omaaMuokkausOikeuden && showMuokkaaTilaisuuksia) {
     setOpenVuorovaikutustilaisuus = () => setMuokkausAuki(true);
   }
 
@@ -111,7 +111,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         showAjansiirtopainikkeet={showAjansiirtopainikkeet}
         projekti={projekti}
         vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
-        setOpenVuorovaikutustilaisuus={showMuokkaaTilaisuuksia ? setOpenVuorovaikutustilaisuus : undefined}
+        setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
       />
       <VuorovaikuttamisenYhteysHenkilot julkaisu={vuorovaikutusKierrosjulkaisu} />
       <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />

@@ -173,8 +173,7 @@ function SuunnitteluPageLayout({
         {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
-            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
-            rajoitetusti.
+            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. { !projekti.nahtavillaoloVaiheJulkaisu ? "Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää rajoitetusti." : "" }
           </Notification>
         )}
         {tilaJulkinen && !published && (
