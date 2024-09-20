@@ -344,3 +344,32 @@ NTM-centralen i Nyland
   "ytunnus": undefined,
 }
 `;
+
+exports[`suomifiHandler omistajan suomi-saame pdf viesti suomi.fi nähtävilläolo 1`] = `
+Object {
+  "hetu": "ABC",
+  "kustannuspaikka": undefined,
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus suunnitelman nähtäville asettamisesta",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Uudenmaan ELY-keskus",
+  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "ytunnus": undefined,
+}
+`;
