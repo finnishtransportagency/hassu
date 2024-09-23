@@ -414,6 +414,7 @@ export class HassuFrontendStack extends Stack {
     );
     const props: Record<string, BehaviorOptions> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
+      "/jwtclaims": dmzProxyBehaviorWithLambda,
       "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
       "/tiedostot/*": publicBucketBehaviour,
