@@ -8,6 +8,7 @@ import {
   CopyObjectRequest,
   DeleteObjectCommand,
   GetObjectCommand,
+  GetObjectCommandOutput,
   GetObjectOutput,
   HeadObjectCommand,
   ListObjectsV2Command,
@@ -221,23 +222,26 @@ export class FileService {
   }
 
   async getProjektiFile(oid: string, path: string): Promise<Buffer> {
+    const { Body } = await this.getProjektiYllapitoS3Object(oid, path);
+    if (Body instanceof Readable) {
+      return await streamToBuffer(Body);
+    }
+    log.error("Tuntematon tiedoston sisältö", { body: typeof Body });
+    throw new Error("Tuntematon tiedoston sisältö");
+  }
+
+  async getProjektiYllapitoS3Object(oid: string, path: string): Promise<GetObjectCommandOutput> {
     const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
-    let obj;
     const s3Client = getS3Client();
     try {
-      obj = await s3Client.send(new GetObjectCommand({ Bucket: config.yllapitoBucketName, Key: filePath }));
-      if (obj?.Body instanceof Readable) {
-        return await streamToBuffer(obj.Body);
-      }
+      return await s3Client.send(new GetObjectCommand({ Bucket: config.yllapitoBucketName, Key: filePath }));
     } catch (e) {
       if (e instanceof NoSuchKey) {
         throw new NotFoundError("Tiedostoa ei löydy:" + filePath);
       }
-      log.error("Error reading file from yllapito", { obj, bucket: config.yllapitoBucketName, filePath });
+      log.error("Error reading file from yllapito", { bucket: config.yllapitoBucketName, filePath });
       throw new Error("Error reading file from yllapito");
     }
-    log.error('"Tuntematon tiedoston sisältö', { body: typeof obj?.Body });
-    throw new Error("Tuntematon tiedoston sisältö");
   }
 
   private async putFile(bucket: string, param: CreateFileProperties, targetPath: string, metadata: { [p: string]: string }): Promise<void> {
@@ -709,7 +713,9 @@ export class FileService {
   }
 }
 
-export async function getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string } | undefined> {
+export async function getUploadedSourceFileInformation(
+  uploadedFileSource: string
+): Promise<{ ContentType: string; CopySource: string } | undefined> {
   if (!config.uploadBucketName) {
     throw new Error("config.uploadBucketName määrittelemättä");
   }
@@ -730,7 +736,7 @@ export async function getUploadedSourceFileInformation(uploadedFileSource: strin
       log.error("Uploaded file " + uploadedFileSource + " not found.");
     } else {
       log.error("Getting uploaded file " + uploadedFileSource + " failed", { error: e });
-      throw e; 
+      throw e;
     }
   }
 }
