@@ -225,17 +225,15 @@ const VuorovaikutusTiedot: FunctionComponent<{
           </p>
         )}
       </ContentSpacer>
-      <ContentSpacer>
-        <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
-        {tulevatTilaisuudet?.length ? (
+      {!!tulevatTilaisuudet?.length && (
+        <ContentSpacer>
+          <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
           <TilaisuusLista tilaisuudet={tulevatTilaisuudet} />
-        ) : (
           <p>
-            {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
             {isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
           </p>
-        )}
-      </ContentSpacer>
+        </ContentSpacer>
+      )}
       {!!menneetTilaisuudet?.length && (
         <ContentSpacer>
           <H4>{t("tilaisuudet.menneet_tilaisuudet")}</H4>
