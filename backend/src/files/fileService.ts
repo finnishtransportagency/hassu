@@ -226,7 +226,7 @@ export class FileService {
     if (Body instanceof Readable) {
       return await streamToBuffer(Body);
     }
-    log.error('"Tuntematon tiedoston sisältö', { body: typeof Body });
+    log.error("Tuntematon tiedoston sisältö", { body: typeof Body });
     throw new Error("Tuntematon tiedoston sisältö");
   }
 
