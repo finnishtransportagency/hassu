@@ -673,7 +673,7 @@ type Palaute {
   kysymysTaiPalaute: String
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
-  liite: String
+  liitteet: [String!]
   liitteenSkannausTulos: LiitteenSkannausTulos
   vastattu: Boolean
 }

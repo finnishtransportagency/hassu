@@ -2,13 +2,13 @@ import * as API from "hassu-common/graphql/apiModel";
 import { cleanupAnyProjektiData } from "../integrationtest/api/testFixtureRecorder";
 import sortBy from "lodash/sortBy";
 
-type APIorDBPalaute = Pick<API.Palaute, "liite" | "id" | "vastaanotettu" | "etunimi" | "sukunimi">;
+type APIorDBPalaute = Pick<API.Palaute, "liitteet" | "id" | "vastaanotettu" | "etunimi" | "sukunimi">;
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks<P extends APIorDBPalaute>(feedbacks?: P[]): P[] | undefined {
   const result = feedbacks
     ? feedbacks.map((palaute) => {
         cleanupAnyProjektiData(palaute);
-        palaute.liite = palaute?.liite?.replace(palaute.id, "***unittest***");
+        palaute.liitteet = palaute.liitteet?.map((liite) => liite?.replace(palaute.id, "***unittest***"));
         palaute.id = "***unittest***";
         palaute.vastaanotettu = "***unittest***";
         return palaute;

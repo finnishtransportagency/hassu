@@ -97,19 +97,32 @@ interface PalauteProps {
   palaute: Palaute;
 }
 
+interface LiitteetProps {
+  oid: string; 
+  liitteet: string[];
+}
+
+function Liitteet({ oid, liitteet }: Readonly<LiitteetProps>) {
+  return (
+    <div style={{ "display": "flex" }}>
+      {liitteet.map((liite) => (
+        <ExtLink key={liite} hideIcon href={`/yllapito/tiedostot/projekti/${oid}${liite}`}>
+          <img src="/paperclip.svg" alt="Liite" />
+        </ExtLink>
+      ))}
+    </div>
+  );
+}
+
 function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }): ReactElement {
   const parsedDate = dayjs(palaute.vastaanotettu);
   return (
     <>
       <div>{parsedDate.format("DD.MM.YYYY HH:mm")}</div>
-      {palaute.liite && palaute.liitteenSkannausTulos !== LiitteenSkannausTulos.SAASTUNUT && (
-        <div>
-          <ExtLink hideIcon href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>
-            <img src="/paperclip.svg" alt="Liite" />
-          </ExtLink>
-        </div>
+      {palaute.liitteet && palaute.liitteenSkannausTulos === LiitteenSkannausTulos.OK && (
+        <Liitteet oid={oid} liitteet={palaute.liitteet} />
       )}
-      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liitteestä löytyi virus</div>}
+      {palaute.liitteet && palaute.liitteenSkannausTulos === LiitteenSkannausTulos.SAASTUNUT && <div>Liitteistä löytyi virus</div>}
     </>
   );
 }

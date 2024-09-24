@@ -1,10 +1,10 @@
-import { Checkbox, DialogActions, DialogContent, FormControlLabel, useMediaQuery, useTheme } from "@mui/material";
-import React, { ReactElement, useCallback, useState } from "react";
+import { Checkbox, DialogActions, DialogContent, FormControlLabel, styled, useMediaQuery, useTheme } from "@mui/material";
+import React, { ReactElement, useCallback, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { Controller, FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { Controller, FieldError, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
@@ -13,14 +13,17 @@ import { formatDate } from "hassu-common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
-import FormGroup from "@components/form/FormGroup";
+import { ErrorSpan } from "@components/form/FormGroup";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypes } from "common/fileValidationSettings";
+import { joinStringArray } from "common/util/joinStringArray";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import { ErrorMessage } from "@hookform/error-message";
 
 interface Props {
   open: boolean;
@@ -38,42 +41,39 @@ interface PalauteFormInput {
   kysymysTaiPalaute: string;
   yhteydenottotapaEmail: boolean | null;
   yhteydenottotapaPuhelin: boolean | null;
-  liite: string | null;
+  liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[];
 }
 
 const defaultValues = {
   kysymysTaiPalaute: "",
   yhteydenottotapaEmail: false,
   yhteydenottotapaPuhelin: false,
-  liite: null,
+  liitteet: [],
 };
 
 export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
-  const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
-
   const formOptions: UseFormProps<PalauteFormInput> = {
     resolver: yupResolver(palauteSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
   };
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const useFormReturn = useForm<PalauteFormInput>(formOptions);
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
-    setValue,
+    formState,
     reset,
+    watch,
   } = useFormReturn;
-
+  const { errors } = formState;
   const api = useApi();
 
   const getTietosuojaUrl = useCallback(() => {
@@ -89,16 +89,23 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
-
+  const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
+  const liitteetWatch = watch("liitteet");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const constructErrorMessage = useCallback((msg: string) => t(`common:virheet.${msg}`), [t]);
   const save = useCallback(
-    (formData: PalauteFormInput) =>
+    ({ liitteet, ...formData }: PalauteFormInput) =>
       withLoadingSpinner(
         (async () => {
           try {
-            const palauteFinalValues: PalauteInput = { ...formData, liite: null };
-            if (tiedosto) {
-              palauteFinalValues.liite = await talletaTiedosto(tiedosto);
-            }
+            const palauteFinalValues: PalauteInput = { ...formData, liitteet: [] };
+            await Promise.all(
+              liitteet.map(async (liite) => {
+                if (liite.tiedosto instanceof File) {
+                  palauteFinalValues.liitteet?.push(await talletaTiedosto(liite.tiedosto));
+                }
+              })
+            );
             (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
               if (!palauteFinalValues[key]) {
                 delete palauteFinalValues[key];
@@ -114,9 +121,8 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           }
         })()
       ),
-    [withLoadingSpinner, tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
+    [withLoadingSpinner, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
   );
-
   return (
     <>
       <HassuDialog
@@ -233,63 +239,94 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                 </HassuStack>
               </div>
               <div className="mt-3">
-                <p style={{ fontWeight: "bold" }}>{t("common:liite")}</p>
+                <p style={{ fontWeight: "bold" }}>{t("common:liitteet")}</p>
                 <p>{t("projekti:palautelomake.tuetut_tiedostomuodot_ovat")}</p>
-                {tiedosto ? (
-                  <FormGroup
-                    label={t("common:valittu_tiedosto")}
-                    errorMessage={errors?.liite?.message ? t(`common:virheet.${errors.liite.message}`) : ""}
-                  >
-                    <HassuStack direction="row">
-                      <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                        <div>{tiedosto.name}</div>
-                        {tiedostoLiianSuuri && (
-                          <div style={{ color: "red", fontWeight: "bold" }}>{t("common:virheet.tiedosto_on_liian_suuri")}</div>
-                        )}
+                {!!liitteetWatch.length && (
+                  <ContentSpacer>
+                    <label>{t("common:valitut_tiedostot")}</label>
+                    {liitteetWatch.map((item, index) => (
+                      <div key={item.nimi}>
+                        <FileDiv>
+                          <span>{item.nimi}</span>
+                          <IconButton
+                            sx={{ justifySelf: "end" }}
+                            icon="trash"
+                            type="button"
+                            onClick={() => {
+                              liitteetFieldArray.remove(index);
+                            }}
+                          />
+                        </FileDiv>
+                        <ErrorMessage
+                          errors={formState.errors}
+                          name={`liitteet.${index}.koko`}
+                          render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+                        />
+                        <ErrorMessage
+                          errors={formState.errors}
+                          name={`liitteet.${index}.tyyppi`}
+                          render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+                        />
                       </div>
-                      <IconButton
-                        icon="trash"
-                        onClick={() => {
-                          setTiedosto(undefined);
-                          setTiedostoLiianSuuri(false);
-                          (document.getElementById("file-input") as HTMLInputElement).value = "";
-                          setValue("liite", null);
-                        }}
-                      />
-                    </HassuStack>
-                  </FormGroup>
-                ) : (
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById("file-input")?.click();
-                    }}
-                  >
-                    {t("common:hae_tiedosto")}
-                  </Button>
-                )}
-                <Controller
-                  render={({ field }) => (
-                    <input
-                      className="hidden"
-                      id="file-input"
-                      type="file"
-                      accept={allowedFileTypes.join(", ")}
-                      onChange={(e) => {
-                        const tiedosto = e.target.files?.[0];
-                        setTiedosto(tiedosto);
-                        if (tiedosto && tiedosto.size > maxFileSize) {
-                          setTiedostoLiianSuuri(true);
-                        }
-                        field.onChange(e.target.value);
-                      }}
+                    ))}
+                    <ErrorMessage
+                      errors={formState.errors}
+                      name={`liitteet`}
+                      render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
                     />
-                  )}
-                  name="liite"
-                  control={control}
-                  defaultValue={null}
-                  shouldUnregister
+                  </ContentSpacer>
+                )}
+                <input
+                  className="hidden"
+                  id="file-input"
+                  type="file"
+                  ref={inputRef}
+                  multiple
+                  accept={allowedFileTypes.join(", ")}
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files?.length) {
+                      let duplicateLiitteet: File[] = [];
+                      Array.from(files)
+                        .filter((tiedosto) => {
+                          const nameAlreadyExists = liitteetWatch.some((liite) => liite.nimi === tiedosto.name);
+                          if (nameAlreadyExists) {
+                            duplicateLiitteet.push(tiedosto);
+                          }
+                          return !nameAlreadyExists;
+                        })
+                        .forEach((file) =>
+                          liitteetFieldArray.append({ nimi: file.name, tiedosto: file, koko: file.size, tyyppi: file.type })
+                        );
+                      if (duplicateLiitteet.length) {
+                        const nimet = joinStringArray(
+                          duplicateLiitteet.map((liite) => `'${liite.name}'`),
+                          ", ",
+                          ` ${t("common:ja")} `
+                        );
+                        showErrorMessage(
+                          t("common:virheet.saman_niminen_liite", {
+                            count: duplicateLiitteet.length,
+                            nimet,
+                          })
+                        );
+                      }
+                    }
+                    if (inputRef.current) {
+                      // Clear input value so onchange will trigger for the same file
+                      inputRef.current.value = "";
+                    }
+                    useFormReturn.trigger();
+                  }}
                 />
+                <Button
+                  onClick={() => {
+                    inputRef.current?.click();
+                  }}
+                  type="button"
+                >
+                  {t("common:hae_tiedosto")}
+                </Button>
               </div>
             </form>
           </FormProvider>
@@ -297,7 +334,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
         <DialogActions
           className={isMobile ? "flex-row-reverse justify-between sticky bottom-0 bg-white border-t py-4 z-10 border-gray-light" : ""}
         >
-          <Button id={"submit_feedback"} primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
+          <Button id={"submit_feedback"} primary onClick={handleSubmit(save)} disabled={!formState.isValid}>
             {t("common:laheta")}
           </Button>
           <Button
@@ -314,6 +351,8 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     </>
   );
 }
+
+const FileDiv = styled("div")({ display: "flex", justifyContent: "space-between", alignItems: "center" });
 
 interface KiitosProps {
   open: boolean;

@@ -10,8 +10,8 @@ Object {
       "etunimi": "",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Nimetön palaute.",
-      "liite": undefined,
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "",
       "sahkoposti": "",
@@ -25,8 +25,8 @@ Object {
       "etunimi": "Joku",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": undefined,
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
@@ -40,8 +40,10 @@ Object {
       "etunimi": "Matti",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [
+        "/palautteet/***unittest***/logo.png",
+      ],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
@@ -64,8 +66,8 @@ Object {
       "etunimi": "",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Nimetön palaute.",
-      "liite": undefined,
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "",
       "sahkoposti": "",
@@ -79,8 +81,8 @@ Object {
       "etunimi": "Joku",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": undefined,
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
@@ -94,8 +96,10 @@ Object {
       "etunimi": "Matti",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "liite": "/palautteet/***unittest***/logo.png",
       "liitteenSkannausTulos": undefined,
+      "liitteet": Array [
+        "/palautteet/***unittest***/logo.png",
+      ],
       "oid": "1.2.246.578.5.1.2978288874.2711575506",
       "puhelinnumero": "123456",
       "sahkoposti": "test@vayla.fi",
@@ -131,7 +135,7 @@ Suunnitelman nimi
 HASSU AUTOMAATTITESTIPROJEKTI1
 Palaute
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Sähköpostiviestin liite
+Sähköpostiviestin liitteet
 logo.png
 ",
     "to": "test@vayla.fi",

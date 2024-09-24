@@ -25,16 +25,18 @@ class PalauteHandlerJulkinen {
       throw new NotFoundError("Projekti ei ole suunnitteluvaiheessa, joten palautetta ei voi antaa");
     }
     const palaute = adaptPalauteInput(oid, palauteInput);
-    if (palaute.liite) {
+    const liitteet = palaute.liitteet?.filter((t) => t) ?? [];
+    palaute.liitteet = liitteet;
+    for(let i = 0; i < liitteet.length; i++) {
       const liite = await fileService.persistFileToProjekti({
-        uploadedFileSource: palaute.liite,
+        uploadedFileSource: liitteet[i],
         oid,
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
       if (!liite) {
         throw new NotFoundError("Liitettä ei löydy");
       }
-      palaute.liite = liite;
+      palaute.liitteet[i] = liite;
       await virusScanService.runScanOnFile(
         config.yllapitoBucketName,
         fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), liite)

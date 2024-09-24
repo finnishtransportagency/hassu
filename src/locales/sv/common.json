@@ -169,7 +169,8 @@
     "postitoimipaikka_max_30": "Postkontor får vara max 30 tecken",
     "puh_vain_numerot": "Ett telefonnummer kan bara innehålla nummer",
     "tiedosto_on_liian_suuri": "Filen är för stor",
-    "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte"
+    "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte",
+    "tiedostoja_liikaa": "Det kan vara högst fem filer"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Sparningen lyckades",
@@ -187,7 +188,7 @@
   "valitut_tiedostot": "Valda filer",
   "hae_tiedosto": "Hämta fil",
   "sulje": "Stäng",
-  "liite": "Bilaga",
+  "liitteet": "Bilagor",
   "klo": "klockan",
   "sivut": "Sidor",
   "edellinen": "Tidigare",
