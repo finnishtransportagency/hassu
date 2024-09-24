@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AineistoInput, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import { MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -10,7 +10,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
 import { PaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
-import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { handleAineistoArrayForDefaultValues } from "src/util/FormAineisto/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
 import AineistoLomake from "./AineistoLomake";
@@ -19,16 +19,17 @@ import { getDialogInfoText, getSectionInfoText, getSectionTitle } from "./textsF
 import Section from "@components/layout/Section2";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
+import { FormAineisto } from "src/util/FormAineisto";
 
 interface AineistoNahtavilla {
-  [kategoriaId: string]: AineistoInput[];
+  [kategoriaId: string]: FormAineisto[];
 }
 
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
-  poistetutAineistoNahtavilla: AineistoInput[];
-  poistetutHyvaksymisPaatos?: AineistoInput[];
-  hyvaksymisPaatos?: AineistoInput[];
+  poistetutAineistoNahtavilla: FormAineisto[];
+  poistetutHyvaksymisPaatos?: FormAineisto[];
+  hyvaksymisPaatos?: FormAineisto[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
