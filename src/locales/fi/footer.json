@@ -9,24 +9,6 @@
       "teksti": "Ely-keskus.fi",
       "linkki": "https://www.ely-keskus.fi"
     },
-    "ohjeluettelo": {
-      "teksti": "Ohjeluettelo",
-      "linkki": "https://vayla.fi/palveluntuottajat/ohjeluettelo"
-    },
-    "projektivelho": {
-      "teksti": "Projektivelho",
-      "linkki": "https://velho.vaylapilvi.fi/"
-    },
-    "projektivelhon_ohjeet": {
-      "teksti": "Projektivelhon ohjeet",
-      "linkki": "https://ohje.velho.vaylapilvi.fi/"
-    },
-    "etakaytto": {
-      "teksti": "Etäkäyttö (Extranet, vpn, intra)",
-      "linkki": "https://sso.vayla.fi/"
-    },
-    "ohjeet": "Ohjeet",
-    "oikopolut": "Oikopolut",
     "tietoa_palvelusta": "Tietoa palvelusta",
     "saavutettavuus": "Saavutettavuus",
     "yhteystiedot_ja_palaute": "Yhteystiedot ja palaute"
