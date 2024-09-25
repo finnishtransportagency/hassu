@@ -8,7 +8,7 @@ import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
-import { useYllapito } from "../../hooks/useYllapito";
+import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
 
 type SocialMediaLinkProps = {
@@ -78,7 +78,7 @@ export const Footer = () => {
   const { t, lang } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const isYllapito = useYllapito();
+  const isYllapito = useIsYllapito();
 
   return (
     <footer className="py-16 bg-gray-lightest w-full mt-auto">

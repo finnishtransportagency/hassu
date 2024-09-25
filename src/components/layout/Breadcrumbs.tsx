@@ -9,6 +9,7 @@ import classNames from "classnames";
 import { ParsedUrlQueryInput } from "querystring";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import capitalize from "lodash/capitalize";
+import { useIsYllapito } from "src/hooks/useIsYllapito";
 
 interface RouteLabels {
   [key: string]: {
@@ -21,8 +22,7 @@ interface RouteLabels {
 }
 
 const Breadcrumbs = () => {
-  const router = useRouter();
-  const isYllapito = router.asPath.startsWith("/yllapito");
+  const isYllapito = useIsYllapito();
   return isYllapito ? <div style={{ width: "100%", height: "3em" }}></div> : <BreadcrumbsJulkinen />;
 };
 
