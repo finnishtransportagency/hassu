@@ -18,7 +18,7 @@ import { NahtavilleAsetettavatAineistotFormValues } from "@components/projekti/n
 import HassuDialog from "@components/HassuDialog";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import { isInPast } from "common/util/dateUtils";
-import { useWaitAineistoValmiit } from "src/hooks/useWaitAineistoValmiit";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 
 type SiirtymaTyyppi =
   | TilasiirtymaTyyppi.NAHTAVILLAOLO
@@ -135,7 +135,7 @@ export default function AineistoSivunPainikkeet({
 
   const aineistotReady = useIsProjektiReadyForTilaChange();
 
-  const waitAineistoValmiit = useWaitAineistoValmiit(projekti.oid);
+  const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu?.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu?.kuulutusPaiva]);
 
@@ -145,10 +145,10 @@ export default function AineistoSivunPainikkeet({
     async (formData: FormValues) => {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
       await api.tallennaProjekti(tallennaProjektiInput);
-      await waitAineistoValmiit(5);
+      await checkAineistoValmiit({ retries: 5 });
       await reloadProjekti?.();
     },
-    [api, muokkausTila, reloadProjekti, siirtymaTyyppi, waitAineistoValmiit]
+    [api, muokkausTila, reloadProjekti, siirtymaTyyppi, checkAineistoValmiit]
   );
 
   const sendForApprovalAineistoMuokkaus = useCallback(

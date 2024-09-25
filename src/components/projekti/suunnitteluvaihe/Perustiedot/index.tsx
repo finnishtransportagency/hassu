@@ -49,7 +49,7 @@ import useValidationMode from "src/hooks/useValidationMode";
 import { H2, H3 } from "../../../Headings";
 import { getDefaultValuesForLokalisoituLinkkiLista } from "src/util/getDefaultValuesForLokalisoituLinkkiLista";
 import { FormAineisto } from "src/util/FormAineisto";
-import { useWaitAineistoValmiit } from "src/hooks/useWaitAineistoValmiit";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -234,7 +234,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     control,
   } = useFormReturn;
 
-  const waitAineistoValmiit = useWaitAineistoValmiit(projekti.oid);
+  const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
@@ -285,10 +285,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         },
       };
       await api.paivitaPerustiedot(partialFormData);
-      await waitAineistoValmiit(5);
+      await checkAineistoValmiit({ retries: 5 });
       await reloadProjekti?.();
     },
-    [api, projekti.kielitiedot, projekti.oid, projekti.versio, reloadProjekti, waitAineistoValmiit]
+    [api, projekti.kielitiedot, projekti.oid, projekti.versio, reloadProjekti, checkAineistoValmiit]
   );
 
   useEffect(() => {
@@ -322,7 +322,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           };
           try {
             await api.tallennaProjekti(tallennaProjektiInput);
-            await waitAineistoValmiit(5);
+            await checkAineistoValmiit({ retries: 5 });
             await reloadProjekti?.();
             showSuccessMessage("Tallennus onnistui");
           } catch (e) {
@@ -330,7 +330,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           }
         })()
       ),
-    [api, projekti.kielitiedot, reloadProjekti, showSuccessMessage, waitAineistoValmiit, withLoadingSpinner]
+    [api, projekti.kielitiedot, reloadProjekti, showSuccessMessage, checkAineistoValmiit, withLoadingSpinner]
   );
 
   const saveAfterPublish = useCallback(

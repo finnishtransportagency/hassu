@@ -10,7 +10,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { LausuntoPyynnotFormValues, mapLausuntoPyyntoFormValuesToLausuntoPyyntoInput } from "../types";
-import { useWaitAineistoValmiit } from "src/hooks/useWaitAineistoValmiit";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 
 export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>) {
   const { mutate: reloadProjekti } = useProjekti();
@@ -29,14 +29,14 @@ export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ proje
     [api]
   );
 
-  const waitAineistoValmiit = useWaitAineistoValmiit(projekti.oid);
+  const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   const save = (formData: LausuntoPyynnotFormValues) =>
     withLoadingSpinner(
       (async () => {
         try {
           await saveLausuntoPyynnot(formData);
-          await waitAineistoValmiit(30);
+          await checkAineistoValmiit({ retries: 30 });
           await reloadProjekti();
           showSuccessMessage("Tallennus onnistui");
         } catch (e) {
