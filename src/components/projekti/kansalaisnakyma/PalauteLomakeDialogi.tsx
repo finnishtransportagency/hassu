@@ -274,6 +274,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       name={`liitteet`}
                       render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
                     />
+                    <div className="mb-4" />
                   </ContentSpacer>
                 )}
                 <input
