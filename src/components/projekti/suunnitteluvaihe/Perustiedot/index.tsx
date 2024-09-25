@@ -304,8 +304,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             esittelyaineistot,
             poistetutSuunnitelmaluonnokset,
             suunnitelmaluonnokset,
-            videot,
-            suunnittelumateriaali,
             ...vuorovaikutusKierros
           } = formData.vuorovaikutusKierros;
 
@@ -316,8 +314,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               ...vuorovaikutusKierros,
               esittelyaineistot: handleAineistoArraysForSave(esittelyaineistot, poistetutEsittelyaineistot),
               suunnitelmaluonnokset: handleAineistoArraysForSave(suunnitelmaluonnokset, poistetutSuunnitelmaluonnokset),
-              videot: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, videot),
-              suunnittelumateriaali: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, suunnittelumateriaali),
             },
           };
           try {
@@ -330,7 +326,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           }
         })()
       ),
-    [api, projekti.kielitiedot, reloadProjekti, showSuccessMessage, checkAineistoValmiit, withLoadingSpinner]
+    [api, reloadProjekti, showSuccessMessage, checkAineistoValmiit, withLoadingSpinner]
   );
 
   const saveAfterPublish = useCallback(
