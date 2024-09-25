@@ -142,12 +142,11 @@ export default function AineistoSivunPainikkeet({
   const aineistotReadyForHyvaksynta = aineistotPresentAndNoKategorisoimattomat && aineistotReady && !isDirty && !kuulutusPaivaIsInPast;
 
   const savePaatosAineisto = useCallback(
-    async (formData: FormValues, afterSaveCallback?: () => Promise<void>) => {
+    async (formData: FormValues) => {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
       await api.tallennaProjekti(tallennaProjektiInput);
       await waitAineistoValmiit(5);
       await reloadProjekti?.();
-      await afterSaveCallback?.();
     },
     [api, muokkausTila, reloadProjekti, siirtymaTyyppi, waitAineistoValmiit]
   );
@@ -169,7 +168,8 @@ export default function AineistoSivunPainikkeet({
               log.error(e);
             }
           };
-          await savePaatosAineisto(formData, sendForApproval);
+          await savePaatosAineisto(formData);
+          await sendForApproval();
         })()
       ),
     [api, reloadProjekti, savePaatosAineisto, showSuccessMessage, siirtymaTyyppi, withLoadingSpinner]
@@ -203,7 +203,8 @@ export default function AineistoSivunPainikkeet({
           await router.push({ query: { oid: projekti?.oid }, pathname: paatosPathnames[siirtymaTyyppi] });
         };
         try {
-          await savePaatosAineisto(formData, moveToKuulutusPage);
+          await savePaatosAineisto(formData);
+          await moveToKuulutusPage();
           showSuccessMessage("Tallennus onnistui");
         } catch (e) {
           log.error("OnSubmit Error", e);

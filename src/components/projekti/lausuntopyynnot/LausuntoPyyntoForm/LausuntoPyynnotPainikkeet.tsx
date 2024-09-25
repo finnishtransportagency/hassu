@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
 import log from "loglevel";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -31,7 +31,6 @@ export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ proje
 
   const waitAineistoValmiit = useWaitAineistoValmiit(projekti.oid);
 
-  const retryCount = useRef<number>(0);
   const save = (formData: LausuntoPyynnotFormValues) =>
     withLoadingSpinner(
       (async () => {
@@ -42,8 +41,6 @@ export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ proje
           showSuccessMessage("Tallennus onnistui");
         } catch (e) {
           log.error("OnSubmit Error", e);
-        } finally {
-          retryCount.current = 0;
         }
       })()
     );
