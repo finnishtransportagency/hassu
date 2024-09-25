@@ -10,10 +10,9 @@ export function adaptPalauteInput(oid: string, palaute: API.PalauteInput): Palau
 
 export function adaptPalautteetToAPI(palautteet: Palaute[]): API.Palaute[] | undefined {
   if (palautteet) {
-    return palautteet.map((palaute) => { 
+    return palautteet.map((palaute) => {
       if (palaute.liite) {
-        palaute.liitteet = palaute.liitteet ?? [];
-        palaute.liitteet.push(palaute.liite);
+        palaute.liitteet = [palaute.liite];
       }
       return { __typename: "Palaute", ...palaute };
     });
