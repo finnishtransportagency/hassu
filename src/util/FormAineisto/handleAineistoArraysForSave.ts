@@ -10,5 +10,5 @@ export const handleAineistoArraysForSave = (lisatty: FormAineisto[] = [], poiste
     tila: tila ?? AineistoTila.ODOTTAA_TUONTIA,
     uuid,
   })),
-  ...poistettu.map(({ dokumenttiOid, nimi, tila, uuid }) => ({ dokumenttiOid, nimi, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, uuid })),
+  ...poistettu.map(({ dokumenttiOid, nimi, tila, uuid }) => ({ dokumenttiOid, nimi, tila: tila ?? AineistoTila.ODOTTAA_POISTOA, uuid })),
 ];
