@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
+import { Liite, LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuTable from "@components/table/HassuTable";
@@ -98,15 +98,21 @@ interface PalauteProps {
 }
 
 interface LiitteetProps {
-  oid: string; 
-  liitteet: string[];
+  oid: string;
+  liitteet: Liite[];
 }
 
 function Liitteet({ oid, liitteet }: Readonly<LiitteetProps>) {
   return (
-    <div style={{ "display": "flex" }}>
+    <div style={{ display: "flex" }}>
       {liitteet.map((liite) => (
-        <ExtLink key={liite} hideIcon href={`/yllapito/tiedostot/projekti/${oid}${liite}`}>
+        <ExtLink
+          key={liite.liite}
+          disabled={liite.skannausTulos !== LiitteenSkannausTulos.OK}
+          hideIcon
+          title={liite.skannausTulos === LiitteenSkannausTulos.SAASTUNUT ? "Liitteestä löytyi virus" : ""}
+          href={`/yllapito/tiedostot/projekti/${oid}${liite.liite}`}
+        >
           <img src="/paperclip.svg" alt="Liite" />
         </ExtLink>
       ))}
@@ -119,10 +125,7 @@ function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }
   return (
     <>
       <div>{parsedDate.format("DD.MM.YYYY HH:mm")}</div>
-      {palaute.liitteet && palaute.liitteenSkannausTulos === LiitteenSkannausTulos.OK && (
-        <Liitteet oid={oid} liitteet={palaute.liitteet} />
-      )}
-      {palaute.liitteet && palaute.liitteenSkannausTulos === LiitteenSkannausTulos.SAASTUNUT && <div>Liitteistä löytyi virus</div>}
+      {palaute.liitteet && <Liitteet oid={oid} liitteet={palaute.liitteet} />}
     </>
   );
 }

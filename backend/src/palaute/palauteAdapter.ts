@@ -14,7 +14,7 @@ export function adaptPalautteetToAPI(palautteet: Palaute[]): API.Palaute[] | und
       if (palaute.liite) {
         palaute.liitteet = [palaute.liite];
       }
-      return { __typename: "Palaute", ...palaute };
+      return { __typename: "Palaute", ...palaute, "liitteet": palaute.liitteet?.map((liite) => ({ __typename: "Liite", liite })) };
     });
   }
 }

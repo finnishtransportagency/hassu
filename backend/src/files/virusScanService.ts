@@ -36,28 +36,23 @@ class VirusScanService {
     }
   }
 
-  async getVirusScanResult(path: ProjektiPaths, liitteet: string[] | null | undefined): Promise<LiitteenSkannausTulos | undefined> {
-    if (liitteet && liitteet.length > 0) {
+  async getVirusScanResult(path: ProjektiPaths, liite: string | null | undefined): Promise<LiitteenSkannausTulos | undefined> {
+    if (liite) {
       const s3 = getS3Client();
-      let result = true;
-      for (const liite of liitteet) {
-        const tagResponse = await s3.send(
-          new GetObjectTaggingCommand({
-            Bucket: config.yllapitoBucketName,
-            Key: fileService.getYllapitoPathForProjektiFile(path, liite),
-          })
-        );
-        const virusscan = tagResponse.TagSet?.filter((tag) => tag.Key == "viruscan").pop();
-        if (virusscan) {
-          result = result && virusscan.Value === "clean";
-        } else {
-          return undefined;
-        }
-        if (!result) {
-          break;
+      const tagResponse = await s3.send(
+        new GetObjectTaggingCommand({
+          Bucket: config.yllapitoBucketName,
+          Key: fileService.getYllapitoPathForProjektiFile(path, liite),
+        })
+      );
+      const virusscan = tagResponse.TagSet?.filter((tag) => tag.Key === "viruscan").pop();
+      if (virusscan) {
+        if (virusscan.Value === "clean") {
+          return LiitteenSkannausTulos.OK;
+        } else if (virusscan.Value === "virus") {
+          return LiitteenSkannausTulos.SAASTUNUT;
         }
       }
-      return result ? LiitteenSkannausTulos.OK : LiitteenSkannausTulos.SAASTUNUT;
     }
   }
 }
