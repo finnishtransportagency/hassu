@@ -23,17 +23,17 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 export default function SuunnitteluPageLayoutWrapper({
   children,
   showLuoUusiKutsuButton,
-}: {
+}: Readonly<{
   children?: ReactNode;
   showLuoUusiKutsuButton?: boolean;
-}) {
+}>) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
         <SuunnitteluPageLayout
           projektiOid={projekti.oid}
           projekti={projekti}
-          disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
+          disableTabs={!(projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan)}
           showLuoUusiKutsuButton={showLuoUusiKutsuButton}
         >
           {children}
@@ -49,13 +49,13 @@ function SuunnitteluPageLayout({
   disableTabs,
   children,
   showLuoUusiKutsuButton,
-}: {
+}: Readonly<{
   projektiOid: string;
   projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
   children?: ReactNode;
   showLuoUusiKutsuButton?: boolean;
-}): ReactElement {
+}>): ReactElement {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
   const { showSuccessMessage } = useSnackbars();
@@ -157,7 +157,7 @@ function SuunnitteluPageLayout({
       vaihe={Vaihe.SUUNNITTELU}
       showInfo={!published}
       contentAsideTitle={
-        !showLuoUusiKutsuButton && (
+        showLuoUusiKutsuButton && (
           <Button
             id="uusi_kutsu_button"
             onClick={openUusiKierrosDialog}
@@ -173,8 +173,7 @@ function SuunnitteluPageLayout({
         {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
-            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
-            rajoitetusti.
+            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. { !projekti.nahtavillaoloVaiheJulkaisu ? "Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää rajoitetusti." : "" }
           </Notification>
         )}
         {tilaJulkinen && !published && (

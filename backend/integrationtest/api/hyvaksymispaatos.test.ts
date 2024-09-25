@@ -47,6 +47,7 @@ describe("Hyväksymispäätös", () => {
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
     const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    const uploadedKirje = await tallennaEULogo("saamekirjetiedotettaville.pdf");
     const hyvaksymisPaatosVanha = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos;
     const aineistotNahtavillaVanha = dbProjekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla;
     await api.tallennaProjekti({
@@ -70,7 +71,11 @@ describe("Hyväksymispäätös", () => {
           },
         ]),
         hyvaksymisPaatosVaiheSaamePDFt: {
-          POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+          POHJOISSAAME: {
+            kuulutusPDFPath: uploadedKuulutus,
+            kuulutusIlmoitusPDFPath: uploadedIlmoitus,
+            kirjeTiedotettavillePDFPath: uploadedKirje,
+          },
         },
       },
     });

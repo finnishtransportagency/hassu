@@ -51,8 +51,8 @@ import { validatePaivitaVuorovaikutus } from "./validator/validatePaivitaVuorova
 import { validatePaivitaPerustiedot } from "./validator/validatePaivitaPerustiedot";
 import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
-import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
+import { omistajaDatabase } from "../database/omistajaDatabase";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -84,14 +84,12 @@ export async function haeProjektinTiedottamistiedot(oid: string): Promise<API.Pr
         oid,
       };
     }
-
-    const { kiinteistotunnusMaara, omistajaMaara } = await omistajaSearchService.getOmistajaJaKiinteistotunnusMaarat(oid);
-
+    const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(oid, "kiinteistotunnus");
     return {
       __typename: "ProjektinTiedottaminen",
       omistajahakuTila,
-      kiinteistonomistajaMaara: omistajaMaara ?? null,
-      kiinteistotunnusMaara: kiinteistotunnusMaara ?? null,
+      kiinteistonomistajaMaara: omistajat.length ?? null,
+      kiinteistotunnusMaara: new Set(omistajat.filter((o) => o.kiinteistotunnus).map((o) => o.kiinteistotunnus)).size,
       muistuttajaMaara,
       oid,
     };
@@ -600,9 +598,13 @@ async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
-        [API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
+        [
+          API.AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        ],
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -621,12 +623,13 @@ async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
         dbProjekti.oid,
         saamePDFt,
         new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
-        ["kuulutusPDF", "kuulutusIlmoitusPDF"],
+        ["kuulutusPDF", "kuulutusIlmoitusPDF", "kirjeTiedotettavillePDF"],
         [
           API.AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
           API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+          API.AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         ],
-        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
+        [API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME, API.Kieli.POHJOISSAAME]
       );
     }
   });
@@ -773,6 +776,13 @@ export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationR
       !events.some((event) => event.eventType === ProjektiEventType.AINEISTO_CHANGED),
     async (oid) => {
       return await eventSqsClient.handleChangedTiedostot(oid);
+    }
+  );
+
+  await projektiAdaptationResult.onEvents(
+    (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.ZIP_LAUSUNTOPYYNNOT),
+    async (oid) => {
+      return await eventSqsClient.zipLausuntoPyyntoAineisto(oid);
     }
   );
 

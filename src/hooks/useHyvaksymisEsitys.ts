@@ -22,5 +22,5 @@ export default function useHyvaksymisEsitys() {
     },
     [api]
   );
-  return useSWR([apiConfig.haeHyvaksymisEsityksenTiedot.graphql, oid, kayttaja], hyvaksymisEsitysLoader);
+  return useSWR([apiConfig.haeHyvaksymisEsityksenTiedot.graphql, oid, kayttaja], hyvaksymisEsitysLoader, { revalidateOnMount: true });
 }

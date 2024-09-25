@@ -19,9 +19,10 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 type Props = {
   vuorovaikutusnro: number;
   projekti: ProjektiLisatiedolla;
+  showMuokkaaTilaisuuksia?: boolean;
 };
 
-export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekti }: Props) {
+export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekti, showMuokkaaTilaisuuksia }: Readonly<Props>) {
   const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
   const { showSuccessMessage } = useSnackbars();
@@ -96,36 +97,34 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   }
 
   let setOpenVuorovaikutustilaisuus;
-  if (projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
+  if (projekti.nykyinenKayttaja.omaaMuokkausOikeuden && showMuokkaaTilaisuuksia) {
     setOpenVuorovaikutustilaisuus = () => setMuokkausAuki(true);
   }
 
   return (
-    <>
-      <Section className="mb-4" noDivider>
-        <SectionContent>
-          <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
-        </SectionContent>
-        <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
-        <VuorovaikutusMahdollisuudet
-          showAjansiirtopainikkeet={showAjansiirtopainikkeet}
-          projekti={projekti}
-          vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
-          setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
-        />
-        <VuorovaikuttamisenYhteysHenkilot julkaisu={vuorovaikutusKierrosjulkaisu} />
-        <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
-        <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutusKierrosjulkaisu} projekti={projekti} />
-        <VuorovaikutustilaisuusDialog
-          open={muokkausAuki}
-          windowHandler={(isOpen: boolean) => setMuokkausAuki(isOpen)}
-          tilaisuudet={projekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet || []}
-          projektiHenkilot={projektiHenkilot}
-          onSubmit={paivitaVuorovaikutustilaisuuksia}
-          mostlyDisabled={true}
-          projekti={projekti}
-        />
-      </Section>
-    </>
+    <Section className="mb-4" noDivider>
+      <SectionContent>
+        <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
+      </SectionContent>
+      <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+      <VuorovaikutusMahdollisuudet
+        showAjansiirtopainikkeet={showAjansiirtopainikkeet}
+        projekti={projekti}
+        vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
+        setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
+      />
+      <VuorovaikuttamisenYhteysHenkilot julkaisu={vuorovaikutusKierrosjulkaisu} />
+      <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+      <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutusKierrosjulkaisu} projekti={projekti} />
+      <VuorovaikutustilaisuusDialog
+        open={muokkausAuki}
+        windowHandler={(isOpen: boolean) => setMuokkausAuki(isOpen)}
+        tilaisuudet={projekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet || []}
+        projektiHenkilot={projektiHenkilot}
+        onSubmit={paivitaVuorovaikutustilaisuuksia}
+        mostlyDisabled={true}
+        projekti={projekti}
+      />
+    </Section>
   );
 }

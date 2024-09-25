@@ -57,6 +57,7 @@ export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;
 export type KuulutusSaamePDF = {
   kuulutusPDF?: LadattuTiedosto | null;
   kuulutusIlmoitusPDF?: LadattuTiedosto | null;
+  kirjeTiedotettavillePDF?: LadattuTiedosto | null;
 };
 
 export type AloitusKuulutusJulkaisu = {
@@ -119,6 +120,8 @@ export type KasittelynTila = {
   lisatieto?: string;
   ennakkotarkastus?: string;
   toimitusKaynnistynyt?: string;
+  toteutusilmoitusOsittain?: string;
+  toteutusilmoitusKokonaan?: string;
 };
 
 export type OikeudenPaatos = {

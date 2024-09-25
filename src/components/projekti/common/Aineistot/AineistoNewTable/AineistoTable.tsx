@@ -37,7 +37,7 @@ export function AineistoTable(props: AineistoTableProps) {
         id: "aineisto",
         accessorFn: (aineisto, index) => (
           <>
-            <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+            <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto ? "/" + aineisto.tiedosto : undefined } />
             <input type="hidden" {...register(`${aineistoRoute}.${index}.dokumenttiOid`)} />
             <input type="hidden" {...register(`${aineistoRoute}.${index}.nimi`)} />
           </>
@@ -110,7 +110,7 @@ export function AineistoTable(props: AineistoTableProps) {
     },
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     getRowId: (row) => row.uuid,
-    meta: { tableId: `${props.kategoriaId}_table`, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { tableId: `${props.kategoriaId}_table`, findRowIndex, onDragAndDrop },
   });
 
   return <HassuTable table={table} />;

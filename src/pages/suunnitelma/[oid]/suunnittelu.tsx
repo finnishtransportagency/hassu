@@ -34,7 +34,7 @@ import Trans from "next-translate/Trans";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import StyledLink from "@components/StyledLink";
-import { experimental_sx as sx, styled } from "@mui/material";
+import { experimental_sx as sx, styled, SvgIconTypeMap } from "@mui/material";
 import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -47,6 +47,7 @@ import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { useIsBelowBreakpoint } from "../../../hooks/useIsSize";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -224,17 +225,15 @@ const VuorovaikutusTiedot: FunctionComponent<{
           </p>
         )}
       </ContentSpacer>
-      <ContentSpacer>
-        <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
-        {tulevatTilaisuudet?.length ? (
+      {!!tulevatTilaisuudet?.length && (
+        <ContentSpacer>
+          <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
           <TilaisuusLista tilaisuudet={tulevatTilaisuudet} />
-        ) : (
           <p>
-            {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
             {isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
           </p>
-        )}
-      </ContentSpacer>
+        </ContentSpacer>
+      )}
       {!!menneetTilaisuudet?.length && (
         <ContentSpacer>
           <H4>{t("tilaisuudet.menneet_tilaisuudet")}</H4>
@@ -273,9 +272,9 @@ const VuorovaikutusTiedot: FunctionComponent<{
               if (url) {
                 return (
                   <React.Fragment key={index}>
-                    {(parseVideoURL(url) && <iframe width={isMobile ? "320px" : "640px"} height={isMobile ? "180px" : "360px"} src={parseVideoURL(url)}></iframe>) || (
-                      <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
-                    )}
+                    {(parseVideoURL(url) && (
+                      <iframe width={isMobile ? "320px" : "640px"} height={isMobile ? "180px" : "360px"} src={parseVideoURL(url)}></iframe>
+                    )) || <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>}
                   </React.Fragment>
                 );
               }
@@ -444,14 +443,15 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
   );
 }
 
+const IconComponentForType: Record<VuorovaikutusTilaisuusTyyppi, OverridableComponent<SvgIconTypeMap> & { muiName: string }> = {
+  [VuorovaikutusTilaisuusTyyppi.PAIKALLA]: LocationCityIcon,
+  [VuorovaikutusTilaisuusTyyppi.SOITTOAIKA]: LocalPhoneIcon,
+  [VuorovaikutusTilaisuusTyyppi.VERKOSSA]: HeadphonesIcon,
+};
+
 function TilaisuusIcon({ tyyppi, inactive }: { tyyppi: VuorovaikutusTilaisuusTyyppi; inactive?: true }) {
-  return (
-    <>
-      {tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && <LocationCityIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />}
-      {tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && <LocalPhoneIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />}
-      {tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && <HeadphonesIcon sx={{ color: inactive ? "#999999" : "#0064AF" }} />}
-    </>
-  );
+  const IconComponent = IconComponentForType[tyyppi];
+  return <IconComponent sx={{ color: inactive ? "grey.500" : "primary.dark" }} />;
 }
 
 function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {

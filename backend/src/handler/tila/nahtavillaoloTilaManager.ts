@@ -392,7 +392,7 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined |
     assertIsDefined(toissijainenKieli);
     const saamePDFt = vaihe?.nahtavillaoloSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
     if (saamePDFt) {
-      if (!saamePDFt.kuulutusIlmoitusPDF || !saamePDFt.kuulutusPDF) {
+      if (!saamePDFt.kuulutusIlmoitusPDF || !saamePDFt.kuulutusPDF || !saamePDFt.kirjeTiedotettavillePDF) {
         throw new IllegalArgumentError("Saamenkieliset PDFt puuttuvat");
       }
     }

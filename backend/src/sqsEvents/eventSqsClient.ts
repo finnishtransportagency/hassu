@@ -34,8 +34,8 @@ class EventSqsClient {
     await this.addEventToSqsQueue({ type: SqsEventType.AINEISTO_AND_FILES_CHANGED, oid });
   }
 
-  async synchronizeAineisto(oid: string, approvalType?: PublishOrExpireEventType) {
-    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid, approvalType });
+  async synchronizeAineisto(oid: string, approvalType?: PublishOrExpireEventType, reason?: string) {
+    await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid, approvalType, reason });
   }
 
   async addEventToSqsQueue(params: SqsEvent, retry?: boolean) {

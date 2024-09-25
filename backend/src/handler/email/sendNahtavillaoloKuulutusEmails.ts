@@ -2,14 +2,13 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
-import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { NahtavillaoloEmailCreator } from "../../email/nahtavillaoloEmailCreator";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
-import { fileService } from "../../files/fileService";
+import { KuulutusHyvaksyntaEmailSender } from "./KuulutusHyvaksyntaEmailSender";
 import { findNahtavillaoloLastApproved } from "../../projekti/projektiUtil";
 
 class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
@@ -55,69 +54,42 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   ) {
     const hyvaksyttyEmail = emailCreator.createHyvaksyttyEmailPp();
     if (hyvaksyttyEmail.to) {
-      const pdfPath = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloPDFPath;
-      if (!pdfPath) {
-        throw new Error(
-          `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloPDFPath on määrittelemättä`
-        );
-      }
-      const nahtavillaKuulutusPDF = await fileService.getFileAsAttachment(oid, pdfPath);
-      if (!nahtavillaKuulutusPDF) {
-        throw new Error("NahtavillaKuulutusPDF:n saaminen epäonnistui");
-      }
-      hyvaksyttyEmail.attachments = [nahtavillaKuulutusPDF];
+      const pdfKeys: (keyof NahtavillaoloPDF)[] = ["nahtavillaoloPDFPath", "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"];
 
-      const kiinteistoPdfPath = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
-      if (!kiinteistoPdfPath) {
-        throw new Error(
-          `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath on määrittelemättä`
-        );
-      }
-      const nahtavillaKiinteistoPDF = await fileService.getFileAsAttachment(oid, kiinteistoPdfPath);
-      if (!nahtavillaKiinteistoPDF) {
-        throw new Error("NahtavillaKiinteistoPDF:n saaminen epäonnistui");
-      }
-      hyvaksyttyEmail.attachments.push(nahtavillaKiinteistoPDF);
+      hyvaksyttyEmail.attachments = await Promise.all(
+        pdfKeys.map(
+          async (key) =>
+            await this.getMandatoryProjektiFileAsAttachment(nahtavillakuulutus.nahtavillaoloPDFt?.SUOMI?.[key], projekti, `${key} SUOMI`)
+        )
+      );
 
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
-        const pdfPathRuotsi = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloPDFPath;
-        if (!pdfPathRuotsi) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloPDFPath on määrittelemättä`
-          );
-        }
-        const nahtavillaKuulutusPDFRuotsi = await fileService.getFileAsAttachment(oid, pdfPathRuotsi);
-        if (!nahtavillaKuulutusPDFRuotsi) {
-          throw new Error("NahtavillaKuulutusPDF:n saaminen epäonnistui");
-        }
-        hyvaksyttyEmail.attachments.push(nahtavillaKuulutusPDFRuotsi);
-
-        const kiinteistoPdfPathRuotsi =
-          nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
-        if (!kiinteistoPdfPathRuotsi) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.RUOTSI]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath on määrittelemättä`
-          );
-        }
-        const nahtavillaKiinteistoPDFRuotsi = await fileService.getFileAsAttachment(oid, kiinteistoPdfPathRuotsi);
-        if (!nahtavillaKiinteistoPDFRuotsi) {
-          throw new Error("NahtavillaKiinteistoPDFRuotsi:n saaminen epäonnistui");
-        }
-        hyvaksyttyEmail.attachments.push(nahtavillaKiinteistoPDFRuotsi);
+        const attachments = await Promise.all(
+          pdfKeys.map(
+            async (key) =>
+              await this.getMandatoryProjektiFileAsAttachment(
+                nahtavillakuulutus.nahtavillaoloPDFt?.RUOTSI?.[key],
+                projekti,
+                `${key} RUOTSI`
+              )
+          )
+        );
+        hyvaksyttyEmail.attachments.push(...attachments);
       }
 
       if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-        const pdfSaamePath = nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
-        if (!pdfSaamePath) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
-          );
-        }
-        const nahtavillaKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
-        if (!nahtavillaKuulutusSaamePDF) {
-          throw new Error("NahtavillaKuulutusSaamePDF:n saaminen epäonnistui");
-        }
-        hyvaksyttyEmail.attachments.push(nahtavillaKuulutusSaamePDF);
+        const saamePdfKeys: (keyof KuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
+        const attachments = await Promise.all(
+          saamePdfKeys.map(
+            async (key) =>
+              await this.getMandatoryProjektiFileAsAttachment(
+                nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
+                projekti,
+                `${key} POHJOISSAAME`
+              )
+          )
+        );
+        hyvaksyttyEmail.attachments.push(...attachments);
       }
 
       await emailClient.sendEmail(hyvaksyttyEmail);

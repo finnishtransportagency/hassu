@@ -386,7 +386,14 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
     ominaisuudet.liikenteeseenluovutus?.kokonaan,
     (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
   );
-
+  setIfDefined(
+    ominaisuudet.toteutusilmoitus?.osittain,
+    (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value))
+  );
+  setIfDefined(
+    ominaisuudet.toteutusilmoitus?.kokonaan,
+    (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value))
+  );
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
   setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
 
@@ -501,6 +508,12 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
       kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
     };
   }
+  if (params.toteutusilmoitusOsittain || params.toteutusilmoitusKokonaan) {
+    ominaisuudet.toteutusilmoitus = {
+      osittain: params.toteutusilmoitusOsittain ? toLocalDate(params.toteutusilmoitusOsittain) : null,
+      kokonaan: params.toteutusilmoitusKokonaan ? toLocalDate(params.toteutusilmoitusKokonaan) : null,
+    };
+  }
   setIfDefined(params.lisatieto, (value) => (ominaisuudet.lisatiedot = value));
   setIfDefined(params.lainvoimaAlkaen, (value) => {
     ominaisuudet["lainvoimaisuus"] = {
@@ -516,6 +529,11 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
 
 export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuulutusPaiva: string | undefined): ProjektiProjekti {
   setIfDefined(kuulutusPaiva, (value) => (projekti.ominaisuudet["aloituskuulutus"] = toLocalDate(value)));
+  return projekti;
+}
+
+export function applySuunnittelunTilaToVelho(projekti: ProjektiProjekti, suunnitelmanTila: string): ProjektiProjekti {
+  projekti.ominaisuudet["suunnitelman-tila"] = stringToObject(suunnitelmanTila);
   return projekti;
 }
 

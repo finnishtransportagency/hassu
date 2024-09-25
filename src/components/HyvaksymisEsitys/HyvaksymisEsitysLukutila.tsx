@@ -255,42 +255,44 @@ export default function HyvaksymisEsitysLukutila({
               {
                 id: "3",
                 title: <H4 sx={{ margin: 0 }}>Maanomistajaluettelo</H4>,
-                content: hyvaksymisEsitys.maanomistajaluettelo?.length ? (
-                  <ul style={{ listStyle: "none" }}>
-                    {tuodutTiedostot.maanomistajaluettelo?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <LadattavaTiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                    {hyvaksymisEsitys.maanomistajaluettelo?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <TiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div>Ei aineistoja</div>
-                ),
+                content:
+                  hyvaksymisEsitys.maanomistajaluettelo?.length || tuodutTiedostot.maanomistajaluettelo?.length ? (
+                    <ul style={{ listStyle: "none" }}>
+                      {tuodutTiedostot.maanomistajaluettelo?.map((tiedosto, index) => (
+                        <li key={index}>
+                          <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                        </li>
+                      ))}
+                      {hyvaksymisEsitys.maanomistajaluettelo?.map((tiedosto, index) => (
+                        <li key={index}>
+                          <TiedostoComponent tiedosto={tiedosto} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>Ei aineistoja</div>
+                  ),
               },
               {
                 id: "4",
                 title: <H4 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H4>,
-                content: hyvaksymisEsitys.kuulutuksetJaKutsu?.length ? (
-                  <ul style={{ listStyle: "none" }}>
-                    {tuodutTiedostot.kuulutuksetJaKutsu?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <LadattavaTiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                    {hyvaksymisEsitys.kuulutuksetJaKutsu?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <TiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div>Ei aineistoja</div>
-                ),
+                content:
+                  hyvaksymisEsitys.kuulutuksetJaKutsu?.length || tuodutTiedostot.kuulutuksetJaKutsu?.length ? (
+                    <ul style={{ listStyle: "none" }}>
+                      {tuodutTiedostot.kuulutuksetJaKutsu?.map((tiedosto, index) => (
+                        <li key={index}>
+                          <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                        </li>
+                      ))}
+                      {hyvaksymisEsitys.kuulutuksetJaKutsu?.map((tiedosto, index) => (
+                        <li key={index}>
+                          <TiedostoComponent tiedosto={tiedosto} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>Ei aineistoja</div>
+                  ),
               },
             ]}
           />
@@ -353,6 +355,19 @@ export default function HyvaksymisEsitysLukutila({
           </SectionContent>
         )}
       </Section>
+      {odottaaHyvaksyntaa && (
+        <Section>
+          <H2>Hyväksymisesityksen sisällön esikatselu</H2>
+          <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen hyväksymistä.</Notification>
+          <ButtonLink
+            target="_blank"
+            href={`/yllapito/projekti/${oid}/esikatsele-hyvaksyttava-hyvaksymisesitys`}
+            endIcon="external-link-alt"
+          >
+            Aineiston esikatselu
+          </ButtonLink>
+        </Section>
+      )}
       {odottaaHyvaksyntaa && nykyinenKayttaja?.onProjektipaallikkoTaiVarahenkilo && (
         <HyvaksyTaiPalautaPainikkeet
           oid={oid}

@@ -208,6 +208,13 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
                           </DownloadLink>
                         </div>
+                        {toissijaisetPDFt.kirjeTiedotettavillePDF && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.kirjeTiedotettavillePDF.tiedosto}>
+                              {toissijaisetPDFt.kirjeTiedotettavillePDF.nimi}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

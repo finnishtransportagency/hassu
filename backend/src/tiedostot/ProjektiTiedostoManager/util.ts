@@ -40,6 +40,9 @@ export function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undef
       if (pdft?.kuulutusIlmoitusPDF) {
         tiedostot.push(pdft.kuulutusIlmoitusPDF);
       }
+      if (pdft?.kirjeTiedotettavillePDF) {
+        tiedostot.push(pdft.kirjeTiedotettavillePDF);
+      }
     });
   }
   return tiedostot;
@@ -51,14 +54,17 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
   }
   let hasChanges = false;
   // Move list contents to a separate list. Aineistot list contents are formed in the following loop
+  const poistettavat: Aineisto[] = [];
+  const persistoitavat: Aineisto[] = [];
   const originalAineistot = aineistot.splice(0, aineistot.length);
   for (const aineisto of originalAineistot) {
     if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA) {
-      await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+      poistettavat.push(aineisto);
       hasChanges = true;
     } else if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
-      await importAineisto(aineisto, oid, paths);
-      aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
+      const persistoitava = omit(aineisto, "kategoriaMuuttunut");
+      persistoitavat.push(persistoitava);
+      aineistot.push(persistoitava);
       hasChanges = true;
     } else if (aineisto.kategoriaMuuttunut) {
       aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
@@ -66,6 +72,12 @@ export async function handleAineistot(oid: string, aineistot: Aineisto[] | null 
     } else {
       aineistot.push(omit(aineisto, "kategoriaMuuttunut"));
     }
+  }
+  for (const aineisto of poistettavat) {
+    await fileService.deleteAineisto(oid, omit(aineisto, "kategoriaMuuttunut"), paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+  }
+  for (const aineisto of persistoitavat) {
+    await importAineisto(aineisto, oid, paths);
   }
 
   return hasChanges;
@@ -99,15 +111,17 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
   );
   await Promise.all(poistettavat.map((tiedosto) => deleteFile({ oid, tiedosto })));
   // ignoorataan virheelliset latausviittaukset jotta ei aiheuta projektin lukitusta 4 päiväksi kun sanoman käsittely ei onnistu
-  const persistoidutTiedostot = (await Promise.all(
-    persistoitavat.map((tiedosto) =>
-      persistLadattuTiedosto({
-        oid,
-        ladattuTiedosto: tiedosto,
-        targetFilePathInProjekti: paths.yllapitoPath,
-      })
+  const persistoidutTiedostot = (
+    await Promise.all(
+      persistoitavat.map((tiedosto) =>
+        persistLadattuTiedosto({
+          oid,
+          ladattuTiedosto: tiedosto,
+          targetFilePathInProjekti: paths.yllapitoPath,
+        })
+      )
     )
-  )).filter(t => t !== undefined);
+  ).filter((t): t is LadattuTiedosto => t !== undefined);
   tiedostot.push(...valmiit.concat(persistoidutTiedostot).sort((a, b) => (a.jarjestys ?? 0) - (b.jarjestys ?? 0)));
   if (poistettavat.length || persistoitavat.length) {
     return true;

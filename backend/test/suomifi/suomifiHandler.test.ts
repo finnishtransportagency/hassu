@@ -19,6 +19,7 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
+  KuulutusSaamePDFt,
   LocalizedMap,
   NahtavillaoloPDF,
   NahtavillaoloVaiheJulkaisu,
@@ -29,6 +30,8 @@ import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { EnhancedPDF } from "../../src/asiakirja/asiakirjaTypes";
 import { SQS, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
+import { sdkStreamMixin } from "@smithy/util-stream";
+import { Readable } from "stream";
 
 const testiPdf =
   "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlPVVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBSCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAxCi9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
@@ -74,7 +77,11 @@ function mockSuomiFiClient(request: SuomiFiRequest, asiakasTila: number, pdfTila
     lahetaViesti(viesti) {
       request.pdfViesti = viesti;
       return new Promise((resolve) => {
-        resolve({ LahetaViestiResult: { TilaKoodi: { TilaKoodi: pdfTilakoodi, TilaKoodiKuvaus: "Laskutustunniste puuttuu tai on väärän mittainen" } } });
+        resolve({
+          LahetaViestiResult: {
+            TilaKoodi: { TilaKoodi: pdfTilakoodi, TilaKoodiKuvaus: "Laskutustunniste puuttuu tai on väärän mittainen" },
+          },
+        });
       });
     },
   };
@@ -102,7 +109,7 @@ describe("suomifiHandler", () => {
   });
 
   it("muistuttajan sähköposti annettu", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(false);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(false);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -204,7 +211,7 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan sähköpostia ei annettu", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(false);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(false);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
       expires: 0,
@@ -230,7 +237,6 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan viesti suomi.fi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -258,7 +264,6 @@ describe("suomifiHandler", () => {
     sinon.restore();
   });
   it("muistuttajan viesti suomi.fi paperiposti", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -292,7 +297,6 @@ describe("suomifiHandler", () => {
     emailStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -348,7 +352,6 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("muistuttajan pdf viesti suomi.fi ruotsi", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const muistuttaja: DBMuistuttaja = {
       id: "123",
@@ -403,7 +406,7 @@ describe("suomifiHandler", () => {
     sinon.restore();
   });
   it("omistajan pdf viesti suomi.fi", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -460,7 +463,7 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("omistajan pdf viesti suomi.fi nähtävilläolo", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -534,8 +537,87 @@ describe("suomifiHandler", () => {
     parameterStub.restore();
     fileStub.restore();
   });
+  it("omistajan suomi-saame pdf viesti suomi.fi nähtävilläolo", async () => {
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
+    const omistaja: DBOmistaja = {
+      id: "123",
+      expires: 0,
+      lisatty: now().toString(),
+      oid: "1",
+      henkilotunnus: "ABC",
+      etunimet: "Testi",
+      sukunimi: "Teppo",
+      jakeluosoite: "Osoite 1",
+      postinumero: "00100",
+      paikkakunta: "Helsinki",
+      kiinteistotunnus: "123",
+      kaytossa: true,
+    };
+    const request: SuomiFiRequest = {};
+    const client = mockSuomiFiClient(request, 300);
+    setMockSuomiFiClient(client);
+    const dbProjekti: Partial<DBProjekti> = {
+      oid: "1",
+      nahtavillaoloVaihe: { id: 1 },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          nahtavillaoloPDFt: {
+            SUOMI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
+          } as unknown as LocalizedMap<NahtavillaoloPDF>,
+          nahtavillaoloSaamePDFt: {
+            POHJOISSAAME: {
+              kirjeTiedotettavillePDF: { tiedosto: "/path/33" },
+            },
+          } as unknown as KuulutusSaamePDFt,
+        } as unknown as NahtavillaoloVaiheJulkaisu,
+      ],
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      },
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+      },
+    };
+    const mock = mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
+      .resolves({ Item: omistaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: dbProjekti,
+      });
+
+    const fileStub = sinon.stub(fileService, "getProjektiYllapitoS3Object").resolves({
+      ContentType: "application/pdf",
+      Body: sdkStreamMixin(Readable.from(Buffer.from(testiPdf, "base64"))),
+      $metadata: {},
+    });
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
+    const msg = { Records: [{ body: JSON.stringify(body) }] };
+    await handleEvent(msg as SQSEvent);
+    expect(fileStub.getCalls()[0].args[0]).to.equal("1");
+    expect(fileStub.getCalls()[0].args[1]).to.equal("/path/33");
+    assert(request.pdfViesti);
+    request.pdfViesti.tiedosto.sisalto = Buffer.from("");
+    expect(request.pdfViesti).toMatchSnapshot();
+    expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
+    parameterStub.restore();
+    fileStub.restore();
+  });
   it("omistajan pdf viesti suomi.fi hyväksymispäätös", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -610,7 +692,7 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("omistajan pdf viesti suomi.fi epäonnistui", async () => {
-    const parameterStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     const omistaja: DBOmistaja = {
       id: "123",
       expires: 0,
@@ -670,7 +752,6 @@ describe("suomifiHandler", () => {
     fileStub.restore();
   });
   it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
-    sinon.stub(parameters, "isSuomiFiIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
     const dbProjekti: Partial<DBProjekti> = {

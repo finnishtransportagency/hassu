@@ -17,14 +17,14 @@ export default function SuunnitteluWrapper() {
   return <Suunnittelu projekti={projekti} />;
 }
 
-function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
+function Suunnittelu({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>): ReactElement {
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const lukutila =
     projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden || projekti.nahtavillaoloVaiheJulkaisu;
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
         <p>
           Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
           kuulutuksen tietoja ei ole saatavilla palvelusta.
@@ -42,7 +42,7 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
   }
 
   return (
-    <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+    <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenPerustiedot />
     </SuunnitteluPageLayoutWrapper>
   );

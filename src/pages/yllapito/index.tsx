@@ -19,7 +19,6 @@ import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
 import Button from "@components/button/Button";
 import FormGroup from "@components/form/FormGroup";
-import Select from "@components/form/Select";
 import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
@@ -208,7 +207,6 @@ const VirkamiesHomePage = () => {
           <HassuGrid cols={{ xs: 1, md: 2, lg: 3, xl: 4 }}>
             <TextInput label="Projektin nimi" {...register("nimi")} />
             <TextInput label="Asiatunnus" {...register("asiatunnus")} />
-            <Select label="Maakunta" disabled options={[]} emptyOption="Valitse" />
             <HassuMuiSelect name="vaylamuoto" label="Väylämuoto" control={control} defaultValue="">
               {["tie", "rata"].map((option) => {
                 return (

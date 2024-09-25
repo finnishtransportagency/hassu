@@ -28,18 +28,21 @@ type KuulutustenLuonnosVaiheet = Pick<
   "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "vuorovaikutusKierros"
 >;
 
-export type SaameKutsuTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
+export type SaameKutsuTiedostoPrefix = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
 
-export type SaameKuulutusTiedostotMetodi =
+export type KuulutusTiedostotPrefix =
   | "aloitusKuulutus.aloituskuulutusSaamePDFt"
-  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
-  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
+export type TiedotettavaKuulutusTiedostotPrefix =
+  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
+  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
+
 type SaameTiedostoLomakePolku =
-  | `${SaameKuulutusTiedostotMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`
-  | `${SaameKutsuTiedostoMetodi}.POHJOISSAAME`;
+  | `${KuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
+  | `${TiedotettavaKuulutusTiedostotPrefix}.POHJOISSAAME.${keyof KuulutusPDFInput}`
+  | `${SaameKutsuTiedostoPrefix}.POHJOISSAAME`;
 
 type SaameTiedostoValitsinProps = {
   name: SaameTiedostoLomakePolku;
@@ -159,6 +162,7 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
       noDropzone
       error={fieldState.error}
       maxFiles={1}
+      accept="application/pdf"
       buttonText="Hae tiedosto"
       onDrop={(files) => {
         const tiedosto = files[0];

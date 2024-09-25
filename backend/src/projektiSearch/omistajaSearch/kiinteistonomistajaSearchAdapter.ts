@@ -18,7 +18,7 @@ export type OmistajaDocument = Pick<
   | "suomifiLahetys"
   | "kaytossa"
   | "userCreated"
-> & { maa: string | null };
+  > & { maa: string | null, viimeisinLahetysaika: string | null, viimeisinTila: "VIRHE" | "OK" | null };
 
 export function adaptOmistajaToIndex({
   etunimet,
@@ -35,7 +35,9 @@ export function adaptOmistajaToIndex({
   suomifiLahetys,
   kaytossa,
   userCreated,
+  lahetykset,
 }: DBOmistaja): OmistajaDocument {
+  const viimeisinLahetys = lahetykset?.sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
   return {
     jakeluosoite,
     kiinteistotunnus: kiinteistotunnus ? formatKiinteistotunnusForDisplay(kiinteistotunnus) : kiinteistotunnus,
@@ -50,6 +52,8 @@ export function adaptOmistajaToIndex({
     suomifiLahetys,
     kaytossa,
     userCreated,
+    viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
+    viimeisinTila: viimeisinLahetys?.tila ?? null,
   };
 }
 
@@ -78,7 +82,7 @@ export type OmistajaDocumentHit = {
 };
 
 function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
-  const { kiinteistotunnus, lisatty, oid, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, maa, maakoodi } = hit._source;
+  const { kiinteistotunnus, lisatty, oid, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, maa, maakoodi, viimeisinLahetysaika, viimeisinTila } = hit._source;
 
   const dokumentti: API.Omistaja = {
     id: hit._id,
@@ -93,6 +97,8 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     maakoodi,
     paivitetty,
     postinumero,
+    viimeisinLahetysaika,
+    viimeisinTila,
   };
   return dokumentti;
 }

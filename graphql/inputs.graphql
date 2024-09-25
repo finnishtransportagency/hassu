@@ -78,6 +78,12 @@ input KuulutusPDFInput {
   kuulutusIlmoitusPDFPath: String
 }
 
+input KuulutusPDFInput {
+  kuulutusPDFPath: String
+  kuulutusIlmoitusPDFPath: String
+  kirjeTiedotettavillePDFPath: String
+}
+
 input KuulutusSaamePDFtInput {
   POHJOISSAAME: KuulutusPDFInput
 }
@@ -460,6 +466,8 @@ input PalauteInput {
 }
 
 input MuistutusInput {
+  etunimi: String!
+  sukunimi: String!
   katuosoite: String!
   postinumero: String!
   postitoimipaikka: String!
@@ -507,6 +515,8 @@ input KasittelyntilaInput {
   lisatieto: String
   hallintoOikeus: OikeudenPaatosInput
   korkeinHallintoOikeus: OikeudenPaatosInput
+  toteutusilmoitusOsittain: String
+  toteutusilmoitusKokonaan: String
 }
 
 input OikeudenPaatosInput {

@@ -1,9 +1,14 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { HyvaksymisPaatosVaihe } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
-import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
+import {
+  adaptAineistotToSave,
+  adaptIlmoituksenVastaanottajatToSave,
+  adaptStandardiYhteystiedotToSave,
+  adaptUudelleenKuulutusToSave,
+  adaptKuulutusSaamePDFtInput,
+} from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptHyvaksymisPaatosVaiheToSave(

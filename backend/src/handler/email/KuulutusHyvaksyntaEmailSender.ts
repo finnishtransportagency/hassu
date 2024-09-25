@@ -5,6 +5,8 @@ import { personSearch } from "../../personSearch/personSearchClient";
 import { GenericDbKuulutusJulkaisu } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { log } from "../../logger";
+import { DBProjekti } from "../../database/model";
+import { fileService } from "../../files/fileService";
 
 export abstract class KuulutusHyvaksyntaEmailSender {
   public abstract sendEmails(oid: string): Promise<void>;
@@ -24,5 +26,16 @@ export abstract class KuulutusHyvaksyntaEmailSender {
     } else {
       log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
     }
+  }
+
+  protected async getMandatoryProjektiFileAsAttachment(filepath: string | undefined | null, projekti: DBProjekti, logInfo: string) {
+    if (!filepath) {
+      throw new Error(`emailAttachmentError: Polku tiedostolle '${logInfo}' on määrittelemättä.`);
+    }
+    const pdf = await fileService.getFileAsAttachment(projekti.oid, filepath);
+    if (!pdf) {
+      throw new Error(`emailAttachmentError: Polusta '${filepath}' ei löytynyt tiedostoa.`);
+    }
+    return pdf;
   }
 }

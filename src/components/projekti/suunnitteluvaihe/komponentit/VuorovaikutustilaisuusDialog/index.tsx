@@ -21,7 +21,7 @@ import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-f
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } from "src/schemas/vuorovaikutus";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import Verkkotilaisuus from "./Verkkotilaisuus";
@@ -30,6 +30,7 @@ import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
 import useValidationMode from "src/hooks/useValidationMode";
 import { TukiEmailLink } from "../../../../EiOikeuksia";
+import { focusStyle } from "@components/layout/HassuMuiThemeProvider";
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
@@ -110,23 +111,13 @@ function tilaisuudetInputiksi(
     delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
     const palautetaan = {
       ...tilaisuusCopy,
+      nimi: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.nimi),
+      osoite: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.osoite),
+      paikka: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.paikka),
+      postitoimipaikka: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.postitoimipaikka),
+      lisatiedot: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.lisatiedot),
       esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(tilaisuus.esitettavatYhteystiedot),
     };
-    if (palautetaan.nimi) {
-      palautetaan.nimi = poistaTypeNameJaTurhatKielet(palautetaan.nimi, kielitiedot);
-    }
-    if (palautetaan.osoite) {
-      palautetaan.osoite = poistaTypeNameJaTurhatKielet(palautetaan.osoite, kielitiedot);
-    }
-    if (palautetaan.paikka) {
-      palautetaan.paikka = poistaTypeNameJaTurhatKielet(palautetaan.paikka, kielitiedot);
-    }
-    if (palautetaan.postitoimipaikka) {
-      palautetaan.postitoimipaikka = poistaTypeNameJaTurhatKielet(palautetaan.postitoimipaikka, kielitiedot);
-    }
-    if (palautetaan.lisatiedot) {
-      palautetaan.lisatiedot = poistaTypeNameJaTurhatKielet(palautetaan.lisatiedot, kielitiedot);
-    }
     return palautetaan;
   });
 }
@@ -239,8 +230,7 @@ export default function VuorovaikutusDialog({
                 <p>
                   Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
                   tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
-                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä{" "}
-                  <TukiEmailLink />.
+                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä <TukiEmailLink />.
                 </p>
               ) : (
                 <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
@@ -385,7 +375,7 @@ const HassuBadge = styled(Badge)(() => ({
   },
 }));
 
-const HassuChip = styled(Chip)(() => ({
+const HassuChip = styled(Chip)(({ theme }) => ({
   paddingRight: 4,
   paddingLeft: 4,
   [`&.${chipClasses.root}`]: {
@@ -393,11 +383,13 @@ const HassuChip = styled(Chip)(() => ({
     borderRadius: "20px",
   },
   [`&.${chipClasses.clickable}`]: {
-    border: "1px solid rgb(0, 100, 175)",
-    background: "white",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: theme.palette.primary.dark,
+    background: theme.palette.common.white,
     margin: 4,
     [`> .${svgIconClasses.root}`]: {
-      color: "rgb(0, 100, 175)",
+      color: theme.palette.primary.dark,
     },
     "&:hover": {
       background: "#e2eff8",
@@ -405,7 +397,7 @@ const HassuChip = styled(Chip)(() => ({
     },
   },
   [`&.clicked`]: {
-    background: "rgb(0, 100, 175)",
+    background: theme.palette.primary.dark,
     color: "#e2eff8",
     [`> .${svgIconClasses.root}`]: {
       color: "#e2eff8",
@@ -415,6 +407,7 @@ const HassuChip = styled(Chip)(() => ({
       boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
     },
   },
+  ["&.Mui-focusVisible"]: focusStyle,
   [`&.Mui-disabled`]: {
     opacity: 100,
     background: "#999999",
@@ -446,15 +439,15 @@ function VerkkoTilaisuusNappi({
 }) {
   return (
     <HassuChip
-      className={countTilaisuudet ? "clicked" : ""}
+      className={countTilaisuudet ? "clicked" : undefined}
       disabled={mostlyDisabled}
       icon={icon}
       clickable={!mostlyDisabled}
       onClick={onClick}
       id={id}
       label={label}
-      onDelete={onClick}
-      deleteIcon={<HassuBadge className={countTilaisuudet ? "clicked" : ""} badgeContent={countTilaisuudet || "0"} color={"primary"} />}
+      onDelete={countTilaisuudet ? onClick : undefined}
+      deleteIcon={countTilaisuudet ? <HassuBadge className="clicked" badgeContent={countTilaisuudet} color="primary" /> : undefined}
     />
   );
 }

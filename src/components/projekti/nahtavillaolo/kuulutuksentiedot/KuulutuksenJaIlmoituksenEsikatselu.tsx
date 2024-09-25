@@ -15,7 +15,7 @@ type Props = {
   esikatselePdf: (formData: KuulutuksenTiedotFormValues, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
 };
 
-export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Props) {
+export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Readonly<Props>) {
   const { data: projekti } = useProjekti();
 
   const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
@@ -66,14 +66,6 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_lahetekirje_pdf_" + ensisijainenKieli}
-                type="button"
-                disabled
-              >
-                Lähetekirjeen esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
@@ -113,14 +105,6 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 )}
               >
                 Ilmoituksen esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_lahetekirje_pdf_" + toissijainenKieli}
-                type="button"
-                disabled
-              >
-                Lähetekirjeen esikatselu
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}

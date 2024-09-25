@@ -9,6 +9,7 @@ import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
 import { useYllapito } from "../../hooks/useYllapito";
+import { focusStyleSecondary } from "./HassuMuiThemeProvider";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -203,6 +204,7 @@ const SocialMediaLink = styled(({ icon, ref, ...props }: Omit<SocialMediaLinkPro
   alignItems: "center",
   borderRadius: "50%",
   background: theme.palette.primary.dark,
+  "&:focus-visible": focusStyleSecondary,
 }));
 
 const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX.Element => (

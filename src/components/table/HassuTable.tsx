@@ -31,6 +31,7 @@ import {
   DataCellHeaderContent,
   DataCellContent,
 } from "./StyledTableComponents";
+import { focusStyle, focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 
 export type HassuTableProps<T> = {
   table: Table<T>;
@@ -63,7 +64,7 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
       />
     </Span>
   ),
-  meta: { minWidth: 100, widthFractions: 1 },
+  meta: { minWidth: 60, widthFractions: 1 },
 });
 
 function SelectHeader<T>(props: HeaderContext<T, unknown>) {
@@ -174,7 +175,6 @@ const BodyContentVirElement = dynamic(() => import("./BodyContentVirtualElement"
 
 function TableBody<T>({ gridTemplateColumns, table }: HassuTableProps<T> & { gridTemplateColumns: string }) {
   const virtualizationOptions = table.options.meta?.virtualization;
-
   if (virtualizationOptions?.type === "window") {
     const BodyContentVirtualWindow = BodyContentVirWindow as React.ComponentType<BodyContentVirtualWindowProps<T>>;
     return <BodyContentVirtualWindow table={table} gridTemplateColumns={gridTemplateColumns} />;
@@ -239,9 +239,13 @@ function HassuTablePagination<T>({ table }: PaginationProps<T>) {
           color="primary"
           sx={{
             ".MuiPagination-ul": { justifyContent: "flex-end" },
-            ".MuiPaginationItem-root.Mui-selected": {
-              color: "#ffffff",
-              backgroundColor: "#0064af",
+            ".MuiPaginationItem-root": {
+              "&.Mui-focusVisible": focusStyle,
+              "&.Mui-selected": {
+                "&.Mui-focusVisible": focusStyleSecondary,
+                color: "#ffffff",
+                backgroundColor: "#0064af",
+              },
             },
           }}
         />

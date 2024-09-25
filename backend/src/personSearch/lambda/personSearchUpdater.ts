@@ -1,5 +1,5 @@
 import { config } from "../../config";
-import { PersonFromResponse, adaptPersonSearchResult } from "./personSearchAdapter";
+import { MemberFromResponse, PersonFromResponse, adaptPersonSearchResult } from "./personSearchAdapter";
 import { log } from "../../logger";
 import { Kayttajas, Person } from "../kayttajas";
 import { getAxios, wrapXRayAsync } from "../../aws/monitoring";
@@ -54,6 +54,7 @@ export class PersonSearchUpdater {
     if (!endpoint) {
       return;
     }
+    const members = await this.listGroupMembers(endpoint, username, password);
     const requestConfig: AxiosRequestConfig = {
       timeout: 120000,
       baseURL: endpoint,
@@ -67,14 +68,42 @@ export class PersonSearchUpdater {
       if (response.status === 200) {
         const responseJson = await wrapXRayAsync("xmlParse", () => parseString(response.data));
         const personsFromResponse: PersonFromResponse[] | undefined = responseJson.person?.person?.filter(this.personHasAllowedAccounttype);
-        adaptPersonSearchResult(personsFromResponse, personMap);
+        adaptPersonSearchResult(personsFromResponse, personMap, members);
         log.info("listAccounts:" + Object.keys(personMap).length + " persons in result map");
       } else {
-        log.error(response.status + " " + response.statusText, { requestConfig });
+        log.error(response.status + " " + response.statusText, { endpoint: requestConfig.baseURL });
         throw new Error(`listAccounts failed: Person search request returned unexpected status code '${response.status}'.`);
       }
     } catch (e) {
-      log.error("listAccounts failed.", { requestConfig, e });
+      log.error("listAccounts failed.", { endpoint: requestConfig.baseURL, e });
+      throw e;
+    }
+  }
+
+  private async listGroupMembers(endpoint: string, username: string, password: string) {
+    if (!endpoint) {
+      return;
+    }
+    const idx = endpoint.indexOf("Person.svc");
+    const requestConfig: AxiosRequestConfig = {
+      timeout: 120000,
+      baseURL: endpoint.substring(0, idx) + "group.svc/byfilter?filterproperty=DisplayName&filter=hassu_kayttaja&fetch=ObjectID,DisplayName,ExplicitMember",
+      method: "GET",
+      auth: { username, password },
+    };
+    try {
+      const axios = getAxios();
+      const response = await axios.request(requestConfig);
+      if (response.status === 200) {
+        const responseJson = await wrapXRayAsync("xmlParse", () => parseString(response.data));
+        const membersFromResponse: MemberFromResponse[] | undefined = responseJson.groups.group[0].members[0].member;
+        return membersFromResponse?.map(m => m.Value[0]);
+      } else {
+        log.error(response.status + " " + response.statusText, { endpoint: requestConfig.baseURL });
+        throw new Error(`listGroupMembers failed: Group search request returned unexpected status code '${response.status}'.`);
+      }
+    } catch (e) {
+      log.error("listGroupMembers failed.", { endpoint: requestConfig.baseURL, e });
       throw e;
     }
   }

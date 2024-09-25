@@ -113,7 +113,11 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
 
     forEverySaameDo((kieli) => {
       const pdf = julkaisu.nahtavillaoloSaamePDFt?.[kieli];
-      s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
+      s3Paths.pushYllapitoFilesIfDefined(
+        pdf?.kuulutusPDF?.tiedosto,
+        pdf?.kuulutusIlmoitusPDF?.tiedosto,
+        pdf?.kirjeTiedotettavillePDF?.tiedosto
+      );
     });
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
