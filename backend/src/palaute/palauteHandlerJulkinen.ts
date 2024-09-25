@@ -25,11 +25,9 @@ class PalauteHandlerJulkinen {
       throw new NotFoundError("Projekti ei ole suunnitteluvaiheessa, joten palautetta ei voi antaa");
     }
     const palaute = adaptPalauteInput(oid, palauteInput);
-    const liitteet = palaute.liitteet?.filter((t) => t) ?? [];
-    palaute.liitteet = liitteet;
-    for(let i = 0; i < liitteet.length; i++) {
+    for(let i = 0; i < palaute.liitteet.length; i++) {
       const liite = await fileService.persistFileToProjekti({
-        uploadedFileSource: liitteet[i],
+        uploadedFileSource: palaute.liitteet[i],
         oid,
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
