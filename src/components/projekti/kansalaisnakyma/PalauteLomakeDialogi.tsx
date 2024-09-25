@@ -92,7 +92,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
   const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
   const liitteetWatch = watch("liitteet");
   const inputRef = useRef<HTMLInputElement>(null);
-  const constructErrorMessage = useCallback((msg: string) => t(`common:virheet.${msg}`), [t]);
+  const constructErrorMessage = useCallback((msg: string) => msg ? t(`common:virheet.${msg}`) : "", [t]);
   const save = useCallback(
     ({ liitteet, ...formData }: PalauteFormInput) =>
       withLoadingSpinner(
