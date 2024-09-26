@@ -3,9 +3,9 @@ import * as API from "hassu-common/graphql/apiModel";
 import { localDateTimeString } from "../util/dateUtil";
 import { uuid } from "hassu-common/util/uuid";
 
-export function adaptPalauteInput(oid: string, palaute: API.PalauteInput): Palaute & { liitteet: string[] } {
+export function adaptPalauteInput(oid: string, palaute: API.PalauteInput): Palaute {
   const aikaleima = localDateTimeString();
-  return { ...palaute, vastaanotettu: aikaleima, oid, id: uuid.v4(), liitteet: palaute.liitteet ?? [] };
+  return { ...palaute, vastaanotettu: aikaleima, oid, id: uuid.v4() };
 }
 
 export function adaptPalautteetToAPI(palautteet: Palaute[]): API.Palaute[] | undefined {
