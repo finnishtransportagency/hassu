@@ -1,11 +1,11 @@
-import { AineistoInput } from "@services/api";
+import { FormAineisto } from "./FormAineisto";
 import { kategorisoimattomatId } from "common/aineistoKategoriat";
 
 interface AineistoNahtavilla {
-  [kategoriaId: string]: AineistoInput[];
+  [kategoriaId: string]: FormAineisto[];
 }
 
-export const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] | undefined | null, kategoriaIds: string[]) => {
+export const getDefaultValueForAineistoNahtavilla = (aineistot: FormAineisto[] | undefined | null, kategoriaIds: string[]) => {
   const initialAineistoKategorias = kategoriaIds.reduce<AineistoNahtavilla>((acc, kategoriaId) => {
     acc[kategoriaId] = [];
     return acc;
@@ -15,7 +15,7 @@ export const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] 
     aineistot?.reduce<AineistoNahtavilla>((aineistoNahtavilla, aineisto) => {
       const kategoriaId =
         aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId) ? aineisto.kategoriaId : kategorisoimattomatId;
-      const aineistoToAdd: AineistoInput = {
+      const aineistoToAdd: FormAineisto = {
         ...aineisto,
         jarjestys: typeof aineisto.jarjestys === "number" ? aineisto.jarjestys : aineistoNahtavilla[kategoriaId].length,
         kategoriaId,

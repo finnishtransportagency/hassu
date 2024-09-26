@@ -17,7 +17,7 @@ export default function TiedostoLomake({ paatosTyyppi, vaihe }: TiedostoLomakePr
       {vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
         <LukutilainenPaatos vaihe={vaihe} />
       ) : (
-        <MuokkaustilainenPaatosTiedostot vaihe={vaihe} paatosTyyppi={paatosTyyppi} />
+        <MuokkaustilainenPaatosTiedostot paatosTyyppi={paatosTyyppi} />
       )}
     </>
   );

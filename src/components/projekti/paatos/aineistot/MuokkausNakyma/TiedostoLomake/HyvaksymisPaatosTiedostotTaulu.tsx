@@ -1,45 +1,32 @@
 import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
-import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe } from "@services/api";
+import { AineistoInput, AineistoTila } from "@services/api";
 import React, { ComponentProps, useCallback, useMemo } from "react";
-import { FieldArrayWithId, useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
+import { useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
 import { formatDateTime } from "hassu-common/util/dateUtils";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { experimental_sx as sx, MUIStyledCommonProps, styled } from "@mui/system";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
+import { FormAineisto } from "src/util/FormAineisto";
 
 interface FormValues {
   hyvaksymisPaatos: AineistoInput[];
   poistetutHyvaksymisPaatos: AineistoInput[];
 }
 
-type FormAineisto = FieldArrayWithId<FormValues, "hyvaksymisPaatos", "id"> & Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
-
-export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe | null | undefined }) {
+export default function AineistoTable() {
   const { control, formState, register, setValue } = useFormContext<FormValues>();
   const { fields, move, remove } = useFieldArray({ name: "hyvaksymisPaatos", control });
   const { append: appendToPoistetut } = useFieldArray({ name: "poistetutHyvaksymisPaatos", control });
 
-  const enrichedFields: FormAineisto[] = useMemo(
-    () =>
-      fields.map((field) => {
-        const aineistoData = vaihe?.hyvaksymisPaatos || [];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
-
-        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
-      }),
-    [fields, vaihe?.hyvaksymisPaatos]
-  );
-
-  const columns = useMemo<ColumnDef<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto & { id: string }>[]>(
     () => [
       {
         header: "Aineisto",
         meta: { minWidth: 250, widthFractions: 6 },
-        accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
+        accessorFn: (aineisto, index) => {
           const errorMessage = (formState.errors.hyvaksymisPaatos?.[index] as any | undefined)?.message;
           return (
             <>
@@ -60,21 +47,15 @@ export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe 
         header: "",
         id: "actions",
         meta: { minWidth: 120, widthFractions: 2 },
-        accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
-          return <ActionsColumn index={index} remove={remove} aineisto={aineisto} appendToPoistetut={appendToPoistetut} />;
-        },
+        accessorFn: (aineisto, index) => (
+          <ActionsColumn index={index} remove={remove} aineisto={aineisto} appendToPoistetut={appendToPoistetut} />
+        ),
       },
     ],
-    [enrichedFields, formState.errors.hyvaksymisPaatos, register, remove, appendToPoistetut]
+    [formState.errors.hyvaksymisPaatos, register, remove, appendToPoistetut]
   );
 
-  const findRowIndex = useCallback(
-    (id: string) => {
-      return enrichedFields.findIndex((row) => row.id.toString() === id);
-    },
-    [enrichedFields]
-  );
+  const findRowIndex = useCallback((id: string) => fields.findIndex((row) => row.id.toString() === id), [fields]);
 
   const onDragAndDrop = useCallback(
     (id: string, targetRowIndex: number) => {
@@ -86,9 +67,9 @@ export default function AineistoTable({ vaihe }: { vaihe: HyvaksymisPaatosVaihe 
     [findRowIndex, move, setValue]
   );
 
-  const tableProps = useReactTable<FormAineisto>({
+  const tableProps = useReactTable<FormAineisto & { id: string }>({
     columns,
-    data: enrichedFields || [],
+    data: fields || [],
     getCoreRowModel: getCoreRowModel(),
     state: {
       pagination: undefined,

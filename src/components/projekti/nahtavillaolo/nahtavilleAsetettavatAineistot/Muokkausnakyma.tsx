@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AineistoInput, TallennaProjektiInput, TilasiirtymaTyyppi } from "@services/api";
+import { TallennaProjektiInput, TilasiirtymaTyyppi } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -7,19 +7,20 @@ import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/Pr
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
 import SuunnitelmatJaAineistot from "./NahtavillaolonAineistoLomake";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { handleAineistoArrayForDefaultValues } from "src/util/FormAineisto/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
 import AineistoSivunPainikkeet from "@components/projekti/AineistoSivunPainikkeet";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
+import { FormAineisto } from "src/util/FormAineisto";
 
 interface AineistoNahtavilla {
-  [kategoriaId: string]: AineistoInput[];
+  [kategoriaId: string]: FormAineisto[];
 }
 
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
-  poistetutAineistoNahtavilla: AineistoInput[];
+  poistetutAineistoNahtavilla: FormAineisto[];
 };
 
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -43,7 +44,7 @@ function MuokkausnakymaLomake({ projekti }: Readonly<MuokkausnakymaLomakeProps>)
     return { aineistoKategoriat, kategoriaIds: aineistoKategoriat.listKategoriaIds() };
   }, [projekti.velho.tyyppi]);
 
-  const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
+  const defaultValues = useMemo<NahtavilleAsetettavatAineistotFormValues>(() => {
     const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
       projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
       false

@@ -462,7 +462,7 @@ input PalauteInput {
   kysymysTaiPalaute: String
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
-  liite: String
+  liitteet: [String!]
 }
 
 input MuistutusInput {
