@@ -1,8 +1,8 @@
 import { ComponentProps, useCallback, useMemo } from "react";
 import IconButton from "@components/button/IconButton";
-import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayReturn, useFormContext } from "react-hook-form";
+import { UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayReturn, useFormContext } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
-import { Aineisto, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { AineistoTila } from "@services/api";
 import Select from "@components/form/Select";
 import { formatDateTime } from "common/util/dateUtils";
 import find from "lodash/find";
@@ -12,14 +12,12 @@ import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceCont
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
 import HassuTable from "../../../table/HassuTable";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
+import { FormAineisto } from "src/util/FormAineisto";
 
 export enum SuunnitteluVaiheAineistoTyyppi {
   ESITTELYAINEISTOT = "ESITTELYAINEISTOT",
   SUUNNITELMALUONNOKSET = "SUUNNITELMALUONNOKSET",
 }
-
-type FormAineisto = FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id"> &
-  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
@@ -39,15 +37,10 @@ interface AineistoTableProps {
     "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset",
     "id"
   >;
-  vuorovaikutus:
-    | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
-    | null
-    | undefined;
 }
 
 const AineistoTable = ({
   aineistoTyyppi,
-  vuorovaikutus,
   esittelyaineistotFieldArray: esittelyAineistotFieldArray,
   poistetutEsittelyaineistotFieldArray: poistetutEsittelyAineistotFieldArray,
   poistetutSuunnittelmaluonnoksetFieldArray,
@@ -78,20 +71,9 @@ const AineistoTable = ({
       ? "vuorovaikutusKierros.suunnitelmaluonnokset"
       : "vuorovaikutusKierros.esittelyaineistot";
 
-  const enrichedFields = useMemo(
-    () =>
-      fields.map((field) => {
-        const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
-
-        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
-      }),
-    [fields, vuorovaikutus]
-  );
-
   const otherAineistoWatch = watch(otherFieldArrayName);
 
-  const columns = useMemo<ColumnDef<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto & { id: string }>[]>(
     () => [
       {
         header: "Aineisto",
@@ -105,68 +87,66 @@ const AineistoTable = ({
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (aineisto) =>
-          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessorFn: (aineisto) => {
+          if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
+            return "Ladataan...";
+          }
+          return aineisto.tila === AineistoTila.VALMIS && aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined;
+        },
         meta: { widthFractions: 2 },
       },
       {
         header: "Kategoria",
         id: "kategoria",
-        accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
-          return (
-            <Select
-              defaultValue={aineistoTyyppi}
-              onChange={(event) => {
-                const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
-                if (tyyppi !== aineistoTyyppi) {
-                  if (!find(otherAineistoWatch, { uuid: aineisto.uuid })) {
-                    appendToOtherArray({
-                      dokumenttiOid: aineisto.dokumenttiOid,
-                      nimi: aineisto.nimi,
-                      tila: aineisto.tila,
-                      jarjestys: otherAineistoWatch?.length,
-                      uuid: aineisto.uuid,
-                    });
-                  }
-                  remove(index);
+        accessorFn: (aineisto, index) => (
+          <Select
+            defaultValue={aineistoTyyppi}
+            onChange={(event) => {
+              const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
+              if (tyyppi !== aineistoTyyppi) {
+                if (!find(otherAineistoWatch, { uuid: aineisto.uuid })) {
+                  appendToOtherArray({
+                    dokumenttiOid: aineisto.dokumenttiOid,
+                    nimi: aineisto.nimi,
+                    tila: aineisto.tila,
+                    jarjestys: otherAineistoWatch?.length,
+                    uuid: aineisto.uuid,
+                  });
                 }
-              }}
-              options={[
-                { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
-                { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
-              ]}
-            />
-          );
-        },
+                remove(index);
+              }
+            }}
+            options={[
+              { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
+              { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
+            ]}
+          />
+        ),
         meta: { widthFractions: 2, minWidth: 220 },
       },
       {
         header: "",
         id: "actions",
-        accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
-          return (
-            <ActionsColumn
-              index={index}
-              remove={remove}
-              aineisto={aineisto}
-              updateFieldArray={updateFieldArray}
-              appendToPoistetut={appendToPoistetut}
-            />
-          );
-        },
+        accessorFn: (aineisto, index) => (
+          <ActionsColumn
+            index={index}
+            remove={remove}
+            aineisto={aineisto}
+            updateFieldArray={updateFieldArray}
+            appendToPoistetut={appendToPoistetut}
+          />
+        ),
         meta: { minWidth: 120 },
       },
     ],
-    [fields, aineistoTyyppi, otherAineistoWatch, remove, appendToOtherArray, updateFieldArray, appendToPoistetut]
+    [aineistoTyyppi, otherAineistoWatch, remove, appendToOtherArray, updateFieldArray, appendToPoistetut]
   );
 
   const findRowIndex = useCallback(
     (id: string) => {
-      return enrichedFields.findIndex((row) => row.id.toString() === id);
+      return fields.findIndex((row) => row.id.toString() === id);
     },
-    [enrichedFields]
+    [fields]
   );
 
   const onDragAndDrop = useCallback(
@@ -179,9 +159,9 @@ const AineistoTable = ({
     [fieldArrayName, findRowIndex, move, setValue]
   );
 
-  const table = useReactTable({
+  const table = useReactTable<FormAineisto & { id: string }>({
     columns,
-    data: enrichedFields,
+    data: fields,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     getRowId: (row) => row.id,

@@ -1,5 +1,5 @@
 import HassuTable from "@components/table/HassuTable";
-import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
+import { Aineisto, AineistoTila } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useCallback, useEffect, useMemo } from "react";
@@ -8,7 +8,8 @@ import { formatDateTime } from "common/util/dateUtils";
 import Select, { SelectOption } from "@components/form/Select";
 import find from "lodash/find";
 import { ActionsColumn } from ".";
-import { FormAineisto, AineistoNahtavillaTableFormValuesInterface } from "../util";
+import { AineistoNahtavillaTableFormValuesInterface } from "../util";
+import { FormAineisto } from "src/util/FormAineisto";
 
 interface AineistoTableProps {
   kategoriaId: string;
@@ -32,25 +33,13 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
     }
   }, [aineistotInCategory, replace, fields]);
 
-  const enrichedFields: FormAineisto[] = useMemo(
-    () =>
-      fields.map((field) => {
-        const aineistoData = props.aineisto || [];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ uuid }) => uuid === field.uuid) || {};
-
-        return { ...field, tila: tila ?? AineistoTila.ODOTTAA_TUONTIA, tuotu, tiedosto };
-      }),
-    [fields, props.aineisto]
-  );
-
-  const columns = useMemo<ColumnDef<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto & { id: string }>[]>(
     () => [
       {
         header: "Aineisto",
         meta: { minWidth: 250, widthFractions: 4 },
         id: "aineisto",
-        accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
+        accessorFn: (aineisto, index) => {
           const errorpath = props.kategoriaId;
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
           return (
@@ -66,67 +55,64 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (aineisto) =>
-          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessorFn: (aineisto) => {
+          if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
+            return "Ladataan...";
+          }
+          return aineisto.tila === AineistoTila.VALMIS && aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined;
+        },
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
         header: "Kategoria",
         id: "kategoria",
-        accessorFn: (aineisto) => {
-          return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <Select
-                options={props.allOptions}
-                defaultValue={props.kategoriaId}
-                className="category_selector"
-                onChange={(event) => {
-                  const newKategoria = event.target.value;
-                  if (newKategoria !== props.kategoriaId) {
-                    const values: AineistoInput[] = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
-                    const index = enrichedFields.findIndex((row) => row.uuid === aineisto.uuid);
+        accessorFn: (aineisto, index) =>
+          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+            <Select
+              options={props.allOptions}
+              defaultValue={props.kategoriaId}
+              className="category_selector"
+              onChange={(event) => {
+                const newKategoria = event.target.value;
+                if (newKategoria !== props.kategoriaId) {
+                  const values: FormAineisto[] = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
 
-                    if (!find(values, { uuid: aineisto.uuid })) {
-                      values.push({
-                        dokumenttiOid: aineisto.dokumenttiOid,
-                        nimi: aineisto.nimi,
-                        kategoriaId: newKategoria,
-                        jarjestys: values.length,
-                        tila: aineisto.tila,
-                        uuid: aineisto.uuid,
-                      });
-                      setValue(`aineistoNahtavilla.${newKategoria}`, values);
-                    }
-                    remove(index);
+                  if (!find(values, { uuid: aineisto.uuid })) {
+                    values.push({
+                      dokumenttiOid: aineisto.dokumenttiOid,
+                      nimi: aineisto.nimi,
+                      kategoriaId: newKategoria,
+                      jarjestys: values.length,
+                      tila: aineisto.tila,
+                      uuid: aineisto.uuid,
+                    });
+                    setValue(`aineistoNahtavilla.${newKategoria}`, values);
                   }
-                }}
-              />
-            )
-          );
-        },
+                  remove(index);
+                }
+              }}
+            />
+          ),
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {
         header: "",
         id: "actions",
-        accessorFn: (aineisto) => {
-          const index = fields.findIndex((row) => row.uuid === aineisto.uuid);
-          return (
-            <ActionsColumn
-              fields={fields}
-              index={index}
-              remove={remove}
-              updateFieldArray={updateFieldArray}
-              aineisto={aineisto}
-              appendToPoistetut={appendToPoistetut}
-            />
-          );
-        },
+        accessorFn: (aineisto, index) => (
+          <ActionsColumn
+            fields={fields}
+            index={index}
+            remove={remove}
+            updateFieldArray={updateFieldArray}
+            aineisto={aineisto}
+            appendToPoistetut={appendToPoistetut}
+          />
+        ),
         meta: { minWidth: 120, widthFractions: 2 },
       },
     ],
     [
-      enrichedFields,
+      fields,
       props.kategoriaId,
       formState.errors.aineistoNahtavilla,
       register,
@@ -135,18 +121,12 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
       getValues,
       remove,
       setValue,
-      fields,
       updateFieldArray,
       appendToPoistetut,
     ]
   );
 
-  const findRowIndex = useCallback(
-    (id: string) => {
-      return enrichedFields.findIndex((row) => row.id.toString() === id);
-    },
-    [enrichedFields]
-  );
+  const findRowIndex = useCallback((id: string) => fields.findIndex((row) => row.id.toString() === id), [fields]);
 
   const onDragAndDrop = useCallback(
     (id: string, targetRowIndex: number) => {
@@ -160,7 +140,7 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
 
   const table = useReactTable({
     columns,
-    data: enrichedFields || [],
+    data: fields || [],
     getCoreRowModel: getCoreRowModel(),
     state: {
       pagination: undefined,

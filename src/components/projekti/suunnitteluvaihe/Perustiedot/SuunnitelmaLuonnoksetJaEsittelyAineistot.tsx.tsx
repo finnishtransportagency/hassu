@@ -1,5 +1,4 @@
 import Section from "@components/layout/Section2";
-import { AineistoInput, VuorovaikutusKierros, AineistoTila } from "@services/api";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
@@ -15,12 +14,9 @@ import Button from "@components/button/Button";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { uuid } from "common/util/uuid";
 import { H2, H3 } from "../../../Headings";
+import { FormAineisto } from "src/util/FormAineisto";
 
-interface Props {
-  vuorovaikutus: VuorovaikutusKierros | null | undefined;
-}
-
-export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus }: Props) {
+export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const { data: projekti } = useProjekti();
   const [expandedEsittelyAineisto, setExpandedEsittelyAineisto] = useState<Key[]>([]);
   const [expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset] = useState<Key[]>([]);
@@ -82,7 +78,6 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
                   {projekti?.oid && !!esittelyaineistot?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT}
-                      vuorovaikutus={vuorovaikutus}
                       esittelyaineistotFieldArray={esittelyaineistotFieldArray}
                       poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
                       poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
@@ -109,7 +104,6 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
                   {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET}
-                      vuorovaikutus={vuorovaikutus}
                       esittelyaineistotFieldArray={esittelyaineistotFieldArray}
                       poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
                       poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
@@ -134,15 +128,16 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
           const { lisatytEa, lisatytSl } = aineistot
-            .map<AineistoInput>((velhoAineisto) => ({
+            .map<FormAineisto>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
-              tila: AineistoTila.ODOTTAA_TUONTIA,
+              tila: null,
               uuid: uuid.v4(),
+              __typename: "Aineisto",
             }))
             .reduce<{
-              lisatytEa: AineistoInput[];
-              lisatytSl: AineistoInput[];
+              lisatytEa: FormAineisto[];
+              lisatytSl: FormAineisto[];
             }>(
               (acc, velhoAineisto) => {
                 const aineistoInSl = suunnitelmaluonnokset?.find((ea) => ea.dokumenttiOid == velhoAineisto.dokumenttiOid);
@@ -173,15 +168,16 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot({ vuorovaikutus
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
           const { lisatytEa, lisatytSl } = aineistot
-            .map<AineistoInput>((velhoAineisto) => ({
+            .map<FormAineisto>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
-              tila: AineistoTila.ODOTTAA_TUONTIA,
+              tila: null,
               uuid: uuid.v4(),
+              __typename: "Aineisto",
             }))
             .reduce<{
-              lisatytEa: AineistoInput[];
-              lisatytSl: AineistoInput[];
+              lisatytEa: FormAineisto[];
+              lisatytSl: FormAineisto[];
             }>(
               (acc, velhoAineisto) => {
                 const aineistoInEa = esittelyaineistot?.find((ea) => ea.dokumenttiOid == velhoAineisto.dokumenttiOid);

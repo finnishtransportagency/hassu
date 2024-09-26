@@ -7,14 +7,12 @@ import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import { getPaatosInfoText } from "../textsForDifferentPaatos";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "..";
 import { adaptVelhoAineistoToAineistoInput, combineOldAndNewAineisto } from "@components/projekti/common/Aineistot/util";
-import { HyvaksymisPaatosVaihe } from "@services/api";
 
 type Props = {
   paatosTyyppi: PaatosTyyppi;
-  vaihe: HyvaksymisPaatosVaihe | null | undefined;
 };
 
-export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi, vaihe }: Props) {
+export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props) {
   const { watch, control } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
   const { replace: replaceHyvaksymisPaatos } = useFieldArray({ control, name: "hyvaksymisPaatos" });
@@ -27,7 +25,7 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi, vaihe }:
       <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
         Tuo päätös
       </Button>
-      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot vaihe={vaihe} />}
+      {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
       <AineistojenValitseminenDialog
         open={paatosDialogOpen}
         infoText="Valitse yksi tai useampi päätöstiedosto."

@@ -1,23 +1,20 @@
 import { SelectOption } from "@components/form/Select";
-import { Aineisto, AineistoInput, AineistoInputNew, AineistoNew, AineistoTila, VelhoAineisto } from "@services/api";
+import { AineistoInputNew, AineistoNew, AineistoTila, VelhoAineisto } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { AineistoKategoria, AineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import { Translate } from "next-translate";
 import { Key } from "react";
-import { FieldArrayWithId } from "react-hook-form";
+import { FormAineisto } from "src/util/FormAineisto";
 
 export interface AineistotKategorioittain {
-  [kategoriaId: string]: AineistoInput[];
+  [kategoriaId: string]: FormAineisto[];
 }
 
 export interface AineistoNahtavillaTableFormValuesInterface {
   aineistoNahtavilla: AineistotKategorioittain;
-  poistetutAineistoNahtavilla: AineistoInput[];
+  poistetutAineistoNahtavilla: FormAineisto[];
 }
-
-export type FormAineisto = FieldArrayWithId<AineistoNahtavillaTableFormValuesInterface, `aineistoNahtavilla.${string}`, "id"> &
-  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tiedosto"> & { tuotu: string | undefined };
 
@@ -62,12 +59,12 @@ export function getAllOptionsForKategoriat({
 export function findKategoriaForVelhoAineisto(
   valitutVelhoAineistot: VelhoAineisto[],
   aineistoKategoriat: AineistoKategoriat
-): AineistoInput[] {
-  return valitutVelhoAineistot.map<AineistoInput>((velhoAineisto) => ({
+): FormAineisto[] {
+  return valitutVelhoAineistot.map<FormAineisto>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
     kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
-    tila: AineistoTila.ODOTTAA_TUONTIA,
+    tila: null,
     uuid: uuid.v4(),
   }));
 }
@@ -91,7 +88,7 @@ export function combineOldAndNewAineistoWithCategories({
   newAineisto,
 }: {
   oldAineisto: AineistotKategorioittain;
-  newAineisto: AineistoInput[];
+  newAineisto: FormAineisto[];
 }) {
   return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
     if (!find(Object.values(combinedNewAndOld).flat(), { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
@@ -108,7 +105,7 @@ export function combineOldAndNewAineistoWithCategories({
   }, oldAineisto || {});
 }
 
-export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAineisto?: AineistoInput[]; newAineisto: AineistoInput[] }) {
+export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAineisto?: FormAineisto[]; newAineisto: FormAineisto[] }) {
   return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
     if (!find(combinedNewAndOld, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
       combinedNewAndOld.push({ ...velhoAineisto, jarjestys: combinedNewAndOld.length });
@@ -117,11 +114,9 @@ export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAine
   }, oldAineisto || []);
 }
 
-export function adaptVelhoAineistoToAineistoInput(velhoAineisto: VelhoAineisto): AineistoInput {
-  return {
-    dokumenttiOid: velhoAineisto.oid,
-    nimi: velhoAineisto.tiedosto,
-    tila: AineistoTila.ODOTTAA_TUONTIA,
-    uuid: uuid.v4(),
-  };
-}
+export const adaptVelhoAineistoToAineistoInput = (velhoAineisto: VelhoAineisto): FormAineisto => ({
+  dokumenttiOid: velhoAineisto.oid,
+  nimi: velhoAineisto.tiedosto,
+  tila: AineistoTila.ODOTTAA_TUONTIA,
+  uuid: uuid.v4(),
+});

@@ -93,31 +93,52 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
     suunnitelmaluonnokset: getAineistotSchema(),
     videot: Yup.array()
       .notRequired()
-      .of(
-        Yup.object().shape({
-          SUOMI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
-          RUOTSI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
-        })
-      )
+      .of(videoSchema())
       .compact(function (linkki) {
         return !linkki.SUOMI;
       }),
-    suunnittelumateriaali: Yup.array()
-      .notRequired()
-      .of(
-        Yup.object()
-          .notRequired()
-          .shape({
-            SUOMI: lokalisoituEiPakollinenObjektiSchema({
-              kieli: Kieli.SUOMI,
-              additionalObjectValidations: getLinkkiNimiPakollinenSchema,
-            }),
+    suunnittelumateriaali: Yup.array().notRequired().of(suunnittelumateriaaliSchema()),
+    kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
+  }),
+});
+
+function suunnittelumateriaaliSchema() {
+  return Yup.object()
+    .notRequired()
+    .shape({
+      SUOMI: lokalisoituEiPakollinenObjektiSchema({
+        kieli: Kieli.SUOMI,
+        additionalObjectValidations: getLinkkiNimiPakollinenSchema,
+      }),
+    })
+    .when("$projekti.kielitiedot", {
+      is: (kielitiedot: Kielitiedot | null | undefined) =>
+        [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI),
+      then: (schema) =>
+        schema.concat(
+          Yup.object().shape({
             RUOTSI: lokalisoituEiPakollinenObjektiSchema({
               kieli: Kieli.RUOTSI,
               additionalObjectValidations: getLinkkiNimiPakollinenSchema,
             }),
           })
-      ),
-    kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
-  }),
-});
+        ),
+    });
+}
+
+function videoSchema() {
+  return Yup.object()
+    .shape({
+      SUOMI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
+    })
+    .when("$projekti.kielitiedot", {
+      is: (kielitiedot: Kielitiedot | null | undefined) =>
+        [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI),
+      then: (schema) =>
+        schema.concat(
+          Yup.object().shape({
+            RUOTSI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
+          })
+        ),
+    });
+}
