@@ -242,7 +242,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                 <p style={{ fontWeight: "bold" }}>{t("common:liitteet")}</p>
                 <p>{t("projekti:palautelomake.tuetut_tiedostomuodot_ovat")}</p>
                 {!!liitteetWatch.length && (
-                  <ContentSpacer>
+                  <ContentSpacer className="mb-4">
                     <label>{t("common:valitut_tiedostot")}</label>
                     {liitteetWatch.map((item, index) => (
                       <div key={item.nimi}>
@@ -274,7 +274,6 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       name={`liitteet`}
                       render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
                     />
-                    <div className="mb-4" />
                   </ContentSpacer>
                 )}
                 <input
