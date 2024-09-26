@@ -617,6 +617,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "Liite",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "LiitteenSkannausTulos",
         "possibleTypes": null,
