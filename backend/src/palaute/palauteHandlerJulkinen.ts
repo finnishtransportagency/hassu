@@ -25,20 +25,22 @@ class PalauteHandlerJulkinen {
       throw new NotFoundError("Projekti ei ole suunnitteluvaiheessa, joten palautetta ei voi antaa");
     }
     const palaute = adaptPalauteInput(oid, palauteInput);
-    if (palaute.liite) {
-      const liite = await fileService.persistFileToProjekti({
-        uploadedFileSource: palaute.liite,
-        oid,
-        targetFilePathInProjekti: "palautteet/" + palaute.id,
-      });
-      if (!liite) {
-        throw new NotFoundError("Liitettä ei löydy");
+    if (palaute.liitteet) {
+      for(let i = 0; i < palaute.liitteet.length; i++) {
+        const liite = await fileService.persistFileToProjekti({
+          uploadedFileSource: palaute.liitteet[i],
+          oid,
+          targetFilePathInProjekti: "palautteet/" + palaute.id,
+        });
+        if (!liite) {
+          throw new NotFoundError("Liitettä ei löydy");
+        }
+        palaute.liitteet[i] = liite;
+        await virusScanService.runScanOnFile(
+          config.yllapitoBucketName,
+          fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), liite)
+        );
       }
-      palaute.liite = liite;
-      await virusScanService.runScanOnFile(
-        config.yllapitoBucketName,
-        fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), liite)
-      );
     }
     const palauteId = await feedbackDatabase.insertFeedback(palaute);
     await palauteEmailService.sendEmailsToPalautteidenVastaanottajat(projektiFromDB);

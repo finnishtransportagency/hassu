@@ -28,7 +28,9 @@ class PalauteHandler {
       apiPalautteet = orderBy(apiPalautteet, ["vastaanotettu"], ["desc"]);
       const projektiPath = new ProjektiPaths(oid);
       for (const palaute of apiPalautteet) {
-        palaute.liitteenSkannausTulos = await virusScanService.getVirusScanResult(projektiPath, palaute.liite);
+        for (const liite of palaute.liitteet ?? []) {
+          liite.skannausTulos = await virusScanService.getVirusScanResult(projektiPath, liite.liite);
+        }
       }
     }
     return apiPalautteet;

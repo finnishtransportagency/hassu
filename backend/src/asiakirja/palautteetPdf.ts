@@ -18,7 +18,7 @@ export class PalautteetPdf {
 
     const table = {
       title: this.projektiNimi + " palautteet",
-      headers: [{ label: "Nimi" }, { label: "Kysymys tai palaute" }, { label: "Vastaanotettu" }, { label: "Liite", align: "center" }],
+      headers: [{ label: "Nimi" }, { label: "Kysymys tai palaute" }, { label: "Vastaanotettu" }, { label: "Liitteet", align: "center" }],
       rows: this.palautteet.map((p) => {
         let kysymysTaiPalaute = p.kysymysTaiPalaute ?? "";
         if (p.yhteydenottotapaPuhelin || p.yhteydenottotapaEmail) {
@@ -38,13 +38,13 @@ export class PalautteetPdf {
         } else {
           nimi = "-";
         }
-        return [nimi, kysymysTaiPalaute, formatDateTime(p.vastaanotettu), p.liite ? "X" : ""];
+        return [nimi, kysymysTaiPalaute, formatDateTime(p.vastaanotettu), p.liite || (p.liitteet?.length ?? 0) > 0 ? "X" : ""];
       }),
     };
     // A4 595.28 x 841.89 (portrait) (about width sizes)
     // width
     await doc.table(table, {
-      columnsSize: [100, 350, 70, 20],
+      columnsSize: [100, 340, 70, 30],
     });
 
     return this.generatePdfDocument(doc);

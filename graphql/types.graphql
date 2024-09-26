@@ -673,9 +673,13 @@ type Palaute {
   kysymysTaiPalaute: String
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
-  liite: String
-  liitteenSkannausTulos: LiitteenSkannausTulos
+  liitteet: [Liite!]
   vastattu: Boolean
+}
+
+type Liite {
+  liite: String!
+  skannausTulos: LiitteenSkannausTulos
 }
 
 enum LiitteenSkannausTulos {

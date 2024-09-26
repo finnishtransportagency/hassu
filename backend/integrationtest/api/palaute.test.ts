@@ -39,7 +39,7 @@ describe("Palaute", () => {
       yhteydenottotapaPuhelin: true,
       yhteydenottotapaEmail: false,
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      liite: await tallennaLogo(),
+      liitteet: [await tallennaLogo()],
     });
     await api.lisaaPalaute(oid, {
       etunimi: "Joku",

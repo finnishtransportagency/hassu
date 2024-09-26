@@ -45,11 +45,11 @@ class VirusScanService {
           Key: fileService.getYllapitoPathForProjektiFile(path, liite),
         })
       );
-      const virusscan = tagResponse.TagSet?.filter((tag) => tag.Key == "viruscan").pop();
+      const virusscan = tagResponse.TagSet?.filter((tag) => tag.Key === "viruscan").pop();
       if (virusscan) {
-        if (virusscan.Value == "clean") {
+        if (virusscan.Value === "clean") {
           return LiitteenSkannausTulos.OK;
-        } else if (virusscan.Value == "virus") {
+        } else if (virusscan.Value === "virus") {
           return LiitteenSkannausTulos.SAASTUNUT;
         }
       }
