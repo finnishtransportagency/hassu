@@ -21,7 +21,7 @@ import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-f
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } from "src/schemas/vuorovaikutus";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import Verkkotilaisuus from "./Verkkotilaisuus";
@@ -111,23 +111,13 @@ function tilaisuudetInputiksi(
     delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
     const palautetaan = {
       ...tilaisuusCopy,
+      nimi: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.nimi),
+      osoite: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.osoite),
+      paikka: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.paikka),
+      postitoimipaikka: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.postitoimipaikka),
+      lisatiedot: getDefaultValuesForLokalisoituText(kielitiedot, tilaisuus.lisatiedot),
       esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(tilaisuus.esitettavatYhteystiedot),
     };
-    if (palautetaan.nimi) {
-      palautetaan.nimi = poistaTypeNameJaTurhatKielet(palautetaan.nimi, kielitiedot);
-    }
-    if (palautetaan.osoite) {
-      palautetaan.osoite = poistaTypeNameJaTurhatKielet(palautetaan.osoite, kielitiedot);
-    }
-    if (palautetaan.paikka) {
-      palautetaan.paikka = poistaTypeNameJaTurhatKielet(palautetaan.paikka, kielitiedot);
-    }
-    if (palautetaan.postitoimipaikka) {
-      palautetaan.postitoimipaikka = poistaTypeNameJaTurhatKielet(palautetaan.postitoimipaikka, kielitiedot);
-    }
-    if (palautetaan.lisatiedot) {
-      palautetaan.lisatiedot = poistaTypeNameJaTurhatKielet(palautetaan.lisatiedot, kielitiedot);
-    }
     return palautetaan;
   });
 }

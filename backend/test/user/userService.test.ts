@@ -65,4 +65,18 @@ describe("userService", () => {
     const user = userService.requireVaylaUser();
     expect(user.roolit).to.eql(["abc", "def", "HassuAdmin", "hassu_admin", "hassu_kayttaja"]);
   });
+  it("should parse entraid roles succesfully", async function () {
+    validateTokenStub.returns({
+      "custom:rooli": "[\"hassu_admin\",\"hassu_kayttaja\",\"arn:aws:iam::123:role/HassuAdmin\"]",
+      "custom:sukunimi": "Meikalainen",
+      "custom:etunimi": "Matti",
+      "custom:puhelin": "12345678",
+      "custom:uid": "A000111",
+    });
+    await userService.identifyUser({
+      request: { headers: { "x-iam-accesstoken": "abc.123", "x-iam-data": "" } },
+    } as unknown as AppSyncResolverEvent<unknown>);
+    const user = userService.requireVaylaUser();
+    expect(user.roolit).to.eql(["hassu_admin", "hassu_kayttaja", "HassuAdmin"]);
+  });
 });

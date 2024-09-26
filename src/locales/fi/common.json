@@ -169,7 +169,8 @@
     "postitoimipaikka_max_30": "Postitoimipaikka voi olla enintään 30 merkkiä",
     "puh_vain_numerot": "Puhelinnumero voi sisältää vain numeroita",
     "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
-    "tiedostotyyppi_ei_tuettu": "Tiedostotyyppi ei ole tuettu"
+    "tiedostotyyppi_ei_tuettu": "Tiedostotyyppi ei ole tuettu",
+    "tiedostoja_liikaa": "Tiedostoja voi olla maksimissaan viisi"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",
@@ -187,7 +188,7 @@
   "valitut_tiedostot": "Valitut tiedostot",
   "hae_tiedosto": "Hae tiedosto",
   "sulje": "Sulje",
-  "liite": "Liite",
+  "liitteet": "Liitteet",
   "klo": "klo",
   "sivut": "Sivut",
   "edellinen": "Edellinen",

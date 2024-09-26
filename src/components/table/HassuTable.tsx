@@ -64,7 +64,7 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
       />
     </Span>
   ),
-  meta: { minWidth: 100, widthFractions: 1 },
+  meta: { minWidth: 60, widthFractions: 1 },
 });
 
 function SelectHeader<T>(props: HeaderContext<T, unknown>) {
@@ -175,7 +175,6 @@ const BodyContentVirElement = dynamic(() => import("./BodyContentVirtualElement"
 
 function TableBody<T>({ gridTemplateColumns, table }: HassuTableProps<T> & { gridTemplateColumns: string }) {
   const virtualizationOptions = table.options.meta?.virtualization;
-
   if (virtualizationOptions?.type === "window") {
     const BodyContentVirtualWindow = BodyContentVirWindow as React.ComponentType<BodyContentVirtualWindowProps<T>>;
     return <BodyContentVirtualWindow table={table} gridTemplateColumns={gridTemplateColumns} />;

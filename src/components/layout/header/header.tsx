@@ -28,6 +28,7 @@ import AnnaPalvelustaPalautettaDialog from "@components/kansalainen/tietoaPalvel
 import { Box } from "@mui/system";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 import { Kieli } from "../../../../common/graphql/apiModel";
+import { useIsYllapito } from "src/hooks/useIsYllapito";
 
 const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
@@ -206,7 +207,7 @@ export default function Header(): ReactElement {
     [kieli, t]
   );
 
-  const isYllapito = router.asPath.startsWith("/yllapito");
+  const isYllapito = useIsYllapito();
   const navigationRoutes = isYllapito ? virkamiesNavigationRoutes : kansalainenNavigationRoutesWithTranslation;
 
   const toggleHamburger = () => {
@@ -301,9 +302,10 @@ export default function Header(): ReactElement {
                   </Box>
                 ) : (
                   <Box
-                  sx={{
-                    marginTop: 11,
-                  }}>
+                    sx={{
+                      marginTop: 11,
+                    }}
+                  >
                     <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
                       Poistu Palvelusta
                     </StyledLink>

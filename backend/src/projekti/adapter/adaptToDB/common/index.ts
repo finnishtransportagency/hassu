@@ -10,3 +10,5 @@ export * from "./adaptLokalisoituLinkkiToSave";
 export * from "./getId";
 export * from "./forEverySaameDoAsync";
 export * from "./adaptLadattuTiedostoToSave";
+export * from "./adaptKuulutusSaamePDFtInput";
+export * from "./adaptUudelleenKuulutusToSave";

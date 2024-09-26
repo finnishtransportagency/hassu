@@ -99,7 +99,7 @@ export default function AineistoTable({
     },
     getRowId: (row) => row.id,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-    meta: { findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { findRowIndex, onDragAndDrop },
   });
   return <HassuTable table={tableProps} />;
 }

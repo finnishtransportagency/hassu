@@ -13,7 +13,6 @@ import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import {
   adaptUudelleenKuulutusToAPI,
-  adaptKuulutusSaamePDFtToAPI,
   adaptAineistoMuokkausToAPI,
   adaptAineistotToAPI,
   adaptIlmoituksenVastaanottajatToAPI,
@@ -22,6 +21,7 @@ import {
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptVelhoToAPI,
   adaptKielitiedotByAddingTypename,
+  adaptKuulutusSaamePDFtToAPI,
 } from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";

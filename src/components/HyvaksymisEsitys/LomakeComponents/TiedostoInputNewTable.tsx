@@ -166,7 +166,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
     },
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     getRowId: (row) => row.uuid,
-    meta: { tableId: id, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
+    meta: { tableId: id, findRowIndex, onDragAndDrop },
   });
 
   return <HassuTable table={table} />;

@@ -7,6 +7,8 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontaw
 import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import HassuLink, { HassuLinkProps } from "@components/HassuLink";
 import ContentSpacer from "./ContentSpacer";
+import { H2 } from "../Headings";
+import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
 
 type SocialMediaLinkProps = {
@@ -73,25 +75,27 @@ const elySocialMedia: SocialMediaLinkProps[] = [
 ];
 
 export const Footer = () => {
-  const { t, lang } = useTranslation("footer");
+  const { t } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
+  const isYllapito = useIsYllapito();
 
   return (
-    <footer className="py-16 bg-gray-lightest w-full mt-auto">
+    <StyledFooter>
       <Container
         sx={{
           columnGap: 75,
+          rowGap: 12,
           paddingLeft: { xs: 10, lg: undefined },
           paddingRight: { xs: 10, lg: undefined },
           display: "flex",
           flexDirection: { xs: "column", lg: "row" },
           justifyContent: { xs: "center", lg: "space-between" },
-          alignItems: { md: "end" },
+          alignItems: { lg: "end" },
         }}
       >
-        <div>
-          <div style={{ width: isDesktop ? "20em" : undefined }}>
+        <ContentSpacer gap={8} sx={{ width: isDesktop ? "20em" : undefined }}>
+          <ContentSpacer gap={2}>
             <div className="flex">
               <KuvaContainer className="justify-center">
                 <div className="my-auto text-center">
@@ -102,66 +106,33 @@ export const Footer = () => {
                 </div>
               </KuvaContainer>
             </div>
-            <p className="mt-5">{t("hankesuunnitelmista")}</p>
-            <ul>
-              <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
-              <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
-            </ul>
-          </div>
-        </div>
-        <div style={{ width: "100%" }}>
-          <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
-            <ContentSpacer gap={4}>
-              <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
-              <SocialMediaLinkList>
-                {vaylaSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-                  <SocialMediaLink
-                    key={title}
-                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.vayla.etuliite_genetiivi")} ${
-                      lang == "fi" ? titleIllatiivi : title
-                    }`}
-                    {...socialMedia}
-                  />
-                ))}
-              </SocialMediaLinkList>
-            </ContentSpacer>
-            <ContentSpacer gap={4}>
-              <p>{t("sosiaalinen_media.ely.otsikko")}</p>
-              <SocialMediaLinkList>
-                {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-                  <SocialMediaLink
-                    key={title}
-                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
-                      lang == "fi" ? titleIllatiivi : title
-                    }`}
-                    {...socialMedia}
-                  />
-                ))}
-              </SocialMediaLinkList>
-            </ContentSpacer>
+            <p>{t("hankesuunnitelmista")}</p>
           </ContentSpacer>
-          <Linkkilista2>
-            <li>
-              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta">
-                {t("linkki.tietoa_palvelusta")}
-              </StyledLink>
-            </li>
-            <li>
-              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/saavutettavuus">
-                {t("linkki.saavutettavuus")}
-              </StyledLink>
-            </li>
-            <li>
-              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/yhteystiedot-ja-palaute">
-                {t("linkki.yhteystiedot_ja_palaute")}
-              </StyledLink>
-            </li>
-          </Linkkilista2>
-        </div>
+          <ul>
+            <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
+            <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
+          </ul>
+          <div>
+            <span>&copy; {t("common:vaylavirasto")}</span>
+          </div>
+        </ContentSpacer>
+        <StyledRightContent>{isYllapito ? <FooterYllapitoContent /> : <FooterKansalaisContent />}</StyledRightContent>
       </Container>
-    </footer>
+    </StyledFooter>
   );
 };
+
+const StyledRightContent = styled("div")({
+  flex: "1",
+});
+
+const StyledFooter = styled("footer")(({ theme }) => ({
+  paddingTop: theme.spacing(16),
+  paddingBottom: theme.spacing(16),
+  backgroundColor: theme.palette.grey[100],
+  width: "100%",
+  marginTop: "auto",
+}));
 
 const SocialMediaLinkList = styled("div")(({ theme }) => ({
   display: "flex",
@@ -186,7 +157,7 @@ const SocialMediaLink = styled(({ icon, ref, ...props }: Omit<SocialMediaLinkPro
 }));
 
 const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX.Element => (
-  <li className="mt-1">
+  <li>
     <ExternalStyledLink
       sx={{
         span: { minWidth: "8em" },
@@ -194,6 +165,7 @@ const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX
         display: "inline-flex",
         gap: 3,
         alignItems: "center",
+        marginTop: 1,
       }}
       href={href}
     >
@@ -223,3 +195,79 @@ const Linkkilista2 = styled("ul")(
     textAlign: { xs: "center", lg: null },
   })
 );
+
+function FooterYllapitoContent() {
+  return (
+    <ContentSpacer gap={8}>
+      <div>
+        <H2 variant="plain">Ohjeet</H2>
+        <ul>
+          <FooterLinkkiEl href="https://vayla.fi/palveluntuottajat/ohjeluettelo" teksti="Ohjeluettelo" />
+          <FooterLinkkiEl href="https://ohje.velho.vaylapilvi.fi/" teksti="Projektivelhon ohjeet" />
+        </ul>
+      </div>
+      <div>
+        <H2 variant="plain">Oikopolut</H2>
+        <ul>
+          <FooterLinkkiEl href="https://sso.vayla.fi/" teksti="Etäkäyttö (Extranet, vpn, intra)" />
+          <FooterLinkkiEl href="https://velho.vaylapilvi.fi/" teksti="Projektivelho" />
+        </ul>
+      </div>
+    </ContentSpacer>
+  );
+}
+
+function FooterKansalaisContent() {
+  const { t, lang } = useTranslation("footer");
+  return (
+    <>
+      <ContentSpacer gap={8}>
+        <ContentSpacer gap={4}>
+          <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
+          <SocialMediaLinkList>
+            {vaylaSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+              <SocialMediaLink
+                key={title}
+                title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.vayla.etuliite_genetiivi")} ${
+                  lang == "fi" ? titleIllatiivi : title
+                }`}
+                {...socialMedia}
+              />
+            ))}
+          </SocialMediaLinkList>
+        </ContentSpacer>
+        <ContentSpacer gap={4}>
+          <p>{t("sosiaalinen_media.ely.otsikko")}</p>
+          <SocialMediaLinkList>
+            {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+              <SocialMediaLink
+                key={title}
+                title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
+                  lang == "fi" ? titleIllatiivi : title
+                }`}
+                {...socialMedia}
+              />
+            ))}
+          </SocialMediaLinkList>
+        </ContentSpacer>
+      </ContentSpacer>
+      <Linkkilista2>
+        <li>
+          <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta">
+            {t("linkki.tietoa_palvelusta")}
+          </StyledLink>
+        </li>
+        <li>
+          <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/saavutettavuus">
+            {t("linkki.saavutettavuus")}
+          </StyledLink>
+        </li>
+        <li>
+          <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/yhteystiedot-ja-palaute">
+            {t("linkki.yhteystiedot_ja_palaute")}
+          </StyledLink>
+        </li>
+      </Linkkilista2>
+    </>
+  );
+}

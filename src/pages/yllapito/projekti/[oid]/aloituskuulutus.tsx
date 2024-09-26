@@ -39,7 +39,8 @@ import { KeyedMutator } from "swr";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "hassu-common/util/dateUtils";
 import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
-import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
+import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForUudelleenKuulutus";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
@@ -136,8 +137,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
       const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
       tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
         POHJOISSAAME: {
-          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
-          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null,
         },
       };
     }

@@ -23,6 +23,6 @@ export const aloituskuulutusSchema = Yup.object().shape({
       requiredText: "Seloste on annettava",
     }),
     ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
-    aloituskuulutusSaamePDFt: kuulutusSaamePDFtInput().required(),
+    aloituskuulutusSaamePDFt: kuulutusSaamePDFtInput(false).required(),
   }),
 });

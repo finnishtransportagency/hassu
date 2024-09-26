@@ -3,14 +3,13 @@ import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { HyvaksymisPaatosEmailCreator } from "../../email/hyvaksymisPaatosEmailCreator";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
-import { fileService } from "../../files/fileService";
+import { KuulutusHyvaksyntaEmailSender } from "./KuulutusHyvaksyntaEmailSender";
 import {
   findHJatko1KuulutusLastApproved,
   findHJatko2KuulutusLastApproved,
@@ -77,60 +76,33 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     const pdft = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
       .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
       .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
-        if (!pdft.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath on määrittelemättä`
-          );
-        }
-        if (!pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
-          );
-        }
-        const ilmoitusKuulutusPdf = await fileService.getFileAsAttachment(projekti.oid, pdft.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath);
-        const ilmoitusKunnallePdf = await fileService.getFileAsAttachment(
-          projekti.oid,
-          pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
+        const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = [
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
+        ];
+        const attachments = await Promise.all(
+          pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
         );
-        if (!ilmoitusKuulutusPdf) {
-          throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKuulutusPdf:ää ei löytynyt kielellä '${kieli}'`);
-        }
-        if (!ilmoitusKunnallePdf) {
-          throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKunnallePdf:ää ei löytynyt kielellä '${kieli}'`);
-        }
-
-        (await lahetettavatPDFt).push(ilmoitusKuulutusPdf, ilmoitusKunnallePdf);
+        (await lahetettavatPDFt).push(...attachments);
 
         if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-          const pdfIlmoitusSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto;
-          if (!pdfIlmoitusSaamePath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto on määrittelemättä`
-            );
-          }
-          const hyvaksyttyKuulutusIlmoitusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfIlmoitusSaamePath);
-          if (!hyvaksyttyKuulutusIlmoitusSaamePDF) {
-            throw new Error("HyvaksyttyKuulutusIlmoitusSaamePDF:n saaminen epäonnistui");
-          }
-
-          (await lahetettavatPDFt).push(hyvaksyttyKuulutusIlmoitusSaamePDF);
+          const kuulutusIlmoitusPDF = await this.getMandatoryProjektiFileAsAttachment(
+            julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto,
+            projekti,
+            `kuulutusIlmoitusPDF ${kieli}`
+          );
+          (await lahetettavatPDFt).push(kuulutusIlmoitusPDF);
         }
 
         return lahetettavatPDFt;
       }, Promise.resolve([]));
     const paatosTiedostot =
       (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        if (!aineisto.tiedosto) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostopolkua ei ole määritelty`
-          );
-        }
-        const aineistoTiedosto = await fileService.getFileAsAttachment(projekti.oid, aineisto.tiedosto);
-        if (!aineistoTiedosto) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostoa ei voitu lisätä liitteeksi`
-          );
-        }
+        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
+          aineisto.tiedosto,
+          projekti,
+          `oid:${aineisto.dokumenttiOid}`
+        );
         (await tiedostot).push(aineistoTiedosto);
         return tiedostot;
       }, Promise.resolve([]))) ?? [];
@@ -164,64 +136,32 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
         .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
-          const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
-          const ilmoitusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
-          const ilmoitusLausunnonAntajallePdfPath = pdft.hyvaksymisIlmoitusLausunnonantajillePDFPath;
-          const ilmoitusMuistuttajillePdfPath = pdft.hyvaksymisIlmoitusMuistuttajillePDFPath;
-
-          if (!kuulutusPdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisKuulutusPDFPath on määrittelemättä`
-            );
-          }
-          if (!ilmoitusPdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
-            );
-          }
-          if (!ilmoitusLausunnonAntajallePdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusLausunnonantajillePDFPath on määrittelemättä`
-            );
-          }
-          if (!ilmoitusMuistuttajillePdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusMuistuttajillePDFPath on määrittelemättä`
-            );
-          }
-          const kuulutusPDF = await fileService.getFileAsAttachment(projekti.oid, kuulutusPdfPath);
-          const ilmoitusPdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusPdfPath);
-          const ilmoitusLausunnonAntajallePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusLausunnonAntajallePdfPath);
-          const ilmoitusMuistuttajillePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusMuistuttajillePdfPath);
-
-          if (!kuulutusPDF) {
-            throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          if (!ilmoitusPdf) {
-            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusPdf:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          if (!ilmoitusLausunnonAntajallePdf) {
-            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusLausunnonAntajallePdf:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          if (!ilmoitusMuistuttajillePdf) {
-            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusMuistuttajillePdf:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf, ilmoitusLausunnonAntajallePdf, ilmoitusMuistuttajillePdf);
+          const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = [
+            "hyvaksymisKuulutusPDFPath",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath",
+          ];
+          const attachments = await Promise.all(
+            pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+          );
+          (await lahetettavatPDFt).push(...attachments);
           return lahetettavatPDFt;
         }, Promise.resolve([]));
 
-      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-        const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
-        if (!pdfSaamePath) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
-          );
-        }
-        const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
-        if (!hyvaksyttyKuulutusSaamePDF) {
-          throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
-        }
-        emailToProjektiPaallikko.attachments.push(hyvaksyttyKuulutusSaamePDF);
+      if (projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME) {
+        const pdfKeys: (keyof KuulutusSaamePDF)[] = ["kuulutusPDF", "kirjeTiedotettavillePDF"];
+        const attachments = await Promise.all(
+          pdfKeys.map(
+            async (key) =>
+              await this.getMandatoryProjektiFileAsAttachment(
+                julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
+                projekti,
+                `${key} ${Kieli.POHJOISSAAME}`
+              )
+          )
+        );
+        emailToProjektiPaallikko.attachments.push(...attachments);
       }
 
       await emailClient.sendEmail(emailToProjektiPaallikko);
@@ -243,56 +183,25 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
       emailToProjektiPaallikko.attachments = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
         .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
         .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
-          const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
-          const ilmoitusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
-          const ilmoitusLausunnonAntajallePdfPath = pdft.hyvaksymisIlmoitusLausunnonantajillePDFPath;
-
-          if (!kuulutusPdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisKuulutusPDFPath on määrittelemättä`
-            );
-          }
-          if (!ilmoitusPdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
-            );
-          }
-          if (!ilmoitusLausunnonAntajallePdfPath) {
-            throw new Error(
-              `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisIlmoitusLausunnonantajillePDFPath on määrittelemättä`
-            );
-          }
-
-          const kuulutusPDF = await fileService.getFileAsAttachment(projekti.oid, kuulutusPdfPath);
-          const ilmoitusPdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusPdfPath);
-          const ilmoitusLausunnonAntajallePdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusLausunnonAntajallePdfPath);
-
-          if (!kuulutusPDF) {
-            throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          if (!ilmoitusPdf) {
-            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusPdf:ää ei löytynyt kielellä '${kieli}'`);
-          }
-          if (!ilmoitusLausunnonAntajallePdf) {
-            throw new Error(`sendApprovalMailsAndAttachments: ilmoitusLausunnonAntajallePdf:ää ei löytynyt kielellä '${kieli}'`);
-          }
-
-          (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf, ilmoitusLausunnonAntajallePdf);
+          const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = [
+            "hyvaksymisKuulutusPDFPath",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath",
+          ];
+          const attachments = await Promise.all(
+            pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+          );
+          (await lahetettavatPDFt).push(...attachments);
           return lahetettavatPDFt;
         }, Promise.resolve([]));
 
-      if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-        const pdfSaamePath = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto;
-        if (!pdfSaamePath) {
-          throw new Error(
-            `sendApprovalMailsAndAttachments: hyvaksymisPaatosVaiheJulkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto on määrittelemättä`
-          );
-        }
-        const hyvaksyttyKuulutusSaamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
-        if (!hyvaksyttyKuulutusSaamePDF) {
-          throw new Error("HyvaksyttyKuulutusSaamePDF:n saaminen epäonnistui");
-        }
-        emailToProjektiPaallikko.attachments.push(hyvaksyttyKuulutusSaamePDF);
+      if (projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME) {
+        const kuulutusPDF = await this.getMandatoryProjektiFileAsAttachment(
+          julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto,
+          projekti,
+          `kuulutusPDF ${Kieli.POHJOISSAAME}`
+        );
+        emailToProjektiPaallikko.attachments.push(kuulutusPDF);
       }
 
       await emailClient.sendEmail(emailToProjektiPaallikko);

@@ -38,6 +38,17 @@ export default function Painikkeet({ projekti }: Props) {
       if (formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
         formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
+
+      const pohjoisSaameKirjeTiedotettavillePdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
+        ?.kirjeTiedotettavillePDFPath as unknown as File | undefined | string;
+      if (
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDFPath &&
+        pohjoisSaameKirjeTiedotettavillePdf instanceof File
+      ) {
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await talletaTiedosto(
+          pohjoisSaameKirjeTiedotettavillePdf
+        );
+      }
       return formData;
     },
     [talletaTiedosto]

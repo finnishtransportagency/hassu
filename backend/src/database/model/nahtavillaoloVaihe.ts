@@ -2,7 +2,6 @@ import {
   Aineisto,
   IlmoituksenVastaanottajat,
   Kielitiedot,
-  KuulutusSaamePDFt,
   LadattuTiedosto,
   LocalizedMap,
   StandardiYhteystiedot,
@@ -10,6 +9,7 @@ import {
   Velho,
   Yhteystieto,
   AineistoMuokkaus,
+  KuulutusSaamePDFt,
 } from ".";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 

@@ -13,21 +13,27 @@ import fetch from "cross-fetch";
 import { SuomiFiCognitoKayttaja } from "./suomiFiCognitoKayttaja";
 import { invokeLambda } from "../aws/lambda";
 
-function parseRoles(roles: string): string[] | undefined {
-  return roles
-    ? roles
-        .replace("\\", "")
-        .split(",")
-        .map((s) => {
-          const s1 = s.split("/").pop();
-          if (s1) {
-            return s1;
-          }
-          // tsc fails if undefined is returned here
-          return "";
-        })
-        .filter((s) => s)
-    : undefined;
+function parseRoles(roles?: string): string[] | undefined {
+  if (!roles) {
+    return undefined;
+  }
+  function parseRole(s: string) {
+    const s1 = s.split("/").pop();
+    if (s1) {
+      return s1;
+    }
+    // tsc fails if undefined is returned here
+    return "";
+  }
+  try {
+    return JSON.parse(roles).map(parseRole).filter((s: string) => s);
+  } catch (e) {
+    return roles
+      .replace("\\", "")
+      .split(",")
+      .map(parseRole)
+      .filter((s) => s);
+  }
 }
 
 export type KayttajaPermissions = {

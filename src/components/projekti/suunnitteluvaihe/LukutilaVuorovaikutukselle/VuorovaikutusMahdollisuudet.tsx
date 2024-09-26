@@ -15,7 +15,7 @@ export default function VuorovaikutusMahdollisuudet({
   vuorovaikutusKierrosJulkaisu,
   setOpenVuorovaikutustilaisuus,
   showAjansiirtopainikkeet,
-}: Props): ReactElement {
+}: Readonly<Props>): ReactElement {
   const vuorovaikutusTilaisuudet = vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet || null;
 
   return (

@@ -156,7 +156,7 @@ class ProjektiSchedulerService {
   private async listAllSchedules(oid: string): Promise<ListSchedulesCommandOutput> {
     const scheduler = getScheduler();
     const scheduleNamePrefix = createScheduleNamePrefix(oid);
-    return scheduler.send(new ListSchedulesCommand({ NamePrefix: scheduleNamePrefix, GroupName: config.env }));
+    return await scheduler.send(new ListSchedulesCommand({ NamePrefix: scheduleNamePrefix, GroupName: config.env }));
   }
 }
 

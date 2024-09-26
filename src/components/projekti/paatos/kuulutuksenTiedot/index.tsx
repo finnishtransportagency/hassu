@@ -1,5 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import {
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheInput,
+  KirjaamoOsoite,
+  KuulutusPDFInput,
+  MuokkausTila,
+  TallennaProjektiInput,
+} from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -17,13 +24,13 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
 import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
-import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
+import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForUudelleenKuulutus";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
+import PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
-import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import useValidationMode from "src/hooks/useValidationMode";
 import { getPaatosSpecificData, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -83,15 +90,20 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const { kuulutusIlmoitusPDF, kuulutusPDF } = julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
+      const { kuulutusIlmoitusPDF, kuulutusPDF, kirjeTiedotettavillePDF } =
+        julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
 
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
       const formValuePaatosVaihe = formValues[paatosVaiheAvain];
+      const POHJOISSAAME: KuulutusPDFInput = {
+        kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null,
+        kuulutusPDFPath: kuulutusPDF?.tiedosto || null,
+      };
+      if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+        POHJOISSAAME.kirjeTiedotettavillePDFPath = kirjeTiedotettavillePDF?.tiedosto || null;
+      }
       formValuePaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
-        POHJOISSAAME: {
-          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
-          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
-        },
+        POHJOISSAAME,
       };
     }
 
@@ -131,17 +143,6 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameKuulutusTiedostotMetodi {
-    switch (paatosTyyppi) {
-      case PaatosTyyppi.HYVAKSYMISPAATOS:
-        return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
-      case PaatosTyyppi.JATKOPAATOS1:
-        return "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
-      case PaatosTyyppi.JATKOPAATOS2:
-        return "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
-    }
-  }
-
   return (
     <>
       {voiMuokata && (
@@ -169,11 +170,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
               )}
               {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
-                <PohjoissaamenkielinenKuulutusJaIlmoitusInput
-                  saamePdfAvain={saamePdfAvain(paatosTyyppi)}
-                  ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
-                  kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
-                />
+                <PaatoksenPohjoissaamiTiedostot projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisematonPaatos={julkaisematonPaatos} />
               )}
               <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
             </fieldset>
@@ -181,16 +178,50 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         </FormProvider>
       )}
       {!voiMuokata && projekti && julkaisu && (
-        <>
-          <FormProvider {...useFormReturn}>
-            <form>
-              <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
-              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
-            </form>
-          </FormProvider>
-        </>
+        <FormProvider {...useFormReturn}>
+          <form>
+            <Lukunakyma projekti={projekti} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
+            <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
+          </form>
+        </FormProvider>
       )}
       <PdfPreviewForm ref={pdfFormRef} />
     </>
   );
+}
+
+type PaatoksenPohjoissaamiTiedostotProps = {
+  projekti: ProjektiLisatiedolla;
+  paatosTyyppi: PaatosTyyppi;
+  julkaisematonPaatos: HyvaksymisPaatosVaihe | null | undefined;
+};
+
+function PaatoksenPohjoissaamiTiedostot(props: PaatoksenPohjoissaamiTiedostotProps) {
+  if (props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return (
+      <PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput
+        saamePdfAvain="hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+        kirjeTiedotettavilleTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDF}
+      />
+    );
+  } else if (props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    return (
+      <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+        saamePdfAvain="jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+      />
+    );
+  } else if (props.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+    return (
+      <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+        saamePdfAvain="jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
+        ilmoitusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+        kuulutusTiedot={props.julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+      />
+    );
+  }
+  return null;
 }

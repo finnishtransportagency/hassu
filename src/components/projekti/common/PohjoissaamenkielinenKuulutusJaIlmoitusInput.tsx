@@ -2,11 +2,11 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { LadattuTiedosto } from "@services/api";
 import React, { FunctionComponent } from "react";
-import SaameTiedostoValitsin, { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
+import SaameTiedostoValitsin, { KuulutusTiedostotPrefix } from "@components/projekti/common/SaameTiedostoValitsin";
 import { H2, H3 } from "../../Headings";
 
 type Props = {
-  saamePdfAvain: SaameKuulutusTiedostotMetodi;
+  saamePdfAvain: KuulutusTiedostotPrefix;
   ilmoitusTiedot: LadattuTiedosto | null | undefined;
   kuulutusTiedot: LadattuTiedosto | null | undefined;
 };

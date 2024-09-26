@@ -26,7 +26,7 @@ class PalauteEmailService {
   async sendEmailToFeedbackSender(projekti: DBProjekti, palaute: Palaute) {
     const vastaanotettu = nyt().format("DD.MM.YYYY HH:mm");
     const ruotsiksi = projekti.kielitiedot?.ensisijainenKieli === Kieli.RUOTSI || projekti.kielitiedot?.toissijainenKieli === Kieli.RUOTSI;
-    const liite = palaute.liite ? palaute.liite.substring(palaute.liite.lastIndexOf("/") + 1) : "";
+    const liite = palaute.liitteet ? palaute.liitteet.map((liite) => liite.substring(liite.lastIndexOf("/") + 1)).join("\n") : "";
     let text = `Palaute vastaanotettu
 ${vastaanotettu}
 Nimi
@@ -40,7 +40,7 @@ Suunnitelman nimi
 ${projekti.velho?.nimi ?? ""}
 Palaute
 ${palaute.kysymysTaiPalaute ?? ""}
-${liite ? "Sähköpostiviestin liite\n" + liite : ""}
+${liite ? "Sähköpostiviestin liitteet\n" + liite : ""}
 `
     if (ruotsiksi) {
       text += text = `
@@ -57,7 +57,7 @@ Planens namn
 ${projekti.kielitiedot?.projektinNimiVieraskielella ?? ""}
 Respons
 ${palaute.kysymysTaiPalaute ?? ""}
-${liite ? "Bifogad fil\n" + liite : ""}
+${liite ? "Bifogade filer\n" + liite : ""}
 `
     }
     if (palaute.sahkoposti) {

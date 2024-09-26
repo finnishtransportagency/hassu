@@ -11,13 +11,14 @@ import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
-import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
+import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/FormAineisto/handleAineistoArraysForSave";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./paatos/aineistot/MuokkausNakyma";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { NahtavilleAsetettavatAineistotFormValues } from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/Muokkausnakyma";
 import HassuDialog from "@components/HassuDialog";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import { isInPast } from "common/util/dateUtils";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 
 type SiirtymaTyyppi =
   | TilasiirtymaTyyppi.NAHTAVILLAOLO
@@ -119,7 +120,7 @@ export default function AineistoSivunPainikkeet({
         } catch {}
       })()
     );
-  }, [withLoadingSpinner, projekti?.oid, api, siirtymaTyyppi, showSuccessMessage, reloadProjekti, close]);
+  }, [withLoadingSpinner, projekti.oid, api, siirtymaTyyppi, showSuccessMessage, reloadProjekti, close]);
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
@@ -134,20 +135,20 @@ export default function AineistoSivunPainikkeet({
 
   const aineistotReady = useIsProjektiReadyForTilaChange();
 
+  const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
+
   const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu?.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu?.kuulutusPaiva]);
 
   const aineistotReadyForHyvaksynta = aineistotPresentAndNoKategorisoimattomat && aineistotReady && !isDirty && !kuulutusPaivaIsInPast;
 
   const savePaatosAineisto = useCallback(
-    async (formData: FormValues, afterSaveCallback?: () => Promise<void>) => {
+    async (formData: FormValues) => {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
       await api.tallennaProjekti(tallennaProjektiInput);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
-      await afterSaveCallback?.();
+      await checkAineistoValmiit({ retries: 5 });
+      await reloadProjekti?.();
     },
-    [api, muokkausTila, reloadProjekti, siirtymaTyyppi]
+    [api, muokkausTila, reloadProjekti, siirtymaTyyppi, checkAineistoValmiit]
   );
 
   const sendForApprovalAineistoMuokkaus = useCallback(
@@ -167,7 +168,8 @@ export default function AineistoSivunPainikkeet({
               log.error(e);
             }
           };
-          await savePaatosAineisto(formData, sendForApproval);
+          await savePaatosAineisto(formData);
+          await sendForApproval();
         })()
       ),
     [api, reloadProjekti, savePaatosAineisto, showSuccessMessage, siirtymaTyyppi, withLoadingSpinner]
@@ -201,7 +203,8 @@ export default function AineistoSivunPainikkeet({
           await router.push({ query: { oid: projekti?.oid }, pathname: paatosPathnames[siirtymaTyyppi] });
         };
         try {
-          await savePaatosAineisto(formData, moveToKuulutusPage);
+          await savePaatosAineisto(formData);
+          await moveToKuulutusPage();
           showSuccessMessage("Tallennus onnistui");
         } catch (e) {
           log.error("OnSubmit Error", e);
@@ -214,60 +217,58 @@ export default function AineistoSivunPainikkeet({
   }
 
   return (
-    <>
-      <Section noDivider>
-        {muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
-          <Stack justifyContent={{ md: "space-between" }} direction={{ xs: "column", md: "row" }}>
-            <Button id="poistu_aineiston_muokkaus" type="button" onClick={open}>
-              Poistu muokkaustilasta
-            </Button>
-            <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-              <Button id="save_draft" disabled={kuulutusPaivaIsInPast} onClick={handleSubmit(saveDraft)}>
-                Tallenna Luonnos
-              </Button>
-              <Button
-                primary
-                disabled={!aineistotReadyForHyvaksynta}
-                id="aineistomuokkaus_send_for_approval"
-                type="button"
-                onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
-              >
-                Lähetä hyväksyttäväksi
-              </Button>
-            </Stack>
-            <HassuDialog title="Poistu aineistojen muokkaustilasta" maxWidth="sm" open={isOpen} onClose={close}>
-              <DialogContent>
-                <p>
-                  Haluatko poistua aineistojen muokkaustilasta? Painamalla Kyllä-painiketta poistut aineistojen muokkaustilasta. Tehtyjä
-                  muutoksia ei tallenneta.
-                </p>
-              </DialogContent>
-              <DialogActions>
-                <Button id="accept_poistu_aineiston_muokkaus" type="button" onClick={cancelAineistoMuokkaus} primary>
-                  Kyllä
-                </Button>
-                <Button id="cancel_poistu_aineiston_muokkaus" type="button" onClick={close}>
-                  Peruuta
-                </Button>
-              </DialogActions>
-            </HassuDialog>
-          </Stack>
-        ) : (
+    <Section noDivider>
+      {muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
+        <Stack justifyContent={{ md: "space-between" }} direction={{ xs: "column", md: "row" }}>
+          <Button id="poistu_aineiston_muokkaus" type="button" onClick={open}>
+            Poistu muokkaustilasta
+          </Button>
           <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-            <Button id="save_draft" onClick={handleSubmit(saveDraft)}>
+            <Button id="save_draft" disabled={kuulutusPaivaIsInPast} onClick={handleSubmit(saveDraft)}>
               Tallenna Luonnos
             </Button>
             <Button
               primary
-              disabled={!aineistotPresentAndNoKategorisoimattomat}
-              id="save_and_move_to_kuulutus_page"
-              onClick={handleSubmit(saveAndMoveToKuulutusPage)}
+              disabled={!aineistotReadyForHyvaksynta}
+              id="aineistomuokkaus_send_for_approval"
+              type="button"
+              onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
             >
-              Tallenna ja Siirry kuulutukselle
+              Lähetä hyväksyttäväksi
             </Button>
           </Stack>
-        )}
-      </Section>
-    </>
+          <HassuDialog title="Poistu aineistojen muokkaustilasta" maxWidth="sm" open={isOpen} onClose={close}>
+            <DialogContent>
+              <p>
+                Haluatko poistua aineistojen muokkaustilasta? Painamalla Kyllä-painiketta poistut aineistojen muokkaustilasta. Tehtyjä
+                muutoksia ei tallenneta.
+              </p>
+            </DialogContent>
+            <DialogActions>
+              <Button id="accept_poistu_aineiston_muokkaus" type="button" onClick={cancelAineistoMuokkaus} primary>
+                Kyllä
+              </Button>
+              <Button id="cancel_poistu_aineiston_muokkaus" type="button" onClick={close}>
+                Peruuta
+              </Button>
+            </DialogActions>
+          </HassuDialog>
+        </Stack>
+      ) : (
+        <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+          <Button id="save_draft" onClick={handleSubmit(saveDraft)}>
+            Tallenna Luonnos
+          </Button>
+          <Button
+            primary
+            disabled={!aineistotPresentAndNoKategorisoimattomat}
+            id="save_and_move_to_kuulutus_page"
+            onClick={handleSubmit(saveAndMoveToKuulutusPage)}
+          >
+            Tallenna ja Siirry kuulutukselle
+          </Button>
+        </Stack>
+      )}
+    </Section>
   );
 }

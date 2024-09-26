@@ -5,7 +5,6 @@ import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import {
   adaptUudelleenKuulutusToAPI,
-  adaptKuulutusSaamePDFtToAPI,
   adaptAineistoMuokkausToAPI,
   adaptLokalisoituTekstiToAPI,
   adaptAineistotToAPI,
@@ -15,6 +14,7 @@ import {
   adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptKielitiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
+  adaptKuulutusSaamePDFtToAPI,
 } from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../../util/assertions";

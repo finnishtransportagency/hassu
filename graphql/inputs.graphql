@@ -78,6 +78,12 @@ input KuulutusPDFInput {
   kuulutusIlmoitusPDFPath: String
 }
 
+input KuulutusPDFInput {
+  kuulutusPDFPath: String
+  kuulutusIlmoitusPDFPath: String
+  kirjeTiedotettavillePDFPath: String
+}
+
 input KuulutusSaamePDFtInput {
   POHJOISSAAME: KuulutusPDFInput
 }
@@ -456,7 +462,7 @@ input PalauteInput {
   kysymysTaiPalaute: String
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
-  liite: String
+  liitteet: [String!]
 }
 
 input MuistutusInput {

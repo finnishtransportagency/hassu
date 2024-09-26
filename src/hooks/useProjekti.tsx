@@ -7,14 +7,16 @@ import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 import { userHasAccessToProjekti, userIsAdmin, userIsProjectManagerOrSubstitute } from "hassu-common/util/userRights";
+import { useIsYllapito } from "./useIsYllapito";
 
 export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
 
 export function useProjekti(config: useProjektiOptions = {}) {
   const api = useApi();
   const router = useRouter();
+  const isYllapito = useIsYllapito();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  if (!router.asPath.startsWith("/yllapito")) {
+  if (!isYllapito) {
     throw new Error("Inproper route for the use of useProjekti hook");
   }
 

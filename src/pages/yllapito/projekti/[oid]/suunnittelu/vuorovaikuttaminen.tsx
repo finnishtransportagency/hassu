@@ -18,8 +18,8 @@ export default function VuorovaikutusKierrosWrapper() {
   return <VuorovaikutusKierros projekti={projekti} />;
 }
 
-function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
-  const kierrosId = projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0;
+function VuorovaikutusKierros({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>): ReactElement {
+  const kierrosId = projekti.vuorovaikutusKierros?.vuorovaikutusNumero ?? 0;
 
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
 
@@ -39,15 +39,15 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
-        <VuorovaikutusKierrosLukutila vuorovaikutusnro={kierrosId} projekti={projekti} />
+      <SuunnitteluPageLayout showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
+        <VuorovaikutusKierrosLukutila vuorovaikutusnro={kierrosId} projekti={projekti} showMuokkaaTilaisuuksia={!projekti.nahtavillaoloVaiheJulkaisu} />
       </SuunnitteluPageLayout>
     );
   }
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+      <SuunnitteluPageLayout showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
         <p>
           Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
           kuulutuksen tietoja ei ole saatavilla palvelusta.
@@ -57,7 +57,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   }
 
   return (
-    <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+    <SuunnitteluPageLayout showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={kierrosId} />
     </SuunnitteluPageLayout>
   );

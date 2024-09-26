@@ -81,7 +81,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                         }
                       },
                     })}
-                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[index]?.[ensisijainenKaannettavaKieli]?.nimi}
                   />
                   <TextInput
                     style={{ width: "100%" }}
@@ -98,7 +98,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                         }
                       },
                     })}
-                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[index]?.[ensisijainenKaannettavaKieli]?.url}
                   />
                 </div>
               )}
@@ -125,7 +125,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
                       },
                     })}
-                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[index]?.[toissijainenKaannettavaKieli]?.nimi}
                   />
                   <TextInput
                     style={{ width: "100%" }}
@@ -140,7 +140,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
                         trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
                       },
                     })}
-                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[index]?.[toissijainenKaannettavaKieli]?.url}
                   />
                 </div>
               )}

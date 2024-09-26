@@ -1,7 +1,7 @@
-import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
-import { mapAineistoToInput } from "./mapAineistoToInput";
+import { Aineisto, AineistoTila } from "@services/api";
+import { FormAineisto } from "./FormAineisto";
 
-type SplittedAineistoInput = { poistettu: AineistoInput[]; lisatty: AineistoInput[] };
+type SplittedAineistoInput = { poistettu: FormAineisto[]; lisatty: FormAineisto[] };
 
 export const handleAineistoArrayForDefaultValues = (
   aineistot: Aineisto[] | null | undefined,
@@ -11,8 +11,17 @@ export const handleAineistoArrayForDefaultValues = (
 
   return (
     aineistot
-      ?.map(mapAineistoToInput)
-      .reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetutAineistoInput(addDefaultJarjestys), initialSplittedAineistoInput) ||
+      ?.map<FormAineisto>(({ dokumenttiOid, nimi, tila, uuid, jarjestys, kategoriaId, tiedosto, tuotu }) => ({
+        dokumenttiOid,
+        nimi,
+        tila,
+        uuid,
+        jarjestys,
+        kategoriaId,
+        tiedosto,
+        tuotu,
+      }))
+      ?.reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetutAineistoInput(addDefaultJarjestys), initialSplittedAineistoInput) ||
     initialSplittedAineistoInput
   );
 };
@@ -20,9 +29,9 @@ export const handleAineistoArrayForDefaultValues = (
 const reduceToLisatytJaPoistetutAineistoInput =
   (addDefaultJarjestys: boolean) =>
   (
-    acc: { poistettu: AineistoInput[]; lisatty: AineistoInput[] },
-    aineisto: AineistoInput
-  ): { poistettu: AineistoInput[]; lisatty: AineistoInput[] } => {
+    acc: { poistettu: FormAineisto[]; lisatty: FormAineisto[] },
+    aineisto: FormAineisto
+  ): { poistettu: FormAineisto[]; lisatty: FormAineisto[] } => {
     if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA || aineisto.tila === AineistoTila.POISTETTU) {
       acc.poistettu.push(aineisto);
     } else {

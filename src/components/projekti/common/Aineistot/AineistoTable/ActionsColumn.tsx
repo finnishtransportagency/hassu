@@ -4,7 +4,8 @@ import { AineistoTila } from "@services/api";
 import { ComponentProps } from "react";
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayReturn } from "react-hook-form";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
-import { FormAineisto, AineistoNahtavillaTableFormValuesInterface } from "../util";
+import { FormAineisto } from "src/util/FormAineisto";
+import { AineistoNahtavillaTableFormValuesInterface } from "../util";
 
 type ActionColumnProps = {
   aineisto: FormAineisto;
