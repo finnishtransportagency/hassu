@@ -1,7 +1,7 @@
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
-import { MmlClient, getMmlClient } from "./mmlClient";
+import { MmlClient, MmlKiinteisto, getMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -28,6 +28,7 @@ import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
+import { getPrhClient, PrhClient } from "./prh/prh";
 import { adaptOmistajaToIndex } from "../projektiSearch/omistajaSearch/kiinteistonomistajaSearchAdapter";
 
 export type OmistajaHakuEvent = {
@@ -38,6 +39,7 @@ export type OmistajaHakuEvent = {
 };
 
 let mmlClient: MmlClient | undefined = undefined;
+let prhClient: PrhClient | undefined = undefined;
 
 async function getClient() {
   if (mmlClient === undefined) {
@@ -49,6 +51,14 @@ async function getClient() {
     mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey, ogcApiExamples });
   }
   return mmlClient;
+}
+
+async function getClient2() {
+  if (prhClient === undefined) {
+    const conf = await parameters.getPrhConfig();
+    prhClient = await getPrhClient({ endpoint: conf.endpoint, apiKey: conf.apikey, palveluTunnus: conf.palvelutunnus });
+  }
+  return prhClient;
 }
 
 function isSuomifiLahetys(
@@ -111,6 +121,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
+        await updatePRHAddress(kiinteistot);
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
@@ -195,6 +206,13 @@ const handlerFactory = (event: SQSEvent) => async () => {
                 // KP = Kuolinpesä
                 taydennettyOmistaja.sukunimi = (taydennettyOmistaja.sukunimi ?? "") + " (KP)";
               }
+              // Täydennetään yrityksen osoitetiedot PRH rajapinnasta saatavilla osoitetiedoilla
+              if (o.ytunnus && o.yhteystiedot) {
+                taydennettyOmistaja.jakeluosoite = o.yhteystiedot.jakeluosoite;
+                taydennettyOmistaja.postinumero = o.yhteystiedot.postinumero;
+                taydennettyOmistaja.paikkakunta = o.yhteystiedot.paikkakunta;
+                taydennettyOmistaja.maakoodi = o.yhteystiedot.maakoodi;
+              }
               const suomifiLahetys = isSuomifiLahetys(taydennettyOmistaja);
               // Täydennetään Suomi.fi tiedotettaville maakoodi, jollei sitä jo ole
               // Tämä tehdään, jotta exceliin ja käyttöliittymälle saadaan aina näkymään maatieto Suomi.fi-tiedotettaville.
@@ -248,8 +266,9 @@ const handlerFactory = (event: SQSEvent) => async () => {
   }
 };
 
-export function setClient(client: MmlClient | undefined) {
+export function setClient(client: MmlClient | undefined, client2: PrhClient | undefined) {
   mmlClient = client;
+  prhClient = client2;
 }
 
 export const handleEvent = async (event: SQSEvent) => {
@@ -431,4 +450,25 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   }
   kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
   return kiinteistonOmistajatResponse;
+}
+
+async function updatePRHAddress(kiinteistot: MmlKiinteisto[]) {
+  const client = await getClient2();
+  const omistajat = kiinteistot.flatMap(k => k.omistajat).filter(o => o.ytunnus);
+  const ytunnus = [...new Set(omistajat.map(o => o.ytunnus!)).values()];
+  const resp = await client.haeYritykset(ytunnus);
+  log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
+  resp.forEach(c => {
+    omistajat.filter(o => o.ytunnus === c.ytunnus).forEach(o => {
+        o.nimi = c.nimi ?? o.nimi;
+        if (c.yhteystiedot) {
+          o.yhteystiedot = {
+            postinumero: c.yhteystiedot.postinumero,
+            jakeluosoite: c.yhteystiedot.jakeluosoite,
+            paikkakunta: c.yhteystiedot.paikkakunta,
+            maakoodi: c.yhteystiedot.maakoodi,
+          };
+        }
+    });
+  });
 }
