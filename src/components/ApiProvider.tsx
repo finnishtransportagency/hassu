@@ -9,6 +9,7 @@ import { GraphQLError } from "graphql";
 import { NoHassuAccessError, NoVaylaAuthenticationError, SimultaneousUpdateError } from "hassu-common/error";
 import Cookies from "js-cookie";
 import { generateErrorMessage } from "../util/errorMessageUtil";
+import { useIsYllapito } from "src/hooks/useIsYllapito";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
 
@@ -39,7 +40,7 @@ export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessag
 function ApiProvider({ children, updateIsUnauthorizedCallback, simultaneousUpdateErrorCallback }: Props) {
   const { showErrorMessage } = useSnackbars();
   const router = useRouter();
-  const isYllapito = router.asPath.startsWith("/yllapito");
+  const isYllapito = useIsYllapito();
   const { t } = useTranslation("error");
   const value: API = useMemo(() => {
     const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
