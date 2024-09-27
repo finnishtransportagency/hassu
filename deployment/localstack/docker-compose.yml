@@ -9,7 +9,7 @@ services:
       - SERVICES=dynamodb,sts,cloudformation,ssm,s3,iam,kms,events,lambda,resource-groups
       - DEFAULT_REGION=eu-west-1
       - DEBUG=0
-      #      - LS_LOG=trace
+      # LS_LOG=trace
       - DATA_DIR=${DATA_DIR- }
       - PORT_WEB_UI=${PORT_WEB_UI- }
       - DOCKER_HOST="unix:///var/run/docker.sock"
