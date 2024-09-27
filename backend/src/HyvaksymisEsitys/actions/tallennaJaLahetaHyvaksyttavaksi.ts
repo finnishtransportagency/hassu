@@ -116,8 +116,7 @@ function validateUpcoming(
   projektiTyyppi: API.ProjektiTyyppi | null | undefined
 ) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
-  const aineistotEpavalmiit = aineistoImportPending({ muokattavaHyvaksymisEsitys, aineistoHandledAt });
-  if (aineistotEpavalmiit) {
+  if (aineistoImportPending({ muokattavaHyvaksymisEsitys, aineistoHandledAt })) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
   const kategoriaIds = getAineistoKategoriat({ projektiTyyppi, hideDeprecated: true }).listKategoriaIds();

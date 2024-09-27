@@ -10,7 +10,7 @@ import {
   VuorovaikutusKierrosJulkaisuTiedostoManager,
 } from ".";
 import { DBProjekti } from "../../database/model";
-import checkHyvaksymisesitysAineistoImportPending from "../../HyvaksymisEsitys/aineistoImportPending";
+import hyvaksymisesitysAineistoImportPending from "../../HyvaksymisEsitys/aineistoImportPending";
 
 export class ProjektiTiedostoManager {
   private projekti: DBProjekti;
@@ -29,7 +29,7 @@ export class ProjektiTiedostoManager {
       this.getJatkoPaatos2Vaihe().isReady() &&
       this.getLausuntoPyynnot().isReady() &&
       this.getLausuntoPyynnonTaydennykset().isReady() &&
-      !checkHyvaksymisesitysAineistoImportPending(this.projekti)
+      !hyvaksymisesitysAineistoImportPending(this.projekti)
     );
   }
 
