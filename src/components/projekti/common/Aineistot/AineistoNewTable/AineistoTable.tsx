@@ -50,7 +50,7 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
         header: "Tuotu",
         id: "tuotu",
         accessorFn: (aineisto) => {
-          // Jos on jo tallennettu aineisto, jolla ei tuotu-aikaleimaa, näytetään ladataan
+          // Jos on jo tallennettu aineisto, jolla ei tuotu-aikaleimaa, näytetään Ladataan-tekstiä
           if (!aineisto.newlyAdded && !aineisto.tuotu) {
             return "Ladataan...";
           }
