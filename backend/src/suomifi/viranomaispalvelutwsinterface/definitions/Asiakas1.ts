@@ -6,11 +6,11 @@ import { AsiakasAttributes } from "./Asiakas";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Asiakas1 {
-  /** xsd:int */
-  Tila?: number;
-  /** xsd:dateTime */
-  TilaPvm?: string;
-  /** xsd:int */
-  TiliPassivoitu?: string;
-  attributes: AsiakasAttributes;
+    /** xsd:int */
+    Tila?: number;
+    /** xsd:dateTime */
+    TilaPvm?: string;
+    /** xsd:int */
+    TiliPassivoitu?: string;
+    attributes: AsiakasAttributes;
 }

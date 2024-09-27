@@ -7,8 +7,8 @@ import { Asiakkaat1 } from "./Asiakkaat1";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface HaeAsiakkaitaResult {
-  /** TilaKoodi */
-  TilaKoodi?: TilaKoodi;
-  /** Asiakkaat */
-  Asiakkaat?: Asiakkaat1;
+    /** TilaKoodi */
+    TilaKoodi?: TilaKoodi;
+    /** Asiakkaat */
+    Asiakkaat?: Asiakkaat1;
 }

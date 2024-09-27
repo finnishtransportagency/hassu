@@ -1,12 +1,14 @@
 # Generated sources
 common/graphql/apiModel.ts
+common/graphql/queries.ts
+common/graphql/mutations.ts
 backend/src/velho/aineistopalvelu
 backend/src/velho/hakupalvelu
 backend/src/velho/projektirekisteri
 backend/integrationtest/api/records
+backend/src/suomifi/viranomaispalvelutwsinterface
+!backend/src/suomifi/viranomaispalvelutwsinterface/README.md
 src/API.ts
-common/graphql/queries.ts
-common/graphql/mutations.ts
 build
 cdk.out
 .next

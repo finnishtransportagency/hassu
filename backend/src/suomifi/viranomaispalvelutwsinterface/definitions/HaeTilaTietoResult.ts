@@ -6,6 +6,6 @@ import { TilaKoodi } from "./TilaKoodi";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface HaeTilaTietoResult {
-  /** TilaKoodi */
-  TilaKoodi?: TilaKoodi;
+    /** TilaKoodi */
+    TilaKoodi?: TilaKoodi;
 }

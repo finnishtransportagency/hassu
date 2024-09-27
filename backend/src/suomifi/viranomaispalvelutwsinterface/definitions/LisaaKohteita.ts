@@ -3,8 +3,8 @@ import { Kysely1 } from "./Kysely1";
 
 /** LisaaKohteita */
 export interface LisaaKohteita {
-  /** Viranomainen */
-  Viranomainen?: Viranomainen;
-  /** Kysely */
-  Kysely?: Kysely1;
+    /** Viranomainen */
+    Viranomainen?: Viranomainen;
+    /** Kysely */
+    Kysely?: Kysely1;
 }

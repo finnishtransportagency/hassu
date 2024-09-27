@@ -8,20 +8,8 @@ import { LahetaViesti } from "../definitions/LahetaViesti";
 import { LahetaViestiResponse } from "../definitions/LahetaViestiResponse";
 
 export interface ViranomaispalvelutPort {
-  HaeAsiakkaita(
-    haeAsiakkaita: HaeAsiakkaita,
-    callback: (err: any, result: HaeAsiakkaitaResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void
-  ): void;
-  LisaaKohteita(
-    lisaaKohteita: LisaaKohteita,
-    callback: (err: any, result: LisaaKohteitaResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void
-  ): void;
-  HaeTilaTieto(
-    haeTilaTieto: HaeTilaTieto,
-    callback: (err: any, result: HaeTilaTietoResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void
-  ): void;
-  LahetaViesti(
-    lahetaViesti: LahetaViesti,
-    callback: (err: any, result: LahetaViestiResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void
-  ): void;
+    HaeAsiakkaita(haeAsiakkaita: HaeAsiakkaita, callback: (err: any, result: HaeAsiakkaitaResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void): void;
+    LisaaKohteita(lisaaKohteita: LisaaKohteita, callback: (err: any, result: LisaaKohteitaResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void): void;
+    HaeTilaTieto(haeTilaTieto: HaeTilaTieto, callback: (err: any, result: HaeTilaTietoResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void): void;
+    LahetaViesti(lahetaViesti: LahetaViesti, callback: (err: any, result: LahetaViestiResponse, rawResponse: any, soapHeader: any, rawRequest: any) => void): void;
 }

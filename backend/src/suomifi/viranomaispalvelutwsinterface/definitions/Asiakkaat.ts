@@ -6,6 +6,6 @@ import { Asiakas } from "./Asiakas";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Asiakkaat {
-  /** Asiakas[] */
-  Asiakas?: Array<Asiakas>;
+    /** Asiakas[] */
+    Asiakas?: Array<Asiakas>;
 }
