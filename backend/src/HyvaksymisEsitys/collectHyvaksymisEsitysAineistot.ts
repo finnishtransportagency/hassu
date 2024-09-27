@@ -12,8 +12,8 @@ import {
 import { forEverySaameDo } from "../projekti/adapter/common";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { fileService } from "../files/fileService";
-import dayjs from "dayjs";
 import { getZipFolder } from "../tiedostot/ProjektiTiedostoManager/util";
+import { aineistoNewIsReady } from "./aineistoNewIsReady";
 
 type TarvittavatTiedot = Pick<
   DBProjekti,
@@ -39,12 +39,6 @@ type ProjektinAineistot = {
   muutAineistot: FileInfo[];
   maanomistajaluettelo: FileInfo[];
 };
-
-function aineistoNewIsReady(lisatty: string, aineistoHandledAt?: string | null): boolean {
-  const handledAt = aineistoHandledAt ? dayjs(aineistoHandledAt) : null;
-  const lisattyDate = lisatty ? dayjs(lisatty) : null;
-  return !!(handledAt && (handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate)));
-}
 
 /**
  *
@@ -88,12 +82,12 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-  const muuAineistoVelhosta = (hyvaksymisEsitys?.muuAineistoVelhosta ?? []).map((tiedosto) => ({
-    s3Key: joinPath(path, "muuAineistoVelhosta", adaptFileName(tiedosto.nimi)),
+  const muuAineistoVelhosta = (hyvaksymisEsitys?.muuAineistoVelhosta ?? []).map((aineisto) => ({
+    s3Key: joinPath(path, "muuAineistoVelhosta", adaptFileName(aineisto.nimi)),
     zipFolder: "Muu aineisto",
-    nimi: tiedosto.nimi,
-    tuotu: tiedosto.lisatty,
-    valmis: aineistoNewIsReady(tiedosto.lisatty, aineistoHandledAt),
+    nimi: aineisto.nimi,
+    tuotu: aineisto.lisatty,
+    valmis: aineistoNewIsReady(aineisto, aineistoHandledAt),
   }));
   const muutAineistot: FileInfo[] = muuAineistoOmaltaKoneelta.concat(muuAineistoVelhosta);
   const suunnitelma = (hyvaksymisEsitys?.suunnitelma ?? []).map<FileInfo>((aineisto) => {
@@ -104,7 +98,7 @@ export default function collectHyvaksymisEsitysAineistot(
       nimi: aineisto.nimi,
       tuotu: aineisto.lisatty,
       kategoriaId: aineisto.kategoriaId,
-      valmis: aineistoNewIsReady(aineisto.lisatty, aineistoHandledAt),
+      valmis: aineistoNewIsReady(aineisto, aineistoHandledAt),
     };
   });
   const kuntaMuistutukset = (hyvaksymisEsitys?.muistutukset ?? []).map((tiedosto) => {
