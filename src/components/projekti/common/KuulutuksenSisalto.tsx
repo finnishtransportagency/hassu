@@ -4,12 +4,12 @@ import Section from "../../layout/Section2";
 import { ReactNode } from "react";
 
 interface Props {
-    alkupvm: string,
-    loppupvm: string,
-    children: ReactNode,
+  alkupvm: string;
+  loppupvm: string;
+  children: ReactNode;
 }
 
-const KuulutuksenSisalto = ({alkupvm, loppupvm, children}: Props) => {
+const KuulutuksenSisalto = ({ alkupvm, loppupvm, children }: Props) => {
   return (
     <>
       <H2>Kuulutuksen sisältö</H2>

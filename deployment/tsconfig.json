@@ -2,9 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2017",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "sourceMap": true,
     "inlineSources": true,
     "sourceRoot": "/",
@@ -15,11 +13,7 @@
         "alwaysShowRuleFailuresAsWarnings": false
       }
     ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

@@ -5,18 +5,9 @@
   },
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "mocha-no-only"
-  ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "ignorePatterns": [
-    "**/node_modules/**"
-  ],
+  "plugins": ["@typescript-eslint", "mocha-no-only"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "ignorePatterns": ["**/node_modules/**"],
   "rules": {
     "strict": "error",
     "@typescript-eslint/no-var-requires": "warn",
@@ -28,9 +19,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "mocha-no-only/mocha-no-only": [
-      "error"
-    ],
+    "mocha-no-only/mocha-no-only": ["error"],
     "@typescript-eslint/consistent-type-assertions": [
       "error",
       {

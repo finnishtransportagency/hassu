@@ -3,9 +3,7 @@
     "analyzer": {
       "sortable": {
         "tokenizer": "standard",
-        "filter": [
-          "lowercase"
-        ]
+        "filter": ["lowercase"]
       }
     }
   }

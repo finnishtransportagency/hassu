@@ -56,7 +56,7 @@ async function fetchBankHolidaysFromAPI() {
         log.error(error.response?.status + " " + error.response?.statusText, { data: error.response?.data });
       }
       // ignore no data yet
-      if (error.response?.status !== 400) { 
+      if (error.response?.status !== 400) {
         throw e;
       }
     }

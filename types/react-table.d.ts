@@ -35,6 +35,6 @@ declare module "@tanstack/table-core" {
     rowOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, row: Row<TData>) => void;
     rowHref?: (row: Row<TData>) => string;
     virtualization?: TableWindowVirtualization | TableScrollElementVirtualization;
-    customRowStyles?: CSSObject
+    customRowStyles?: CSSObject;
   }
 }

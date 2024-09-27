@@ -52,7 +52,7 @@ export const BodyTrWrapper = styled("div")(
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
     position: "relative",
-    '&:focus-visible': focusStyle,
+    "&:focus-visible": focusStyle,
   })
 );
 export const BodyTr = styled(Tr)(sx({}));

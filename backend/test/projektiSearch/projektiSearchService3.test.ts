@@ -106,7 +106,6 @@ const projekti: DBProjekti = {
 };
 
 describe("ProjektiSearchService", () => {
-  
   beforeEach(() => {
     sinon.reset();
     sinon.restore();

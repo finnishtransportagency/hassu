@@ -183,7 +183,11 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     );
     log.info("VuorovaikutusKierrosJulkaisu ennen lisäystä", { vuorovaikutusKierrosJulkaisu });
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, vuorovaikutusKierrosJulkaisu);
-    await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva, PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS);
+    await this.updateProjektiSchedule(
+      oid,
+      vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva,
+      PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS
+    );
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 

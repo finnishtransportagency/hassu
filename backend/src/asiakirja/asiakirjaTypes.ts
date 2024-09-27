@@ -48,7 +48,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
-  osoite?: Osoite
+  osoite?: Osoite;
 };
 
 export type CreatePalautteetPdfOptions = {

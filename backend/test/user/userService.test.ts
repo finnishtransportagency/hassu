@@ -67,7 +67,7 @@ describe("userService", () => {
   });
   it("should parse entraid roles succesfully", async function () {
     validateTokenStub.returns({
-      "custom:rooli": "[\"hassu_admin\",\"hassu_kayttaja\",\"arn:aws:iam::123:role/HassuAdmin\"]",
+      "custom:rooli": '["hassu_admin","hassu_kayttaja","arn:aws:iam::123:role/HassuAdmin"]',
       "custom:sukunimi": "Meikalainen",
       "custom:etunimi": "Matti",
       "custom:puhelin": "12345678",

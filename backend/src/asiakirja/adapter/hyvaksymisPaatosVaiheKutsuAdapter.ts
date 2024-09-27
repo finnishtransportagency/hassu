@@ -34,7 +34,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   paatosTyyppi: PaatosTyyppi,
   asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
-  osoite?: Osoite,
+  osoite?: Osoite
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");

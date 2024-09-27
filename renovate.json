@@ -12,9 +12,7 @@
   "updateNotScheduled": false,
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 5,
-  "baseBranches": [
-    "main"
-  ],
+  "baseBranches": ["main"],
   "major": {
     "enabled": false
   },
@@ -29,45 +27,22 @@
   },
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "excludePackagePatterns": [
-        "^@aws-cdk",
-        "^aws-cdk",
-        "^@aws-sdk",
-        "^aws-sdk",
-        "^@sls-next/cdk-construct",
-        "inquirer"
-      ],
-      "excludePackageNames": [
-        "next",
-        "eslint-config-next",
-        "localstack/localstack",
-        "@types/react",
-        "@hassu/asianhallinta"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
+      "matchPackagePatterns": ["*"],
+      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "^@sls-next/cdk-construct", "inquirer"],
+      "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack", "@types/react", "@hassu/asianhallinta"],
+      "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
       "groupSlug": "all-patch"
     },
     {
-      "matchPackageNames": [
-        "@types/react"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
+      "matchPackageNames": ["@types/react"],
+      "matchUpdateTypes": ["patch"],
       "enabled": false,
       "groupName": "ignored",
       "groupSlug": "ignored"
     },
     {
-      "matchPackagePatterns": [
-        "*"
-      ],
+      "matchPackagePatterns": ["*"],
       "excludePackagePatterns": [
         "^@aws-cdk",
         "^aws-cdk",
@@ -77,57 +52,35 @@
         "inquirer",
         "@hassu/asianhallinta"
       ],
-      "excludePackageNames": [
-        "next",
-        "eslint-config-next",
-        "localstack/localstack"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
+      "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack"],
+      "matchUpdateTypes": ["minor"],
       "enabled": false,
       "groupName": "all minor dependencies",
       "groupSlug": "all-minor"
     },
     {
-      "matchPackagePatterns": [
-        "^@aws-cdk",
-        "^aws-cdk"
-      ],
+      "matchPackagePatterns": ["^@aws-cdk", "^aws-cdk"],
       "groupName": "AWS CDK",
       "groupSlug": "aws-cdk"
     },
     {
       "description": "@sls-next/cdk-construct=3.7.0 => next=11",
-      "matchPackagePatterns": [
-        "^@sls-next/cdk-construct"
-      ],
+      "matchPackagePatterns": ["^@sls-next/cdk-construct"],
       "allowedVersions": "3.7.0",
       "groupName": "sls-next/cdk-construct"
     },
     {
-      "matchPackageNames": [
-        "next",
-        "eslint-config-next"
-      ],
+      "matchPackageNames": ["next", "eslint-config-next"],
       "matchUpdateTypes": "patch",
       "groupName": "nextjs"
     },
     {
-      "matchPackagePatterns": [
-        "^@aws-sdk",
-        "^aws-sdk"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchPackagePatterns": ["^@aws-sdk", "^aws-sdk"],
+      "matchUpdateTypes": ["minor", "patch"],
       "groupName": "aws-sdk"
     },
     {
-      "matchPackageNames": [
-        "localstack/localstack"
-      ],
+      "matchPackageNames": ["localstack/localstack"],
       "allowedVersions": "1.3",
       "groupName": "localstack"
     }

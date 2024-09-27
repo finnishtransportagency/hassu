@@ -32,7 +32,7 @@ function TutustuVaylavirastoonJaElyynWidget() {
             external
             primary
             href={lang == "fi" ? "https://vayla.fi" : "https://vayla.fi/sv/framsida"}
-              style={{ marginLeft: "auto", marginRight: "auto" }}
+            style={{ marginLeft: "auto", marginRight: "auto" }}
             target="_blank"
           >
             {t("widgetit.vaylavirasto")}

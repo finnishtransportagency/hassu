@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let body = req.body;
   const urlObject = new URL(process.env["APPSYNC_URL"] || "");
   const isYllapito = req.query.yllapito == "true";
-  const isPlayground = req.headers['referer']?.indexOf("graphql-playground");
+  const isPlayground = req.headers["referer"]?.indexOf("graphql-playground");
 
   let headers = {
     host: urlObject.host,

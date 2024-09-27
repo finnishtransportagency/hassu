@@ -33,7 +33,7 @@ export default function SuunnitteluPageLayoutWrapper({
         <SuunnitteluPageLayout
           projektiOid={projekti.oid}
           projekti={projekti}
-          disableTabs={!(projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan)}
+          disableTabs={!projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan}
           showLuoUusiKutsuButton={showLuoUusiKutsuButton}
         >
           {children}
@@ -173,7 +173,8 @@ function SuunnitteluPageLayout({
         {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
-            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. { !projekti.nahtavillaoloVaiheJulkaisu ? "Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää rajoitetusti." : "" }
+            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}.{" "}
+            {!projekti.nahtavillaoloVaiheJulkaisu ? "Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää rajoitetusti." : ""}
           </Notification>
         )}
         {tilaJulkinen && !published && (
@@ -216,9 +217,7 @@ function SuunnitteluPageLayout({
                   </li>
                   {projekti.asianhallinta.inaktiivinen && <li>Muistathan viedä kutsun asianhallintaan.</li>}
                   {!projekti.asianhallinta.inaktiivinen && (
-                    <li>
-                      Kutsu siirtyy automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
-                    </li>
+                    <li>Kutsu siirtyy automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.</li>
                   )}
                 </OhjelistaNotification>
               )}

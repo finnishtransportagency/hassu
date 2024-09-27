@@ -71,16 +71,18 @@ export class HassuAccountStack extends Stack {
       vpc,
       tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.VERSION_1_0_143_0,
-      layers: [new LayerVersion(this, "BaseLayer-" + Config.env, {
-        code: Code.fromAsset("./layers/lambda-base"),
-        compatibleRuntimes: [Runtime.NODEJS_18_X],
-        description: "Lambda base layer",
-      }),
-      LayerVersion.fromLayerVersionArn(
-        this,
-        "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
-      )],
+      layers: [
+        new LayerVersion(this, "BaseLayer-" + Config.env, {
+          code: Code.fromAsset("./layers/lambda-base"),
+          compatibleRuntimes: [Runtime.NODEJS_18_X],
+          description: "Lambda base layer",
+        }),
+        LayerVersion.fromLayerVersionArn(
+          this,
+          "paramLayer",
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+        ),
+      ],
       logRetention: RetentionDays.SEVEN_YEARS,
     });
     keycloak.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
@@ -88,7 +90,7 @@ export class HassuAccountStack extends Stack {
     new Rule(this, "KeycloakRule", {
       description: "Cleanup users",
       schedule: Schedule.rate(Duration.hours(24)),
-      targets: [ new LambdaFunction(keycloak)],
+      targets: [new LambdaFunction(keycloak)],
     });
     keycloak.addToRolePolicy(
       new PolicyStatement({
@@ -213,5 +215,4 @@ export class HassuAccountStack extends Stack {
     });
     codeartifactRepository.addDependency(codeartifactDomain);
   }
-
 }

@@ -243,9 +243,7 @@ export class VelhoClient {
 
   @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidGet")
   public async saveProjektiSuunnitelmanTila(oid: string, tila: keyof typeof suunnitelmanTilat): Promise<void> {
-    await this.saveProjekti(oid, (projekti) =>
-      applySuunnittelunTilaToVelho(projekti, tila)
-    );
+    await this.saveProjekti(oid, (projekti) => applySuunnittelunTilaToVelho(projekti, tila));
   }
 
   public async saveKasittelynTila(oid: string, kasittelynTila: KasittelynTila): Promise<void> {
