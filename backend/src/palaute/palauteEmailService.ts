@@ -96,7 +96,7 @@ ${liite ? "Bifogade filer\n" + liite : ""}
         recipients = dbProjekti.kayttoOikeudet;
       }
       for (const recipient of recipients) {
-        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email);
+        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email, dbProjekti.uusiaPalautteita);
         if (emailOptions.to) {
           await emailClient.sendEmail(emailOptions);
           log.info("'Uusia palautteita'-email lähetetty: " + emailOptions.to);
