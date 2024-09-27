@@ -3,8 +3,8 @@ import { Kysely } from "./Kysely";
 
 /** HaeAsiakkaita */
 export interface HaeAsiakkaita {
-    /** Viranomainen */
-    Viranomainen?: Viranomainen;
-    /** Kysely */
-    Kysely?: Kysely;
+  /** Viranomainen */
+  Viranomainen?: Viranomainen;
+  /** Kysely */
+  Kysely?: Kysely;
 }

@@ -35,7 +35,11 @@ class DateMoverTool {
       siirraProjektinAikaa(projekti, deltaInDays);
       await testProjektiDatabase.saveProjekti(projekti);
       const sendTraficomMessage = params.vaihe === TestiKomentoVaihe.HYVAKSYMISVAIHE;
-      await projektiSchedulerService.synchronizeProjektiFiles(params.oid, PublishOrExpireEventType.EXPIRE, sendTraficomMessage ? HYVAKSYMISPAATOS_VAIHE_PAATTYY : undefined);
+      await projektiSchedulerService.synchronizeProjektiFiles(
+        params.oid,
+        PublishOrExpireEventType.EXPIRE,
+        sendTraficomMessage ? HYVAKSYMISPAATOS_VAIHE_PAATTYY : undefined
+      );
     }
   }
 

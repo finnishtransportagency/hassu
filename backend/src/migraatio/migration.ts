@@ -1,10 +1,4 @@
-import {
-  Kieli,
-  KuulutusJulkaisuTila,
-  NykyinenKayttaja,
-  Status,
-  VuorovaikutusKierrosTila,
-} from "hassu-common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { createProjektiFromVelho } from "../projekti/projektiHandler";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";

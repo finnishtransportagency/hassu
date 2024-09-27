@@ -10,14 +10,22 @@ import { LahetaViestiResponse } from "./definitions/LahetaViestiResponse";
 import { ViranomaispalvelutService } from "./services/ViranomaispalvelutService";
 
 export interface ViranomaispalvelutWsInterfaceClient extends SoapClient {
-    ViranomaispalvelutService: ViranomaispalvelutService;
-    HaeAsiakkaitaAsync(haeAsiakkaita: HaeAsiakkaita): Promise<[result: HaeAsiakkaitaResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
-    LisaaKohteitaAsync(lisaaKohteita: LisaaKohteita): Promise<[result: LisaaKohteitaResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
-    HaeTilaTietoAsync(haeTilaTieto: HaeTilaTieto): Promise<[result: HaeTilaTietoResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
-    LahetaViestiAsync(lahetaViesti: LahetaViesti): Promise<[result: LahetaViestiResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
+  ViranomaispalvelutService: ViranomaispalvelutService;
+  HaeAsiakkaitaAsync(
+    haeAsiakkaita: HaeAsiakkaita
+  ): Promise<[result: HaeAsiakkaitaResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
+  LisaaKohteitaAsync(
+    lisaaKohteita: LisaaKohteita
+  ): Promise<[result: LisaaKohteitaResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
+  HaeTilaTietoAsync(
+    haeTilaTieto: HaeTilaTieto
+  ): Promise<[result: HaeTilaTietoResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
+  LahetaViestiAsync(
+    lahetaViesti: LahetaViesti
+  ): Promise<[result: LahetaViestiResponse, rawResponse: any, soapHeader: any, rawRequest: any]>;
 }
 
 /** Create ViranomaispalvelutWsInterfaceClient */
 export function createClientAsync(...args: Parameters<typeof soapCreateClientAsync>): Promise<ViranomaispalvelutWsInterfaceClient> {
-    return soapCreateClientAsync(args[0], args[1], args[2]) as any;
+  return soapCreateClientAsync(args[0], args[1], args[2]) as any;
 }

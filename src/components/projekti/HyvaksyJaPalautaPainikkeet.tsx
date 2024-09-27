@@ -52,9 +52,11 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
   }, [julkaisu, showErrorMessage]);
 
   const hyvaksyIsDisabled = useMemo(() => {
-    const puuttuuKuntatieto = isKuntatietoMissing(projekti)
+    const puuttuuKuntatieto = isKuntatietoMissing(projekti);
     const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
-    return kuulutusPaivaInPast || puuttuuKuntatieto || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
+    return (
+      kuulutusPaivaInPast || puuttuuKuntatieto || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
+    );
   }, [julkaisu.kuulutusPaiva, projekti, tilasiirtymaTyyppi]);
 
   return (

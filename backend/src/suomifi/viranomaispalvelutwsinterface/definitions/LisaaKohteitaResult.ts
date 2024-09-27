@@ -7,10 +7,10 @@ import { Kohteet1 } from "./Kohteet1";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface LisaaKohteitaResult {
-    /** TilaKoodi */
-    TilaKoodi?: TilaKoodi;
-    /** xsd:int */
-    KohdeMaara?: string;
-    /** Kohteet */
-    Kohteet?: Kohteet1;
+  /** TilaKoodi */
+  TilaKoodi?: TilaKoodi;
+  /** xsd:int */
+  KohdeMaara?: string;
+  /** Kohteet */
+  Kohteet?: Kohteet1;
 }

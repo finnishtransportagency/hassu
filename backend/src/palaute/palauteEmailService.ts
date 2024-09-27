@@ -41,7 +41,7 @@ ${projekti.velho?.nimi ?? ""}
 Palaute
 ${palaute.kysymysTaiPalaute ?? ""}
 ${liite ? "Sähköpostiviestin liitteet\n" + liite : ""}
-`
+`;
     if (ruotsiksi) {
       text += text = `
 Respons mottagen
@@ -58,10 +58,16 @@ ${projekti.kielitiedot?.projektinNimiVieraskielella ?? ""}
 Respons
 ${palaute.kysymysTaiPalaute ?? ""}
 ${liite ? "Bifogade filer\n" + liite : ""}
-`
+`;
     }
     if (palaute.sahkoposti) {
-      await emailClient.sendEmail({ subject: `Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta${ruotsiksi ? " / Bekräftelse av att respons lämnats via systemet Planering av statens trafikleder" : ""}`, text, to: palaute.sahkoposti });
+      await emailClient.sendEmail({
+        subject: `Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta${
+          ruotsiksi ? " / Bekräftelse av att respons lämnats via systemet Planering av statens trafikleder" : ""
+        }`,
+        text,
+        to: palaute.sahkoposti,
+      });
       auditLog.info("Palautteen antajalle lähetetty sähköpostikuittaus osoitteeseen " + palaute.sahkoposti);
     } else {
       auditLog.info("Palautteen antajalle ei lähetetty sähköpostikuittausta");

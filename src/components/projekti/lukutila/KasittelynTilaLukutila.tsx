@@ -93,15 +93,11 @@ export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): R
         <h3 className="vayla-subtitle">Ratasuunnitelman toteutusilmoitus</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Osatoteutus</p>
-          <p className="md:col-span-4 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusOsittain)}
-          </p>
+          <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusOsittain)}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Kokototeutus</p>
-          <p className="md:col-span-4 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}
-          </p>
+          <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}</p>
         </div>
       </Section>
       <Section>

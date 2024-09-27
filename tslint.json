@@ -8,10 +8,6 @@
   },
   "jsRules": true,
   "linterOptions": {
-    "exclude": [
-      "backend/src/velho/aineistopalvelu/**",
-      "backend/src/velho/hakupalvelu/**",
-      "backend/src/velho/projektirekisteri/**"
-    ]
+    "exclude": ["backend/src/velho/aineistopalvelu/**", "backend/src/velho/hakupalvelu/**", "backend/src/velho/projektirekisteri/**"]
   }
 }

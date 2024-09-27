@@ -87,7 +87,9 @@ export class PersonSearchUpdater {
     const idx = endpoint.indexOf("Person.svc");
     const requestConfig: AxiosRequestConfig = {
       timeout: 120000,
-      baseURL: endpoint.substring(0, idx) + "group.svc/byfilter?filterproperty=DisplayName&filter=hassu_kayttaja&fetch=ObjectID,DisplayName,ExplicitMember",
+      baseURL:
+        endpoint.substring(0, idx) +
+        "group.svc/byfilter?filterproperty=DisplayName&filter=hassu_kayttaja&fetch=ObjectID,DisplayName,ExplicitMember",
       method: "GET",
       auth: { username, password },
     };
@@ -97,7 +99,7 @@ export class PersonSearchUpdater {
       if (response.status === 200) {
         const responseJson = await wrapXRayAsync("xmlParse", () => parseString(response.data));
         const membersFromResponse: MemberFromResponse[] | undefined = responseJson.groups.group[0].members[0].member;
-        return membersFromResponse?.map(m => m.Value[0]);
+        return membersFromResponse?.map((m) => m.Value[0]);
       } else {
         log.error(response.status + " " + response.statusText, { endpoint: requestConfig.baseURL });
         throw new Error(`listGroupMembers failed: Group search request returned unexpected status code '${response.status}'.`);

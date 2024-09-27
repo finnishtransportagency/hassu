@@ -131,8 +131,11 @@ describe("emailHandler", () => {
       await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
       expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
       const calls = emailClientStub.sendEmailStub.getCalls();
-      const hasPohjoissaameAttachment = calls[2].lastArg.attachments.some((attachment: Mail.Attachment) => attachment.filename === "POHJOISSAAME ILMOITUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf")
-      expect(hasPohjoissaameAttachment).to.be.true
+      const hasPohjoissaameAttachment = calls[2].lastArg.attachments.some(
+        (attachment: Mail.Attachment) =>
+          attachment.filename === "POHJOISSAAME ILMOITUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf"
+      );
+      expect(hasPohjoissaameAttachment).to.be.true;
       emailClientStub.verifyEmailsSent();
     });
   });

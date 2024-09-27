@@ -40,7 +40,11 @@ function VuorovaikutusKierros({ projekti }: Readonly<{ projekti: ProjektiLisatie
   if (lukutila) {
     return (
       <SuunnitteluPageLayout showLuoUusiKutsuButton={!projekti.nahtavillaoloVaiheJulkaisu}>
-        <VuorovaikutusKierrosLukutila vuorovaikutusnro={kierrosId} projekti={projekti} showMuokkaaTilaisuuksia={!projekti.nahtavillaoloVaiheJulkaisu} />
+        <VuorovaikutusKierrosLukutila
+          vuorovaikutusnro={kierrosId}
+          projekti={projekti}
+          showMuokkaaTilaisuuksia={!projekti.nahtavillaoloVaiheJulkaisu}
+        />
       </SuunnitteluPageLayout>
     );
   }

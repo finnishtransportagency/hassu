@@ -7,20 +7,20 @@ import { Osoite } from "./Osoite";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Viranomainen {
-    /** xsd:string */
-    ViranomaisTunnus?: string;
-    /** xsd:string */
-    PalveluTunnus?: string;
-    /** xsd:string */
-    KayttajaTunnus?: string;
-    /** Yhteyshenkilo */
-    Yhteyshenkilo?: Yhteyshenkilo;
-    /** Osoite */
-    Osoite?: Osoite;
-    /** xsd:string */
-    SanomaTunniste?: string;
-    /** xsd:string */
-    SanomaVersio?: string;
-    /** xsd:string */
-    SanomaVarmenneNimi?: string;
+  /** xsd:string */
+  ViranomaisTunnus?: string;
+  /** xsd:string */
+  PalveluTunnus?: string;
+  /** xsd:string */
+  KayttajaTunnus?: string;
+  /** Yhteyshenkilo */
+  Yhteyshenkilo?: Yhteyshenkilo;
+  /** Osoite */
+  Osoite?: Osoite;
+  /** xsd:string */
+  SanomaTunniste?: string;
+  /** xsd:string */
+  SanomaVersio?: string;
+  /** xsd:string */
+  SanomaVarmenneNimi?: string;
 }

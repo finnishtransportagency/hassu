@@ -6,6 +6,6 @@ import { Tiedosto } from "./Tiedosto";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Tiedostot {
-    /** Tiedosto[] */
-    Tiedosto?: Array<Tiedosto>;
+  /** Tiedosto[] */
+  Tiedosto?: Array<Tiedosto>;
 }

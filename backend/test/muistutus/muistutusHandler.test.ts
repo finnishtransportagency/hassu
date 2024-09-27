@@ -159,7 +159,7 @@ describe("muistutusHandler", () => {
       const muistuttajaIdt = ["11", "22"];
       const muutMuistuttajaIdt = ["33", "44"];
       mockUUID();
-  
+
       beforeEach(() => {
         identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
         loadProjektiByOidStub.restore();

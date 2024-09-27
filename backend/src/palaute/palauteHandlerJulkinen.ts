@@ -26,7 +26,7 @@ class PalauteHandlerJulkinen {
     }
     const palaute = adaptPalauteInput(oid, palauteInput);
     if (palaute.liitteet) {
-      for(let i = 0; i < palaute.liitteet.length; i++) {
+      for (let i = 0; i < palaute.liitteet.length; i++) {
         const liite = await fileService.persistFileToProjekti({
           uploadedFileSource: palaute.liitteet[i],
           oid,

@@ -458,7 +458,11 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           projekti.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil13";
           await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, kasittelynTila: projekti.kasittelynTila });
           await velho.saveProjektiSuunnitelmanTila(projekti.oid, projekti.kasittelynTila.suunnitelmanTila);
-        } else if (successfulSynchronization && sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE && sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY) {
+        } else if (
+          successfulSynchronization &&
+          sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE &&
+          sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY
+        ) {
           // sähköposti Traficomille
           await lahetaSahkopostiTraficom(projekti);
         }
@@ -483,7 +487,9 @@ async function lahetaSahkopostiTraficom(projekti: DBProjekti) {
   log.info("Lähetetään sähköposti Traficomille");
   const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
   const text = `Hei,
-Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} hyväksymispäätöksen (${projekti.kasittelynTila?.hyvaksymispaatos?.asianumero}) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
+Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} hyväksymispäätöksen (${
+    projekti.kasittelynTila?.hyvaksymispaatos?.asianumero
+  }) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
 Linkki kuulutukseen Valtion liikenneväylien suunnittelu -palvelussa: ${linkHyvaksymisPaatos(projekti, API.Kieli.SUOMI)}`;
-  await emailClient.sendEmail({ to: "kirjaamo@traficom.fi", subject: "Hyväksymispäätöksen nähtävilläoloaika päättynyt", text })
+  await emailClient.sendEmail({ to: "kirjaamo@traficom.fi", subject: "Hyväksymispäätöksen nähtävilläoloaika päättynyt", text });
 }

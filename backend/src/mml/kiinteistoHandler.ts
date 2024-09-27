@@ -103,11 +103,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
         const yhteystiedot = responses[1];
         const tiekunnat = responses[2];
         let kiinteistoOmistajaCount = 0;
-        kiinteistot.forEach(k => kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length); 
+        kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
-        yhteystiedot.forEach(k => yhteystietoOmistajaCount = yhteystietoOmistajaCount + k.omistajat.length);
+        yhteystiedot.forEach((k) => (yhteystietoOmistajaCount = yhteystietoOmistajaCount + k.omistajat.length));
         let tiekuntaOmistajaCount = 0;
-        tiekunnat.forEach(k => tiekuntaOmistajaCount = tiekuntaOmistajaCount + k.omistajat.length);
+        tiekunnat.forEach((k) => (tiekuntaOmistajaCount = tiekuntaOmistajaCount + k.omistajat.length));
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
@@ -412,7 +412,7 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   } else {
     const omistajatKaytossa = (await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(variables.oid))
       .sort((a, b) => (a.kiinteistotunnus ?? "").localeCompare(b.kiinteistotunnus ?? ""))
-      .filter(o => o.suomifiLahetys === !variables.muutOmistajat)
+      .filter((o) => o.suomifiLahetys === !variables.muutOmistajat)
       .filter((o) => {
         if (variables.onlyUserCreated) {
           return o.userCreated === true;
@@ -422,11 +422,13 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
           return true;
         }
       });
-    const omistajat = omistajatKaytossa.slice(variables.from ?? 0, (variables.from ?? 0) + (variables.size ?? 25))
+    const omistajat = omistajatKaytossa.slice(variables.from ?? 0, (variables.from ?? 0) + (variables.size ?? 25));
     kiinteistonOmistajatResponse = {
       __typename: "KiinteistonOmistajat",
       hakutulosMaara: omistajatKaytossa.length,
-      omistajat: omistajat.map((o) => { return { ...adaptOmistajaToIndex(o), id: o.id, __typename: "Omistaja" }; }),
+      omistajat: omistajat.map((o) => {
+        return { ...adaptOmistajaToIndex(o), id: o.id, __typename: "Omistaja" };
+      }),
     };
   }
   kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));

@@ -120,10 +120,11 @@ function validateUpcoming(
   const handledAt = aineistotHandledAt ? dayjs(aineistotHandledAt) : null;
   if (
     aineistot.length > 0 &&
-    (!handledAt || !aineistot.every((aineisto) => {
-      const lisattyDate = aineisto.lisatty ? dayjs(aineisto.lisatty) : null;
-      return handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate);
-    }))
+    (!handledAt ||
+      !aineistot.every((aineisto) => {
+        const lisattyDate = aineisto.lisatty ? dayjs(aineisto.lisatty) : null;
+        return handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate);
+      }))
   ) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }

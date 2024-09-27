@@ -6,8 +6,8 @@ import { Kohteet } from "./Kohteet";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Kysely1 {
-    /** xsd:int */
-    KohdeMaara?: string;
-    /** Kohteet */
-    Kohteet?: Kohteet;
+  /** xsd:int */
+  KohdeMaara?: string;
+  /** Kohteet */
+  Kohteet?: Kohteet;
 }

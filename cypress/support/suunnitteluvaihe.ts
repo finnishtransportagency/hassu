@@ -186,9 +186,10 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
   Object.entries(mainFormSelectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
       timeout: 10000,
-    }).as("vuorovaikutusKierrosInput").should("be.enabled");
-    cy.get("@vuorovaikutusKierrosInput")
-      .type(CLEAR_ALL + text);
+    })
+      .as("vuorovaikutusKierrosInput")
+      .should("be.enabled");
+    cy.get("@vuorovaikutusKierrosInput").type(CLEAR_ALL + text);
   });
 
   cy.get("#select_esittelyaineistot_button").click();

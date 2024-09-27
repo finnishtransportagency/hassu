@@ -6,6 +6,6 @@ import { Kohde1 } from "./Kohde1";
  * @targetNamespace `http://www.suomi.fi/asiointitili`
  */
 export interface Kohteet1 {
-    /** Kohde[] */
-    Kohde?: Array<Kohde1>;
+  /** Kohde[] */
+  Kohde?: Array<Kohde1>;
 }

@@ -13,7 +13,7 @@ export function useSuomifiUser() {
 export type RefreshStatus = {
   status: number;
   updated: string;
-}
+};
 
 export function useRefreshToken() {
   const fetcher = (url: string): Promise<RefreshStatus> => fetch(url).then((r) => r.json());

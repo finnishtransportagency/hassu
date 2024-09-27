@@ -7,12 +7,16 @@ type APIorDBPalaute = Pick<API.Palaute, "liitteet" | "id" | "vastaanotettu" | "e
 export function cleanupGeneratedIdAndTimestampFromFeedbacks<P extends APIorDBPalaute>(feedbacks?: P[]): P[] | undefined {
   const result = feedbacks
     ? feedbacks.map((palaute) => {
-      cleanupAnyProjektiData(palaute);
-      palaute.liitteet = palaute.liitteet?.map((liite) => ({ __typename: "Liite", liite: liite.liite.replace(palaute.id, "***unittest***"), skannausTulos: liite.skannausTulos }));
-      palaute.id = "***unittest***";
-      palaute.vastaanotettu = "***unittest***";
-      return palaute;
-    })
+        cleanupAnyProjektiData(palaute);
+        palaute.liitteet = palaute.liitteet?.map((liite) => ({
+          __typename: "Liite",
+          liite: liite.liite.replace(palaute.id, "***unittest***"),
+          skannausTulos: liite.skannausTulos,
+        }));
+        palaute.id = "***unittest***";
+        palaute.vastaanotettu = "***unittest***";
+        return palaute;
+      })
     : undefined;
   if (result) {
     return sortBy(result, "etunimi", "sukunimi");
@@ -110,7 +114,7 @@ type APIorDBVaihe = {
   } | null;
 };
 
-interface APIorDBAloituskuulutus extends APIorDBVaihe { }
+interface APIorDBAloituskuulutus extends APIorDBVaihe {}
 
 /**
  *

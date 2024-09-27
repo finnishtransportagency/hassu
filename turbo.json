@@ -1,52 +1,28 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
+  "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "lint:backend": {
-      "inputs": [
-        "backend/**/*.ts"
-      ],
-      "dependsOn": [
-        "lint:common"
-      ]
+      "inputs": ["backend/**/*.ts"],
+      "dependsOn": ["lint:common"]
     },
     "lint:app": {
-      "inputs": [
-        "src/**/*.ts"
-      ],
-      "dependsOn": [
-        "lint:common"
-      ]
+      "inputs": ["src/**/*.ts"],
+      "dependsOn": ["lint:common"]
     },
     "lint:common": {
-      "inputs": [
-        "common/**/*"
-      ]
+      "inputs": ["common/**/*"]
     },
     "lint:tsc": {},
     "turbo:lint": {
-      "dependsOn": [
-        "lint:backend",
-        "lint:common",
-        "lint:app",
-        "lint:tsc"
-      ]
+      "dependsOn": ["lint:backend", "lint:common", "lint:app", "lint:tsc"]
     },
     "generate:api": {
-      "inputs": [
-        "graphql/*.graphql"
-      ],
-      "outputs": [
-        "schema.graphql",
-        "common/graphql/**/*.ts"
-      ]
+      "inputs": ["graphql/*.graphql"],
+      "outputs": ["schema.graphql", "common/graphql/**/*.ts"]
     },
     "generate:velhoapi": {
-      "inputs": [
-        "tools/velho/**/*.gradle"
-      ],
+      "inputs": ["tools/velho/**/*.gradle"],
       "outputs": [
         "common/generated/**/*",
         "backend/src/velho/metadata.json",
@@ -56,30 +32,15 @@
       ]
     },
     "turbo:generate": {
-      "dependsOn": [
-        "generate:api",
-        "generate:velhoapi"
-      ]
+      "dependsOn": ["generate:api", "generate:velhoapi"]
     },
     "test:backend": {
-      "inputs": [
-        "backend/**/*.ts",
-        "common/**/*",
-        "package.json"
-      ],
-      "outputs": [
-        "./.report/unit/test-results.xml"
-      ]
+      "inputs": ["backend/**/*.ts", "common/**/*", "package.json"],
+      "outputs": ["./.report/unit/test-results.xml"]
     },
     "test:integration": {
-      "inputs": [
-        "backend/**/*.ts",
-        "common/**/*",
-        "package.json"
-      ],
-      "outputs": [
-        "./.report/unit/integration-test-results.xml"
-      ]
+      "inputs": ["backend/**/*.ts", "common/**/*", "package.json"],
+      "outputs": ["./.report/unit/integration-test-results.xml"]
     }
   }
 }

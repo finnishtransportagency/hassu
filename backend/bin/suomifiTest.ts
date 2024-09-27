@@ -234,7 +234,7 @@ euWestSSMClient
     if (process.argv.includes("--debug")) {
       console.log("XML Request: " + soapClient?.getSoapClient().lastRequest);
       console.log("XML Response: " + soapClient?.getSoapClient().lastResponse);
-      console.log("TraceId: " + parseTraceId(response.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus))
+      console.log("TraceId: " + parseTraceId(response.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus));
     }
     if (isHaeAsiakkaitaResponse(response)) {
       console.log(response.HaeAsiakkaitaResult?.TilaKoodi);
