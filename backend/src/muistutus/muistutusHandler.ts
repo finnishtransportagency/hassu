@@ -118,19 +118,17 @@ class MuistutusHandler {
     }
 
     return await Promise.all(
-      liitteet.map(
-        async (liite) => {
-          const tiedosto = await fileService.persistFileToProjekti({
-            uploadedFileSource: liite,
-            oid,
-            targetFilePathInProjekti: "muistutukset/" + muistutusId,
-          });
-          if (!tiedosto) {
-            throw new NotFoundError("Liitettä ei löydy");
-          }
-          return tiedosto;
+      liitteet.map(async (liite) => {
+        const tiedosto = await fileService.persistFileToProjekti({
+          uploadedFileSource: liite,
+          oid,
+          targetFilePathInProjekti: "muistutukset/" + muistutusId,
+        });
+        if (!tiedosto) {
+          throw new NotFoundError("Liitettä ei löydy");
         }
-      )
+        return tiedosto;
+      })
     );
   }
 
@@ -192,11 +190,7 @@ class MuistutusHandler {
   }
 }
 
-export async function poistaMuistuttajat(
-  oid: string,
-  initialMuistuttajat: DBMuistuttaja[],
-  poistettavatMuistuttajat: string[]
-) {
+export async function poistaMuistuttajat(oid: string, initialMuistuttajat: DBMuistuttaja[], poistettavatMuistuttajat: string[]) {
   poistettavatMuistuttajat.forEach((poistettavaId) => {
     const idFound = initialMuistuttajat.some((muistuttaja) => muistuttaja.id === poistettavaId);
     if (!idFound) {

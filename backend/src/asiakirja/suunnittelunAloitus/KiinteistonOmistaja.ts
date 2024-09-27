@@ -118,7 +118,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.doc.text(this.kutsuAdapter.projektipaallikkoNimi);
       this.doc.text(this.kutsuAdapter.text("projektipaallikko"));
       this.doc.text(this.kutsuAdapter.projektipaallikkoOrganisaatio!).moveDown();
-    }
+    };
   }
 
   private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {
@@ -131,7 +131,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       }
       this.doc.text(this.kutsuAdapter.text("tiedoksi1")).moveUp();
       this.doc.text(this.kutsuAdapter.text("tiedoksi2"), { indent: 70 });
-    }
+    };
   }
 
   private lahetettyOmistajilleParagraph() {

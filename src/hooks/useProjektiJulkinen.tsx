@@ -6,6 +6,7 @@ import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { useIsYllapito } from "./useIsYllapito";
 
 export function langToKieli(lang: string): KaannettavaKieli {
   if (lang === "sv") {
@@ -18,10 +19,11 @@ export function useProjektiJulkinen() {
   const router = useRouter();
   const api = useApi();
   const { lang } = useTranslation();
+  const isYllapito = useIsYllapito();
 
   const projektiLoader = useMemo(() => getProjektiLoader(api), [api]);
 
-  if (router.asPath.startsWith("/yllapito")) {
+  if (isYllapito) {
     throw new Error("Inproper route for the use of useProjektiJulkinen hook");
   }
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;

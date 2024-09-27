@@ -18,7 +18,7 @@ export type OmistajaDocument = Pick<
   | "suomifiLahetys"
   | "kaytossa"
   | "userCreated"
-  > & { maa: string | null, viimeisinLahetysaika: string | null, viimeisinTila: "VIRHE" | "OK" | null };
+> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: "VIRHE" | "OK" | null };
 
 export function adaptOmistajaToIndex({
   etunimet,
@@ -82,7 +82,20 @@ export type OmistajaDocumentHit = {
 };
 
 function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
-  const { kiinteistotunnus, lisatty, oid, jakeluosoite, nimi, paikkakunta, paivitetty, postinumero, maa, maakoodi, viimeisinLahetysaika, viimeisinTila } = hit._source;
+  const {
+    kiinteistotunnus,
+    lisatty,
+    oid,
+    jakeluosoite,
+    nimi,
+    paikkakunta,
+    paivitetty,
+    postinumero,
+    maa,
+    maakoodi,
+    viimeisinLahetysaika,
+    viimeisinTila,
+  } = hit._source;
 
   const dokumentti: API.Omistaja = {
     id: hit._id,

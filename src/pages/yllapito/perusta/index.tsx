@@ -213,7 +213,7 @@ const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
             textUnderlineOffset: "4px",
           },
         },
-      }
+      },
     },
   });
 

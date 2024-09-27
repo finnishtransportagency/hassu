@@ -10,7 +10,7 @@ export async function createSignedCookies(): Promise<string[]> {
         Resource: `*`,
         Condition: {
           DateLessThan: {
-            "AWS:EpochTime": Math.floor(new Date().getTime() / 1000) + (3600 * 8),
+            "AWS:EpochTime": Math.floor(new Date().getTime() / 1000) + 3600 * 8,
           },
         },
       },

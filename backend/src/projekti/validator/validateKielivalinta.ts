@@ -13,7 +13,8 @@ export function validateKielivalinta(dbProjekti: DBProjekti, projekti: Projekti,
     // tai ei ole kuulutuksia/kutsuja ollenkaan
     return;
   }
-  const kielivalintaaEiMuuteta = kieltaEiMuuteta(input.kielitiedot?.ensisijainenKieli, dbProjekti.kielitiedot?.ensisijainenKieli) && 
+  const kielivalintaaEiMuuteta =
+    kieltaEiMuuteta(input.kielitiedot?.ensisijainenKieli, dbProjekti.kielitiedot?.ensisijainenKieli) &&
     kieltaEiMuuteta(input.kielitiedot?.toissijainenKieli, dbProjekti.kielitiedot?.toissijainenKieli);
 
   const allowedToChangeKielivalinta = isAllowedToChangeKielivalinta(projekti);

@@ -67,7 +67,7 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     cell: (c) => {
       const value = c.getValue() as string | null;
       const tila = c.row.original.viimeisinTila;
-      return <PaivamaaraTila pvm={value} tila={tila} />
+      return <PaivamaaraTila pvm={value} tila={tila} />;
     },
   },
 ];

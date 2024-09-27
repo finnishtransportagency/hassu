@@ -66,6 +66,7 @@ const typography: TypographyOptions = {
   h5: { fontSize: "1rem", lineHeight: 1.5, fontWeight: 700, margin: undefined },
   h6: { fontSize: "1rem", lineHeight: 1.5, fontWeight: 700, margin: undefined },
   lead: { fontSize: "1.5rem", fontWeight: 400, lineHeight: 1.333, margin: undefined },
+  plain: { fontSize: "1rem" },
 };
 
 const theme = createTheme({ spacing, palette, typography }, breakpoints);
@@ -685,7 +686,7 @@ export const createLocalizedTheme = (locale: Localization) =>
   createTheme(
     theme,
     {
-      components: components,
+      components,
     },
     locale,
     breakpoints

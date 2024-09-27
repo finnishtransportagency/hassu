@@ -181,7 +181,10 @@ export default function Nahtavillaolo(): ReactElement {
             )}
           </H3>
           <p>
-            <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}{kayttaja?.suomifiEnabled ? " " + t("muistutuslomake.jata_vahva") : ""}</strong>
+            <strong>
+              {t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}
+              {kayttaja?.suomifiEnabled ? " " + t("muistutuslomake.jata_vahva") : ""}
+            </strong>
           </p>
 
           <Notification

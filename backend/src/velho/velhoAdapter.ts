@@ -255,7 +255,10 @@ export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?
     kayttoOikeudet: [],
   };
 
-  const asiaId = (process.env.MIGRATION_CLI === "true" || await isProjektiAsianhallintaIntegrationEnabled(projekti)) ? await haeAsiaId(projekti) : undefined;
+  const asiaId =
+    process.env.MIGRATION_CLI === "true" || (await isProjektiAsianhallintaIntegrationEnabled(projekti))
+      ? await haeAsiaId(projekti)
+      : undefined;
 
   await persistGeoJsonFile(data);
 
@@ -386,14 +389,8 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
     ominaisuudet.liikenteeseenluovutus?.kokonaan,
     (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
   );
-  setIfDefined(
-    ominaisuudet.toteutusilmoitus?.osittain,
-    (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value))
-  );
-  setIfDefined(
-    ominaisuudet.toteutusilmoitus?.kokonaan,
-    (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value))
-  );
+  setIfDefined(ominaisuudet.toteutusilmoitus?.osittain, (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value)));
+  setIfDefined(ominaisuudet.toteutusilmoitus?.kokonaan, (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value)));
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
   setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
 

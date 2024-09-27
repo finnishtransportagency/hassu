@@ -16,8 +16,7 @@ export function EdellinenVaiheMigroituNotification(props: { oid: string | undefi
         <HassuLink className="text-primary" href={`/yllapito/projekti/${props.oid}/henkilot`}>
           Projektin henkilot
         </HassuLink>{" "}
-        -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään{" "}
-        <TukiEmailLink />.
+        -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään <TukiEmailLink />.
       </div>
     </Notification>
   );

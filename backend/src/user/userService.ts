@@ -26,7 +26,9 @@ function parseRoles(roles?: string): string[] | undefined {
     return "";
   }
   try {
-    return JSON.parse(roles).map(parseRole).filter((s: string) => s);
+    return JSON.parse(roles)
+      .map(parseRole)
+      .filter((s: string) => s);
   } catch (e) {
     return roles
       .replace("\\", "")

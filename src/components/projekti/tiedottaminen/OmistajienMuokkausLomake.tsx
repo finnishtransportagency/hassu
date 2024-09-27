@@ -580,7 +580,11 @@ const PaginatedTaulukko = ({
   fieldArrayName: "muutOmistajat" | "suomifiOmistajat";
   columns: ColumnDef<OmistajaRow>[];
 }) => {
-  const { control, reset, formState: { isDirty } } = useFormContext<KiinteistonOmistajatFormFields>();
+  const {
+    control,
+    reset,
+    formState: { isDirty },
+  } = useFormContext<KiinteistonOmistajatFormFields>();
   const [hakutulosMaara, setHakutulosMaara] = useState<number>(initialHakutulosMaara);
   const [sliceAt, setSliceAt] = useState(PAGE_SIZE);
   const { append: appendMuut, fields } = useFieldArray({ control, name: fieldArrayName, keyName: "fieldId" });

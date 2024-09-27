@@ -75,7 +75,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     }
   }
 
-  getLahettaja() : Osoite {
+  getLahettaja(): Osoite {
     const viranomainen = this.kutsuAdapter.velho.suunnittelustaVastaavaViranomainen;
     if (viranomainen === SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY) {
       return {
@@ -83,63 +83,63 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
         katuosoite: "PL 156",
         postinumero: "60101",
         postitoimipaikka: "SEINÄJOKI",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_ELY) {
       return {
         nimi: "Kaakkois-Suomen ELY-keskus",
         katuosoite: "PL 1041",
         postinumero: "45101",
         postitoimipaikka: "Kouvola",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY) {
       return {
         nimi: "Keski-Suomen ELY-keskus",
         katuosoite: "PL 250",
         postinumero: "40101",
         postitoimipaikka: "Jyväskylä",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.LAPIN_ELY) {
       return {
         nimi: "Lapin ELY-keskus",
         katuosoite: "PL 8060",
         postinumero: "96101",
         postitoimipaikka: "Rovaniemi",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY) {
       return {
         nimi: "Pirkanmaan ELY-keskus",
         katuosoite: "PL 297",
         postinumero: "33101",
         postitoimipaikka: "Tampere",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY) {
       return {
         nimi: "Pohjois-Pohjanmaan ELY-keskus",
         katuosoite: "PL 86",
         postinumero: "90101",
         postitoimipaikka: "Oulu",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJOIS_SAVON_ELY) {
       return {
         nimi: "Pohjois-Savon ELY-keskus",
         katuosoite: "PL 2000",
         postinumero: "70101",
         postitoimipaikka: "Kuopio",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY) {
       return {
         nimi: "Uudenmaan ELY-keskus",
         katuosoite: "PL 36",
         postinumero: "00521",
         postitoimipaikka: "HELSINKI",
-      }
+      };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.VARSINAIS_SUOMEN_ELY) {
       return {
         nimi: "Varsinais-Suomen ELY-keskus",
         katuosoite: "PL 236",
         postinumero: "20101",
         postitoimipaikka: "TURKU",
-      }
+      };
     } else {
       return {
         nimi: "Väylävirasto",
@@ -169,7 +169,9 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
       this.doc.text(this.osoite?.nimi, x, toPdfPoints(55), { width: toPdfPoints(62), baseline: "top" });
       this.doc.text(this.osoite.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
-      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka.toUpperCase()}`, undefined, undefined, { width: toPdfPoints(72) });
+      this.doc.text(`${this.osoite.postinumero} ${this.osoite.postitoimipaikka.toUpperCase()}`, undefined, undefined, {
+        width: toPdfPoints(72),
+      });
       this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), this.asiaTunnusX, 110);
 
       this.doc.moveDown(12);

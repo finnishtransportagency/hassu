@@ -7,11 +7,7 @@ export default function PoistumisPaiva({ index, kunta }: Readonly<{ index: numbe
 
   return (
     <SectionContent>
-      {kunta ? (
-        <H3>Täydennysaineiston voimassaoloaika</H3>
-      ) : (
-        <H3 className="mb-1">Aineistolinkin voimassaoloaika</H3>
-      )}
+      {kunta ? <H3>Täydennysaineiston voimassaoloaika</H3> : <H3 className="mb-1">Aineistolinkin voimassaoloaika</H3>}
       <p className="mb-6">
         Valitse {kunta ? "lausuntopyynnön täydennyksen" : "lausuntopyynnön"} sisällölle voimassaoloaika. Linkki ja sen sisältö on
         tarkasteltavissa alla olevaan päivämäärään saakka. Päivämäärää on mahdollista päivittää jälkikäteen.

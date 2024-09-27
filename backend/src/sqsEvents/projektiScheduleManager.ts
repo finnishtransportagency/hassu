@@ -265,12 +265,7 @@ const HYVAKSYMISPAATOS_VAIHE = "HyvaksymisPaatosVaihe";
 export class HyvaksymisPaatosVaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(
-      julkaisut,
-      HYVAKSYMISPAATOS_VAIHE,
-      "HYVAKSYMISPAATOSVAIHE",
-      HYVAKSYMISPAATOS_DURATION
-    );
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, HYVAKSYMISPAATOS_VAIHE, "HYVAKSYMISPAATOSVAIHE", HYVAKSYMISPAATOS_DURATION);
   }
 }
 

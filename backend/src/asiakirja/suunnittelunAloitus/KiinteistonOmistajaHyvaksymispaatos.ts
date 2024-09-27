@@ -131,7 +131,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-    ].filter((elem): elem is PDFStructureElement => !!elem);;
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   paatoslaki(): string {

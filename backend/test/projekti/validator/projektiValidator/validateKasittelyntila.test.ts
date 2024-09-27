@@ -78,7 +78,7 @@ describe("validateKasittelyntila", () => {
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila", async () => {
-   const input: TallennaProjektiInput = {
+    const input: TallennaProjektiInput = {
       oid: "1",
       versio: 1,
       kasittelynTila: {

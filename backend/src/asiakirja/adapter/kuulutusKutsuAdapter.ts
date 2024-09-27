@@ -88,7 +88,9 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
           organisaatio = kaannos;
         }
       }
-      return `${organisaatio ? organisaatio + ", " : ""}${formatNimi(y)}, ${this.kieli === Kieli.RUOTSI ? "tel" : "puh"}. ${y.puhelinnumero}, ${y.sahkoposti}`;
+      return `${organisaatio ? organisaatio + ", " : ""}${formatNimi(y)}, ${this.kieli === Kieli.RUOTSI ? "tel" : "puh"}. ${
+        y.puhelinnumero
+      }, ${y.sahkoposti}`;
     });
   }
 }
