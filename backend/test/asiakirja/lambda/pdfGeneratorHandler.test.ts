@@ -38,11 +38,11 @@ type PdfEvent = {
 
 function pdfFileName({ tyyppi, kieli }: PdfEvent) {
   if (tyyppi === ProjektiTyyppi.TIE) {
-    return `T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else if (tyyppi === ProjektiTyyppi.RATA) {
-    return `31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `R415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else {
-    return `31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `Y415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   }
 }
 
