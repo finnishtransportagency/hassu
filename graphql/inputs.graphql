@@ -533,7 +533,6 @@ input PaatosInput {
 input HyvaksymispaatosInput {
   paatoksenPvm: String
   asianumero: String
-  aktiivinen: Boolean
 }
 
 input PalveluPalauteInput {

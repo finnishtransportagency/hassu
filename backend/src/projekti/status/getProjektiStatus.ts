@@ -116,9 +116,9 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
   const nahtavillaoloJulkaisunTila = nahtavillaoloVaiheJulkaisu?.tila;
   const nahtavillaoloVaihePaattyyPaiva = nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva;
   const nahtavillaoloMigroituTaiKuulutusaikaOhi =
-    (nahtavillaoloJulkaisunTila == API.KuulutusJulkaisuTila.HYVAKSYTTY &&
+    (nahtavillaoloJulkaisunTila === API.KuulutusJulkaisuTila.HYVAKSYTTY &&
       isDateTimeInThePast(nahtavillaoloVaihePaattyyPaiva, "end-of-day")) ||
-    nahtavillaoloJulkaisunTila == API.KuulutusJulkaisuTila.MIGROITU;
+    nahtavillaoloJulkaisunTila === API.KuulutusJulkaisuTila.MIGROITU;
   const hyvaksymisPaatosVaiheAineistoKunnossa =
     aineistoNahtavillaIsOk(projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla, aineistoKategoriat) &&
     !!projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.length;
@@ -258,9 +258,9 @@ function projektiOnEpaAktiivinen3(
   const jatkoPaatos2JulkaisunTila = jatkoPaatos2Julkaisu?.tila;
   const kuulutusJP2VaihePaattyyPaiva = jatkoPaatos2Julkaisu?.kuulutusVaihePaattyyPaiva;
   if (
-    (jatkoPaatos2JulkaisunTila == API.KuulutusJulkaisuTila.HYVAKSYTTY &&
+    (jatkoPaatos2JulkaisunTila === API.KuulutusJulkaisuTila.HYVAKSYTTY &&
       isDateTimeInThePast(kuulutusJP2VaihePaattyyPaiva, "end-of-day", JATKOPAATOS_DURATION)) ||
-    jatkoPaatos2JulkaisunTila == API.KuulutusJulkaisuTila.MIGROITU
+    jatkoPaatos2JulkaisunTila === API.KuulutusJulkaisuTila.MIGROITU
   ) {
     return true;
   }
@@ -310,9 +310,9 @@ function projektiOnVahintaanEpaAktiivinen2(
   const kuulutusJP1VaihePaattyyPaiva = jatkoPaatos1Julkaisu?.kuulutusVaihePaattyyPaiva;
 
   if (
-    (jatkoPaatos1JulkaisunTila == API.KuulutusJulkaisuTila.HYVAKSYTTY &&
+    (jatkoPaatos1JulkaisunTila === API.KuulutusJulkaisuTila.HYVAKSYTTY &&
       isDateTimeInThePast(kuulutusJP1VaihePaattyyPaiva, "end-of-day", JATKOPAATOS_DURATION)) ||
-    jatkoPaatos1JulkaisunTila == API.KuulutusJulkaisuTila.MIGROITU
+    jatkoPaatos1JulkaisunTila === API.KuulutusJulkaisuTila.MIGROITU
   ) {
     return true;
   }
@@ -363,9 +363,9 @@ function projektinStatusOnVahintaanEpaAktiivinen1(projekti: {
   const kuulutusVaihePaattyyPaiva = hyvaksymisPaatosJulkaisu?.kuulutusVaihePaattyyPaiva;
 
   if (
-    (hyvaksymisPaatosJulkaisunTila == API.KuulutusJulkaisuTila.HYVAKSYTTY &&
+    (hyvaksymisPaatosJulkaisunTila === API.KuulutusJulkaisuTila.HYVAKSYTTY &&
       isDateTimeInThePast(kuulutusVaihePaattyyPaiva, "end-of-day", HYVAKSYMISPAATOS_DURATION)) ||
-    hyvaksymisPaatosJulkaisunTila == API.KuulutusJulkaisuTila.MIGROITU
+    hyvaksymisPaatosJulkaisunTila === API.KuulutusJulkaisuTila.MIGROITU
   ) {
     return true;
   }
@@ -452,8 +452,8 @@ function projektinStatusOnVahintaanNahtavillaoloAineistot(projekti: {
   vahainenMenettely?: boolean | null;
 }): boolean {
   if (
-    projekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.MIGROITU ||
-    projekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.JULKINEN ||
+    projekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU ||
+    projekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.JULKINEN ||
     (projekti.vahainenMenettely && projekti.aloitusKuulutusJulkaisut?.length)
   ) {
     return true;
