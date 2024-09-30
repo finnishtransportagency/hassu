@@ -52,6 +52,12 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
     keyName: "alt-id",
   });
 
+  const { fields: maakuntaFields } = useFieldArray({
+    control,
+    name: "paatos.ilmoituksenVastaanottajat.maakunnat",
+    keyName: "alt-id",
+  });
+
   const {
     fields: viranomaisFields,
     append,
@@ -118,6 +124,27 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               ))}
             </div>
           </SectionContent>
+          {paatosIsJatkopaatos(paatosTyyppi) && (
+            <SectionContent>
+              <h6 className="font-bold">Maakunnat</h6>
+              <div className="content grid grid-cols-4 mb-4">
+                <p className="vayla-table-header">Maakunta</p>
+                <p className="vayla-table-header">Sähköpostiosoite</p>
+                <p className="vayla-table-header">Ilmoituksen tila</p>
+                <p className="vayla-table-header">Lähetysaika</p>
+                {paatosVaihe?.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
+                  <Fragment key={index}>
+                    <p className={getStyleForRow(index)}>{kuntametadata.nameForMaakuntaId(maakunta.id, lang)}</p>
+                    <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
+                    <p className={getStyleForRow(index)}>{lahetysTila(maakunta)}</p>
+                    <p className={getStyleForRow(index)}>
+                      {maakunta.lahetetty ? dayjs(maakunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                    </p>
+                  </Fragment>
+                ))}
+              </div>
+            </SectionContent>
+          )}
         </Section>
       )}
       <div style={julkinen ? { display: "none" } : {}}>
@@ -224,6 +251,23 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               </HassuGrid>
             ))}
           </SectionContent>
+          {paatosIsJatkopaatos(paatosTyyppi) && (
+            <SectionContent>
+              <H3>Maakunnat</H3>
+              {maakuntaFields.length === 0 && <p>Maakuntia ei ole asetettu velhoon.</p>}
+              {maakuntaFields.map((maakunta, index) => (
+                <HassuGrid key={maakunta.id} cols={{ lg: 3 }}>
+                  <input type="hidden" {...register(`paatos.ilmoituksenVastaanottajat.maakunnat.${index}.id`)} readOnly />
+                  <TextInput label="Maakunta *" value={kuntametadata.nameForMaakuntaId(maakunta.id, lang)} disabled />
+                  <TextInput
+                    label="Sähköpostiosoite *"
+                    error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.maakunnat?.[index]?.sahkoposti}
+                    {...register(`paatos.ilmoituksenVastaanottajat.maakunnat.${index}.sahkoposti`)}
+                  />
+                </HassuGrid>
+              ))}
+            </SectionContent>
+          )}
           {!paatosIsJatkopaatos(paatosTyyppi) && (
             <>
               <KiinteistonomistajatOhje

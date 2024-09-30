@@ -8,7 +8,9 @@ import {
   Projekti,
   ViranomaisVastaanottajaInput,
   Status,
+  MaakuntaVastaanottajaInput,
 } from "@services/api";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import uniqBy from "lodash/uniqBy";
 
@@ -44,11 +46,12 @@ function findOutEdellisenVaiheenIlmoituksenVastaanottajat(
 export default function defaultVastaanottajat(
   projekti: Projekti | null | undefined,
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined,
-  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined
+  kirjaamoOsoitteet: KirjaamoOsoite[] | undefined,
+  paatosTyyppi?: PaatosTyyppi | null
 ): IlmoituksenVastaanottajatInput {
   let kunnat: KuntaVastaanottajaInput[];
   let viranomaiset: ViranomaisVastaanottajaInput[];
-
+  let maakunnat: MaakuntaVastaanottajaInput[];
   const edellisenVaiheenilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined =
     findOutEdellisenVaiheenIlmoituksenVastaanottajat(projekti);
 
@@ -65,6 +68,22 @@ export default function defaultVastaanottajat(
         id: kuntaId,
         sahkoposti: "",
       })) || [];
+  }
+  if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+    if (ilmoituksenVastaanottajat?.maakunnat && ilmoituksenVastaanottajat.maakunnat.length > 0) {
+      maakunnat = ilmoituksenVastaanottajat.maakunnat.map((maakunta) => ({
+        id: maakunta.id,
+        sahkoposti: maakunta.sahkoposti,
+      }));
+    } else {
+      maakunnat =
+        projekti?.velho?.maakunnat?.map((id) => ({
+          id,
+          sahkoposti: "",
+        })) || [];
+    }
+  } else {
+    maakunnat = [];
   }
   if (ilmoituksenVastaanottajat?.viranomaiset) {
     // tapaus, jossa lomake on jo kerran tallennettu
@@ -104,5 +123,6 @@ export default function defaultVastaanottajat(
   return {
     kunnat,
     viranomaiset,
+    maakunnat,
   };
 }
