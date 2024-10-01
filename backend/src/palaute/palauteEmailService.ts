@@ -83,19 +83,12 @@ ${liite ? "Bifogade filer\n" + liite : ""}
         throw new Error(`Projektia oid:lla ${oid} ei löytynyt tietokannasta`);
       }
 
-      let recipients;
+      const usersToNotSendDigest = dbProjekti.vuorovaikutusKierros?.palautteidenVastaanottajat ?? [];
+
       // Send digest email to everybody else than the ones listed in palautteidenVastaanottajat. They already got the emails immediately when feedback was given
-      if (dbProjekti.vuorovaikutusKierros?.palautteidenVastaanottajat) {
-        recipients = dbProjekti.kayttoOikeudet.filter(
-          // varmistettu jo, että palautteidenVastaanottajat on olemassa
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          (user) => dbProjekti.suunnitteluVaihe?.palautteidenVastaanottajat.indexOf(user.kayttajatunnus) < 0
-        );
-      } else {
-        recipients = dbProjekti.kayttoOikeudet;
-      }
-      for (const recipient of recipients) {
+      const digestRecipients = dbProjekti.kayttoOikeudet.filter((user) => !usersToNotSendDigest.includes(user.kayttajatunnus));
+
+      for (const recipient of digestRecipients) {
         const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email, dbProjekti.uusiaPalautteita);
         if (emailOptions.to) {
           await emailClient.sendEmail(emailOptions);
