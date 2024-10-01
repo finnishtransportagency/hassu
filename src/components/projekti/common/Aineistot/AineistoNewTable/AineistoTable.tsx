@@ -17,7 +17,7 @@ interface AineistoTableProps {
   aineistoKategoriat: AineistoKategoriat;
 }
 
-export function AineistoTable(props: AineistoTableProps) {
+export function AineistoTable(props: Readonly<AineistoTableProps>) {
   const { control, register, getValues, setValue } = useFormContext<HyvaksymisEsitysForm>();
   const aineistoRoute: `muokattavaHyvaksymisEsitys.suunnitelma.${string}` = `muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoriaId}`;
   const { fields, remove, move } = useFieldArray({ name: aineistoRoute, control });
@@ -49,7 +49,13 @@ export function AineistoTable(props: AineistoTableProps) {
       {
         header: "Tuotu",
         id: "tuotu",
-        accessorFn: (aineisto) => (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessorFn: (aineisto) => {
+          // Jos on jo tallennettu aineisto, jolla ei tuotu-aikaleimaa, näytetään Ladataan-tekstiä
+          if (!aineisto.newlyAdded && !aineisto.tuotu) {
+            return "Ladataan...";
+          }
+          return aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined;
+        },
         meta: { minWidth: 120, widthFractions: 2 },
       },
       {

@@ -14,6 +14,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
 import { AineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 
 type Props = {
   hyvaksymisesitys: HyvaksymisEsityksenTiedot;
@@ -24,7 +25,7 @@ const adaptFormDataForAPI: (formData: HyvaksymisEsitysForm) => TallennaHyvaksymi
   return transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(data);
 };
 
-export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKategoriat }: Props) {
+export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKategoriat }: Readonly<Props>) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty, isSubmitting },
@@ -38,6 +39,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKat
 
   const { withLoadingSpinner } = useLoadingSpinner();
   const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<HyvaksymisEsitysForm>();
+  const checkAineistoValmiit = useCheckAineistoValmiit(hyvaksymisesitys.oid);
 
   const api = useApi();
 
@@ -48,6 +50,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKat
           try {
             const convertedFormData = adaptFormDataForAPI(formData);
             await api.tallennaHyvaksymisEsitys(convertedFormData);
+            await checkAineistoValmiit({ retries: 5 });
             await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
           } catch (e) {
@@ -55,7 +58,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKat
           }
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, checkAineistoValmiit, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
   useLeaveConfirm(!isSubmitting && isDirty);
