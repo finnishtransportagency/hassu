@@ -41,9 +41,9 @@ function pdfFileName({ tyyppi, kieli }: PdfEvent) {
   if (tyyppi === ProjektiTyyppi.TIE) {
     return `T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else if (tyyppi === ProjektiTyyppi.RATA) {
-    return `63R Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `R433 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else {
-    return `63YS Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `Y431-4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   }
 }
 

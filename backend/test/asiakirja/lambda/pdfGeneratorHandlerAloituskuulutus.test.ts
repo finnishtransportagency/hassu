@@ -43,9 +43,9 @@ function pdfFileName({ tyyppi, kieli }: PdfEvent) {
   if (tyyppi === ProjektiTyyppi.TIE) {
     return `T412 Aloituskuulutus${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else if (tyyppi === ProjektiTyyppi.RATA) {
-    return `10R Aloituskuulutus${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `R412 Aloituskuulutus${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else {
-    return `10YS Aloituskuulutus${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `Y412 Aloituskuulutus${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   }
 }
 

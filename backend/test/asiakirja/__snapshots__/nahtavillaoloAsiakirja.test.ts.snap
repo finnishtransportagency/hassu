@@ -2,7 +2,7 @@
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -44,7 +44,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__31R Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -87,7 +87,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -129,7 +129,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -171,7 +171,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -214,7 +214,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_31YS Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -251,7 +251,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -277,7 +277,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -383,7 +383,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_12YS Ilmoitus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -409,7 +409,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__30R Kuulutus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -448,7 +448,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__30R Kuulutus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA__R414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -596,7 +596,7 @@ LUONNOS",
 
 exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_30YS Kuulutus suunnitelman nahtavillaolo.pdf",
+  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
 
 
