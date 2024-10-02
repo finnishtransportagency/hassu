@@ -19,6 +19,7 @@ import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { EmailOptions } from "../../email/model/emailOptions";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { getProjektipaallikkoAndOrganisaatio } from "../../util/userUtil";
+import { translate } from "../../util/localization";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
@@ -212,7 +213,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
     const virasto =
       projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
         ? "Väyläviraston"
-        : "ELY-keskuksen";
+        : translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI) + " ELY-keskuksen";
     const projektiPaallikko = getProjektipaallikkoAndOrganisaatio(projekti, Kieli.SUOMI);
     const text = `Hei,
 Liitteenä on ${virasto} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksen voimassa olon pidentämistä koskevasta päätöksestä koskien suunnitelmaa ${
