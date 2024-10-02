@@ -118,8 +118,8 @@ Object {
 exports[`Palaute should insert and manage feedback 3`] = `
 Array [
   Object {
-    "subject": "Suunnitelmaan on tullut palautetta",
-    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "subject": "Valtion liikenneväylien suunnittelu: Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palautetta",
+    "text": "Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palaute tai kysymys. Tarkasta kysymyksen tai palautteen sisältö https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
@@ -143,8 +143,8 @@ logo.png
     "to": "test@vayla.fi",
   },
   Object {
-    "subject": "Suunnitelmaan on tullut palautetta",
-    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "subject": "Valtion liikenneväylien suunnittelu: Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palautetta",
+    "text": "Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palaute tai kysymys. Tarkasta kysymyksen tai palautteen sisältö https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
@@ -167,8 +167,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit a
     "to": "test@vayla.fi",
   },
   Object {
-    "subject": "Suunnitelmaan on tullut palautetta",
-    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
+    "subject": "Valtion liikenneväylien suunnittelu: Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palautetta",
+    "text": "Suunnitelmasta HASSU AUTOMAATTITESTIPROJEKTI1 on saapunut palaute tai kysymys. Tarkasta kysymyksen tai palautteen sisältö https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnittelu",
     "to": "mikko.haapamaki@cgi.com",
   },
 ]

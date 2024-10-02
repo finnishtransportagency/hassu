@@ -311,7 +311,7 @@ export class ProjektiDatabase {
       Key: {
         oid,
       },
-      UpdateExpression: "SET uusiaPalautteita = :one",
+      UpdateExpression: "ADD uusiaPalautteita :one",
       ExpressionAttributeValues: { ":one": 1 },
     });
     await getDynamoDBDocumentClient().send(params);
