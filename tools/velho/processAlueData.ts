@@ -90,6 +90,7 @@ function parseMaakunnat(): Record<string, Maakunta> {
       let sykeMaakunta = sykeMaakunnat.value.find((sykeMaakunta) => sykeMaakunta.Maakunta_Id == maakuntaId);
       if (sykeMaakunta) {
         maakunta.nimi.RUOTSI = sykeMaakunta.NimiRuo;
+        maakunta.liittoNimi = sykeMaakunta.LiittoNimi ?? maakunta.nimi.SUOMI;
       }
     }
     maakuntaMap[maakuntaId] = maakunta;

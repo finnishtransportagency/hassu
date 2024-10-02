@@ -126,15 +126,15 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
           </SectionContent>
           {paatosIsJatkopaatos(paatosTyyppi) && (
             <SectionContent>
-              <h6 className="font-bold">Maakunnat</h6>
+              <h6 className="font-bold">Maakuntaliitot</h6>
               <div className="content grid grid-cols-4 mb-4">
-                <p className="vayla-table-header">Maakunta</p>
+                <p className="vayla-table-header">Maakuntaliitto</p>
                 <p className="vayla-table-header">Sähköpostiosoite</p>
                 <p className="vayla-table-header">Ilmoituksen tila</p>
                 <p className="vayla-table-header">Lähetysaika</p>
                 {paatosVaihe?.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
-                  <Fragment key={index}>
-                    <p className={getStyleForRow(index)}>{kuntametadata.nameForMaakuntaId(maakunta.id, lang)}</p>
+                  <Fragment key={maakunta.id}>
+                    <p className={getStyleForRow(index)}>{kuntametadata.liittoNameForMaakuntaId(maakunta.id)}</p>
                     <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
                     <p className={getStyleForRow(index)}>{lahetysTila(maakunta)}</p>
                     <p className={getStyleForRow(index)}>
@@ -253,12 +253,12 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
           </SectionContent>
           {paatosIsJatkopaatos(paatosTyyppi) && (
             <SectionContent>
-              <H3>Maakunnat</H3>
+              <H3>Maakuntaliitot</H3>
               {maakuntaFields.length === 0 && <p>Maakuntia ei ole asetettu velhoon.</p>}
               {maakuntaFields.map((maakunta, index) => (
                 <HassuGrid key={maakunta.id} cols={{ lg: 3 }}>
                   <input type="hidden" {...register(`paatos.ilmoituksenVastaanottajat.maakunnat.${index}.id`)} readOnly />
-                  <TextInput label="Maakunta *" value={kuntametadata.nameForMaakuntaId(maakunta.id, lang)} disabled />
+                  <TextInput label="Maakuntaliitto *" value={kuntametadata.liittoNameForMaakuntaId(maakunta.id)} disabled />
                   <TextInput
                     label="Sähköpostiosoite *"
                     error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.maakunnat?.[index]?.sahkoposti}

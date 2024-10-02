@@ -65,24 +65,20 @@ export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }:
       </SectionContent>
       {isMaakuntia && (
         <SectionContent>
-          <H3 variant="h5">Maakunnat</H3>
+          <H3 variant="h5">Maakuntaliitot</H3>
           <div className="content grid grid-cols-4 mb-4">
-            <p className="vayla-table-header">Maakunta</p>
+            <p className="vayla-table-header">Maakuntaliitto</p>
             <p className="vayla-table-header">Sähköpostiosoite</p>
             <p className="vayla-table-header">Ilmoituksen tila</p>
             <p className="vayla-table-header">Lähetysaika</p>
-            <>
-              {ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
-                <React.Fragment key={index}>
-                  <p className={getStyleForRow(index)}>{kuntametadata.nameForMaakuntaId(maakunta.id, lang)}</p>
-                  <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
-                  <p className={getStyleForRow(index)}>{maakunta.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
-                  <p className={getStyleForRow(index)}>
-                    {maakunta.lahetetty ? dayjs(maakunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
-                  </p>
-                </React.Fragment>
-              ))}
-            </>
+            {ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
+              <React.Fragment key={maakunta.id}>
+                <p className={getStyleForRow(index)}>{kuntametadata.liittoNameForMaakuntaId(maakunta.id)}</p>
+                <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
+                <p className={getStyleForRow(index)}>{maakunta.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                <p className={getStyleForRow(index)}>{maakunta.lahetetty ? dayjs(maakunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
+              </React.Fragment>
+            ))}
           </div>
         </SectionContent>
       )}
