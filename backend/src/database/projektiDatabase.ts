@@ -3,6 +3,7 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
+  KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
   PartialDBProjekti,
@@ -550,6 +551,67 @@ export class ProjektiDatabase {
       },
     });
     return await getDynamoDBDocumentClient().send(params);
+  }
+
+  async avaaProjektiJatkopaatettavaksi(
+    oid: string,
+    vaiheAvain: keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">
+  ) {
+    const aktiivinenInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: `SET kasittelynTila.#paatos.aktiivinen = :aktiivinen`,
+      ExpressionAttributeNames: {
+        ["#paatos"]: vaiheAvain,
+      },
+      ExpressionAttributeValues: {
+        ":aktiivinen": true,
+      },
+      ConditionExpression: "attribute_exists(kasittelynTila.#paatos)",
+    };
+    const paatosInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: `SET kasittelynTila.#paatos = if_not_exists(kasittelynTila.#paatos, :paatos)`,
+      ExpressionAttributeNames: {
+        ["#paatos"]: vaiheAvain,
+      },
+      ExpressionAttributeValues: {
+        ":paatos": { aktiivinen: true },
+      },
+      ConditionExpression: "attribute_exists(kasittelynTila)",
+    };
+    const kasittelynTilaInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: `SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)`,
+      ExpressionAttributeValues: {
+        ":kasittelynTila": { [vaiheAvain]: { aktiivinen: true } },
+      },
+    };
+    try {
+      await getDynamoDBDocumentClient().send(new UpdateCommand(aktiivinenInput));
+      return;
+    } catch (e) {
+      if (!(e instanceof ConditionalCheckFailedException)) {
+        throw e;
+      }
+    }
+    try {
+      await getDynamoDBDocumentClient().send(new UpdateCommand(paatosInput));
+      return;
+    } catch (e) {
+      if (!(e instanceof ConditionalCheckFailedException)) {
+        throw e;
+      }
+    }
+    await getDynamoDBDocumentClient().send(new UpdateCommand(kasittelynTilaInput));
   }
 }
 

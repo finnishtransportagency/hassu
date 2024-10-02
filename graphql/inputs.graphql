@@ -547,6 +547,11 @@ enum TestiKomento {
   VIE_ASIANHALLINTAAN
 }
 
+enum JatkopaatettavaVaihe {
+  JATKOPAATOS_1
+  JATKOPAATOS_2
+}
+
 enum TestiKomentoVaihe {
   ALOITUSKUULUTUS
   SUUNNITTELU

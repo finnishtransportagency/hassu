@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState, useMemo, useEffect, FunctionComponent } from "react";
+import React, { ReactElement, useCallback, useMemo, useEffect, FunctionComponent } from "react";
 import { KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -18,9 +18,6 @@ import { KeyedMutator } from "swr";
 import { HassuDatePickerWithController, HassuDatePicker, HassuDatePickerWithControllerProps } from "@components/form/HassuDatePicker";
 import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import HassuGridItem from "@components/HassuGridItem";
-import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopaatosDialog";
-import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
 import { formatDate, parseValidDateOtherwiseReturnNull } from "hassu-common/util/dateUtils";
@@ -129,10 +126,6 @@ function removeEmptyValues(data: KasittelynTilaFormValues): KasittelynTilaFormVa
 }
 
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: Readonly<HenkilotFormProps>): ReactElement {
-  const router = useRouter();
-  const [openTallenna, setOpenTallenna] = useState(false);
-  const [openTallenna2, setOpenTallenna2] = useState(false);
-
   const { isLoading: isFormSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -149,7 +142,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const defaultValues: KasittelynTilaFormValues = useMemo(() => {
     const kasittelynTila: KasittelyntilaInput = {
       hyvaksymispaatos: {
-        paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm ?? null,
+        paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm
+          ? projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm
+          : null,
         asianumero: projekti.kasittelynTila?.hyvaksymispaatos?.asianumero ?? "",
       },
     };
@@ -157,13 +152,17 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     if (projekti.nykyinenKayttaja.onYllapitaja) {
       if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)) {
         kasittelynTila.ensimmainenJatkopaatos = {
-          paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm ?? null,
+          paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm
+            ? projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm
+            : null,
           asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero ?? "",
         };
       }
       if (isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)) {
         kasittelynTila.toinenJatkopaatos = {
-          paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm ?? null,
+          paatoksenPvm: projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm
+            ? projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm
+            : null,
           asianumero: projekti.kasittelynTila?.toinenJatkopaatos?.asianumero ?? "",
         };
       }
@@ -229,7 +228,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     formState: { errors, isDirty, isSubmitting },
     control,
     reset,
-    watch,
     setValue,
     trigger,
   } = useFormReturn;
@@ -251,7 +249,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         log.log("OnSubmit Error", e);
       }
     },
-    [api, reloadProjekti, showSuccessMessage]
+    [api, reloadProjekti, reset, showSuccessMessage]
   );
 
   const onSubmit = useCallback(
@@ -263,70 +261,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  const avaaJatkopaatos = useCallback(
-    async (data: KasittelynTilaFormValues) =>
-      await withLoadingSpinner(
-        (async () => {
-          try {
-            data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
-            await save(data, "Jatkopäätös lisätty");
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          } catch (e) {
-            log.log("OnSubmit Error", e);
-          }
-          setOpenTallenna(false);
-        })()
-      ),
-    [withLoadingSpinner, save, router, projekti.oid]
-  );
-
-  const handleClickOpenTallenna = () => {
-    setOpenTallenna(true);
-  };
-  const handleClickCloseTallenna = () => {
-    setOpenTallenna(false);
-  };
-
-  const handleClickTallennaJaAvaa = useMemo(() => {
-    return handleSubmit(avaaJatkopaatos);
-  }, [avaaJatkopaatos, handleSubmit]);
-
-  const avaaJatkopaatos2 = useCallback(
-    async (data: KasittelynTilaFormValues) =>
-      await withLoadingSpinner(
-        (async () => {
-          try {
-            data.kasittelynTila!.toinenJatkopaatos!.aktiivinen = true;
-            await save(data, "Jatkopäätös lisätty");
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            await router.push(`/yllapito/projekti/${projekti.oid}/henkilot`);
-          } catch (e) {
-            log.log("OnSubmit Error", e);
-          }
-          setOpenTallenna2(false);
-        })()
-      ),
-    [withLoadingSpinner, save, router, projekti.oid]
-  );
-
-  const handleClickOpenTallenna2 = () => {
-    setOpenTallenna2(true);
-  };
-  const handleClickCloseTallenna2 = () => {
-    setOpenTallenna2(false);
-  };
-
-  const handleClickTallennaJaAvaa2 = useMemo(() => {
-    return handleSubmit(avaaJatkopaatos2);
-  }, [avaaJatkopaatos2, handleSubmit]);
-
-  const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
-  const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
-  const jatkopaatos2Pvm = watch("kasittelynTila.toinenJatkopaatos.paatoksenPvm");
-  const jatkopaatos2Asiatunnus = watch("kasittelynTila.toinenJatkopaatos.asianumero");
-  const jatkopaatos1lisaaDisabled = ensimmainenJatkopaatosDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus;
-  const jatkopaatos2lisaaDisabled = toinenJatkopaatosDisabled || !jatkopaatos2Pvm || !jatkopaatos2Asiatunnus;
   const velhoURL = getVelhoUrl(projekti.oid);
 
   return (
@@ -613,14 +547,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
               )}
-              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && (
-                <HassuGridItem sx={{ alignSelf: "end" }}>
-                  <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos1lisaaDisabled}>
-                    Lisää jatkopäätös
-                  </Button>
-                </HassuGridItem>
-              )}
-              <LuoJatkopaatosDialog isOpen={openTallenna} onClose={handleClickCloseTallenna} tallenna={handleClickTallennaJaAvaa} />
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
@@ -640,14 +566,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || ""} disabled />
               )}
-              {!projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen && (
-                <HassuGridItem sx={{ alignSelf: "end" }}>
-                  <Button id="lisaa_jatkopaatos2" onClick={handleSubmit(handleClickOpenTallenna2)} disabled={jatkopaatos2lisaaDisabled}>
-                    Lisää jatkopäätös
-                  </Button>
-                </HassuGridItem>
-              )}
-              <LuoJatkopaatosDialog isOpen={openTallenna2} onClose={handleClickCloseTallenna2} tallenna={handleClickTallennaJaAvaa2} />
             </HassuGrid>
           </SectionContent>
         </Section>

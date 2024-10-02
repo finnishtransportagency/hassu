@@ -96,6 +96,8 @@ import {
   KayttoOikeusTiedot,
   HyvaksymisEsityksenAineistot,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
+  AvaaProjektiJatkopaatettavaksiMutationVariables,
+  JatkopaatettavaVaihe,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -431,6 +433,12 @@ export const apiConfig: ApiConfig = {
     name: "haeKayttoOikeudet",
     operationType: OperationType.Query,
     graphql: queries.haeKayttoOikeudet,
+    isYllapitoOperation: true,
+  },
+  avaaProjektiJatkopaatettavaksi: {
+    name: "avaaProjektiJatkopaatettavaksi",
+    operationType: OperationType.Mutation,
+    graphql: mutations.avaaProjektiJatkopaatettavaksi,
     isYllapitoOperation: true,
   },
 };
@@ -830,6 +838,13 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.haeProjektinTiedottamistiedot, {
       oid,
     } as HaeProjektinTiedottamistiedotQueryVariables);
+  }
+
+  async avaaProjektiJatkopaatettavaksi(oid: string, vaihe: JatkopaatettavaVaihe): Promise<ProjektinTiedottaminen> {
+    return await this.callYllapitoAPI(apiConfig.avaaProjektiJatkopaatettavaksi, {
+      oid,
+      vaihe,
+    } as AvaaProjektiJatkopaatettavaksiMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

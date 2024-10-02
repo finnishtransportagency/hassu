@@ -79,4 +79,5 @@ type Mutation {
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!, status: Status): String
   tallennaKiinteistonOmistajat(oid: String!, muutOmistajat: [OmistajaInput!]!, poistettavatOmistajat: [String!]!): [String]
   tallennaMuistuttajat(oid: String!, muutMuistuttajat: [MuistuttajaInput!]!, poistettavatMuistuttajat: [String!]!): [String]
+  avaaProjektiJatkopaatettavaksi(oid: String!, vaihe: JatkopaatettavaVaihe!): String
 }

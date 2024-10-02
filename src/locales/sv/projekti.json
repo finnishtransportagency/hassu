@@ -413,11 +413,6 @@
     "TURKU": "Åbo",
     "VAASA": "Vasa"
   },
-  "kasittelyn_tila": {
-    "luo-jatkopaatos": "Luo jatkopäätös",
-    "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
-    "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
-  },
   "tien_tie": "landsväg",
   "tien_rata": "järnväg",
   "suunnitelma": {
