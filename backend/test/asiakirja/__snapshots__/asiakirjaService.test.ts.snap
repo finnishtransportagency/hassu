@@ -597,7 +597,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 7`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1071,7 +1071,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 22`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
