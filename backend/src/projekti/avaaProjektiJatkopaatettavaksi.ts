@@ -15,7 +15,11 @@ export async function avaaProjektiJatkopaatettavaksi(vars: Variables): Promise<s
     JATKOPAATOS_1: "ensimmainenJatkopaatos",
     JATKOPAATOS_2: "toinenJatkopaatos",
   };
-  await projektiDatabase.avaaProjektiJatkopaatettavaksi(vars.oid, mapVaiheToKasittelynTilaKey[vars.vaihe]);
+  await projektiDatabase.avaaProjektiJatkopaatettavaksi(vars.oid, mapVaiheToKasittelynTilaKey[vars.vaihe], {
+    aktiivinen: true,
+    asianumero: vars.paatoksenTiedot.asianumero ?? undefined,
+    paatoksenPvm: vars.paatoksenTiedot.paatoksenPvm ?? undefined,
+  });
   await synchronizeUpdatesFromVelho(vars.oid, true);
   return vars.oid;
 }

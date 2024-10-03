@@ -5,17 +5,23 @@ import { KasittelynTila } from "@services/api";
 
 type Hyvaksymispaatos = keyof Pick<KasittelynTila, "hyvaksymispaatos" | "ensimmainenJatkopaatos" | "toinenJatkopaatos">;
 
-const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
+export const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
   Yup.object()
     .shape({
       paatoksenPvm: paivamaara().when("$projekti", {
-        is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+        is: (projekti: ProjektiLisatiedolla) =>
+          projekti.kasittelynTila?.[paatosAvain]?.aktiivinen &&
+          projekti.kasittelynTila?.[paatosAvain]?.asianumero &&
+          projekti.kasittelynTila?.[paatosAvain]?.paatoksenPvm,
         then: (schema) => schema.required("Päivämäärä on annettava"),
       }),
       asianumero: Yup.string()
         .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
         .when("$projekti", {
-          is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+          is: (projekti: ProjektiLisatiedolla) =>
+            projekti.kasittelynTila?.[paatosAvain]?.aktiivinen &&
+            projekti.kasittelynTila?.[paatosAvain]?.asianumero &&
+            projekti.kasittelynTila?.[paatosAvain]?.paatoksenPvm,
           then: (schema) => schema.required("Päivämäärä on annettava"),
         })
         .notRequired()

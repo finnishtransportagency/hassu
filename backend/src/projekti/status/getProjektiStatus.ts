@@ -294,8 +294,7 @@ function projektinStatusOnVahintaanJatkoPaatos2Aineistot({
   jatkoPaatos2VaiheAineistoKunnossa: boolean;
 }): boolean {
   const { aktiivinen, asianumero, paatoksenPvm } = kasittelynTila?.toinenJatkopaatos ?? {};
-  const paatosAktiivinenTaiMuutenKunnossa = aktiivinen || (asianumero && paatoksenPvm);
-  if (paatosAktiivinenTaiMuutenKunnossa && !jatkoPaatos2VaiheAineistoKunnossa) {
+  if (aktiivinen && asianumero && paatoksenPvm && !jatkoPaatos2VaiheAineistoKunnossa) {
     return true;
   }
   return false;
@@ -344,8 +343,7 @@ function projektinStatusOnVahintaanJatkoPaatos1Aineistot({
   jatkoPaatos1VaiheAineistoKunnossa: boolean;
 }): boolean {
   const { aktiivinen, asianumero, paatoksenPvm } = kasittelynTila?.ensimmainenJatkopaatos ?? {};
-  const paatosAktiivinenTaiMuutenKunnossa = aktiivinen || (asianumero && paatoksenPvm);
-  if (paatosAktiivinenTaiMuutenKunnossa && !jatkoPaatos1VaiheAineistoKunnossa) {
+  if (aktiivinen && asianumero && paatoksenPvm && !jatkoPaatos1VaiheAineistoKunnossa) {
     return true;
   }
   return false;

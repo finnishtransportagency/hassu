@@ -263,6 +263,16 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const velhoURL = getVelhoUrl(projekti.oid);
 
+  const jatkopaatos1TiedotPakollisia =
+    projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen &&
+    projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero &&
+    projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm;
+
+  const jatkopaatos2AnnettuTiedot =
+    projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen &&
+    projekti.kasittelynTila?.toinenJatkopaatos?.asianumero &&
+    projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm;
+
   return (
     <FormProvider {...useFormReturn}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -524,14 +534,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <H2>Jatkopäätös</H2>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asiatunnus ja paina ‘Lisää jatkopäätös’. Toiminto
-              avaa suunnitelmalle jatkopäätöksen kuulutuksen. Tarkasta jatkopäätöksen lisäämisen jälkeen Projektivelhosta suunnitelman
-              projektipäällikön tiedot ajantasalle.
+              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asiatunnus. Kun projekti on avattu
+              jatkopäätettäväksi Projektin tiedot -sivulta ja jatkopäätöksen tiedot on kertaalleen tallennettu, niitä ei voi enää poistaa,
+              mutta niitä voidaan päivittää.
             </p>
             <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
-                label={`1. jatkopäätöksen päivä ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
+                label={`1. jatkopäätöksen päivä ${jatkopaatos1TiedotPakollisia ? "*" : ""}`}
                 controllerProps={{ control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={ensimmainenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)}
@@ -539,7 +549,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               />
               {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) ? (
                 <TextInput
-                  label={`Asiatunnus ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
+                  label={`Asiatunnus ${jatkopaatos1TiedotPakollisia ? "*" : ""}`}
                   {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                   error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
                   disabled={ensimmainenJatkopaatosDisabled}
@@ -550,7 +560,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
-                label={`2. jatkopäätöksen päivä ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
+                label={`2. jatkopäätöksen päivä ${jatkopaatos2AnnettuTiedot ? "*" : ""}`}
                 disabled={toinenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)}
                 controllerProps={{ control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
@@ -558,7 +568,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               />
               {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2) ? (
                 <TextInput
-                  label={`Asiatunnus ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
+                  label={`Asiatunnus ${jatkopaatos2AnnettuTiedot ? "*" : ""}`}
                   {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
                   disabled={toinenJatkopaatosDisabled}
                   error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}

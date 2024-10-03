@@ -87,6 +87,8 @@ export default function ProjektiSivu() {
     return <></>;
   }
 
+  const showAvaaJatkopaatettavaksi = jatkopaatettavaVaihe && projekti.nykyinenKayttaja.onYllapitaja;
+
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
@@ -97,7 +99,7 @@ export default function ProjektiSivu() {
         !epaaktiivinen ? (
           <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />
         ) : (
-          jatkopaatettavaVaihe && <AvaaJatkopaatettavaksiPainike oid={projekti.oid} jatkopaatettavaVaihe={jatkopaatettavaVaihe} />
+          showAvaaJatkopaatettavaksi && <AvaaJatkopaatettavaksiPainike projekti={projekti} jatkopaatettavaVaihe={jatkopaatettavaVaihe} />
         )
       }
     >

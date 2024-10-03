@@ -97,7 +97,6 @@ import {
   HyvaksymisEsityksenAineistot,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
   AvaaProjektiJatkopaatettavaksiMutationVariables,
-  JatkopaatettavaVaihe,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -840,11 +839,8 @@ export abstract class AbstractApi {
     } as HaeProjektinTiedottamistiedotQueryVariables);
   }
 
-  async avaaProjektiJatkopaatettavaksi(oid: string, vaihe: JatkopaatettavaVaihe): Promise<ProjektinTiedottaminen> {
-    return await this.callYllapitoAPI(apiConfig.avaaProjektiJatkopaatettavaksi, {
-      oid,
-      vaihe,
-    } as AvaaProjektiJatkopaatettavaksiMutationVariables);
+  async avaaProjektiJatkopaatettavaksi(variables: AvaaProjektiJatkopaatettavaksiMutationVariables): Promise<ProjektinTiedottaminen> {
+    return await this.callYllapitoAPI(apiConfig.avaaProjektiJatkopaatettavaksi, variables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

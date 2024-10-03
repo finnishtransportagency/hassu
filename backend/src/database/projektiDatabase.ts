@@ -2,6 +2,7 @@ import { log, setLogContextOid } from "../logger";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
@@ -555,33 +556,20 @@ export class ProjektiDatabase {
 
   async avaaProjektiJatkopaatettavaksi(
     oid: string,
-    vaiheAvain: keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">
+    vaiheAvain: keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">,
+    paatoksenTiedot: Hyvaksymispaatos
   ) {
-    const aktiivinenInput = {
-      TableName: this.projektiTableName,
-      Key: {
-        oid,
-      },
-      UpdateExpression: `SET kasittelynTila.#paatos.aktiivinen = :aktiivinen`,
-      ExpressionAttributeNames: {
-        ["#paatos"]: vaiheAvain,
-      },
-      ExpressionAttributeValues: {
-        ":aktiivinen": true,
-      },
-      ConditionExpression: "attribute_exists(kasittelynTila.#paatos)",
-    };
     const paatosInput = {
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
-      UpdateExpression: `SET kasittelynTila.#paatos = if_not_exists(kasittelynTila.#paatos, :paatos)`,
+      UpdateExpression: `SET kasittelynTila.#paatos = :paatos`,
       ExpressionAttributeNames: {
         ["#paatos"]: vaiheAvain,
       },
       ExpressionAttributeValues: {
-        ":paatos": { aktiivinen: true },
+        ":paatos": paatoksenTiedot,
       },
       ConditionExpression: "attribute_exists(kasittelynTila)",
     };
@@ -592,17 +580,9 @@ export class ProjektiDatabase {
       },
       UpdateExpression: `SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)`,
       ExpressionAttributeValues: {
-        ":kasittelynTila": { [vaiheAvain]: { aktiivinen: true } },
+        ":kasittelynTila": { [vaiheAvain]: paatoksenTiedot },
       },
     };
-    try {
-      await getDynamoDBDocumentClient().send(new UpdateCommand(aktiivinenInput));
-      return;
-    } catch (e) {
-      if (!(e instanceof ConditionalCheckFailedException)) {
-        throw e;
-      }
-    }
     try {
       await getDynamoDBDocumentClient().send(new UpdateCommand(paatosInput));
       return;
