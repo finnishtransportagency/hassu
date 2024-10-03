@@ -155,7 +155,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", this.getVaihe(projekti));
 
-    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, this.getVaihe(projekti));
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      this.getVaihe(projekti),
+      this.getJulkaisut(projekti)
+    );
     if (!julkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
     }
