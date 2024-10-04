@@ -53,7 +53,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     const kieli = props.kieli;
     const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
-    super(kieli, kutsuAdapter);
+    super(kieli, props.oid, kutsuAdapter);
     this.kieli = props.kieli;
 
     this.asiakirjanMuoto = asiakirjanMuoto;
@@ -63,7 +63,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.kuulutus_hyvaksymispaatoksesta.otsikko");
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   hyvaksymis_pvm(): string {

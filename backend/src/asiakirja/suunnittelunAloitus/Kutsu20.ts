@@ -16,7 +16,6 @@ import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter
 import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { fileService } from "../../files/fileService";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
@@ -33,11 +32,9 @@ function formatTime(time: string) {
 const baseline = -7; // Tried with "alphabetic", but doesn't work https://github.com/foliojs/pdfkit/issues/994
 
 export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
-  private readonly oid: string;
   private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private suunnitteluSopimus: undefined | SuunnitteluSopimus;
 
   constructor(props: YleisotilaisuusKutsuPdfOptions) {
     let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
@@ -58,15 +55,14 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       props.velho.tyyppi,
       props.kieli
     );
-    super(kieli, kutsuAdapter);
+    super(kieli, props.oid, kutsuAdapter);
     this.header = kutsuAdapter.subject;
     this.kieli = kieli;
 
     assertIsDefined(props.oid);
     this.oid = props.oid;
-    this.suunnitteluSopimus = props.suunnitteluSopimus;
     this.vuorovaikutusKierrosJulkaisu = props.vuorovaikutusKierrosJulkaisu;
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, props.suunnitteluSopimus, baseline);
   }
 
   protected addContent(): void {
@@ -317,14 +313,5 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     return `${dayjs(tilaisuus.paivamaara).format("DD.MM.YYYY")} ${this.localizedKlo} ${formatTime(tilaisuus.alkamisAika)} - ${formatTime(
       tilaisuus.paattymisAika
     )}`;
-  }
-
-  async loadLogo(): Promise<string | Buffer> {
-    if (this.suunnitteluSopimus) {
-      const logo = this.suunnitteluSopimus.logo?.[this.kieli];
-      assertIsDefined(logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
-      return fileService.getProjektiFile(this.oid, logo);
-    }
-    return super.loadLogo();
   }
 }

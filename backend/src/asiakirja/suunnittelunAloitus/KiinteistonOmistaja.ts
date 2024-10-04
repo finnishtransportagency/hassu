@@ -68,7 +68,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       velho.tyyppi,
       params.kieli
     );
-    super(params.kieli, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
+    super(params.kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.velho = velho;
     const language = params.kieli;
     this.header = headers[language];
@@ -77,7 +77,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.kutsuAdapter.addTemplateResolver(this);
-    this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    this.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   protected getIndention() {

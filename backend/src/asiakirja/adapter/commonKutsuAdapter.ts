@@ -1,4 +1,13 @@
-import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  Kielitiedot,
+  LocalizedMap,
+  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
+  Velho,
+  Yhteystieto,
+} from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -40,6 +49,7 @@ export interface CommonKutsuAdapterProps {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 }
 
 /**
@@ -78,12 +88,13 @@ export class CommonKutsuAdapter {
   readonly kielitiedot: Kielitiedot;
   readonly asianhallintaPaalla: boolean;
   readonly linkkiAsianhallintaan: string | undefined;
-  private templateResolvers: unknown[] = [];
+  private readonly templateResolvers: unknown[] = [];
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
-  private localizationKeyPrefix?: string;
+  private readonly localizationKeyPrefix?: string;
 
   euRahoitusLogot?: LocalizedMap<string> | null;
   linkableProjekti: LinkableProjekti;
+  protected suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
     const {
@@ -97,6 +108,7 @@ export class CommonKutsuAdapter {
       euRahoitusLogot,
       asianhallintaPaalla,
       linkkiAsianhallintaan,
+      suunnitteluSopimus,
     } = params;
     this.oid = oid;
     this.linkableProjekti = { oid, lyhytOsoite };
@@ -115,6 +127,7 @@ export class CommonKutsuAdapter {
     this.euRahoitusLogot = euRahoitusLogot;
     this.asianhallintaPaalla = asianhallintaPaalla;
     this.linkkiAsianhallintaan = linkkiAsianhallintaan ? " " + linkkiAsianhallintaan : "";
+    this.suunnitteluSopimus = suunnitteluSopimus;
   }
 
   addTemplateResolver(value: unknown): void {
@@ -268,6 +281,10 @@ export class CommonKutsuAdapter {
 
   get suunnitelman_nimi(): string {
     return this.nimi;
+  }
+
+  get sopimus(): SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null | undefined {
+    return this.suunnitteluSopimus;
   }
 
   get nimi(): string {

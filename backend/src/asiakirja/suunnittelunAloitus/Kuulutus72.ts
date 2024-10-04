@@ -73,7 +73,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       }
     }
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params);
-    super(kieli, kutsuAdapter);
+    super(kieli, params.oid, kutsuAdapter);
     this.kieli = kieli;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
@@ -87,7 +87,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     } else {
       this.header = kutsuAdapter.title;
     }
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   linkki_jatkopaatos(): string {

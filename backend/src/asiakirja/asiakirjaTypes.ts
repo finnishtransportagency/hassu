@@ -91,6 +91,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
   osoite?: Osoite;
+  suunnitteluSopimus?: SuunnitteluSopimus | null;
 };
 
 export function determineAsiakirjaMuoto(

@@ -64,7 +64,7 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     const kieli = props.kieli;
     const asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
-    super(kieli, kutsuAdapter);
+    super(kieli, props.oid, kutsuAdapter);
     this.kieli = props.kieli;
     this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.asiakirjanMuoto = asiakirjanMuoto;
@@ -74,7 +74,7 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(asiakirjaTyyppi, this.asiakirjanMuoto, velho.tyyppi, kieli);
     this.header = kutsuAdapter.text("asiakirja.kuulutus_jatkopaatos.otsikko");
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   linkki_jatkopaatos(): string {

@@ -145,11 +145,12 @@ export class AsiakirjaService {
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    suunnitteluSopimus,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
     log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
-      { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
+      { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila, suunnitteluSopimus },
       kieli,
       hyvaksymisPaatosVaihe,
       getPaatosTyyppi(asiakirjaTyyppi),

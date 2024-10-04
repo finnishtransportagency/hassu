@@ -11,8 +11,8 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
-  private kasittelynTila: KasittelynTila;
+  private readonly hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private readonly kasittelynTila: KasittelynTila;
 
   constructor(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
@@ -60,8 +60,9 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
       throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
     }
-    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params, "lain2");
-    super(kieli, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
+    const paramsWithoutSuunnitteluSopimus = { ...params, suunnitteluSopimus: undefined };
+    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(paramsWithoutSuunnitteluSopimus, "lain2");
+    super(kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.kieli = kieli;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
@@ -74,7 +75,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
       kieli
     );
     this.header = kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   protected getIndention() {

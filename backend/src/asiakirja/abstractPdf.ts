@@ -4,6 +4,9 @@ import { assertIsDefined } from "../util/assertions";
 import { convertPdfFileName, linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
+import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../database/model";
+import { fileService } from "../files/fileService";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 const INDENTATION_BODY = 186;
 
@@ -20,14 +23,30 @@ export abstract class AbstractPdf {
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
   protected logo?: string | Buffer;
+  private sopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
+  protected kieli: KaannettavaKieli;
+  protected oid: string;
+  protected sopimusLogo?: string | Buffer;
 
-  setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
+  constructor(kieli: KaannettavaKieli, oid: string) {
+    this.kieli = kieli;
+    this.oid = oid;
+  }
+
+  setupPDF(
+    header: string,
+    nimi: string,
+    fileName: string,
+    suunnitteluSopimus: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null | undefined,
+    baseline?: number | "alphabetic"
+  ): void {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
     this.fileName = convertPdfFileName(fileName);
     this.fileBasePath = __dirname;
     this.setupAccessibleDocument();
     this.baseline = baseline;
+    this.sopimus = suunnitteluSopimus;
   }
 
   protected paragraphBold(text: string, options?: ParagraphOptions): PDFStructureElement {
@@ -242,12 +261,23 @@ export abstract class AbstractPdf {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, logoX, 32, { height: 75 });
     this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), asiaTunnusX, 64);
+    if (this.sopimusLogo) {
+      this.doc.image(this.sopimusLogo, 32, 120, { height: 75 });
+    }
     this.doc.moveDown(3);
   }
 
   async loadLogo(): Promise<string | Buffer> {
     const isVaylaTilaaja = this.isVaylaTilaaja();
     return this.fileBasePath + (isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png");
+  }
+
+  async loadSuunnitteluSopimus(): Promise<string | Buffer | undefined> {
+    if (this.sopimus) {
+      const tiedosto = this.sopimus.logo?.[this.kieli];
+      assertIsDefined(tiedosto, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return await fileService.getProjektiFile(this.oid, tiedosto);
+    }
   }
 
   protected addContent(): void {
@@ -260,6 +290,7 @@ export abstract class AbstractPdf {
 
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     this.logo = await this.loadLogo();
+    this.sopimusLogo = await this.loadSuunnitteluSopimus();
     this.doc.addStructure(
       this.doc.struct("Document", {}, () => {
         this.appendHeader();
