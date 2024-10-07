@@ -71,6 +71,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       this.uudelleenKuulutusParagraph(),
       ...this.addDocumentElements(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((p) => p);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

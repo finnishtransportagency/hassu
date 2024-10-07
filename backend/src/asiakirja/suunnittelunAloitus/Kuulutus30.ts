@@ -70,6 +70,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.uudelleenKuulutusParagraph(),
       ...this.addDocumentElements(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((element) => element) as PDFKit.PDFStructureElementChild[];
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

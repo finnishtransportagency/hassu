@@ -123,6 +123,7 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       this.headerElement(this.header),
       ...this.paragraphs(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

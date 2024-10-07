@@ -261,9 +261,6 @@ export abstract class AbstractPdf {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, logoX, 32, { height: 75 });
     this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), asiaTunnusX, 64);
-    if (this.sopimusLogo) {
-      this.doc.image(this.sopimusLogo, 32, 120, { height: 75 });
-    }
     this.doc.moveDown(3);
   }
 
@@ -278,6 +275,12 @@ export abstract class AbstractPdf {
       assertIsDefined(tiedosto, "suunnittelusopimuksessa tulee aina olla kunnan logo");
       return await fileService.getProjektiFile(this.oid, tiedosto);
     }
+  }
+
+  protected sopimusLogoElement(): PDFKit.PDFStructureElement {
+    return this.doc.struct("DIV", {}, () => {
+      this.sopimusLogo && this.doc.image(this.sopimusLogo, { height: 50 });
+    });
   }
 
   protected addContent(): void {

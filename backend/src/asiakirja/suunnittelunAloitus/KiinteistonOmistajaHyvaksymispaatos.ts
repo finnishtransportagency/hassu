@@ -60,8 +60,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     if (!kasittelynTila.hyvaksymispaatos.paatoksenPvm) {
       throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
     }
-    const paramsWithoutSuunnitteluSopimus = { ...params, suunnitteluSopimus: undefined };
-    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(paramsWithoutSuunnitteluSopimus, "lain2");
+    const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params, "lain2");
     super(kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.kieli = kieli;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
@@ -115,6 +114,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
       this.headerElement(this.header),
       ...this.paragraphs(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

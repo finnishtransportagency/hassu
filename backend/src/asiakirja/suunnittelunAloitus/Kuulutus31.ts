@@ -79,9 +79,12 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements(), this.euLogoElement()].filter(
-      (element) => element
-    );
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.addHeader(),
+      ...this.addDocumentElements(),
+      this.euLogoElement(),
+      this.sopimusLogoElement(),
+    ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 

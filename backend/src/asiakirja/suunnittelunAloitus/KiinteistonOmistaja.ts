@@ -59,6 +59,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
         asianhallintaPaalla: params.asianhallintaPaalla,
         linkkiAsianhallintaan: params.linkkiAsianhallintaan,
         yhteystiedot: params.yhteystiedot,
+        suunnitteluSopimus: params.suunnitteluSopimus,
       },
       "lakiviite_ilmoitus_rata2"
     );
@@ -85,9 +86,12 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements(), this.euLogoElement()].filter(
-      (element) => element
-    );
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.addHeader(),
+      ...this.addDocumentElements(),
+      this.euLogoElement(),
+      this.sopimusLogoElement(),
+    ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 

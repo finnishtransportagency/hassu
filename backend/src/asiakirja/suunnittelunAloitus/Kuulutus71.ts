@@ -131,6 +131,7 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       ...this.paragraphs(),
       this.toimivaltainenViranomainen(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

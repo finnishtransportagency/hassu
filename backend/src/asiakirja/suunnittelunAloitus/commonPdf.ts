@@ -219,7 +219,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
   protected euLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      this.euLogo && this.doc.image(this.euLogo, { height: 75 });
+      this.euLogo && this.doc.image(this.euLogo, { height: 50 });
     });
   }
 
