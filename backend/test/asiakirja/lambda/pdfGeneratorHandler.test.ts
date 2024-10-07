@@ -132,6 +132,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
         : undefined,
       suunnitteluSopimus: {
         kunta: 91,
+        logo: { SUOMI: "xxx", RUOTSI: "yyy" },
         yhteysHenkilo: "",
       },
       osoite: event.lisaaOsoite
