@@ -85,6 +85,10 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
     return API.Status.JATKOPAATOS_2_AINEISTOT;
   }
 
+  if (projektinStatusOnVahintaanJatkoPaatos2Hyvaksymisesitys(kasittelynTila)) {
+    return API.Status.JATKOPAATOS_2_HYVAKSYMISESITYS;
+  }
+
   const jatkoPaatos1Julkaisu = getJulkaisu(projekti.jatkoPaatos1VaiheJulkaisut);
 
   if (projektiOnVahintaanEpaAktiivinen2(jatkoPaatos1Julkaisu)) {
@@ -106,6 +110,10 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
 
   if (projektinStatusOnVahintaanJatkoPaatos1Aineistot(kasittelynTila)) {
     return API.Status.JATKOPAATOS_1_AINEISTOT;
+  }
+
+  if (projektinStatusOnVahintaanJatkoPaatos1Hyvaksymisesitys(kasittelynTila)) {
+    return API.Status.JATKOPAATOS_1_HYVAKSYMISESITYS;
   }
 
   if (projektinStatusOnVahintaanEpaAktiivinen1(projekti)) {
@@ -276,7 +284,7 @@ function projektinStatusOnVahintaanJatkoPaatos2({
   jatkoPaatos2VaiheAineistoKunnossa: boolean;
   jatkoPaatos2MuokkausTila: API.MuokkausTila;
 }): boolean {
-  const { aktiivinen, asianumero, paatoksenPvm } = kasittelynTila?.toinenJatkopaatos ?? {};
+  const { asianumero, paatoksenPvm, aktiivinen } = kasittelynTila?.toinenJatkopaatos ?? {};
 
   if (
     aktiivinen &&
@@ -290,10 +298,12 @@ function projektinStatusOnVahintaanJatkoPaatos2({
 }
 
 function projektinStatusOnVahintaanJatkoPaatos2Aineistot(kasittelynTila: KasittelynTila | undefined | null): boolean {
-  if (kasittelynTila?.toinenJatkopaatos?.aktiivinen) {
-    return true;
-  }
-  return false;
+  const { aktiivinen, asianumero, paatoksenPvm } = kasittelynTila?.toinenJatkopaatos ?? {};
+  return !!aktiivinen && !!asianumero && !!paatoksenPvm;
+}
+
+function projektinStatusOnVahintaanJatkoPaatos2Hyvaksymisesitys(kasittelynTila: KasittelynTila | undefined | null): boolean {
+  return !!kasittelynTila?.toinenJatkopaatos?.aktiivinen;
 }
 
 function projektiOnVahintaanEpaAktiivinen2(
@@ -333,11 +343,13 @@ function projektinStatusOnVahintaanJatkoPaatos1({
   return false;
 }
 
+function projektinStatusOnVahintaanJatkoPaatos1Hyvaksymisesitys(kasittelynTila: KasittelynTila | undefined | null): boolean {
+  return !!kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen;
+}
+
 function projektinStatusOnVahintaanJatkoPaatos1Aineistot(kasittelynTila: KasittelynTila | undefined | null): boolean {
-  if (kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen) {
-    return true;
-  }
-  return false;
+  const { aktiivinen, asianumero, paatoksenPvm } = kasittelynTila?.ensimmainenJatkopaatos ?? {};
+  return !!aktiivinen && !!asianumero && !!paatoksenPvm;
 }
 
 function projektinStatusOnVahintaanEpaAktiivinen1(projekti: {
