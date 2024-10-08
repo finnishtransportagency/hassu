@@ -150,6 +150,7 @@ export abstract class AbstractPdf {
       lang: "fi",
       displayTitle: true,
       bufferPages: true,
+      margins: { bottom: 120, left: 72, right: 72, top: 72 },
     });
     this.doc = doc;
 
@@ -279,7 +280,10 @@ export abstract class AbstractPdf {
 
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      this.sopimusLogo && this.doc.image(this.sopimusLogo, { height: 50 });
+      if (this.sopimusLogo) {
+        this.doc.moveDown();
+        this.doc.image(this.sopimusLogo, { height: 50 });
+      }
     });
   }
 
