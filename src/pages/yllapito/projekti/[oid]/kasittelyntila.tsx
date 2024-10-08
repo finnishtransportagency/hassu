@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useMemo, useEffect, FunctionComponent } from "react";
-import { KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
+import { JatkopaatettavaVaihe, KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -35,6 +35,7 @@ import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { getVelhoUrl } from "../../../../util/velhoUtils";
 import { H2, H3 } from "../../../../components/Headings";
+import { PalautaAktiiviseksiButton } from "@components/projekti/PalautaAktiiviseksiButton";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -57,8 +58,27 @@ export default function KasittelyntilaSivu(): ReactElement {
     return epaAktivoitumisPvm.diff(now, "month", true) <= 1 && now.isBefore(epaAktivoitumisPvm, "day"); // Varoitellaan 1 kuukautta ennen, "true" lisaa muutoin putoavat desimaalit, jotta varoitukset ei ala heti alle 2 kk jalkeen
   }, [epaAktivoitumisPvm]);
 
+  const jatkopaatettavaVaihe: JatkopaatettavaVaihe | null = useMemo(() => {
+    if (projekti?.status === Status.EPAAKTIIVINEN_1) {
+      return JatkopaatettavaVaihe.JATKOPAATOS_1;
+    } else if (projekti?.status === Status.EPAAKTIIVINEN_2) {
+      return JatkopaatettavaVaihe.JATKOPAATOS_2;
+    } else {
+      return null;
+    }
+  }, [projekti?.status]);
+
+  const showPalautaAktiiviseksi = jatkopaatettavaVaihe && projekti?.nykyinenKayttaja.onYllapitaja;
+
   return (
-    <ProjektiPageLayout title="Käsittelyn tila">
+    <ProjektiPageLayout
+      title="Käsittelyn tila"
+      contentAsideTitle={
+        showPalautaAktiiviseksi && (
+          <PalautaAktiiviseksiButton projekti={projekti} jatkopaatettavaVaihe={jatkopaatettavaVaihe} reloadProjekti={reloadProjekti} />
+        )
+      }
+    >
       {projekti && onEpaAktivoitumassa && projekti.nykyinenKayttaja.omaaMuokkausOikeuden && (
         <Notification type={NotificationType.INFO_GRAY}>
           Suunnitelma muuttuu epäaktiivikseksi {formatDate(epaAktivoitumisPvm)}. Samalla kun suunnitelma muuttuu epäaktiivikseksi, projektin
@@ -534,9 +554,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <H2>Jatkopäätös</H2>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asiatunnus. Kun projekti on avattu
-              jatkopäätettäväksi Projektin tiedot -sivulta ja jatkopäätöksen tiedot on kertaalleen tallennettu, niitä ei voi enää poistaa,
-              mutta niitä voidaan päivittää.
+              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä tämän asiatunnus. Kun projekti on palautettu aktiiviseksi
+              jatkopäätöstä varten ja jatkopäätöksen tiedot on kertaalleen tallennettu, niitä ei voi enää poistaa, mutta niitä voidaan
+              päivittää.
             </p>
             <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>

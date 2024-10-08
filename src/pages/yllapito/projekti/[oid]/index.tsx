@@ -4,14 +4,7 @@ import log from "loglevel";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import {
-  JatkopaatettavaVaihe,
-  Kieli,
-  KielitiedotInput,
-  LokalisoituTekstiInputEiPakollinen,
-  Status,
-  TallennaProjektiInput,
-} from "@services/api";
+import { Kieli, KielitiedotInput, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -43,7 +36,6 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import useCurrentUser from "src/hooks/useCurrentUser";
 import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
 import { H3 } from "../../../../components/Headings";
-import { AvaaJatkopaatettavaksiPainike } from "../../../../components/projekti/AvaaJatkopaatettavaksi";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -73,21 +65,9 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 export default function ProjektiSivu() {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
-  const jatkopaatettavaVaihe: JatkopaatettavaVaihe | null = useMemo(() => {
-    if (projekti?.status === Status.EPAAKTIIVINEN_1) {
-      return JatkopaatettavaVaihe.JATKOPAATOS_1;
-    } else if (projekti?.status === Status.EPAAKTIIVINEN_2) {
-      return JatkopaatettavaVaihe.JATKOPAATOS_2;
-    } else {
-      return null;
-    }
-  }, [projekti?.status]);
-
   if (!projekti) {
     return <></>;
   }
-
-  const showAvaaJatkopaatettavaksi = jatkopaatettavaVaihe && projekti.nykyinenKayttaja.onYllapitaja;
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
@@ -95,13 +75,7 @@ export default function ProjektiSivu() {
     <ProjektiPageLayout
       title={"Projektin tiedot"}
       showInfo={!epaaktiivinen}
-      contentAsideTitle={
-        !epaaktiivinen ? (
-          <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />
-        ) : (
-          showAvaaJatkopaatettavaksi && <AvaaJatkopaatettavaksiPainike projekti={projekti} jatkopaatettavaVaihe={jatkopaatettavaVaihe} />
-        )
-      }
+      contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
       {projekti &&
         (epaaktiivinen ? (

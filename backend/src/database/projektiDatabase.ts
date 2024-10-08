@@ -23,6 +23,7 @@ import {
   ScanCommand,
   ScanCommandOutput,
   UpdateCommand,
+  UpdateCommandInput,
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
@@ -554,12 +555,13 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
-  async avaaProjektiJatkopaatettavaksi(
+  async aktivoiProjektiJatkopaatettavaksi(
     oid: string,
+    versio: number,
     vaiheAvain: keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">,
     paatoksenTiedot: Hyvaksymispaatos
   ) {
-    const paatosInput = {
+    const paatosInput: UpdateCommandInput = {
       TableName: this.projektiTableName,
       Key: {
         oid,
@@ -567,21 +569,28 @@ export class ProjektiDatabase {
       UpdateExpression: `SET kasittelynTila.#paatos = :paatos`,
       ExpressionAttributeNames: {
         ["#paatos"]: vaiheAvain,
+        ["#versio"]: "versio",
       },
       ExpressionAttributeValues: {
         ":paatos": paatoksenTiedot,
+        ":versio": versio,
       },
-      ConditionExpression: "attribute_exists(kasittelynTila)",
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versio) AND attribute_exists(kasittelynTila)",
     };
-    const kasittelynTilaInput = {
+    const kasittelynTilaInput: UpdateCommandInput = {
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression: `SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)`,
+      ExpressionAttributeNames: {
+        ["#versio"]: "versio",
+      },
       ExpressionAttributeValues: {
         ":kasittelynTila": { [vaiheAvain]: paatoksenTiedot },
+        ":versio": versio,
       },
+      ConditionExpression: "attribute_not_exists(#versio) OR #versio = :versio",
     };
     try {
       await getDynamoDBDocumentClient().send(new UpdateCommand(paatosInput));

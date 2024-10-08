@@ -1,13 +1,18 @@
 import { IllegalProjektiStateError } from "hassu-common/error";
-import { AvaaProjektiJatkopaatettavaksiMutationVariables as Variables, JatkopaatettavaVaihe, Status } from "hassu-common/graphql/apiModel";
+import {
+  AktivoiProjektiJatkopaatettavaksiMutationVariables as Variables,
+  JatkopaatettavaVaihe,
+  Status,
+} from "hassu-common/graphql/apiModel";
 import { KasittelynTila } from "../database/model";
 import { projektiDatabase } from "../database/projektiDatabase";
+import { requireAdmin } from "../user/userService";
 import { assertIsDefined } from "../util/assertions";
 import { synchronizeUpdatesFromVelho } from "./projektiHandler";
 import GetProjektiStatus from "./status/getProjektiStatus";
 
-export async function avaaProjektiJatkopaatettavaksi(vars: Variables): Promise<string> {
-  validateProjektiStatus(vars);
+export async function aktivoiProjektiJatkopaatettavaksi(vars: Variables): Promise<string> {
+  await validate(vars);
   const mapVaiheToKasittelynTilaKey: Record<
     JatkopaatettavaVaihe,
     keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">
@@ -15,7 +20,7 @@ export async function avaaProjektiJatkopaatettavaksi(vars: Variables): Promise<s
     JATKOPAATOS_1: "ensimmainenJatkopaatos",
     JATKOPAATOS_2: "toinenJatkopaatos",
   };
-  await projektiDatabase.avaaProjektiJatkopaatettavaksi(vars.oid, mapVaiheToKasittelynTilaKey[vars.vaihe], {
+  await projektiDatabase.aktivoiProjektiJatkopaatettavaksi(vars.oid, vars.versio, mapVaiheToKasittelynTilaKey[vars.vaihe], {
     aktiivinen: true,
     asianumero: vars.paatoksenTiedot.asianumero ?? undefined,
     paatoksenPvm: vars.paatoksenTiedot.paatoksenPvm ?? undefined,
@@ -24,7 +29,8 @@ export async function avaaProjektiJatkopaatettavaksi(vars: Variables): Promise<s
   return vars.oid;
 }
 
-async function validateProjektiStatus(vars: Variables) {
+async function validate(vars: Variables) {
+  requireAdmin();
   const projekti = await projektiDatabase.loadProjektiByOid(vars.oid);
   assertIsDefined(projekti);
   const status = await GetProjektiStatus.getProjektiStatus(projekti);
