@@ -72,6 +72,7 @@ Marko Koi (Kajaani),
 puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus ja Nokia
+
 ELY/1/2022
 
 
@@ -178,10 +179,10 @@ Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respo
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-.
+https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 
 
@@ -196,6 +197,7 @@ Marko Koi (Kajaani),
 tel. 0293121213, markku.koi(at)koi.com 
 Välkommen!
 Närings-, trafik- och miljöcentralen i Nyland och Nokia
+
 ELY/1/2022
 
 
@@ -255,10 +257,10 @@ Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä m
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, 
 
 
-.
+https://www.vayla.fi/tietosuoja.
 
 
 
@@ -273,6 +275,7 @@ Marko Koi (Kajaani),
 puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
 Väylävirasto ja Nokia
+
 VAYLA/1/2022
 
 
@@ -379,10 +382,10 @@ Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respo
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-.
+https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 
 
@@ -397,6 +400,7 @@ Marko Koi (Kajaani),
 tel. 0293121213, markku.koi(at)koi.com 
 Välkommen!
 Trafikledsverket och Nokia
+
 VAYLA/1/2022
 
 
@@ -471,8 +475,14 @@ Matti Meikalainen (Väylävirasto),
 puh. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
+
+
+
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
-LUONNOS",
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -945,8 +955,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Närings-, trafik- och miljöcentralen i Nyland
-LUONNOS",
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -1103,8 +1119,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Trafikledsverket
-LUONNOS",
+VAYLA/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -1261,8 +1283,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Trafikledsverket
-LUONNOS",
+VAYLA/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -2113,6 +2141,7 @@ Eemil Elylainen (Pirkanmaan ELY-keskus),
 puh. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
+
 LUONNOS",
 }
 `;
@@ -2139,6 +2168,7 @@ Eemil Elylainen (Pirkanmaan ELY-keskus),
 puh. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
+
 LUONNOS",
 }
 `;
@@ -2171,6 +2201,7 @@ Eemil Elylainen (NTM-centralen i Birkaland),
 tel. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
 LUONNOS",
 }
 `;
@@ -2197,6 +2228,7 @@ Eemil Elylainen (NTM-centralen i Birkaland),
 tel. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
 LUONNOS",
 }
 `;
