@@ -31,11 +31,12 @@ import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
-import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
+import { Checkbox, FormControlLabel, MenuItem, TextField } from "@mui/material";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { getVelhoUrl } from "../../../../util/velhoUtils";
 import { H2, H3 } from "../../../../components/Headings";
 import { PalautaAktiiviseksiButton } from "@components/projekti/PalautaAktiiviseksiButton";
+import { TextFieldWithController } from "@components/form/TextFieldWithController";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -392,12 +393,22 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 disabled={hyvaksymispaatosDisabled}
                 controllerProps={{ control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm)}
+                onChange={(value) => {
+                  if (value === null) {
+                    trigger("kasittelynTila.hyvaksymispaatos.asianumero");
+                  }
+                }}
               />
               <TextInput
                 label={`Asiatunnus ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
                 {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
                 disabled={hyvaksymispaatosDisabled}
                 error={(errors as any).kasittelynTila?.hyvaksymispaatos?.asianumero}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    trigger("kasittelynTila.hyvaksymispaatos.paatoksenPvm");
+                  }
+                }}
               />
             </HassuGrid>
           </SectionContent>
@@ -561,40 +572,58 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
-                label={`1. jatkopäätöksen päivä ${jatkopaatos1TiedotPakollisia ? "*" : ""}`}
+                label={`1. jatkopäätöksen päivä${jatkopaatos1TiedotPakollisia ? " *" : ""}`}
                 controllerProps={{ control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={ensimmainenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1)}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm)}
+                onChange={(value) => {
+                  if (value === null) {
+                    trigger("kasittelynTila.ensimmainenJatkopaatos.asianumero");
+                  }
+                }}
               />
               {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1) ? (
-                <TextInput
-                  label={`Asiatunnus ${jatkopaatos1TiedotPakollisia ? "*" : ""}`}
-                  {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
-                  error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
+                <TextFieldWithController
+                  label={`Asiatunnus${jatkopaatos1TiedotPakollisia ? " *" : ""}`}
+                  controllerProps={{ control, name: "kasittelynTila.ensimmainenJatkopaatos.asianumero" }}
                   disabled={ensimmainenJatkopaatosDisabled}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      trigger("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
+                    }
+                  }}
                 />
               ) : (
-                <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
+                <TextField label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
               )}
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
-                label={`2. jatkopäätöksen päivä ${jatkopaatos2AnnettuTiedot ? "*" : ""}`}
+                label={`2. jatkopäätöksen päivä${jatkopaatos2AnnettuTiedot ? " *" : ""}`}
                 disabled={toinenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2)}
                 controllerProps={{ control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm)}
+                onChange={(value) => {
+                  if (value === null) {
+                    trigger("kasittelynTila.toinenJatkopaatos.asianumero");
+                  }
+                }}
               />
               {projekti.nykyinenKayttaja.onYllapitaja && isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_2) ? (
-                <TextInput
-                  label={`Asiatunnus ${jatkopaatos2AnnettuTiedot ? "*" : ""}`}
-                  {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
+                <TextFieldWithController
+                  label={`Asiatunnus${jatkopaatos2AnnettuTiedot ? " *" : ""}`}
+                  controllerProps={{ control, name: "kasittelynTila.toinenJatkopaatos.asianumero" }}
                   disabled={toinenJatkopaatosDisabled}
-                  error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      trigger("kasittelynTila.toinenJatkopaatos.paatoksenPvm");
+                    }
+                  }}
                 />
               ) : (
-                <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || ""} disabled />
+                <TextField label="Asiatunnus" value={projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || ""} disabled />
               )}
             </HassuGrid>
           </SectionContent>

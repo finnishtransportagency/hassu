@@ -22,7 +22,7 @@ export const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
             projekti.kasittelynTila?.[paatosAvain]?.aktiivinen &&
             projekti.kasittelynTila?.[paatosAvain]?.asianumero &&
             projekti.kasittelynTila?.[paatosAvain]?.paatoksenPvm,
-          then: (schema) => schema.required("Päivämäärä on annettava"),
+          then: (schema) => schema.required("Asiatunnus on annettava"),
         })
         .notRequired()
         .nullable(),
@@ -30,7 +30,7 @@ export const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
     .test((value, context) => {
       if (!!value?.asianumero && !value?.paatoksenPvm) {
         return context.createError({
-          message: "Päivämäärä on annettava jos Asiatunnus on annettu",
+          message: "Päivämäärä on annettava jos asiatunnus on annettu",
           path: `${context.path}.paatoksenPvm`,
           type: "custom",
         });

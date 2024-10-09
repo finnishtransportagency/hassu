@@ -115,15 +115,19 @@ export function PalautaAktiiviseksiButton(props: PalautaAktiiviseksiButtonProps)
                   <HassuDatePickerWithController
                     label={datepickerLabels[props.jatkopaatettavaVaihe]}
                     controllerProps={{ control, name: "paatoksenPvm" }}
-                    onChange={() => {
-                      trigger("asianumero");
+                    onChange={(outputDate) => {
+                      if (outputDate === null) {
+                        trigger("asianumero");
+                      }
                     }}
                   />
                   <TextFieldWithController
                     label="Asiatunnus"
                     controllerProps={{ control, name: "asianumero" }}
-                    onChange={() => {
-                      trigger("paatoksenPvm");
+                    onChange={(event) => {
+                      if (event.target.value === "") {
+                        trigger("paatoksenPvm");
+                      }
                     }}
                   />
                 </HassuGrid>
