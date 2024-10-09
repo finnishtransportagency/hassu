@@ -29,15 +29,16 @@ export async function aktivoiProjektiJatkopaatettavaksi(vars: Variables): Promis
   return vars.oid;
 }
 
+const mapVaiheToExpectedStatus: Record<JatkopaatettavaVaihe, Status> = {
+  JATKOPAATOS_1: Status.EPAAKTIIVINEN_1,
+  JATKOPAATOS_2: Status.EPAAKTIIVINEN_2,
+};
+
 async function validate(vars: Variables) {
   requireAdmin();
   const projekti = await projektiDatabase.loadProjektiByOid(vars.oid);
   assertIsDefined(projekti);
   const status = await GetProjektiStatus.getProjektiStatus(projekti);
-  const mapVaiheToExpectedStatus: Record<JatkopaatettavaVaihe, Status> = {
-    JATKOPAATOS_1: Status.EPAAKTIIVINEN_1,
-    JATKOPAATOS_2: Status.EPAAKTIIVINEN_2,
-  };
   const expectedStatus = mapVaiheToExpectedStatus[vars.vaihe];
 
   if (status !== expectedStatus) {

@@ -101,7 +101,7 @@ export function PalautaAktiiviseksiButton(props: PalautaAktiiviseksiButtonProps)
           <DialogContent sx={{ mb: 12 }}>
             <ContentSpacer gap={7}>
               <p>
-                Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Palauta aktiiviseksi -painiketta tallennat
+                Olet palauttassa suunnitelman aktiiviseksi jatkopäättämistä varten. Painamalla Palauta aktiiviseksi -painiketta tallennat
                 jatkopäätöksen tiedot ja siirryt Projektin henkilöt -sivulle.
               </p>
               <p>
