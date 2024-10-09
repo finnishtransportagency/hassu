@@ -435,10 +435,14 @@ function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velh
           throw new Error(`'${vaiheKey}' vaiheelta puuttuu id-tieto`);
         }
         const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset ?? [];
+        const maakunnat =
+          vaiheKey === "jatkoPaatos1Vaihe" || vaiheKey === "jatkoPaatos2Vaihe"
+            ? getUpdatedMaakunnat(dbProjekti, velho, vaiheKey)
+            : undefined;
         dataToSave[vaiheKey] = {
           ...oldVaiheData,
           id,
-          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset },
+          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset, maakunnat },
         };
       }
     }
@@ -459,6 +463,20 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
     };
   });
   return kunnat;
+}
+
+function getUpdatedMaakunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof PartialProjektiWithLuonnosVaiheet) {
+  const defaultMaakunnat: IlmoituksenVastaanottajat["maakunnat"] = velho.maakunnat?.map((id) => ({ id, sahkoposti: "" }));
+  const vanhatMaakuntatiedot = dbProjekti[vaiheKey]?.ilmoituksenVastaanottajat?.maakunnat;
+  const maakunnat: IlmoituksenVastaanottajat["maakunnat"] = defaultMaakunnat?.map((defaultMaakunta) => {
+    const vanhaMaakuntatieto = vanhatMaakuntatiedot?.find((kunta) => kunta.id === defaultMaakunta.id);
+    return {
+      ...(vanhaMaakuntatieto ?? {}),
+      id: defaultMaakunta.id,
+      sahkoposti: vanhaMaakuntatieto?.sahkoposti ?? defaultMaakunta.sahkoposti,
+    };
+  });
+  return maakunnat;
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {

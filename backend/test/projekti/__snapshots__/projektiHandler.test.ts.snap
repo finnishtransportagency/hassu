@@ -34,6 +34,7 @@ Object {
           "sahkoposti": "536@email.com",
         },
       ],
+      "maakunnat": undefined,
       "viranomaiset": Array [
         Object {
           "nimi": "PIRKANMAAN_ELY",

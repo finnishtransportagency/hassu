@@ -54,34 +54,21 @@ export default function defaultVastaanottajat(
   let maakunnat: MaakuntaVastaanottajaInput[];
   const edellisenVaiheenilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined =
     findOutEdellisenVaiheenIlmoituksenVastaanottajat(projekti);
-
-  if (ilmoituksenVastaanottajat?.kunnat) {
-    // tapaus, jossa lomake on jo kerran tallennettu
-    kunnat = ilmoituksenVastaanottajat?.kunnat.map((kunta) => ({
-      id: kunta.id,
-      sahkoposti: kunta.sahkoposti,
-    }));
-  } else {
-    // tapaus, jossa lomake alustetaan ensimmäistä kertaa
-    kunnat =
-      projekti?.velho?.kunnat?.map((kuntaId) => ({
-        id: kuntaId,
-        sahkoposti: "",
-      })) || [];
-  }
+  const kunnatMap = new Map<number, string>();
+  ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => kunnatMap.set(kunta.id, kunta.sahkoposti));
+  kunnat =
+    projekti?.velho?.kunnat?.map((kuntaId) => ({
+      id: kuntaId,
+      sahkoposti: kunnatMap.get(kuntaId) ?? "",
+    })) || [];
   if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-    if (ilmoituksenVastaanottajat?.maakunnat && ilmoituksenVastaanottajat.maakunnat.length > 0) {
-      maakunnat = ilmoituksenVastaanottajat.maakunnat.map((maakunta) => ({
-        id: maakunta.id,
-        sahkoposti: maakunta.sahkoposti,
-      }));
-    } else {
-      maakunnat =
-        projekti?.velho?.maakunnat?.map((id) => ({
-          id,
-          sahkoposti: "",
-        })) || [];
-    }
+    const maakunnatMap = new Map<number, string>();
+    ilmoituksenVastaanottajat?.maakunnat?.forEach((maakunta) => maakunnatMap.set(maakunta.id, maakunta.sahkoposti));
+    maakunnat =
+      projekti?.velho?.maakunnat?.map((id) => ({
+        id,
+        sahkoposti: maakunnatMap.get(id) ?? "",
+      })) || [];
   } else {
     maakunnat = [];
   }
