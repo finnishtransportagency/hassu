@@ -566,7 +566,7 @@ export class ProjektiDatabase {
       Key: {
         oid,
       },
-      UpdateExpression: `SET kasittelynTila.#paatos = :paatos`,
+      UpdateExpression: `ADD #versio :one SET kasittelynTila.#paatos = :paatos`,
       ExpressionAttributeNames: {
         ["#paatos"]: vaiheAvain,
         ["#versio"]: "versio",
@@ -574,6 +574,7 @@ export class ProjektiDatabase {
       ExpressionAttributeValues: {
         ":paatos": paatoksenTiedot,
         ":versio": versio,
+        ":one": 1,
       },
       ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versio) AND attribute_exists(kasittelynTila)",
     };
@@ -582,13 +583,14 @@ export class ProjektiDatabase {
       Key: {
         oid,
       },
-      UpdateExpression: `SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)`,
+      UpdateExpression: "ADD #versio :one SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)",
       ExpressionAttributeNames: {
         ["#versio"]: "versio",
       },
       ExpressionAttributeValues: {
         ":kasittelynTila": { [vaiheAvain]: paatoksenTiedot },
         ":versio": versio,
+        ":one": 1,
       },
       ConditionExpression: "attribute_not_exists(#versio) OR #versio = :versio",
     };
