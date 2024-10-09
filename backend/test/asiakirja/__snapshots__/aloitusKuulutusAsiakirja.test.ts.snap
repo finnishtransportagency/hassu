@@ -2,7 +2,7 @@
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA_12R Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_R412-1 Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -28,7 +28,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_12R Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_R412-1 Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -134,7 +134,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_12YS Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y412-1 Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -160,7 +160,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA_10R Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_R412 Aloituskuulutus.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -192,7 +192,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_10R Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_R412 Aloituskuulutus.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -320,7 +320,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_10YS Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y412 Aloituskuulutus.pdf",
   "textContent": "ELY/1/2022
 
 

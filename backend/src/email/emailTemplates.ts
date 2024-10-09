@@ -439,11 +439,22 @@ export function createJatkopaatosHyvaksyttyViranomaisilleEmail(adapter: Hyvaksym
   };
 }
 
-export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient: string): EmailOptions {
+export function createNewFeedbackAvailableEmail(projekti: DBProjekti, to: string, uusiaPalautteita = 1): EmailOptions {
+  const subject = `Valtion liikenneväylien suunnittelu: Suunnitelmasta ${
+    projekti.velho?.nimi ? projekti.velho?.nimi + " " : ""
+  }on saapunut palautetta`;
+  const singularText = `Suunnitelmasta ${
+    projekti.velho?.nimi ? projekti.velho?.nimi + " " : ""
+  }on saapunut palaute tai kysymys. Tarkasta kysymyksen tai palautteen sisältö ${linkSuunnitteluVaiheYllapito(projekti.oid)}`;
+  const pluralText = `Suunnitelmasta ${
+    projekti.velho?.nimi ? projekti.velho?.nimi + " " : ""
+  }on saapunut ${uusiaPalautteita} palautetta tai kysymystä. Tarkasta kysymysten tai palautteiden sisältö ${linkSuunnitteluVaiheYllapito(
+    projekti.oid
+  )}`;
   return {
-    subject: "Suunnitelmaan on tullut palautetta",
-    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaiheYllapito(projekti.oid),
-    to: recipient,
+    subject,
+    text: uusiaPalautteita > 1 ? pluralText : singularText,
+    to,
   };
 }
 
