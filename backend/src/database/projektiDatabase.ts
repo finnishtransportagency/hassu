@@ -599,10 +599,19 @@ export class ProjektiDatabase {
       return;
     } catch (e) {
       if (!(e instanceof ConditionalCheckFailedException)) {
+        log.error(e instanceof Error ? e.message : String(e), { paatosInput });
         throw e;
       }
     }
-    await getDynamoDBDocumentClient().send(new UpdateCommand(kasittelynTilaInput));
+    try {
+      await getDynamoDBDocumentClient().send(new UpdateCommand(kasittelynTilaInput));
+    } catch (e) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
+      }
+      log.error(e instanceof Error ? e.message : String(e), { kasittelynTilaInput });
+      throw e;
+    }
   }
 }
 

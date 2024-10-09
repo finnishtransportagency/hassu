@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
-import { api, HyvaksymispaatosInput, JatkopaatettavaVaihe, KasittelynTila } from "@services/api";
+import { HyvaksymispaatosInput, JatkopaatettavaVaihe, KasittelynTila } from "@services/api";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import router from "next/router";
@@ -17,6 +17,7 @@ import { TextFieldWithController } from "@components/form/TextFieldWithControlle
 import { H5 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { KeyedMutator } from "swr/dist/types";
+import useApi from "src/hooks/useApi";
 
 type PalautaAktiiviseksiButtonProps = {
   jatkopaatettavaVaihe: JatkopaatettavaVaihe;
@@ -50,6 +51,8 @@ export function PalautaAktiiviseksiButton(props: PalautaAktiiviseksiButtonProps)
     context: { projekti: props.projekti },
   };
   const { handleSubmit, control, trigger, reset } = useForm(formOptions);
+
+  const api = useApi();
 
   useEffect(() => {
     reset(getDefaultValues(props));
@@ -86,7 +89,7 @@ export function PalautaAktiiviseksiButton(props: PalautaAktiiviseksiButtonProps)
           setOpen(false);
         })()
       ),
-    [withLoadingSpinner, props, showSuccessMessage]
+    [withLoadingSpinner, api, props, showSuccessMessage]
   );
 
   const title = titles[props.jatkopaatettavaVaihe];
