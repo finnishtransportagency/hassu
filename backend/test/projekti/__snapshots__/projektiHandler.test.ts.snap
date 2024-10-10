@@ -17,48 +17,6 @@ Object {
 
 exports[`projektiHandler should update Velho changes successfully 1`] = `
 Object {
-  "aloitusKuulutus": Object {
-    "hankkeenKuvaus": Object {
-      "RUOTSI": "På svenska",
-      "SUOMI": "Lorem Ipsum",
-    },
-    "id": 1,
-    "ilmoituksenVastaanottajat": Object {
-      "kunnat": Array [
-        Object {
-          "id": 837,
-          "sahkoposti": "837@email.com",
-        },
-        Object {
-          "id": 536,
-          "sahkoposti": "536@email.com",
-        },
-      ],
-      "maakunnat": undefined,
-      "viranomaiset": Array [
-        Object {
-          "nimi": "PIRKANMAAN_ELY",
-          "sahkoposti": "pirkanmaan-ely@email.com",
-        },
-      ],
-    },
-    "kuulutusPaiva": "2022-01-02",
-    "kuulutusYhteystiedot": Object {
-      "yhteysHenkilot": Array [
-        "A000124",
-      ],
-      "yhteysTiedot": Array [
-        Object {
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
-        },
-      ],
-    },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-  },
   "asianhallinta": Object {
     "asiaId": undefined,
   },
