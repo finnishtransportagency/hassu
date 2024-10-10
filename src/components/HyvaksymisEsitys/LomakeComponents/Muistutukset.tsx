@@ -9,15 +9,25 @@ import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { KunnallinenLadattuTiedosto } from "@services/api";
+import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 export default function Muistutukset({
   kunnat,
   tiedostot,
-}: Readonly<{ kunnat: number[] | null | undefined; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{
+  kunnat: number[] | null | undefined;
+  tiedostot?: KunnallinenLadattuTiedosto[] | null;
+  ennakkoneuvottelu?: boolean;
+}>): ReactElement {
   return (
     <SectionContent>
       <H5 variant="h4">Muistutukset</H5>
-      {kunnat?.length ? kunnat.map((kunta) => <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} />) : "Kunnat puuttuu"}
+      {kunnat?.length
+        ? kunnat.map((kunta) => (
+            <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} ennakkoneuvottelu={ennakkoneuvottelu} />
+          ))
+        : "Kunnat puuttuu"}
     </SectionContent>
   );
 }
@@ -25,12 +35,19 @@ export default function Muistutukset({
 function KunnanMuistutukset({
   kunta,
   tiedostot,
-}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
-  const { remove, fields, move } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { remove, fields, move } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muistutukset.${kunta}`,
+    control,
+  });
 
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, { kunta });
+  const handleUploadedFiles = useHandleUploadedFiles(
+    `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muistutukset.${kunta}`,
+    { kunta }
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -40,7 +57,7 @@ function KunnanMuistutukset({
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.muistutukset.${kunta}.${index}.nimi`);
+      return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muistutukset.${kunta}.${index}.nimi`);
     },
     [register, kunta]
   );

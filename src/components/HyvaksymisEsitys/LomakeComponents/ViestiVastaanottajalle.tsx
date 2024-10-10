@@ -6,10 +6,10 @@ import { ReactElement } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
+import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps): ReactElement {
-  const { control } = useFormContext<HyvaksymisEsitysForm>();
-
+  const { control } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   return (
     <SectionContent>
       <H4 variant="h3">Viesti vastaanottajalle</H4>
@@ -42,7 +42,7 @@ export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: Hyvaksymis
       <div>
         <TextFieldWithController
           multiline
-          controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.lisatiedot" }}
+          controllerProps={{ control, name: ennakkoneuvottelu ? "ennakkoNeuvottelu.lisatiedot" : "muokattavaHyvaksymisEsitys.lisatiedot" }}
           inputProps={{ maxLength: 2000 }}
           showCounter
           fullWidth

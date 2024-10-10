@@ -172,6 +172,7 @@ type Projekti implements IProjekti {
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
+  ennakkoNeuvottelu: EnnakkoNeuvottelu
   hyvaksymisEsitys: HyvaksymisEsitys
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
@@ -469,6 +470,23 @@ enum HyvaksymisTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
   MUOKKAUS
+}
+
+type EnnakkoNeuvottelu {
+  poistumisPaiva: String
+  lisatiedot: String
+  suunnitelma: [AineistoNew!]
+  muistutukset: [KunnallinenLadattuTiedosto!]
+  lausunnot: [LadattuTiedostoNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoNew!]
+  muuAineistoVelhosta: [AineistoNew!]
+  muuAineistoKoneelta: [LadattuTiedostoNew!]
+  maanomistajaluettelo: [LadattuTiedostoNew!]
+  vastaanottajat: [SahkopostiVastaanottaja!]
+  aineistopaketti: String
+  hash: String!
+  tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  kayttoOikeudet: [ProjektiKayttaja!]
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

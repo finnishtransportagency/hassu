@@ -12,7 +12,6 @@ import Lausunnot from "@components/HyvaksymisEsitys/LomakeComponents/Lausunnot";
 import LinkinVoimassaoloaika from "@components/HyvaksymisEsitys/LomakeComponents/LinkinVoimassaoloaika";
 import Maanomistajaluettelo from "@components/HyvaksymisEsitys/LomakeComponents/MaanomistajaLuettelo";
 import Muistutukset from "@components/HyvaksymisEsitys/LomakeComponents/Muistutukset";
-import MuokkausLomakePainikkeet from "@components/HyvaksymisEsitys/LomakeComponents/MuokkausLomakePainikkeet";
 import MuuAineistoKoneelta from "@components/HyvaksymisEsitys/LomakeComponents/MuuAineistoKoneelta";
 import MuuAineistoVelhosta from "@components/HyvaksymisEsitys/LomakeComponents/MuuAineistoVelhosta";
 import Suunnitelma from "@components/HyvaksymisEsitys/LomakeComponents/Suunnitelma";
@@ -23,7 +22,7 @@ import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisEsityksenTiedot, HyvaksymisEsitysInput, ProjektiTyyppi } from "@services/api";
+import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, ProjektiTyyppi } from "@services/api";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { ProjektiLisatiedolla, ValidationModeState } from "common/ProjektiValidationContext";
 import {
@@ -44,7 +43,7 @@ import { ObjectShape, OptionalObjectSchema, AnyObject, TypeOfShape } from "yup/l
 export type EnnakkoneuvotteluForm = {
   oid: string;
   versio: number;
-  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
+  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
   };
@@ -68,7 +67,7 @@ const getKunnallinenLadatutTiedostotSchema = () => Yup.array().of(getKunnallinen
 export const ennakkoNeuvotteluSchema = Yup.object().shape({
   oid: Yup.string().required(),
   versio: Yup.number().integer().required(),
-  muokattavaHyvaksymisEsitys: Yup.object()
+  ennakkoNeuvottelu: Yup.object()
     .shape({
       poistumisPaiva: paivamaara()
         .defined()
@@ -77,30 +76,8 @@ export const ennakkoNeuvotteluSchema = Yup.object().shape({
           then: (schema) =>
             schema.required("Päivämäärä on pakollinen").test("not-in-past", "Päivämäärää ei voi asettaa menneisyyteen", notInPastCheck),
         }),
-      kiireellinen: Yup.boolean().defined(),
       lisatiedot: Yup.string().defined(),
-      laskutustiedot: Yup.object().shape({
-        ovtTunnus: Yup.string()
-          .defined("OVT-tunnus on annettava")
-          .when("$validationMode", {
-            is: isValidationModePublish,
-            then: (schema) => schema.required("OVT-tunnus on pakollinen"),
-          }),
-        verkkolaskuoperaattorinTunnus: Yup.string()
-          .defined("Verkkolaskuoperaattorin välittäjätunnus on annettava")
-          .when("$validationMode", {
-            is: isValidationModePublish,
-            then: (schema) => schema.required("Verkkolaskuoperaattorin välittäjätunnus on pakollinen"),
-          }),
-        viitetieto: Yup.string()
-          .defined("Viitetieto on annettava")
-          .when("$validationMode", {
-            is: isValidationModePublish,
-            then: (schema) => schema.required("Viitetieto on pakollinen"),
-          }),
-      }),
       kuulutuksetJaKutsu: getLadatutTiedostotNewSchema().defined(),
-      hyvaksymisEsitys: getLadatutTiedostotNewSchema().defined(),
       lausunnot: getLadatutTiedostotNewSchema().defined(),
       maanomistajaluettelo: getLadatutTiedostotNewSchema().defined(),
       muuAineistoKoneelta: getLadatutTiedostotNewSchema().defined(),
@@ -153,15 +130,11 @@ function suunnitelmaFrontendSchema(projektiTyyppi: ProjektiTyyppi | null | undef
   return Yup.object().shape(kategorioittenSchema);
 }
 
-export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot): EnnakkoneuvotteluForm {
-  const { oid, versio, hyvaksymisEsitys: muokattavaHyvaksymisEsitys, perustiedot } = hyvaksymisEsityksenTiedot;
-
+export function getDefaultValuesForForm(projekti: Projekti): EnnakkoneuvotteluForm {
+  const { oid, versio, ennakkoNeuvottelu, velho } = projekti;
   const {
     poistumisPaiva,
-    kiireellinen,
     lisatiedot,
-    laskutustiedot,
-    hyvaksymisEsitys,
     suunnitelma,
     muistutukset,
     lausunnot,
@@ -170,10 +143,9 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
-  } = muokattavaHyvaksymisEsitys ?? {};
-  const { ovtTunnus, verkkolaskuoperaattorinTunnus, viitetieto } = laskutustiedot ?? {};
+  } = ennakkoNeuvottelu ?? {};
   const muistutuksetSorted =
-    perustiedot.kunnat?.reduce((acc, kunta) => {
+    velho.kunnat?.reduce((acc, kunta) => {
       acc[kunta] = [];
       return acc;
     }, {} as FormMuistutukset) ?? {};
@@ -183,17 +155,10 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   return {
     oid,
     versio,
-    muokattavaHyvaksymisEsitys: {
+    ennakkoNeuvottelu: {
       poistumisPaiva: poistumisPaiva ?? null,
-      kiireellinen: !!kiireellinen,
       lisatiedot: lisatiedot ?? "",
-      laskutustiedot: {
-        ovtTunnus: ovtTunnus ?? "",
-        verkkolaskuoperaattorinTunnus: verkkolaskuoperaattorinTunnus ?? "",
-        viitetieto: viitetieto ?? "",
-      },
-      hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
-      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, perustiedot.projektiTyyppi),
+      suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, velho.tyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
@@ -207,22 +172,26 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
-export default function HyvaksymisEsitysLomake(): ReactElement {
-  const hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot = {
-    __typename: "HyvaksymisEsityksenTiedot",
-    oid: "1.2.3",
-    versio: 1,
-    aineistotValmiit: true,
-    muokkauksenVoiAvata: true,
-    vaiheOnAktiivinen: true,
-    asianhallinta: { __typename: "AsianhallintaNew", aktivoitavissa: true, inaktiivinen: false },
-    perustiedot: { __typename: "ProjektinPerustiedot", suunnitelmanNimi: "Projekti 1.2.3", projektiTyyppi: ProjektiTyyppi.RATA },
+export default function EnnakkoNeuvotteluLomake(): ReactElement {
+  const ennakkoNeuvottelu: EnnakkoNeuvottelu = {
+    __typename: "EnnakkoNeuvottelu",
     tuodutTiedostot: { __typename: "HyvaksymisEsityksenTuodutTiedostot" },
+    hash: "",
+    suunnitelma: [],
   };
-  const defaultValues: EnnakkoneuvotteluForm = useMemo(
-    () => getDefaultValuesForForm(hyvaksymisEsityksenTiedot),
-    [hyvaksymisEsityksenTiedot]
-  );
+  const projekti: Projekti = {
+    __typename: "Projekti",
+    asianhallinta: { __typename: "Asianhallinta", aktivoitavissa: true, inaktiivinen: false },
+    oid: "1.2.3",
+    velho: {
+      __typename: "Velho",
+      tyyppi: ProjektiTyyppi.TIE,
+      kunnat: [91],
+    },
+    versio: 1,
+    ennakkoNeuvottelu,
+  };
+  const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), []);
 
   const validationMode = useValidationMode();
 
@@ -243,14 +212,14 @@ export default function HyvaksymisEsitysLomake(): ReactElement {
   const aineistoKategoriat = useMemo(
     () =>
       getAineistoKategoriat({
-        projektiTyyppi: hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi,
+        projektiTyyppi: projekti.velho.tyyppi,
         showKategorisoimattomat: true,
         hideDeprecated: true,
       }),
-    [hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi]
+    [projekti.velho.tyyppi]
   );
 
-  if (!hyvaksymisEsityksenTiedot) {
+  if (!ennakkoNeuvottelu) {
     return <></>;
   }
 
@@ -289,28 +258,27 @@ export default function HyvaksymisEsitysLomake(): ReactElement {
               </Section>
               <Section>
                 <H3 variant="h2">Ennakkoneuvotteluun liitettävä aineisto</H3>
-                <Suunnitelma aineistoKategoriat={aineistoKategoriat} />
+                <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
-                <Muistutukset
-                  kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat}
-                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muistutukset}
-                />
-                <Lausunnot tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.lausunnot} />
+                <Muistutukset kunnat={projekti.velho.kunnat} tiedostot={ennakkoNeuvottelu.muistutukset} ennakkoneuvottelu={true} />
+                <Lausunnot tiedostot={ennakkoNeuvottelu.lausunnot} ennakkoneuvottelu={true} />
                 <Maanomistajaluettelo
-                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo}
-                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.maanomistajaluettelo}
+                  tuodut={ennakkoNeuvottelu.tuodutTiedostot.maanomistajaluettelo}
+                  tiedostot={ennakkoNeuvottelu.maanomistajaluettelo}
+                  ennakkoneuvottelu={true}
                 />
                 <KuulutuksetJaKutsu
-                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.kuulutuksetJaKutsu}
-                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu}
+                  tiedostot={ennakkoNeuvottelu.kuulutuksetJaKutsu}
+                  tuodut={ennakkoNeuvottelu.tuodutTiedostot.kuulutuksetJaKutsu}
+                  ennakkoneuvottelu={true}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>
                   Voit halutessasi liittää ennakkoneuvotteluun muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
                 </p>
-                <MuuAineistoVelhosta aineisto={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoVelhosta} ennakkoneuvottelu={true} />
-                <MuuAineistoKoneelta tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoKoneelta} ennakkoneuvottelu={true} />
+                <MuuAineistoVelhosta aineisto={ennakkoNeuvottelu.muuAineistoVelhosta} ennakkoneuvottelu={true} />
+                <MuuAineistoKoneelta tiedostot={ennakkoNeuvottelu.muuAineistoKoneelta} ennakkoneuvottelu={true} />
               </Section>
               <Section>
                 <Vastaanottajat ennakkoneuvottelu={true} />
@@ -318,7 +286,6 @@ export default function HyvaksymisEsitysLomake(): ReactElement {
               <Section>
                 <AineistonEsikatselu ennakkoneuvottelu={true} />
               </Section>
-              <MuokkausLomakePainikkeet aineistoKategoriat={aineistoKategoriat} hyvaksymisesitys={hyvaksymisEsityksenTiedot} />
             </form>
           </FormProvider>
         )}

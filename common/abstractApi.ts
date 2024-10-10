@@ -137,6 +137,12 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.tallennaHyvaksymisesitys,
     isYllapitoOperation: true,
   },
+  tallennaEnnakkoNeuvottelu: {
+    name: "tallennaEnnakkoNeuvottelu",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaEnnakkoNeuvottelu,
+    isYllapitoOperation: true,
+  },
   tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi: {
     name: "tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi",
     operationType: OperationType.Mutation,

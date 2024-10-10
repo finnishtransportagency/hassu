@@ -274,6 +274,25 @@ input HyvaksymisEsitysInput {
   vastaanottajat: [SahkopostiVastaanottajaInput!]
 }
 
+input EnnakkoNeuvotteluInput {
+  poistumisPaiva: String
+  lisatiedot: String
+  suunnitelma: [AineistoInputNew!]
+  muistutukset: [KunnallinenLadattuTiedostoInput!]
+  lausunnot: [LadattuTiedostoInputNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
+  muuAineistoVelhosta: [AineistoInputNew!]
+  muuAineistoKoneelta: [LadattuTiedostoInputNew!]
+  maanomistajaluettelo: [LadattuTiedostoInputNew!]
+  vastaanottajat: [SahkopostiVastaanottajaInput!]
+}
+
+input TallennaEnnakkoNeuvotteluInput {
+  oid: String!
+  versio: Int!
+  ennakkoNeuvottelu: EnnakkoNeuvotteluInput!
+}
+
 input SahkopostiVastaanottajaInput {
   sahkoposti: String!
 }

@@ -20,7 +20,7 @@ export default function LinkinVoimassaoloaika({ ennakkoneuvottelu }: HyvaksymisE
         <HassuDatePickerWithController
           label="Voimassaoloaika päättyy"
           controllerProps={{
-            name: ennakkoneuvottelu ? "muokattavaEnnakkoNeuvottelu.poistumisPaiva" : "muokattavaHyvaksymisEsitys.poistumisPaiva",
+            name: ennakkoneuvottelu ? "ennakkoNeuvottelu.poistumisPaiva" : "muokattavaHyvaksymisEsitys.poistumisPaiva",
           }}
           disablePast
           onChange={(date) => {

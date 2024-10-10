@@ -13,15 +13,17 @@ import SectionContent from "@components/layout/SectionContent";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoNewTable";
 import find from "lodash/find";
 import remove from "lodash/remove";
+import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 type Props = {
   aineistoKategoriat: AineistoKategoriat;
+  ennakkoneuvottelu?: boolean;
 };
 
-export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): ReactElement {
+export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm>();
-  const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
+  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const suunnitelma = watch(ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma");
   const { t } = useTranslation("aineisto");
   const suunnitelmaFlat = Object.values(suunnitelma).flat();
 
@@ -73,9 +75,15 @@ export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): Re
             oldAineisto: suunnitelma,
             newAineisto,
           });
-          setValue("muokattavaHyvaksymisEsitys.suunnitelma", uusiAineistoNahtavilla.aineisto);
+          setValue(
+            ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma",
+            uusiAineistoNahtavilla.aineisto
+          );
           uusiAineistoNahtavilla.kategoriasWithChanges.forEach((kategoria) => {
-            setValue(`muokattavaHyvaksymisEsitys.suunnitelma.${kategoria}`, uusiAineistoNahtavilla.aineisto[kategoria]);
+            setValue(
+              `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${kategoria}`,
+              uusiAineistoNahtavilla.aineisto[kategoria]
+            );
           });
         }}
       />
