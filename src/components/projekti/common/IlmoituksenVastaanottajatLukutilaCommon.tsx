@@ -12,11 +12,11 @@ interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
 }
 
-export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }: Readonly<Props>): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const isKuntia = !!ilmoituksenVastaanottajat?.kunnat;
   const isViranomaisia = !!ilmoituksenVastaanottajat?.viranomaiset;
-
+  const isMaakuntia = ilmoituksenVastaanottajat?.maakunnat && ilmoituksenVastaanottajat.maakunnat.length > 0;
   return (
     <Section noDivider>
       <SectionContent>
@@ -63,6 +63,25 @@ export default function IlmoituksenVastaanottajat({ ilmoituksenVastaanottajat }:
           )}
         </div>
       </SectionContent>
+      {isMaakuntia && (
+        <SectionContent>
+          <H3 variant="h5">Maakuntaliitot</H3>
+          <div className="content grid grid-cols-4 mb-4">
+            <p className="vayla-table-header">Maakuntaliitto</p>
+            <p className="vayla-table-header">Sähköpostiosoite</p>
+            <p className="vayla-table-header">Ilmoituksen tila</p>
+            <p className="vayla-table-header">Lähetysaika</p>
+            {ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
+              <React.Fragment key={maakunta.id}>
+                <p className={getStyleForRow(index)}>{kuntametadata.liittoNameForMaakuntaId(maakunta.id)}</p>
+                <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
+                <p className={getStyleForRow(index)}>{maakunta.lahetetty ? "Lähetetty" : "Ei lähetetty"}</p>
+                <p className={getStyleForRow(index)}>{maakunta.lahetetty ? dayjs(maakunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
+              </React.Fragment>
+            ))}
+          </div>
+        </SectionContent>
+      )}
     </Section>
   );
 }

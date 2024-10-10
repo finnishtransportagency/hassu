@@ -112,6 +112,7 @@ input StandardiYhteystiedotInput {
 input IlmoituksenVastaanottajatInput {
   kunnat: [KuntaVastaanottajaInput!]
   viranomaiset: [ViranomaisVastaanottajaInput!]
+  maakunnat: [MaakuntaVastaanottajaInput!]
 }
 
 input ViranomaisVastaanottajaInput {
@@ -120,6 +121,11 @@ input ViranomaisVastaanottajaInput {
 }
 
 input KuntaVastaanottajaInput {
+  id: Int!
+  sahkoposti: String!
+}
+
+input MaakuntaVastaanottajaInput {
   id: Int!
   sahkoposti: String!
 }

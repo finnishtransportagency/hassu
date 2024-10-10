@@ -134,7 +134,11 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
 
     await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos2Vaihe", this.getVaihe(projekti));
 
-    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.jatkoPaatos2Vaihe);
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.jatkoPaatos2Vaihe,
+      projekti.jatkoPaatos2VaiheJulkaisut
+    );
     if (!julkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Jatkopäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
     }

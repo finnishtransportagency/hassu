@@ -20,6 +20,7 @@ export type Maakunta = {
   id: string;
   koodi: string;
   nimi: RequiredLocalizedMap<string>;
+  liittoNimi?: string | null;
   lakkautettu?: boolean;
 };
 
@@ -133,6 +134,15 @@ class KuntaMetadata {
       return localizedNimi;
     }
     return nimi[Kieli.SUOMI];
+  }
+
+  public liittoNameForMaakuntaId(maakuntaId: number): string {
+    const nimi = alueData.maakunnat[maakuntaId]?.liittoNimi;
+    if (!nimi) {
+      // Ahvenanmaa
+      return this.nameForMaakuntaId(maakuntaId, Kieli.SUOMI);
+    }
+    return nimi;
   }
 
   public namesForKuntaIds(kuntaIds: number[] | null | undefined, kieli: Kieli | string): string[] {

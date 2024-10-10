@@ -330,7 +330,8 @@
     "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i",
     "switchenv": "ts-node -T --project=tsconfig.cdk.json  ./deployment/bin/switchEnv.ts && direnv exec . npm run setupenvironment",
     "generate:puml": "npx node-plantuml generate doc/suomifi_tunnistautuminen.puml -o doc/suomifi_tunnistautuminen.png",
-    "mml:test": "ts-node --project=backend/tsconfig.json ./backend/bin/mmlTest.ts"
+    "mml:test": "ts-node --project=backend/tsconfig.json ./backend/bin/mmlTest.ts",
+    "format": "prettier . --write"
   },
   "browserslist": {
     "production": [

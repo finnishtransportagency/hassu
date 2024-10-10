@@ -16,6 +16,7 @@ Object {
         "sahkoposti": "maikol@iki.fi",
       },
     ],
+    "maakunnat": undefined,
     "viranomaiset": Array [
       Object {
         "nimi": "KAINUUN_ELY",

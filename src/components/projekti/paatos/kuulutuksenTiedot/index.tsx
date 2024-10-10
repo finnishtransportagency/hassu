@@ -82,7 +82,12 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         kuulutusVaihePaattyyPaiva: julkaisematonPaatos?.kuulutusVaihePaattyyPaiva || null,
         hallintoOikeus: julkaisematonPaatos?.hallintoOikeus || "",
         kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(julkaisematonPaatos?.kuulutusYhteystiedot),
-        ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
+        ilmoituksenVastaanottajat: defaultVastaanottajat(
+          projekti,
+          julkaisematonPaatos?.ilmoituksenVastaanottajat,
+          kirjaamoOsoitteet,
+          paatosTyyppi
+        ),
       },
       hyvaksymisPaatosVaihe: {},
       jatkoPaatos1Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi },

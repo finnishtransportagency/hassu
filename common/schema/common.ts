@@ -71,7 +71,19 @@ export const ilmoituksenVastaanottajat = () =>
           return !kunta.id && !kunta.sahkoposti;
         })
         .notRequired(),
-
+      maakunnat: Yup.array()
+        .of(
+          Yup.object()
+            .shape({
+              id: Yup.number().required(),
+              sahkoposti: Yup.string().email("Virheellinen sähköpostiosoite").required("Sähköpostiosoite on pakollinen"),
+            })
+            .required()
+        )
+        .compact(function (maakunta) {
+          return !maakunta.id && !maakunta.sahkoposti;
+        })
+        .notRequired(),
       viranomaiset: Yup.array()
         .of(
           Yup.object()

@@ -526,6 +526,7 @@ Object {
             "sahkoposti": "",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -682,6 +683,7 @@ Object {
             "sahkoposti": "",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -900,6 +902,7 @@ Object {
             "sahkoposti": "",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -1112,6 +1115,7 @@ Object {
             "sahkoposti": "",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",

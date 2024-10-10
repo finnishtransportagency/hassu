@@ -85,6 +85,7 @@ export type StandardiYhteystiedot = {
 export type IlmoituksenVastaanottajat = {
   kunnat?: Array<KuntaVastaanottaja> | null;
   viranomaiset?: Array<ViranomaisVastaanottaja> | null;
+  maakunnat?: Array<MaakuntaVastaanottaja> | null;
 };
 
 export type SahkopostiVastaanottaja = {
@@ -95,6 +96,10 @@ export type SahkopostiVastaanottaja = {
 };
 
 export type KuntaVastaanottaja = {
+  id: number;
+} & SahkopostiVastaanottaja;
+
+export type MaakuntaVastaanottaja = {
   id: number;
 } & SahkopostiVastaanottaja;
 
