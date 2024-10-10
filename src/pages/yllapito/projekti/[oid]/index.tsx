@@ -70,6 +70,7 @@ export default function ProjektiSivu() {
   }
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
   return (
     <ProjektiPageLayout
       title={"Projektin tiedot"}

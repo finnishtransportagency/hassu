@@ -42,9 +42,9 @@ describe("12 - Projektin 1. jaktopäätöksen tiedot", () => {
     // save draft of jatkopaatos 1
     cy.contains("Tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
 
-    cy.get("#lisaa_jatkopaatos").click(); // open dialog
-    cy.get("#accept_and_save_jatkopaatos").click(); // accept
-    cy.contains("Jatkopäätös lisätty").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
+    cy.get("#open_palauta_aktiiviseksi_dialog").click(); // open dialog
+    cy.get("#accept_palauta_jatkopaatos").click(); // accept
+    cy.contains("Projekti avattu jatkopäätettäksi").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
 
     // TODO: check that user moved itself to projektin henkilot
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot", {

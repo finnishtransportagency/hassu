@@ -650,6 +650,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1Vaihe: {
@@ -685,6 +686,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1Vaihe: {
@@ -712,6 +714,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1Vaihe: {
@@ -737,6 +740,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1Vaihe: {
@@ -790,6 +794,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1Vaihe: {
@@ -844,6 +849,7 @@ describe("getProjektiStatus", () => {
         ensimmainenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos1VaiheJulkaisut: [
@@ -868,6 +874,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2Vaihe: {
@@ -905,6 +912,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2Vaihe: {
@@ -931,6 +939,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2Vaihe: {
@@ -957,6 +966,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2Vaihe: {
@@ -1019,6 +1029,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2Vaihe: {
@@ -1073,6 +1084,7 @@ describe("getProjektiStatus", () => {
         toinenJatkopaatos: {
           paatoksenPvm: "2000-01-01",
           asianumero: "asianumero",
+          aktiivinen: true,
         },
       },
       jatkoPaatos2VaiheJulkaisut: [

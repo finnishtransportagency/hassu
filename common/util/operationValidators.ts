@@ -69,11 +69,11 @@ function noUserCreatedJulkaisuPreventingChange(projekti: Projekti, additionalVai
     // Tarkastetaan salliiko vaiheen ja julkaisun tiedot
     .some(([vaiheString, { julkaisu, vaihe }]) => {
       const vaiheTyyppi = vaiheString as Vaihe;
-      const statusNro = statusOrder[vaiheToStatus[vaiheTyyppi]];
+      const statusNro = statusOrder(vaiheToStatus[vaiheTyyppi]);
 
       // Haetaan julkaisut, jotka on järjestyksessä ennen kyseistä vaihetta
       const aiemmatJulkaisut = Object.entries(vaiheidenTiedot)
-        .filter(([t]) => statusOrder[vaiheToStatus[t as Vaihe]] < statusNro)
+        .filter(([t]) => statusOrder(vaiheToStatus[t as Vaihe]) < statusNro)
         .map(([_, { julkaisu: j }]) => j);
 
       const vaiheNotEditable = !vaiheOnMuokkausTilassa(projekti, vaiheTyyppi);

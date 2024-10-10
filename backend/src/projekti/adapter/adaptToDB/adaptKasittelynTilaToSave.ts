@@ -12,59 +12,28 @@ export function adaptKasittelynTilaToSave(
   if (!kasittelynTilaInput) {
     return undefined;
   }
+  const { hallintoOikeus, korkeinHallintoOikeus, hyvaksymispaatos: hyvaksymispaatosInput, ...rest } = kasittelynTilaInput;
   const hyvaksymispaatosMerged: Hyvaksymispaatos = mergeWith(
     {},
     dbKasittelynTila?.hyvaksymispaatos,
-    kasittelynTilaInput.hyvaksymispaatos,
+    hyvaksymispaatosInput,
     preventArrayMergingCustomizer
   );
+
+  const hyvaksymispaatosTiedotTaytetty =
+    hyvaksymispaatosInput &&
+    !dbKasittelynTila?.hyvaksymispaatos?.aktiivinen &&
+    hyvaksymispaatosMerged.asianumero &&
+    hyvaksymispaatosMerged.paatoksenPvm;
 
   // Jos kannassa oleva hyväksymispäätöksen aktiivisuusarvo ei ole aktiivinen ja hyväksymispäätöksen tiedot täytetään
   // Aktiivisuus arvoa käytetään asettamaan kenttien pakollisuus
   // Kun päivämäärä- ja asianumerotiedot kerran on annettu, ne on annettava jatkossakin
-  if (
-    kasittelynTilaInput.hyvaksymispaatos &&
-    !dbKasittelynTila?.hyvaksymispaatos?.aktiivinen &&
-    hyvaksymispaatosMerged.asianumero &&
-    hyvaksymispaatosMerged.paatoksenPvm
-  ) {
-    kasittelynTilaInput.hyvaksymispaatos.aktiivinen = true;
-  }
+  const hyvaksymispaatos = hyvaksymispaatosTiedotTaytetty ? { ...hyvaksymispaatosInput, aktiivinen: true } : hyvaksymispaatosInput;
 
-  const ensimmainenJatkopaatosMerged: Hyvaksymispaatos = mergeWith(
-    {},
-    dbKasittelynTila?.ensimmainenJatkopaatos,
-    kasittelynTilaInput.ensimmainenJatkopaatos,
-    preventArrayMergingCustomizer
-  );
-  // Tunnista jatkopäätöksen lisäys ja lisää event käyttöoikeuksien nollaamiseksi
-  if (
-    !dbKasittelynTila?.ensimmainenJatkopaatos?.aktiivinen &&
-    ensimmainenJatkopaatosMerged.aktiivinen &&
-    ensimmainenJatkopaatosMerged.asianumero &&
-    ensimmainenJatkopaatosMerged.paatoksenPvm
-  ) {
-    projektiAdaptationResult.resetKayttooikeudetAndSynchronizeVelho();
-  }
-
-  const toinenJatkopaatosMerged: Hyvaksymispaatos = mergeWith(
-    {},
-    dbKasittelynTila?.toinenJatkopaatos,
-    kasittelynTilaInput.toinenJatkopaatos,
-    preventArrayMergingCustomizer
-  );
-  // Tunnista jatkopäätöksen lisäys ja lisää event käyttöoikeuksien nollaamiseksi
-  if (
-    !dbKasittelynTila?.toinenJatkopaatos?.aktiivinen &&
-    toinenJatkopaatosMerged.aktiivinen &&
-    toinenJatkopaatosMerged.asianumero &&
-    toinenJatkopaatosMerged.paatoksenPvm
-  ) {
-    projektiAdaptationResult.resetKayttooikeudetAndSynchronizeVelho();
-  }
-  const { hallintoOikeus, korkeinHallintoOikeus, ...rest } = kasittelynTilaInput;
   const adaptedKasittelynTila = {
     ...rest,
+    hyvaksymispaatos,
     hallintoOikeus: adaptHallintoOikeusToDB(hallintoOikeus),
     korkeinHallintoOikeus: korkeinHallintoOikeus !== undefined ? adaptHallintoOikeusToDB(korkeinHallintoOikeus) : undefined,
   };

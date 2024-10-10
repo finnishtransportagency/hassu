@@ -44,9 +44,11 @@
     "LAINVOIMA": "Rättsligt bindande",
     "ARKISTOITU": "Arkiverad",
     "EPAAKTIIVINEN_1": "Planen har godkänts",
+    "JATKOPAATOS_1_HYVAKSYMISESITYS": "1. beslut om fortsättning",
     "JATKOPAATOS_1_AINEISTOT": "1. beslut om fortsättning",
     "JATKOPAATOS_1": "1. beslut om fortsättning",
     "EPAAKTIIVINEN_2": "1. beslut om fortsättning",
+    "JATKOPAATOS_2_HYVAKSYMISESITYS": "2. beslut om fortsättning",
     "JATKOPAATOS_2_AINEISTOT": "2. beslut om fortsättning",
     "JATKOPAATOS_2": "2. beslut om fortsättning",
     "EPAAKTIIVINEN_3": "2. beslut om fortsättning"
@@ -412,11 +414,6 @@
     "POHJOIS_SUOMI": "Norra Finland",
     "TURKU": "Åbo",
     "VAASA": "Vasa"
-  },
-  "kasittelyn_tila": {
-    "luo-jatkopaatos": "Luo jatkopäätös",
-    "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
-    "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
   },
   "tien_tie": "landsväg",
   "tien_rata": "järnväg",

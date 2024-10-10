@@ -150,7 +150,7 @@ export class DBProjektiForSpecificVaiheFixture {
     const projekti = this.projektiBase();
 
     const haeVaiheenTila = (currentVaihe: Vaihe, vaihe: Vaihe) => {
-      const vaiheIsBeforeCurrentVaihe = statusOrder[vaiheToStatus[vaihe]] < statusOrder[vaiheToStatus[currentVaihe]];
+      const vaiheIsBeforeCurrentVaihe = statusOrder(vaiheToStatus[vaihe]) < statusOrder(vaiheToStatus[currentVaihe]);
       return vaiheIsBeforeCurrentVaihe ? VaiheenTila.HYVAKSYTTY : vaiheenTila;
     };
 

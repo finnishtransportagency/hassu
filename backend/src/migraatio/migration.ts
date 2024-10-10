@@ -43,8 +43,8 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   await projektiDatabase.createProjekti(projekti);
   log.info("Created projekti to Hassu");
 
-  const targetStatusRank = statusOrder[targetStatus];
-  if (targetStatusRank >= statusOrder[Status.SUUNNITTELU]) {
+  const targetStatusRank = statusOrder(targetStatus);
+  if (targetStatusRank >= statusOrder(Status.SUUNNITTELU)) {
     const aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
       kielitiedot,
       id: 1,
@@ -58,7 +58,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   }
 
   const versio = projekti.versio;
-  if (targetStatusRank >= statusOrder[Status.NAHTAVILLAOLO]) {
+  if (targetStatusRank >= statusOrder(Status.NAHTAVILLAOLO)) {
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: 1,
       tila: VuorovaikutusKierrosTila.MIGROITU,
@@ -66,7 +66,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, versio, vuorovaikutusKierros });
   }
 
-  if (targetStatusRank >= statusOrder[Status.HYVAKSYMISMENETTELYSSA]) {
+  if (targetStatusRank >= statusOrder(Status.HYVAKSYMISMENETTELYSSA)) {
     const nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu = {
       kielitiedot,
       id: 1,
@@ -83,7 +83,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     ...projekti.kasittelynTila,
   };
 
-  if (targetStatusRank >= statusOrder[Status.EPAAKTIIVINEN_1]) {
+  if (targetStatusRank >= statusOrder(Status.EPAAKTIIVINEN_1)) {
     const { hyvaksymispaatosAsianumero, hyvaksymispaatosPaivamaara } = params;
     if (!hyvaksymispaatosAsianumero || !hyvaksymispaatosPaivamaara) {
       log.error("Hyväksymispäätös puuttuu!", { oid });
@@ -109,7 +109,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     });
   }
 
-  if (targetStatusRank >= statusOrder[Status.EPAAKTIIVINEN_2]) {
+  if (targetStatusRank >= statusOrder(Status.EPAAKTIIVINEN_2)) {
     const { jatkopaatosAsianumero, jatkopaatosPaivamaara } = params;
     if (!jatkopaatosAsianumero || !jatkopaatosPaivamaara) {
       log.error("Jatkopäätös puuttuu!", { oid });

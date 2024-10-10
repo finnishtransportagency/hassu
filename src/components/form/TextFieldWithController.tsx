@@ -1,6 +1,6 @@
 import { Box, styled, TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode, useCallback, useMemo } from "react";
 import { FieldValues, UseControllerProps, useController } from "react-hook-form";
 
 const getDefaultMaxLength = (isMultiline: boolean | undefined) => (isMultiline ? 2000 : 200);
@@ -9,7 +9,7 @@ type TextFieldWithControllerProps<TFieldValues extends FieldValues> = TextFieldW
   controllerProps: UseControllerProps<TFieldValues> & { constructErrorMessage?: (message: string) => string | undefined };
 };
 
-type TextFieldWithCounterProps = Omit<TextFieldProps, "inputProps" | "value" | "onChange" | "name" | "onBlur" | "error" | "helperText"> & {
+type TextFieldWithCounterProps = Omit<TextFieldProps, "inputProps" | "value" | "name" | "onBlur" | "error" | "helperText"> & {
   inputProps?: TextFieldProps["inputProps"] & { maxLength?: number };
 } & { showCounter?: boolean };
 
@@ -17,16 +17,25 @@ export const TextFieldWithController = <TFieldValues extends FieldValues>({
   controllerProps: { constructErrorMessage, ...controllerProps },
   inputProps,
   showCounter,
+  onChange: onChangeProp,
   ...textFieldProps
 }: TextFieldWithControllerProps<TFieldValues>) => {
   const {
-    field: { ref, ...field },
+    field: { ref, onChange: onChangeFromController, ...field },
     fieldState,
   } = useController(controllerProps);
 
   const maxLength = useMemo(
     () => inputProps?.maxLength ?? getDefaultMaxLength(textFieldProps.multiline),
     [inputProps?.maxLength, textFieldProps.multiline]
+  );
+
+  const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>>(
+    (event) => {
+      onChangeFromController(event);
+      onChangeProp?.(event);
+    },
+    [onChangeFromController, onChangeProp]
   );
 
   const helperText: ReactNode | undefined = useMemo(() => {
@@ -48,7 +57,16 @@ export const TextFieldWithController = <TFieldValues extends FieldValues>({
 
   const inputPrps = useMemo(() => ({ ref, maxLength, ...inputProps }), [inputProps, maxLength, ref]);
 
-  return <TextField {...field} {...textFieldProps} inputProps={inputPrps} error={!!fieldState.error?.message} helperText={helperText} />;
+  return (
+    <TextField
+      {...field}
+      {...textFieldProps}
+      onChange={onChange}
+      inputProps={inputPrps}
+      error={!!fieldState.error?.message}
+      helperText={helperText}
+    />
+  );
 };
 
 const HelperTextContainer = styled(Box)({
