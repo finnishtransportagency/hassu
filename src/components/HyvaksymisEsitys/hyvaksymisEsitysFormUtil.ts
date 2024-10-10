@@ -77,7 +77,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
   };
 }
 
-function adaptSuunnitelmaAineistot(
+export function adaptSuunnitelmaAineistot(
   suunnitelma: AineistoNew[] | null | undefined,
   projektiTyyppi: ProjektiTyyppi | null | undefined
 ): { [key: string]: FormAineistoNew[] } {
@@ -120,14 +120,14 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
   };
 }
 
-function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] | undefined | null): LadattuTiedostoInputNew[] {
+export function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] | undefined | null): LadattuTiedostoInputNew[] {
   if (!ladatutTiedostot) {
     return [];
   }
   return ladatutTiedostot.map(adaptLadattuTiedostoNewToInput);
 }
 
-function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): LadattuTiedostoInputNew {
+export function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): LadattuTiedostoInputNew {
   const { nimi, uuid } = ladattuTiedosto;
   return {
     nimi,
@@ -135,7 +135,7 @@ function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): La
   };
 }
 
-function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLadattuTiedosto): KunnallinenLadattuTiedostoInput {
+export function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLadattuTiedosto): KunnallinenLadattuTiedostoInput {
   const { nimi, uuid, kunta } = ladattuTiedosto;
   return {
     nimi,
@@ -144,7 +144,7 @@ function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLada
   };
 }
 
-function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): AineistoInputNew[] {
+export function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): AineistoInputNew[] {
   if (!aineistot) {
     return [];
   }

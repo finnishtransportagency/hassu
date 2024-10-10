@@ -5,33 +5,40 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 import { ReactElement } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
 
-export default function ViestiVastaanottajalle(): ReactElement {
+export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps): ReactElement {
   const { control } = useFormContext<HyvaksymisEsitysForm>();
 
   return (
     <SectionContent>
       <H4 variant="h3">Viesti vastaanottajalle</H4>
-      <Controller<HyvaksymisEsitysForm>
-        name="muokattavaHyvaksymisEsitys.kiireellinen"
-        render={({ field: { value, onChange, ...field } }) => (
-          <FormControlLabel
-            label="Pyydetään kiireellistä käsittelyä"
-            control={
-              <Checkbox
-                checked={!!value}
-                onChange={(event) => {
-                  const checked = event.target.checked;
-                  onChange(!!checked);
-                }}
-                {...field}
-              />
-            }
-          />
-        )}
-      />
+      {!ennakkoneuvottelu && (
+        <Controller<HyvaksymisEsitysForm>
+          name="muokattavaHyvaksymisEsitys.kiireellinen"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormControlLabel
+              label="Pyydetään kiireellistä käsittelyä"
+              control={
+                <Checkbox
+                  checked={!!value}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    onChange(!!checked);
+                  }}
+                  {...field}
+                />
+              }
+            />
+          )}
+        />
+      )}
       <H5 variant="h4">Lisätiedot</H5>
-      <p>Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä hyväksymisesityksen linkin takana.</p>
+      <p>
+        {ennakkoneuvottelu
+          ? "Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä ennakkoneuvottelun linkin takana. Kirjaa kentään esimerkiksi sovittu ennakkoneuvottelun ajankohta."
+          : "Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä hyväksymisesityksen linkin takana."}
+      </p>
       <div>
         <TextFieldWithController
           multiline

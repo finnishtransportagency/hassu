@@ -10,7 +10,7 @@ import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymises
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoNew[] | null }): ReactElement {
+export default function MuuAineistoVelhosta({ aineisto, ennakkoneuvottelu }: { aineisto?: AineistoNew[] | null, ennakkoneuvottelu?: boolean }): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { control, register } = useFormContext<HyvaksymisEsitysForm>();
   const { fields, remove, prepend, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoVelhosta", control });
@@ -32,7 +32,7 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
   return (
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
-      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
+      <p>Voit halutessasi liittää { ennakkoneuvottelu ? "enakkoneuvotteluun" : "hyväksymisesitykseen" } Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="muu_aineisto_velhosta_table"

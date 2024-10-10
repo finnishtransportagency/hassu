@@ -7,8 +7,9 @@ import { ReactElement, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
 
-export default function Vastaanottajat(): ReactElement {
+export default function Vastaanottajat({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps): ReactElement {
   const { control } = useFormContext<HyvaksymisEsitysForm>();
   const { fields, remove, append } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.vastaanottajat", control });
 
@@ -18,9 +19,9 @@ export default function Vastaanottajat(): ReactElement {
 
   return (
     <>
-      <H3 variant="h2">Hyväksymisesityksen vastaanottajat</H3>
+      <H3 variant="h2">{ennakkoneuvottelu ? "Ennakkoneuvotteluun toimitettavan suunnitelman" : "Hyväksymisesityksen"} vastaanottajat</H3>
       <p>
-        Lisää lähetettävälle hyväksymisesitykselle vastaanottaja. Jos hyväksymisesitys pitää lähettää useammalle kuin yhdelle
+        Lisää lähetettävälle { ennakkoneuvottelu ? "ennakkoneuvottelulle": "hyväksymisesitykselle" } vastaanottaja. Jos { ennakkoneuvottelu ? "ennakkoneuvottelu" : "hyväksymisesitys" } pitää lähettää useammalle kuin yhdelle
         vastaanottajalle, lisää uusi rivi Lisää uusi -painikkeella.
       </p>
       {fields.map((field, index) => (

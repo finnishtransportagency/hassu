@@ -4,16 +4,23 @@ import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
 import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
 
-export default function AineistonEsikatselu() {
+export default function AineistonEsikatselu({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps) {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
   const { watch } = useFormContext<HyvaksymisEsitysForm>();
   const formData = watch();
 
   return (
     <>
-      <H3 variant="h2">Hyväksymisesityksen sisällön esikatselu</H3>
-      <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen lähettämistä eteenpäin.</Notification>
+      <H3 variant="h2">
+        {ennakkoneuvottelu ? "Ennakkoneuvotteluun toimitettavan suunnitelman" : "Hyväksymisesityksen"} sisällön esikatselu
+      </H3>
+      <Notification type={NotificationType.INFO_GRAY}>
+        {ennakkoneuvottelu
+          ? "Esikatsele ennakkoneuvottelumateriaali ennen sen lähettämistä eteenpäin."
+          : "Esikatsele hyväksymisesitys ennen sen lähettämistä eteenpäin."}
+      </Notification>
       <a
         className="hidden"
         id="esikatsele-hyvaksymisesitys-link"
