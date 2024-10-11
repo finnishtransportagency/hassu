@@ -1,3 +1,4 @@
+import Button from "@components/button/Button";
 import { H3, H4 } from "@components/Headings";
 import {
   adaptAineistotNewToInput,
@@ -22,8 +23,16 @@ import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, ProjektiTyyppi } from "@services/api";
-import { getAineistoKategoriat } from "common/aineistoKategoriat";
+import { Stack } from "@mui/system";
+import {
+  AineistoInputNew,
+  EnnakkoNeuvottelu,
+  EnnakkoNeuvotteluInput,
+  Projekti,
+  ProjektiTyyppi,
+  TallennaEnnakkoNeuvotteluInput,
+} from "@services/api";
+import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { ProjektiLisatiedolla, ValidationModeState } from "common/ProjektiValidationContext";
 import {
   getAineistotNewSchema,
@@ -34,8 +43,15 @@ import {
 } from "common/schema/common";
 import { notInPastCheck, paivamaara } from "common/schema/paivamaaraSchema";
 import { mapValues } from "lodash";
-import { ReactElement, useEffect, useMemo } from "react";
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { ReactElement, useCallback, useEffect, useMemo } from "react";
+import { FormProvider, SubmitHandler, useForm, useFormContext, UseFormProps } from "react-hook-form";
+import useApi from "src/hooks/useApi";
+import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
+import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { useProjekti } from "src/hooks/useProjekti";
+import useSnackbars from "src/hooks/useSnackbars";
 import useValidationMode from "src/hooks/useValidationMode";
 import * as Yup from "yup";
 import { ObjectShape, OptionalObjectSchema, AnyObject, TypeOfShape } from "yup/lib/object";
@@ -286,10 +302,138 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
               <Section>
                 <AineistonEsikatselu ennakkoneuvottelu={true} />
               </Section>
+              <MuokkausLomakePainikkeet kategoriat={aineistoKategoriat} projekti={projekti} />
             </form>
           </FormProvider>
         )}
       </ProjektiPageLayoutContext.Consumer>
     </ProjektiPageLayout>
+  );
+}
+
+function transformToInput(formData: EnnakkoneuvotteluForm): TallennaEnnakkoNeuvotteluInput {
+  const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
+  const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
+  const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
+    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
+  );
+  return {
+    ...formData,
+    ennakkoNeuvottelu: {
+      ...formData.ennakkoNeuvottelu,
+      suunnitelma,
+      muistutukset,
+      muuAineistoVelhosta,
+    },
+  };
+}
+
+type PainikkeetProps = {
+  projekti: Projekti;
+  kategoriat: AineistoKategoriat;
+};
+
+function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetProps>) {
+  const { showSuccessMessage } = useSnackbars();
+  const {
+    formState: { isDirty, isSubmitting },
+    watch,
+  } = useFormContext<EnnakkoneuvotteluForm>();
+
+  const suunnitelma = watch("ennakkoNeuvottelu.suunnitelma");
+  const muuAineistoVelhosta = watch("ennakkoNeuvottelu.muuAineistoVelhosta");
+
+  const { mutate: reloadProjekti } = useProjekti();
+
+  const { withLoadingSpinner } = useLoadingSpinner();
+  const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
+  const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
+
+  const api = useApi();
+
+  const saveDraft: SubmitHandler<EnnakkoneuvotteluForm> = useCallback(
+    (formData) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const convertedFormData = transformToInput(formData);
+            //await api.tallennaHyvaksymisEsitys(convertedFormData);
+            //await checkAineistoValmiit({ retries: 5 });
+            //await reloadProjekti();
+            console.log(convertedFormData);
+            showSuccessMessage("Tallennus onnistui");
+          } catch (e) {}
+        })()
+      ),
+    [api, checkAineistoValmiit, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
+
+  useLeaveConfirm(!isSubmitting && isDirty);
+
+  const laheta: SubmitHandler<EnnakkoneuvotteluForm> = useCallback(
+    (formData) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const convertedFormData = transformToInput(formData);
+            //await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
+            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+            //reloadProjekti();
+            console.log(convertedFormData);
+          } catch (error) {}
+        })()
+      ),
+    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
+
+  return (
+    <Section noDivider>
+      <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+        <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
+          Tallenna Luonnos
+        </Button>
+        <Button
+          type="button"
+          disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
+          id="save_and_send_for_acceptance"
+          primary
+          onClick={handleSubmit(laheta)}
+        >
+          Lähetä
+        </Button>
+      </Stack>
+    </Section>
+  );
+}
+
+function lomakkeenAineistotEiKunnossa(
+  suunnitelma: { [key: string]: FormAineistoNew[] },
+  ennakkoneuvottelu: EnnakkoNeuvottelu | undefined | null,
+  muuAineistoVelhosta: AineistoInputNew[] | null | undefined,
+  aineistoKategoriat: AineistoKategoriat
+): boolean {
+  const lomakkeenSuunnitelmaAineistoFlat = Object.values(suunnitelma).flat();
+  const uusiSuunnitelmaAineisto = lomakkeenSuunnitelmaAineistoFlat?.some(
+    (aineisto) => !ennakkoneuvottelu?.suunnitelma?.some((a) => a.uuid === aineisto.uuid)
+  );
+  const uusiMuuAineistoVelhosta = !!muuAineistoVelhosta?.some(
+    (aineisto) => !ennakkoneuvottelu?.muuAineistoVelhosta?.some((a) => a.uuid === aineisto.uuid)
+  );
+  const suunnitelmaAineistojaTuomatta = !!ennakkoneuvottelu?.suunnitelma?.some((aineisto) => !aineisto.tuotu);
+  const suunnitelmaAineistoKategorisoimatta = lomakkeenSuunnitelmaAineistoFlat?.some(
+    (aineisto) =>
+      !aineisto.kategoriaId ||
+      aineisto.kategoriaId === kategorisoimattomatId ||
+      !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
+  );
+  const velhoAineistojaTuomatta = !!ennakkoneuvottelu?.muuAineistoVelhosta?.some((aineisto) => !aineisto.tuotu);
+  return (
+    uusiSuunnitelmaAineisto ||
+    uusiMuuAineistoVelhosta ||
+    suunnitelmaAineistojaTuomatta ||
+    velhoAineistojaTuomatta ||
+    suunnitelmaAineistoKategorisoimatta
   );
 }

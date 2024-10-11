@@ -57,6 +57,7 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
                 aineistoKategoriat={aineistoKategoriat}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                ennakkoneuvottelu={ennakkoneuvottelu}
               />
             </SectionContent>
           ),
