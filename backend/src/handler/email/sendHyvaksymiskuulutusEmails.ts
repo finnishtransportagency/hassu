@@ -11,8 +11,8 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./KuulutusHyvaksyntaEmailSender";
 import {
-  findHJatko1KuulutusLastApproved,
-  findHJatko2KuulutusLastApproved,
+  findJatko1KuulutusLastApproved,
+  findJatko2KuulutusLastApproved,
   findHyvaksymisKuulutusLastApproved,
 } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -81,12 +81,14 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
           "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
         ];
         const attachments = await Promise.all(
-          pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+          pdfKeys.map(
+            async (key) => (await this.getMandatoryProjektiFileAsAttachmentAndItsSize(pdft[key], projekti, `${key} ${kieli}`)).attachment
+          )
         );
         (await lahetettavatPDFt).push(...attachments);
 
         if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-          const kuulutusIlmoitusPDF = await this.getMandatoryProjektiFileAsAttachment(
+          const { attachment: kuulutusIlmoitusPDF } = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
             julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto,
             projekti,
             `kuulutusIlmoitusPDF ${kieli}`
@@ -96,16 +98,8 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot =
-      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
-          aineisto.tiedosto,
-          projekti,
-          `oid:${aineisto.dokumenttiOid}`
-        );
-        (await tiedostot).push(aineistoTiedosto);
-        return tiedostot;
-      }, Promise.resolve([]))) ?? [];
+
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
     const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
 
@@ -123,6 +117,30 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     );
 
     await this.updateProjektiJulkaisut(projekti, julkaisu);
+  }
+
+  private async getPaatostiedostotAsAttachments(julkaisu: HyvaksymisPaatosVaiheJulkaisu, projekti: DBProjekti): Promise<Mail.Attachment[]> {
+    const attachmentsAndSizes = await Promise.all(
+      (julkaisu.hyvaksymisPaatos ?? []).map(
+        async (aineisto) =>
+          await this.getMandatoryProjektiFileAsAttachmentAndItsSize(aineisto.tiedosto, projekti, `oid:${aineisto.dokumenttiOid}`)
+      )
+    );
+
+    // 30MB
+    const maximumCombinedSize = 30 * 1024 * 1024;
+
+    const combinedFileSize = attachmentsAndSizes.reduce((combinedFileSize, { size = 0 }) => (combinedFileSize += size), 0);
+
+    if (combinedFileSize > maximumCombinedSize) {
+      log.info("Päätöstiedostojen koko ylittää sallitun 30MB rajan. Jätetään päätöstiedostot pois liitteistä.", {
+        combinedFileSize,
+        tiedostot: attachmentsAndSizes.map(({ attachment }) => attachment.filename).filter((filename): filename is string => !!filename),
+      });
+      return [];
+    }
+
+    return attachmentsAndSizes.map(({ attachment }) => attachment);
   }
 
   protected async sendEmailToProjektipaallikko(
@@ -143,7 +161,9 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
             "hyvaksymisIlmoitusMuistuttajillePDFPath",
           ];
           const attachments = await Promise.all(
-            pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+            pdfKeys.map(
+              async (key) => (await this.getMandatoryProjektiFileAsAttachmentAndItsSize(pdft[key], projekti, `${key} ${kieli}`)).attachment
+            )
           );
           (await lahetettavatPDFt).push(...attachments);
           return lahetettavatPDFt;
@@ -154,11 +174,13 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
         const attachments = await Promise.all(
           pdfKeys.map(
             async (key) =>
-              await this.getMandatoryProjektiFileAsAttachment(
-                julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
-                projekti,
-                `${key} ${Kieli.POHJOISSAAME}`
-              )
+              (
+                await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
+                  julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
+                  projekti,
+                  `${key} ${Kieli.POHJOISSAAME}`
+                )
+              ).attachment
           )
         );
         emailToProjektiPaallikko.attachments.push(...attachments);
@@ -189,14 +211,16 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
             "hyvaksymisIlmoitusLausunnonantajillePDFPath",
           ];
           const attachments = await Promise.all(
-            pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+            pdfKeys.map(
+              async (key) => (await this.getMandatoryProjektiFileAsAttachmentAndItsSize(pdft[key], projekti, `${key} ${kieli}`)).attachment
+            )
           );
           (await lahetettavatPDFt).push(...attachments);
           return lahetettavatPDFt;
         }, Promise.resolve([]));
 
       if (projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME) {
-        const kuulutusPDF = await this.getMandatoryProjektiFileAsAttachment(
+        const { attachment: kuulutusPDF } = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
           julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto,
           projekti,
           `kuulutusPDF ${Kieli.POHJOISSAAME}`
@@ -225,7 +249,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
 
 class JatkoPaatos1HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
-    return findHJatko1KuulutusLastApproved(projekti);
+    return findJatko1KuulutusLastApproved(projekti);
   }
 
   protected getPaatosTyyppi() {
@@ -251,7 +275,7 @@ class JatkoPaatos1HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender
 
 class JatkoPaatos2HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender {
   public findLastApproved(projekti: DBProjekti) {
-    return findHJatko2KuulutusLastApproved(projekti);
+    return findJatko2KuulutusLastApproved(projekti);
   }
 
   protected getPaatosTyyppi() {

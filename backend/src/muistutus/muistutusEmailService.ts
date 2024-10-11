@@ -37,7 +37,7 @@ class MuistutusEmailService {
       emailOptions.attachments = await Promise.all(
         muistutus.liitteet.map(async (liite) => {
           log.info("haetaan muistutuksen liite: ", liite);
-          const liiteTiedosto = await fileService.getFileAsAttachment(projekti.oid, liite);
+          const { attachment: liiteTiedosto } = await fileService.getYllapitoFileAsAttachmentAndItsSize(projekti.oid, liite);
           if (!liiteTiedosto) {
             throw new Error("Liitetiedostoa ei saatu");
           }

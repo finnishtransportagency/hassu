@@ -7,6 +7,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { log } from "../../logger";
 import { DBProjekti } from "../../database/model";
 import { fileService } from "../../files/fileService";
+import Mail from "nodemailer/lib/mailer";
 
 export abstract class KuulutusHyvaksyntaEmailSender {
   public abstract sendEmails(oid: string): Promise<void>;
@@ -28,14 +29,18 @@ export abstract class KuulutusHyvaksyntaEmailSender {
     }
   }
 
-  protected async getMandatoryProjektiFileAsAttachment(filepath: string | undefined | null, projekti: DBProjekti, logInfo: string) {
+  protected async getMandatoryProjektiFileAsAttachmentAndItsSize(
+    filepath: string | undefined | null,
+    projekti: DBProjekti,
+    logInfo: string
+  ): Promise<{ attachment: Mail.Attachment; size: number | undefined }> {
     if (!filepath) {
       throw new Error(`emailAttachmentError: Polku tiedostolle '${logInfo}' on määrittelemättä.`);
     }
-    const pdf = await fileService.getFileAsAttachment(projekti.oid, filepath);
-    if (!pdf) {
+    const { attachment, size } = await fileService.getYllapitoFileAsAttachmentAndItsSize(projekti.oid, filepath);
+    if (!attachment) {
       throw new Error(`emailAttachmentError: Polusta '${filepath}' ei löytynyt tiedostoa.`);
     }
-    return pdf;
+    return { attachment, size };
   }
 }

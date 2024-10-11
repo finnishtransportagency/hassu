@@ -192,13 +192,13 @@ export function findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): Hyvaks
   }
 }
 
-export function findHJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos1VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
   }
 }
 
-export function findHJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos2VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
   }

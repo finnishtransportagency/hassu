@@ -59,7 +59,13 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
       hyvaksyttyEmail.attachments = await Promise.all(
         pdfKeys.map(
           async (key) =>
-            await this.getMandatoryProjektiFileAsAttachment(nahtavillakuulutus.nahtavillaoloPDFt?.SUOMI?.[key], projekti, `${key} SUOMI`)
+            (
+              await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
+                nahtavillakuulutus.nahtavillaoloPDFt?.SUOMI?.[key],
+                projekti,
+                `${key} SUOMI`
+              )
+            ).attachment
         )
       );
 
@@ -67,11 +73,13 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
         const attachments = await Promise.all(
           pdfKeys.map(
             async (key) =>
-              await this.getMandatoryProjektiFileAsAttachment(
-                nahtavillakuulutus.nahtavillaoloPDFt?.RUOTSI?.[key],
-                projekti,
-                `${key} RUOTSI`
-              )
+              (
+                await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
+                  nahtavillakuulutus.nahtavillaoloPDFt?.RUOTSI?.[key],
+                  projekti,
+                  `${key} RUOTSI`
+                )
+              ).attachment
           )
         );
         hyvaksyttyEmail.attachments.push(...attachments);
@@ -82,11 +90,13 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
         const attachments = await Promise.all(
           saamePdfKeys.map(
             async (key) =>
-              await this.getMandatoryProjektiFileAsAttachment(
-                nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
-                projekti,
-                `${key} POHJOISSAAME`
-              )
+              (
+                await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
+                  nahtavillakuulutus.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.[key]?.tiedosto,
+                  projekti,
+                  `${key} POHJOISSAAME`
+                )
+              ).attachment
           )
         );
         hyvaksyttyEmail.attachments.push(...attachments);

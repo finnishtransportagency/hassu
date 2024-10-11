@@ -40,6 +40,7 @@ import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjekti
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 import { log } from "../../logger";
+import Mail from "nodemailer/lib/mailer";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -263,7 +264,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       throw new Error("projekti.kielitiedot puuttuu!");
     }
     const kielitiedot: Kielitiedot = projekti.kielitiedot;
-    const attachments = [];
+    const attachments: Mail.Attachment[] = [];
     julkaisu.vuorovaikutusPDFt = {};
     assert(
       isKieliTranslatable(kielitiedot.ensisijainenKieli),
@@ -281,7 +282,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     const pdfSaamePath = julkaisu.vuorovaikutusSaamePDFt?.[Kieli.POHJOISSAAME]?.tiedosto;
     if (pdfSaamePath) {
-      const saamePDF = await fileService.getFileAsAttachment(projekti.oid, pdfSaamePath);
+      const { attachment: saamePDF } = await fileService.getYllapitoFileAsAttachmentAndItsSize(projekti.oid, pdfSaamePath);
       if (!saamePDF) {
         throw new Error("Vuorovaikutuskutsu saame pdf:n saaminen epäonnistui");
       }

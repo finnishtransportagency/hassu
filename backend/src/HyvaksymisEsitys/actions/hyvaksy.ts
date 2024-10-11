@@ -1,5 +1,11 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import {
+  DBProjekti,
+  ILadattuTiedosto,
+  JulkaistuHyvaksymisEsitys,
+  MuokattavaHyvaksymisEsitys,
+  SahkopostiVastaanottaja,
+} from "../../database/model";
 import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
@@ -30,8 +36,7 @@ import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { EmailOptions } from "../../email/model/emailOptions";
 import { emailOptionsToEml, isEmailSent } from "../../email/emailUtil";
 import putFile from "../s3Calls/putFile";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { AsiakirjaTyyppi, ToimenpideTyyppi } from "@hassu/asianhallinta";
+import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { uuid } from "hassu-common/util/uuid";
 import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
@@ -41,59 +46,86 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio } = input;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
-  assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
+  const asiatunnus = getAsiatunnus(projektiInDB?.velho);
+  assertIsDefined(projektiInDB?.muokattavaHyvaksymisEsitys?.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
+  assertIsDefined(asiatunnus, "Joko Väylä- tai ELY-asiatunnus on olemassa");
+
   await validate(projektiInDB);
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi muokattavan hyväksymisesityksen tiedostot julkaistun hyväksymisesityksen tiedostojen sijaintiin
-  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys, "muokattavan hyväksymisesityksen olemassaolo on validoitu");
   await copyMuokattavaHyvaksymisEsitysFilesToJulkaistu(oid, projektiInDB.muokattavaHyvaksymisEsitys);
 
   // Lähetä email vastaanottajille
-  const emailOptions = createHyvaksymisesitysViranomaisilleEmail(projektiInDB);
-  let messageInfo: SMTPTransport.SentMessageInfo | undefined;
-  let s3PathForEmail: string | undefined;
-  if (emailOptions.to) {
-    // Laita hyväksymisesitystiedostot liiteeksi sähköpostiin
-    const promises = (projektiInDB.muokattavaHyvaksymisEsitys.hyvaksymisEsitys ?? []).map((he) =>
-      fileService.getFileAsAttachment(projektiInDB.oid, `/hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(he.nimi)}`)
-    );
-    const attachments = await Promise.all(promises);
-    if (attachments.find((a) => !a)) {
-      log.error("Liitteiden lisääminen ilmoitukseen epäonnistui");
-    }
-    // Tallenna s.posti S3:een
-    s3PathForEmail = await saveEmailAsFile(oid, emailOptions);
-    messageInfo = await emailClient.sendTurvapostiEmail({ ...emailOptions, attachments: attachments as Mail.Attachment[] });
+  const { vastaanottajat, asianhallintaEventId } = await sendEmailsToHyvaksymisesitysRecipients(projektiInDB, asiatunnus);
+
+  const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
+    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "vastaanottajat"]),
+    poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
+    hyvaksymisPaiva: nyt().format(),
+    hyvaksyja: nykyinenKayttaja.uid,
+    vastaanottajat,
+    asianhallintaEventId,
+  };
+  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+
+  // Lähetä email hyväksymisesityksen laatijalle
+  const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
+  if (emailOptions2.to) {
+    await emailClient.sendEmail(emailOptions2);
   } else {
-    log.error("Ilmoitukselle ei loytynyt vastaanottajien sahkopostiosoitetta");
+    log.error("Ilmoitukselle ei löytynyt laatijan sähköpostiosoitetta");
   }
 
-  const asiatunnus = getAsiatunnus(projektiInDB.velho);
-  assertIsDefined(asiatunnus, "Joko väylä- tai ELY-asiatunnus on olemassa");
-
-  let asianhallintaEventId: string | undefined;
-  if (s3PathForEmail) {
-    const toimenpideTyyppi: ToimenpideTyyppi = "ENSIMMAINEN_VERSIO";
-    // Laita synkronointi-event ashaan ja tietokantaan
-    asianhallintaEventId = uuid.v4();
-    await asianhallintaService.saveAndEnqueueSynchronization(oid, {
-      asiatunnus,
-      toimenpideTyyppi,
-      asianhallintaEventId,
-      vaylaAsianhallinta: isVaylaAsianhallinta(projektiInDB),
-      dokumentit: [
-        {
-          s3Path: s3PathForEmail,
-        },
-      ],
-    });
+  // Lähetä email projarille ja varahenkilöille
+  const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
+  if (emailOptions3.to) {
+    await emailClient.sendEmail(emailOptions3);
+  } else {
+    log.error("Ilmoitukselle ei löytynyt projektipäällikön ja varahenkilöiden sähköpostiosoitetta");
   }
 
+  return oid;
+}
+
+async function sendEmailsToHyvaksymisesitysRecipients(
+  projektiInDB: DBProjekti,
+  asiatunnus: string
+): Promise<{ vastaanottajat: SahkopostiVastaanottaja[] | undefined; asianhallintaEventId: string | undefined }> {
+  const recipients = projektiInDB.muokattavaHyvaksymisEsitys?.vastaanottajat;
+  if (!recipients?.length) {
+    log.error("Ilmoitukselle ei löytynyt vastaanottajien sähköpostiosoitteita");
+    return { vastaanottajat: undefined, asianhallintaEventId: undefined };
+  }
+  const hyvaksymisesitysAttachments = await getHyvaksymisesitysAineistotAsAttachments(
+    projektiInDB.oid,
+    projektiInDB?.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys
+  );
+  const emailOptions = createHyvaksymisesitysViranomaisilleEmail(
+    projektiInDB,
+    recipients?.map((vo) => vo.sahkoposti),
+    hyvaksymisesitysAttachments
+  );
+
+  // Tallenna s.posti S3:een ilman liitteitä
+  const s3PathForEmail = await saveEmailAsFile(projektiInDB.oid, emailOptions);
+  const messageInfo = await emailClient.sendTurvapostiEmail({ ...emailOptions, attachments: hyvaksymisesitysAttachments });
+  // Laita synkronointi-event ashaan
+  const asianhallintaEventId = uuid.v4();
+  await asianhallintaService.saveAndEnqueueSynchronization(projektiInDB.oid, {
+    asiatunnus,
+    toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
+    asianhallintaEventId,
+    vaylaAsianhallinta: isVaylaAsianhallinta(projektiInDB),
+    dokumentit: [
+      {
+        s3Path: s3PathForEmail,
+      },
+    ],
+  });
   // Kopioi muokattavaHyvaksymisEsitys julkaistuHyvaksymisEsitys-kenttään. Tila ei tule mukaan. Julkaistupäivä ja hyväksyjätieto tulee.
   // Vastaanottajiin lisätään lähetystieto.
-
-  const vastaanottajat = projektiInDB.muokattavaHyvaksymisEsitys.vastaanottajat?.map((vo) => {
+  const vastaanottajat: SahkopostiVastaanottaja[] = recipients?.map((vo) => {
     if (isEmailSent(vo.sahkoposti, messageInfo)) {
       return {
         ...vo,
@@ -110,35 +142,42 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
       };
     }
   });
+  return { vastaanottajat, asianhallintaEventId };
+}
 
-  assertIsDefined(projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
-  const julkaistuHyvaksymisEsitys: JulkaistuHyvaksymisEsitys = {
-    ...omit(projektiInDB.muokattavaHyvaksymisEsitys, ["tila", "palautusSyy", "vastaanottajat"]),
-    poistumisPaiva: projektiInDB.muokattavaHyvaksymisEsitys.poistumisPaiva,
-    hyvaksymisPaiva: nyt().format(),
-    hyvaksyja: nykyinenKayttaja.uid,
-    vastaanottajat,
-    asianhallintaEventId,
-  };
-  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+async function getHyvaksymisesitysAineistotAsAttachments(
+  oid: string,
+  tiedostot: ILadattuTiedosto[] | null | undefined
+): Promise<Mail.Attachment[]> {
+  // 30MB
+  const maxAllowedCombinedSize = 30 * 1024 * 1024;
 
-  // Lähetä email hyväksymisesityksen laatijalle
-  const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
-  if (emailOptions2.to) {
-    await emailClient.sendEmail(emailOptions2);
-  } else {
-    log.error("Ilmoitukselle ei loytynyt laatijan sahkopostiosoitetta");
+  const attachmentsAndSizes = await Promise.all(
+    (tiedostot ?? []).map(async (tiedosto) => {
+      const key = `/hyvaksymisesitys/hyvaksymisEsitys/${adaptFileName(tiedosto.nimi)}`;
+      const { attachment, size } = await fileService.getYllapitoFileAsAttachmentAndItsSize(oid, key);
+      return { key, attachment, size };
+    })
+  );
+
+  const combinedFileSize = attachmentsAndSizes.reduce((totalSize, { size = 0 }) => (totalSize += size), 0);
+
+  if (combinedFileSize > maxAllowedCombinedSize) {
+    log.error("Hyväksymisesityksen liitetiedostoja ei voida lisätä lomakkeelle. Liitetiedostojen maksikoko ylittyi", {
+      combinedFileSize,
+      maxAllowedCombinedSize,
+    });
+    return [];
   }
 
-  // Lähetä email projarille ja varahenkilöille
-  const emailOptions3 = await createHyvaksymisesitysHyvaksyttyPpEmail(projektiInDB);
-  if (emailOptions3.to) {
-    await emailClient.sendEmail(emailOptions3);
-  } else {
-    log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
-  }
-
-  return oid;
+  return attachmentsAndSizes.reduce<Mail.Attachment[]>((attachments, { attachment, key }) => {
+    if (!attachment) {
+      log.error("Liitteen lisääminen ilmoitukseen epäonnistui", { key });
+    } else {
+      attachments.push(attachment);
+    }
+    return attachments;
+  }, []);
 }
 
 async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.NykyinenKayttaja> {
