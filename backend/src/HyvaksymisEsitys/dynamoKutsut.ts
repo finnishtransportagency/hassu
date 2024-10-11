@@ -1,6 +1,6 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../config";
-import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { DBEnnakkoNeuvottelu, DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
 import { ProjektiDatabase } from "../database/projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
@@ -284,6 +284,38 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       ExpressionAttributeValues: {
         ":versio": nextVersion,
         ":muokattavaHyvaksymisEsitys": { ...muokattavaHyvaksymisEsitys, muokkaaja },
+        ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+        ":versioFromInput": versio,
+      },
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
+    });
+
+    await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
+    return nextVersion;
+  }
+
+  async tallennaEnnakkoNeuvottelu(input: {
+    oid: string;
+    versio: number;
+    ennakkoNeuvottelu: DBEnnakkoNeuvottelu;
+    muokkaaja: string;
+  }): Promise<number> {
+    const { oid, versio, ennakkoNeuvottelu, muokkaaja } = input;
+    const nextVersion = versio + 1;
+    const params = new UpdateCommand({
+      TableName: config.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET " + "#versio = :versio, " + "#ennakkoNeuvottelu = :ennakkoNeuvottelu, " + "#paivitetty = :paivitetty",
+      ExpressionAttributeNames: {
+        "#versio": "versio",
+        "#ennakkoNeuvottelu": "ennakkoNeuvottelu",
+        "#paivitetty": "paivitetty",
+      },
+      ExpressionAttributeValues: {
+        ":versio": nextVersion,
+        ":ennakkoNeuvottelu": { ...ennakkoNeuvottelu, muokkaaja },
         ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
         ":versioFromInput": versio,
       },

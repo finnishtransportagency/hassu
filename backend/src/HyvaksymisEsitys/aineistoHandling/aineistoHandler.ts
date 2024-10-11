@@ -12,11 +12,12 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { SimultaneousUpdateError } from "hassu-common/error";
-import { DBProjekti } from "../../database/model";
+import { DBProjekti, IHyvaksymisEsitys } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
 import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
 import { assertIsDefined } from "../../util/assertions";
+import { ENNAKKONEUVOTTELU_PATH } from "../../ennakkoneuvottelu/tallenna";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -31,11 +32,15 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         const { oid, operation } = sqsEvent;
         switch (operation) {
           case HyvaksymisEsitysAineistoOperation.TUO_HYV_ES_TIEDOSTOT: {
-            await tuoAineistot(oid);
+            await tuoAineistot(oid, false);
             break;
           }
           case HyvaksymisEsitysAineistoOperation.ZIP_HYV_ES_AINEISTOT: {
             await zipHyvEsAineistot(oid);
+            break;
+          }
+          case HyvaksymisEsitysAineistoOperation.TUO_ENNAKKONEUVOTTELU_TIEDOSTOT: {
+            await tuoAineistot(oid, true);
             break;
           }
           default: {
@@ -89,14 +94,14 @@ export async function zipHyvEsAineistot(oid: string) {
   await setAineistoZip(oid);
 }
 
-export async function tuoAineistot(oid: string) {
-  const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid);
-  const { aineistoHandledAt, versio, lockedUntil } = projekti;
+export async function tuoAineistot(oid: string, ennakko: boolean) {
+  const projekti: HyvaksymisEsityksenAineistotiedot = await haeHyvaksymisEsityksenAineistotiedot(oid, ennakko);
+  const { aineistoHandledAt, versio, lockedUntil, ennakkoNeuvottelu, muokattavaHyvaksymisEsitys } = projekti;
   const timestampNow = nyt().unix();
   if (lockedUntil && lockedUntil > timestampNow) {
     throw new SimultaneousUpdateError();
   }
-  const aineistot = getHyvaksymisEsityksenAineistot(projekti.muokattavaHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot((ennakkoNeuvottelu as IHyvaksymisEsitys) ?? muokattavaHyvaksymisEsitys);
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
@@ -110,7 +115,9 @@ export async function tuoAineistot(oid: string) {
     .map((aineisto) => async () => {
       const { contents } = await velho.getAineisto(aineisto.dokumenttiOid);
       await putFile({
-        targetPath: `yllapito/tiedostot/projekti/${oid}/muokattava_hyvaksymisesitys/${aineisto.avain}/${adaptFileName(aineisto.nimi)}`,
+        targetPath: `yllapito/tiedostot/projekti/${oid}/${ennakko ? ENNAKKONEUVOTTELU_PATH : "muokattava_hyvaksymisesitys"}/${
+          aineisto.avain
+        }/${adaptFileName(aineisto.nimi)}`,
         filename: aineisto.nimi,
         contents,
       });
@@ -122,15 +129,17 @@ export async function tuoAineistot(oid: string) {
 
 type HyvaksymisEsityksenAineistotiedot = Pick<
   DBProjekti,
-  "oid" | "versio" | "aineistoHandledAt" | "muokattavaHyvaksymisEsitys" | "lockedUntil"
+  "oid" | "versio" | "aineistoHandledAt" | "muokattavaHyvaksymisEsitys" | "lockedUntil" | "ennakkoNeuvottelu"
 >;
 
-async function haeHyvaksymisEsityksenAineistotiedot(oid: string): Promise<HyvaksymisEsityksenAineistotiedot> {
+async function haeHyvaksymisEsityksenAineistotiedot(oid: string, ennakkoneuvottelu: boolean): Promise<HyvaksymisEsityksenAineistotiedot> {
   const params = new GetCommand({
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
-    ProjectionExpression: "oid, versio, muokattavaHyvaksymisEsitys, aineistoHandledAt, lockedUntil",
+    ProjectionExpression: `oid, versio, ${
+      ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"
+    }, aineistoHandledAt, lockedUntil`,
   });
 
   try {

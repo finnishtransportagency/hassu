@@ -29,20 +29,11 @@ import {
   EnnakkoNeuvottelu,
   EnnakkoNeuvotteluInput,
   Projekti,
-  ProjektiTyyppi,
   TallennaEnnakkoNeuvotteluInput,
 } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
-import { ProjektiLisatiedolla, ValidationModeState } from "common/ProjektiValidationContext";
-import {
-  getAineistotNewSchema,
-  getLadatutTiedostotNewSchema,
-  isTestTypeBackend,
-  isValidationModePublish,
-  TestType,
-} from "common/schema/common";
-import { notInPastCheck, paivamaara } from "common/schema/paivamaaraSchema";
-import { mapValues } from "lodash";
+import { TestType } from "common/schema/common";
+import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
 import { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import useApi from "src/hooks/useApi";
@@ -53,8 +44,6 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useValidationMode from "src/hooks/useValidationMode";
-import * as Yup from "yup";
-import { ObjectShape, OptionalObjectSchema, AnyObject, TypeOfShape } from "yup/lib/object";
 
 export type EnnakkoneuvotteluForm = {
   oid: string;
@@ -65,88 +54,14 @@ export type EnnakkoneuvotteluForm = {
   };
 };
 
-export type EnnakkoneuvotteluValidationContext = {
-  validationMode: ValidationModeState;
-  testType: TestType;
-};
-
-const getKunnallinenLadattuTiedostoSchema = () =>
-  Yup.object().shape({
-    tiedosto: Yup.string().nullable(),
-    nimi: Yup.string().required(),
-    uuid: Yup.string().required(),
-    kunta: Yup.number().integer().required(),
-  });
-
-const getKunnallinenLadatutTiedostotSchema = () => Yup.array().of(getKunnallinenLadattuTiedostoSchema()).nullable();
-
-export const ennakkoNeuvotteluSchema = Yup.object().shape({
-  oid: Yup.string().required(),
-  versio: Yup.number().integer().required(),
-  ennakkoNeuvottelu: Yup.object()
-    .shape({
-      poistumisPaiva: paivamaara()
-        .defined()
-        .when("$validationMode", {
-          is: isValidationModePublish,
-          then: (schema) =>
-            schema.required("Päivämäärä on pakollinen").test("not-in-past", "Päivämäärää ei voi asettaa menneisyyteen", notInPastCheck),
-        }),
-      lisatiedot: Yup.string().defined(),
-      kuulutuksetJaKutsu: getLadatutTiedostotNewSchema().defined(),
-      lausunnot: getLadatutTiedostotNewSchema().defined(),
-      maanomistajaluettelo: getLadatutTiedostotNewSchema().defined(),
-      muuAineistoKoneelta: getLadatutTiedostotNewSchema().defined(),
-      muuAineistoVelhosta: getAineistotNewSchema(false).defined(),
-      vastaanottajat: Yup.array()
-        .of(
-          Yup.object()
-            .shape({
-              sahkoposti: Yup.string()
-                .defined("Sähköposti on annettava")
-                .when("$validationMode", {
-                  is: isValidationModePublish,
-                  then: (schema) => schema.email("Virheellinen sähköpostiosoite").required("Sähköposti on pakollinen"),
-                }),
-            })
-            .required()
-        )
-        .min(1)
-        .defined(),
-    })
-    .when(
-      ["$testType", "$projekti"],
-      (
-        [testType, projekti]: [testType: TestType, projekti: ProjektiLisatiedolla],
-        schema: OptionalObjectSchema<ObjectShape, AnyObject, TypeOfShape<ObjectShape>>
-      ) =>
-        testType === TestType.FRONTEND
-          ? Yup.object().shape({
-              muistutukset: Yup.lazy((obj) => Yup.object(mapValues(obj, () => getKunnallinenLadatutTiedostotSchema().defined()))),
-              suunnitelma: suunnitelmaFrontendSchema(projekti.velho.tyyppi),
-            })
-          : schema
-    )
-    .when("$testType", {
-      is: isTestTypeBackend,
-      then: Yup.object().shape({
-        muistutukset: getKunnallinenLadatutTiedostotSchema().defined(),
-        suunnitelma: getAineistotNewSchema(true).defined(),
-      }),
-    }),
-});
-
-function suunnitelmaFrontendSchema(projektiTyyppi: ProjektiTyyppi | null | undefined) {
-  const kategorioittenSchema = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true })
-    .listKategoriaIds()
-    .reduce<ObjectShape>((obj, id) => {
-      obj[id] = getAineistotNewSchema(true).defined();
-      return obj;
-    }, {});
-  return Yup.object().shape(kategorioittenSchema);
-}
-
-export function getDefaultValuesForForm(projekti: Projekti): EnnakkoneuvotteluForm {
+export function getDefaultValuesForForm(projekti: Projekti | null | undefined): EnnakkoneuvotteluForm {
+  if (!projekti) {
+    return {
+      ennakkoNeuvottelu: { muistutukset: {}, suunnitelma: {} },
+      oid: "",
+      versio: 1,
+    };
+  }
   const { oid, versio, ennakkoNeuvottelu, velho } = projekti;
   const {
     poistumisPaiva,
@@ -189,28 +104,9 @@ export function getDefaultValuesForForm(projekti: Projekti): EnnakkoneuvotteluFo
 }
 
 export default function EnnakkoNeuvotteluLomake(): ReactElement {
-  const ennakkoNeuvottelu: EnnakkoNeuvottelu = {
-    __typename: "EnnakkoNeuvottelu",
-    tuodutTiedostot: { __typename: "HyvaksymisEsityksenTuodutTiedostot" },
-    hash: "",
-    suunnitelma: [],
-  };
-  const projekti: Projekti = {
-    __typename: "Projekti",
-    asianhallinta: { __typename: "Asianhallinta", aktivoitavissa: true, inaktiivinen: false },
-    oid: "1.2.3",
-    velho: {
-      __typename: "Velho",
-      tyyppi: ProjektiTyyppi.TIE,
-      kunnat: [91],
-    },
-    versio: 1,
-    ennakkoNeuvottelu,
-  };
-  const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), []);
-
+  const { data: projekti } = useProjekti();
+  const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), [projekti]);
   const validationMode = useValidationMode();
-
   const formOptions: UseFormProps<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext> = {
     resolver: yupResolver(ennakkoNeuvotteluSchema, { abortEarly: false, recursive: true }),
     defaultValues,
@@ -218,27 +114,22 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
     reValidateMode: "onChange",
     context: { validationMode, testType: TestType.FRONTEND },
   };
-
   const useFormReturn = useForm<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext>(formOptions);
-
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
-
   const aineistoKategoriat = useMemo(
     () =>
       getAineistoKategoriat({
-        projektiTyyppi: projekti.velho.tyyppi,
+        projektiTyyppi: projekti?.velho.tyyppi,
         showKategorisoimattomat: true,
         hideDeprecated: true,
       }),
-    [projekti.velho.tyyppi]
+    [projekti?.velho.tyyppi]
   );
-
-  if (!ennakkoNeuvottelu) {
+  if (!projekti) {
     return <></>;
   }
-
   return (
     <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
       <ProjektiPageLayoutContext.Consumer>
@@ -277,24 +168,28 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
                 <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
-                <Muistutukset kunnat={projekti.velho.kunnat} tiedostot={ennakkoNeuvottelu.muistutukset} ennakkoneuvottelu={true} />
-                <Lausunnot tiedostot={ennakkoNeuvottelu.lausunnot} ennakkoneuvottelu={true} />
+                <Muistutukset
+                  kunnat={projekti.velho.kunnat}
+                  tiedostot={projekti.ennakkoNeuvottelu?.muistutukset}
+                  ennakkoneuvottelu={true}
+                />
+                <Lausunnot tiedostot={projekti.ennakkoNeuvottelu?.lausunnot} ennakkoneuvottelu={true} />
                 <Maanomistajaluettelo
-                  tuodut={ennakkoNeuvottelu.tuodutTiedostot.maanomistajaluettelo}
-                  tiedostot={ennakkoNeuvottelu.maanomistajaluettelo}
+                  tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.maanomistajaluettelo}
+                  tiedostot={projekti.ennakkoNeuvottelu?.maanomistajaluettelo}
                   ennakkoneuvottelu={true}
                 />
                 <KuulutuksetJaKutsu
-                  tiedostot={ennakkoNeuvottelu.kuulutuksetJaKutsu}
-                  tuodut={ennakkoNeuvottelu.tuodutTiedostot.kuulutuksetJaKutsu}
+                  tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
+                  tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
                   ennakkoneuvottelu={true}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>
                   Voit halutessasi liittää ennakkoneuvotteluun muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
                 </p>
-                <MuuAineistoVelhosta aineisto={ennakkoNeuvottelu.muuAineistoVelhosta} ennakkoneuvottelu={true} />
-                <MuuAineistoKoneelta tiedostot={ennakkoNeuvottelu.muuAineistoKoneelta} ennakkoneuvottelu={true} />
+                <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} />
+                <MuuAineistoKoneelta tiedostot={projekti.ennakkoNeuvottelu?.muuAineistoKoneelta} ennakkoneuvottelu={true} />
               </Section>
               <Section>
                 <Vastaanottajat ennakkoneuvottelu={true} />
@@ -311,7 +206,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   );
 }
 
-function transformToInput(formData: EnnakkoneuvotteluForm): TallennaEnnakkoNeuvotteluInput {
+function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
   const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
   const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
     .flat()
@@ -321,6 +216,7 @@ function transformToInput(formData: EnnakkoneuvotteluForm): TallennaEnnakkoNeuvo
   );
   return {
     ...formData,
+    laheta,
     ennakkoNeuvottelu: {
       ...formData.ennakkoNeuvottelu,
       suunnitelma,
@@ -358,11 +254,11 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
       withLoadingSpinner(
         (async () => {
           try {
-            const convertedFormData = transformToInput(formData);
-            //await api.tallennaHyvaksymisEsitys(convertedFormData);
-            //await checkAineistoValmiit({ retries: 5 });
-            //await reloadProjekti();
+            const convertedFormData = transformToInput(formData, false);
             console.log(convertedFormData);
+            await api.tallennaEnnakkoNeuvottelu(convertedFormData);
+            await checkAineistoValmiit({ retries: 5 });
+            await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
           } catch (e) {}
         })()
@@ -377,11 +273,11 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
       withLoadingSpinner(
         (async () => {
           try {
-            const convertedFormData = transformToInput(formData);
-            //await api.tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(convertedFormData);
-            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
-            //reloadProjekti();
+            const convertedFormData = transformToInput(formData, true);
             console.log(convertedFormData);
+            await api.tallennaEnnakkoNeuvottelu(convertedFormData);
+            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+            reloadProjekti();
           } catch (error) {}
         })()
       ),

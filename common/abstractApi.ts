@@ -96,6 +96,8 @@ import {
   KayttoOikeusTiedot,
   HyvaksymisEsityksenAineistot,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
+  TallennaEnnakkoNeuvotteluInput,
+  TallennaEnnakkoNeuvotteluMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -517,6 +519,12 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.haeHyvaksymisEsityksenTiedot, {
       oid,
     } as HaeHyvaksymisEsityksenTiedotQueryVariables);
+  }
+
+  async tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaEnnakkoNeuvottelu, {
+      input,
+    } as TallennaEnnakkoNeuvotteluMutationVariables);
   }
 
   async arkistoiProjekti(oid: string): Promise<Projekti> {

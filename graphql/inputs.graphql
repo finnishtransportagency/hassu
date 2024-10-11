@@ -290,6 +290,7 @@ input EnnakkoNeuvotteluInput {
 input TallennaEnnakkoNeuvotteluInput {
   oid: String!
   versio: Int!
+  laheta: Boolean!
   ennakkoNeuvottelu: EnnakkoNeuvotteluInput!
 }
 
