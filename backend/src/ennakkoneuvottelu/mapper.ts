@@ -78,7 +78,6 @@ export async function adaptEnnakkoNeuvotteluToAPI(dbProjekti: DBProjekti): Promi
       path: joinPath(path, "maanomistajaluettelo"),
     }),
     vastaanottajat: adaptSahkopostiVastaanottajatToAPI(ennakkoNeuvottelu.vastaanottajat),
-    hash: "",
     tuodutTiedostot: {
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),

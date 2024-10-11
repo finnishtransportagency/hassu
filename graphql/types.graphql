@@ -483,10 +483,7 @@ type EnnakkoNeuvottelu {
   muuAineistoKoneelta: [LadattuTiedostoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
-  aineistopaketti: String
-  hash: String!
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
-  kayttoOikeudet: [ProjektiKayttaja!]
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

@@ -24,13 +24,7 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Stack } from "@mui/system";
-import {
-  AineistoInputNew,
-  EnnakkoNeuvottelu,
-  EnnakkoNeuvotteluInput,
-  Projekti,
-  TallennaEnnakkoNeuvotteluInput,
-} from "@services/api";
+import { AineistoInputNew, EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, TallennaEnnakkoNeuvotteluInput } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
