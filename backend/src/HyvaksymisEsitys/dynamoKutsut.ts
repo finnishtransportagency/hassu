@@ -1,6 +1,12 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../config";
-import { DBEnnakkoNeuvottelu, DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
+import {
+  DBEnnakkoNeuvottelu,
+  DBEnnakkoNeuvotteluJulkaisu,
+  DBProjekti,
+  JulkaistuHyvaksymisEsitys,
+  MuokattavaHyvaksymisEsitys,
+} from "../database/model";
 import { ProjektiDatabase } from "../database/projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
@@ -298,7 +304,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
     oid: string;
     versio: number;
     ennakkoNeuvottelu: DBEnnakkoNeuvottelu;
-    ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvottelu | undefined;
+    ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined;
     muokkaaja: string;
   }): Promise<number> {
     const { oid, versio, ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu, muokkaaja } = input;

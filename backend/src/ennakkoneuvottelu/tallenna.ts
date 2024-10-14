@@ -7,7 +7,7 @@ import projektiDatabase from "../HyvaksymisEsitys/dynamoKutsut";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
-import { DBProjekti, IHyvaksymisEsitys } from "../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys } from "../database/model";
 import { validateVaiheOnAktiivinen } from "../HyvaksymisEsitys/validateVaiheOnAktiivinen";
 import { SqsClient } from "../HyvaksymisEsitys/aineistoHandling/sqsClient";
 import { persistFile } from "../HyvaksymisEsitys/s3Calls/persistFile";
@@ -20,6 +20,8 @@ import {
 import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../HyvaksymisEsitys/getAineistot";
 import { uusiaAineistoja } from "../HyvaksymisEsitys/actions/tallenna";
 import { HyvaksymisEsitysAineistoOperation } from "../HyvaksymisEsitys/aineistoHandling/sqsEvent";
+import { nyt } from "../util/dateUtil";
+import { cloneDeep } from "lodash";
 
 export const ENNAKKONEUVOTTELU_PATH = "ennakkoneuvottelu";
 
@@ -68,7 +70,9 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     }
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
-    const newEnnakkoNeuvotteluJulkaisu = laheta ? newEnnakkoNeuvottelu : undefined;
+    const newEnnakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined = laheta
+      ? { ...cloneDeep(newEnnakkoNeuvottelu), lahetetty: nyt().toISOString() }
+      : undefined;
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
       versio,

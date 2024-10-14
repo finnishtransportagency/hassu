@@ -500,6 +500,7 @@ type EnnakkoNeuvotteluJulkaisu {
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
   hash: String!
+  lahetetty: String!
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {

@@ -1,5 +1,6 @@
 import Button from "@components/button/Button";
-import { H3, H4 } from "@components/Headings";
+import ExtLink from "@components/ExtLink";
+import { H2, H3, H4 } from "@components/Headings";
 import {
   adaptAineistotNewToInput,
   adaptKunnallinenLadattuTiedostoToInput,
@@ -7,6 +8,7 @@ import {
   adaptSuunnitelmaAineistot,
   FormMuistutukset,
 } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
+import { IlmoituksenVastaanottajatTable } from "@components/HyvaksymisEsitys/HyvaksymisEsitysLukutila";
 import AineistonEsikatselu from "@components/HyvaksymisEsitys/LomakeComponents/AineistonEsikatselu";
 import KuulutuksetJaKutsu from "@components/HyvaksymisEsitys/LomakeComponents/KuulutuksetJaKutsu";
 import Lausunnot from "@components/HyvaksymisEsitys/LomakeComponents/Lausunnot";
@@ -19,6 +21,8 @@ import Suunnitelma from "@components/HyvaksymisEsitys/LomakeComponents/Suunnitel
 import Vastaanottajat from "@components/HyvaksymisEsitys/LomakeComponents/Vastaanottajat";
 import ViestiVastaanottajalle from "@components/HyvaksymisEsitys/LomakeComponents/ViestiVastaanottajalle";
 import Section from "@components/layout/Section";
+import SectionContent from "@components/layout/SectionContent";
+import Notification, { NotificationType } from "@components/notification/Notification";
 import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
@@ -28,6 +32,7 @@ import { AineistoInputNew, EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, 
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
+import { formatDate } from "common/util/dateUtils";
 import { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import useApi from "src/hooks/useApi";
@@ -124,8 +129,17 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   if (!projekti) {
     return <></>;
   }
+  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
   return (
     <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
+      {projekti.ennakkoNeuvotteluJulkaisu && (
+        <Section noDivider>
+          <Notification type={NotificationType.INFO_GREEN}>
+            Ennakkoneuvottelu on lähetetty vastaanottajalle {formatDate(projekti.ennakkoNeuvotteluJulkaisu.lahetetty)}:{" "}
+            <ExtLink href={url}>{url}</ExtLink>
+          </Notification>
+        </Section>
+      )}
       <ProjektiPageLayoutContext.Consumer>
         {({ ohjeetOnClose, ohjeetOpen }) => (
           <FormProvider {...useFormReturn}>
@@ -188,6 +202,16 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
               <Section>
                 <Vastaanottajat ennakkoneuvottelu={true} />
               </Section>
+              {projekti.ennakkoNeuvotteluJulkaisu && (
+                <Section>
+                  <H2>Ennakkoneuvottelun vastaanottajat</H2>
+                  {projekti.ennakkoNeuvotteluJulkaisu.vastaanottajat && (
+                    <SectionContent>
+                      <IlmoituksenVastaanottajatTable vastaanottajat={projekti.ennakkoNeuvotteluJulkaisu.vastaanottajat} />
+                    </SectionContent>
+                  )}
+                </Section>
+              )}
               <Section>
                 <AineistonEsikatselu ennakkoneuvottelu={true} />
               </Section>
@@ -200,7 +224,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   );
 }
 
-function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
+export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
   const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
   const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
     .flat()
@@ -270,7 +294,7 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
             const convertedFormData = transformToInput(formData, true);
             console.log(convertedFormData);
             await api.tallennaEnnakkoNeuvottelu(convertedFormData);
-            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+            showSuccessMessage("Tallennus ja lähettäminen onnistui");
             reloadProjekti();
           } catch (error) {}
         })()
@@ -291,7 +315,7 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
           primary
           onClick={handleSubmit(laheta)}
         >
-          Lähetä
+          {projekti.ennakkoNeuvotteluJulkaisu ? "Lähetä päivitys" : "Lähetä"}
         </Button>
       </Stack>
     </Section>

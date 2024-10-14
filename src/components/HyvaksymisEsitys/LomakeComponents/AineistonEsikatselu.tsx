@@ -5,10 +5,11 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { H3 } from "@components/Headings";
 import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
+import { EnnakkoneuvotteluForm, transformToInput } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
-export default function AineistonEsikatselu({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps) {
+export default function AineistonEsikatselu({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>) {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();
-  const { watch } = useFormContext<HyvaksymisEsitysForm>();
+  const { watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const formData = watch();
 
   return (
@@ -26,7 +27,7 @@ export default function AineistonEsikatselu({ ennakkoneuvottelu }: HyvaksymisEsi
         id="esikatsele-hyvaksymisesitys-link"
         target="_blank"
         rel="noreferrer"
-        href={`/yllapito/projekti/${formData.oid}/esikatsele-hyvaksymisesitys`}
+        href={`/yllapito/projekti/${formData.oid}/esikatsele-${ennakkoneuvottelu ? "ennakkoneuvottelu" : "hyvaksymisesitys"}`}
         ref={(e) => {
           if (hiddenLinkRef) {
             hiddenLinkRef.current = e;
@@ -40,8 +41,10 @@ export default function AineistonEsikatselu({ ennakkoneuvottelu }: HyvaksymisEsi
         type="button"
         onClick={() => {
           localStorage.setItem(
-            `tallennaHyvaksymisEsitysInput`,
-            JSON.stringify(transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData))
+            ennakkoneuvottelu ? "tallennaEnnakkoNeuvotteluInput" : "tallennaHyvaksymisEsitysInput",
+            JSON.stringify(
+              ennakkoneuvottelu ? transformToInput(formData, false) : transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(formData)
+            )
           );
           if (hiddenLinkRef.current) {
             hiddenLinkRef.current.click();

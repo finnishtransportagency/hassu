@@ -130,5 +130,6 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti: DBProjekti
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
     hash: createEnnakkoNeuvotteluHash(oid, salt),
+    lahetetty: ennakkoNeuvotteluJulkaisu.lahetetty,
   };
 }
