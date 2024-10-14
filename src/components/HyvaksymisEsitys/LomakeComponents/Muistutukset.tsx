@@ -5,7 +5,7 @@ import { allowedFileTypes } from "common/fileValidationSettings";
 import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToKunnallinenLadattuTiedostoInput } from "src/hooks/useHandleUploadedFiles";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { KunnallinenLadattuTiedosto } from "@services/api";
@@ -27,10 +27,15 @@ function KunnanMuistutukset({
   tiedostot,
 }: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const { control, register } = useFormReturn;
   const { remove, fields, move } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });
 
-  const handleUploadedFiles = useHandleUploadedFiles(`muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, { kunta });
+  const handleUploadedFiles = useHandleUploadedFiles(
+    useFormReturn,
+    `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`,
+    mapUploadedFileToKunnallinenLadattuTiedostoInput(kunta)
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {

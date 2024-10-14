@@ -17,8 +17,6 @@ export default function Painikkeet({ projekti }: Props) {
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const pohjoisSaameIlmoitusPdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
@@ -27,7 +25,8 @@ export default function Painikkeet({ projekti }: Props) {
         formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
         pohjoisSaameIlmoitusPdf instanceof File
       ) {
-        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await lataaTiedosto(
+          api,
           pohjoisSaameIlmoitusPdf
         );
       }
@@ -36,7 +35,7 @@ export default function Painikkeet({ projekti }: Props) {
         | undefined
         | string;
       if (formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
-        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await lataaTiedosto(api, pohjoisSaameKuulutusPdf);
       }
 
       const pohjoisSaameKirjeTiedotettavillePdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
@@ -45,13 +44,14 @@ export default function Painikkeet({ projekti }: Props) {
         formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDFPath &&
         pohjoisSaameKirjeTiedotettavillePdf instanceof File
       ) {
-        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await talletaTiedosto(
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await lataaTiedosto(
+          api,
           pohjoisSaameKirjeTiedotettavillePdf
         );
       }
       return formData;
     },
-    [talletaTiedosto]
+    [api]
   );
 
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;

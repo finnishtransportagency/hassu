@@ -1,5 +1,8 @@
 import { API } from "@services/api/commonApi";
 import axios from "axios";
+import { FileTypeNotAllowedError } from "common/error";
+import { FileSizeExceededLimitError } from "common/error/FileSizeExceededLimitError";
+import { maxFileSize, allowedFileTypes } from "common/fileValidationSettings";
 
 export function splitFilePath(path?: string) {
   if (!path) {
@@ -12,6 +15,11 @@ export function splitFilePath(path?: string) {
 }
 
 export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
+  validateTiedosto(tiedosto);
+  return await lataaTiedostoInternal(api, tiedosto);
+}
+
+async function lataaTiedostoInternal(api: API, tiedosto: File): Promise<string> {
   const contentType = (tiedosto as Blob).type ?? "application/octet-stream";
   const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
   const url = response.latausLinkki;
@@ -25,4 +33,24 @@ export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
 
   await axios.post(url, form);
   return response.tiedostoPolku;
+}
+
+function validateTiedosto(tiedosto: File) {
+  if (tiedosto.size > maxFileSize) {
+    throw new FileSizeExceededLimitError("Ladattavan tiedoston maksimikoko ylittyi", tiedosto);
+  }
+  if (!allowedFileTypes.includes(tiedosto.type)) {
+    throw new FileTypeNotAllowedError("Ladattavan tiedosot väärä", tiedosto);
+  }
+}
+
+export async function lataaTiedostot(api: API, fileList: FileList | File[]): Promise<{ name: string; path: string }[]> {
+  const tiedostot = Array.from(fileList);
+  tiedostot.forEach((tiedosto) => validateTiedosto(tiedosto));
+  return await Promise.all(
+    tiedostot.map<Promise<{ name: string; path: string }>>(async (tiedosto) => ({
+      name: tiedosto.name,
+      path: await lataaTiedostoInternal(api, tiedosto),
+    }))
+  );
 }

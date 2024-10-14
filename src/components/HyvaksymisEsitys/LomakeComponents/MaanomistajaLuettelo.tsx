@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
-import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoInputNew } from "src/hooks/useHandleUploadedFiles";
 import { LadattavaTiedosto, LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
@@ -14,9 +14,14 @@ export default function Maanomistajaluettelo({
   tiedostot,
 }: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const { control, register } = useFormReturn;
   const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.maanomistajaluettelo");
+  const handleUploadedFiles = useHandleUploadedFiles(
+    useFormReturn,
+    "muokattavaHyvaksymisEsitys.maanomistajaluettelo",
+    mapUploadedFileToLadattuTiedostoInputNew
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {

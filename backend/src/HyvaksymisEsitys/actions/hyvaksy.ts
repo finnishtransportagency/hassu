@@ -49,8 +49,8 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   const asiatunnus = getAsiatunnus(projektiInDB?.velho);
   assertIsDefined(projektiInDB?.muokattavaHyvaksymisEsitys?.poistumisPaiva, "Poistumispäivä on oltava määritelty tässä vaiheessa");
   assertIsDefined(asiatunnus, "Joko Väylä- tai ELY-asiatunnus on olemassa");
-
   await validate(projektiInDB);
+
   // Poista julkaistun hyväksymisesityksen nykyiset tiedostot
   await poistaJulkaistunHyvaksymisEsityksenTiedostot(oid, projektiInDB.julkaistuHyvaksymisEsitys);
   // Kopioi muokattavan hyväksymisesityksen tiedostot julkaistun hyväksymisesityksen tiedostojen sijaintiin

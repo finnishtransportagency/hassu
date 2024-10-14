@@ -205,8 +205,6 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const { withLoadingSpinner, isLoading } = useLoadingSpinner();
 
   useEffect(() => {
@@ -222,11 +220,11 @@ function VuorovaikutusKierrosKutsu({
         | undefined
         | string;
       if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
-        formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
+        formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await lataaTiedosto(api, pohjoisSaameKutsuPdf);
       }
       return formData;
     },
-    [talletaTiedosto]
+    [api]
   );
 
   const saveDraft = useCallback(

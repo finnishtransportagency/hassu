@@ -79,8 +79,6 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const { withLoadingSpinner } = useLoadingSpinner();
   const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
   const liitteetWatch = watch("liitteet");
@@ -95,7 +93,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
             await Promise.all(
               liitteet.map(async (liite) => {
                 if (liite.tiedosto instanceof File) {
-                  palauteFinalValues.liitteet?.push(await talletaTiedosto(liite.tiedosto));
+                  palauteFinalValues.liitteet?.push(await lataaTiedosto(api, liite.tiedosto));
                 }
               })
             );
@@ -114,7 +112,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           }
         })()
       ),
-    [withLoadingSpinner, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
+    [withLoadingSpinner, api, projektiOid, showSuccessMessage, t, onClose, reset]
   );
   return (
     <>

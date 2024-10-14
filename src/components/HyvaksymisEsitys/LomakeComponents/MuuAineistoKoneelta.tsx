@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
-import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoInputNew } from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
@@ -11,10 +11,15 @@ import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const { control, register } = useFormReturn;
   const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoKoneelta", control });
 
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.muuAineistoKoneelta");
+  const handleUploadedFiles = useHandleUploadedFiles(
+    useFormReturn,
+    "muokattavaHyvaksymisEsitys.muuAineistoKoneelta",
+    mapUploadedFileToLadattuTiedostoInputNew
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
