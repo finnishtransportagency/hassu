@@ -195,6 +195,7 @@ export type DBProjekti = {
   aineistoHandledAt?: string | null;
   hyvEsAineistoPaketti?: string | null;
   ennakkoNeuvottelu?: DBEnnakkoNeuvottelu;
+  ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvottelu;
 };
 
 export type DBEnnakkoNeuvottelu = {
@@ -208,7 +209,6 @@ export type DBEnnakkoNeuvottelu = {
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
   maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
-  lahetetty?: boolean | null;
 };
 
 export type OmistajaHaku = {

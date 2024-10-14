@@ -298,27 +298,36 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
     oid: string;
     versio: number;
     ennakkoNeuvottelu: DBEnnakkoNeuvottelu;
+    ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvottelu | undefined;
     muokkaaja: string;
   }): Promise<number> {
-    const { oid, versio, ennakkoNeuvottelu, muokkaaja } = input;
+    const { oid, versio, ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu, muokkaaja } = input;
     const nextVersion = versio + 1;
+    const names: Record<string, string> = {
+      "#versio": "versio",
+      "#ennakkoNeuvottelu": "ennakkoNeuvottelu",
+      "#paivitetty": "paivitetty",
+    };
+    const values: Record<string, any> = {
+      ":versio": nextVersion,
+      ":ennakkoNeuvottelu": { ...ennakkoNeuvottelu, muokkaaja },
+      ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+      ":versioFromInput": versio,
+    };
+    if (ennakkoNeuvotteluJulkaisu) {
+      names["#ennakkoNeuvotteluJulkaisu"] = "ennakkoNeuvotteluJulkaisu";
+      values[":ennakkoNeuvotteluJulkaisu"] = { ...ennakkoNeuvotteluJulkaisu, muokkaaja };
+    }
     const params = new UpdateCommand({
       TableName: config.projektiTableName,
       Key: {
         oid,
       },
-      UpdateExpression: "SET " + "#versio = :versio, " + "#ennakkoNeuvottelu = :ennakkoNeuvottelu, " + "#paivitetty = :paivitetty",
-      ExpressionAttributeNames: {
-        "#versio": "versio",
-        "#ennakkoNeuvottelu": "ennakkoNeuvottelu",
-        "#paivitetty": "paivitetty",
-      },
-      ExpressionAttributeValues: {
-        ":versio": nextVersion,
-        ":ennakkoNeuvottelu": { ...ennakkoNeuvottelu, muokkaaja },
-        ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
-        ":versioFromInput": versio,
-      },
+      UpdateExpression:
+        "SET #versio = :versio, #ennakkoNeuvottelu = :ennakkoNeuvottelu, #paivitetty = :paivitetty" +
+        (ennakkoNeuvotteluJulkaisu ? ", #ennakkoNeuvotteluJulkaisu = :ennakkoNeuvotteluJulkaisu" : ""),
+      ExpressionAttributeNames: names,
+      ExpressionAttributeValues: values,
       ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
     });
 

@@ -43,7 +43,7 @@ import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } fr
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import GetProjektiStatus from "../status/getProjektiStatus";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
-import { adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
+import { adaptEnnakkoNeuvotteluJulkaisuToAPI, adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -180,6 +180,7 @@ export class ProjektiAdapter {
         : undefined,
       kustannuspaikka,
       ennakkoNeuvottelu: await adaptEnnakkoNeuvotteluToAPI(dbProjekti),
+      ennakkoNeuvotteluJulkaisu: await adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti),
     });
 
     if (apiProjekti.tallennettu) {

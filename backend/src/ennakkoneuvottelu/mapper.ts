@@ -1,4 +1,4 @@
-import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput } from "hassu-common/graphql/apiModel";
+import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, EnnakkoNeuvotteluJulkaisu } from "hassu-common/graphql/apiModel";
 import { DBEnnakkoNeuvottelu, DBProjekti } from "../database/model";
 import { adaptAineistotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptAineistotToSave";
 import { adaptLadatutTiedostotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptLadatutTiedostotToSave";
@@ -11,11 +11,11 @@ import { adaptLadatutTiedostotToApi } from "../HyvaksymisEsitys/adaptToApi/adapt
 import { adaptSahkopostiVastaanottajatToAPI } from "../HyvaksymisEsitys/adaptToApi/adaptSahkopostiVastaanottajatToAPI";
 import { getKutsut, getMaanomistajaLuettelo } from "../HyvaksymisEsitys/collectHyvaksymisEsitysAineistot";
 import { adaptFileInfoToLadattavaTiedosto } from "../HyvaksymisEsitys/latauslinkit/createLadattavatTiedostot";
+import { createEnnakkoNeuvotteluHash } from "../HyvaksymisEsitys/latauslinkit/hash";
 
 export function adaptEnnakkoNeuvotteluToSave(
   dbEnnakkoNeuvottelu: DBEnnakkoNeuvottelu | undefined | null,
-  ennakkoNeuvotteluInput: EnnakkoNeuvotteluInput,
-  laheta: boolean
+  ennakkoNeuvotteluInput: EnnakkoNeuvotteluInput
 ): DBEnnakkoNeuvottelu {
   const {
     suunnitelma,
@@ -37,7 +37,6 @@ export function adaptEnnakkoNeuvotteluToSave(
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
-    lahetetty: laheta,
     ...rest,
   };
   return ennakko;
@@ -83,5 +82,53 @@ export async function adaptEnnakkoNeuvotteluToAPI(dbProjekti: DBProjekti): Promi
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
     },
+  };
+}
+
+export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti: DBProjekti): Promise<EnnakkoNeuvotteluJulkaisu | undefined> {
+  const { oid, salt, ennakkoNeuvotteluJulkaisu } = dbProjekti;
+  if (!ennakkoNeuvotteluJulkaisu) {
+    return undefined;
+  }
+  const aineistotHandledAt = dbProjekti.aineistoHandledAt;
+  const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
+  return {
+    __typename: "EnnakkoNeuvotteluJulkaisu",
+    poistumisPaiva: ennakkoNeuvotteluJulkaisu.poistumisPaiva ?? null,
+    lisatiedot: ennakkoNeuvotteluJulkaisu.lisatiedot,
+    suunnitelma: adaptAineistotToAPI({
+      aineistot: ennakkoNeuvotteluJulkaisu.suunnitelma,
+      aineistotHandledAt,
+      path: joinPath(path, "suunnitelma"),
+    }),
+    muistutukset: adaptKunnallisetLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.muistutukset,
+      path: joinPath(path, "muistutukset"),
+    }),
+    lausunnot: adaptLadatutTiedostotToApi({ tiedostot: ennakkoNeuvotteluJulkaisu.lausunnot, path: joinPath(path, "lausunnot") }),
+    kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.kuulutuksetJaKutsu,
+      path: joinPath(path, "kuulutuksetJaKutsu"),
+    }),
+    muuAineistoVelhosta: adaptAineistotToAPI({
+      aineistot: ennakkoNeuvotteluJulkaisu.muuAineistoVelhosta,
+      aineistotHandledAt,
+      path: joinPath(path, "muuAineistoVelhosta"),
+    }),
+    muuAineistoKoneelta: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.muuAineistoKoneelta,
+      path: joinPath(path, "muuAineistoKoneelta"),
+    }),
+    maanomistajaluettelo: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.maanomistajaluettelo,
+      path: joinPath(path, "maanomistajaluettelo"),
+    }),
+    vastaanottajat: adaptSahkopostiVastaanottajatToAPI(ennakkoNeuvotteluJulkaisu.vastaanottajat),
+    tuodutTiedostot: {
+      __typename: "HyvaksymisEsityksenTuodutTiedostot",
+      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+      kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+    },
+    hash: createEnnakkoNeuvotteluHash(oid, salt),
   };
 }

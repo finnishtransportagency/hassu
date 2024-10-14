@@ -189,6 +189,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EnnakkoNeuvotteluJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Excel",
         "possibleTypes": null,
         "__typename": "__Type"

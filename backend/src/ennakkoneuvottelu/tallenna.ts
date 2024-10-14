@@ -45,7 +45,7 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
-    const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu, laheta);
+    const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu);
     const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
       projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
       ennakkoNeuvottelu
@@ -68,10 +68,12 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     }
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
+    const newEnnakkoNeuvotteluJulkaisu = laheta ? newEnnakkoNeuvottelu : undefined;
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
       versio,
       ennakkoNeuvottelu: newEnnakkoNeuvottelu,
+      ennakkoNeuvotteluJulkaisu: newEnnakkoNeuvotteluJulkaisu,
       muokkaaja: nykyinenKayttaja.uid,
     });
     if (
