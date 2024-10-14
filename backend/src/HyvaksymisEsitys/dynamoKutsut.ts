@@ -6,6 +6,7 @@ import {
   DBProjekti,
   JulkaistuHyvaksymisEsitys,
   MuokattavaHyvaksymisEsitys,
+  SahkopostiVastaanottaja,
 } from "../database/model";
 import { ProjektiDatabase } from "../database/projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -339,6 +340,22 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
     return nextVersion;
+  }
+
+  async paivitaEnnakkoNeuvottelunVastaanottajat(oid: string, vastaanottajat: SahkopostiVastaanottaja[]) {
+    const params = new UpdateCommand({
+      TableName: config.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #ennakkoNeuvotteluJulkaisu.#vastaanottajat = :vastaanottajat",
+      ExpressionAttributeNames: {
+        "#ennakkoNeuvotteluJulkaisu": "ennakkoNeuvotteluJulkaisu",
+        "#vastaanottajat": "vastaanottajat",
+      },
+      ExpressionAttributeValues: { ":vastaanottajat": vastaanottajat },
+    });
+    await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
   }
 }
 

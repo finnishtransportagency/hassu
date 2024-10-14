@@ -2,18 +2,19 @@ import { TallennaEnnakkoNeuvotteluInput } from "hassu-common/graphql/apiModel";
 import { EnnakkoneuvotteluValidationContext, ennakkoNeuvotteluSchema } from "hassu-common/schema/ennakkoNeuvotteluSchema";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { assertIsDefined } from "../util/assertions";
-import { auditLog } from "../logger";
+import { auditLog, log } from "../logger";
 import projektiDatabase from "../HyvaksymisEsitys/dynamoKutsut";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
-import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys } from "../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys, SahkopostiVastaanottaja } from "../database/model";
 import { validateVaiheOnAktiivinen } from "../HyvaksymisEsitys/validateVaiheOnAktiivinen";
 import { SqsClient } from "../HyvaksymisEsitys/aineistoHandling/sqsClient";
 import { persistFile } from "../HyvaksymisEsitys/s3Calls/persistFile";
 import { deleteFilesUnderSpecifiedVaihe } from "../HyvaksymisEsitys/s3Calls/deleteFiles";
 import { adaptEnnakkoNeuvotteluToSave } from "./mapper";
 import {
+  getHyvaksymisEsityksenLadatutTiedostot,
   getHyvaksymisEsityksenPoistetutTiedostot,
   getHyvaksymisEsityksenUudetLadatutTiedostot,
 } from "../HyvaksymisEsitys/getLadatutTiedostot";
@@ -22,8 +23,13 @@ import { uusiaAineistoja } from "../HyvaksymisEsitys/actions/tallenna";
 import { HyvaksymisEsitysAineistoOperation } from "../HyvaksymisEsitys/aineistoHandling/sqsEvent";
 import { nyt } from "../util/dateUtil";
 import { cloneDeep } from "lodash";
+import { copyFilesFromVaiheToAnother } from "../HyvaksymisEsitys/s3Calls/copyFiles";
+import { createEnnakkoNeuvotteluViranomaisilleEmail } from "../email/emailTemplates";
+import { emailClient } from "../email/email";
+import { isEmailSent } from "../email/emailUtil";
 
-export const ENNAKKONEUVOTTELU_PATH = "ennakkoneuvottelu";
+export const ENNAKKONEUVOTTELU_PATH = "muokattava_ennakkoneuvottelu";
+export const ENNAKKONEUVOTTELU_JULKAISU_PATH = "ennakkoneuvottelu";
 
 async function validate(projektiInDB: DBProjekti, input: TallennaEnnakkoNeuvotteluInput) {
   // Toiminnon tekijän on oltava projektihenkilö
@@ -80,6 +86,11 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       ennakkoNeuvotteluJulkaisu: newEnnakkoNeuvotteluJulkaisu,
       muokkaaja: nykyinenKayttaja.uid,
     });
+    if (newEnnakkoNeuvotteluJulkaisu) {
+      await poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid, projektiInDB.ennakkoNeuvotteluJulkaisu);
+      await copyMuokattavaEnnakkoNeuvotteluFilesToJulkaistu(oid, newEnnakkoNeuvotteluJulkaisu);
+      await sendEmailAndUpdateDB(projektiInDB, newEnnakkoNeuvotteluJulkaisu);
+    }
     if (
       uusiaAineistoja(
         getHyvaksymisEsityksenAineistot(projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys),
@@ -93,4 +104,51 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
   } finally {
     await projektiDatabase.releaseLock(oid);
   }
+}
+
+async function sendEmailAndUpdateDB(projekti: DBProjekti, ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu) {
+  const emailOptions = createEnnakkoNeuvotteluViranomaisilleEmail(projekti, ennakkoNeuvotteluJulkaisu);
+  if (emailOptions.to && ennakkoNeuvotteluJulkaisu.vastaanottajat && ennakkoNeuvotteluJulkaisu.vastaanottajat.length > 0) {
+    const messageInfo = await emailClient.sendTurvapostiEmail(emailOptions);
+    const vastaanottajat: SahkopostiVastaanottaja[] = ennakkoNeuvotteluJulkaisu.vastaanottajat.map((vo) => {
+      if (isEmailSent(vo.sahkoposti, messageInfo)) {
+        return {
+          ...vo,
+          lahetetty: nyt().format(),
+          messageId: messageInfo?.messageId,
+        };
+      } else {
+        if (messageInfo) {
+          log.error(`Sähköpostin lähettäminen vastaanottajalle ${vo.sahkoposti} ei onnistunut`);
+        }
+        return {
+          ...vo,
+          lahetysvirhe: true,
+        };
+      }
+    });
+    await projektiDatabase.paivitaEnnakkoNeuvottelunVastaanottajat(projekti.oid, vastaanottajat);
+  } else {
+    log.error("Ennakkoneuvottelun ilmoitukselle ei löytynyt vastaanottajien sähköpostiosoitetta");
+  }
+}
+
+async function poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid: string, julkaistuEnnakkoNeuvottelu: DBEnnakkoNeuvotteluJulkaisu | undefined) {
+  if (!julkaistuEnnakkoNeuvottelu) {
+    return;
+  }
+  const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(julkaistuEnnakkoNeuvottelu);
+  const aineistot = getHyvaksymisEsityksenAineistot(julkaistuEnnakkoNeuvottelu as unknown as IHyvaksymisEsitys);
+  await deleteFilesUnderSpecifiedVaihe(
+    oid,
+    ENNAKKONEUVOTTELU_JULKAISU_PATH,
+    [...tiedostot, ...aineistot],
+    "uusi ennakkoneuvottelu julkaistaan"
+  );
+}
+
+async function copyMuokattavaEnnakkoNeuvotteluFilesToJulkaistu(oid: string, muokattavaHyvaksymisEsitys: DBEnnakkoNeuvotteluJulkaisu) {
+  const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(muokattavaHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys as unknown as IHyvaksymisEsitys);
+  await copyFilesFromVaiheToAnother(oid, ENNAKKONEUVOTTELU_PATH, ENNAKKONEUVOTTELU_JULKAISU_PATH, [...tiedostot, ...aineistot]);
 }

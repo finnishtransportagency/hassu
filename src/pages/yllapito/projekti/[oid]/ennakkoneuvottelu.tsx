@@ -133,7 +133,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   return (
     <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
       {projekti.ennakkoNeuvotteluJulkaisu && (
-        <Section noDivider>
+        <Section noDivider className="mb-2">
           <Notification type={NotificationType.INFO_GREEN}>
             Ennakkoneuvottelu on lähetetty vastaanottajalle {formatDate(projekti.ennakkoNeuvotteluJulkaisu.lahetetty)}:{" "}
             <ExtLink href={url}>{url}</ExtLink>
