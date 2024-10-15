@@ -369,9 +369,10 @@ describe("Migraatio", () => {
         waitForAnimations: true,
       });
     cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').type(CLEAR_ALL + "asianumero123");
-    cy.get("#lisaa_jatkopaatos").click();
-    cy.get("#accept_and_save_jatkopaatos").click();
-    cy.contains("Jatkopäätös lisätty").wait(2000);
+    cy.get("#save").click();
+    cy.get("#open_palauta_aktiiviseksi_dialog").click();
+    cy.get("#accept_palauta_jatkopaatos").click();
+    cy.contains("Projekti avattu jatkopäätettäksi").wait(2000);
     cy.get("#sidenavi_1_jatkopaatos").should("exist");
   });
 });

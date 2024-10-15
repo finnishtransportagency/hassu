@@ -230,7 +230,7 @@ const VirkamiesHomePage = () => {
                 );
               })}
             </HassuMuiSelect>
-            <HassuMuiSelect name="vaihe" label="Vaihe" control={control} defaultValue="" disabled={!!epaaktiivinen}>
+            <HassuMuiSelect name="vaihe" label="Kansalaisnäkymän vaihe" control={control} defaultValue="" disabled={!!epaaktiivinen}>
               {statusOptions.map((option) => {
                 return (
                   <MenuItem key={option} value={option}>
@@ -378,9 +378,9 @@ const FrontPageTable = (props: FrontPageTableProps) => {
           return value ? t(`projekti:projekti-status.${value}`) : undefined;
         },
         {
-          header: "Vaihe",
+          header: "Kansalaisnäkymän vaihe",
           id: ProjektiSarake.VAIHE,
-          meta: { widthFractions: 2, minWidth: 150 },
+          meta: { widthFractions: 2, minWidth: 220 },
         }
       ),
       columnHelper.accessor(
