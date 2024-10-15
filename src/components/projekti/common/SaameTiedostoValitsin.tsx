@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useCallback } from "react";
 import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "hassu-common/util/dateUtils";
@@ -22,6 +22,9 @@ import {
   Tr,
 } from "@components/table/StyledTableComponents";
 import { useIsAboveBreakpoint } from "src/hooks/useIsSize";
+import { FileSizeExceededLimitError, FileTypeNotAllowedError } from "common/error";
+import useSnackbars from "src/hooks/useSnackbars";
+import { validateTiedostoForUpload } from "src/util/fileUtil";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
@@ -62,6 +65,7 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
   const showUusiTiedosto = (value as any) instanceof File || !value;
 
   const [uusiTiedosto, setUusiTiedosto] = useState<OptionalNullableLadattuTiedosto | null>(null);
+  const { showErrorMessage } = useSnackbars();
 
   const tiedosto: OptionalNullableLadattuTiedosto | null | undefined = showUusiTiedosto ? uusiTiedosto : props.tiedosto;
 
@@ -94,6 +98,36 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
     .join(" ");
 
   const isMedium = useIsAboveBreakpoint("md");
+
+  const updateFileOnForm = useCallback(
+    (tiedosto: File | undefined): void => {
+      if (!tiedosto) {
+        return;
+      }
+
+      try {
+        validateTiedostoForUpload(tiedosto);
+        onChange(tiedosto);
+        setUusiTiedosto({ nimi: tiedosto.name });
+      } catch (e) {
+        if (e instanceof FileSizeExceededLimitError) {
+          const filename = e.file?.name;
+          const file = filename ? "Tiedosto '" + filename + "'" : "Tiedosto";
+          showErrorMessage(`${file} ylittää 25 Mt maksimikoon.`);
+        } else if (e instanceof FileTypeNotAllowedError) {
+          const filename = e.file?.name;
+          const file = filename ? "Tiedosto '" + filename + "'" : "Tiedosto";
+          showErrorMessage(`${file} on väärää tiedostotyyppiä. Sallitut tyypit: pdf, jpg, png, doc, docx ja txt.`);
+        } else {
+          // Ei pitäisi tapahtua
+          console.log("Tiedoston validointi epäonnistui", e);
+          showErrorMessage("Tiedoston validointi epäonnistui.");
+        }
+      }
+    },
+    [onChange, showErrorMessage]
+  );
+
   return value ? (
     <ContentSpacer gap={7} style={{ marginTop: "24px" }}>
       <TableWrapper>
@@ -164,20 +198,8 @@ const SaameTiedostoValitsin: FunctionComponent<SaameTiedostoValitsinProps> = (pr
       maxFiles={1}
       accept="application/pdf"
       buttonText="Hae tiedosto"
-      onDrop={(files) => {
-        const tiedosto = files[0];
-        if (tiedosto) {
-          onChange(tiedosto);
-          setUusiTiedosto({ nimi: tiedosto.name });
-        }
-      }}
-      onChange={(e) => {
-        const tiedosto = e.target.files?.[0];
-        if (tiedosto) {
-          onChange(tiedosto);
-          setUusiTiedosto({ nimi: tiedosto.name });
-        }
-      }}
+      onDrop={(files) => updateFileOnForm(files[0])}
+      onChange={(e) => updateFileOnForm(e.target.files?.[0])}
     />
   );
 };
