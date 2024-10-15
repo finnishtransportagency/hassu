@@ -2,8 +2,20 @@ import IconButton from "@components/button/IconButton";
 import FileInput from "@components/form/FileInput";
 import FormGroup from "@components/form/FormGroup";
 import HassuStack from "@components/layout/HassuStack";
-import { ReactElement, useEffect, useState } from "react";
-import { Controller, ControllerProps, FieldValues, Path, PathValue, UnpackNestedValue, useFormContext } from "react-hook-form";
+import { FileSizeExceededLimitError, FileTypeNotAllowedError } from "common/error";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  Controller,
+  ControllerProps,
+  ControllerRenderProps,
+  FieldValues,
+  Path,
+  PathValue,
+  UnpackNestedValue,
+  useFormContext,
+} from "react-hook-form";
+import useSnackbars from "src/hooks/useSnackbars";
+import { validateTiedostoForUpload } from "src/util/fileUtil";
 
 type ControlledLogoInputProps<TFieldValues extends FieldValues> = {
   label: JSX.Element;
@@ -18,6 +30,8 @@ export function ControlledLogoInput<TFieldValues extends FieldValues>({
 }: ControlledLogoInputProps<TFieldValues>): ReactElement {
   const { control, watch } = useFormContext<TFieldValues>();
 
+  const { showErrorMessage } = useSnackbars();
+
   const logoUrlWatch = watch(name) as string | File | null | undefined;
 
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
@@ -29,6 +43,33 @@ export function ControlledLogoInput<TFieldValues extends FieldValues>({
       setLogoUrl(logoUrlWatch || undefined);
     }
   }, [logoUrlWatch]);
+
+  const updateLogoIfValid = useCallback(
+    (logoTiedosto: File | undefined, field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>) => {
+      if (!logoTiedosto) {
+        return;
+      }
+      try {
+        validateTiedostoForUpload(logoTiedosto);
+        field.onChange(logoTiedosto);
+      } catch (e) {
+        if (e instanceof FileSizeExceededLimitError) {
+          const filename = e.file?.name;
+          const file = filename ? "Tiedosto '" + filename + "'" : "Tiedosto";
+          showErrorMessage(`${file} ylittää 25 Mt maksimikoon.`);
+        } else if (e instanceof FileTypeNotAllowedError) {
+          const filename = e.file?.name;
+          const file = filename ? "Tiedosto '" + filename + "'" : "Tiedosto";
+          showErrorMessage(`${file} on väärää tiedostotyyppiä. Sallitut tyypit: pdf, jpg, png, doc, docx ja txt.`);
+        } else {
+          // Ei pitäisi tapahtua
+          console.log("Tiedoston validointi epäonnistui", e);
+          showErrorMessage("Tiedoston validointi epäonnistui.");
+        }
+      }
+    },
+    [showErrorMessage]
+  );
 
   // @ts-ignore
   return (
@@ -56,20 +97,10 @@ export function ControlledLogoInput<TFieldValues extends FieldValues>({
             <FileInput
               maxFiles={1}
               error={fieldState.error}
-              onDrop={(files) => {
-                const logoTiedosto = files[0];
-                if (logoTiedosto) {
-                  field.onChange(logoTiedosto);
-                }
-              }}
+              onDrop={(files) => updateLogoIfValid(files[0], field)}
               bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
               disabled={disabled}
-              onChange={(e) => {
-                const logoTiedosto = e.target.files?.[0];
-                if (logoTiedosto) {
-                  field.onChange(logoTiedosto);
-                }
-              }}
+              onChange={(e) => updateLogoIfValid(e.target.files?.[0], field)}
             />
           </span>
         )

@@ -163,10 +163,14 @@ async function getHyvaksymisesitysAineistotAsAttachments(
   const combinedFileSize = attachmentsAndSizes.reduce((totalSize, { size = 0 }) => (totalSize += size), 0);
 
   if (combinedFileSize > maxAllowedCombinedSize) {
-    log.error("Hyväksymisesityksen liitetiedostoja ei voida lisätä lomakkeelle. Liitetiedostojen maksikoko ylittyi", {
-      combinedFileSize,
-      maxAllowedCombinedSize,
-    });
+    log.error(
+      "Hyväksymisesityksen liitetiedostojen koko ylittää sallitun 30 Mt rajan. Jätetään hyväksymisesitystiedostot pois liitteistä",
+      {
+        combinedFileSize,
+        maxAllowedCombinedSize,
+        attachments: attachmentsAndSizes.map(({ attachment }) => attachment?.filename).filter((filename): filename is string => !!filename),
+      }
+    );
     return [];
   }
 

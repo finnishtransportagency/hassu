@@ -15,7 +15,7 @@ export function splitFilePath(path?: string) {
 }
 
 export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
-  validateTiedosto(tiedosto);
+  validateTiedostoForUpload(tiedosto);
   return await lataaTiedostoInternal(api, tiedosto);
 }
 
@@ -35,7 +35,7 @@ async function lataaTiedostoInternal(api: API, tiedosto: File): Promise<string> 
   return response.tiedostoPolku;
 }
 
-function validateTiedosto(tiedosto: File) {
+export function validateTiedostoForUpload(tiedosto: File) {
   if (tiedosto.size > maxFileSize) {
     throw new FileSizeExceededLimitError("Ladattavan tiedoston maksimikoko ylittyi", tiedosto);
   }
@@ -46,7 +46,7 @@ function validateTiedosto(tiedosto: File) {
 
 export async function lataaTiedostot(api: API, fileList: FileList | File[]): Promise<{ name: string; path: string }[]> {
   const tiedostot = Array.from(fileList);
-  tiedostot.forEach((tiedosto) => validateTiedosto(tiedosto));
+  tiedostot.forEach((tiedosto) => validateTiedostoForUpload(tiedosto));
   return await Promise.all(
     tiedostot.map<Promise<{ name: string; path: string }>>(async (tiedosto) => ({
       name: tiedosto.name,

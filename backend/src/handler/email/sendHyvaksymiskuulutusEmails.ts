@@ -133,8 +133,9 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     const combinedFileSize = attachmentsAndSizes.reduce((combinedFileSize, { size = 0 }) => (combinedFileSize += size), 0);
 
     if (combinedFileSize > maximumCombinedSize) {
-      log.info("Päätöstiedostojen koko ylittää sallitun 30MB rajan. Jätetään päätöstiedostot pois liitteistä.", {
+      log.info("Päätöstiedostojen koko ylittää sallitun 30 Mt rajan. Jätetään päätöstiedostot pois liitteistä.", {
         combinedFileSize,
+        maximumCombinedSize,
         tiedostot: attachmentsAndSizes.map(({ attachment }) => attachment.filename).filter((filename): filename is string => !!filename),
       });
       return [];

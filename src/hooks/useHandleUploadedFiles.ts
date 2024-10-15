@@ -86,7 +86,7 @@ async function tryFilelistUpload(api: API, files: FileList, showErrorMessage: Sh
     if (e instanceof FileSizeExceededLimitError) {
       const filename = e.file?.name;
       const oneOfFiles = filename ? "Tiedosto '" + filename + "'" : "Yksi tiedostoista";
-      showErrorMessage(`${oneOfFiles} ylittää 25MB maksimikoon.`);
+      showErrorMessage(`${oneOfFiles} ylittää 25 Mt maksimikoon.`);
     } else if (e instanceof FileTypeNotAllowedError) {
       const filename = e.file?.name;
       const oneOfFiles = filename ? "Tiedosto '" + filename + "'" : "Yksi tiedostoista";
