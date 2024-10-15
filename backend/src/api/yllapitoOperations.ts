@@ -41,6 +41,7 @@ import {
   SuljeHyvaksymisEsityksenMuokkausMutationVariables,
   HaeHyvaksymisEsityksenTiedotQueryVariables,
   HaeKayttoOikeudetQueryVariables,
+  AktivoiProjektiJatkopaatettavaksiMutationVariables,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaEnnakkoNeuvotteluMutationVariables,
 } from "hassu-common/graphql/apiModel";
@@ -91,6 +92,7 @@ import {
 } from "../HyvaksymisEsitys/actions";
 import haeKayttoOikeudet from "../user/haeKayttoOikeudet";
 import { tallennaEnnakkoNeuvottelu } from "../ennakkoneuvottelu/tallenna";
+import { aktivoiProjektiJatkopaatettavaksi } from "../projekti/aktivoiProjektiJatkopaatettavaksi";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -199,6 +201,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await haeProjektinTiedottamistiedot((event.arguments as HaeProjektinTiedottamistiedotQueryVariables).oid);
     case apiConfig.haeKayttoOikeudet.name:
       return await haeKayttoOikeudet((event.arguments as HaeKayttoOikeudetQueryVariables).oid);
+    case apiConfig.aktivoiProjektiJatkopaatettavaksi.name:
+      return await aktivoiProjektiJatkopaatettavaksi(event.arguments as AktivoiProjektiJatkopaatettavaksiMutationVariables);
     case apiConfig.tallennaEnnakkoNeuvottelu.name:
       return await tallennaEnnakkoNeuvottelu((event.arguments as TallennaEnnakkoNeuvotteluMutationVariables).input);
     default:
