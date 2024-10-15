@@ -38,7 +38,7 @@ export async function haeAktiivisenVaiheenAsianhallinnanTila(
 function haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti: Projekti) {
   return Object.values(Vaihe)
     .filter(suodataSuunnitteluvaiheJosPalattuNahtavillaolostaTaiVahainenMenettely(projekti))
-    .sort((vaiheA, vaiheB) => statusOrder[vaiheToStatus[vaiheA]] - statusOrder[vaiheToStatus[vaiheB]])
+    .sort((vaiheA, vaiheB) => statusOrder(vaiheToStatus[vaiheA]) - statusOrder(vaiheToStatus[vaiheB]))
     .find((vaihe) => vaiheOnMuokkausTilassa(projekti, vaihe) || vaiheenJulkaisuOdottaaHyvaksyntaa(projekti, vaihe));
 }
 
