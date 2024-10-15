@@ -54,15 +54,6 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
     const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu);
-    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-      projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
-      ennakkoNeuvottelu
-    );
-    if (uudetTiedostot.length) {
-      await Promise.all(
-        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: ENNAKKONEUVOTTELU_PATH }))
-      );
-    }
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
       projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
       newEnnakkoNeuvottelu as IHyvaksymisEsitys
@@ -73,6 +64,15 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     );
     if (poistetutTiedostot.length || poistetutAineistot.length) {
       await deleteFilesUnderSpecifiedVaihe(oid, ENNAKKONEUVOTTELU_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
+    }
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
+      projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
+      ennakkoNeuvottelu
+    );
+    if (uudetTiedostot.length) {
+      await Promise.all(
+        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: ENNAKKONEUVOTTELU_PATH }))
+      );
     }
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");

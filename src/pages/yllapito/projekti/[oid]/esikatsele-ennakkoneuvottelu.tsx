@@ -1,7 +1,7 @@
 import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
 import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { KayttajaTyyppi, LadattavaTiedosto, LadattuTiedostoInputNew, TallennaEnnakkoNeuvotteluInput } from "@services/api";
+import { KayttajaTyyppi, LadattavaTiedosto, TallennaEnnakkoNeuvotteluInput } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { H1, H2, H3, H4, H5 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -34,6 +34,8 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
           ?.filter((muistutus) => muistutus.kunta === kunta)
           .map<LadattavaTiedosto>(({ kunta, ...ladattavaTiedosto }) => ({
             __typename: "LadattavaTiedosto",
+            tuotu: projekti?.ennakkoNeuvottelu?.muistutukset?.find((m) => m.uuid === ladattavaTiedosto.uuid)?.lisatty,
+            linkki: projekti?.ennakkoNeuvottelu?.muistutukset?.find((m) => m.uuid === ladattavaTiedosto.uuid)?.tiedosto,
             ...ladattavaTiedosto,
           })) ?? [];
       return acc;
@@ -56,18 +58,46 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
   const { suunnitelma, maanomistajaluettelo, lausunnot, kuulutuksetJaKutsu, muuAineistoKoneelta, muuAineistoVelhosta, poistumisPaiva } =
     ennakkoNeuvotteluInput.ennakkoNeuvottelu;
   const muutAineistot: LadattavaTiedosto[] = [];
-  muuAineistoKoneelta?.forEach((a) => muutAineistot.push({ __typename: "LadattavaTiedosto", nimi: a.nimi }));
-  muuAineistoVelhosta?.forEach((a) => muutAineistot.push({ __typename: "LadattavaTiedosto", nimi: a.nimi }));
-  const allMaanomistajaluettelo: LadattuTiedostoInputNew[] = [];
+  muuAineistoKoneelta?.forEach((a) =>
+    muutAineistot.push({
+      __typename: "LadattavaTiedosto",
+      nimi: a.nimi,
+      tuotu: projekti.ennakkoNeuvottelu?.muuAineistoKoneelta?.find((m) => m.uuid === a.uuid)?.lisatty,
+      linkki: projekti.ennakkoNeuvottelu?.muuAineistoKoneelta?.find((m) => m.uuid === a.uuid)?.tiedosto,
+    })
+  );
+  muuAineistoVelhosta?.forEach((a) =>
+    muutAineistot.push({
+      __typename: "LadattavaTiedosto",
+      nimi: a.nimi,
+      tuotu: projekti.ennakkoNeuvottelu?.muuAineistoVelhosta?.find((m) => m.uuid === a.uuid)?.lisatty,
+      linkki: projekti.ennakkoNeuvottelu?.muuAineistoVelhosta?.find((m) => m.uuid === a.uuid)?.tiedosto,
+    })
+  );
+  const allMaanomistajaluettelo: LadattavaTiedosto[] = [];
   projekti.ennakkoNeuvottelu?.tuodutTiedostot?.maanomistajaluettelo?.forEach((m) =>
-    allMaanomistajaluettelo.push({ nimi: m.nimi, uuid: "", tiedosto: m.nimi })
+    allMaanomistajaluettelo.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
   );
-  allMaanomistajaluettelo.push(...(maanomistajaluettelo ?? []));
-  const allKuulutuksetJaKutsu: LadattuTiedostoInputNew[] = [];
+  maanomistajaluettelo?.forEach((k) =>
+    allMaanomistajaluettelo.push({
+      __typename: "LadattavaTiedosto",
+      nimi: k.nimi,
+      linkki: projekti?.ennakkoNeuvottelu?.maanomistajaluettelo?.find((t) => t.uuid === k.uuid)?.tiedosto,
+      tuotu: projekti?.ennakkoNeuvottelu?.maanomistajaluettelo?.find((t) => t.uuid === k.uuid)?.lisatty,
+    })
+  );
+  const allKuulutuksetJaKutsu: LadattavaTiedosto[] = [];
   projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) =>
-    allKuulutuksetJaKutsu.push({ nimi: m.nimi, uuid: "", tiedosto: m.nimi })
+    allKuulutuksetJaKutsu.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
   );
-  allKuulutuksetJaKutsu.push(...(kuulutuksetJaKutsu ?? []));
+  kuulutuksetJaKutsu?.forEach((k) =>
+    allKuulutuksetJaKutsu.push({
+      __typename: "LadattavaTiedosto",
+      nimi: k.nimi,
+      linkki: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.tiedosto,
+      tuotu: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
+    })
+  );
   return (
     <>
       <H1>Ennakkoneuvottelu (esikatselu)</H1>
@@ -112,7 +142,12 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={kategoriat}
           aineistot={suunnitelma?.map((a) => {
-            return { ...a, __typename: "LadattavaTiedosto", linkki: "esikatselu" };
+            return {
+              ...a,
+              __typename: "LadattavaTiedosto",
+              linkki: projekti.ennakkoNeuvottelu?.suunnitelma?.find((s) => s.uuid === a.uuid)?.tiedosto,
+              tuotu: projekti.ennakkoNeuvottelu?.suunnitelma?.find((s) => s.uuid === a.uuid)?.lisatty,
+            };
           })}
           esikatselu={true}
         />
@@ -133,7 +168,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
                         <ul style={{ listStyle: "none" }}>
                           {muistutukset[kunta]?.map((tiedosto, index) => (
                             <li key={index}>
-                              <LadattavaTiedostoComponent tiedosto={{ ...tiedosto, linkki: "esikatselu" }} esikatselu={true} />
+                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={true} />
                             </li>
                           ))}
                         </ul>
@@ -153,7 +188,12 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
                   {lausunnot?.map((tiedosto, index) => (
                     <li key={index}>
                       <LadattavaTiedostoComponent
-                        tiedosto={{ ...tiedosto, __typename: "LadattavaTiedosto", linkki: "esikatselu" }}
+                        tiedosto={{
+                          ...tiedosto,
+                          __typename: "LadattavaTiedosto",
+                          linkki: projekti.ennakkoNeuvottelu?.lausunnot?.find((l) => l.uuid === tiedosto.uuid)?.tiedosto,
+                          tuotu: projekti.ennakkoNeuvottelu?.lausunnot?.find((l) => l.uuid === tiedosto.uuid)?.lisatty,
+                        }}
                         esikatselu={true}
                       />
                     </li>
@@ -170,10 +210,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
                 <ul style={{ listStyle: "none" }}>
                   {allMaanomistajaluettelo?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent
-                        tiedosto={{ ...tiedosto, __typename: "LadattavaTiedosto", linkki: "esikatselu" }}
-                        esikatselu={true}
-                      />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={true} />
                     </li>
                   ))}
                 </ul>
@@ -188,10 +225,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
                 <ul style={{ listStyle: "none" }}>
                   {allKuulutuksetJaKutsu?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent
-                        tiedosto={{ ...tiedosto, __typename: "LadattavaTiedosto", linkki: "esikatselu" }}
-                        esikatselu={true}
-                      />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={true} />
                     </li>
                   ))}
                 </ul>
@@ -212,7 +246,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={{ ...tiedosto, linkki: "esikatselu" }} esikatselu={true} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={true} />
                     </li>
                   ))}
                 </ul>
