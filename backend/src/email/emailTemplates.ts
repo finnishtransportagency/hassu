@@ -603,12 +603,15 @@ export function createEnnakkoNeuvotteluViranomaisilleEmail(
   const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
   const url = new URL(`https://${domain}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot`);
   url.searchParams.append("hash", createEnnakkoNeuvotteluHash(projekti.oid, projekti.salt));
-
+  let viranomainen: string;
+  if (projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+    viranomainen = translate("viranomainen.VAYLAVIRASTO", API.Kieli.SUOMI) ?? "Väylävirasto";
+  } else {
+    viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) ?? "ELY-keskus";
+  }
   return {
     subject: `Ennakkoneuvottelu ${projekti.velho?.nimi}`,
-    text: `${
-      projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
-    } lähettää suunnitelman ${
+    text: `${viranomainen} lähettää suunnitelman ${
       projekti.velho?.nimi
     } ennakkoneuvottelua varten Traficomiin. Suunnitelman ennakkoneuvotteluaineisto löytyy oheisen linkin takaa ${url.href}.
 

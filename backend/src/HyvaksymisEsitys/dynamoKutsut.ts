@@ -46,6 +46,8 @@ export type ProjektiTiedostoineen = Pick<
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
   | "hyvEsAineistoPaketti"
+  | "ennakkoNeuvottelu"
+  | "ennakkoNeuvotteluJulkaisu"
 >;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -356,6 +358,42 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       ExpressionAttributeValues: { ":vastaanottajat": vastaanottajat },
     });
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
+  }
+
+  async haeEnnakkoNeuvottelunTiedostoTiedot(oid: string): Promise<ProjektiTiedostoineen> {
+    const params = new GetCommand({
+      TableName: this.projektiTableName,
+      Key: { oid },
+      ConsistentRead: true,
+      ProjectionExpression:
+        "oid, " +
+        "versio, " +
+        "salt, " +
+        "kielitiedot, " +
+        "kayttoOikeudet, " +
+        "velho, " +
+        "aloitusKuulutusJulkaisut, " +
+        "vuorovaikutusKierrosJulkaisut, " +
+        "nahtavillaoloVaiheJulkaisut, " +
+        "ennakkoNeuvottelu, " +
+        "ennakkoNeuvotteluJulkaisu, " +
+        "aineistoHandledAt, " +
+        "hyvEsAineistoPaketti",
+    });
+
+    try {
+      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+      const data = await dynamoDBDocumentClient.send(params);
+      if (!data.Item) {
+        log.error(`Projektia oid:lla ${oid} ei löydy`);
+        throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
+      }
+      const projekti = data.Item as ProjektiTiedostoineen;
+      return projekti;
+    } catch (e) {
+      log.error(e instanceof Error ? e.message : String(e), { params });
+      throw e;
+    }
   }
 }
 

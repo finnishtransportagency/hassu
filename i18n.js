@@ -33,6 +33,7 @@ module.exports = {
     "/suunnitelma/[oid]/hyvaksymisesitysaineistot": ["aineisto"],
     "/yllapito/projekti/[oid]/ennakkoneuvottelu": ["aineisto"],
     "/yllapito/projekti/[oid]/esikatsele-ennakkoneuvottelu": ["aineisto"],
+    "/suunnitelma/[oid]/ennakkoneuvotteluaineistot": ["aineisto"],
   },
   ignoreRoutes: ["/api/", "/keycloak/"],
   loadLocaleFrom: (lang, ns) =>

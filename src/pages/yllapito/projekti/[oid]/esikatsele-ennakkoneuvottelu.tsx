@@ -82,7 +82,8 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
 
       <Section noDivider>
         <p>
-          Huomioi, että tämä sisältö on tarkasteltavissa <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "-"}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
+          Huomioi, että tämä sisältö on tarkasteltavissa <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "-"}</b> asti, jonka jälkeen
+          sisältö poistuu näkyvistä.
         </p>
         {!!ennakkoNeuvotteluInput?.ennakkoNeuvottelu.lisatiedot && (
           <SectionContent>

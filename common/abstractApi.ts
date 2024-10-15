@@ -98,6 +98,8 @@ import {
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaEnnakkoNeuvotteluInput,
   TallennaEnnakkoNeuvotteluMutationVariables,
+  ListaaEnnakkoNeuvottelunTiedostotQueryVariables,
+  EnnakkoNeuvottelunAineistot,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -351,6 +353,11 @@ export const apiConfig: ApiConfig = {
     name: "listaaHyvaksymisEsityksenTiedostot",
     operationType: OperationType.Query,
     graphql: queries.listaaHyvaksymisEsityksenTiedostot,
+  },
+  listaaEnnakkoNeuvottelunTiedostot: {
+    name: "listaaEnnakkoNeuvottelunTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaEnnakkoNeuvottelunTiedostot,
   },
   esikatseleLausuntoPyynnonTiedostot: {
     name: "esikatseleLausuntoPyynnonTiedostot",
@@ -727,6 +734,13 @@ export abstract class AbstractApi {
       oid,
       listaaHyvaksymisEsityksenTiedostotInput,
     } as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
+  }
+
+  async listaaEnnakkoNeuvottelunTiedostot(oid: string, hash: string): Promise<EnnakkoNeuvottelunAineistot> {
+    return await this.callAPI(apiConfig.listaaEnnakkoNeuvottelunTiedostot, {
+      oid,
+      hash,
+    } as ListaaEnnakkoNeuvottelunTiedostotQueryVariables);
   }
 
   async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyynto: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {

@@ -77,7 +77,7 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
     const newEnnakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined = laheta
-      ? { ...cloneDeep(newEnnakkoNeuvottelu), lahetetty: nyt().toISOString() }
+      ? { ...(cloneDeep(newEnnakkoNeuvottelu) as DBEnnakkoNeuvotteluJulkaisu), lahetetty: nyt().toISOString() }
       : undefined;
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
@@ -133,7 +133,10 @@ async function sendEmailAndUpdateDB(projekti: DBProjekti, ennakkoNeuvotteluJulka
   }
 }
 
-async function poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid: string, julkaistuEnnakkoNeuvottelu: DBEnnakkoNeuvotteluJulkaisu | undefined) {
+async function poistaJulkaistunEnnakkoNeuvottelunTiedostot(
+  oid: string,
+  julkaistuEnnakkoNeuvottelu: DBEnnakkoNeuvotteluJulkaisu | undefined
+) {
   if (!julkaistuEnnakkoNeuvottelu) {
     return;
   }

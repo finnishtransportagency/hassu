@@ -211,7 +211,7 @@ export type DBEnnakkoNeuvottelu = {
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
 };
 
-export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string };
+export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string; poistumisPaiva: string };
 
 export type OmistajaHaku = {
   virhe?: boolean | null;

@@ -1304,6 +1304,22 @@ type HyvaksymisEsityksenAineistot {
   aineistopaketti: String
 }
 
+type EnnakkoNeuvottelunAineistot {
+  perustiedot: ProjektinPerustiedot!
+  poistumisPaiva: String
+  eiOlemassa: Boolean
+  linkkiVanhentunut: Boolean
+  lisatiedot: String
+  projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  suunnitelma: [LadattavaTiedosto!]
+  kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
+  lausunnot: [LadattavaTiedosto!]
+  maanomistajaluettelo: [LadattavaTiedosto!]
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  muutAineistot: [LadattavaTiedosto!]
+  aineistopaketti: String
+}
+
 interface ILadattavaTiedosto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
