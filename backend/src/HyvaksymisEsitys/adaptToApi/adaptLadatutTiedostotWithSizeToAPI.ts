@@ -12,7 +12,7 @@ export async function adaptLadatutTiedostotWithSizeToAPI({
   path: string;
 }): Promise<API.LadattuTiedostoNew[] | undefined> {
   if (tiedostot && tiedostot.length > 0) {
-    return Promise.all(
+    return await Promise.all(
       tiedostot.map(async (tiedosto: LadattuTiedostoNew) => {
         const { nimi, lisatty, uuid } = tiedosto;
         const tiedostoPath = joinPath(path, adaptFileName(nimi));
