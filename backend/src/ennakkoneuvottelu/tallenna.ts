@@ -90,6 +90,7 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       await poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid, projektiInDB.ennakkoNeuvotteluJulkaisu);
       await copyMuokattavaEnnakkoNeuvotteluFilesToJulkaistu(oid, newEnnakkoNeuvotteluJulkaisu);
       await sendEmailAndUpdateDB(projektiInDB, newEnnakkoNeuvotteluJulkaisu);
+      await SqsClient.addEventToSqsQueue({ operation: HyvaksymisEsitysAineistoOperation.ZIP_ENNAKKONEUVOTTELU_TIEDOSTOT, oid });
     }
     if (
       uusiaAineistoja(

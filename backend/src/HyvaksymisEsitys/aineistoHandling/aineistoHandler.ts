@@ -12,7 +12,7 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { SimultaneousUpdateError } from "hassu-common/error";
-import { DBProjekti, IHyvaksymisEsitys } from "../../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
 import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
@@ -41,6 +41,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           }
           case HyvaksymisEsitysAineistoOperation.TUO_ENNAKKONEUVOTTELU_TIEDOSTOT: {
             await tuoAineistot(oid, true);
+            break;
+          }
+          case HyvaksymisEsitysAineistoOperation.ZIP_ENNAKKONEUVOTTELU_TIEDOSTOT: {
+            await zipHyvEsAineistot(oid, true);
             break;
           }
           default: {
@@ -72,11 +76,18 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   });
 };
 
-export async function zipHyvEsAineistot(oid: string) {
-  const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid);
-  assertIsDefined(projekti.muokattavaHyvaksymisEsitys, "Muokattava hyväksymisesitys oltava zipattaessa");
+export async function zipHyvEsAineistot(oid: string, ennakkoneuvottelu = false) {
+  const projekti: ZipattavatAineistotHyvaksymisEsitykseen = await haeZipattavatAineistotHyvaksymisEsityksen(oid, ennakkoneuvottelu);
+  let aineisto: DBEnnakkoNeuvotteluJulkaisu | MuokattavaHyvaksymisEsitys;
+  if (ennakkoneuvottelu) {
+    assertIsDefined(projekti.ennakkoNeuvotteluJulkaisu, "Ennakkoneuvottelun julkaisu oltava zipattaessa");
+    aineisto = projekti.ennakkoNeuvotteluJulkaisu;
+  } else {
+    assertIsDefined(projekti.muokattavaHyvaksymisEsitys, "Muokattava hyväksymisesitys oltava zipattaessa");
+    aineisto = projekti.muokattavaHyvaksymisEsitys;
+  }
   const { hyvaksymisEsitys, kuulutuksetJaKutsu, muutAineistot, suunnitelma, kuntaMuistutukset, maanomistajaluettelo, lausunnot } =
-    collectHyvaksymisEsitysAineistot(projekti, projekti.muokattavaHyvaksymisEsitys, projekti.aineistoHandledAt);
+    collectHyvaksymisEsitysAineistot(projekti, aineisto, projekti.aineistoHandledAt);
   const filesToZip: ZipSourceFile[] = [
     ...hyvaksymisEsitys,
     ...kuulutuksetJaKutsu,
@@ -89,9 +100,9 @@ export async function zipHyvEsAineistot(oid: string) {
   await generateAndStreamZipfileToS3(
     config.yllapitoBucketName,
     filesToZip,
-    joinPath(getYllapitoPathForProjekti(projekti.oid), "hyvaksymisesitys", "/aineisto.zip")
+    joinPath(getYllapitoPathForProjekti(projekti.oid), ennakkoneuvottelu ? "ennakkoneuvottelu" : "hyvaksymisesitys", "/aineisto.zip")
   );
-  await setAineistoZip(oid);
+  await setAineistoZip(oid, ennakkoneuvottelu);
 }
 
 export async function tuoAineistot(oid: string, ennakko: boolean) {
@@ -168,9 +179,13 @@ type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
   | "muokattavaHyvaksymisEsitys"
   | "aineistoHandledAt"
   | "velho"
+  | "ennakkoNeuvotteluJulkaisu"
 >;
 
-async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
+async function haeZipattavatAineistotHyvaksymisEsityksen(
+  oid: string,
+  ennakkoneuvottelu: boolean
+): Promise<ZipattavatAineistotHyvaksymisEsitykseen> {
   const params = new GetCommand({
     TableName: config.projektiTableName,
     Key: { oid },
@@ -182,9 +197,9 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(oid: string): Promise<Z
       "aloitusKuulutusJulkaisut, " +
       "vuorovaikutusKierrosJulkaisut, " +
       "nahtavillaoloVaiheJulkaisut, " +
-      "muokattavaHyvaksymisEsitys, " +
       "aineistoHandledAt, " +
-      "velho",
+      "velho, " +
+      (ennakkoneuvottelu ? "ennakkoNeuvotteluJulkaisu" : "muokattavaHyvaksymisEsitys"),
   });
 
   try {
@@ -241,24 +256,20 @@ async function setAineistoHandledAt(oid: string, versio: number) {
   }
 }
 
-async function setAineistoZip(oid: string) {
+async function setAineistoZip(oid: string, ennakkoneuvottelu: boolean) {
   const params = new UpdateCommand({
     TableName: config.projektiTableName,
     Key: {
       oid,
     },
-    UpdateExpression: "SET " + "#hyvEsAineistoPaketti = :aineistoZip",
+    UpdateExpression: "SET " + "#aineisto = :aineistoZip",
     ExpressionAttributeNames: {
-      "#hyvEsAineistoPaketti": "hyvEsAineistoPaketti",
+      "#aineisto": ennakkoneuvottelu ? "ennakkoNeuvotteluAineistoPaketti" : "hyvEsAineistoPaketti",
     },
     ExpressionAttributeValues: {
-      ":aineistoZip": "hyvaksymisesitys/aineisto.zip",
+      ":aineistoZip": ennakkoneuvottelu ? "ennakkoneuvottelu/aineisto.zip" : "hyvaksymisesitys/aineisto.zip",
     },
   });
-
-  if (log.isLevelEnabled("debug")) {
-    log.debug("Marking hyvEsAineistoPaketti as created", "hyvEsAineistoPaketti: " + "hyvaksymisesitys/aineisto.zip");
-  }
   try {
     const dynamoDBDocumentClient = getDynamoDBDocumentClient();
     await dynamoDBDocumentClient.send(params);

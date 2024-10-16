@@ -1,4 +1,4 @@
-import { IHyvaksymisEsitys, AineistoNew, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { IHyvaksymisEsitys, AineistoNew, MuokattavaHyvaksymisEsitys, DBEnnakkoNeuvottelu } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 
 /**
@@ -7,7 +7,7 @@ import { parseDate } from "../util/dateUtil";
  * @returns Hyväksymisesityksen aineistot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export default function getHyvaksymisEsityksenAineistot(
-  hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined
+  hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined | DBEnnakkoNeuvottelu
 ): (AineistoNew & { avain: string })[] {
   if (!hyvaksymisEsitys) {
     return [] as (AineistoNew & { avain: string })[];

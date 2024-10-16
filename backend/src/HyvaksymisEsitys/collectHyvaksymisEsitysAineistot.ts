@@ -172,7 +172,7 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): FileInfo[]
       if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
         maanomistajaluttelo.push({
           s3Key: joinPath(getSisaisetPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
-          zipFolder: "Maanomistajaluttelo",
+          zipFolder: "Maanomistajaluettelo",
           nimi: fileService.getFileNameFromFilePath(nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
           valmis: true,
         });

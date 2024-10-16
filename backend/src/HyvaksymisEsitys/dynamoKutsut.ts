@@ -48,6 +48,7 @@ export type ProjektiTiedostoineen = Pick<
   | "hyvEsAineistoPaketti"
   | "ennakkoNeuvottelu"
   | "ennakkoNeuvotteluJulkaisu"
+  | "ennakkoNeuvotteluAineistoPaketti"
 >;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -378,7 +379,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "ennakkoNeuvottelu, " +
         "ennakkoNeuvotteluJulkaisu, " +
         "aineistoHandledAt, " +
-        "hyvEsAineistoPaketti",
+        "ennakkoNeuvotteluAineistoPaketti",
     });
 
     try {

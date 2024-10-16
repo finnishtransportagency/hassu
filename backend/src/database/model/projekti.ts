@@ -196,6 +196,7 @@ export type DBProjekti = {
   hyvEsAineistoPaketti?: string | null;
   ennakkoNeuvottelu?: DBEnnakkoNeuvottelu;
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
+  ennakkoNeuvotteluAineistoPaketti?: string | null;
 };
 
 export type DBEnnakkoNeuvottelu = {

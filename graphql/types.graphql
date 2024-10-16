@@ -1317,7 +1317,6 @@ type HyvaksymisEsityksenAineistot {
 type EnnakkoNeuvottelunAineistot {
   perustiedot: ProjektinPerustiedot!
   poistumisPaiva: String
-  eiOlemassa: Boolean
   linkkiVanhentunut: Boolean
   lisatiedot: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen

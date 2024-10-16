@@ -26,7 +26,6 @@ export default async function listaaEnnakkoNeuvottelunTiedostot({
     if (!ennakkoNeuvotteluJulkaisu) {
       return {
         __typename: "EnnakkoNeuvottelunAineistot",
-        eiOlemassa: true,
         projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
         perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       };
@@ -45,8 +44,8 @@ export default async function listaaEnnakkoNeuvottelunTiedostot({
         perustiedot: adaptVelhoToProjektinPerustiedot(projekti.velho),
       };
     }
-    const aineistopaketti = projekti?.hyvEsAineistoPaketti
-      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, projekti?.hyvEsAineistoPaketti)
+    const aineistopaketti = projekti.ennakkoNeuvotteluAineistoPaketti
+      ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, projekti.ennakkoNeuvotteluAineistoPaketti)
       : null;
     const ladattavatTiedostot = await createLadattavatTiedostot(projekti, ennakkoNeuvotteluJulkaisu);
     return {

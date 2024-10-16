@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import VanhentunutAineistolinkki from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
+import VanhentunutAineistolinkki, { AineistoType } from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
 import { useEnnakkoNeuvottelunAineistot } from "src/hooks/useEnnakkoNeuvottelunAineistot";
 import { EnnakkoNeuvottelunAineistot, LadattavaTiedosto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
@@ -26,14 +26,14 @@ export default function EnnakkoNeuvotteluLinkki(): ReactElement {
         poistumisPaiva={data.poistumisPaiva}
         suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
         projarinYhteystiedot={data.projektipaallikonYhteystiedot}
-        hyvaksymisesitys
+        tyyppi={AineistoType.ENNAKKONEUVOTTELU}
       />
     );
   }
   return <EnnakkoNeuvotteluAineistoPage {...data} />;
 }
 
-function EnnakkoNeuvotteluAineistoPage(props: EnnakkoNeuvottelunAineistot): ReactElement {
+function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineistot>): ReactElement {
   const {
     aineistopaketti,
     suunnitelma,

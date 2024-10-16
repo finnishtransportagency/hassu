@@ -3,17 +3,31 @@ import { ProjektiKayttajaJulkinen } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { H1, H2 } from "@components/Headings";
 
+export enum AineistoType {
+  ENNAKKONEUVOTTELU,
+  HYVAKSYMISESITYS,
+  LAUSUNTOPYYNTO,
+}
+
 export default function VanhentunutAineistolinkki({
   poistumisPaiva,
   projarinYhteystiedot,
   suunnitelmanNimi,
-  hyvaksymisesitys,
+  tyyppi,
 }: Readonly<{
   poistumisPaiva: string | null | undefined;
   projarinYhteystiedot: ProjektiKayttajaJulkinen | null | undefined;
   suunnitelmanNimi: string | null | undefined;
-  hyvaksymisesitys?: boolean;
+  tyyppi?: AineistoType;
 }>): ReactElement {
+  let tyyppiMessage: string;
+  if (tyyppi === AineistoType.ENNAKKONEUVOTTELU) {
+    tyyppiMessage = "Ennakkoneuvottelun";
+  } else if (tyyppi === AineistoType.HYVAKSYMISESITYS) {
+    tyyppiMessage = "Hyväksymisesityksen";
+  } else {
+    tyyppiMessage = "Lausuntopyynnön";
+  }
   return (
     <>
       <H1>Aineistolinkin voimassaolo on päättynyt</H1>
@@ -22,7 +36,7 @@ export default function VanhentunutAineistolinkki({
       </H2>
       <div style={{ maxWidth: "40em" }}>
         <p>
-          {hyvaksymisesitys ? "Hyväksymisesityksen" : "Lausuntopyynnön"} aineistolinkin voimassaolo on päättynyt{" "}
+          {tyyppiMessage} aineistolinkin voimassaolo on päättynyt{" "}
           <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "virhe: päivämäärä puuttuu"}</b>.
         </p>
         <p>
