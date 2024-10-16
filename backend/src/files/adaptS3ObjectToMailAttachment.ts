@@ -8,7 +8,7 @@ export default function adaptS3ObjectOutputToMailAttachment(
   key: string
 ): Mail.Attachment | undefined {
   if (!(Body instanceof Readable)) {
-    log.error("Liitetiedoston sisällössa ongelmia");
+    log.error("Liitetiedoston sisällössä ongelmia");
     return undefined;
   }
   const contentType = !ContentType || ContentType == "null" ? "application/octet-stream" : ContentType;

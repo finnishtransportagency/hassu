@@ -40,7 +40,7 @@ export function validateTiedostoForUpload(tiedosto: File) {
     throw new FileSizeExceededLimitError("Ladattavan tiedoston maksimikoko ylittyi", tiedosto);
   }
   if (!allowedFileTypes.includes(tiedosto.type)) {
-    throw new FileTypeNotAllowedError("Ladattavan tiedosot väärä", tiedosto);
+    throw new FileTypeNotAllowedError("Ladattava tiedosto ei ole sallittua tyyppiä", tiedosto);
   }
 }
 

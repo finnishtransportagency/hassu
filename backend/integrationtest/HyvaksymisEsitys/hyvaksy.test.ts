@@ -923,7 +923,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
     const kutsu = hyvaksyHyvaksymisEsitys({ oid, versio });
-    await expect(kutsu).to.be.eventually.be.rejectedWith(Error, "Poistumispäivä on oltava määritelty tässä vaiheessa");
+    await expect(kutsu).to.be.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Projektilla ei ole hyväksymistä odottavaa hyväksymisesitystä"
+    );
   });
 
   it("ei onnistu jos poistumisPaiva on menneisyydessa", async () => {

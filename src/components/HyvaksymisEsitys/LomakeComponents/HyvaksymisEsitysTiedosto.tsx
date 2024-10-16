@@ -48,8 +48,8 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
       <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
       {totalFileSize > maxHyvaksymisesitysFileSize && (
         <Notification type={NotificationType.WARN}>
-          Hyväksymisesitystiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähetettää vastaanottajille sähköpostien
-          liitteenä. Vastaanottajat pääsevät lataamaan hyväksymisesitystiedostot sähköpostiin tulevasta linkistä.
+          Hyväksymisesitystiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähetettää vastaanottajille sähköpostin
+          liitteinä. Vastaanottajat pääsevät lataamaan hyväksymisesitystiedostot sähköpostiin tulevasta linkistä.
         </Notification>
       )}
       {!!fields?.length && (
