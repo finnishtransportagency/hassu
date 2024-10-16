@@ -3,9 +3,18 @@ import { DBProjekti } from "../../src/database/model";
 import { adaptHyvaksymisEsitysToAPI } from "../../src/projekti/adapter/adaptToAPI";
 import * as API from "hassu-common/graphql/apiModel";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
+import sinon from "sinon";
+import { fileService } from "../../src/files/fileService";
 
 describe("adaptHyvaksymisEsitysToApi", () => {
-  it("adaptoi tiedostopolut oikein", () => {
+  let publishProjektiFileStub: sinon.SinonStub;
+
+  before(async () => {
+    publishProjektiFileStub = sinon.stub(fileService, "getFileContentLength");
+    publishProjektiFileStub.resolves(300);
+  });
+
+  it("adaptoi tiedostopolut oikein", async () => {
     const projektiInDB: Pick<
       DBProjekti,
       "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt"
@@ -33,7 +42,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       salt: "jotain",
       aineistoHandledAt: "2022-01-02T01:01:01:222",
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.hyvaksymisEsitys?.[0].tiedosto).to.eql(
       "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/tiedosto.png"
     );
@@ -42,7 +51,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
     );
   });
 
-  it("adaptoi muistutukset oikein, niin että kuntatieto säilyy", () => {
+  it("adaptoi muistutukset oikein, niin että kuntatieto säilyy", async () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       salt: "jotain",
@@ -59,11 +68,11 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         ],
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.muistutukset?.[0]?.kunta).to.eql(1);
   });
 
-  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on muokattava hyväksymisesitys, muttei julkaistua", () => {
+  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on muokattava hyväksymisesitys, muttei julkaistua", async () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       salt: "jotain",
@@ -73,12 +82,12 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       },
       julkaistuHyvaksymisEsitys: undefined,
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.MUOKKAUS);
   });
 
-  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on muokkaustilainen hyväksymisesitys ja julkaistu hyväksymisesitys", () => {
+  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on muokkaustilainen hyväksymisesitys ja julkaistu hyväksymisesitys", async () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       salt: "jotain",
@@ -94,14 +103,14 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.MUOKKAUS);
   });
 
-  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on hyväksyntää odottava hyväksymisesitys ja julkaistu hyväksymisesitys", () => {
+  it("näyttää muokattavan hyväksymisesityksen tiedot, jos on hyväksyntää odottava hyväksymisesitys ja julkaistu hyväksymisesitys", async () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       salt: "jotain",
@@ -117,14 +126,14 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA);
   });
 
-  it("näyttää hyväksytyn hyväksymisesityksen tiedot, jos on hyväksytty muokattava hyväksymisesitys ja julkaistu hyväksymisesitys", () => {
+  it("näyttää hyväksytyn hyväksymisesityksen tiedot, jos on hyväksytty muokattava hyväksymisesitys ja julkaistu hyväksymisesitys", async () => {
     const projektiInDB: Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys"> = {
       oid: "1",
       salt: "jotain",
@@ -140,14 +149,14 @@ describe("adaptHyvaksymisEsitysToApi", () => {
         hyvaksymisPaiva: "2033-01-03",
       },
     };
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-01");
     expect(hyvaksymisEsitys?.hyvaksyja).to.exist;
     expect(hyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
     expect(hyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.HYVAKSYTTY);
   });
 
-  it("sisällyttää adaptoidessa kaikki tiedot adaptoinnin tulokseen", () => {
+  it("sisällyttää adaptoidessa kaikki tiedot adaptoinnin tulokseen", async () => {
     const projektiInDB = {
       oid: "1",
       salt: "jotain",
@@ -164,7 +173,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       aineistoHandledAt: "2022-01-02T02:01:00+02:00",
       hyvEsAineistoPaketti: "hyvaksymisesitys/aineisto.zip",
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys).to.eql({
       __typename: "HyvaksymisEsitys",
       hyvaksyja: "oid",
@@ -181,6 +190,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       hyvaksymisEsitys: [
         {
           __typename: "LadattuTiedostoNew",
+          koko: 300,
           nimi: "hyvaksymisEsitys äöå .png",
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "hyvaksymis-esitys-uuid",
@@ -270,7 +280,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
     });
   });
 
-  it("antaa oikeat tuontitiedot, jos aineistoja ei ole koskaan tuotu", () => {
+  it("antaa oikeat tuontitiedot, jos aineistoja ei ole koskaan tuotu", async () => {
     const projektiInDB = {
       oid: "1",
       salt: "jotain",
@@ -285,7 +295,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
       },
       // aineistoHandledAt ei määritelty
     } as any as Pick<DBProjekti, "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys">;
-    const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(projektiInDB);
+    const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(projektiInDB);
     expect(hyvaksymisEsitys?.muuAineistoVelhosta?.[0]?.tuotu).to.eql(false);
   });
 });

@@ -117,8 +117,13 @@ export class ProjektiAdapter {
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisuToAPI(dbProjekti, nahtavillaoloVaiheJulkaisut),
       lausuntoPyynnot: adaptLausuntoPyynnotToAPI(dbProjekti, lausuntoPyynnot),
       lausuntoPyynnonTaydennykset: adaptLausuntoPyynnonTaydennyksetToAPI(dbProjekti, lausuntoPyynnonTaydennykset),
-      hyvaksymisEsitys: adaptHyvaksymisEsitysToAPI({ oid, salt: dbProjekti.salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys }),
-      hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaiheToAPI(
+      hyvaksymisEsitys: await adaptHyvaksymisEsitysToAPI({
+        oid,
+        salt: dbProjekti.salt,
+        muokattavaHyvaksymisEsitys,
+        julkaistuHyvaksymisEsitys,
+      }),
+      hyvaksymisPaatosVaihe: await adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
@@ -131,7 +136,7 @@ export class ProjektiAdapter {
         hyvaksymisPaatosVaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
       ),
-      jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaiheToAPI(
+      jatkoPaatos1Vaihe: await adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
@@ -144,7 +149,7 @@ export class ProjektiAdapter {
         jatkoPaatos1VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
       ),
-      jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToAPI(
+      jatkoPaatos2Vaihe: await adaptHyvaksymisPaatosVaiheToAPI(
         kayttoOikeudet,
         jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,

@@ -1,4 +1,4 @@
-import { lataaTiedostot } from "../util/fileUtil";
+import { LataaTiedostoResult, lataaTiedostot } from "../util/fileUtil";
 import { FieldArrayPath, FieldArrayPathValue, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -7,26 +7,28 @@ import { useCallback } from "react";
 import { FileSizeExceededLimitError, FileTypeNotAllowedError } from "common/error";
 import { ShowMessage } from "@components/HassuSnackbarProvider";
 import { API } from "@services/api/commonApi";
-import { KunnallinenLadattuTiedostoInput, LadattuTiedostoInputNew, LadattuTiedostoTila } from "@services/api";
+import { KunnallinenLadattuTiedostoInput, LadattuTiedostoNew, LadattuTiedostoTila } from "@services/api";
 import { uuid } from "common/util/uuid";
 import { LadattuTiedostoInputWithTuotu } from "@components/projekti/lausuntopyynnot/types";
 
 export const mapUploadedFileToKunnallinenLadattuTiedostoInput =
   (kunta: number) =>
-  (file: { path: string; name: string }): KunnallinenLadattuTiedostoInput => ({
+  (file: LataaTiedostoResult): KunnallinenLadattuTiedostoInput => ({
     kunta,
     nimi: file.name,
     uuid: uuid.v4(),
     tiedosto: file.path,
   });
 
-export const mapUploadedFileToLadattuTiedostoInputNew = (file: { path: string; name: string }): LadattuTiedostoInputNew => ({
+export const mapUploadedFileToLadattuTiedostoInputNew = (file: LataaTiedostoResult): LadattuTiedostoNew => ({
   nimi: file.name,
   uuid: uuid.v4(),
   tiedosto: file.path,
+  koko: file.size,
+  __typename: "LadattuTiedostoNew",
 });
 
-export const mapUploadedFileToLadattuTiedostoInputWithTuotu = (file: { path: string; name: string }): LadattuTiedostoInputWithTuotu => ({
+export const mapUploadedFileToLadattuTiedostoInputWithTuotu = (file: LataaTiedostoResult): LadattuTiedostoInputWithTuotu => ({
   nimi: file.name,
   uuid: uuid.v4(),
   tiedosto: file.path,
@@ -42,7 +44,7 @@ export default function useHandleUploadedFiles<
 >(
   { watch, setValue }: UseFormReturn<TFieldValues>,
   keyToLadatutTiedostot: TFieldArrayName,
-  mapUploadedFileToFormValue: (jotain: { name: string; path: string }) => TFieldArray,
+  mapUploadedFileToFormValue: (jotain: LataaTiedostoResult) => TFieldArray,
   allowOnlyOne?: boolean
 ) {
   const ladatutTiedostot: TFieldArray[] = watch(keyToLadatutTiedostot);
@@ -79,7 +81,7 @@ export default function useHandleUploadedFiles<
   );
 }
 
-async function tryFilelistUpload(api: API, files: FileList, showErrorMessage: ShowMessage) {
+async function tryFilelistUpload(api: API, files: FileList, showErrorMessage: ShowMessage): Promise<LataaTiedostoResult[] | undefined> {
   try {
     return await lataaTiedostot(api, files);
   } catch (e) {

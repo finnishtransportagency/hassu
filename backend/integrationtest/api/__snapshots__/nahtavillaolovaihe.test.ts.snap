@@ -45,18 +45,21 @@ Object {
   "yllapito S3 files Nähtävilläolovaihe saamenkielisellä kuulutuksella ja ilmoituksella": Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
@@ -110,6 +113,7 @@ Object {
   "yllapito S3 files Nähtävilläolovaihejulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
     "/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentLength": 52843,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
@@ -117,6 +121,7 @@ Object {
     },
     "/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentLength": 48284,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
@@ -124,6 +129,7 @@ Object {
     },
     "/1/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20nahtaville%20asettamisesta.pdf",
+      "ContentLength": 52295,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -131,35 +137,41 @@ Object {
     },
     "/1/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentLength": 0,
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
     "/1/aineisto.zip": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 298,
       "ContentType": "application/octet-stream",
       "checksum": "ABC123",
     },
     "/1/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145245,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
       "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
     },
     "/1/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
@@ -213,6 +225,7 @@ Object {
   "public S3 files Nähtävilläolovaihejulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
     "/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentLength": 52843,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
@@ -220,6 +233,7 @@ Object {
     },
     "/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentLength": 48284,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
@@ -227,6 +241,7 @@ Object {
     },
     "/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20nahtaville%20asettamisesta.pdf",
+      "ContentLength": 52295,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -234,6 +249,7 @@ Object {
     },
     "/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentLength": 0,
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "expirationDate": "2040-01-01T23:59:59+02:00",
@@ -242,12 +258,14 @@ Object {
     },
     "/aineisto.zip": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 298,
       "ContentType": "application/octet-stream",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145245,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
       "checksum": "ABC123",
@@ -255,6 +273,7 @@ Object {
     },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
@@ -262,6 +281,7 @@ Object {
     },
     "/saamekirjetiedotettaville.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -269,6 +289,7 @@ Object {
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",

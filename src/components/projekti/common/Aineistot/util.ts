@@ -106,8 +106,14 @@ export function combineOldAndNewAineistoWithCategories({
   }, oldAineisto || {});
 }
 
-export function combineOldAndNewAineisto({ oldAineisto, newAineisto }: { oldAineisto?: FormAineisto[]; newAineisto: FormAineisto[] }) {
-  return newAineisto.reduce((combinedNewAndOld, velhoAineisto) => {
+export function combineOldAndNewAineisto({
+  oldAineisto,
+  newAineisto,
+}: {
+  oldAineisto?: FormAineisto[];
+  newAineisto: FormAineisto[];
+}): FormAineisto[] {
+  return newAineisto.reduce<FormAineisto[]>((combinedNewAndOld, velhoAineisto) => {
     if (!find(combinedNewAndOld, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
       combinedNewAndOld.push({ ...velhoAineisto, jarjestys: combinedNewAndOld.length });
     }
@@ -120,4 +126,5 @@ export const adaptVelhoAineistoToAineistoInput = (velhoAineisto: VelhoAineisto):
   nimi: velhoAineisto.tiedosto,
   tila: AineistoTila.ODOTTAA_TUONTIA,
   uuid: uuid.v4(),
+  koko: velhoAineisto.koko,
 });

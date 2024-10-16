@@ -1,30 +1,38 @@
 import Button from "@components/button/Button";
 import HyvaksymisPaatosTiedostot from "./HyvaksymisPaatosTiedostotTaulu";
 import { useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 import { getPaatosInfoText } from "../textsForDifferentPaatos";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "..";
 import { adaptVelhoAineistoToAineistoInput, combineOldAndNewAineisto } from "@components/projekti/common/Aineistot/util";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 type Props = {
   paatosTyyppi: PaatosTyyppi;
 };
 
+const maxPaatosFileSize = 30 * 1024 * 1024;
+
 export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props) {
-  const { watch, control } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
+  const { watch, setValue } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
-  const { replace: replaceHyvaksymisPaatos } = useFieldArray({ control, name: "hyvaksymisPaatos" });
+
+  const totalPaatosSize = hyvaksymisPaatos?.reduce((combinedSize, { koko }) => (combinedSize += koko ?? 0), 0) ?? 0;
 
   const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
   return (
-    <div>
+    <ContentSpacer gap={7}>
       <p>{getPaatosInfoText(paatosTyyppi)}</p>
-      <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
-        Tuo päätös
-      </Button>
+      {totalPaatosSize > maxPaatosFileSize && (
+        <Notification type={NotificationType.WARN}>
+          Päätöstiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähetettää vastaanottajille sähköpostien liitteenä.
+          Valitse pienemmät tiedostot tai välitä tiedostot tiedotetaville järjestelmän ulkopuolella.
+        </Notification>
+      )}
       {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
       <AineistojenValitseminenDialog
         open={paatosDialogOpen}
@@ -36,9 +44,12 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props)
             oldAineisto: hyvaksymisPaatos,
             newAineisto,
           });
-          replaceHyvaksymisPaatos(newHyvaksymisPaatos);
+          setValue("hyvaksymisPaatos", newHyvaksymisPaatos);
         }}
       />
-    </div>
+      <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
+        Tuo päätös
+      </Button>
+    </ContentSpacer>
   );
 }

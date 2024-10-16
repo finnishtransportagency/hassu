@@ -8,11 +8,14 @@ import { H4 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import Notification, { NotificationType } from "@components/notification/Notification";
+
+const maxHyvaksymisesitysFileSize = 30 * 1024 * 1024;
 
 export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
-  const { control, register } = useFormReturn;
+  const { control, register, watch } = useFormReturn;
 
   const fieldName = "muokattavaHyvaksymisEsitys.hyvaksymisEsitys";
   const {
@@ -21,7 +24,12 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
   } = useController({ name: fieldName, control });
 
   const { fields, remove, move } = useFieldArray({ name: fieldName, control });
+
+  const hyvaksymisesitystiedostot = watch(fieldName);
+
   const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, fieldName, mapUploadedFileToLadattuTiedostoInputNew);
+
+  const totalFileSize = hyvaksymisesitystiedostot?.reduce((combinedSize, { koko }) => (combinedSize += koko ?? 0), 0) ?? 0;
 
   const onButtonClick = () => {
     hiddenInputRef.current?.click();
@@ -38,6 +46,12 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
     <SectionContent>
       <H4 variant="h3">Hyväksymisesitys</H4>
       <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
+      {totalFileSize > maxHyvaksymisesitysFileSize && (
+        <Notification type={NotificationType.WARN}>
+          Hyväksymisesitystiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähetettää vastaanottajille sähköpostien
+          liitteenä. Vastaanottajat pääsevät lataamaan hyväksymisesitystiedostot sähköpostiin tulevasta linkistä.
+        </Notification>
+      )}
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="hyvaksymisesitys_files_table"
@@ -48,6 +62,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
           registerNimi={registerNimi}
           ladattuTiedosto
           noHeaders
+          showKoko
           showTuotu
         />
       )}

@@ -2,7 +2,6 @@ import sinon, { SinonStub } from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
-import MockDate from "mockdate";
 import { DBProjekti } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
@@ -16,7 +15,6 @@ import { parameters } from "../../../src/aws/parameters";
 describe("hyvaksymisPaatosTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
-  let deleteFiles: SinonStub;
   let saveProjekti: SinonStub;
 
   afterEach(() => {
@@ -35,7 +33,8 @@ describe("hyvaksymisPaatosTilaManager", () => {
     delete projekti.jatkoPaatos2Vaihe;
     delete projekti.jatkoPaatos2VaiheJulkaisut;
     userFixture.loginAs(UserFixture.hassuAdmin);
-    deleteFiles = sinon.stub(fileService, "deleteProjektiFilesRecursively");
+    sinon.stub(fileService, "deleteProjektiFilesRecursively");
+    sinon.stub(fileService, "getFileContentLength").returns(Promise.resolve(400));
     saveProjekti = sinon.stub(projektiDatabase, "saveProjekti");
     sinon.stub(projektiDatabase, "updateJulkaisuToList");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
@@ -63,12 +62,14 @@ describe("hyvaksymisPaatosTilaManager", () => {
             nimi: "Saamenkielinen kuulutus",
             tuotu: "2023-01-01",
             tila: LadattuTiedostoTila.VALMIS,
+            uuid: "uuid123",
           },
           kuulutusIlmoitusPDF: {
             tiedosto: "/hyvaksymispaatos/1/kuulutusilmoitus.pdf",
             nimi: "Saamenkielinen kuulutus ilmoitus",
             tuotu: "2023-01-01",
             tila: LadattuTiedostoTila.VALMIS,
+            uuid: "uuid1234",
           },
         },
       },
@@ -85,12 +86,14 @@ describe("hyvaksymisPaatosTilaManager", () => {
               nimi: "Saamenkielinen kuulutus",
               tuotu: "2023-01-01",
               tila: LadattuTiedostoTila.VALMIS,
+              uuid: "uuid123",
             },
             kuulutusIlmoitusPDF: {
               tiedosto: "/hyvaksymispaatos/1/kuulutusilmoitus.pdf",
               nimi: "Saamenkielinen kuulutus ilmoitus",
               tuotu: "2023-01-01",
               tila: LadattuTiedostoTila.VALMIS,
+              uuid: "uuid1234",
             },
           },
         },

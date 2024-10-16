@@ -44,13 +44,20 @@ export function validateTiedostoForUpload(tiedosto: File) {
   }
 }
 
-export async function lataaTiedostot(api: API, fileList: FileList | File[]): Promise<{ name: string; path: string }[]> {
+export type LataaTiedostoResult = {
+  name: string;
+  path: string;
+  size: number;
+};
+
+export async function lataaTiedostot(api: API, fileList: FileList | File[]): Promise<LataaTiedostoResult[]> {
   const tiedostot = Array.from(fileList);
   tiedostot.forEach((tiedosto) => validateTiedostoForUpload(tiedosto));
   return await Promise.all(
-    tiedostot.map<Promise<{ name: string; path: string }>>(async (tiedosto) => ({
+    tiedostot.map<Promise<LataaTiedostoResult>>(async (tiedosto) => ({
       name: tiedosto.name,
       path: await lataaTiedostoInternal(api, tiedosto),
+      size: tiedosto.size,
     }))
   );
 }

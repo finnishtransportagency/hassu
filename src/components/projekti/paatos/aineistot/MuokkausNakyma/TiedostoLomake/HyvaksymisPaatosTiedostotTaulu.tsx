@@ -10,6 +10,7 @@ import { experimental_sx as sx, MUIStyledCommonProps, styled } from "@mui/system
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 import { FormAineisto } from "src/util/FormAineisto";
+import { byteFileSizeToHumanString } from "common/util/fileSizeToHumanReadable";
 
 interface FormValues {
   hyvaksymisPaatos: AineistoInput[];
@@ -25,7 +26,7 @@ export default function AineistoTable() {
     () => [
       {
         header: "Aineisto",
-        meta: { minWidth: 250, widthFractions: 6 },
+        meta: { minWidth: 250, widthFractions: 5 },
         accessorFn: (aineisto, index) => {
           const errorMessage = (formState.errors.hyvaksymisPaatos?.[index] as any | undefined)?.message;
           return (
@@ -37,6 +38,12 @@ export default function AineistoTable() {
             </>
           );
         },
+      },
+      {
+        header: "Koko",
+        accessorKey: "koko",
+        meta: { minWidth: 55, widthFractions: 2 },
+        cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number),
       },
       {
         header: "Tuotu",

@@ -68,6 +68,7 @@ export class FileMetadata {
   checksum?: string;
   fileType?: FileType;
   asiakirjaTyyppi?: string;
+  ContentLength?: number;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -80,6 +81,7 @@ export class FileMetadata {
       isEqual(this.checksum, other.checksum) &&
       isEqual(this.fileType, other.fileType) &&
       isEqual(this.asiakirjaTyyppi, other.asiakirjaTyyppi) &&
+      isEqual(this.ContentLength, other.ContentLength) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -543,6 +545,11 @@ export class FileService {
     return result;
   }
 
+  async getFileContentLength(bucketName: string, key: string): Promise<number | undefined> {
+    const fileMetaData = await FileService.getFileMetaData(bucketName, key);
+    return fileMetaData?.ContentLength;
+  }
+
   private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
       const keyWithoutLeadingSlash = key.replace(/^\//, "");
@@ -560,6 +567,7 @@ export class FileService {
 
       result.ContentDisposition = headObject.ContentDisposition;
       result.ContentType = headObject.ContentType;
+      result.ContentLength = headObject.ContentLength;
 
       if (publishDate) {
         result.publishDate = parseDate(publishDate);

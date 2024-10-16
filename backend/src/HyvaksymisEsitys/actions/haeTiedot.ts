@@ -21,7 +21,7 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
 
   const vaiheOnAktiivinen = await heVaiheOnAktiivinen(dbProjekti);
   const { versio, aineistoHandledAt, velho } = dbProjekti;
-  const hyvaksymisEsitys = adaptHyvaksymisEsitysToAPI(dbProjekti);
+  const hyvaksymisEsitys = await adaptHyvaksymisEsitysToAPI(dbProjekti);
 
   const aineistot = getHyvaksymisEsityksenAineistot(dbProjekti.muokattavaHyvaksymisEsitys);
 

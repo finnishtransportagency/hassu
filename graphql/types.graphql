@@ -610,6 +610,7 @@ type Aineisto {
   """
   jarjestys: Int
   tila: AineistoTila!
+  koko: Int
 }
 
 type AineistoNew {
@@ -935,6 +936,7 @@ type LadattuTiedostoNew implements ILadattuTiedosto {
   uuid: String!
   lisatty: String
   tiedosto: String
+  koko: Int
 }
 
 type KunnallinenLadattuTiedosto implements ILadattuTiedosto {

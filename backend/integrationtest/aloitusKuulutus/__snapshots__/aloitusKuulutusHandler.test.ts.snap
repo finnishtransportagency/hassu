@@ -37,12 +37,14 @@ Object {
   "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -203,6 +205,7 @@ Object {
   "yllapito S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentLength": 50774,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -210,6 +213,7 @@ Object {
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentLength": 47917,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -217,18 +221,21 @@ Object {
     },
     "/1/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145199,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -280,6 +287,7 @@ Object {
   "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentLength": 50774,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -287,6 +295,7 @@ Object {
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentLength": 47917,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -294,6 +303,7 @@ Object {
     },
     "/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145199,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
@@ -301,6 +311,7 @@ Object {
     },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -308,6 +319,7 @@ Object {
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -485,6 +497,7 @@ Object {
   "yllapito S3 files Aloituskuulutusjulkaisun uudelleenkuulutus saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentLength": 50774,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -492,6 +505,7 @@ Object {
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentLength": 47917,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -499,24 +513,28 @@ Object {
     },
     "/1/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145199,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/1/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
     },
     "/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentLength": 50873,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -524,6 +542,7 @@ Object {
     },
     "/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentLength": 48045,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -531,18 +550,21 @@ Object {
     },
     "/2/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145431,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
     },
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
     },
     "/2/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -594,6 +616,7 @@ Object {
   "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentLength": 50873,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
@@ -601,6 +624,7 @@ Object {
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentLength": 48045,
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -608,6 +632,7 @@ Object {
     },
     "/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentLength": 145431,
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
@@ -615,6 +640,7 @@ Object {
     },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
@@ -622,6 +648,7 @@ Object {
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 55634,
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
