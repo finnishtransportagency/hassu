@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
-import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoInputNew } from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoNew } from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
 import { useController, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
@@ -27,7 +27,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
 
   const hyvaksymisesitystiedostot = watch(fieldName);
 
-  const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, fieldName, mapUploadedFileToLadattuTiedostoInputNew);
+  const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, fieldName, mapUploadedFileToLadattuTiedostoNew);
 
   const totalFileSize = hyvaksymisesitystiedostot?.reduce((combinedSize, { koko }) => (combinedSize += koko ?? 0), 0) ?? 0;
 

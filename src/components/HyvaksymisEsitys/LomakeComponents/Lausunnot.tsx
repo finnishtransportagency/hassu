@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
-import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoInputNew } from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoNew } from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
@@ -16,7 +16,7 @@ export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNe
   const handleUploadedFiles = useHandleUploadedFiles(
     useFormReturn,
     "muokattavaHyvaksymisEsitys.lausunnot",
-    mapUploadedFileToLadattuTiedostoInputNew
+    mapUploadedFileToLadattuTiedostoNew
   );
 
   const onButtonClick = () => {

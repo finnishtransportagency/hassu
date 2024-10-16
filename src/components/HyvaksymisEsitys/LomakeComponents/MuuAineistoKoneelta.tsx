@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useRef } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
-import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoInputNew } from "src/hooks/useHandleUploadedFiles";
+import useHandleUploadedFiles, { mapUploadedFileToLadattuTiedostoNew } from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
@@ -18,7 +18,7 @@ export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: Ladattu
   const handleUploadedFiles = useHandleUploadedFiles(
     useFormReturn,
     "muokattavaHyvaksymisEsitys.muuAineistoKoneelta",
-    mapUploadedFileToLadattuTiedostoInputNew
+    mapUploadedFileToLadattuTiedostoNew
   );
 
   const onButtonClick = () => {
