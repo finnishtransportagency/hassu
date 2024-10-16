@@ -406,6 +406,10 @@
             "__typename": "__Type"
           },
           {
+            "name": "MaakuntaVastaanottaja",
+            "__typename": "__Type"
+          },
+          {
             "name": "ViranomaisVastaanottaja",
             "__typename": "__Type"
           }
@@ -745,6 +749,18 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "LokalisoituTekstiInputEiPakollinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MaakuntaVastaanottaja",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "MaakuntaVastaanottajaInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

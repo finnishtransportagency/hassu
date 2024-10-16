@@ -8,10 +8,12 @@ export function adaptIlmoituksenVastaanottajatToAPI(
     return undefined;
   }
   const kunnat: API.KuntaVastaanottaja[] = vastaanottajat.kunnat?.map((kunta) => ({ __typename: "KuntaVastaanottaja", ...kunta })) ?? [];
+  const maakunnat: API.MaakuntaVastaanottaja[] =
+    vastaanottajat.maakunnat?.map((maakunta) => ({ __typename: "MaakuntaVastaanottaja", ...maakunta })) ?? [];
   const viranomaiset: API.ViranomaisVastaanottaja[] =
     vastaanottajat.viranomaiset?.map((viranomainen) => ({
       __typename: "ViranomaisVastaanottaja",
       ...viranomainen,
     })) ?? [];
-  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset };
+  return { __typename: "IlmoituksenVastaanottajat", kunnat, viranomaiset, maakunnat };
 }

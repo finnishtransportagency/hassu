@@ -1058,6 +1058,7 @@ type AloitusKuulutusJulkaisuJulkinen {
 type IlmoituksenVastaanottajat {
   kunnat: [KuntaVastaanottaja!]
   viranomaiset: [ViranomaisVastaanottaja!]
+  maakunnat: [MaakuntaVastaanottaja!]
 }
 
 type KirjaamoOsoite {
@@ -1085,6 +1086,13 @@ type ViranomaisVastaanottaja implements ISahkopostiVastaanottaja {
 }
 
 type KuntaVastaanottaja implements ISahkopostiVastaanottaja {
+  id: Int!
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
+}
+
+type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
   id: Int!
   sahkoposti: String!
   lahetetty: String
