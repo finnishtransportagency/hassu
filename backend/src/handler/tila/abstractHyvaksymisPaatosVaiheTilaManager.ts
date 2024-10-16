@@ -189,6 +189,7 @@ async function createPDF(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    suunnitteluSopimus: projekti.suunnitteluSopimus,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
