@@ -20,7 +20,7 @@ export const mapUploadedFileToKunnallinenLadattuTiedostoInput =
     tiedosto: file.path,
   });
 
-export const mapUploadedFileToLadattuTiedostoInputNew = (file: LataaTiedostoResult): LadattuTiedostoNew => ({
+export const mapUploadedFileToLadattuTiedostoNew = (file: LataaTiedostoResult): LadattuTiedostoNew => ({
   nimi: file.name,
   uuid: uuid.v4(),
   tiedosto: file.path,
