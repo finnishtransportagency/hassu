@@ -389,6 +389,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "JatkopaatettavaVaihe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "KasittelynTila",
         "possibleTypes": null,
