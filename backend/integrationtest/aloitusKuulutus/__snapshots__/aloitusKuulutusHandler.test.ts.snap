@@ -126,6 +126,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -402,6 +403,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
