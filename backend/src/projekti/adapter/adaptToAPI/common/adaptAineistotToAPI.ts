@@ -59,7 +59,7 @@ export async function adaptAineistotWithSizeToAPI(
     return undefined;
   }
   if (aineistot && aineistot.length > 0) {
-    return Promise.all(
+    return await Promise.all(
       aineistot
         .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
         .sort(jarjestaTiedostot)
