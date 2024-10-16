@@ -146,7 +146,8 @@ export class AsiakirjaAdapter {
 
   async adaptHyvaksymisPaatosVaiheJulkaisu(
     dbProjekti: DBProjekti,
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
+    hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
   ): Promise<HyvaksymisPaatosVaiheJulkaisu> {
     if (hyvaksymisPaatosVaihe) {
       assertIsDefined(dbProjekti.kielitiedot);
@@ -164,7 +165,7 @@ export class AsiakirjaAdapter {
       if (hyvaksymisPaatosVaihe.aineistoMuokkaus) {
         // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
         // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
-        const aiempiJulkaisu = findJulkaisuWithTila(dbProjekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+        const aiempiJulkaisu = findJulkaisuWithTila(hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
         if (aiempiJulkaisu) {
           julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
         }

@@ -57,7 +57,7 @@ export default function KuulutuksenHyvaksyminenDialog({
       ),
     [api, onClose, projekti, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
   );
-
+  const isMaakuntia = julkaisu.ilmoituksenVastaanottajat?.maakunnat && julkaisu.ilmoituksenVastaanottajat.maakunnat.length > 0;
   return (
     <HassuDialog
       title={isAineistoMuokkaus ? "Aineiston hyväksyminen" : "Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen"}
@@ -97,6 +97,18 @@ export default function KuulutuksenHyvaksyminenDialog({
                   </li>
                 ))}
               </ul>
+              {isMaakuntia && (
+                <>
+                  <p>Maakuntaliitot</p>
+                  <ul className="vayla-dialog-list">
+                    {julkaisu.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta) => (
+                      <li key={maakunta.id}>
+                        {kuntametadata.liittoNameForMaakuntaId(maakunta.id)}, {maakunta.sahkoposti}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
             <p>
               Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä sekä

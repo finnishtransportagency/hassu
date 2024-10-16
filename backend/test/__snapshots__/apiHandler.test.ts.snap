@@ -451,6 +451,7 @@ Array [
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": undefined,
         "viranomaiset": Array [
           Object {
             "lahetetty": "2022-09-28T00:00",
@@ -584,6 +585,7 @@ Array [
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -745,6 +747,7 @@ Object {
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
+      "maakunnat": Array [],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
@@ -829,6 +832,7 @@ Object {
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
+      "maakunnat": Array [],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
