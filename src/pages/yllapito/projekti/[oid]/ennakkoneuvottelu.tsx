@@ -32,10 +32,11 @@ import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/proje
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DialogActions, DialogContent } from "@mui/material";
 import { Stack } from "@mui/system";
-import { AineistoInputNew, EnnakkoNeuvottelu, Projekti } from "@services/api";
+import { AineistoInputNew, EnnakkoNeuvottelu, Projekti, Status } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
+import { isStatusGreaterOrEqualTo } from "common/statusOrder";
 import { formatDate } from "common/util/dateUtils";
 import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext, UseFormProps } from "react-hook-form";
@@ -125,6 +126,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
     return <></>;
   }
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
+  const disabled = isStatusGreaterOrEqualTo(projekti.status, Status.EPAAKTIIVINEN_1);
   return (
     <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
       {projekti.ennakkoNeuvotteluJulkaisu && (
@@ -207,10 +209,12 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
                   )}
                 </Section>
               )}
-              <Section>
-                <AineistonEsikatselu ennakkoneuvottelu={true} />
-              </Section>
-              <MuokkausLomakePainikkeet kategoriat={aineistoKategoriat} projekti={projekti} />
+              {!disabled && (
+                <Section>
+                  <AineistonEsikatselu ennakkoneuvottelu={true} />
+                </Section>
+              )}
+              <MuokkausLomakePainikkeet kategoriat={aineistoKategoriat} projekti={projekti} disabled={disabled} />
             </form>
           </FormProvider>
         )}
@@ -222,9 +226,10 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
 type PainikkeetProps = {
   projekti: Projekti;
   kategoriat: AineistoKategoriat;
+  disabled: boolean;
 };
 
-function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetProps>) {
+function MuokkausLomakePainikkeet({ projekti, kategoriat, disabled }: Readonly<PainikkeetProps>) {
   const { showSuccessMessage } = useSnackbars();
   const {
     formState: { isDirty, isSubmitting },
@@ -279,12 +284,12 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
     <>
       <Section noDivider>
         <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-          <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
+          <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)} disabled={disabled}>
             Tallenna Luonnos
           </Button>
           <Button
             type="button"
-            disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
+            disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat) || disabled}
             id="save_and_send_for_acceptance"
             primary
             onClick={() => setIsOpen(true)}

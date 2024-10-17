@@ -89,7 +89,10 @@ export class ProjektiAdapter {
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
-
+    let status: API.Status | undefined = undefined;
+    if (dbProjekti.tallennettu) {
+      status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
+    }
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       lyhytOsoite: dbProjekti.lyhytOsoite,
@@ -179,12 +182,11 @@ export class ProjektiAdapter {
           }
         : undefined,
       kustannuspaikka,
-      ennakkoNeuvottelu: await adaptEnnakkoNeuvotteluToAPI(dbProjekti),
-      ennakkoNeuvotteluJulkaisu: await adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti),
+      ennakkoNeuvottelu: await adaptEnnakkoNeuvotteluToAPI(dbProjekti, status),
+      ennakkoNeuvotteluJulkaisu: await adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti, status),
     });
 
     if (apiProjekti.tallennettu) {
-      const status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
       apiProjekti.status = status;
       if (
         !apiProjekti.nahtavillaoloVaihe &&

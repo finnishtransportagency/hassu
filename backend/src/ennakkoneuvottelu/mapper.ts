@@ -1,4 +1,4 @@
-import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, EnnakkoNeuvotteluJulkaisu } from "hassu-common/graphql/apiModel";
+import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, EnnakkoNeuvotteluJulkaisu, Status } from "hassu-common/graphql/apiModel";
 import { DBEnnakkoNeuvottelu, DBProjekti } from "../database/model";
 import { adaptAineistotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptAineistotToSave";
 import { adaptLadatutTiedostotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptLadatutTiedostotToSave";
@@ -12,6 +12,7 @@ import { adaptSahkopostiVastaanottajatToAPI } from "../HyvaksymisEsitys/adaptToA
 import { getKutsut, getMaanomistajaLuettelo } from "../HyvaksymisEsitys/collectHyvaksymisEsitysAineistot";
 import { adaptFileInfoToLadattavaTiedosto } from "../HyvaksymisEsitys/latauslinkit/createLadattavatTiedostot";
 import { createEnnakkoNeuvotteluHash } from "../HyvaksymisEsitys/latauslinkit/hash";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 
 export function adaptEnnakkoNeuvotteluToSave(
   dbEnnakkoNeuvottelu: DBEnnakkoNeuvottelu | undefined | null,
@@ -42,10 +43,23 @@ export function adaptEnnakkoNeuvotteluToSave(
   return ennakko;
 }
 
-export async function adaptEnnakkoNeuvotteluToAPI(dbProjekti: DBProjekti): Promise<EnnakkoNeuvottelu | undefined> {
+export async function adaptEnnakkoNeuvotteluToAPI(
+  dbProjekti: DBProjekti,
+  status: Status | undefined
+): Promise<EnnakkoNeuvottelu | undefined> {
+  if (isStatusGreaterOrEqualTo(status, Status.EPAAKTIIVINEN_1)) {
+    return undefined;
+  }
   const { oid, ennakkoNeuvottelu } = dbProjekti;
   if (!ennakkoNeuvottelu) {
-    return undefined;
+    return {
+      __typename: "EnnakkoNeuvottelu",
+      tuodutTiedostot: {
+        __typename: "HyvaksymisEsityksenTuodutTiedostot",
+        maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+        kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+      },
+    };
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
@@ -85,9 +99,12 @@ export async function adaptEnnakkoNeuvotteluToAPI(dbProjekti: DBProjekti): Promi
   };
 }
 
-export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti: DBProjekti): Promise<EnnakkoNeuvotteluJulkaisu | undefined> {
+export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
+  dbProjekti: DBProjekti,
+  status: Status | undefined
+): Promise<EnnakkoNeuvotteluJulkaisu | undefined> {
   const { oid, salt, ennakkoNeuvotteluJulkaisu } = dbProjekti;
-  if (!ennakkoNeuvotteluJulkaisu) {
+  if (!ennakkoNeuvotteluJulkaisu || isStatusGreaterOrEqualTo(status, Status.EPAAKTIIVINEN_1)) {
     return undefined;
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
