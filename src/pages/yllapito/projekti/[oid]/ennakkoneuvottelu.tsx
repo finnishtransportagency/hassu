@@ -1,5 +1,6 @@
 import Button from "@components/button/Button";
 import ExtLink from "@components/ExtLink";
+import HassuDialog from "@components/HassuDialog";
 import { H2, H3, H4 } from "@components/Headings";
 import {
   adaptAineistotNewToInput,
@@ -27,13 +28,14 @@ import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { DialogActions, DialogContent } from "@mui/material";
 import { Stack } from "@mui/system";
 import { AineistoInputNew, EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, TallennaEnnakkoNeuvotteluInput } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
 import { formatDate } from "common/util/dateUtils";
-import { ReactElement, useCallback, useEffect, useMemo } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext, UseFormProps } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
@@ -262,7 +264,7 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
   const { mutate: reloadProjekti } = useProjekti();
 
   const { withLoadingSpinner } = useLoadingSpinner();
-  const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
+  const { handleDraftSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
   const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   const api = useApi();
@@ -273,7 +275,6 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
         (async () => {
           try {
             const convertedFormData = transformToInput(formData, false);
-            console.log(convertedFormData);
             await api.tallennaEnnakkoNeuvottelu(convertedFormData);
             await checkAineistoValmiit({ retries: 5 });
             await reloadProjekti();
@@ -285,40 +286,88 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
   );
 
   useLeaveConfirm(!isSubmitting && isDirty);
-
+  const [isOpen, setIsOpen] = useState(false);
   const laheta: SubmitHandler<EnnakkoneuvotteluForm> = useCallback(
     (formData) =>
       withLoadingSpinner(
         (async () => {
           try {
+            setIsOpen(false);
             const convertedFormData = transformToInput(formData, true);
-            console.log(convertedFormData);
             await api.tallennaEnnakkoNeuvottelu(convertedFormData);
             showSuccessMessage("Tallennus ja lähettäminen onnistui");
             reloadProjekti();
           } catch (error) {}
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner, setIsOpen]
   );
-
   return (
-    <Section noDivider>
-      <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-        <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
-          Tallenna Luonnos
-        </Button>
-        <Button
-          type="button"
-          disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
-          id="save_and_send_for_acceptance"
-          primary
-          onClick={handleSubmit(laheta)}
-        >
-          {projekti.ennakkoNeuvotteluJulkaisu ? "Lähetä päivitys" : "Lähetä"}
-        </Button>
-      </Stack>
-    </Section>
+    <>
+      <Section noDivider>
+        <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+          <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
+            Tallenna Luonnos
+          </Button>
+          <Button
+            type="button"
+            disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
+            id="save_and_send_for_acceptance"
+            primary
+            onClick={() => setIsOpen(true)}
+          >
+            {projekti.ennakkoNeuvotteluJulkaisu ? "Lähetä päivitys" : "Lähetä"}
+          </Button>
+        </Stack>
+      </Section>
+      <LahetaDialog open={isOpen} onClose={() => setIsOpen(false)} laheta={laheta} />
+    </>
+  );
+}
+
+type DialogProps = {
+  open: boolean;
+  onClose: () => void;
+  laheta: SubmitHandler<EnnakkoneuvotteluForm>;
+};
+
+function LahetaDialog({ open, onClose, laheta }: Readonly<DialogProps>) {
+  const { watch } = useFormContext<EnnakkoneuvotteluForm>();
+  const { handleSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
+  const vastaanottajat = watch("ennakkoNeuvottelu.vastaanottajat");
+  return (
+    <HassuDialog
+      title={"Ennakkoneuvotteluun lähetettävän suunnitelman hyväksyminen"}
+      hideCloseButton
+      open={open}
+      onClose={onClose}
+      maxWidth={"md"}
+    >
+      <form style={{ display: "contents" }}>
+        <DialogContent>
+          <p>Olet hyväksymässä ennakkoneuvotteluun lähetettävän suunnitelman lähettämisen seuraaville tahoille:</p>
+          <ul className="vayla-dialog-list">
+            {vastaanottajat?.map(({ sahkoposti }) => (
+              <li key={sahkoposti}>{sahkoposti}</li>
+            ))}
+          </ul>
+          <p>Ennakkoneuvotteluun lähetettävän aineiston sisältöä pystyy vapaasti päivittämään lähetyksen jälkeen.</p>
+          <p>
+            Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat ennakkotarkastuksen aineiston tarkastetuksi ja hyväksyt lähettämisen
+            vastaanottajille.
+          </p>
+        </DialogContent>
+
+        <DialogActions>
+          <Button id="accept_kuulutus" primary type="button" onClick={handleSubmit(laheta)}>
+            Hyväksy ja lähetä
+          </Button>
+          <Button type="button" onClick={onClose}>
+            Peruuta
+          </Button>
+        </DialogActions>
+      </form>
+    </HassuDialog>
   );
 }
 
