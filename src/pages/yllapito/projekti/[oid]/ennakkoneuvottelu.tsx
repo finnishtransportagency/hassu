@@ -337,7 +337,7 @@ function LahetaDialog({ open, onClose, laheta }: Readonly<DialogProps>) {
         </DialogContent>
 
         <DialogActions>
-          <Button id="accept_kuulutus" primary type="button" onClick={handleSubmit(laheta)}>
+          <Button id="accept_kuulutus" primary type="button" onClick={handleSubmit(laheta, onClose)}>
             Hyväksy ja lähetä
           </Button>
           <Button type="button" onClick={onClose}>
