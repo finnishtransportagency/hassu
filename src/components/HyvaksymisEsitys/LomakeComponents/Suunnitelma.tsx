@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { H3, H4 } from "@components/Headings";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import HassuAccordion from "@components/HassuAccordion";
 import { findKategoriaForVelhoAineistoNew, FormAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
@@ -13,7 +13,6 @@ import SectionContent from "@components/layout/SectionContent";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoNewTable";
 import find from "lodash/find";
 import remove from "lodash/remove";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 type Props = {
   aineistoKategoriat: AineistoKategoriat;

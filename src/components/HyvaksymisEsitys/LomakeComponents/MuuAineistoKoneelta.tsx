@@ -7,16 +7,15 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import { H5 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function MuuAineistoKoneelta({
   tiedostot,
   ennakkoneuvottelu,
-}: {
+}: Readonly<{
   tiedostot?: LadattuTiedostoNew[] | null;
   ennakkoneuvottelu?: boolean;
-}): ReactElement {
+}>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { fields, remove, move } = useFieldArray({

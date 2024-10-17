@@ -3,9 +3,8 @@ import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
-import { HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput, transformToInput } from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
-import { EnnakkoneuvotteluForm, transformToInput } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 export default function AineistonEsikatselu({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>) {
   const hiddenLinkRef = useRef<HTMLAnchorElement | null>();

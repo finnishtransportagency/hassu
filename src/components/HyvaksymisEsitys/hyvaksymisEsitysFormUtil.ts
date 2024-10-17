@@ -2,6 +2,7 @@ import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
 import {
   AineistoInputNew,
   AineistoNew,
+  EnnakkoNeuvotteluInput,
   HyvaksymisEsityksenTiedot,
   HyvaksymisEsitysInput,
   KunnallinenLadattuTiedosto,
@@ -9,6 +10,7 @@ import {
   LadattuTiedostoInputNew,
   LadattuTiedostoNew,
   ProjektiTyyppi,
+  TallennaEnnakkoNeuvotteluInput,
   TallennaHyvaksymisEsitysInput,
 } from "@services/api";
 import { getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
@@ -18,6 +20,15 @@ export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
   muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
+    muistutukset: FormMuistutukset;
+    suunnitelma: { [key: string]: FormAineistoNew[] };
+  };
+};
+
+export type EnnakkoneuvotteluForm = {
+  oid: string;
+  versio: number;
+  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
   };
@@ -113,6 +124,26 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
     ...formData,
     muokattavaHyvaksymisEsitys: {
       ...formData.muokattavaHyvaksymisEsitys,
+      suunnitelma,
+      muistutukset,
+      muuAineistoVelhosta,
+    },
+  };
+}
+
+export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
+  const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
+  const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
+  const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
+    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
+  );
+  return {
+    ...formData,
+    laheta,
+    ennakkoNeuvottelu: {
+      ...formData.ennakkoNeuvottelu,
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,

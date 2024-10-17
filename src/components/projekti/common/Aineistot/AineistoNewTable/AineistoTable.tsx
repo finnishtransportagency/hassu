@@ -7,11 +7,10 @@ import { AineistoKategoriat, kategorisoimattomatId } from "common/aineistoKatego
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { ActionsColumn } from ".";
 import { FormAineistoNew, getAllOptionsForKategoriat } from "../util";
-import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 import { formatDateTime } from "common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 interface AineistoTableProps {
   kategoriaId: string;

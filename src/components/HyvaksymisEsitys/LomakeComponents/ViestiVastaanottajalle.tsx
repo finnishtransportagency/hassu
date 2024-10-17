@@ -4,11 +4,10 @@ import SectionContent from "@components/layout/SectionContent";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { ReactElement } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
-export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps): ReactElement {
+export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>): ReactElement {
   const { control } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   return (
     <SectionContent>

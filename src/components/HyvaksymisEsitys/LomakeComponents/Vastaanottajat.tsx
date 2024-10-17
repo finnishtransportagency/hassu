@@ -6,11 +6,10 @@ import { Stack, styled } from "@mui/system";
 import { ReactElement, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
-export default function Vastaanottajat({ ennakkoneuvottelu }: HyvaksymisEsitysEnnakkoNeuvotteluProps): ReactElement {
+export default function Vastaanottajat({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>): ReactElement {
   const { control } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { fields, remove, append } = useFieldArray({
     name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.vastaanottajat`,

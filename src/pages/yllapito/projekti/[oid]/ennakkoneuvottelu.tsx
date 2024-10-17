@@ -7,7 +7,9 @@ import {
   adaptKunnallinenLadattuTiedostoToInput,
   adaptLadatutTiedostotNewToInput,
   adaptSuunnitelmaAineistot,
+  EnnakkoneuvotteluForm,
   FormMuistutukset,
+  transformToInput,
 } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 import { IlmoituksenVastaanottajatTable } from "@components/HyvaksymisEsitys/HyvaksymisEsitysLukutila";
 import AineistonEsikatselu from "@components/HyvaksymisEsitys/LomakeComponents/AineistonEsikatselu";
@@ -30,7 +32,7 @@ import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/proje
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DialogActions, DialogContent } from "@mui/material";
 import { Stack } from "@mui/system";
-import { AineistoInputNew, EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, Projekti, TallennaEnnakkoNeuvotteluInput } from "@services/api";
+import { AineistoInputNew, EnnakkoNeuvottelu, Projekti } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
@@ -45,15 +47,6 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useValidationMode from "src/hooks/useValidationMode";
-
-export type EnnakkoneuvotteluForm = {
-  oid: string;
-  versio: number;
-  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
-    muistutukset: FormMuistutukset;
-    suunnitelma: { [key: string]: FormAineistoNew[] };
-  };
-};
 
 export function getDefaultValuesForForm(projekti: Projekti | null | undefined): EnnakkoneuvotteluForm {
   if (!projekti) {
@@ -224,26 +217,6 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
       </ProjektiPageLayoutContext.Consumer>
     </ProjektiPageLayout>
   );
-}
-
-export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
-  const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
-  const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
-    .flat()
-    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
-  const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
-    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
-  );
-  return {
-    ...formData,
-    laheta,
-    ennakkoNeuvottelu: {
-      ...formData.ennakkoNeuvottelu,
-      suunnitelma,
-      muistutukset,
-      muuAineistoVelhosta,
-    },
-  };
 }
 
 type PainikkeetProps = {

@@ -3,8 +3,7 @@ import { AineistoKategoria, AineistoKategoriat, getNestedAineistoMaaraForCategor
 import useTranslation from "next-translate/useTranslation";
 import { useFormContext } from "react-hook-form";
 import { AineistoTable } from ".";
-import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 
 interface AineistoAlakategoriaAccordionProps {
   aineistoKategoriat: AineistoKategoriat;

@@ -6,8 +6,7 @@ import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Lausunnot({
   tiedostot,

@@ -6,10 +6,9 @@ import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { KunnallinenLadattuTiedosto } from "@services/api";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
 
 export default function Muistutukset({
   kunnat,

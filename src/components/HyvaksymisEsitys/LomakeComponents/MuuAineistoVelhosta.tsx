@@ -8,16 +8,15 @@ import { H5 } from "@components/Headings";
 import { getNewAineistot } from "../../../util/hyvaksymisesitys/getNewAineistot";
 import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function MuuAineistoVelhosta({
   aineisto,
   ennakkoneuvottelu,
-}: {
+}: Readonly<{
   aineisto?: AineistoNew[] | null;
   ennakkoneuvottelu?: boolean;
-}): ReactElement {
+}>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { fields, remove, prepend, move } = useFieldArray({

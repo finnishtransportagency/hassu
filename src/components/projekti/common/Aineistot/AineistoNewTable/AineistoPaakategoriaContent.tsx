@@ -1,8 +1,7 @@
 import { AineistoKategoria, AineistoKategoriat } from "common/aineistoKategoriat";
 import { useFormContext } from "react-hook-form";
 import { AineistoAlakategoriaAccordion, AineistoTable } from ".";
-import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
-import { EnnakkoneuvotteluForm } from "@pages/yllapito/projekti/[oid]/ennakkoneuvottelu";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 
 const kategoriaInfoText: Record<string, string> = {
   osa_a: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
@@ -19,7 +18,7 @@ interface SuunnitelmaAineistoPaakategoriaContentProps {
   ennakkoneuvottelu?: boolean;
 }
 
-export function SuunnitelmaAineistoPaakategoriaContent(props: SuunnitelmaAineistoPaakategoriaContentProps) {
+export function SuunnitelmaAineistoPaakategoriaContent(props: Readonly<SuunnitelmaAineistoPaakategoriaContentProps>) {
   const { watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
 
   const paaKategoriaAineisto = watch(
