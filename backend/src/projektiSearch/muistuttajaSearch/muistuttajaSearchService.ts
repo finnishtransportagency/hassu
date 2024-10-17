@@ -74,8 +74,8 @@ class MuistuttajaSearchService {
   async searchMuistuttajat(params: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
     const searchResult = await muistuttajaOpenSearchClient.query({
       query: this.buildQuery(params),
-      size: params.size ?? undefined,
-      from: params.from ?? undefined,
+      size: params.size ?? 10000,
+      from: params.from ?? 0,
       sort: [{ "sukunimi.keyword": { order: "asc" } }],
     });
 

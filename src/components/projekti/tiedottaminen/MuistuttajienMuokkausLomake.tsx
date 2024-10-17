@@ -269,7 +269,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
     cell: (context) => <Maa fieldArrayName="muutMuistuttajat" index={context.row.index} />,
   },
   {
-    header: "Sähkoposti",
+    header: "Sähköposti",
     id: "sahkoposti",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
