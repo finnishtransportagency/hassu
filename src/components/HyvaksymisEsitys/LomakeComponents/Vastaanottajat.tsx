@@ -6,11 +6,15 @@ import { Stack, styled } from "@mui/system";
 import { ReactElement, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
 
-export default function Vastaanottajat(): ReactElement {
-  const { control } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, append } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.vastaanottajat", control });
+export default function Vastaanottajat({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>): ReactElement {
+  const { control } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { fields, remove, append } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.vastaanottajat`,
+    control,
+  });
 
   const addNew = useCallback(() => append({ sahkoposti: "" }), [append]);
 
@@ -18,10 +22,11 @@ export default function Vastaanottajat(): ReactElement {
 
   return (
     <>
-      <H3 variant="h2">Hyväksymisesityksen vastaanottajat</H3>
+      <H3 variant="h2">{ennakkoneuvottelu ? "Ennakkoneuvotteluun toimitettavan suunnitelman" : "Hyväksymisesityksen"} vastaanottajat</H3>
       <p>
-        Lisää lähetettävälle hyväksymisesitykselle vastaanottaja. Jos hyväksymisesitys pitää lähettää useammalle kuin yhdelle
-        vastaanottajalle, lisää uusi rivi Lisää uusi -painikkeella.
+        Lisää lähetettävälle {ennakkoneuvottelu ? "ennakkoneuvottelulle" : "hyväksymisesitykselle"} vastaanottaja. Jos{" "}
+        {ennakkoneuvottelu ? "ennakkoneuvottelu" : "hyväksymisesitys"} pitää lähettää useammalle kuin yhdelle vastaanottajalle, lisää uusi
+        rivi Lisää uusi -painikkeella.
       </p>
       {fields.map((field, index) => (
         <Stack direction="row" key={field.id}>
@@ -29,7 +34,10 @@ export default function Vastaanottajat(): ReactElement {
             label="Sähköpostiosoite"
             sx={{ minWidth: { md: "335px" } }}
             fullWidth={isMobile}
-            controllerProps={{ control, name: `muokattavaHyvaksymisEsitys.vastaanottajat.${index}.sahkoposti` }}
+            controllerProps={{
+              control,
+              name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.vastaanottajat.${index}.sahkoposti`,
+            }}
           />
           {!!index && (
             <IconButtonWrapper>

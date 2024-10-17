@@ -1,6 +1,13 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../util/assertions";
-import { Aineisto, DBProjekti, JulkaistuHyvaksymisEsitys, LadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../database/model";
+import {
+  Aineisto,
+  DBEnnakkoNeuvotteluJulkaisu,
+  DBProjekti,
+  JulkaistuHyvaksymisEsitys,
+  LadattuTiedosto,
+  MuokattavaHyvaksymisEsitys,
+} from "../database/model";
 import {
   JULKAISTU_HYVAKSYMISESITYS_PATH,
   MUOKATTAVA_HYVAKSYMISESITYS_PATH,
@@ -14,6 +21,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import { fileService } from "../files/fileService";
 import { getZipFolder } from "../tiedostot/ProjektiTiedostoManager/util";
 import { aineistoNewIsReady } from "./aineistoNewIsReady";
+import { ENNAKKONEUVOTTELU_JULKAISU_PATH } from "../ennakkoneuvottelu/tallenna";
 
 type TarvittavatTiedot = Pick<
   DBProjekti,
@@ -49,20 +57,26 @@ type ProjektinAineistot = {
  */
 export default function collectHyvaksymisEsitysAineistot(
   projekti: TarvittavatTiedot,
-  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys,
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys | DBEnnakkoNeuvotteluJulkaisu,
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
-  const path = joinPath(
-    getYllapitoPathForProjekti(projekti.oid),
-    (hyvaksymisEsitys as JulkaistuHyvaksymisEsitys).hyvaksymisPaiva ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
-  );
-  const hyvaksymisEsitysTiedostot = (hyvaksymisEsitys?.hyvaksymisEsitys ?? []).map((tiedosto) => ({
-    s3Key: joinPath(path, "hyvaksymisEsitys", adaptFileName(tiedosto.nimi)),
-    zipFolder: "Hyväksymisesitys",
-    nimi: tiedosto.nimi,
-    tuotu: tiedosto.lisatty,
-    valmis: true,
-  }));
+  let path: string;
+  let hyvaksymisEsitysTiedostot: FileInfo[] = [];
+  if ("hyvaksymisEsitys" in hyvaksymisEsitys) {
+    path = joinPath(
+      getYllapitoPathForProjekti(projekti.oid),
+      (hyvaksymisEsitys as JulkaistuHyvaksymisEsitys).hyvaksymisPaiva ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
+    );
+    hyvaksymisEsitysTiedostot = (hyvaksymisEsitys?.hyvaksymisEsitys ?? []).map((tiedosto) => ({
+      s3Key: joinPath(path, "hyvaksymisEsitys", adaptFileName(tiedosto.nimi)),
+      zipFolder: "Hyväksymisesitys",
+      nimi: tiedosto.nimi,
+      tuotu: tiedosto.lisatty,
+      valmis: true,
+    }));
+  } else {
+    path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
+  }
 
   const kuulutuksetJaKutsutOmaltaKoneelta = (hyvaksymisEsitys?.kuulutuksetJaKutsu ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "kuulutuksetJaKutsu", adaptFileName(tiedosto.nimi)),
@@ -158,7 +172,7 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): FileInfo[]
       if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
         maanomistajaluttelo.push({
           s3Key: joinPath(getSisaisetPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
-          zipFolder: "Maanomistajaluttelo",
+          zipFolder: "Maanomistajaluettelo",
           nimi: fileService.getFileNameFromFilePath(nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
           valmis: true,
         });
@@ -180,32 +194,34 @@ export function getKutsut(projekti: TarvittavatTiedot): FileInfo[] {
         continue;
       }
       const aloituskuulutusJulkaisuPDFt = aloituskuulutusJulkaisu?.aloituskuulutusPDFt;
-      assertIsDefined(aloituskuulutusJulkaisuPDFt, "aloituskuulutusJulkaisuPDFt on määritelty tässä vaiheessa");
-      for (const kieli in API.Kieli) {
-        const kuulutus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusPDFPath;
-        if (kuulutus) {
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: fileService.getFileNameFromFilePath(kuulutus),
-            valmis: true,
-          });
+      if (aloituskuulutusJulkaisuPDFt) {
+        for (const kieli in API.Kieli) {
+          const kuulutus: string | undefined = aloituskuulutusJulkaisuPDFt[kieli as API.Kieli]?.aloituskuulutusPDFPath;
+          if (kuulutus) {
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: fileService.getFileNameFromFilePath(kuulutus),
+              valmis: true,
+            });
+          }
         }
       }
 
       if (onSaameProjekti) {
         const aloituskuulutusSaamePDFt = aloituskuulutusJulkaisu?.aloituskuulutusSaamePDFt;
         forEverySaameDo(async (kieli) => {
-          assertIsDefined(aloituskuulutusSaamePDFt, "aloituskuulutusSaamePDFt on määritelty tässä vaiheessa");
-          const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
-          assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
-            tuotu: kuulutus.tuotu,
-            valmis: tiedostoVanhaIsReady(kuulutus),
-          });
+          if (aloituskuulutusSaamePDFt) {
+            const kuulutus: LadattuTiedosto | null | undefined = aloituskuulutusSaamePDFt[kieli]?.kuulutusPDF;
+            assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
+              tuotu: kuulutus.tuotu,
+              valmis: tiedostoVanhaIsReady(kuulutus),
+            });
+          }
         });
       }
     }
@@ -220,32 +236,34 @@ export function getKutsut(projekti: TarvittavatTiedot): FileInfo[] {
         continue;
       }
       const vuorovaikutusPDFt = julkaisu.vuorovaikutusPDFt;
-      assertIsDefined(vuorovaikutusPDFt, "vuorovaikutusPDFt on määritelty tässä vaiheessa");
-      for (const kieli in API.Kieli) {
-        const kutsu: string | undefined = vuorovaikutusPDFt[kieli as API.Kieli]?.kutsuPDFPath;
-        if (kutsu) {
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: fileService.getFileNameFromFilePath(kutsu),
-            valmis: true,
-          });
+      if (vuorovaikutusPDFt) {
+        for (const kieli in API.Kieli) {
+          const kutsu: string | undefined = vuorovaikutusPDFt[kieli as API.Kieli]?.kutsuPDFPath;
+          if (kutsu) {
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: fileService.getFileNameFromFilePath(kutsu),
+              valmis: true,
+            });
+          }
         }
       }
 
       if (onSaameProjekti) {
         const vuorovaikutusSaamePDFt = julkaisu.vuorovaikutusSaamePDFt;
         forEverySaameDo(async (kieli) => {
-          assertIsDefined(vuorovaikutusSaamePDFt, "vuorovaikutusSaamePDFt on määritelty tässä vaiheessa");
-          const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
-          assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu.tiedosto),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: kutsu.nimi ?? fileService.getFileNameFromFilePath(kutsu.tiedosto),
-            tuotu: kutsu.tuotu,
-            valmis: tiedostoVanhaIsReady(kutsu),
-          });
+          if (vuorovaikutusSaamePDFt) {
+            const kutsu: LadattuTiedosto | null | undefined = vuorovaikutusSaamePDFt[kieli];
+            assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu.tiedosto),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: kutsu.nimi ?? fileService.getFileNameFromFilePath(kutsu.tiedosto),
+              tuotu: kutsu.tuotu,
+              valmis: tiedostoVanhaIsReady(kutsu),
+            });
+          }
         });
       }
     }
@@ -259,42 +277,44 @@ export function getKutsut(projekti: TarvittavatTiedot): FileInfo[] {
         continue;
       }
       const nahtavillaoloVaiheJulkaisuPDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloPDFt;
-      assertIsDefined(nahtavillaoloVaiheJulkaisuPDFt, "nahtavillaoloVaiheJulkaisuPDFt on määritelty tässä vaiheessa");
-      for (const kieli in API.Kieli) {
-        const kuulutus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloPDFPath;
-        if (kuulutus) {
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: fileService.getFileNameFromFilePath(kuulutus),
-            valmis: true,
-          });
-        }
-        const ilmoitusKiinteistonomistajille: string | undefined =
-          nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
-        if (ilmoitusKiinteistonomistajille) {
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), ilmoitusKiinteistonomistajille),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: fileService.getFileNameFromFilePath(ilmoitusKiinteistonomistajille),
-            valmis: true,
-          });
+      if (nahtavillaoloVaiheJulkaisuPDFt) {
+        for (const kieli in API.Kieli) {
+          const kuulutus: string | undefined = nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloPDFPath;
+          if (kuulutus) {
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: fileService.getFileNameFromFilePath(kuulutus),
+              valmis: true,
+            });
+          }
+          const ilmoitusKiinteistonomistajille: string | undefined =
+            nahtavillaoloVaiheJulkaisuPDFt[kieli as API.Kieli]?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
+          if (ilmoitusKiinteistonomistajille) {
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), ilmoitusKiinteistonomistajille),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: fileService.getFileNameFromFilePath(ilmoitusKiinteistonomistajille),
+              valmis: true,
+            });
+          }
         }
       }
 
       if (onSaameProjekti) {
         forEverySaameDo(async (kieli) => {
           const nahtavillaoloSaamePDFt = nahtavillaoloVaiheJulkaisu?.nahtavillaoloSaamePDFt;
-          assertIsDefined(nahtavillaoloSaamePDFt, "nahtavillaoloSaamePDFt on määritelty tässä vaiheessa");
-          const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
-          assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
-          kutsut.push({
-            s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
-            zipFolder: "Kuulutukset ja kutsut",
-            nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
-            tuotu: kuulutus.tuotu,
-            valmis: tiedostoVanhaIsReady(kuulutus),
-          });
+          if (nahtavillaoloSaamePDFt) {
+            const kuulutus: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kuulutusPDF;
+            assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
+            kutsut.push({
+              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
+              zipFolder: "Kuulutukset ja kutsut",
+              nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
+              tuotu: kuulutus.tuotu,
+              valmis: tiedostoVanhaIsReady(kuulutus),
+            });
+          }
         });
       }
     }

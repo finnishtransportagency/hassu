@@ -1,12 +1,12 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiTiedostoineen } from "../dynamoKutsut";
-import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import collectHyvaksymisEsitysAineistot, { FileInfo } from "../collectHyvaksymisEsitysAineistot";
 import { fileService } from "../../files/fileService";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
-  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys | DBEnnakkoNeuvotteluJulkaisu
 ): Promise<
   Pick<
     API.HyvaksymisEsityksenAineistot,
@@ -51,4 +51,26 @@ export async function adaptFileInfoToKunnallinenLadattavaTiedosto(fileInfo: File
     linkki = "";
   }
   return { __typename: "KunnallinenLadattavaTiedosto", nimi: fileInfo.nimi, linkki, tuotu: fileInfo.tuotu, kunta: fileInfo.kunta };
+}
+
+export async function createEnnakkoNeuvotteluLadattavatTiedostot(
+  projekti: ProjektiTiedostoineen,
+  ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu
+): Promise<
+  Pick<
+    API.EnnakkoNeuvottelunAineistot,
+    "suunnitelma" | "kuntaMuistutukset" | "lausunnot" | "kuulutuksetJaKutsu" | "muutAineistot" | "maanomistajaluettelo"
+  >
+> {
+  const { suunnitelma, kuntaMuistutukset, lausunnot, kuulutuksetJaKutsu, muutAineistot, maanomistajaluettelo } =
+    collectHyvaksymisEsitysAineistot(projekti, ennakkoNeuvotteluJulkaisu, projekti.aineistoHandledAt);
+
+  return {
+    suunnitelma: await Promise.all(suunnitelma.map(adaptFileInfoToLadattavaTiedosto)),
+    kuntaMuistutukset: await Promise.all(kuntaMuistutukset.map(adaptFileInfoToKunnallinenLadattavaTiedosto)),
+    lausunnot: await Promise.all(lausunnot.map(adaptFileInfoToLadattavaTiedosto)),
+    kuulutuksetJaKutsu: await Promise.all(kuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
+    muutAineistot: await Promise.all(muutAineistot.map(adaptFileInfoToLadattavaTiedosto)),
+    maanomistajaluettelo: await Promise.all(maanomistajaluettelo.map(adaptFileInfoToLadattavaTiedosto)),
+  };
 }

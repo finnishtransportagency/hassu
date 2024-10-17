@@ -68,6 +68,7 @@ task fixSwagger(type: Copy) {
   from("${buildDir}") {
     include "*.json"
     filter { line -> line.replaceAll('"tieosuushaku","kohdeluokkahaku","kohdeluokkahaku","tieosuushaku"', '"tieosuushaku","kohdeluokkahaku"') }
+    filter { line -> line.replaceAll('"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria","geometrycollection","keskilinjageometria","geometria","keskilinjageometria-wgs84","geometria-wgs84"', '"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria"') }
   }
   into "${buildDir}/fixed".toString()
 }
