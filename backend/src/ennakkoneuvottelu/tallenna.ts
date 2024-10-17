@@ -7,7 +7,7 @@ import projektiDatabase from "../HyvaksymisEsitys/dynamoKutsut";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
 import { TestType } from "hassu-common/schema/common";
-import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys, SahkopostiVastaanottaja } from "../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, SahkopostiVastaanottaja } from "../database/model";
 import { validateVaiheOnAktiivinen } from "../HyvaksymisEsitys/validateVaiheOnAktiivinen";
 import { SqsClient } from "../HyvaksymisEsitys/aineistoHandling/sqsClient";
 import { persistFile } from "../HyvaksymisEsitys/s3Calls/persistFile";
@@ -54,21 +54,12 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
     const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu);
-    const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
-      projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
-      newEnnakkoNeuvottelu as IHyvaksymisEsitys
-    );
-    const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(
-      projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
-      newEnnakkoNeuvottelu as IHyvaksymisEsitys
-    );
+    const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
+    const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     if (poistetutTiedostot.length || poistetutAineistot.length) {
       await deleteFilesUnderSpecifiedVaihe(oid, ENNAKKONEUVOTTELU_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
     }
-    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(
-      projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys,
-      ennakkoNeuvottelu
-    );
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu);
     if (uudetTiedostot.length) {
       await Promise.all(
         uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: ENNAKKONEUVOTTELU_PATH }))
@@ -94,8 +85,8 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     }
     if (
       uusiaAineistoja(
-        getHyvaksymisEsityksenAineistot(projektiInDB.ennakkoNeuvottelu as IHyvaksymisEsitys),
-        getHyvaksymisEsityksenAineistot(newEnnakkoNeuvottelu as IHyvaksymisEsitys),
+        getHyvaksymisEsityksenAineistot(projektiInDB.ennakkoNeuvottelu),
+        getHyvaksymisEsityksenAineistot(newEnnakkoNeuvottelu),
         projektiInDB.aineistoHandledAt
       )
     ) {
@@ -142,7 +133,7 @@ async function poistaJulkaistunEnnakkoNeuvottelunTiedostot(
     return;
   }
   const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(julkaistuEnnakkoNeuvottelu);
-  const aineistot = getHyvaksymisEsityksenAineistot(julkaistuEnnakkoNeuvottelu as unknown as IHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(julkaistuEnnakkoNeuvottelu);
   await deleteFilesUnderSpecifiedVaihe(
     oid,
     ENNAKKONEUVOTTELU_JULKAISU_PATH,
@@ -153,6 +144,6 @@ async function poistaJulkaistunEnnakkoNeuvottelunTiedostot(
 
 async function copyMuokattavaEnnakkoNeuvotteluFilesToJulkaistu(oid: string, muokattavaHyvaksymisEsitys: DBEnnakkoNeuvotteluJulkaisu) {
   const tiedostot = getHyvaksymisEsityksenLadatutTiedostot(muokattavaHyvaksymisEsitys);
-  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys as unknown as IHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
   await copyFilesFromVaiheToAnother(oid, ENNAKKONEUVOTTELU_PATH, ENNAKKONEUVOTTELU_JULKAISU_PATH, [...tiedostot, ...aineistot]);
 }

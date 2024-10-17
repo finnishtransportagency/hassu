@@ -607,7 +607,7 @@ export function createEnnakkoNeuvotteluViranomaisilleEmail(
   if (projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
     viranomainen = translate("viranomainen.VAYLAVIRASTO", API.Kieli.SUOMI) ?? "Väylävirasto";
   } else {
-    viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) ?? "ELY-keskus";
+    viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) + " ELY-keskus";
   }
   return {
     subject: `Ennakkoneuvottelu ${projekti.velho?.nimi}`,

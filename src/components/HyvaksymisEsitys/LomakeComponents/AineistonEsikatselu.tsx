@@ -3,7 +3,12 @@ import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
-import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm, transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput, transformToInput } from "../hyvaksymisEsitysFormUtil";
+import {
+  EnnakkoneuvotteluForm,
+  HyvaksymisEsitysForm,
+  transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput,
+  transformToInput,
+} from "../hyvaksymisEsitysFormUtil";
 import { HyvaksymisEsitysEnnakkoNeuvotteluProps } from "./LinkinVoimassaoloaika";
 
 export default function AineistonEsikatselu({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>) {

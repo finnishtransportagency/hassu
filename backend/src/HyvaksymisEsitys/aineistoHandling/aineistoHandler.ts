@@ -12,7 +12,7 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { config } from "../../config";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { SimultaneousUpdateError } from "hassu-common/error";
-import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, IHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { setZeroMessageVisibilityTimeout } from "./sqsClient";
 import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zipFiles";
 import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
@@ -112,7 +112,7 @@ export async function tuoAineistot(oid: string, ennakko: boolean) {
   if (lockedUntil && lockedUntil > timestampNow) {
     throw new SimultaneousUpdateError();
   }
-  const aineistot = getHyvaksymisEsityksenAineistot((ennakkoNeuvottelu as IHyvaksymisEsitys) ?? muokattavaHyvaksymisEsitys);
+  const aineistot = getHyvaksymisEsityksenAineistot(ennakkoNeuvottelu ?? muokattavaHyvaksymisEsitys);
 
   // Etsi käsittelemättömät aineistot aikaleimojen perusteella
   const uudetAineistot = aineistot.filter(
