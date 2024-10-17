@@ -179,6 +179,7 @@ Object {
   "yllapito S3 files should insert and manage feedback": Object {
     "/***unittest***/logo.png": FileMetadata {
       "ContentDisposition": undefined,
+      "ContentLength": 13662,
       "ContentType": "image/png",
       "checksum": "ABC123",
     },

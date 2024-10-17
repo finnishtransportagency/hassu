@@ -17,8 +17,22 @@ export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] 
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
-  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
+  muokattavaHyvaksymisEsitys: Omit<
+    HyvaksymisEsitysInput,
+    | "muistutukset"
+    | "suunnitelma"
+    | "hyvaksymisEsitys"
+    | "kuulutuksetJaKutsu"
+    | "muuAineistoKoneelta"
+    | "maanomistajaluettelo"
+    | "lausunnot"
+  > & {
     muistutukset: FormMuistutukset;
+    hyvaksymisEsitys: LadattuTiedostoNew[];
+    kuulutuksetJaKutsu: LadattuTiedostoNew[];
+    muuAineistoKoneelta: LadattuTiedostoNew[];
+    maanomistajaluettelo: LadattuTiedostoNew[];
+    lausunnot: LadattuTiedostoNew[];
     suunnitelma: { [key: string]: FormAineistoNew[] };
   };
 };
@@ -62,14 +76,14 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
         verkkolaskuoperaattorinTunnus: verkkolaskuoperaattorinTunnus ?? "",
         viitetieto: viitetieto ?? "",
       },
-      hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
+      hyvaksymisEsitys: hyvaksymisEsitys ?? [],
       suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, perustiedot.projektiTyyppi),
       muistutukset: muistutuksetSorted,
-      lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
-      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
+      lausunnot: lausunnot ?? [],
+      kuulutuksetJaKutsu: kuulutuksetJaKutsu ?? [],
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
-      muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
-      maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
+      muuAineistoKoneelta: muuAineistoKoneelta ?? [],
+      maanomistajaluettelo: maanomistajaluettelo ?? [],
       vastaanottajat: vastaanottajat?.length
         ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
         : [{ sahkoposti: "kirjaamo@traficom.fi" }],
@@ -99,23 +113,45 @@ function adaptSuunnitelmaAineistot(
   }, kategoriat);
 }
 
-export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
-  formData: HyvaksymisEsitysForm
-): TallennaHyvaksymisEsitysInput {
-  const muistutukset = Object.values(formData.muokattavaHyvaksymisEsitys.muistutukset).flat();
-  const suunnitelma = Object.values(formData.muokattavaHyvaksymisEsitys.suunnitelma)
+export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput({
+  oid,
+  versio,
+  muokattavaHyvaksymisEsitys,
+}: HyvaksymisEsitysForm): TallennaHyvaksymisEsitysInput {
+  const {
+    hyvaksymisEsitys,
+    kuulutuksetJaKutsu,
+    muuAineistoKoneelta,
+    maanomistajaluettelo,
+    lausunnot,
+    suunnitelma,
+    muistutukset,
+    muuAineistoVelhosta,
+  } = muokattavaHyvaksymisEsitys;
+
+  const flatMuistutukset = Object.values(muistutukset).flat();
+  const flatSuunnitelma = Object.values(suunnitelma)
     .flat()
     .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
-  const muuAineistoVelhosta = formData.muokattavaHyvaksymisEsitys.muuAineistoVelhosta?.map<AineistoInputNew>(
-    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
-  );
+  const flatMuuAineistoVelhosta = muuAineistoVelhosta?.map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({
+    dokumenttiOid,
+    nimi,
+    uuid,
+    kategoriaId,
+  }));
   return {
-    ...formData,
+    oid,
+    versio,
     muokattavaHyvaksymisEsitys: {
-      ...formData.muokattavaHyvaksymisEsitys,
-      suunnitelma,
-      muistutukset,
-      muuAineistoVelhosta,
+      ...muokattavaHyvaksymisEsitys,
+      hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
+      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
+      muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
+      maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
+      lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
+      suunnitelma: flatSuunnitelma,
+      muistutukset: flatMuistutukset,
+      muuAineistoVelhosta: flatMuuAineistoVelhosta,
     },
   };
 }

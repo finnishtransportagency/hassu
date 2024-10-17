@@ -118,12 +118,11 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         (async () => {
           try {
             const muistutusFinalValues: MuistutusInput = { ...formData, liitteet: [] };
-            const talletaTiedosto = async (tiedosto: File) => lataaTiedosto(api, tiedosto);
 
             await Promise.all(
               liitteet.map(async (liite) => {
                 if (liite.tiedosto instanceof File) {
-                  muistutusFinalValues.liitteet.push(await talletaTiedosto(liite.tiedosto));
+                  muistutusFinalValues.liitteet.push(await lataaTiedosto(api, liite.tiedosto));
                 }
               })
             );

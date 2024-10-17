@@ -9,6 +9,7 @@ import { ComponentProps, useCallback, useMemo } from "react";
 import { FieldArrayWithId, UseFieldArrayMove, UseFieldArrayRemove, UseFormRegisterReturn } from "react-hook-form";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
+import { byteFileSizeToHumanString } from "common/util/fileSizeToHumanReadable";
 
 type GenTiedosto = {
   uuid: string;
@@ -38,6 +39,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   ladattuTiedosto,
   noHeaders,
   showTuotu,
+  showKoko,
 }: {
   /**
    * Id taulukolle. Oltava uniikki.
@@ -82,6 +84,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
    * Näytetäänkö tuotu-aikaleima-sarake
    */
   showTuotu?: boolean;
+  showKoko?: boolean;
 }) {
   const enrichedFields: RowDataType<S>[] = useMemo(
     () =>
@@ -95,7 +98,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
   );
 
   const columns = useMemo<ColumnDef<RowDataType<S>>[]>(() => {
-    const all = [
+    const all: ColumnDef<RowDataType<S>>[] = [
       {
         header: noHeaders ? undefined : ladattuTiedosto ? "Tiedostot" : "Aineisto",
         meta: { minWidth: 250, widthFractions: 4 },
@@ -120,6 +123,13 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         },
       },
       {
+        header: noHeaders ? undefined : "Koko",
+        id: "koko",
+        accessorKey: "koko",
+        meta: { minWidth: 120, widthFractions: 2 },
+        cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number, "fi"),
+      },
+      {
         header: noHeaders ? undefined : "Tuotu",
         id: "tuotu",
         accessorFn: (tiedosto: RowDataType<S>) =>
@@ -136,11 +146,8 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         meta: { minWidth: 120, widthFractions: 0 },
       },
     ];
-    if (showTuotu) {
-      return all;
-    }
-    return all.filter((col) => col.id !== "tuotu");
-  }, [enrichedFields, fields, registerDokumenttiOid, registerNimi, remove, ladattuTiedosto, noHeaders, showTuotu]);
+    return all.filter((col) => showTuotu || col.id !== "tuotu").filter((col) => showKoko || col.id !== "koko");
+  }, [noHeaders, ladattuTiedosto, enrichedFields, registerDokumenttiOid, registerNimi, fields, remove, showTuotu, showKoko]);
 
   const findRowIndex = useCallback(
     (id: string) => {

@@ -24,8 +24,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
@@ -36,7 +34,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         | undefined
         | string;
       if (paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath && pohjoisSaameIlmoitusPdf instanceof File) {
-        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(pohjoisSaameIlmoitusPdf);
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await lataaTiedosto(api, pohjoisSaameIlmoitusPdf);
       }
       const pohjoisSaameKuulutusPdf = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath as unknown as
         | File
@@ -44,7 +42,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         | string;
 
       if (paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
-        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await lataaTiedosto(api, pohjoisSaameKuulutusPdf);
       }
 
       const pohjoisSaameKirjeTiedotettavillePdf = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
@@ -54,7 +52,8 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kirjeTiedotettavillePDFPath &&
         pohjoisSaameKirjeTiedotettavillePdf instanceof File
       ) {
-        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await talletaTiedosto(
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kirjeTiedotettavillePDFPath = await lataaTiedosto(
+          api,
           pohjoisSaameKirjeTiedotettavillePdf
         );
       }
@@ -67,7 +66,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       }
       return convertedFormData;
     },
-    [paatosTyyppi, talletaTiedosto]
+    [api, paatosTyyppi]
   );
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;

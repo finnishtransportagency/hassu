@@ -13,6 +13,7 @@ import {
   getYllapitoPathForProjekti,
   joinPath,
 } from "../../tiedostot/paths";
+import { adaptLadatutTiedostotWithSizeToAPI } from "./adaptLadatutTiedostotWithSizeToAPI";
 
 /**
  * Riippuen siitä, onko hyväksymisesitys hyväksytty vai muussa tilassa, palauttaa tietoja muokattavasta tai julkaistusta hyväksymisesityksestä.
@@ -20,12 +21,12 @@ import {
  * @param projekti Projekti tietokannassa
  * @returns Tiedot hyväksymisesityksestä varustettuna aineistojen sijaintitiedolla ja tiedolla siitä, onko aineistot tuotu
  */
-export function adaptHyvaksymisEsitysToAPI(
+export async function adaptHyvaksymisEsitysToAPI(
   projekti: Pick<
     DBProjekti,
     "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "julkaistuHyvaksymisEsitys" | "aineistoHandledAt" | "hyvEsAineistoPaketti"
   >
-): API.HyvaksymisEsitys | undefined {
+): Promise<API.HyvaksymisEsitys | undefined> {
   const { oid, salt, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys } = projekti;
   if (!(muokattavaHyvaksymisEsitys || julkaistuHyvaksymisEsitys)) {
     return undefined;
@@ -51,7 +52,7 @@ export function adaptHyvaksymisEsitysToAPI(
     kiireellinen: hyvaksymisEsitys.kiireellinen,
     lisatiedot: hyvaksymisEsitys.lisatiedot,
     laskutustiedot: adaptLaskutustiedotToAPI(hyvaksymisEsitys.laskutustiedot),
-    hyvaksymisEsitys: adaptLadatutTiedostotToApi({
+    hyvaksymisEsitys: await adaptLadatutTiedostotWithSizeToAPI({
       tiedostot: hyvaksymisEsitys.hyvaksymisEsitys,
       path: joinPath(path, "hyvaksymisEsitys"),
     }),

@@ -36,29 +36,29 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
   ): Promise<void> {
     const aloituskuulutusHyvaksyttyEmail = emailCreator.createHyvaksyttyEmailPp();
     if (aloituskuulutusHyvaksyttyEmail.to) {
-      const aloituskuulutusSuomiPDF = await this.getMandatoryProjektiFileAsAttachment(
+      const aloituskuulutusSuomiPDF = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
         aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath,
         projekti,
         `aloituskuulutusPDFPath SUOMI`
       );
-      aloituskuulutusHyvaksyttyEmail.attachments = [aloituskuulutusSuomiPDF];
+      aloituskuulutusHyvaksyttyEmail.attachments = [aloituskuulutusSuomiPDF.attachment];
 
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
-        const aloituskuulutusRuotsiPDF = await this.getMandatoryProjektiFileAsAttachment(
+        const aloituskuulutusRuotsiPDF = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
           aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusPDFPath,
           projekti,
           `aloituskuulutusPDFPath RUOTSI`
         );
-        aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusRuotsiPDF);
+        aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusRuotsiPDF.attachment);
       }
 
       if (projekti.kielitiedot?.toissijainenKieli == Kieli.POHJOISSAAME) {
-        const aloituskuulutusSaamePDF = await this.getMandatoryProjektiFileAsAttachment(
+        const aloituskuulutusSaamePDF = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
           aloituskuulutus.aloituskuulutusSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusPDF?.tiedosto,
           projekti,
           `aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusPDF`
         );
-        aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusSaamePDF);
+        aloituskuulutusHyvaksyttyEmail.attachments.push(aloituskuulutusSaamePDF.attachment);
       }
 
       await emailClient.sendEmail(aloituskuulutusHyvaksyttyEmail);
@@ -74,22 +74,22 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
   ): Promise<void> {
     const emailOptionsLahetekirje = emailCreator.createLahetekirje();
     if (emailOptionsLahetekirje.to) {
-      const aloituskuulutusIlmoitusPDFSUOMI = await this.getMandatoryProjektiFileAsAttachment(
+      const aloituskuulutusIlmoitusPDFSUOMI = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
         aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusIlmoitusPDFPath,
         projekti,
         `aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath`
       );
-      emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI];
+      emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI.attachment];
 
       const projectLanguages = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli];
 
       if (projectLanguages.includes(Kieli.RUOTSI)) {
-        const aloituskuulutusIlmoitusPDFRuotsi = await this.getMandatoryProjektiFileAsAttachment(
+        const aloituskuulutusIlmoitusPDFRuotsi = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
           aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusIlmoitusPDFPath,
           projekti,
           `aloituskuulutusPDFtRUOTSI.aloituskuulutusIlmoitusPDFPath`
         );
-        emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFRuotsi);
+        emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFRuotsi.attachment);
       }
 
       const saameLanguages = projectLanguages.filter(
@@ -98,12 +98,12 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
 
       if (saameLanguages) {
         for (const saameLanguage of saameLanguages) {
-          const kuulutusIlmoitusPDF = await this.getMandatoryProjektiFileAsAttachment(
+          const kuulutusIlmoitusPDF = await this.getMandatoryProjektiFileAsAttachmentAndItsSize(
             aloituskuulutus.aloituskuulutusSaamePDFt?.[saameLanguage]?.kuulutusIlmoitusPDF?.tiedosto,
             projekti,
             `aloituskuulutusSaamePDFt.${saameLanguage}.kuulutusIlmoitusPDF`
           );
-          emailOptionsLahetekirje.attachments.push(kuulutusIlmoitusPDF);
+          emailOptionsLahetekirje.attachments.push(kuulutusIlmoitusPDF.attachment);
         }
       }
 

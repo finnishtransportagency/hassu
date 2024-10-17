@@ -15,6 +15,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { assertIsDefined } from "../../../../src/util/assertions";
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
+import { fileService } from "../../../../src/files/fileService";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -33,6 +34,7 @@ describe("projektiValidator", () => {
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    sinon.stub(fileService, "getFileContentLength").returns(Promise.resolve(400));
 
     fixture = new ProjektiFixture();
   });
