@@ -22,6 +22,7 @@ import { fileService } from "../files/fileService";
 import { getZipFolder } from "../tiedostot/ProjektiTiedostoManager/util";
 import { aineistoNewIsReady } from "./aineistoNewIsReady";
 import { ENNAKKONEUVOTTELU_JULKAISU_PATH } from "../ennakkoneuvottelu/tallenna";
+import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 
 type TarvittavatTiedot = Pick<
   DBProjekti,
@@ -58,6 +59,7 @@ type ProjektinAineistot = {
 export default function collectHyvaksymisEsitysAineistot(
   projekti: TarvittavatTiedot,
   hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys | DBEnnakkoNeuvotteluJulkaisu,
+  status: API.Status | undefined,
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
   let path: string;
@@ -86,7 +88,7 @@ export default function collectHyvaksymisEsitysAineistot(
     valmis: true,
   }));
 
-  const kuulutuksetJaKutsutProjektista = getKutsut(projekti);
+  const kuulutuksetJaKutsutProjektista = getKutsut(projekti, status);
   const kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({
@@ -127,7 +129,7 @@ export default function collectHyvaksymisEsitysAineistot(
       valmis: true,
     };
   });
-  const maanomistajaluetteloProjektista = getMaanomistajaLuettelo(projekti);
+  const maanomistajaluetteloProjektista = getMaanomistajaLuettelo(projekti, status);
   const maanomistajaluetteloOmaltaKoneelta: FileInfo[] = (hyvaksymisEsitys?.maanomistajaluettelo ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "maanomistajaluettelo", adaptFileName(tiedosto.nimi)),
     zipFolder: "Maanomistajaluettelo",
@@ -159,7 +161,10 @@ function tiedostoVanhaIsReady(aineisto: Aineisto | LadattuTiedosto): boolean {
   return aineisto.tila == API.AineistoTila.VALMIS;
 }
 
-export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): FileInfo[] {
+export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot, status: API.Status | undefined): FileInfo[] {
+  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1) || status === API.Status.EI_JULKAISTU) {
+    return [];
+  }
   const maanomistajaluttelo: FileInfo[] = [];
   //Nähtävilläolovaihe
   const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
@@ -182,7 +187,10 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot): FileInfo[]
   return maanomistajaluttelo;
 }
 
-export function getKutsut(projekti: TarvittavatTiedot): FileInfo[] {
+export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | undefined): FileInfo[] {
+  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1) || status === API.Status.EI_JULKAISTU) {
+    return [];
+  }
   const onSaameProjekti =
     projekti.kielitiedot?.ensisijainenKieli == API.Kieli.POHJOISSAAME || projekti.kielitiedot?.toissijainenKieli == API.Kieli.POHJOISSAAME;
   const kutsut: FileInfo[] = [];

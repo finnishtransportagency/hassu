@@ -429,7 +429,7 @@ export const handlerFactory = (event: SQSEvent) => async () => {
         }
       }
 
-      await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+      await checkEpaaktiivinen(ctx);
 
       // Synkronoidaan tiedostot aina
       const successfulSynchronization = await synchronizeAll(ctx);
@@ -477,6 +477,13 @@ export const handlerFactory = (event: SQSEvent) => async () => {
     throw e;
   }
 };
+
+async function checkEpaaktiivinen(ctx: ImportContext) {
+  if (ctx.projektiStatus == API.Status.EPAAKTIIVINEN_1) {
+    await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+    await projektiDatabase.deleteEnnakkoNeuvottelu(ctx.oid);
+  }
+}
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();

@@ -18,6 +18,8 @@ import { ZipSourceFile, generateAndStreamZipfileToS3 } from "../../tiedostot/zip
 import collectHyvaksymisEsitysAineistot from "../collectHyvaksymisEsitysAineistot";
 import { assertIsDefined } from "../../util/assertions";
 import { ENNAKKONEUVOTTELU_PATH } from "../../ennakkoneuvottelu/tallenna";
+import { Status } from "hassu-common/graphql/apiModel";
+import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -86,8 +88,9 @@ export async function zipHyvEsAineistot(oid: string, ennakkoneuvottelu = false) 
     assertIsDefined(projekti.muokattavaHyvaksymisEsitys, "Muokattava hyväksymisesitys oltava zipattaessa");
     aineisto = projekti.muokattavaHyvaksymisEsitys;
   }
+  const status: Status = await GetProjektiStatus.getProjektiStatus(projekti);
   const { hyvaksymisEsitys, kuulutuksetJaKutsu, muutAineistot, suunnitelma, kuntaMuistutukset, maanomistajaluettelo, lausunnot } =
-    collectHyvaksymisEsitysAineistot(projekti, aineisto, projekti.aineistoHandledAt);
+    collectHyvaksymisEsitysAineistot(projekti, aineisto, status, projekti.aineistoHandledAt);
   const filesToZip: ZipSourceFile[] = [
     ...hyvaksymisEsitys,
     ...kuulutuksetJaKutsu,
@@ -180,6 +183,7 @@ type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
   | "aineistoHandledAt"
   | "velho"
   | "ennakkoNeuvotteluJulkaisu"
+  | "kayttoOikeudet"
 >;
 
 async function haeZipattavatAineistotHyvaksymisEsityksen(
@@ -199,6 +203,7 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(
       "nahtavillaoloVaiheJulkaisut, " +
       "aineistoHandledAt, " +
       "velho, " +
+      "kayttoOikeudet, " +
       (ennakkoneuvottelu ? "ennakkoNeuvotteluJulkaisu" : "muokattavaHyvaksymisEsitys"),
   });
 

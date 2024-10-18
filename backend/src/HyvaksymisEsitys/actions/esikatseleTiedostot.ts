@@ -9,6 +9,7 @@ import projektiDatabase, { ProjektiTiedostoineen } from "../dynamoKutsut";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import { getYllapitoPathForProjekti, joinPath, JULKAISTU_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
 import { IllegalArgumentError } from "hassu-common/error";
+import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
 
 export async function esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot({
   oid,
@@ -27,7 +28,8 @@ export async function esikatseleHyvaksyttavaHyvaksymisEsityksenTiedostot({
     ? "/" + joinPath(getYllapitoPathForProjekti(dbProjekti.oid), JULKAISTU_HYVAKSYMISESITYS_PATH, "aineisto.zip")
     : undefined;
 
-  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
+  const status: API.Status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
+  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys, status);
 
   return {
     __typename: "HyvaksymisEsityksenAineistot",
@@ -55,8 +57,8 @@ export async function esikatseleHyvaksymisEsityksenTiedostot({
   }
 
   const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitysInput);
-
-  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys);
+  const status: API.Status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
+  const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys, status);
   return {
     __typename: "HyvaksymisEsityksenAineistot",
     aineistopaketti: undefined,

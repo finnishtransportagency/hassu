@@ -9,6 +9,7 @@ import { validateEnnakkoNeuvotteluHash } from "../HyvaksymisEsitys/latauslinkit/
 import { adaptVelhoToProjektinPerustiedot } from "../HyvaksymisEsitys/adaptToApi/adaptVelhoToProjektinPerustiedot";
 import { adaptProjektiKayttajaJulkinen } from "../projekti/adapter/adaptToAPI";
 import createLadattavatTiedostot from "../HyvaksymisEsitys/latauslinkit/createLadattavatTiedostot";
+import GetProjektiStatus from "../projekti/status/getProjektiStatus";
 
 export default async function listaaEnnakkoNeuvottelunTiedostot({
   oid,
@@ -47,7 +48,9 @@ export default async function listaaEnnakkoNeuvottelunTiedostot({
     const aineistopaketti = projekti.ennakkoNeuvotteluAineistoPaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, projekti.ennakkoNeuvotteluAineistoPaketti)
       : null;
-    const ladattavatTiedostot = await createLadattavatTiedostot(projekti, ennakkoNeuvotteluJulkaisu);
+    const status: API.Status = await GetProjektiStatus.getProjektiStatus(projekti);
+    log.info("Status: " + status);
+    const ladattavatTiedostot = await createLadattavatTiedostot(projekti, ennakkoNeuvotteluJulkaisu, status);
     return {
       __typename: "EnnakkoNeuvottelunAineistot",
       ...ladattavatTiedostot,
