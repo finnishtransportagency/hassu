@@ -31,10 +31,11 @@ import {
 } from "../util/lausuntoPyyntoUtil";
 import { velho } from "../velho/velhoClient";
 import { linkHyvaksymisPaatos } from "hassu-common/links";
-import { deleteFilesUnderSpecifiedVaihe } from "../HyvaksymisEsitys/s3Calls/deleteFiles";
+import { deleteFilesUnderSpecifiedVaihe, deleteProjektiFilesFromYllapito } from "../HyvaksymisEsitys/s3Calls/deleteFiles";
 import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
 import { getHyvaksymisEsityksenLadatutTiedostot } from "../HyvaksymisEsitys/getLadatutTiedostot";
 import getHyvaksymisEsityksenAineistot from "../HyvaksymisEsitys/getAineistot";
+import { joinPath } from "../tiedostot/paths";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -494,9 +495,10 @@ async function checkEpaaktiivinen(ctx: ImportContext) {
       await deleteFilesUnderSpecifiedVaihe(
         ctx.oid,
         ENNAKKONEUVOTTELU_JULKAISU_PATH,
-        [...tiedostot, ...aineistot, { avain: ENNAKKONEUVOTTELU_JULKAISU_PATH + "/aineisto.zip", nimi: "aineisto.zip" }],
+        [...tiedostot, ...aineistot],
         "Projekti epäaktiivinen"
       );
+      await deleteProjektiFilesFromYllapito(ctx.oid, [joinPath(ENNAKKONEUVOTTELU_JULKAISU_PATH, "aineisto.zip")], "Projekti epäaktiivinen");
     }
     if (ctx.projekti.ennakkoNeuvottelu) {
       const tiedostot = await getHyvaksymisEsityksenLadatutTiedostot(ctx.projekti.ennakkoNeuvottelu);
