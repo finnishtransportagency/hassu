@@ -1,4 +1,4 @@
-import { IHyvaksymisEsitys, AineistoNew, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { IHyvaksymisEsitys, AineistoNew, MuokattavaHyvaksymisEsitys, IEnnakkoNeuvottelu } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 
 /**
@@ -7,7 +7,7 @@ import { parseDate } from "../util/dateUtil";
  * @returns Hyväksymisesityksen aineistot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export default function getHyvaksymisEsityksenAineistot(
-  hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined
+  hyvaksymisEsitys: IHyvaksymisEsitys | null | undefined | IEnnakkoNeuvottelu
 ): (AineistoNew & { avain: string })[] {
   if (!hyvaksymisEsitys) {
     return [] as (AineistoNew & { avain: string })[];
@@ -27,8 +27,8 @@ export default function getHyvaksymisEsityksenAineistot(
  * @returns Poistuvat aineistot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export function getHyvaksymisEsityksenPoistetutAineistot(
-  vanha: MuokattavaHyvaksymisEsitys | null | undefined,
-  uusi: MuokattavaHyvaksymisEsitys | null | undefined
+  vanha: IEnnakkoNeuvottelu | null | undefined,
+  uusi: IEnnakkoNeuvottelu | null | undefined
 ): (AineistoNew & { avain: string })[] {
   const uudet = getHyvaksymisEsityksenAineistot(uusi);
   const vanhat = getHyvaksymisEsityksenAineistot(vanha);

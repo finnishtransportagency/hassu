@@ -579,6 +579,7 @@ export class HassuBackendStack extends Stack {
       this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/suunnitteluvaihe/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/hyvaksymisesitys/*"); // Hyväksymisesitystä varten lukuoikeus
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/ennakkoneuvottelu/*");
       this.props.yllapitoBucket.grantRead(backendLambda, "*/nahtavillaolo/*"); // Lausuntopyyntöjä  ja hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynto/*"); // Lausuntopyyntöjä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynnon_taydennys/*"); // Lausuntopyynnön täydennyksiä varten lukuoikeus

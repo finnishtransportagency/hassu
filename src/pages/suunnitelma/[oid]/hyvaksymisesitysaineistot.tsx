@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { HyvaksymisEsityksenAineistot } from "@services/api";
 import { useHyvaksymisEsityksenAineistot } from "src/hooks/useHyvaksymisEsityksenAineistot";
 import HyvaksymisEsitysAineistoPage from "@components/HyvaksymisEsitys/AineistoPage";
-import VanhentunutAineistolinkki from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
+import VanhentunutAineistolinkki, { AineistoType } from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
 import EiHyvaksymisEsitysta from "@components/HyvaksymisEsitys/EiHyvaksymisEsitysta";
 
 export default function HyvaksymisesitysLinkki(): ReactElement {
@@ -17,7 +17,7 @@ export default function HyvaksymisesitysLinkki(): ReactElement {
         poistumisPaiva={data.poistumisPaiva}
         suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
         projarinYhteystiedot={data.projektipaallikonYhteystiedot}
-        hyvaksymisesitys
+        tyyppi={AineistoType.HYVAKSYMISESITYS}
       />
     );
   }

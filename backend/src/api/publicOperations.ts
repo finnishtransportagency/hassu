@@ -9,6 +9,7 @@ import {
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
   ListaaHyvaksymisEsityksenTiedostotQueryVariables,
+  ListaaEnnakkoNeuvottelunTiedostotQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { apiConfig, OperationName } from "hassu-common/abstractApi";
@@ -23,6 +24,7 @@ import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJu
 import { getSuomiFiKayttaja } from "../user/userService";
 import { tiedostoDownloadLinkHandler } from "../handler/tiedostoDownloadLinkHandler";
 import { listaaHyvaksymisEsityksenTiedostot } from "../HyvaksymisEsitys/actions";
+import listaaEnnakkoNeuvottelunTiedostot from "../ennakkoneuvottelu/listaaTiedostot";
 
 export async function executePublicOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -57,6 +59,8 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
       );
     case apiConfig.listaaHyvaksymisEsityksenTiedostot.name:
       return await listaaHyvaksymisEsityksenTiedostot(event.arguments as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
+    case apiConfig.listaaEnnakkoNeuvottelunTiedostot.name:
+      return await listaaEnnakkoNeuvottelunTiedostot(event.arguments as ListaaEnnakkoNeuvottelunTiedostotQueryVariables);
     default:
       return null;
   }

@@ -359,7 +359,7 @@ function setIfDefined<T>(value: T | undefined | null, setValue: (value: T) => vo
 
 function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminaisuudet): KasittelynTila | undefined {
   const kasittelynTila: KasittelynTila = {};
-  kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["suunnitelman-tila"]);
+  kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["hallinnollisen-kasittelyn-tila"]);
   kasittelynTila.ennakkoneuvotteluPaiva = objectToString(ominaisuudet["ennakkoneuvottelu"]);
   kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
   kasittelynTila.ennakkotarkastus = objectToString(ominaisuudet["hyvaksymisesitys"]?.saapunut);
@@ -403,7 +403,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
 
 export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): ProjektiProjekti {
   const ominaisuudet = projekti.ominaisuudet;
-  setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["suunnitelman-tila"] = stringToObject(value)));
+  setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(value)));
   setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
   setIfDefined(
     params.hyvaksymisesitysTraficomiinPaiva,
@@ -530,7 +530,7 @@ export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuu
 }
 
 export function applySuunnittelunTilaToVelho(projekti: ProjektiProjekti, suunnitelmanTila: string): ProjektiProjekti {
-  projekti.ominaisuudet["suunnitelman-tila"] = stringToObject(suunnitelmanTila);
+  projekti.ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(suunnitelmanTila);
   return projekti;
 }
 

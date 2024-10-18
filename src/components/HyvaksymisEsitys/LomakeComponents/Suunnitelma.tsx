@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { H3, H4 } from "@components/Headings";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import HassuAccordion from "@components/HassuAccordion";
 import { findKategoriaForVelhoAineistoNew, FormAineistoNew, getInitialExpandedAineisto } from "@components/projekti/common/Aineistot/util";
@@ -16,12 +16,13 @@ import remove from "lodash/remove";
 
 type Props = {
   aineistoKategoriat: AineistoKategoriat;
+  ennakkoneuvottelu?: boolean;
 };
 
-export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): ReactElement {
+export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm>();
-  const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
+  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const suunnitelma = watch(ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma");
   const { t } = useTranslation("aineisto");
   const suunnitelmaFlat = Object.values(suunnitelma).flat();
 
@@ -55,6 +56,7 @@ export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): Re
                 aineistoKategoriat={aineistoKategoriat}
                 paakategoria={paakategoria}
                 expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                ennakkoneuvottelu={ennakkoneuvottelu}
               />
             </SectionContent>
           ),
@@ -73,9 +75,15 @@ export default function Suunnitelma({ aineistoKategoriat }: Readonly<Props>): Re
             oldAineisto: suunnitelma,
             newAineisto,
           });
-          setValue("muokattavaHyvaksymisEsitys.suunnitelma", uusiAineistoNahtavilla.aineisto);
+          setValue(
+            ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma",
+            uusiAineistoNahtavilla.aineisto
+          );
           uusiAineistoNahtavilla.kategoriasWithChanges.forEach((kategoria) => {
-            setValue(`muokattavaHyvaksymisEsitys.suunnitelma.${kategoria}`, uusiAineistoNahtavilla.aineisto[kategoria]);
+            setValue(
+              `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${kategoria}`,
+              uusiAineistoNahtavilla.aineisto[kategoria]
+            );
           });
         }}
       />

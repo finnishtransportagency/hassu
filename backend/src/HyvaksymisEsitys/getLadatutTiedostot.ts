@@ -1,4 +1,4 @@
-import { IHyvaksymisEsitys, ILadattuTiedosto, MuokattavaHyvaksymisEsitys } from "../database/model";
+import { IEnnakkoNeuvottelu, ILadattuTiedosto } from "../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
 /**
@@ -8,8 +8,8 @@ import * as API from "hassu-common/graphql/apiModel";
  * @returns Inputista poimitut uudet ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export function getHyvaksymisEsityksenUudetLadatutTiedostot(
-  vanha: MuokattavaHyvaksymisEsitys | null | undefined,
-  uusi: API.HyvaksymisEsitysInput | null | undefined
+  vanha: IEnnakkoNeuvottelu | null | undefined,
+  uusi: API.HyvaksymisEsitysInput | API.EnnakkoNeuvotteluInput | null | undefined
 ): (API.LadattuTiedostoInputNew & { avain: string })[] {
   const uudet = getHyvaksymisEsityksenLadatutTiedostot(uusi);
   const vanhat = getHyvaksymisEsityksenLadatutTiedostot(vanha);
@@ -23,8 +23,8 @@ export function getHyvaksymisEsityksenUudetLadatutTiedostot(
  * @returns Poistuvat ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
 export function getHyvaksymisEsityksenPoistetutTiedostot(
-  vanha: MuokattavaHyvaksymisEsitys | null | undefined,
-  uusi: MuokattavaHyvaksymisEsitys | null | undefined
+  vanha: IEnnakkoNeuvottelu | null | undefined,
+  uusi: IEnnakkoNeuvottelu | null | undefined
 ): (ILadattuTiedosto & { avain: string })[] {
   const uudet = getHyvaksymisEsityksenLadatutTiedostot(uusi);
   const vanhat = getHyvaksymisEsityksenLadatutTiedostot(vanha);
@@ -36,9 +36,9 @@ export function getHyvaksymisEsityksenPoistetutTiedostot(
  * @param hyvaksymisEsitys DB- tai input-muotoinen hyväksymisesitys
  * @returns Annetun hyväksymisesityksen ladatut tiedostot varustettuna tiedolla siitä, minkä avaimen takana ne olivat
  */
-export function getHyvaksymisEsityksenLadatutTiedostot<A extends IHyvaksymisEsitys | API.HyvaksymisEsitysInput>(
+export function getHyvaksymisEsityksenLadatutTiedostot<A extends IEnnakkoNeuvottelu | API.HyvaksymisEsitysInput>(
   hyvaksymisEsitys: A | null | undefined
-): A extends IHyvaksymisEsitys ? (ILadattuTiedosto & { avain: string })[] : (API.LadattuTiedostoInputNew & { avain: string })[] {
+): A extends IEnnakkoNeuvottelu ? (ILadattuTiedosto & { avain: string })[] : (API.LadattuTiedostoInputNew & { avain: string })[] {
   if (!hyvaksymisEsitys) {
     return [];
   }
@@ -58,14 +58,15 @@ export function getHyvaksymisEsityksenLadatutTiedostot<A extends IHyvaksymisEsit
         avain: "lausunnot",
       }))
     );
-
-  hyvaksymisEsitys.hyvaksymisEsitys &&
-    tiedostot.push(
-      ...hyvaksymisEsitys.hyvaksymisEsitys.map((tiedosto) => ({
-        ...tiedosto,
-        avain: "hyvaksymisEsitys",
-      }))
-    );
+  if ("hyvaksymisEsitys" in hyvaksymisEsitys) {
+    hyvaksymisEsitys.hyvaksymisEsitys &&
+      tiedostot.push(
+        ...hyvaksymisEsitys.hyvaksymisEsitys.map((tiedosto) => ({
+          ...tiedosto,
+          avain: "hyvaksymisEsitys",
+        }))
+      );
+  }
 
   hyvaksymisEsitys.maanomistajaluettelo &&
     tiedostot.push(
@@ -91,7 +92,7 @@ export function getHyvaksymisEsityksenLadatutTiedostot<A extends IHyvaksymisEsit
       }))
     );
 
-  return tiedostot as A extends IHyvaksymisEsitys
+  return tiedostot as A extends IEnnakkoNeuvottelu
     ? (ILadattuTiedosto & { avain: string })[]
     : (API.LadattuTiedostoInputNew & { avain: string })[];
 }

@@ -59,7 +59,7 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
     const expectedArgs2 = [
       {
         s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
-        zipFolder: "Maanomistajaluttelo",
+        zipFolder: "Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
@@ -161,7 +161,7 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
     const expectedArgs2 = [
       {
         s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
-        zipFolder: "Maanomistajaluttelo",
+        zipFolder: "Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus se.pdf",

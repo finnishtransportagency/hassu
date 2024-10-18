@@ -8,6 +8,14 @@ Object {
     "aktivoitavissa": false,
     "inaktiivinen": true,
   },
+  "ennakkoNeuvottelu": Object {
+    "__typename": "EnnakkoNeuvottelu",
+    "tuodutTiedostot": Object {
+      "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+      "kuulutuksetJaKutsu": Array [],
+      "maanomistajaluettelo": Array [],
+    },
+  },
   "kayttoOikeudet": Array [
     Object {
       "__typename": "ProjektiKayttaja",
@@ -146,6 +154,14 @@ Array [
       "inaktiivinen": true,
       "linkkiAsianhallintaan": undefined,
     },
+    "ennakkoNeuvottelu": Object {
+      "__typename": "EnnakkoNeuvottelu",
+      "tuodutTiedostot": Object {
+        "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+        "kuulutuksetJaKutsu": Array [],
+        "maanomistajaluettelo": Array [],
+      },
+    },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
@@ -258,6 +274,14 @@ Array [
       "inaktiivinen": true,
       "linkkiAsianhallintaan": undefined,
     },
+    "ennakkoNeuvottelu": Object {
+      "__typename": "EnnakkoNeuvottelu",
+      "tuodutTiedostot": Object {
+        "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+        "kuulutuksetJaKutsu": Array [],
+        "maanomistajaluettelo": Array [],
+      },
+    },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
@@ -368,6 +392,14 @@ Array [
       "aktivoitavissa": false,
       "inaktiivinen": true,
       "linkkiAsianhallintaan": undefined,
+    },
+    "ennakkoNeuvottelu": Object {
+      "__typename": "EnnakkoNeuvottelu",
+      "tuodutTiedostot": Object {
+        "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+        "kuulutuksetJaKutsu": Array [],
+        "maanomistajaluettelo": Array [],
+      },
     },
     "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
@@ -625,6 +657,14 @@ Array [
       "aktivoitavissa": false,
       "inaktiivinen": true,
       "linkkiAsianhallintaan": undefined,
+    },
+    "ennakkoNeuvottelu": Object {
+      "__typename": "EnnakkoNeuvottelu",
+      "tuodutTiedostot": Object {
+        "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+        "kuulutuksetJaKutsu": Array [],
+        "maanomistajaluettelo": Array [],
+      },
     },
     "euRahoitus": false,
     "julkinenStatus": "EI_JULKAISTU",
@@ -936,6 +976,29 @@ Object {
     "aktivoitavissa": false,
     "inaktiivinen": true,
     "linkkiAsianhallintaan": undefined,
+  },
+  "ennakkoNeuvottelu": Object {
+    "__typename": "EnnakkoNeuvottelu",
+    "tuodutTiedostot": Object {
+      "__typename": "HyvaksymisEsityksenTuodutTiedostot",
+      "kuulutuksetJaKutsu": Array [
+        Object {
+          "__typename": "LadattavaTiedosto",
+          "kategoriaId": undefined,
+          "linkki": "http://localhost:4566/hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412%20Aloituskuulutus.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20220101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20220101T220001Z&X-Amz-Expires=3600&X-Amz-Signature=7646786873e908af05075014822fed0e49775ca95763dd03cdaaa6e2f93a106d&X-Amz-SignedHeaders=host&x-id=GetObject",
+          "nimi": "T412 Aloituskuulutus.pdf",
+          "tuotu": undefined,
+        },
+        Object {
+          "__typename": "LadattavaTiedosto",
+          "kategoriaId": undefined,
+          "linkki": "http://localhost:4566/hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/Saame.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20220101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20220101T220001Z&X-Amz-Expires=3600&X-Amz-Signature=386a6f4c7ca74f2737afc18be8afd27cfa8c64e52d42b10c7eead03487962a40&X-Amz-SignedHeaders=host&x-id=GetObject",
+          "nimi": "Saame.pdf",
+          "tuotu": undefined,
+        },
+      ],
+      "maanomistajaluettelo": Array [],
+    },
   },
   "euRahoitus": false,
   "julkinenStatus": "ALOITUSKUULUTUS",

@@ -7,7 +7,7 @@ import { AineistoKategoriat, kategorisoimattomatId } from "common/aineistoKatego
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { ActionsColumn } from ".";
 import { FormAineistoNew, getAllOptionsForKategoriat } from "../util";
-import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 import { formatDateTime } from "common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
@@ -15,11 +15,14 @@ import { MenuItem } from "@mui/material";
 interface AineistoTableProps {
   kategoriaId: string;
   aineistoKategoriat: AineistoKategoriat;
+  ennakkoneuvottelu?: boolean;
 }
 
 export function AineistoTable(props: Readonly<AineistoTableProps>) {
-  const { control, register, getValues, setValue } = useFormContext<HyvaksymisEsitysForm>();
-  const aineistoRoute: `muokattavaHyvaksymisEsitys.suunnitelma.${string}` = `muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoriaId}`;
+  const { control, register, getValues, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const aineistoRouteEsitys: `muokattavaHyvaksymisEsitys.suunnitelma.${string}` = `muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoriaId}`;
+  const aineistoRouteEnnakko: `ennakkoNeuvottelu.suunnitelma.${string}` = `ennakkoNeuvottelu.suunnitelma.${props.kategoriaId}`;
+  const aineistoRoute = props.ennakkoneuvottelu ? aineistoRouteEnnakko : aineistoRouteEsitys;
   const { fields, remove, move } = useFieldArray({ name: aineistoRoute, control });
 
   const { t } = useTranslation("aineisto");
@@ -70,8 +73,11 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
             onChange={(event) => {
               const newKategoria = event.target.value;
               if (newKategoria !== props.kategoriaId) {
-                const values = getValues(`muokattavaHyvaksymisEsitys.suunnitelma.${newKategoria}`) || [];
-                setValue(`muokattavaHyvaksymisEsitys.suunnitelma.${newKategoria}`, [
+                const values =
+                  getValues(
+                    `${props.ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${newKategoria}`
+                  ) || [];
+                setValue(`${props.ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${newKategoria}`, [
                   ...values,
                   {
                     ...aineisto,
