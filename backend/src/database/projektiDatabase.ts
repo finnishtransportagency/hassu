@@ -620,7 +620,7 @@ export class ProjektiDatabase {
       Key: {
         oid,
       },
-      UpdateExpression: "REMOVE ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu",
+      UpdateExpression: "REMOVE ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu, ennakkoNeuvotteluAineistoPaketti",
     };
     await getDynamoDBDocumentClient().send(new UpdateCommand(input));
   }

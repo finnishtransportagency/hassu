@@ -162,7 +162,7 @@ function tiedostoVanhaIsReady(aineisto: Aineisto | LadattuTiedosto): boolean {
 }
 
 export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot, status: API.Status | undefined): FileInfo[] {
-  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1) || status === API.Status.EI_JULKAISTU) {
+  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1)) {
     return [];
   }
   const maanomistajaluttelo: FileInfo[] = [];
@@ -188,7 +188,7 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot, status: API
 }
 
 export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | undefined): FileInfo[] {
-  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1) || status === API.Status.EI_JULKAISTU) {
+  if (isStatusGreaterOrEqualTo(status, API.Status.EPAAKTIIVINEN_1)) {
     return [];
   }
   const onSaameProjekti =

@@ -52,6 +52,12 @@ export type ProjektiTiedostoineen = Pick<
   | "ennakkoNeuvotteluAineistoPaketti"
   | "asianhallinta"
   | "euRahoitus"
+  | "hyvaksymisPaatosVaihe"
+  | "hyvaksymisPaatosVaiheJulkaisut"
+  | "jatkoPaatos1Vaihe"
+  | "jatkoPaatos1VaiheJulkaisut"
+  | "jatkoPaatos2Vaihe"
+  | "jatkoPaatos2VaiheJulkaisut"
 >;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -117,7 +123,13 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
         "aineistoHandledAt, " +
-        "hyvEsAineistoPaketti",
+        "hyvEsAineistoPaketti, " +
+        "hyvaksymisPaatosVaihe, " +
+        "hyvaksymisPaatosVaiheJulkaisut, " +
+        "jatkoPaatos1Vaihe, " +
+        "jatkoPaatos1VaiheJulkaisut, " +
+        "jatkoPaatos2Vaihe, " +
+        "jatkoPaatos2VaiheJulkaisut",
     });
 
     try {
@@ -386,7 +398,13 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "ennakkoNeuvottelu, " +
         "ennakkoNeuvotteluJulkaisu, " +
         "aineistoHandledAt, " +
-        "ennakkoNeuvotteluAineistoPaketti",
+        "ennakkoNeuvotteluAineistoPaketti, " +
+        "hyvaksymisPaatosVaihe, " +
+        "hyvaksymisPaatosVaiheJulkaisut, " +
+        "jatkoPaatos1Vaihe, " +
+        "jatkoPaatos1VaiheJulkaisut, " +
+        "jatkoPaatos2Vaihe, " +
+        "jatkoPaatos2VaiheJulkaisut",
     });
 
     try {
