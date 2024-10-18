@@ -184,6 +184,8 @@ type ZipattavatAineistotHyvaksymisEsitykseen = Pick<
   | "velho"
   | "ennakkoNeuvotteluJulkaisu"
   | "kayttoOikeudet"
+  | "euRahoitus"
+  | "asianhallinta"
 >;
 
 async function haeZipattavatAineistotHyvaksymisEsityksen(
@@ -204,6 +206,8 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(
       "aineistoHandledAt, " +
       "velho, " +
       "kayttoOikeudet, " +
+      "euRahoitus, " +
+      "asianhallinta, " +
       (ennakkoneuvottelu ? "ennakkoNeuvotteluJulkaisu" : "muokattavaHyvaksymisEsitys"),
   });
 

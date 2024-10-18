@@ -29,6 +29,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "velho"
   | "asianhallinta"
   | "hyvEsAineistoPaketti"
+  | "euRahoitus"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -49,6 +50,8 @@ export type ProjektiTiedostoineen = Pick<
   | "ennakkoNeuvottelu"
   | "ennakkoNeuvotteluJulkaisu"
   | "ennakkoNeuvotteluAineistoPaketti"
+  | "asianhallinta"
+  | "euRahoitus"
 >;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -76,7 +79,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti, euRahoitus",
     });
 
     try {
@@ -105,6 +108,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "salt, " +
         "kielitiedot, " +
         "kayttoOikeudet, " +
+        "asianhallinta, " +
+        "euRahoitus, " +
         "velho, " +
         "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
@@ -372,6 +377,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "salt, " +
         "kielitiedot, " +
         "kayttoOikeudet, " +
+        "asianhallinta, " +
+        "euRahoitus, " +
         "velho, " +
         "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
