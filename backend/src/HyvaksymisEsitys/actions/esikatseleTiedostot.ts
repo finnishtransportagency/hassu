@@ -52,10 +52,6 @@ export async function esikatseleHyvaksymisEsityksenTiedostot({
   const projari = validateProjari(dbProjekti);
   assertIsDefined(dbProjekti.velho, "Projektilta puuttuu Projektivelhotiedot");
 
-  if (!dbProjekti.muokattavaHyvaksymisEsitys?.tila && dbProjekti.muokattavaHyvaksymisEsitys?.tila !== API.HyvaksymisTila.MUOKKAUS) {
-    throw new IllegalArgumentError(`Hyväksymisesitys ei ole muokattavissa. Esikatselua ei voi tehdä tällä hetkellä.`);
-  }
-
   const muokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(dbProjekti.muokattavaHyvaksymisEsitys, hyvaksymisEsitysInput);
   const status: API.Status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
   const ladattavatTiedostot = await createLadattavatTiedostot(dbProjekti, muokattavaHyvaksymisEsitys, status);
