@@ -97,7 +97,7 @@ export const ENNAKKONEUVOTTELU_ROUTE: Route = {
   id: "ennakkoneuvottelu",
   requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
   pathname: `/yllapito/projekti/[oid]/ennakkoneuvottelu`,
-  visible: process.env.ENVIRONMENT !== "prod",
+  visible: true,
 };
 
 export const HYVAKSYMISESITYS_ROUTE: Route = {
