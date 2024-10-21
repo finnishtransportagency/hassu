@@ -323,14 +323,15 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
               valmis: tiedostoVanhaIsReady(kuulutus),
             });
             const kirje: LadattuTiedosto | null | undefined = nahtavillaoloSaamePDFt[kieli]?.kirjeTiedotettavillePDF;
-            assertIsDefined(kirje, `nahtavillaoloSaamePDFt[${kieli}].kirjeTiedotettavillePDF on oltava olemassa`);
-            kutsut.push({
-              s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kirje.tiedosto),
-              zipFolder: "Kuulutukset ja kutsut",
-              nimi: kirje.nimi ?? fileService.getFileNameFromFilePath(kirje.tiedosto),
-              tuotu: kirje.tuotu,
-              valmis: tiedostoVanhaIsReady(kirje),
-            });
+            if (kirje) {
+              kutsut.push({
+                s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kirje.tiedosto),
+                zipFolder: "Kuulutukset ja kutsut",
+                nimi: kirje.nimi ?? fileService.getFileNameFromFilePath(kirje.tiedosto),
+                tuotu: kirje.tuotu,
+                valmis: tiedostoVanhaIsReady(kirje),
+              });
+            }
           }
         });
       }
