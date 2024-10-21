@@ -83,7 +83,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
       </H2>
       <Section noDivider>
         <p>
-          Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
+          Huomioi, että tämä sisältö on tarkasteltavissa <b>{poistumisPaiva ? formatDate(poistumisPaiva): "-"}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
         </p>
         {!!lisatiedot && (
           <SectionContent>
