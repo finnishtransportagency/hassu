@@ -83,7 +83,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       )}
       <Section noDivider>
         <p>
-          Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
+          Huomioi, että tämä sisältö on tarkasteltavissa <b>{poistumisPaiva ? formatDate(poistumisPaiva): "-"}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
         </p>
         <SectionContent>
           <H4>Pyydetään kiireellistä käsittelyä: {kiireellinen ? "KYLLÄ" : "EI"}</H4>
