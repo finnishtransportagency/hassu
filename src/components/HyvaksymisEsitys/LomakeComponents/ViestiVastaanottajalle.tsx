@@ -35,7 +35,7 @@ export default function ViestiVastaanottajalle({ ennakkoneuvottelu }: Readonly<H
       <H5 variant="h4">Lisätiedot</H5>
       <p>
         {ennakkoneuvottelu
-          ? "Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä ennakkoneuvottelun linkin takana. Kirjaa kentään esimerkiksi sovittu ennakkoneuvottelun ajankohta."
+          ? "Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä ennakkoneuvottelun linkin takana. Kirjaa kenttään esimerkiksi sovittu ennakkoneuvottelun ajankohta."
           : "Lisätieto näkyy vastaanottajalle lähetetyssä sähköpostiviestissä sekä hyväksymisesityksen linkin takana."}
       </p>
       <div>
