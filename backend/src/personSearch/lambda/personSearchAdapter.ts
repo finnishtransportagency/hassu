@@ -13,9 +13,13 @@ export type PersonFromResponse = {
 
 export type MemberFromResponse = {
   Value: string[];
-}
+};
 
-export function adaptPersonSearchResult(personsFromResponse: PersonFromResponse[] | undefined, personMap: Record<string, Person>, members: string[] | undefined): void {
+export function adaptPersonSearchResult(
+  personsFromResponse: PersonFromResponse[] | undefined,
+  personMap: Record<string, Person>,
+  members: string[] | undefined
+): void {
   personsFromResponse?.forEach((person: PersonFromResponse) => {
     const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
     const id = getFirstElementFromArrayOrEmpty(person.ObjectID);

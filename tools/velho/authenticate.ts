@@ -18,7 +18,5 @@ axios
     console.log(response.data.access_token);
   })
   .catch((error) => {
-    throw new Error(
-      "Authentikaatiokutsu epäonnistui! Tarkista ympäristömuuttujat: VELHO_AUTH_URL, VELHO_USERNAME, VELHO_PASSWORD"
-    );
+    throw new Error("Authentikaatiokutsu epäonnistui! Tarkista ympäristömuuttujat: VELHO_AUTH_URL, VELHO_USERNAME, VELHO_PASSWORD");
   });

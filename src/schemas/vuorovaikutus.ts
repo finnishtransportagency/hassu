@@ -40,12 +40,14 @@ export const palauteSchema = Yup.object().shape({
   kysymysTaiPalaute: Yup.string().required("palaute_on_pakollinen").max(2000),
   yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
   yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
-  liitteet: Yup.array().max(5, "tiedostoja_liikaa").of(
-    Yup.object().shape({
-      koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
-      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypes, "tiedostotyyppi_ei_tuettu"),
-    })
-  ),
+  liitteet: Yup.array()
+    .max(5, "tiedostoja_liikaa")
+    .of(
+      Yup.object().shape({
+        koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
+        tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypes, "tiedostotyyppi_ei_tuettu"),
+      })
+    ),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({

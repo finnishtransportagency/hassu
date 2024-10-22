@@ -41,7 +41,7 @@ ${projekti.velho?.nimi ?? ""}
 Palaute
 ${palaute.kysymysTaiPalaute ?? ""}
 ${liite ? "Sähköpostiviestin liitteet\n" + liite : ""}
-`
+`;
     if (ruotsiksi) {
       text += text = `
 Respons mottagen
@@ -58,10 +58,16 @@ ${projekti.kielitiedot?.projektinNimiVieraskielella ?? ""}
 Respons
 ${palaute.kysymysTaiPalaute ?? ""}
 ${liite ? "Bifogade filer\n" + liite : ""}
-`
+`;
     }
     if (palaute.sahkoposti) {
-      await emailClient.sendEmail({ subject: `Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta${ruotsiksi ? " / Bekräftelse av att respons lämnats via systemet Planering av statens trafikleder" : ""}`, text, to: palaute.sahkoposti });
+      await emailClient.sendEmail({
+        subject: `Vahvistus palautteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta${
+          ruotsiksi ? " / Bekräftelse av att respons lämnats via systemet Planering av statens trafikleder" : ""
+        }`,
+        text,
+        to: palaute.sahkoposti,
+      });
       auditLog.info("Palautteen antajalle lähetetty sähköpostikuittaus osoitteeseen " + palaute.sahkoposti);
     } else {
       auditLog.info("Palautteen antajalle ei lähetetty sähköpostikuittausta");
@@ -77,20 +83,13 @@ ${liite ? "Bifogade filer\n" + liite : ""}
         throw new Error(`Projektia oid:lla ${oid} ei löytynyt tietokannasta`);
       }
 
-      let recipients;
+      const usersToNotSendDigest = dbProjekti.vuorovaikutusKierros?.palautteidenVastaanottajat ?? [];
+
       // Send digest email to everybody else than the ones listed in palautteidenVastaanottajat. They already got the emails immediately when feedback was given
-      if (dbProjekti.vuorovaikutusKierros?.palautteidenVastaanottajat) {
-        recipients = dbProjekti.kayttoOikeudet.filter(
-          // varmistettu jo, että palautteidenVastaanottajat on olemassa
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          (user) => dbProjekti.suunnitteluVaihe?.palautteidenVastaanottajat.indexOf(user.kayttajatunnus) < 0
-        );
-      } else {
-        recipients = dbProjekti.kayttoOikeudet;
-      }
-      for (const recipient of recipients) {
-        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email);
+      const digestRecipients = dbProjekti.kayttoOikeudet.filter((user) => !usersToNotSendDigest.includes(user.kayttajatunnus));
+
+      for (const recipient of digestRecipients) {
+        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email, dbProjekti.uusiaPalautteita);
         if (emailOptions.to) {
           await emailClient.sendEmail(emailOptions);
           log.info("'Uusia palautteita'-email lähetetty: " + emailOptions.to);

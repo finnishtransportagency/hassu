@@ -75,10 +75,13 @@ export function isEmailSent(email: string, sentMessageInfo: SMTPTransport.SentMe
     return false;
   }
 
-  if (sentMessageInfo?.accepted.find((accepted) => accepted == email || accepted == (email + ".sec")) || sentMessageInfo?.pending?.find((pending) => pending == email || pending == (email + ".sec"))) {
+  if (
+    sentMessageInfo?.accepted.find((accepted) => accepted == email || accepted == email + ".sec") ||
+    sentMessageInfo?.pending?.find((pending) => pending == email || pending == email + ".sec")
+  ) {
     return true;
   }
-  if (sentMessageInfo?.rejected.find((rejected) => rejected == email || rejected == (email + ".sec"))) {
+  if (sentMessageInfo?.rejected.find((rejected) => rejected == email || rejected == email + ".sec")) {
     return false;
   }
   throw new Error(`Annettua sähköpostia ${email} ei löydy sentMessageInfosta`);

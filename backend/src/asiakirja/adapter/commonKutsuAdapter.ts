@@ -209,7 +209,9 @@ export class CommonKutsuAdapter {
 
     const isElyOrganisaatio = !!organisaatioIsEly(projektiPaallikko.organisaatio) && !!projektiPaallikko.elyOrganisaatio;
 
-    return isElyOrganisaatio ? translate(`viranomainen.${projektiPaallikko.elyOrganisaatio}`, this.kieli) : translate("viranomainen.VAYLAVIRASTO", this.kieli);
+    return isElyOrganisaatio
+      ? translate(`viranomainen.${projektiPaallikko.elyOrganisaatio}`, this.kieli)
+      : translate("viranomainen.VAYLAVIRASTO", this.kieli);
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {

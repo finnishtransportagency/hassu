@@ -38,8 +38,7 @@ export default function IlmoituksenVastaanottajat({
               <>
                 <p>
                   Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty,
-                  tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon{" "}
-                  <TukiEmailLink />.
+                  tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
                 </p>
                 <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
               </>

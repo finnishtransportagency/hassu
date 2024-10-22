@@ -7,10 +7,7 @@ interface Props {
 }
 
 const RadioButton = (
-  {
-    label,
-    ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
+  { label, ...props }: Props & Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref">,
   ref: React.ForwardedRef<HTMLInputElement>
 ) => (
   <label>

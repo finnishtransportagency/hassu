@@ -22,6 +22,7 @@ describe("Metadata", () => {
     expect(pirkanmaa).to.eql({
       id: "maakunta/maakunta06",
       koodi: "06",
+      liittoNimi: "Pirkanmaan liitto",
       nimi: {
         RUOTSI: "Birkaland",
         SUOMI: "Pirkanmaa",

@@ -4,10 +4,7 @@ import { Dayjs } from "dayjs";
 import { bankHolidaysClient } from "./bankHolidaysClient";
 import { config } from "../config";
 
-export async function calculateEndDate({
-                                         alkupaiva,
-                                         tyyppi,
-                                       }: LaskePaattymisPaivaQueryVariables): Promise<string> {
+export async function calculateEndDate({ alkupaiva, tyyppi }: LaskePaattymisPaivaQueryVariables): Promise<string> {
   switch (tyyppi) {
     case LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA:
     case LaskuriTyyppi.NAHTAVILLAOLON_KUULUTUKSEN_PAATTYMISPAIVA:

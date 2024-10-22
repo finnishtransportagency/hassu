@@ -229,9 +229,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <ContentSpacer>
           <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
           <TilaisuusLista tilaisuudet={tulevatTilaisuudet} />
-          <p>
-            {isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
-          </p>
+          <p>{isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}</p>
         </ContentSpacer>
       )}
       {!!menneetTilaisuudet?.length && (

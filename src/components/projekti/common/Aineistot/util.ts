@@ -16,7 +16,7 @@ export interface AineistoNahtavillaTableFormValuesInterface {
   poistetutAineistoNahtavilla: FormAineisto[];
 }
 
-export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tiedosto"> & { tuotu: string | undefined };
+export type FormAineistoNew = AineistoInputNew & Pick<AineistoNew, "tiedosto"> & { tuotu: string | undefined; newlyAdded?: boolean };
 
 export function getInitialExpandedAineisto(aineistot: AineistotKategorioittain | { [kategoriaId: string]: FormAineistoNew[] }): Key[] {
   const keyArray = [];
@@ -80,6 +80,7 @@ export function findKategoriaForVelhoAineistoNew(
     uuid: uuid.v4(),
     tuotu: undefined,
     tiedosto: undefined,
+    newlyAdded: true,
   }));
 }
 

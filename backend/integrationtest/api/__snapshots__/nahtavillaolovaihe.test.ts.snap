@@ -122,8 +122,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "/1/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20suunnitelman%20nahtavillaolo.pdf",
+    "/1/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20nahtaville%20asettamisesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -225,8 +225,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
-    "/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20suunnitelman%20nahtavillaolo.pdf",
+    "/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajille%20nahtaville%20asettamisesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
@@ -492,6 +492,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -597,6 +598,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -637,7 +639,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
@@ -811,6 +813,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
@@ -859,7 +862,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/3/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
@@ -1027,6 +1030,7 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",

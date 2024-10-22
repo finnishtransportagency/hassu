@@ -225,7 +225,11 @@ describe("asiakirjaService", () => {
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       kasittelynTila: projektiToTestWith.kasittelynTila,
-      hyvaksymisPaatosVaihe: await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe),
+      hyvaksymisPaatosVaihe: await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+        projekti,
+        projekti.hyvaksymisPaatosVaihe,
+        projekti.hyvaksymisPaatosVaiheJulkaisut
+      ),
       kieli,
       luonnos: true,
       asiakirjaTyyppi,

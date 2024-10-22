@@ -34,7 +34,11 @@ const getProjektinTilaLoader = (api: API) => async (_query: string, oid: string 
   return await api.haeProjektinTiedottamistiedot(oid);
 };
 
-export function useProjektinTiedottaminenReady(oid: string, tiedottaminen: ProjektinTiedottaminen | undefined, setTiedottaminen: (tiedottaminen: ProjektinTiedottaminen | undefined) => void) {
+export function useProjektinTiedottaminenReady(
+  oid: string,
+  tiedottaminen: ProjektinTiedottaminen | undefined,
+  setTiedottaminen: (tiedottaminen: ProjektinTiedottaminen | undefined) => void
+) {
   const api = useApi();
   const { data } = useProjektinTiedottaminen();
   useEffect(() => {

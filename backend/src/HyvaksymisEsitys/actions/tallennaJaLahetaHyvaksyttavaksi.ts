@@ -5,7 +5,7 @@ import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/erro
 import { hyvaksymisEsitysSchema, HyvaksymisEsitysValidationContext } from "hassu-common/schema/hyvaksymisEsitysSchema";
 import { adaptHyvaksymisEsitysToSave } from "../adaptToSave/adaptHyvaksymisEsitysToSave";
 import { auditLog, log } from "../../logger";
-import getHyvaksymisEsityksenAineistot, { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
+import { getHyvaksymisEsityksenPoistetutAineistot } from "../getAineistot";
 import { getHyvaksymisEsityksenPoistetutTiedostot, getHyvaksymisEsityksenUudetLadatutTiedostot } from "../getLadatutTiedostot";
 import { persistFile } from "../s3Calls/persistFile";
 import { MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "../../tiedostot/paths";
@@ -19,8 +19,8 @@ import { validateVaiheOnAktiivinen } from "../validateVaiheOnAktiivinen";
 import { TestType } from "hassu-common/schema/common";
 import { SqsClient } from "../aineistoHandling/sqsClient";
 import { HyvaksymisEsitysAineistoOperation } from "../aineistoHandling/sqsEvent";
-import dayjs from "dayjs";
 import { getAineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import aineistoImportPending from "../aineistoImportPending";
 
 /**
  * Hakee halutun projektin tiedot ja tallentaa inputin perusteella muokattavalle hyväksymisesitykselle uudet tiedot
@@ -45,13 +45,6 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.aineistoHandledAt, projektiInDB.velho?.tyyppi);
-  // Persistoi uudet tiedostot
-  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-  if (uudetTiedostot.length) {
-    await Promise.all(
-      uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
-    );
-  }
   // Poista poistetut tiedostot/aineistot
   const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
     projektiInDB.muokattavaHyvaksymisEsitys,
@@ -63,6 +56,13 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   );
   if (poistetutTiedostot.length || poistetutAineistot.length) {
     await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
+  }
+  // Persistoi uudet tiedostot
+  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
+  if (uudetTiedostot.length) {
+    await Promise.all(
+      uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
+    );
   }
   // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
   const tallennettavaMuokattavaHyvaksymisEsitys = {
@@ -112,19 +112,11 @@ async function validateCurrent(projektiInDB: HyvaksymisEsityksenTiedot, input: A
 
 function validateUpcoming(
   muokattavaHyvaksymisEsitys: MuokattavaHyvaksymisEsitys,
-  aineistotHandledAt: string | undefined | null,
+  aineistoHandledAt: string | undefined | null,
   projektiTyyppi: API.ProjektiTyyppi | null | undefined
 ) {
   // Aineistojen ja ladattujen tiedostojen on oltava valmiita
-  const aineistot = getHyvaksymisEsityksenAineistot(muokattavaHyvaksymisEsitys);
-  const handledAt = aineistotHandledAt ? dayjs(aineistotHandledAt) : null;
-  if (
-    aineistot.length > 0 &&
-    (!handledAt || !aineistot.every((aineisto) => {
-      const lisattyDate = aineisto.lisatty ? dayjs(aineisto.lisatty) : null;
-      return handledAt.isAfter(lisattyDate) || handledAt.isSame(lisattyDate);
-    }))
-  ) {
+  if (aineistoImportPending({ muokattavaHyvaksymisEsitys, aineistoHandledAt })) {
     throw new IllegalArgumentError("Aineistojen on oltava valmiita ennen kuin hyväksymisesitys lähetetään hyväksyttäväksi.");
   }
   const kategoriaIds = getAineistoKategoriat({ projektiTyyppi, hideDeprecated: true }).listKategoriaIds();

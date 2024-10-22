@@ -6,39 +6,40 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { has, isEmpty, isEqual } from "lodash";
 
-type InputChangesKasittelynTilaFieldFunc = (key: keyof KasittelyntilaInput & keyof KasittelynTila) => boolean;
-
 export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput): void {
   if (input.kasittelynTila) {
     validateHasAccessToEditKasittelyntilaFields(projekti, input.kasittelynTila);
     assert(apiProjekti.status, "Projektilla ei ole statusta");
 
-    const inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc = (key) =>
-      has(input.kasittelynTila, key) && !isEqual(input.kasittelynTila?.[key], projekti.kasittelynTila?.[key]);
-
-    const inputChangesHyvaksymispaatosField: InputChangesKasittelynTilaFieldFunc = (key) => {
-      if (
-        (!projekti.kasittelynTila?.hyvaksymispaatos || isEqual(projekti.kasittelynTila.hyvaksymispaatos, {})) &&
-        input.kasittelynTila?.hyvaksymispaatos?.asianumero === "" &&
-        input.kasittelynTila.hyvaksymispaatos.paatoksenPvm === null
-      ) {
-        return false;
-      }
-      // ignore aktiivinen
-      return (
-        has(input.kasittelynTila, key) &&
-        // @ts-expect-error ignore
-        (!isEqual(input.kasittelynTila?.hyvaksymispaatos?.asianumero, projekti.kasittelynTila?.hyvaksymispaatos?.asianumero) ||
-        // @ts-expect-error ignore
-          !isEqual(input.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm, projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm))
-      );
-    };
-
-    validateKasittelyntilaHyvaksymispaatos(apiProjekti, inputChangesHyvaksymispaatosField);
-    validateKasittelyntilaEnsimmainenJatkopaatos(apiProjekti, projekti, inputChangesKasittelynTilaField);
-    validateKasittelyntilaToinenJatkopaatos(apiProjekti, projekti, inputChangesKasittelynTilaField);
+    validateKasittelyntilaHyvaksymispaatos(projekti, apiProjekti, input);
+    validateKasittelyntilaEnsimmainenJatkopaatos(projekti, apiProjekti, input);
+    validateKasittelyntilaToinenJatkopaatos(projekti, apiProjekti, input);
   }
 }
+
+const inputChangesKasittelynTilaField = (
+  projekti: DBProjekti,
+  input: TallennaProjektiInput,
+  key: keyof KasittelyntilaInput & keyof KasittelynTila
+) => has(input.kasittelynTila, key) && !isEqual(input.kasittelynTila?.[key], projekti.kasittelynTila?.[key]);
+
+const inputChangesHyvaksymispaatosField = (projekti: DBProjekti, input: TallennaProjektiInput) => {
+  if (
+    (!projekti.kasittelynTila?.hyvaksymispaatos || isEqual(projekti.kasittelynTila.hyvaksymispaatos, {})) &&
+    input.kasittelynTila?.hyvaksymispaatos?.asianumero === "" &&
+    input.kasittelynTila.hyvaksymispaatos.paatoksenPvm === null
+  ) {
+    return false;
+  }
+  // ignore aktiivinen
+  return (
+    has(input.kasittelynTila, "hyvaksymispaatos") &&
+    // @ts-expect-error ignore
+    (!isEqual(input.kasittelynTila?.hyvaksymispaatos?.asianumero, projekti.kasittelynTila?.hyvaksymispaatos?.asianumero) ||
+      // @ts-expect-error ignore
+      !isEqual(input.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm, projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm))
+  );
+};
 
 function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
   requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
@@ -48,23 +49,16 @@ function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input
   }
 }
 
-function validateKasittelyntilaHyvaksymispaatos(
-  apiProjekti: Projekti,
-  inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc
-) {
-  if (inputChangesKasittelynTilaField("hyvaksymispaatos") && !isStatusGreaterOrEqualTo(apiProjekti.status, Status.NAHTAVILLAOLO)) {
+function validateKasittelyntilaHyvaksymispaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+  if (inputChangesHyvaksymispaatosField(projekti, input) && !isStatusGreaterOrEqualTo(apiProjekti.status, Status.NAHTAVILLAOLO)) {
     throw new IllegalArgumentError(
       "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin. Projektin status nyt:" + apiProjekti.status
     );
   }
 }
 
-function validateKasittelyntilaEnsimmainenJatkopaatos(
-  apiProjekti: Projekti,
-  projekti: DBProjekti,
-  inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc
-) {
-  if (inputChangesKasittelynTilaField("ensimmainenJatkopaatos")) {
+function validateKasittelyntilaEnsimmainenJatkopaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+  if (inputChangesKasittelynTilaField(projekti, input, "ensimmainenJatkopaatos")) {
     if (!projekti.kasittelynTila?.hyvaksymispaatos) {
       throw new IllegalArgumentError("Ensimmäistä jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös");
     }
@@ -77,12 +71,8 @@ function validateKasittelyntilaEnsimmainenJatkopaatos(
   }
 }
 
-function validateKasittelyntilaToinenJatkopaatos(
-  apiProjekti: Projekti,
-  projekti: DBProjekti,
-  inputChangesKasittelynTilaField: InputChangesKasittelynTilaFieldFunc
-) {
-  if (inputChangesKasittelynTilaField("toinenJatkopaatos")) {
+function validateKasittelyntilaToinenJatkopaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+  if (inputChangesKasittelynTilaField(projekti, input, "toinenJatkopaatos")) {
     if (!projekti.kasittelynTila?.hyvaksymispaatos || !projekti.kasittelynTila?.ensimmainenJatkopaatos) {
       throw new IllegalArgumentError(
         "Toista jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös ja ensimmäinen jatkopäätös."

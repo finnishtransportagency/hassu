@@ -15,15 +15,14 @@ const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta",
   },
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA: {
-    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta",
   },
   ILMOITUS_JATKOPAATOSKUULUTUKSESTA2: {
-    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta",
   },
 };
 
 export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
-
   constructor(
     asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi,
     params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps

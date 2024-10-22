@@ -2,7 +2,9 @@ import { log, setLogContextOid } from "../logger";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
+  KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
   PartialDBProjekti,
@@ -21,6 +23,7 @@ import {
   ScanCommand,
   ScanCommandOutput,
   UpdateCommand,
+  UpdateCommandInput,
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
@@ -311,7 +314,7 @@ export class ProjektiDatabase {
       Key: {
         oid,
       },
-      UpdateExpression: "SET uusiaPalautteita = :one",
+      UpdateExpression: "ADD uusiaPalautteita :one",
       ExpressionAttributeValues: { ":one": 1 },
     });
     await getDynamoDBDocumentClient().send(params);
@@ -550,6 +553,65 @@ export class ProjektiDatabase {
       },
     });
     return await getDynamoDBDocumentClient().send(params);
+  }
+
+  async aktivoiProjektiJatkopaatettavaksi(
+    oid: string,
+    versio: number,
+    vaiheAvain: keyof Pick<KasittelynTila, "ensimmainenJatkopaatos" | "toinenJatkopaatos">,
+    paatoksenTiedot: Hyvaksymispaatos
+  ) {
+    const paatosInput: UpdateCommandInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: `ADD #versio :one SET kasittelynTila.#paatos = :paatos`,
+      ExpressionAttributeNames: {
+        ["#paatos"]: vaiheAvain,
+        ["#versio"]: "versio",
+      },
+      ExpressionAttributeValues: {
+        ":paatos": paatoksenTiedot,
+        ":versio": versio,
+        ":one": 1,
+      },
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versio) AND attribute_exists(kasittelynTila)",
+    };
+    const kasittelynTilaInput: UpdateCommandInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "ADD #versio :one SET kasittelynTila = if_not_exists(kasittelynTila, :kasittelynTila)",
+      ExpressionAttributeNames: {
+        ["#versio"]: "versio",
+      },
+      ExpressionAttributeValues: {
+        ":kasittelynTila": { [vaiheAvain]: paatoksenTiedot },
+        ":versio": versio,
+        ":one": 1,
+      },
+      ConditionExpression: "attribute_not_exists(#versio) OR #versio = :versio",
+    };
+    try {
+      await getDynamoDBDocumentClient().send(new UpdateCommand(paatosInput));
+      return;
+    } catch (e) {
+      if (!(e instanceof ConditionalCheckFailedException)) {
+        log.error(e instanceof Error ? e.message : String(e), { paatosInput });
+        throw e;
+      }
+    }
+    try {
+      await getDynamoDBDocumentClient().send(new UpdateCommand(kasittelynTilaInput));
+    } catch (e) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
+      }
+      log.error(e instanceof Error ? e.message : String(e), { kasittelynTilaInput });
+      throw e;
+    }
   }
 }
 

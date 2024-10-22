@@ -41,9 +41,9 @@ function pdfFileName({ tyyppi, kieli }: PdfEvent) {
   if (tyyppi === ProjektiTyyppi.TIE) {
     return `T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else if (tyyppi === ProjektiTyyppi.RATA) {
-    return `63R Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `R433 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   } else {
-    return `63YS Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
+    return `Y431-4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille${kieli === Kieli.RUOTSI ? " sv" : ""}.pdf`;
   }
 }
 
@@ -286,7 +286,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli:Kieli.RUOTSI,
+      toissijainenKieli: Kieli.RUOTSI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
@@ -301,7 +301,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli:Kieli.RUOTSI,
+      toissijainenKieli: Kieli.RUOTSI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.RATA,
       lisaaOsoite: true,
@@ -316,7 +316,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.RUOTSI,
-      toissijainenKieli:Kieli.SUOMI,
+      toissijainenKieli: Kieli.SUOMI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       tyyppi: ProjektiTyyppi.YLEINEN,
       lisaaOsoite: true,
@@ -331,7 +331,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli:Kieli.RUOTSI,
+      toissijainenKieli: Kieli.RUOTSI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       tyyppi: ProjektiTyyppi.TIE,
       lisaaOsoite: true,
@@ -346,7 +346,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.SUOMI,
-      toissijainenKieli:Kieli.RUOTSI,
+      toissijainenKieli: Kieli.RUOTSI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       tyyppi: ProjektiTyyppi.RATA,
       lisaaOsoite: true,
@@ -361,7 +361,7 @@ describe("pdfGeneratorHandlerHyvaksymispaatos", () => {
     const event: PdfEvent = {
       kieli: Kieli.RUOTSI,
       ensisijainenKieli: Kieli.RUOTSI,
-      toissijainenKieli:Kieli.SUOMI,
+      toissijainenKieli: Kieli.SUOMI,
       suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       tyyppi: ProjektiTyyppi.YLEINEN,
       lisaaOsoite: true,

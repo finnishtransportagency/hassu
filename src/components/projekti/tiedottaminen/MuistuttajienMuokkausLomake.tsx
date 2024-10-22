@@ -269,7 +269,7 @@ const muutColumns: ColumnDef<MuistuttajaRow>[] = [
     cell: (context) => <Maa fieldArrayName="muutMuistuttajat" index={context.row.index} />,
   },
   {
-    header: "Sähkoposti",
+    header: "Sähköposti",
     id: "sahkoposti",
     meta: getDefaultColumnMeta(),
     cell: (context) => (
@@ -483,7 +483,11 @@ export const FormContents: FunctionComponent<{
 };
 
 const SuomifiTaulukko = ({ oid, initialHakutulosMaara }: { oid: string; initialHakutulosMaara: number }) => {
-  const { control, reset, formState: { isDirty } } = useFormContext<MuistuttajatFormFields>();
+  const {
+    control,
+    reset,
+    formState: { isDirty },
+  } = useFormContext<MuistuttajatFormFields>();
   const [hakutulosMaara, setHakutulosMaara] = useState<number>(initialHakutulosMaara);
   const [sliceAt, setSliceAt] = useState(PAGE_SIZE);
   const { append, fields } = useFieldArray({ control, name: "suomifiMuistuttajat", keyName: "fieldId" });

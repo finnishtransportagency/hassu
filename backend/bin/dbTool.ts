@@ -33,13 +33,10 @@ const cli = yargs
     function (argv) {
       copyProjektit(argv.env as string, argv.oid as string | undefined).catch((err) => console.error(err));
     }
-  ).command(
-    "clean",
-    "Tyhjennä " + targetTable + " taulu",
-    function (argv) {
-      deleteProjektit().catch((err) => console.error(err));
-    }
   )
+  .command("clean", "Tyhjennä " + targetTable + " taulu", function (argv) {
+    deleteProjektit().catch((err) => console.error(err));
+  })
   .usage("npm run db:tool -- [command]")
   .help();
 
@@ -106,10 +103,9 @@ async function deleteProjektit() {
     await getDynamoDBDocumentClient().send(
       new DeleteCommand({
         TableName: targetTable,
-        Key: { oid }
+        Key: { oid },
       })
     );
-    
   }
   console.log("%d projektia poistettu %s taulusta", keys.length, targetTable);
 }

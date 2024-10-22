@@ -26,4 +26,3 @@ export function lahetysTila(vastaanottaja: Pick<SahkopostiVastaanottaja, "lahety
   }
   return vastaanottaja.lahetetty ? "Lähetetty" : "Ei lähetetty";
 }
-

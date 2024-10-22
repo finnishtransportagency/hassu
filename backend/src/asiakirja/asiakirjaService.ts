@@ -155,14 +155,18 @@ export class AsiakirjaService {
       getPaatosTyyppi(asiakirjaTyyppi),
       asianhallintaPaalla,
       linkkiAsianhallintaan,
-      osoite,
+      osoite
     );
     const suomiFiEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     if (
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
     ) {
-      if (suomiFiEnabled && params.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS && asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE) {
+      if (
+        suomiFiEnabled &&
+        params.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS &&
+        asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+      ) {
         return new KiinteistonOmistajaHyvaksymispaatos(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
       }
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);

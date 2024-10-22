@@ -112,6 +112,7 @@ input StandardiYhteystiedotInput {
 input IlmoituksenVastaanottajatInput {
   kunnat: [KuntaVastaanottajaInput!]
   viranomaiset: [ViranomaisVastaanottajaInput!]
+  maakunnat: [MaakuntaVastaanottajaInput!]
 }
 
 input ViranomaisVastaanottajaInput {
@@ -120,6 +121,11 @@ input ViranomaisVastaanottajaInput {
 }
 
 input KuntaVastaanottajaInput {
+  id: Int!
+  sahkoposti: String!
+}
+
+input MaakuntaVastaanottajaInput {
   id: Int!
   sahkoposti: String!
 }
@@ -533,7 +539,6 @@ input PaatosInput {
 input HyvaksymispaatosInput {
   paatoksenPvm: String
   asianumero: String
-  aktiivinen: Boolean
 }
 
 input PalveluPalauteInput {
@@ -546,6 +551,11 @@ enum TestiKomento {
   AJANSIIRTO
   MIGRAATIO
   VIE_ASIANHALLINTAAN
+}
+
+enum JatkopaatettavaVaihe {
+  JATKOPAATOS_1
+  JATKOPAATOS_2
 }
 
 enum TestiKomentoVaihe {

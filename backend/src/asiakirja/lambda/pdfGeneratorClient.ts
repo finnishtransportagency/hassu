@@ -48,7 +48,7 @@ class PdfGeneratorClient {
     return this.generatePDF({ createNahtavillaoloKuulutusPdf: param });
   }
 
-  createPalautteetPDF(projektiNimi:string, palautteet: Palaute[]) {
+  createPalautteetPDF(projektiNimi: string, palautteet: Palaute[]) {
     return this.generatePDF({ createPalautteetPDF: { projektiNimi, palautteet } });
   }
 }

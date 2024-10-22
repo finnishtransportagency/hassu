@@ -5,6 +5,8 @@ export const jatkopaatos2KuulutusSaamePDFtSchema = Yup.object().shape({
     .required()
     .shape({
       hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(false),
-      viimeinenVoimassaolovuosi: Yup.string().required("Päätöksen viimeinen voimassaolovuosi annettava"),
+      viimeinenVoimassaolovuosi: Yup.string()
+        .required("Päätöksen viimeinen voimassaolovuosi annettava")
+        .typeError("Päätöksen viimeinen voimassaolovuosi annettava"),
     }),
 });

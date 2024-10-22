@@ -66,8 +66,7 @@ export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFile
             if (s3ReadableStream) {
               zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
             }
-          }
-          )
+          })
         )
       ).then(() => zip.finalize());
     }).catch((error: { code: string; message: string; data: string }) => {
