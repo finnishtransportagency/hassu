@@ -1,87 +1,106 @@
-import { chunkArray } from "../../database/chunkArray";
+import axios from "axios";
 import { auditLog } from "../../logger";
 import { Omistaja } from "../mmlClient";
-import { Company } from "./service";
-import { createClientAsync, ServiceClient } from "./service/client";
+import { uuid } from "hassu-common/util/uuid";
+import { nyt } from "../../util/dateUtil";
+import { chunkArray } from "../../database/chunkArray";
 
 export type PrhConfig = {
   endpoint: string;
-  apikey: string;
+  username: string;
+  password: string;
   palvelutunnus: string;
 };
 
-
 export type Options = {
   endpoint: string;
-  apiKey: string;
+  username: string;
+  password: string;
   palveluTunnus: string;
 };
 
+type PrhResponse = {
+  schemaLocation: string;
+  Organisaatio?: {
+    Id: string;
+    YTunnus: string;
+    Nimi: string;
+    Kotipaikka: string;
+    Puhelin: string;
+    Fax: string;
+    Sahkoposti: string;
+    Kotisivu: string;
+    Rekisterointipvm: string;
+    Kaupparekisterinumero: string;
+    Lakkaamispvm: string;
+    Sijainti: string;
+    Tila: string;
+    Osoite?: {
+      Katuosoite: string;
+      Postinumero: string;
+      Postitoimipaikka: string;
+      Maa: string;
+    };
+    aikaleima: string;
+    muuttaja: string;
+    TilanStatus: string;
+    Ryhma: string;
+  };
+};
+
+const TIMEOUT = 120000;
 
 export type PrhClient = {
-  haeYritykset: (ytunnus: string[]) => Promise<Omistaja[]>;
-  getSoapClient?: () => ServiceClient;
+  haeYritykset: (ytunnus: string[], uid: string) => Promise<Omistaja[]>;
 };
 
 export async function getPrhClient(options: Options): Promise<PrhClient> {
-  const client = await createClientAsync(__dirname + "/service.wsdl", undefined, options.endpoint);
-  if (options.apiKey) {
-    client.addHttpHeader("x-api-key", options.apiKey);
-  }
-  client.addSoapHeader({
-    "xrd:client": {
-      attributes: { "id:objectType": "SUBSYSTEM" },
-      "id:xRoadInstance": "FI",
-      "id:memberClass": "GOV",
-      "id:memberCode": "x",
-      "id:subsystemCode": options.palveluTunnus,
-    }
-  });
   return {
-    haeYritykset: (ytunnus) => {
-      return haeYritykset(client, ytunnus);
-    },
-    getSoapClient: () => {
-      return client;
+    haeYritykset: (ytunnus, uid) => {
+      return haeYritykset(ytunnus, uid, options);
     },
   };
 }
 
-async function haeYritykset(client: ServiceClient, ytunnus: string[]): Promise<Omistaja[]> {
+async function haeYritykset(ytunnus: string[], uid: string, options: Options): Promise<Omistaja[]> {
   auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus });
-  const companies:Company[]  = [];
-  for (const tunnukset of chunkArray(ytunnus, 1000)) {
-    const response = await client.GetCompaniesAsync({
-      request: {
-        companiesQuery: {
-          BusinessIds: { string: tunnukset }
-        }
-      }
-    });
-    if (response[0].response?.GetCompaniesResult?.Companies?.Company) {
-      companies.push(...response[0].response.GetCompaniesResult.Companies.Company);
-    }
+  const messageId = uuid.v4();
+  const now = nyt().toISOString();
+  const promises = ytunnus.map(
+    (tunnus) =>
+      new Promise((resolve: (value: Omistaja) => void) => {
+        axios
+          .get(options.endpoint + "?YTunnus=" + tunnus, {
+            headers: {
+              "SOA-KayttajanID": uid,
+              "SOA-Toiminto": "GET",
+              "SOA-Kutsuja": options.palveluTunnus,
+              "SOA-Kohde": "OTP",
+              "SOA-ViestinID": messageId,
+              "SOA-Aikaleima": now,
+            },
+            auth: { username: options.username, password: options.password },
+            timeout: TIMEOUT,
+          })
+          .then((response) => {
+            const prhResponse: PrhResponse = response.data;
+            const omistaja: Omistaja = {
+              nimi: prhResponse.Organisaatio?.Nimi,
+              ytunnus: prhResponse.Organisaatio?.YTunnus,
+              yhteystiedot: {
+                jakeluosoite: prhResponse.Organisaatio?.Osoite?.Katuosoite,
+                postinumero: prhResponse.Organisaatio?.Osoite?.Postinumero,
+                paikkakunta: prhResponse.Organisaatio?.Osoite?.Postitoimipaikka,
+                maakoodi: prhResponse.Organisaatio?.Osoite?.Maa,
+              },
+            };
+            resolve(omistaja);
+          });
+      })
+  );
+  const omistajat: Omistaja[] = [];
+  for (const omistajaChunk of chunkArray(promises, 10)) {
+    omistajat.push(...(await Promise.all(omistajaChunk)));
   }
-  return companies.map(c => {
-      const o: Omistaja = {};
-      o.ytunnus = c.BusinessId;
-      o.nimi = c.TradeName?.Name;
-      if (c.PostalAddress?.DomesticAddress?.PostalCodeActive) {
-        const street = [c.PostalAddress.DomesticAddress.Street, c.PostalAddress.DomesticAddress.BuildingNumber, c.PostalAddress.DomesticAddress.Entrance, c.PostalAddress.DomesticAddress.ApartmentNumber].filter(a => a).join(" ");
-        o.yhteystiedot = {
-          postinumero: c.PostalAddress.DomesticAddress.PostalCode,
-          jakeluosoite: street,
-          paikkakunta: c.PostalAddress.DomesticAddress.City,
-          maakoodi: "FI",
-        };
-      } else if (c.PostalAddress?.ForeignAddress?.Country?.PrimaryCode) {
-        o.yhteystiedot = {
-          postinumero: c.PostalAddress.ForeignAddress.AddressPart1,
-          jakeluosoite: c.PostalAddress.ForeignAddress.AddressPart2,
-          paikkakunta: c.PostalAddress.ForeignAddress.AddressPart3,
-          maakoodi: c.PostalAddress.ForeignAddress.Country.PrimaryCode,
-        };
-      }
-      return o;
-  });
+  return omistajat;
 }
