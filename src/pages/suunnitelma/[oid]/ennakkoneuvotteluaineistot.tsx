@@ -1,36 +1,45 @@
 import React, { ReactElement, useMemo } from "react";
-import Section from "@components/layout/Section2";
-import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { HyvaksymisEsityksenAineistot, LadattavaTiedosto } from "@services/api";
-import { formatDate } from "hassu-common/util/dateUtils";
-import DownloadIcon from "@mui/icons-material/Download";
-import ButtonLink from "@components/button/ButtonLink";
-import { H1, H2, H3, H4, H5 } from "@components/Headings";
-import Notification, { NotificationType } from "@components/notification/Notification";
-import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
-import SectionContent from "@components/layout/SectionContent";
-import HassuGrid from "@components/HassuGrid";
-import HassuGridItem from "@components/HassuGridItem";
+import VanhentunutAineistolinkki, { AineistoType } from "@components/projekti/common/Aineistot/VanhentunutAineistolinkki";
+import { useEnnakkoNeuvottelunAineistot } from "src/hooks/useEnnakkoNeuvottelunAineistot";
+import { EnnakkoNeuvottelunAineistot, LadattavaTiedosto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
-import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import { getAineistoKategoriat } from "common/aineistoKategoriat";
+import { H1, H2, H3, H4, H5 } from "@components/Headings";
+import Section from "@components/layout/Section2";
+import { formatDate } from "common/util/dateUtils";
+import SectionContent from "@components/layout/SectionContent";
 import HassuAccordion from "@components/HassuAccordion";
 import { kuntametadata } from "common/kuntametadata";
+import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import ButtonLink from "@components/button/ButtonLink";
+import DownloadIcon from "@mui/icons-material/Download";
+import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
 
-export enum EsikatseluMode {
-  ESIKATSELU = "ESIKATSELU",
-  ESIKATSELU_AINEISTOLINKEILLA = "ESIKATSELU_AINEISTOLINKEILLA",
+export default function EnnakkoNeuvotteluLinkki(): ReactElement {
+  const { data } = useEnnakkoNeuvottelunAineistot();
+  if (!data) {
+    return <></>;
+  }
+  if (data.linkkiVanhentunut) {
+    return (
+      <VanhentunutAineistolinkki
+        poistumisPaiva={data.poistumisPaiva}
+        suunnitelmanNimi={data.perustiedot.suunnitelmanNimi}
+        projarinYhteystiedot={data.projektipaallikonYhteystiedot}
+        tyyppi={AineistoType.ENNAKKONEUVOTTELU}
+      />
+    );
+  }
+  return <EnnakkoNeuvotteluAineistoPage {...data} />;
 }
 
-export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenAineistot & { esikatselu?: EsikatseluMode }): ReactElement {
+function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineistot>): ReactElement {
   const {
     aineistopaketti,
     suunnitelma,
     poistumisPaiva,
-    kiireellinen,
     lisatiedot,
-    laskutustiedot,
     projektipaallikonYhteystiedot,
-    hyvaksymisEsitys,
     kuntaMuistutukset,
     lausunnot,
     maanomistajaluettelo,
@@ -39,7 +48,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     perustiedot,
   } = props;
 
-  const { suunnitelmanNimi, asiatunnus, vastuuorganisaatio, yTunnus } = perustiedot;
+  const { suunnitelmanNimi } = perustiedot;
 
   const muistutukset = useMemo(() => {
     const kunnat = perustiedot.kunnat ?? [];
@@ -66,70 +75,23 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     () => getAineistoKategoriat({ projektiTyyppi: perustiedot.projektiTyyppi }).listKategoriat(),
     [perustiedot.projektiTyyppi]
   );
-
-  const tiedostotEiLadattavissa = props.esikatselu === EsikatseluMode.ESIKATSELU;
-
   return (
     <>
-      <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
+      <H1>Ennakkoneuvottelu</H1>
       <H2 variant="lead" sx={{ mt: 8, mb: 8 }}>
         {suunnitelmanNimi}
       </H2>
-      {props.esikatselu && (
-        <Notification type={NotificationType.INFO_GRAY}>
-          Esikatselutilassa voit nähdä, miltä linkin sisältö näyttää vastaanottajille.
-          {tiedostotEiLadattavissa && " Varsinaisessa linkissä voi avata aineistoja uuteen välilehteen yksi kerrallaan."}
-        </Notification>
-      )}
       <Section noDivider>
         <p>
           Huomioi, että tämä sisältö on tarkasteltavissa <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "-"}</b> asti, jonka jälkeen
           sisältö poistuu näkyvistä.
         </p>
-        <SectionContent>
-          <H4>Pyydetään kiireellistä käsittelyä: {kiireellinen ? "KYLLÄ" : "EI"}</H4>
-        </SectionContent>
         {!!lisatiedot && (
           <SectionContent>
             <H4>Lisätietoa vastaanottajalle</H4>
             <p>{lisatiedot}</p>
           </SectionContent>
         )}
-      </Section>
-      <Section noDivider>
-        <SectionContent>
-          <H2>Laskutustiedot hyväksymismaksua varten</H2>
-          <HassuGrid cols={3} sx={{ width: { lg: "70%", sm: "100%" }, rowGap: 0, marginTop: "2em", marginBottom: "2.5em" }}>
-            <HassuGridItem colSpan={1}>
-              <H4>Suunnitelman nimi</H4>
-              <p>{suunnitelmanNimi || "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={2}>
-              <H4>Asiatunnus</H4>
-              <p>{asiatunnus || "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={1}>
-              <H4>Vastuuorganisaatio</H4>
-              <p>{vastuuorganisaatio ? t(`viranomainen.${vastuuorganisaatio}`) : "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={2}>
-              <H4>Y-tunnus</H4>
-              <p>{yTunnus || "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={1}>
-              <H4>OVT-tunnus</H4>
-              <p>{laskutustiedot?.ovtTunnus || "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={2}>
-              <H4>Verkkolaskuoperaattorin välittäjätunnus</H4>
-              <p>{laskutustiedot?.verkkolaskuoperaattorinTunnus || "-"}</p>
-            </HassuGridItem>
-            <HassuGridItem colSpan={3}>
-              <H4>Viitetieto</H4>
-              <p>{laskutustiedot?.viitetieto || "-"}</p>
-            </HassuGridItem>
-          </HassuGrid>
-        </SectionContent>
       </Section>
       <Section>
         <SectionContent sx={{ "> p": { marginTop: 0 } }}>
@@ -144,23 +106,9 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           </p>
         </SectionContent>
       </Section>
-
       <Section>
-        <H2>Hyväksymisesityksen aineisto</H2>
-        <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
-        {hyvaksymisEsitys?.length ? (
-          <ul style={{ listStyle: "none" }}>
-            {hyvaksymisEsitys?.map((tiedosto, index) => (
-              <li key={index}>
-                <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>Ei aineistoja</div>
-        )}
-        <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
-        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={tiedostotEiLadattavissa} />
+        <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={false} />
       </Section>
       <Section>
         <H2>Vuorovaikutus</H2>
@@ -178,7 +126,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                         <ul style={{ listStyle: "none" }}>
                           {muistutukset[kunta]?.map((tiedosto, index) => (
                             <li key={index}>
-                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
+                              <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
                             </li>
                           ))}
                         </ul>
@@ -197,7 +145,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {lausunnot?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
                     </li>
                   ))}
                 </ul>
@@ -212,7 +160,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {maanomistajaluettelo?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
                     </li>
                   ))}
                 </ul>
@@ -227,7 +175,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {kuulutuksetJaKutsu?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
                     </li>
                   ))}
                 </ul>
@@ -248,7 +196,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
                     <li key={index}>
-                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={tiedostotEiLadattavissa} />
+                      <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
                     </li>
                   ))}
                 </ul>
@@ -259,9 +207,9 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           ]}
         />
       </Section>
-      {(aineistopaketti || tiedostotEiLadattavissa) && (
+      {aineistopaketti && (
         <Section noDivider>
-          <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
+          <ButtonLink href={aineistopaketti}>
             Lataa kaikki
             <DownloadIcon className="ml-2" />
           </ButtonLink>

@@ -359,7 +359,7 @@ function setIfDefined<T>(value: T | undefined | null, setValue: (value: T) => vo
 
 function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminaisuudet): KasittelynTila | undefined {
   const kasittelynTila: KasittelynTila = {};
-  kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["suunnitelman-tila"]);
+  kasittelynTila.suunnitelmanTila = objectToString(ominaisuudet["hallinnollisen-kasittelyn-tila"]);
   kasittelynTila.ennakkoneuvotteluPaiva = objectToString(ominaisuudet["ennakkoneuvottelu"]);
   kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
   kasittelynTila.ennakkotarkastus = objectToString(ominaisuudet["hyvaksymisesitys"]?.saapunut);
@@ -383,13 +383,13 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   setIfDefined(ominaisuudet["valitukset"], (value) => (kasittelynTila.valitustenMaara = value));
   setIfDefined(
     ominaisuudet.liikenteeseenluovutus?.osittain,
-    (value) => (kasittelynTila.liikenteeseenluovutusOsittain = objectToString(value))
+    (value) => (kasittelynTila.liikenteeseenluovutusOsittain = objectToString(value[0]))
   );
   setIfDefined(
     ominaisuudet.liikenteeseenluovutus?.kokonaan,
     (value) => (kasittelynTila.liikenteeseenluovutusKokonaan = objectToString(value))
   );
-  setIfDefined(ominaisuudet.toteutusilmoitus?.osittain, (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value)));
+  setIfDefined(ominaisuudet.toteutusilmoitus?.osittain, (value) => (kasittelynTila.toteutusilmoitusOsittain = objectToString(value[0])));
   setIfDefined(ominaisuudet.toteutusilmoitus?.kokonaan, (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value)));
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
   setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
@@ -403,7 +403,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
 
 export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): ProjektiProjekti {
   const ominaisuudet = projekti.ominaisuudet;
-  setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["suunnitelman-tila"] = stringToObject(value)));
+  setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(value)));
   setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
   setIfDefined(
     params.hyvaksymisesitysTraficomiinPaiva,
@@ -501,13 +501,13 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
 
   if (params.liikenteeseenluovutusOsittain || params.liikenteeseenluovutusKokonaan) {
     ominaisuudet.liikenteeseenluovutus = {
-      osittain: params.liikenteeseenluovutusOsittain ? toLocalDate(params.liikenteeseenluovutusOsittain) : null,
+      osittain: params.liikenteeseenluovutusOsittain ? [toLocalDate(params.liikenteeseenluovutusOsittain)] : null,
       kokonaan: params.liikenteeseenluovutusKokonaan ? toLocalDate(params.liikenteeseenluovutusKokonaan) : null,
     };
   }
   if (params.toteutusilmoitusOsittain || params.toteutusilmoitusKokonaan) {
     ominaisuudet.toteutusilmoitus = {
-      osittain: params.toteutusilmoitusOsittain ? toLocalDate(params.toteutusilmoitusOsittain) : null,
+      osittain: params.toteutusilmoitusOsittain ? [toLocalDate(params.toteutusilmoitusOsittain)] : null,
       kokonaan: params.toteutusilmoitusKokonaan ? toLocalDate(params.toteutusilmoitusKokonaan) : null,
     };
   }
@@ -530,7 +530,7 @@ export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuu
 }
 
 export function applySuunnittelunTilaToVelho(projekti: ProjektiProjekti, suunnitelmanTila: string): ProjektiProjekti {
-  projekti.ominaisuudet["suunnitelman-tila"] = stringToObject(suunnitelmanTila);
+  projekti.ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(suunnitelmanTila);
   return projekti;
 }
 

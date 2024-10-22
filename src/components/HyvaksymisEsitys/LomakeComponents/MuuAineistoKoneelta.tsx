@@ -7,14 +7,25 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import { H5 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
+export default function MuuAineistoKoneelta({
+  tiedostot,
+  ennakkoneuvottelu,
+}: Readonly<{
+  tiedostot?: LadattuTiedostoNew[] | null;
+  ennakkoneuvottelu?: boolean;
+}>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoKoneelta", control });
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { fields, remove, move } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoKoneelta`,
+    control,
+  });
 
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.muuAineistoKoneelta");
+  const handleUploadedFiles = useHandleUploadedFiles(
+    `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoKoneelta`
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -24,7 +35,7 @@ export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: Ladattu
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.muuAineistoKoneelta.${index}.nimi`);
+      return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoKoneelta.${index}.nimi`);
     },
     [register]
   );
@@ -33,8 +44,9 @@ export default function MuuAineistoKoneelta({ tiedostot }: { tiedostot?: Ladattu
     <SectionContent>
       <H5 variant="h4">Omalta koneelta</H5>
       <p>
-        Voit halutessasi liittää omalta koneelta hyväksymisesitykseen toimitettavaan aineistoon myös muuta lisäaineistoa, kuten
-        hyväksymisesityksen luonnoksen tai muuta valitsemaasi materiaalia.
+        Voit halutessasi liittää omalta koneelta {ennakkoneuvottelu ? "ennakkoneuvotteluun" : "hyväksymisesitykseen"} toimitettavaan
+        aineistoon myös muuta lisäaineistoa, kuten
+        {ennakkoneuvottelu ? "ennakkoneuvottelun" : "hyväksymisesityksen"} luonnoksen tai muuta valitsemaasi materiaalia.
       </p>
       {!!fields?.length && (
         <TiedostoInputNewTable

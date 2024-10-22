@@ -64,6 +64,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
               showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");
             }
+            event.target.value = "";
           }
         })()
       ),
