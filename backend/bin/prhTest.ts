@@ -34,6 +34,7 @@ Promise.all([
         username: cfg.username,
         password: cfg.password,
         palveluTunnus: cfg.palvelutunnus,
+        kohdeTunnus: cfg.kohdetunnus,
       }).then((client) => {
         if (process.argv.length <= 2) {
           return Promise.reject(new Error("Anna ytunnus parametrina!"));

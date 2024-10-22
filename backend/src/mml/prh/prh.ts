@@ -10,6 +10,7 @@ export type PrhConfig = {
   username: string;
   password: string;
   palvelutunnus: string;
+  kohdetunnus: string;
 };
 
 export type Options = {
@@ -17,6 +18,7 @@ export type Options = {
   username: string;
   password: string;
   palveluTunnus: string;
+  kohdeTunnus: string;
 };
 
 type PrhResponse = {
@@ -66,41 +68,39 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
   auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus });
   const messageId = uuid.v4();
   const now = nyt().toISOString();
-  const promises = ytunnus.map(
-    (tunnus) =>
-      new Promise((resolve: (value: Omistaja) => void) => {
-        axios
-          .get(options.endpoint + "?YTunnus=" + tunnus, {
-            headers: {
-              "SOA-KayttajanID": uid,
-              "SOA-Toiminto": "GET",
-              "SOA-Kutsuja": options.palveluTunnus,
-              "SOA-Kohde": "OTP",
-              "SOA-ViestinID": messageId,
-              "SOA-Aikaleima": now,
-            },
-            auth: { username: options.username, password: options.password },
-            timeout: TIMEOUT,
-          })
-          .then((response) => {
-            const prhResponse: PrhResponse = response.data;
-            const omistaja: Omistaja = {
-              nimi: prhResponse.Organisaatio?.Nimi,
-              ytunnus: prhResponse.Organisaatio?.YTunnus,
-              yhteystiedot: {
-                jakeluosoite: prhResponse.Organisaatio?.Osoite?.Katuosoite,
-                postinumero: prhResponse.Organisaatio?.Osoite?.Postinumero,
-                paikkakunta: prhResponse.Organisaatio?.Osoite?.Postitoimipaikka,
-                maakoodi: prhResponse.Organisaatio?.Osoite?.Maa,
-              },
-            };
-            resolve(omistaja);
-          });
-      })
-  );
   const omistajat: Omistaja[] = [];
-  for (const omistajaChunk of chunkArray(promises, 10)) {
-    omistajat.push(...(await Promise.all(omistajaChunk)));
+  for (const ytunnusChunk of chunkArray(ytunnus, 10)) {
+    const promises = ytunnusChunk.map((tunnus) =>
+      axios
+        .get(options.endpoint + "?YTunnus=" + tunnus, {
+          headers: {
+            "SOA-KayttajanID": uid,
+            "SOA-Toiminto": "GET",
+            "SOA-Kutsuja": options.palveluTunnus,
+            "SOA-Kohde": options.kohdeTunnus,
+            "SOA-ViestinID": messageId,
+            "SOA-Aikaleima": now,
+          },
+          auth: { username: options.username, password: options.password },
+          timeout: TIMEOUT,
+          validateStatus: (status) => status === 200 || status === 404,
+        })
+        .then((response) => {
+          const prhResponse: PrhResponse = response.data;
+          const omistaja: Omistaja = {
+            nimi: prhResponse.Organisaatio?.Nimi,
+            ytunnus: prhResponse.Organisaatio?.YTunnus ?? tunnus,
+            yhteystiedot: {
+              jakeluosoite: prhResponse.Organisaatio?.Osoite?.Katuosoite,
+              postinumero: prhResponse.Organisaatio?.Osoite?.Postinumero,
+              paikkakunta: prhResponse.Organisaatio?.Osoite?.Postitoimipaikka,
+              maakoodi: prhResponse.Organisaatio?.Osoite?.Maa,
+            },
+          };
+          return omistaja;
+        })
+    );
+    omistajat.push(...(await Promise.all(promises)));
   }
   return omistajat;
 }

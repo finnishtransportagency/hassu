@@ -61,6 +61,7 @@ async function getClient2() {
       username: conf.username,
       password: conf.password,
       palveluTunnus: conf.palvelutunnus,
+      kohdeTunnus: conf.kohdetunnus,
     });
   }
   return prhClient;
