@@ -160,15 +160,7 @@ function adaptLadatutTiedostotNewToInput(ladatutTiedostot: LadattuTiedostoNew[] 
   if (!ladatutTiedostot) {
     return [];
   }
-  return ladatutTiedostot.map(adaptLadattuTiedostoNewToInput);
-}
-
-function adaptLadattuTiedostoNewToInput(ladattuTiedosto: LadattuTiedostoNew): LadattuTiedostoInputNew {
-  const { nimi, uuid } = ladattuTiedosto;
-  return {
-    nimi,
-    uuid,
-  };
+  return ladatutTiedostot.map<LadattuTiedostoInputNew>(({ nimi, tiedosto, uuid }) => ({ nimi, tiedosto, uuid }));
 }
 
 function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLadattuTiedosto): KunnallinenLadattuTiedostoInput {
@@ -180,7 +172,7 @@ function adaptKunnallinenLadattuTiedostoToInput(ladattuTiedosto: KunnallinenLada
   };
 }
 
-function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): AineistoInputNew[] {
+function adaptAineistotNewToInput(aineistot: AineistoNew[] | undefined | null): FormAineistoNew[] {
   if (!aineistot) {
     return [];
   }
