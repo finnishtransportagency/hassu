@@ -216,7 +216,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           lisatty: "2022-01-02T02:00:00+02:00",
           uuid: "muistutukset-uuid",
           kunta: 91,
-          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muistutukset/muistutukset äöå .png",
+          tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_.png",
         },
       ],
       lausunnot: [
