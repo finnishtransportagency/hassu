@@ -214,10 +214,10 @@ const handlerFactory = (event: SQSEvent) => async () => {
               }
               // Täydennetään yrityksen osoitetiedot PRH rajapinnasta saatavilla osoitetiedoilla
               if (o.ytunnus && o.yhteystiedot) {
-                taydennettyOmistaja.jakeluosoite = o.yhteystiedot.jakeluosoite;
-                taydennettyOmistaja.postinumero = o.yhteystiedot.postinumero;
-                taydennettyOmistaja.paikkakunta = o.yhteystiedot.paikkakunta;
-                taydennettyOmistaja.maakoodi = o.yhteystiedot.maakoodi;
+                taydennettyOmistaja.jakeluosoite = o.yhteystiedot.jakeluosoite ?? taydennettyOmistaja.jakeluosoite;
+                taydennettyOmistaja.postinumero = o.yhteystiedot.postinumero ?? taydennettyOmistaja.postinumero;
+                taydennettyOmistaja.paikkakunta = o.yhteystiedot.paikkakunta ?? taydennettyOmistaja.paikkakunta;
+                taydennettyOmistaja.maakoodi = o.yhteystiedot.maakoodi ?? taydennettyOmistaja.maakoodi;
               }
               const suomifiLahetys = isSuomifiLahetys(taydennettyOmistaja);
               // Täydennetään Suomi.fi tiedotettaville maakoodi, jollei sitä jo ole
@@ -465,6 +465,13 @@ async function updatePRHAddress(kiinteistot: MmlKiinteisto[], uid: string) {
   const omistajat = kiinteistot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
   const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus, uid);
+  function trim(text: string | undefined | null) {
+    const txt = text?.trim();
+    if (txt) {
+      return txt;
+    }
+    return undefined;
+  }
   log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
   resp.forEach((c) => {
     omistajat
@@ -473,10 +480,10 @@ async function updatePRHAddress(kiinteistot: MmlKiinteisto[], uid: string) {
         o.nimi = c.nimi ?? o.nimi;
         if (c.yhteystiedot) {
           o.yhteystiedot = {
-            postinumero: c.yhteystiedot.postinumero,
-            jakeluosoite: c.yhteystiedot.jakeluosoite,
-            paikkakunta: c.yhteystiedot.paikkakunta,
-            maakoodi: c.yhteystiedot.maakoodi,
+            postinumero: trim(c.yhteystiedot.postinumero),
+            jakeluosoite: trim(c.yhteystiedot.jakeluosoite),
+            paikkakunta: trim(c.yhteystiedot.paikkakunta),
+            maakoodi: trim(c.yhteystiedot.maakoodi),
           };
         }
       });
