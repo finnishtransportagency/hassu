@@ -187,8 +187,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const api = useApi();
 
-  const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto), [api]);
-
   const onSubmit = useCallback(
     (data: FormValues) =>
       withLoadingSpinner(
@@ -200,11 +198,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               const originalInputLogo = persistentData.suunnitteluSopimus.logo;
               const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
               if (logoTiedostoFi instanceof File) {
-                ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
+                ssLogo.SUOMI = await lataaTiedosto(api, logoTiedostoFi);
               }
               const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
               if (logoTiedostoSv instanceof File) {
-                ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
+                ssLogo.RUOTSI = await lataaTiedosto(api, logoTiedostoSv);
               }
               persistentData.suunnitteluSopimus.logo = ssLogo;
             }
@@ -214,12 +212,12 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               const originalInputLogo = persistentData.euRahoitusLogot;
               const euLogoFITiedosto = originalInputLogo?.SUOMI as unknown as File | undefined | string;
               if (euLogoFITiedosto instanceof File) {
-                euLogo.SUOMI = await talletaLogo(euLogoFITiedosto);
+                euLogo.SUOMI = await lataaTiedosto(api, euLogoFITiedosto);
               }
 
               const euLogoSVTiedosto = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
               if (euLogoSVTiedosto instanceof File) {
-                euLogo.RUOTSI = await talletaLogo(euLogoSVTiedosto);
+                euLogo.RUOTSI = await lataaTiedosto(api, euLogoSVTiedosto);
               }
               persistentData.euRahoitusLogot = euLogo;
             }
@@ -246,7 +244,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           }
         })()
       ),
-    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showSuccessMessage]
   );
 
   useEffect(() => {

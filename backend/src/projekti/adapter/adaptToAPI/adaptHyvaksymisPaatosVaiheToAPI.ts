@@ -22,17 +22,18 @@ import {
   adaptVelhoToAPI,
   adaptKielitiedotByAddingTypename,
   adaptKuulutusSaamePDFtToAPI,
+  adaptAineistotWithSizeToAPI,
 } from ".";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
-export function adaptHyvaksymisPaatosVaiheToAPI(
+export async function adaptHyvaksymisPaatosVaiheToAPI(
   kayttoOikeudet: DBVaylaUser[],
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   paths: PathTuple,
   hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
-): API.HyvaksymisPaatosVaihe | undefined {
+): Promise<API.HyvaksymisPaatosVaihe | undefined> {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }
@@ -51,7 +52,7 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
     aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
-    hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
+    hyvaksymisPaatos: await adaptAineistotWithSizeToAPI(hyvaksymisPaatosAineisto, paths),
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToAPI(ilmoituksenVastaanottajat),

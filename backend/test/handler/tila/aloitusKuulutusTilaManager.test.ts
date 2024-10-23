@@ -18,13 +18,12 @@ import { assertIsDefined } from "../../../src/util/assertions";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
-  let _updateJulkaisuStub: sinon.SinonStub;
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-    _updateJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });
@@ -123,12 +122,14 @@ describe("aloitusKuulutusTilaManager", () => {
             nimi: "Saamenkielinen kuulutus",
             tuotu: "2023-01-01",
             tila: LadattuTiedostoTila.VALMIS,
+            uuid: "uuid123",
           },
           kuulutusIlmoitusPDF: {
             tiedosto: "/aloituskuulutus/1/kuulutusilmoitus.pdf",
             nimi: "Saamenkielinen kuulutus ilmoitus",
             tuotu: "2023-01-01",
             tila: LadattuTiedostoTila.VALMIS,
+            uuid: "uuid1234",
           },
         },
       },
@@ -145,12 +146,14 @@ describe("aloitusKuulutusTilaManager", () => {
               nimi: "Saamenkielinen kuulutus",
               tuotu: "2023-01-01",
               tila: LadattuTiedostoTila.VALMIS,
+              uuid: "uuid123",
             },
             kuulutusIlmoitusPDF: {
               tiedosto: "/aloituskuulutus/1/kuulutusilmoitus.pdf",
               nimi: "Saamenkielinen kuulutus ilmoitus",
               tuotu: "2023-01-01",
               tila: LadattuTiedostoTila.VALMIS,
+              uuid: "uuid1234",
             },
           },
         },

@@ -11,7 +11,7 @@ export const handleAineistoArrayForDefaultValues = (
 
   return (
     aineistot
-      ?.map<FormAineisto>(({ dokumenttiOid, nimi, tila, uuid, jarjestys, kategoriaId, tiedosto, tuotu }) => ({
+      ?.map<FormAineisto>(({ dokumenttiOid, nimi, tila, uuid, jarjestys, kategoriaId, tiedosto, tuotu, koko }) => ({
         dokumenttiOid,
         nimi,
         tila,
@@ -20,6 +20,7 @@ export const handleAineistoArrayForDefaultValues = (
         kategoriaId,
         tiedosto,
         tuotu,
+        koko,
       }))
       ?.reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetutAineistoInput(addDefaultJarjestys), initialSplittedAineistoInput) ||
     initialSplittedAineistoInput

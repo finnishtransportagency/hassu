@@ -183,8 +183,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
-
   const preSubmitFunction = useCallback(
     async (formData: FormValues) => {
       const pohjoisSaameIlmoitusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME
@@ -193,7 +191,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
         formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
         pohjoisSaameIlmoitusPdf instanceof File
       ) {
-        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await lataaTiedosto(
+          api,
           pohjoisSaameIlmoitusPdf
         );
       }
@@ -202,7 +201,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
         | undefined
         | string;
       if (formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
-        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await lataaTiedosto(api, pohjoisSaameKuulutusPdf);
       }
 
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
@@ -211,7 +210,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
       return formData;
     },
-    [talletaTiedosto]
+    [api]
   );
 
   useEffect(() => {

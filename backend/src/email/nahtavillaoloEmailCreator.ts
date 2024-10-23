@@ -47,7 +47,7 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     // PDFt on jo olemassa
     const nahtavillakuulutusPDFtSUOMI = this.julkaisu.nahtavillaoloPDFt?.[Kieli.SUOMI];
     assertIsDefined(nahtavillakuulutusPDFtSUOMI);
-    const nahtavillakuulutusIlmoitusPDFSUOMI = await fileService.getFileAsAttachment(
+    const { attachment: nahtavillakuulutusIlmoitusPDFSUOMI } = await fileService.getYllapitoFileAsAttachmentAndItsSize(
       oid,
       nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath
     );
@@ -59,10 +59,9 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     if (toinenKieli) {
       const nahtavillakuulutusPDFtToinenKieli = this.julkaisu.nahtavillaoloPDFt?.[toinenKieli];
       assertIsDefined(nahtavillakuulutusPDFtToinenKieli);
-      nahtavillakuulutusIlmoitusPDFToinenKieli = await fileService.getFileAsAttachment(
-        oid,
-        nahtavillakuulutusPDFtToinenKieli.nahtavillaoloIlmoitusPDFPath
-      );
+      nahtavillakuulutusIlmoitusPDFToinenKieli = (
+        await fileService.getYllapitoFileAsAttachmentAndItsSize(oid, nahtavillakuulutusPDFtToinenKieli.nahtavillaoloIlmoitusPDFPath)
+      ).attachment;
       if (!nahtavillakuulutusIlmoitusPDFToinenKieli) {
         throw new Error("NahtavillaKuulutusPDFToinenKieli:n saaminen epäonnistui");
       }
@@ -74,7 +73,7 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     }
     const pdfSaamePath = this.julkaisu.nahtavillaoloSaamePDFt?.[Kieli.POHJOISSAAME]?.kuulutusIlmoitusPDF?.tiedosto;
     if (pdfSaamePath) {
-      const saamePDF = await fileService.getFileAsAttachment(oid, pdfSaamePath);
+      const { attachment: saamePDF } = await fileService.getYllapitoFileAsAttachmentAndItsSize(oid, pdfSaamePath);
       if (!saamePDF) {
         throw new Error("NahtavillaKuulutusIlmoitusPDFSaame:n saaminen epäonnistui");
       }

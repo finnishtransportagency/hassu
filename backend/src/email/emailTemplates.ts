@@ -28,6 +28,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
 import { createHyvaksymisEsitysHash } from "../HyvaksymisEsitys/latauslinkit/hash";
+import Mail from "nodemailer/lib/mailer";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -266,7 +267,9 @@ ${projektiPaallikkoSuffix}`,
 }
 
 export function createHyvaksymisesitysViranomaisilleEmail(
-  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">
+  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "muokattavaHyvaksymisEsitys" | "kayttoOikeudet" | "asianhallinta">,
+  to: EmailOptions["to"],
+  hyvaksymisesitysAttachments: Mail.Attachment[]
 ): EmailOptions {
   assertIsDefined(projekti.muokattavaHyvaksymisEsitys);
   const asiatunnus = getAsiatunnus(projekti.velho);
@@ -283,11 +286,10 @@ ${
 } lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
       projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? " kiireellisenä" : ""
     }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa ${url.href}
-${projekti.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys?.length ? `\nSähköpostin liitteenä on myös hyväksymisesitys.\n` : "\n"}
+${hyvaksymisesitysAttachments.length ? `\nSähköpostin liitteenä on myös hyväksymisesitys.\n` : "\n"}
 Lisätiedot 
 
 ${projekti.muokattavaHyvaksymisEsitys?.lisatiedot}
-
 
 
 Laskutustiedot hyväksymismaksua varten
@@ -339,7 +341,7 @@ ${projektiPaallikko?.email}
 
 
 Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.`,
-    to: projekti.muokattavaHyvaksymisEsitys?.vastaanottajat?.map((vo) => vo.sahkoposti),
+    to,
     cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
