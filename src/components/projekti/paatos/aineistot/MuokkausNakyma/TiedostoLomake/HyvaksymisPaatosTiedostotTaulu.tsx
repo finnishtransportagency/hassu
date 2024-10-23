@@ -41,9 +41,8 @@ export default function AineistoTable() {
       },
       {
         header: "Koko",
-        accessorKey: "koko",
         meta: { minWidth: 55, widthFractions: 2 },
-        cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number),
+        accessorFn: (aineisto) => byteFileSizeToHumanString(aineisto.koko as number),
       },
       {
         header: "Tuotu",

@@ -183,7 +183,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
     header: "Koko",
     accessorKey: "koko",
     meta: { minWidth: 55, widthFractions: 1 },
-    cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number),
+    cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number) || "-",
   },
   selectColumnDef(),
 ];

@@ -7,7 +7,11 @@
  *
  * @return Formatted string.
  */
-export function byteFileSizeToHumanString(bytes: number, lang: "fi" | "sv" = "fi", dp = 1) {
+export function byteFileSizeToHumanString(bytes: number, lang: "fi" | "sv" = "fi", dp = 1): string | null {
+  if (isNaN(bytes) || bytes === null) {
+    return null;
+  }
+
   const thresh = 1024;
   const localizedUnit = lang === "fi" ? "t" : "B";
 

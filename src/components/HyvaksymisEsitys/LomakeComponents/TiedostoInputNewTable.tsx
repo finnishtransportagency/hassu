@@ -127,7 +127,7 @@ export default function TiedostoInputNewTable<S extends GenTiedosto>({
         id: "koko",
         accessorKey: "koko",
         meta: { minWidth: 120, widthFractions: 2 },
-        cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number, "fi"),
+        cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number) || "-",
       },
       {
         header: noHeaders ? undefined : "Tuotu",
