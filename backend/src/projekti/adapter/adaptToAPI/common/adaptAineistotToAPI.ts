@@ -33,15 +33,13 @@ export function adaptAineistotToAPI(
         };
 
         if (aineisto.tiedosto) {
-          let tiedosto = fileService.getYllapitoPathForProjektiFile(paths, aineisto.tiedosto);
           // Enkoodaa tiedoston polku jos se ei ole jo enkoodattu
-          const parts = tiedosto.split("/");
-          const fileNamePart = parts[parts.length - 1];
-          if (decodeURIComponent(fileNamePart) == fileNamePart) {
-            parts[parts.length - 1] = encodeURIComponent(fileNamePart);
-            tiedosto = parts.join("/");
+          const parts = fileService.getYllapitoPathForProjektiFile(paths, aineisto.tiedosto).split("/");
+          const fileNamePart = parts.pop();
+          if (fileNamePart) {
+            const encodedFilename = decodeURIComponent(fileNamePart) === fileNamePart ? encodeURIComponent(fileNamePart) : fileNamePart;
+            apiAineisto.tiedosto = [...parts, encodedFilename].join("/");
           }
-          apiAineisto.tiedosto = tiedosto;
         }
 
         return apiAineisto;
@@ -77,16 +75,14 @@ export async function adaptAineistotWithSizeToAPI(
           };
 
           if (aineisto.tiedosto) {
-            let tiedosto = fileService.getYllapitoPathForProjektiFile(paths, aineisto.tiedosto);
             // Enkoodaa tiedoston polku jos se ei ole jo enkoodattu
-            const parts = tiedosto.split("/");
-            const fileNamePart = parts[parts.length - 1];
-            if (decodeURIComponent(fileNamePart) == fileNamePart) {
-              parts[parts.length - 1] = encodeURIComponent(fileNamePart);
-              tiedosto = parts.join("/");
+            const parts = fileService.getYllapitoPathForProjektiFile(paths, aineisto.tiedosto).split("/");
+            const fileNamePart = parts.pop();
+            if (fileNamePart) {
+              const encodedFilename = decodeURIComponent(fileNamePart) === fileNamePart ? encodeURIComponent(fileNamePart) : fileNamePart;
+              apiAineisto.tiedosto = [...parts, encodedFilename].join("/");
+              apiAineisto.koko = await fileService.getFileContentLength(config.yllapitoBucketName, [...parts, fileNamePart].join("/"));
             }
-            apiAineisto.tiedosto = tiedosto;
-            apiAineisto.koko = await fileService.getFileContentLength(config.yllapitoBucketName, tiedosto);
           }
 
           return apiAineisto;
