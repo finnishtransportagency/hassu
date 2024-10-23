@@ -66,8 +66,6 @@ export async function getPrhClient(options: Options): Promise<PrhClient> {
 
 async function haeYritykset(ytunnus: string[], uid: string, options: Options): Promise<Omistaja[]> {
   auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus });
-  const messageId = uuid.v4();
-  const now = nyt().toISOString();
   const omistajat: Omistaja[] = [];
   for (const ytunnusChunk of chunkArray(ytunnus, 10)) {
     const promises = ytunnusChunk.map((tunnus) =>
@@ -78,8 +76,8 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
             "SOA-Toiminto": "GET",
             "SOA-Kutsuja": options.palveluTunnus,
             "SOA-Kohde": options.kohdeTunnus,
-            "SOA-ViestinID": messageId,
-            "SOA-Aikaleima": now,
+            "SOA-ViestinID": uuid.v4(),
+            "SOA-Aikaleima": nyt().toISOString(),
           },
           auth: { username: options.username, password: options.password },
           timeout: TIMEOUT,
