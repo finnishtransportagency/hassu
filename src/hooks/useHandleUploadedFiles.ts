@@ -75,6 +75,7 @@ export default function useHandleUploadedFiles<
           setValue(keyToLadatutTiedostot, newValue as PathValue<TFieldValues, Path<TFieldValues>>, {
             shouldDirty: true,
           });
+          event.target.value = "";
         })()
       ),
     [withLoadingSpinner, api, showErrorMessage, mapUploadedFileToFormValue, ladatutTiedostot, allowOnlyOne, setValue, keyToLadatutTiedostot]
