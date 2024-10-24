@@ -614,7 +614,7 @@ export class ProjektiDatabase {
     }
   }
 
-  async deleteProjektiAttributesFromEpaaktiivinenProjekti(oid: string): Promise<void> {
+  async removeProjektiAttributesFromEpaaktiivinenProjekti(oid: string): Promise<void> {
     const projektiKeys: (keyof DBProjekti)[] = [
       "lausuntoPyynnot",
       "lausuntoPyynnonTaydennykset",
