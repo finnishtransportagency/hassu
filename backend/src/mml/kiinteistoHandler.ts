@@ -152,14 +152,15 @@ const handlerFactory = (event: SQSEvent) => async () => {
               etunimet: o.etunimet,
               sukunimi: o.sukunimi,
               nimi: o.nimi,
+              ytunnus: o.ytunnus,
               jakeluosoite: o.yhteystiedot?.jakeluosoite,
               postinumero: o.yhteystiedot?.postinumero,
               paikkakunta: o.yhteystiedot?.paikkakunta,
               maakoodi: o.yhteystiedot?.maakoodi,
-              suomifiLahetys: false,
               kaytossa: true,
               expires,
             };
+            omistaja.suomifiLahetys = isSuomifiLahetys(omistaja);
             omistajaMap.set(
               mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }),
               omistaja
