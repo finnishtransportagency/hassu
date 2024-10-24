@@ -159,6 +159,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                             etunimet: tiedot["y:etunimet"] ? tiedot["y:etunimet"][0] : undefined,
                             sukunimi: tiedot["y:sukunimi"] ? tiedot["y:sukunimi"][0] : undefined,
                             nimi: tiedot["y:nimi"] ? tiedot["y:nimi"][0] : undefined,
+                            ytunnus: tiedot["y:ytunnus"] ? tiedot["y:ytunnus"][0] : undefined,
                             yhteystiedot: {
                               jakeluosoite: osoite && osoite["muti:jakeluosoite"] ? osoite["muti:jakeluosoite"][0] : undefined,
                               paikkakunta: osoite && osoite["muti:paikkakunta"] ? osoite["muti:paikkakunta"][0] : undefined,

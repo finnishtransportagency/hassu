@@ -127,7 +127,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
-        await updatePRHAddress(kiinteistot, hakuEvent.uid);
+        await updatePRHAddress(kiinteistot, yhteystiedot, hakuEvent.uid);
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
@@ -460,10 +460,12 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   return kiinteistonOmistajatResponse;
 }
 
-async function updatePRHAddress(kiinteistot: MmlKiinteisto[], uid: string) {
+async function updatePRHAddress(kiinteistot: MmlKiinteisto[], yhteystiedot: MmlKiinteisto[], uid: string) {
   const client = await getClient2();
-  const omistajat = kiinteistot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
-  const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
+  const kOmistajat = kiinteistot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
+  const yOmistajat = yhteystiedot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
+  const allOmistajat = [...kOmistajat, ...yOmistajat];
+  const ytunnus = [...new Set(allOmistajat.map((o) => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus, uid);
   function trim(text: string | undefined | null) {
     const txt = text?.trim();
@@ -474,7 +476,7 @@ async function updatePRHAddress(kiinteistot: MmlKiinteisto[], uid: string) {
   }
   log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
   resp.forEach((c) => {
-    omistajat
+    allOmistajat
       .filter((o) => o.ytunnus === c.ytunnus)
       .forEach((o) => {
         o.nimi = c.nimi ?? o.nimi;
