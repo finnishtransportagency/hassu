@@ -239,7 +239,7 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
   const { mutate: reloadProjekti } = useProjekti();
 
   const { withLoadingSpinner } = useLoadingSpinner();
-  const { handleDraftSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
+  const { handleDraftSubmit, handleSubmit } = useHandleSubmitContext<EnnakkoneuvotteluForm>();
   const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   const api = useApi();
@@ -289,11 +289,19 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
             disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
             id="save_and_send_for_acceptance"
             primary
-            onClick={async () => {
+            onClick={async (e) => {
               if (validationMode) {
                 validationMode.current = ValidationMode.PUBLISH;
                 const valid = await trigger();
-                setIsOpen(valid);
+                if (valid) {
+                  setIsOpen(true);
+                } else {
+                  // focus oikeaan elementtiin
+                  handleSubmit(
+                    () => setIsOpen(false),
+                    () => setIsOpen(false)
+                  )(e);
+                }
               }
             }}
           >
