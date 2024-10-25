@@ -127,7 +127,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
-        await updatePRHAddress(kiinteistot, yhteystiedot, hakuEvent.uid);
+        await updatePRHAddress(yhteystiedot, hakuEvent.uid);
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
@@ -212,13 +212,6 @@ const handlerFactory = (event: SQSEvent) => async () => {
               if (o.kuolinpvm && !taydennettyOmistaja.sukunimi?.endsWith(" (KP)")) {
                 // KP = Kuolinpesä
                 taydennettyOmistaja.sukunimi = (taydennettyOmistaja.sukunimi ?? "") + " (KP)";
-              }
-              // Täydennetään yrityksen osoitetiedot PRH rajapinnasta saatavilla osoitetiedoilla
-              if (o.ytunnus && o.yhteystiedot) {
-                taydennettyOmistaja.jakeluosoite = o.yhteystiedot.jakeluosoite ?? taydennettyOmistaja.jakeluosoite;
-                taydennettyOmistaja.postinumero = o.yhteystiedot.postinumero ?? taydennettyOmistaja.postinumero;
-                taydennettyOmistaja.paikkakunta = o.yhteystiedot.paikkakunta ?? taydennettyOmistaja.paikkakunta;
-                taydennettyOmistaja.maakoodi = o.yhteystiedot.maakoodi ?? taydennettyOmistaja.maakoodi;
               }
               const suomifiLahetys = isSuomifiLahetys(taydennettyOmistaja);
               // Täydennetään Suomi.fi tiedotettaville maakoodi, jollei sitä jo ole
@@ -461,12 +454,10 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   return kiinteistonOmistajatResponse;
 }
 
-async function updatePRHAddress(kiinteistot: MmlKiinteisto[], yhteystiedot: MmlKiinteisto[], uid: string) {
+async function updatePRHAddress(yhteystiedot: MmlKiinteisto[], uid: string) {
   const client = await getClient2();
-  const kOmistajat = kiinteistot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
-  const yOmistajat = yhteystiedot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
-  const allOmistajat = [...kOmistajat, ...yOmistajat];
-  const ytunnus = [...new Set(allOmistajat.map((o) => o.ytunnus!)).values()];
+  const omistajat = yhteystiedot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
+  const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus, uid);
   function trim(text: string | undefined | null) {
     const txt = text?.trim();
@@ -477,7 +468,7 @@ async function updatePRHAddress(kiinteistot: MmlKiinteisto[], yhteystiedot: MmlK
   }
   log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
   resp.forEach((c) => {
-    allOmistajat
+    omistajat
       .filter((o) => o.ytunnus === c.ytunnus)
       .forEach((o) => {
         o.nimi = c.nimi ?? o.nimi;

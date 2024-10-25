@@ -115,6 +115,7 @@ const mockMmlClient: MmlClient = {
         omistajat: [
           {
             nimi: "Yritys Oy Ab",
+            ytunnus: "123-456",
             yhteystiedot: { jakeluosoite: "Yritysosoite 1", postinumero: "00001", paikkakunta: "Helsinki" },
           },
         ],
