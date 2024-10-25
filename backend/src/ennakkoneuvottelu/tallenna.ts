@@ -53,7 +53,7 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
-    const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu);
+    const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu, nykyinenKayttaja);
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     if (poistetutTiedostot.length || poistetutAineistot.length) {

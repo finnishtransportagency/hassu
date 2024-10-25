@@ -1,4 +1,10 @@
-import { EnnakkoNeuvottelu, EnnakkoNeuvotteluInput, EnnakkoNeuvotteluJulkaisu, Status } from "hassu-common/graphql/apiModel";
+import {
+  EnnakkoNeuvottelu,
+  EnnakkoNeuvotteluInput,
+  EnnakkoNeuvotteluJulkaisu,
+  NykyinenKayttaja,
+  Status,
+} from "hassu-common/graphql/apiModel";
 import { DBEnnakkoNeuvottelu, DBProjekti } from "../database/model";
 import { adaptAineistotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptAineistotToSave";
 import { adaptLadatutTiedostotToSave } from "../HyvaksymisEsitys/adaptToSave/adaptLadatutTiedostotToSave";
@@ -15,7 +21,8 @@ import { createEnnakkoNeuvotteluHash } from "../HyvaksymisEsitys/latauslinkit/ha
 
 export function adaptEnnakkoNeuvotteluToSave(
   dbEnnakkoNeuvottelu: DBEnnakkoNeuvottelu | undefined | null,
-  ennakkoNeuvotteluInput: EnnakkoNeuvotteluInput
+  ennakkoNeuvotteluInput: EnnakkoNeuvotteluInput,
+  nykyinenKayttaja: NykyinenKayttaja
 ): DBEnnakkoNeuvottelu {
   const {
     suunnitelma,
@@ -37,6 +44,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
+    muokkaaja: nykyinenKayttaja.uid,
     ...rest,
   };
   return ennakko;

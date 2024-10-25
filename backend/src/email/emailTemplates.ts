@@ -597,7 +597,7 @@ export function createKuukausiEpaaktiiviseenEmail(projekti: DBProjekti): EmailOp
 }
 
 export function createEnnakkoNeuvotteluViranomaisilleEmail(
-  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "kayttoOikeudet">,
+  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "kayttoOikeudet" | "ennakkoNeuvottelu">,
   ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu
 ): EmailOptions {
   const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
@@ -608,6 +608,11 @@ export function createEnnakkoNeuvotteluViranomaisilleEmail(
     viranomainen = translate("viranomainen.VAYLAVIRASTO", API.Kieli.SUOMI) ?? "Väylävirasto";
   } else {
     viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) + " ELY-keskus";
+  }
+  const muokkaajaEmail = projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus == projekti.ennakkoNeuvottelu?.muokkaaja)?.email;
+  const cc = projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
+  if (muokkaajaEmail && !cc.includes(muokkaajaEmail)) {
+    cc.push(muokkaajaEmail);
   }
   return {
     subject: `Ennakkoneuvottelu ${projekti.velho?.nimi}`,
@@ -634,6 +639,6 @@ ${projektiPaallikko?.email}
 
 Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.`,
     to: ennakkoNeuvotteluJulkaisu.vastaanottajat?.map((vo) => vo.sahkoposti),
-    cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+    cc,
   };
 }

@@ -210,6 +210,7 @@ export type DBEnnakkoNeuvottelu = {
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
   maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
+  muokkaaja?: string | null;
 };
 
 export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string; poistumisPaiva: string };
