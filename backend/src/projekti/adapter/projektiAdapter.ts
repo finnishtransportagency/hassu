@@ -43,6 +43,7 @@ import { adaptLausuntoPyynnonTaydennyksetToSave, adaptLausuntoPyynnotToSave } fr
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import GetProjektiStatus from "../status/getProjektiStatus";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { adaptEnnakkoNeuvotteluJulkaisuToAPI, adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -88,7 +89,10 @@ export class ProjektiAdapter {
     } = dbProjekti;
 
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
-
+    let status: API.Status | undefined = undefined;
+    if (dbProjekti.tallennettu) {
+      status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
+    }
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
       lyhytOsoite: dbProjekti.lyhytOsoite,
@@ -183,10 +187,11 @@ export class ProjektiAdapter {
           }
         : undefined,
       kustannuspaikka,
+      ennakkoNeuvottelu: await adaptEnnakkoNeuvotteluToAPI(dbProjekti, status),
+      ennakkoNeuvotteluJulkaisu: await adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti, status),
     });
 
     if (apiProjekti.tallennettu) {
-      const status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
       apiProjekti.status = status;
       if (
         !apiProjekti.nahtavillaoloVaihe &&

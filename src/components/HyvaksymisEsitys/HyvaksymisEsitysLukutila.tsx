@@ -413,7 +413,7 @@ const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
   },
 ];
 
-function IlmoituksenVastaanottajatTable(props: Readonly<{ vastaanottajat: SahkopostiVastaanottaja[] }>) {
+export function IlmoituksenVastaanottajatTable(props: Readonly<{ vastaanottajat: SahkopostiVastaanottaja[] }>) {
   const table = useReactTable({
     columns,
     getCoreRowModel: getCoreRowModel(),

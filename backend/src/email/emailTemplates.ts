@@ -8,7 +8,7 @@ import {
   TilasiirtymaTyyppi,
 } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
-import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import {
@@ -27,8 +27,8 @@ import { translate } from "../util/localization";
 import * as API from "hassu-common/graphql/apiModel";
 import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
-import { createHyvaksymisEsitysHash } from "../HyvaksymisEsitys/latauslinkit/hash";
 import Mail from "nodemailer/lib/mailer";
+import { createEnnakkoNeuvotteluHash, createHyvaksymisEsitysHash } from "../HyvaksymisEsitys/latauslinkit/hash";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -595,5 +595,52 @@ export function createKuukausiEpaaktiiviseenEmail(projekti: DBProjekti): EmailOp
       projektiPaallikkoSuffix,
     }),
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+  };
+}
+
+export function createEnnakkoNeuvotteluViranomaisilleEmail(
+  projekti: Pick<DBProjekti, "velho" | "oid" | "salt" | "kayttoOikeudet" | "ennakkoNeuvottelu">,
+  ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu
+): EmailOptions {
+  const projektiPaallikko = projekti.kayttoOikeudet.find((ko) => ko.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
+  const url = new URL(`https://${domain}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot`);
+  url.searchParams.append("hash", createEnnakkoNeuvotteluHash(projekti.oid, projekti.salt));
+  let viranomainen: string;
+  if (projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+    viranomainen = translate("viranomainen.VAYLAVIRASTO", API.Kieli.SUOMI) ?? "Väylävirasto";
+  } else {
+    viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) + " ELY-keskus";
+  }
+  const muokkaajaEmail = projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus == projekti.ennakkoNeuvottelu?.muokkaaja)?.email;
+  const cc = projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
+  if (muokkaajaEmail && !cc.includes(muokkaajaEmail)) {
+    cc.push(muokkaajaEmail);
+  }
+  return {
+    subject: `Ennakkoneuvottelu ${projekti.velho?.nimi}`,
+    text: `${viranomainen} lähettää suunnitelman ${
+      projekti.velho?.nimi
+    } ennakkoneuvottelua varten Traficomiin. Suunnitelman ennakkoneuvotteluaineisto löytyy oheisen linkin takaa ${url.href}.
+
+Lisätiedot 
+
+${ennakkoNeuvotteluJulkaisu.lisatiedot}
+
+
+Lisätietoja suunnitelmasta antaa 
+
+${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
+      projektiPaallikko?.elyOrganisaatio
+        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
+        : projektiPaallikko?.organisaatio
+    }, 
+
+puh ${projektiPaallikko?.puhelinnumero},
+
+${projektiPaallikko?.email}
+
+Tämä viesti on lähetetty automaattisesti Valtion liikenneväylien suunnittelu -järjestelmän kautta eikä siihen voi vastata.`,
+    to: ennakkoNeuvotteluJulkaisu.vastaanottajat?.map((vo) => vo.sahkoposti),
+    cc,
   };
 }

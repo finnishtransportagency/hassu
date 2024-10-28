@@ -6,18 +6,27 @@ import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles, { mapUploadedFileToKunnallinenLadattuTiedostoInput } from "src/hooks/useHandleUploadedFiles";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { KunnallinenLadattuTiedosto } from "@services/api";
 
 export default function Muistutukset({
   kunnat,
   tiedostot,
-}: Readonly<{ kunnat: number[] | null | undefined; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{
+  kunnat: number[] | null | undefined;
+  tiedostot?: KunnallinenLadattuTiedosto[] | null;
+  ennakkoneuvottelu?: boolean;
+}>): ReactElement {
   return (
     <SectionContent>
       <H5 variant="h4">Muistutukset</H5>
-      {kunnat?.length ? kunnat.map((kunta) => <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} />) : "Kunnat puuttuu"}
+      {kunnat?.length
+        ? kunnat.map((kunta) => (
+            <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} ennakkoneuvottelu={ennakkoneuvottelu} />
+          ))
+        : "Kunnat puuttuu"}
     </SectionContent>
   );
 }
@@ -25,15 +34,17 @@ export default function Muistutukset({
 function KunnanMuistutukset({
   kunta,
   tiedostot,
-}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const vaihe = ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys";
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { control, register } = useFormReturn;
-  const { remove, fields, move } = useFieldArray({ name: `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`, control });
+  const { remove, fields, move } = useFieldArray({ name: `${vaihe}.muistutukset.${kunta}`, control });
 
   const handleUploadedFiles = useHandleUploadedFiles(
     useFormReturn,
-    `muokattavaHyvaksymisEsitys.muistutukset.${kunta}`,
+    `${vaihe}.muistutukset.${kunta}`,
     mapUploadedFileToKunnallinenLadattuTiedostoInput(kunta)
   );
 
@@ -45,9 +56,9 @@ function KunnanMuistutukset({
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.muistutukset.${kunta}.${index}.nimi`);
+      return register(`${vaihe}.muistutukset.${kunta}.${index}.nimi`);
     },
-    [register, kunta]
+    [register, vaihe, kunta]
   );
 
   return (

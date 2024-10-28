@@ -21,6 +21,7 @@ import {
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "./hyvaksymisEsitys";
+import { AineistoNew, KunnallinenLadattuTiedosto, LadattuTiedostoNew, SahkopostiVastaanottaja } from "./common";
 
 export type DBVaylaUser = {
   email: string;
@@ -193,7 +194,26 @@ export type DBProjekti = {
   lockedUntil?: number | null;
   aineistoHandledAt?: string | null;
   hyvEsAineistoPaketti?: string | null;
+  ennakkoNeuvottelu?: DBEnnakkoNeuvottelu;
+  ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
+  ennakkoNeuvotteluAineistoPaketti?: string | null;
 };
+
+export type DBEnnakkoNeuvottelu = {
+  poistumisPaiva?: string | null;
+  lisatiedot?: string | null;
+  suunnitelma?: Array<AineistoNew> | null;
+  muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
+  lausunnot?: Array<LadattuTiedostoNew> | null;
+  kuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
+  muuAineistoVelhosta?: Array<AineistoNew> | null;
+  muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
+  maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
+  vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
+  muokkaaja?: string | null;
+};
+
+export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string; poistumisPaiva: string };
 
 export type OmistajaHaku = {
   virhe?: boolean | null;

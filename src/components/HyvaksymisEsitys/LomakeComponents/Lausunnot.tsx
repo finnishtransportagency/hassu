@@ -6,18 +6,18 @@ import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
+export default function Lausunnot({
+  tiedostot,
+  ennakkoneuvottelu,
+}: Readonly<{ tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const vaihe = ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys";
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { control, register } = useFormReturn;
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.lausunnot", control });
-  const handleUploadedFiles = useHandleUploadedFiles(
-    useFormReturn,
-    "muokattavaHyvaksymisEsitys.lausunnot",
-    mapUploadedFileToLadattuTiedostoNew
-  );
+  const { fields, remove, move } = useFieldArray({ name: `${vaihe}.lausunnot`, control });
+  const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, `${vaihe}.lausunnot`, mapUploadedFileToLadattuTiedostoNew);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -27,9 +27,9 @@ export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNe
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.lausunnot.${index}.nimi`);
+      return register(`${vaihe}.lausunnot.${index}.nimi`);
     },
-    [register]
+    [register, vaihe]
   );
 
   return (

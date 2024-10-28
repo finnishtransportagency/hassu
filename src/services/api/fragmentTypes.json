@@ -177,6 +177,30 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EnnakkoNeuvottelu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "EnnakkoNeuvotteluInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EnnakkoNeuvotteluJulkaisu",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EnnakkoNeuvottelunAineistot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "Excel",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -1085,6 +1109,12 @@
       {
         "kind": "ENUM",
         "name": "SuunnittelustaVastaavaViranomainen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TallennaEnnakkoNeuvotteluInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

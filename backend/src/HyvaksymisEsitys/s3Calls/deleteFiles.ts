@@ -32,7 +32,7 @@ export async function deleteFilesUnderSpecifiedVaihe(
  * @param paths Lista tiedostopolkuja projektikohtaisen ylläpito-bucketin alla
  * @param reason Syy poistolle
  */
-async function deleteProjektiFilesFromYllapito(oid: string, paths: string[], reason?: string) {
+export async function deleteProjektiFilesFromYllapito(oid: string, paths: string[], reason?: string) {
   return deleteFilesFromYllapito(
     paths.map((path) => joinPath(getYllapitoPathForProjekti(oid), path)),
     reason

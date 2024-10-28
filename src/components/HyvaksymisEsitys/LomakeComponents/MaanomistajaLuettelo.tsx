@@ -7,21 +7,19 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Maanomistajaluettelo({
   tuodut,
   tiedostot,
-}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const vaihe = ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys";
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { control, register } = useFormReturn;
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
-  const handleUploadedFiles = useHandleUploadedFiles(
-    useFormReturn,
-    "muokattavaHyvaksymisEsitys.maanomistajaluettelo",
-    mapUploadedFileToLadattuTiedostoNew
-  );
+  const { fields, remove, move } = useFieldArray({ name: `${vaihe}.maanomistajaluettelo`, control });
+  const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, `${vaihe}.maanomistajaluettelo`, mapUploadedFileToLadattuTiedostoNew);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -31,9 +29,9 @@ export default function Maanomistajaluettelo({
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.maanomistajaluettelo.${index}.nimi`);
+      return register(`${vaihe}.maanomistajaluettelo.${index}.nimi`);
     },
-    [register]
+    [register, vaihe]
   );
 
   return (

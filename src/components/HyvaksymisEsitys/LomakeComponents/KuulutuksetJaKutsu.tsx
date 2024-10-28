@@ -7,21 +7,19 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function KuulutuksetJaKutsu({
   tuodut,
   tiedostot,
-}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const useFormReturn = useFormContext<HyvaksymisEsitysForm>();
+  const vaihe = ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys";
+  const useFormReturn = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { control, register } = useFormReturn;
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu", control });
-  const handleUploadedFiles = useHandleUploadedFiles(
-    useFormReturn,
-    "muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu",
-    mapUploadedFileToLadattuTiedostoNew
-  );
+  const { fields, remove, move } = useFieldArray({ name: `${vaihe}.kuulutuksetJaKutsu`, control });
+  const handleUploadedFiles = useHandleUploadedFiles(useFormReturn, `${vaihe}.kuulutuksetJaKutsu`, mapUploadedFileToLadattuTiedostoNew);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -31,9 +29,9 @@ export default function KuulutuksetJaKutsu({
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.kuulutuksetJaKutsu.${index}.nimi`);
+      return register(`${vaihe}.kuulutuksetJaKutsu.${index}.nimi`);
     },
-    [register]
+    [register, vaihe]
   );
 
   return (

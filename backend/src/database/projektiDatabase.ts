@@ -351,7 +351,7 @@ export class ProjektiDatabase {
     const result: string[] = [];
 
     try {
-      let lastEvaluatedKey = undefined;
+      let lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"] = undefined;
       do {
         const params = new ScanCommand({
           TableName: this.projektiTableName,
@@ -612,6 +612,36 @@ export class ProjektiDatabase {
       log.error(e instanceof Error ? e.message : String(e), { kasittelynTilaInput });
       throw e;
     }
+  }
+
+  async removeProjektiAttributesFromEpaaktiivinenProjekti(oid: string): Promise<void> {
+    const projektiKeys: (keyof DBProjekti)[] = [
+      "lausuntoPyynnot",
+      "lausuntoPyynnonTaydennykset",
+      "julkaistuHyvaksymisEsitys",
+      "muokattavaHyvaksymisEsitys",
+      "hyvEsAineistoPaketti",
+      "ennakkoNeuvottelu",
+      "ennakkoNeuvotteluJulkaisu",
+      "ennakkoNeuvotteluAineistoPaketti",
+    ];
+
+    const UpdateExpression = "SET #paivitetty = :paivitetty REMOVE " + projektiKeys.map((key) => "#" + key).join(", ");
+    const ExpressionAttributeNames = Object.fromEntries(["paivitetty" as const, ...projektiKeys].map((key) => ["#" + key, key]));
+
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression,
+      ExpressionAttributeNames,
+      ExpressionAttributeValues: {
+        ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+      },
+    });
+    log.info("Deleting attributes from projekti", { oid, attributesToBeDeleted: projektiKeys.join(", ") });
+    await getDynamoDBDocumentClient().send(params);
   }
 }
 
