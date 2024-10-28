@@ -41,6 +41,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
             setValue(`lausuntoPyynnonTaydennykset.${index}.muistutukset`, (muistutukset ?? []).concat(tiedostoInputs), {
               shouldDirty: true,
             });
+            event.target.value = "";
           }
         })()
       ),

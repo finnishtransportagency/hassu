@@ -613,6 +613,17 @@ export class ProjektiDatabase {
       throw e;
     }
   }
+
+  async deleteEnnakkoNeuvottelu(oid: string) {
+    const input: UpdateCommandInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "REMOVE ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu, ennakkoNeuvotteluAineistoPaketti",
+    };
+    await getDynamoDBDocumentClient().send(new UpdateCommand(input));
+  }
 }
 
 export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");

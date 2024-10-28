@@ -7,16 +7,22 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
 export default function Maanomistajaluettelo({
   tuodut,
   tiedostot,
-}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null }>): ReactElement {
+  ennakkoneuvottelu,
+}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.maanomistajaluettelo", control });
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.maanomistajaluettelo");
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { fields, remove, move } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.maanomistajaluettelo`,
+    control,
+  });
+  const handleUploadedFiles = useHandleUploadedFiles(
+    `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.maanomistajaluettelo`
+  );
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -26,7 +32,7 @@ export default function Maanomistajaluettelo({
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.maanomistajaluettelo.${index}.nimi`);
+      return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.maanomistajaluettelo.${index}.nimi`);
     },
     [register]
   );

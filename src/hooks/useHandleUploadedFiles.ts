@@ -78,6 +78,8 @@ export default function useHandleUploadedFiles<F extends FieldValues>(
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
               showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");
             }
+            // Clear input value so onchange will trigger for the same file
+            event.target.value = "";
           }
         })()
       ),
