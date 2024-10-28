@@ -6,13 +6,19 @@ import { LadattuTiedostoNew } from "@services/api";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
+export default function Lausunnot({
+  tiedostot,
+  ennakkoneuvottelu,
+}: Readonly<{ tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.lausunnot", control });
-  const handleUploadedFiles = useHandleUploadedFiles("muokattavaHyvaksymisEsitys.lausunnot");
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { fields, remove, move } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.lausunnot`,
+    control,
+  });
+  const handleUploadedFiles = useHandleUploadedFiles(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.lausunnot`);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -22,7 +28,7 @@ export default function Lausunnot({ tiedostot }: { tiedostot?: LadattuTiedostoNe
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.lausunnot.${index}.nimi`);
+      return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.lausunnot.${index}.nimi`);
     },
     [register]
   );

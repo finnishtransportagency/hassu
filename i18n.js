@@ -31,6 +31,9 @@ module.exports = {
     "/yllapito/projekti/[oid]/esikatsele-hyvaksymisesitys": ["aineisto"],
     "/yllapito/projekti/[oid]/esikatsele-hyvaksyttava-hyvaksymisesitys": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymisesitysaineistot": ["aineisto"],
+    "/yllapito/projekti/[oid]/ennakkoneuvottelu": ["aineisto"],
+    "/yllapito/projekti/[oid]/esikatsele-ennakkoneuvottelu": ["aineisto"],
+    "/suunnitelma/[oid]/ennakkoneuvotteluaineistot": ["aineisto"],
   },
   ignoreRoutes: ["/api/", "/keycloak/"],
   loadLocaleFrom: (lang, ns) =>

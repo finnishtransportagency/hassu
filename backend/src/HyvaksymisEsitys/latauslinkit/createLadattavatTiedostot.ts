@@ -1,12 +1,13 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiTiedostoineen } from "../dynamoKutsut";
-import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { DBEnnakkoNeuvotteluJulkaisu, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import collectHyvaksymisEsitysAineistot, { FileInfo } from "../collectHyvaksymisEsitysAineistot";
 import { fileService } from "../../files/fileService";
 
 export default async function createLadattavatTiedostot(
   projekti: ProjektiTiedostoineen,
-  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys
+  hyvaksymisEsitys: MuokattavaHyvaksymisEsitys | JulkaistuHyvaksymisEsitys | DBEnnakkoNeuvotteluJulkaisu,
+  status: API.Status | undefined
 ): Promise<
   Pick<
     API.HyvaksymisEsityksenAineistot,
@@ -21,7 +22,7 @@ export default async function createLadattavatTiedostot(
     kuulutuksetJaKutsu,
     muutAineistot,
     maanomistajaluettelo,
-  } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, projekti.aineistoHandledAt);
+  } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, status, projekti.aineistoHandledAt);
 
   return {
     hyvaksymisEsitys: await Promise.all(hyvaksymisEsitysTiedostot.map(adaptFileInfoToLadattavaTiedosto)),

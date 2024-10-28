@@ -49,6 +49,7 @@ type Query {
   haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, query: String, from: Int, size: Int): Muistuttajat
   haeProjektinTiedottamistiedot(oid: String!): ProjektinTiedottaminen
   haeKayttoOikeudet(oid: String!): KayttoOikeusTiedot!
+  listaaEnnakkoNeuvottelunTiedostot(oid: String!, hash: String!): EnnakkoNeuvottelunAineistot!
 }
 
 type Mutation {
@@ -85,4 +86,5 @@ type Mutation {
     vaihe: JatkopaatettavaVaihe!
     paatoksenTiedot: HyvaksymispaatosInput!
   ): String
+  tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput!): String
 }

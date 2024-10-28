@@ -102,7 +102,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tall
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 
-function uusiaAineistoja(
+export function uusiaAineistoja(
   aineistotBefore: AineistoNew[],
   aineistotAfter: AineistoNew[],
   aineistoHandledAt: string | null | undefined
