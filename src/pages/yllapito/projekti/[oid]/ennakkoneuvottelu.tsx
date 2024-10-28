@@ -34,7 +34,6 @@ import { DialogActions, DialogContent } from "@mui/material";
 import { Stack } from "@mui/system";
 import { AineistoInputNew, EnnakkoNeuvottelu, Projekti } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
-import { ValidationMode } from "common/ProjektiValidationContext";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
 import { formatDate } from "common/util/dateUtils";
@@ -230,7 +229,6 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
   const {
     formState: { isDirty, isSubmitting },
     watch,
-    trigger,
   } = useFormContext<EnnakkoneuvotteluForm>();
 
   const suunnitelma = watch("ennakkoNeuvottelu.suunnitelma");
@@ -243,7 +241,6 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
   const checkAineistoValmiit = useCheckAineistoValmiit(projekti.oid);
 
   const api = useApi();
-  const validationMode = useValidationMode();
   const saveDraft: SubmitHandler<EnnakkoneuvotteluForm> = useCallback(
     (formData) =>
       withLoadingSpinner(
@@ -289,21 +286,14 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
             disabled={lomakkeenAineistotEiKunnossa(suunnitelma, projekti.ennakkoNeuvottelu, muuAineistoVelhosta, kategoriat)}
             id="save_and_send_for_acceptance"
             primary
-            onClick={async (e) => {
-              if (validationMode) {
-                validationMode.current = ValidationMode.PUBLISH;
-                const valid = await trigger();
-                if (valid) {
-                  setIsOpen(true);
-                } else {
-                  // focus oikeaan elementtiin
-                  handleSubmit(
-                    () => setIsOpen(false),
-                    () => setIsOpen(false)
-                  )(e);
-                }
+            onClick={handleSubmit(
+              () => {
+                setIsOpen(true);
+              },
+              () => {
+                setIsOpen(false);
               }
-            }}
+            )}
           >
             {projekti.ennakkoNeuvotteluJulkaisu ? "Lähetä päivitys" : "Lähetä"}
           </Button>
