@@ -31,11 +31,6 @@ import {
 } from "../util/lausuntoPyyntoUtil";
 import { velho } from "../velho/velhoClient";
 import { linkHyvaksymisPaatos } from "hassu-common/links";
-import { deleteFilesUnderSpecifiedVaihe, deleteProjektiFilesFromYllapito } from "../HyvaksymisEsitys/s3Calls/deleteFiles";
-import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
-import { getHyvaksymisEsityksenLadatutTiedostot } from "../HyvaksymisEsitys/getLadatutTiedostot";
-import getHyvaksymisEsityksenAineistot from "../HyvaksymisEsitys/getAineistot";
-import { joinPath } from "../tiedostot/paths";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -434,7 +429,7 @@ export const handlerFactory = (event: SQSEvent) => async () => {
         }
       }
 
-      await checkEpaaktiivinen(ctx);
+      await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
 
       // Synkronoidaan tiedostot aina
       const successfulSynchronization = await synchronizeAll(ctx);
@@ -482,31 +477,6 @@ export const handlerFactory = (event: SQSEvent) => async () => {
     throw e;
   }
 };
-
-async function checkEpaaktiivinen(ctx: ImportContext) {
-  if (ctx.projektiStatus == API.Status.EPAAKTIIVINEN_1) {
-    await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
-    if (ctx.projekti.ennakkoNeuvottelu || ctx.projekti.ennakkoNeuvotteluJulkaisu) {
-      await projektiDatabase.deleteEnnakkoNeuvottelu(ctx.oid);
-    }
-    if (ctx.projekti.ennakkoNeuvotteluJulkaisu) {
-      const tiedostot = await getHyvaksymisEsityksenLadatutTiedostot(ctx.projekti.ennakkoNeuvotteluJulkaisu);
-      const aineistot = await getHyvaksymisEsityksenAineistot(ctx.projekti.ennakkoNeuvotteluJulkaisu);
-      await deleteFilesUnderSpecifiedVaihe(
-        ctx.oid,
-        ENNAKKONEUVOTTELU_JULKAISU_PATH,
-        [...tiedostot, ...aineistot],
-        "Projekti epäaktiivinen"
-      );
-      await deleteProjektiFilesFromYllapito(ctx.oid, [joinPath(ENNAKKONEUVOTTELU_JULKAISU_PATH, "aineisto.zip")], "Projekti epäaktiivinen");
-    }
-    if (ctx.projekti.ennakkoNeuvottelu) {
-      const tiedostot = await getHyvaksymisEsityksenLadatutTiedostot(ctx.projekti.ennakkoNeuvottelu);
-      const aineistot = await getHyvaksymisEsityksenAineistot(ctx.projekti.ennakkoNeuvottelu);
-      await deleteFilesUnderSpecifiedVaihe(ctx.oid, ENNAKKONEUVOTTELU_PATH, [...tiedostot, ...aineistot], "Projekti epäaktiivinen");
-    }
-  }
-}
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
