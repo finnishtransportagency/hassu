@@ -39,6 +39,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
               uuid: uuid.v4(),
             }));
             setValue(`lausuntoPyynnonTaydennykset.${index}.muuAineisto`, (muuAineisto ?? []).concat(tiedostoInputs), { shouldDirty: true });
+            event.target.value = "";
           }
         })()
       ),

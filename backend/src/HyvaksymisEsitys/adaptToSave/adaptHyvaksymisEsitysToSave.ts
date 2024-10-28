@@ -45,7 +45,7 @@ export function adaptHyvaksymisEsitysToSave(
   return newMuokattavaHyvaksymisEsitys;
 }
 
-function adaptVastaanottajatToSave(vastaanottajat: API.SahkopostiVastaanottajaInput[] | null | undefined) {
+export function adaptVastaanottajatToSave(vastaanottajat: API.SahkopostiVastaanottajaInput[] | null | undefined) {
   if (!vastaanottajat) {
     return vastaanottajat;
   }

@@ -12,6 +12,7 @@ import { adaptFileInfoToLadattavaTiedosto } from "../latauslinkit/createLadattav
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { adaptAsianhallintaToAPI } from "../adaptToApi/adaptAsianhallintaToAPI";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
+import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
 
 export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise<API.HyvaksymisEsityksenTiedot> {
   requirePermissionLuku();
@@ -26,7 +27,7 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
   const aineistot = getHyvaksymisEsityksenAineistot(dbProjekti.muokattavaHyvaksymisEsitys);
 
   const muokkauksenVoiAvata = vaiheOnAktiivinen && hyvaksymisEsitys?.tila === API.HyvaksymisTila.HYVAKSYTTY;
-
+  const status: API.Status = await GetProjektiStatus.getProjektiStatus(dbProjekti);
   return {
     __typename: "HyvaksymisEsityksenTiedot",
     oid,
@@ -38,8 +39,8 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     perustiedot: adaptVelhoToProjektinPerustiedot(velho),
     tuodutTiedostot: {
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
-      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
-      kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti).map(adaptFileInfoToLadattavaTiedosto)),
+      maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
+      kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
     ashaTila: await asianhallintaService.checkAsianhallintaStateForKnownProjekti(dbProjekti, "HYVAKSYMISESITYS"),
     asianhallinta: await adaptAsianhallintaToAPI(dbProjekti),

@@ -3,18 +3,19 @@ import { AineistoKategoria, AineistoKategoriat, getNestedAineistoMaaraForCategor
 import useTranslation from "next-translate/useTranslation";
 import { useFormContext } from "react-hook-form";
 import { AineistoTable } from ".";
-import { HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 
 interface AineistoAlakategoriaAccordionProps {
   aineistoKategoriat: AineistoKategoriat;
   alakategoriat: AineistoKategoria[];
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+  ennakkoneuvottelu?: boolean;
 }
 
 export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordionProps) => {
-  const { watch } = useFormContext<HyvaksymisEsitysForm>();
+  const { watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { t } = useTranslation("aineisto");
-  const aineistot = watch("muokattavaHyvaksymisEsitys.suunnitelma");
+  const aineistot = watch(props.ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma");
   const aineistotFlat = Object.values(aineistot || {}).flat();
   const aineistojenMaara = props.alakategoriat.reduce((acc, cur) => {
     return acc + getNestedAineistoMaaraForCategory(aineistotFlat, cur);
@@ -34,6 +35,7 @@ export const AineistoAlakategoriaAccordion = (props: AineistoAlakategoriaAccordi
             aineistoKategoriat={props.aineistoKategoriat}
             kategoria={alakategoria}
             expandedAineistoState={props.expandedAineistoState}
+            ennakkoneuvottelu={props.ennakkoneuvottelu}
           />
         ),
         id: alakategoria.id,
@@ -46,15 +48,22 @@ interface AlakategoriaContentProps {
   aineistoKategoriat: AineistoKategoriat;
   kategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
+  ennakkoneuvottelu?: boolean;
 }
 
 export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => {
-  const { watch } = useFormContext<HyvaksymisEsitysForm>();
-  const aineistot = watch(`muokattavaHyvaksymisEsitys.suunnitelma.${props.kategoria.id}`);
+  const { watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const aineistot = watch(
+    `${props.ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${props.kategoria.id}`
+  );
   return (
     <>
       {!!aineistot?.length ? (
-        <AineistoTable aineistoKategoriat={props.aineistoKategoriat} kategoriaId={props.kategoria.id} />
+        <AineistoTable
+          aineistoKategoriat={props.aineistoKategoriat}
+          kategoriaId={props.kategoria.id}
+          ennakkoneuvottelu={props.ennakkoneuvottelu}
+        />
       ) : (
         <p>Kategoriaan ei ole asetettu aineistoa.</p>
       )}
@@ -63,6 +72,7 @@ export const AineistoAlakategoriaContent = (props: AlakategoriaContentProps) => 
           aineistoKategoriat={props.aineistoKategoriat}
           expandedAineistoState={props.expandedAineistoState}
           alakategoriat={props.kategoria.alaKategoriat}
+          ennakkoneuvottelu={props.ennakkoneuvottelu}
         />
       )}
     </>

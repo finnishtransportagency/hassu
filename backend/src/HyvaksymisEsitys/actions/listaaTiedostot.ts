@@ -10,6 +10,7 @@ import { validateHyvaksymisEsitysHash } from "../latauslinkit/hash";
 import { adaptLaskutustiedotToAPI } from "../adaptToApi/adaptLaskutustiedotToAPI";
 import { adaptVelhoToProjektinPerustiedot } from "../adaptToApi/adaptVelhoToProjektinPerustiedot";
 import projektiDatabase, { ProjektiTiedostoineen } from "../dynamoKutsut";
+import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
 
 export default async function listaaHyvaksymisEsityksenTiedostot({
   oid,
@@ -51,7 +52,8 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
     const aineistopaketti = projekti?.hyvEsAineistoPaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, projekti?.hyvEsAineistoPaketti)
       : null;
-    const ladattavatTiedostot = await createLadattavatTiedostot(projekti, hyvaksymisEsitys);
+    const status: API.Status = await GetProjektiStatus.getProjektiStatus(projekti);
+    const ladattavatTiedostot = await createLadattavatTiedostot(projekti, hyvaksymisEsitys, status);
     return {
       __typename: "HyvaksymisEsityksenAineistot",
       ...ladattavatTiedostot,

@@ -621,6 +621,9 @@ export class ProjektiDatabase {
       "julkaistuHyvaksymisEsitys",
       "muokattavaHyvaksymisEsitys",
       "hyvEsAineistoPaketti",
+      "ennakkoNeuvottelu",
+      "ennakkoNeuvotteluJulkaisu",
+      "ennakkoNeuvotteluAineistoPaketti",
     ];
 
     const UpdateExpression = "SET #paivitetty = :paivitetty REMOVE " + projektiKeys.map((key) => "#" + key).join(", ");

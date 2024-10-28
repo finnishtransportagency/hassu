@@ -12,9 +12,10 @@ import {
 } from ".";
 import { DBProjekti } from "../../database/model";
 import hyvaksymisesitysAineistoImportPending from "../../HyvaksymisEsitys/aineistoImportPending";
+import ennakkoneuvotteluAineistoImportPending from "../../ennakkoneuvottelu/aineistoImportPending";
 
 export class ProjektiTiedostoManager {
-  private projekti: DBProjekti;
+  private readonly projekti: DBProjekti;
 
   constructor(projekti: DBProjekti) {
     this.projekti = projekti;
@@ -30,7 +31,8 @@ export class ProjektiTiedostoManager {
       this.getJatkoPaatos2Vaihe().isReady() &&
       this.getLausuntoPyynnot().isReady() &&
       this.getLausuntoPyynnonTaydennykset().isReady() &&
-      !hyvaksymisesitysAineistoImportPending(this.projekti)
+      !hyvaksymisesitysAineistoImportPending(this.projekti) &&
+      !ennakkoneuvotteluAineistoImportPending(this.projekti)
     );
   }
 

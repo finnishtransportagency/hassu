@@ -1,6 +1,13 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { config } from "../config";
-import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../database/model";
+import {
+  DBEnnakkoNeuvottelu,
+  DBEnnakkoNeuvotteluJulkaisu,
+  DBProjekti,
+  JulkaistuHyvaksymisEsitys,
+  MuokattavaHyvaksymisEsitys,
+  SahkopostiVastaanottaja,
+} from "../database/model";
 import { ProjektiDatabase } from "../database/projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
@@ -22,6 +29,7 @@ export type HyvaksymisEsityksenTiedot = Pick<
   | "velho"
   | "asianhallinta"
   | "hyvEsAineistoPaketti"
+  | "euRahoitus"
 >;
 
 export type ProjektiTiedostoineen = Pick<
@@ -39,6 +47,17 @@ export type ProjektiTiedostoineen = Pick<
   | "julkaistuHyvaksymisEsitys"
   | "aineistoHandledAt"
   | "hyvEsAineistoPaketti"
+  | "ennakkoNeuvottelu"
+  | "ennakkoNeuvotteluJulkaisu"
+  | "ennakkoNeuvotteluAineistoPaketti"
+  | "asianhallinta"
+  | "euRahoitus"
+  | "hyvaksymisPaatosVaihe"
+  | "hyvaksymisPaatosVaiheJulkaisut"
+  | "jatkoPaatos1Vaihe"
+  | "jatkoPaatos1VaiheJulkaisut"
+  | "jatkoPaatos2Vaihe"
+  | "jatkoPaatos2VaiheJulkaisut"
 >;
 
 class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
@@ -66,7 +85,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       Key: { oid },
       ConsistentRead: true,
       ProjectionExpression:
-        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti",
+        "oid, versio, salt, kayttoOikeudet, muokattavaHyvaksymisEsitys, julkaistuHyvaksymisEsitys, hyvaksymisPaatosVaihe, aineistoHandledAt, velho, asianhallinta, hyvEsAineistoPaketti, euRahoitus",
     });
 
     try {
@@ -95,6 +114,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "salt, " +
         "kielitiedot, " +
         "kayttoOikeudet, " +
+        "asianhallinta, " +
+        "euRahoitus, " +
         "velho, " +
         "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
@@ -102,7 +123,13 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
         "aineistoHandledAt, " +
-        "hyvEsAineistoPaketti",
+        "hyvEsAineistoPaketti, " +
+        "hyvaksymisPaatosVaihe, " +
+        "hyvaksymisPaatosVaiheJulkaisut, " +
+        "jatkoPaatos1Vaihe, " +
+        "jatkoPaatos1VaiheJulkaisut, " +
+        "jatkoPaatos2Vaihe, " +
+        "jatkoPaatos2VaiheJulkaisut",
     });
 
     try {
@@ -292,6 +319,107 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
 
     await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
     return nextVersion;
+  }
+
+  async tallennaEnnakkoNeuvottelu(input: {
+    oid: string;
+    versio: number;
+    ennakkoNeuvottelu: DBEnnakkoNeuvottelu;
+    ennakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined;
+    muokkaaja: string;
+  }): Promise<number> {
+    const { oid, versio, ennakkoNeuvottelu, ennakkoNeuvotteluJulkaisu, muokkaaja } = input;
+    const nextVersion = versio + 1;
+    const names: Record<string, string> = {
+      "#versio": "versio",
+      "#ennakkoNeuvottelu": "ennakkoNeuvottelu",
+      "#paivitetty": "paivitetty",
+    };
+    const values: Record<string, any> = {
+      ":versio": nextVersion,
+      ":ennakkoNeuvottelu": { ...ennakkoNeuvottelu, muokkaaja },
+      ":paivitetty": nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ),
+      ":versioFromInput": versio,
+    };
+    if (ennakkoNeuvotteluJulkaisu) {
+      names["#ennakkoNeuvotteluJulkaisu"] = "ennakkoNeuvotteluJulkaisu";
+      values[":ennakkoNeuvotteluJulkaisu"] = { ...ennakkoNeuvotteluJulkaisu, muokkaaja };
+    }
+    const params = new UpdateCommand({
+      TableName: config.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression:
+        "SET #versio = :versio, #ennakkoNeuvottelu = :ennakkoNeuvottelu, #paivitetty = :paivitetty" +
+        (ennakkoNeuvotteluJulkaisu ? ", #ennakkoNeuvotteluJulkaisu = :ennakkoNeuvotteluJulkaisu" : ""),
+      ExpressionAttributeNames: names,
+      ExpressionAttributeValues: values,
+      ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versioFromInput)",
+    });
+
+    await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
+    return nextVersion;
+  }
+
+  async paivitaEnnakkoNeuvottelunVastaanottajat(oid: string, vastaanottajat: SahkopostiVastaanottaja[]) {
+    const params = new UpdateCommand({
+      TableName: config.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #ennakkoNeuvotteluJulkaisu.#vastaanottajat = :vastaanottajat",
+      ExpressionAttributeNames: {
+        "#ennakkoNeuvotteluJulkaisu": "ennakkoNeuvotteluJulkaisu",
+        "#vastaanottajat": "vastaanottajat",
+      },
+      ExpressionAttributeValues: { ":vastaanottajat": vastaanottajat },
+    });
+    await HyvaksymisEsityksenDynamoKutsut.sendUpdateCommandToDynamoDB(params);
+  }
+
+  async haeEnnakkoNeuvottelunTiedostoTiedot(oid: string): Promise<ProjektiTiedostoineen> {
+    const params = new GetCommand({
+      TableName: this.projektiTableName,
+      Key: { oid },
+      ConsistentRead: true,
+      ProjectionExpression:
+        "oid, " +
+        "versio, " +
+        "salt, " +
+        "kielitiedot, " +
+        "kayttoOikeudet, " +
+        "asianhallinta, " +
+        "euRahoitus, " +
+        "velho, " +
+        "aloitusKuulutusJulkaisut, " +
+        "vuorovaikutusKierrosJulkaisut, " +
+        "nahtavillaoloVaiheJulkaisut, " +
+        "ennakkoNeuvottelu, " +
+        "ennakkoNeuvotteluJulkaisu, " +
+        "aineistoHandledAt, " +
+        "ennakkoNeuvotteluAineistoPaketti, " +
+        "hyvaksymisPaatosVaihe, " +
+        "hyvaksymisPaatosVaiheJulkaisut, " +
+        "jatkoPaatos1Vaihe, " +
+        "jatkoPaatos1VaiheJulkaisut, " +
+        "jatkoPaatos2Vaihe, " +
+        "jatkoPaatos2VaiheJulkaisut",
+    });
+
+    try {
+      const dynamoDBDocumentClient = getDynamoDBDocumentClient();
+      const data = await dynamoDBDocumentClient.send(params);
+      if (!data.Item) {
+        log.error(`Projektia oid:lla ${oid} ei löydy`);
+        throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
+      }
+      const projekti = data.Item as ProjektiTiedostoineen;
+      return projekti;
+    } catch (e) {
+      log.error(e instanceof Error ? e.message : String(e), { params });
+      throw e;
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import { ProjektiTiedostoManager } from "./ProjektiTiedostoManager";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "./paths";
+import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
 
 class AineistoDeleterService {
   async deleteAineistoIfEpaaktiivinen(ctx: ImportContext) {
@@ -38,6 +39,8 @@ class AineistoDeleterService {
       const s3PathsForRecursiveDelete = [
         JULKAISTU_HYVAKSYMISESITYS_PATH,
         MUOKATTAVA_HYVAKSYMISESITYS_PATH,
+        ENNAKKONEUVOTTELU_JULKAISU_PATH,
+        ENNAKKONEUVOTTELU_PATH,
         "hyvaksymisesityksen_spostit",
         "lausuntopyynto",
         "lausuntopyynnon_taydennys",

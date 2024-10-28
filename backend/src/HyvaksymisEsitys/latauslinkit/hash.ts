@@ -16,3 +16,18 @@ export function createHyvaksymisEsitysHash(oid: string, versio: number, salt: st
   }
   return crypto.createHash("sha512").update([oid, "hyvaksymisesitys", versio, salt].join()).digest("hex");
 }
+
+export function validateEnnakkoNeuvotteluHash(oid: string, salt: string, givenHash: string) {
+  const hash = createEnnakkoNeuvotteluHash(oid, salt);
+  if (hash != givenHash) {
+    log.error("Ennakkoneuvottelun aineiston tarkistussumma ei täsmää", { oid, salt, givenHash });
+    throw new IllegalAccessError("Ennakkoneuvottelun aineiston tarkistussumma ei täsmää");
+  }
+}
+
+export function createEnnakkoNeuvotteluHash(oid: string, salt: string | undefined): string {
+  if (!salt) {
+    throw new Error("Salt missing");
+  }
+  return crypto.createHash("sha512").update([oid, "ennakkoneuvottelu", salt].join()).digest("hex");
+}
