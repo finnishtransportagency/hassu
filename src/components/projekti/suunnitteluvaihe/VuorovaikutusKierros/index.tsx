@@ -46,7 +46,6 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import SelosteVuorovaikutuskierrokselle from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/SelosteVuorovaikutuskierrokselle";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
@@ -57,6 +56,8 @@ import { isAsianhallintaVaarassaTilassa } from "../../../../util/asianhallintaVa
 import { onTulevaisuudessa } from "common/util/dateUtils";
 import { isKuntatietoMissing } from "../../../../util/velhoUtils";
 import { H2 } from "../../../Headings";
+import KierroksenPoistoButton from "../KierroksenPoistoButton";
+import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -107,7 +108,6 @@ function VuorovaikutusKierrosKutsu({
 
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
-  const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
   const { showSuccessMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
@@ -207,7 +207,7 @@ function VuorovaikutusKierrosKutsu({
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const { withLoadingSpinner, isLoading } = useLoadingSpinner();
+  const { withLoadingSpinner } = useLoadingSpinner();
 
   useEffect(() => {
     reset(defaultValues);
@@ -267,10 +267,6 @@ function VuorovaikutusKierrosKutsu({
     [api, preSubmitFunction, projekti.oid, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
-  const confirmPoista = () => {
-    setOpenPoistoDialogi(true);
-  };
-
   const saveForm = useMemo(() => {
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
@@ -289,31 +285,6 @@ function VuorovaikutusKierrosKutsu({
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
-  const poistaKierros = useCallback(
-    () =>
-      withLoadingSpinner(
-        (async () => {
-          if (!projekti) {
-            return;
-          }
-          try {
-            await api.siirraTila({
-              oid: projekti.oid,
-              toiminto: TilasiirtymaToiminto.HYLKAA,
-              tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-              syy: "Poistetaan luonnos",
-            });
-            await reloadProjekti();
-            showSuccessMessage(`Luonnoksen poistaminen onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-          setOpenPoistoDialogi(false);
-        })()
-      ),
-    [api, projekti, reloadProjekti, showSuccessMessage, withLoadingSpinner]
-  );
-
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
 
   const julkaisuIsDisabled = useMemo(() => {
@@ -327,6 +298,8 @@ function VuorovaikutusKierrosKutsu({
 
   const ensisijainenKieli = kielitiedot.ensisijainenKieli;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
+
+  const kierrosCanBeDeleted = canVuorovaikutusKierrosBeDeleted(projekti);
 
   return (
     <>
@@ -412,22 +385,8 @@ function VuorovaikutusKierrosKutsu({
               </Section>
             }
             <Section noDivider>
-              <Stack justifyContent="flex-end" flexDirection="row" flexWrap="wrap">
-                {projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
-                  <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
-                    <Button
-                      style={{ whiteSpace: "nowrap" }}
-                      id="poista_luonnos"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        confirmPoista();
-                      }}
-                      disabled={isLoading}
-                    >
-                      Poista luonnos
-                    </Button>
-                  </Stack>
-                )}
+              <Stack justifyContent={kierrosCanBeDeleted ? "space-between" : "flex-end"} flexDirection="row" flexWrap="wrap">
+                {kierrosCanBeDeleted && <KierroksenPoistoButton projekti={projekti} reloadProjekti={reloadProjekti} />}
                 <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
                   <Button
                     id="save_suunnitteluvaihe_vuorovaikutukset_draft"
@@ -461,11 +420,6 @@ function VuorovaikutusKierrosKutsu({
           asianhallintaIntegraatio={!projekti.asianhallinta.inaktiivinen}
         />
       )}
-      <KierroksenPoistoDialogi
-        openPoistoDialogi={openPoistoDialogi}
-        setOpenPoistoDialogi={setOpenPoistoDialogi}
-        poistaKierros={poistaKierros}
-      />
     </>
   );
 }

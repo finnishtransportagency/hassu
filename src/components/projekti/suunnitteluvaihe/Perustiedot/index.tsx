@@ -8,8 +8,6 @@ import {
   LokalisoituLinkki,
   LokalisoituLinkkiInput,
   TallennaProjektiInput,
-  TilasiirtymaToiminto,
-  TilasiirtymaTyyppi,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusPerustiedotInput,
@@ -38,7 +36,7 @@ import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
+import KierroksenPoistoButton from "../KierroksenPoistoButton";
 import { handleAineistoArrayForDefaultValues } from "src/util/FormAineisto/handleAineistoArrayForDefaultValues";
 import { handleAineistoArraysForSave } from "src/util/FormAineisto/handleAineistoArraysForSave";
 import SuunnitelmaLuonnoksetJaEsittelyAineistot from "./SuunnitelmaLuonnoksetJaEsittelyAineistot.tsx";
@@ -50,6 +48,7 @@ import { H2, H3 } from "../../../Headings";
 import { getDefaultValuesForLokalisoituLinkkiLista } from "src/util/getDefaultValuesForLokalisoituLinkkiLista";
 import { FormAineisto } from "src/util/FormAineisto";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -145,7 +144,6 @@ type SuunnitteluvaiheenPerustiedotFormProps = {
 function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const { showSuccessMessage } = useSnackbars();
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
-  const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
   const closeHyvaksy = useCallback(() => {
     setIsOpenHyvaksy(false);
@@ -240,10 +238,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const confirmPublish = () => {
     setIsOpenHyvaksy(true);
-  };
-
-  const confirmPoista = () => {
-    setOpenPoistoDialogi(true);
   };
 
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
@@ -349,35 +343,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const { t } = useTranslation();
 
-  const poistaKierros = useCallback(
-    () =>
-      withLoadingSpinner(
-        (async () => {
-          if (!projekti) {
-            return;
-          }
-          try {
-            await api.siirraTila({
-              oid: projekti.oid,
-              toiminto: TilasiirtymaToiminto.HYLKAA,
-              tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-              syy: "Poistetaan luonnos",
-            });
-            await reloadProjekti();
-            showSuccessMessage(`Luonnoksen poistaminen onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-          setOpenPoistoDialogi(false);
-        })()
-      ),
-    [api, projekti, reloadProjekti, showSuccessMessage, withLoadingSpinner]
-  );
-
-  const isUusiKierros = useMemo(
-    () => !julkinen && !!projekti.vuorovaikutusKierros?.vuorovaikutusNumero,
-    [julkinen, projekti.vuorovaikutusKierros?.vuorovaikutusNumero]
-  );
+  const kierrosCanBeDeleted = canVuorovaikutusKierrosBeDeleted(projekti);
 
   return (
     <>
@@ -465,15 +431,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={isUusiKierros ? "space-between" : "flex-end"} flexDirection="row" flexWrap="wrap">
-              {isUusiKierros && (
-                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
-                  <Button id="poista_luonnos" style={{ whiteSpace: "nowrap" }} type="button" onClick={confirmPoista} disabled={isLoading}>
-                    Poista luonnos
-                  </Button>
-                </Stack>
-              )}
-
+            <Stack justifyContent={kierrosCanBeDeleted ? "space-between" : "flex-end"} flexDirection="row" flexWrap="wrap">
+              {kierrosCanBeDeleted && <KierroksenPoistoButton projekti={projekti} reloadProjekti={reloadProjekti} />}
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
                 {!julkinen && (
                   <Button
@@ -531,11 +490,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </DialogActions>
         </form>
       </HassuDialog>
-      <KierroksenPoistoDialogi
-        openPoistoDialogi={openPoistoDialogi}
-        setOpenPoistoDialogi={setOpenPoistoDialogi}
-        poistaKierros={poistaKierros}
-      />
     </>
   );
 }
