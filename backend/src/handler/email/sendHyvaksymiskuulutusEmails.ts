@@ -31,10 +31,10 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   }
 
   protected async sendEmailToMaakuntaliitto(
-    emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
-    projektinKielet: Kieli[],
-    projekti: DBProjekti
+    _emailCreator: HyvaksymisPaatosEmailCreator,
+    _julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    _projektinKielet: Kieli[],
+    _projekti: DBProjekti
   ): Promise<void> {}
 
   public async sendEmails(oid: string): Promise<void> {
@@ -218,21 +218,26 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
       .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
         const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = ["hyvaksymisIlmoitusLausunnonantajillePDFPath"];
         const attachments = await Promise.all(
-          pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+          pdfKeys.map(
+            async (key) => (await this.getMandatoryProjektiFileAsAttachmentAndItsSize(pdft[key], projekti, `${key} ${kieli}`)).attachment
+          )
         );
         (await lahetettavatPDFt).push(...attachments);
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot =
-      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
-          aineisto.tiedosto,
-          projekti,
-          `oid:${aineisto.dokumenttiOid}`
-        );
-        (await tiedostot).push(aineistoTiedosto);
-        return tiedostot;
-      }, Promise.resolve([]))) ?? [];
+    const paatosTiedostot = await Promise.all(
+      (julkaisu.hyvaksymisPaatos ?? []).map((aineisto) =>
+        this.getMandatoryProjektiFileAsAttachmentAndItsSize(aineisto.tiedosto, projekti, `oid:${aineisto.dokumenttiOid}`)
+      )
+    );
+
+    const maxCombinedPaatosSize = 30 * 1024 * 1024;
+
+    const combinedFileSize = paatosTiedostot.reduce((combinedSize, paatosAttachment) => (combinedSize += paatosAttachment.size ?? 0), 0);
+
+    const attachments: Mail.Attachment[] =
+      combinedFileSize > maxCombinedPaatosSize ? pdft : [...pdft, ...paatosTiedostot.map((tiedosto) => tiedosto.attachment)];
+
     const virasto =
       projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
         ? "Väyläviraston"
@@ -252,7 +257,7 @@ ${projektiPaallikko.organisaatio}`;
       text,
       to: julkaisu.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta) => maakunta.sahkoposti),
       cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
-      attachments: [...pdft, ...paatosTiedostot],
+      attachments,
     };
     const sentMessageInfo = await emailClient.sendEmail(emailOptions);
     const aikaleima = localDateTimeString();
