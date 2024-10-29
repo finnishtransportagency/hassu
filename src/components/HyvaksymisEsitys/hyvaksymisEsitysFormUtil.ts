@@ -42,8 +42,15 @@ export type HyvaksymisEsitysForm = {
 export type EnnakkoneuvotteluForm = {
   oid: string;
   versio: number;
-  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
+  ennakkoNeuvottelu: Omit<
+    EnnakkoNeuvotteluInput,
+    "muistutukset" | "suunnitelma" | "kuulutuksetJaKutsu" | "muuAineistoKoneelta" | "maanomistajaluettelo" | "lausunnot"
+  > & {
     muistutukset: FormMuistutukset;
+    kuulutuksetJaKutsu: LadattuTiedostoNew[];
+    muuAineistoKoneelta: LadattuTiedostoNew[];
+    maanomistajaluettelo: LadattuTiedostoNew[];
+    lausunnot: LadattuTiedostoNew[];
     suunnitelma: { [key: string]: FormAineistoNew[] };
   };
 };
@@ -135,51 +142,76 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput({
     muuAineistoKoneelta,
     maanomistajaluettelo,
     lausunnot,
-    suunnitelma,
-    muistutukset,
-    muuAineistoVelhosta,
+    kiireellinen,
+    laskutustiedot,
+    lisatiedot,
+    poistumisPaiva,
+    vastaanottajat,
   } = muokattavaHyvaksymisEsitys;
 
-  const flatMuistutukset = Object.values(muistutukset).flat();
-  const flatSuunnitelma = Object.values(suunnitelma)
+  const muistutukset = Object.values(muokattavaHyvaksymisEsitys.muistutukset).flat();
+  const suunnitelma = Object.values(muokattavaHyvaksymisEsitys.suunnitelma)
     .flat()
     .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
-  const flatMuuAineistoVelhosta = muuAineistoVelhosta?.map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({
-    dokumenttiOid,
-    nimi,
-    uuid,
-    kategoriaId,
-  }));
+  const muuAineistoVelhosta = muokattavaHyvaksymisEsitys.muuAineistoVelhosta?.map<AineistoInputNew>(
+    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({
+      dokumenttiOid,
+      nimi,
+      uuid,
+      kategoriaId,
+    })
+  );
   return {
     oid,
     versio,
     muokattavaHyvaksymisEsitys: {
-      ...muokattavaHyvaksymisEsitys,
+      kiireellinen,
+      laskutustiedot,
+      lisatiedot,
+      poistumisPaiva,
+      vastaanottajat,
       hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
-      suunnitelma: flatSuunnitelma,
-      muistutukset: flatMuistutukset,
-      muuAineistoVelhosta: flatMuuAineistoVelhosta,
+      suunnitelma,
+      muistutukset,
+      muuAineistoVelhosta,
     },
   };
 }
 
-export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolean): TallennaEnnakkoNeuvotteluInput {
-  const muistutukset = Object.values(formData.ennakkoNeuvottelu.muistutukset).flat();
-  const suunnitelma = Object.values(formData.ennakkoNeuvottelu.suunnitelma)
+export function transformToInput(
+  { ennakkoNeuvottelu, oid, versio }: EnnakkoneuvotteluForm,
+  laheta: boolean
+): TallennaEnnakkoNeuvotteluInput {
+  const { kuulutuksetJaKutsu, lausunnot, lisatiedot, maanomistajaluettelo, muuAineistoKoneelta, poistumisPaiva, vastaanottajat } =
+    ennakkoNeuvottelu;
+  const muistutukset = Object.values(ennakkoNeuvottelu.muistutukset ?? {}).flat();
+  const suunnitelma = Object.values(ennakkoNeuvottelu.suunnitelma ?? {})
     .flat()
     .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
-  const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
-    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
+  const muuAineistoVelhosta = ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
+    ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({
+      dokumenttiOid,
+      nimi,
+      uuid,
+      kategoriaId,
+    })
   );
   return {
-    ...formData,
+    oid,
+    versio,
     laheta,
     ennakkoNeuvottelu: {
-      ...formData.ennakkoNeuvottelu,
+      lisatiedot,
+      poistumisPaiva,
+      vastaanottajat,
+      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
+      lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
+      maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
+      muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,

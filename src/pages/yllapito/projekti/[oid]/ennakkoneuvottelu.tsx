@@ -3,9 +3,7 @@ import ExtLink from "@components/ExtLink";
 import HassuDialog from "@components/HassuDialog";
 import { H2, H3, H4 } from "@components/Headings";
 import {
-  adaptAineistotNewToInput,
   adaptKunnallinenLadattuTiedostoToInput,
-  adaptLadatutTiedostotNewToInput,
   adaptSuunnitelmaAineistot,
   EnnakkoneuvotteluForm,
   FormMuistutukset,
@@ -51,7 +49,14 @@ import useValidationMode from "src/hooks/useValidationMode";
 export function getDefaultValuesForForm(projekti: Projekti | null | undefined): EnnakkoneuvotteluForm {
   if (!projekti) {
     return {
-      ennakkoNeuvottelu: { muistutukset: {}, suunnitelma: {} },
+      ennakkoNeuvottelu: {
+        muistutukset: {},
+        suunnitelma: {},
+        kuulutuksetJaKutsu: [],
+        lausunnot: [],
+        maanomistajaluettelo: [],
+        muuAineistoKoneelta: [],
+      },
       oid: "",
       versio: 1,
     };
@@ -85,11 +90,11 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       lisatiedot: lisatiedot ?? "",
       suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, velho.tyyppi),
       muistutukset: muistutuksetSorted,
-      lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
-      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
-      muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
-      muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
-      maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
+      lausunnot: lausunnot ?? [],
+      kuulutuksetJaKutsu: kuulutuksetJaKutsu ?? [],
+      muuAineistoVelhosta: muuAineistoVelhosta,
+      muuAineistoKoneelta: muuAineistoKoneelta ?? [],
+      maanomistajaluettelo: maanomistajaluettelo ?? [],
       vastaanottajat: vastaanottajat?.length
         ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
         : [{ sahkoposti: "kirjaamo@traficom.fi" }],
