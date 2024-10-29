@@ -131,7 +131,10 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     await this.updateProjektiJulkaisut(projekti, julkaisu);
   }
 
-  private async getPaatostiedostotAsAttachments(julkaisu: HyvaksymisPaatosVaiheJulkaisu, projekti: DBProjekti): Promise<Mail.Attachment[]> {
+  protected async getPaatostiedostotAsAttachments(
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    projekti: DBProjekti
+  ): Promise<Mail.Attachment[]> {
     const attachmentsAndSizes = await Promise.all(
       (julkaisu.hyvaksymisPaatos ?? []).map(
         async (aineisto) =>
@@ -225,18 +228,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
         (await lahetettavatPDFt).push(...attachments);
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot = await Promise.all(
-      (julkaisu.hyvaksymisPaatos ?? []).map((aineisto) =>
-        this.getMandatoryProjektiFileAsAttachmentAndItsSize(aineisto.tiedosto, projekti, `oid:${aineisto.dokumenttiOid}`)
-      )
-    );
-
-    const maxCombinedPaatosSize = 30 * 1024 * 1024;
-
-    const combinedFileSize = paatosTiedostot.reduce((combinedSize, paatosAttachment) => (combinedSize += paatosAttachment.size ?? 0), 0);
-
-    const attachments: Mail.Attachment[] =
-      combinedFileSize > maxCombinedPaatosSize ? pdft : [...pdft, ...paatosTiedostot.map((tiedosto) => tiedosto.attachment)];
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
 
     const virasto =
       projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
@@ -257,7 +249,7 @@ ${projektiPaallikko.organisaatio}`;
       text,
       to: julkaisu.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta) => maakunta.sahkoposti),
       cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
-      attachments,
+      attachments: [...pdft, ...paatosTiedostot],
     };
     const sentMessageInfo = await emailClient.sendEmail(emailOptions);
     const aikaleima = localDateTimeString();
