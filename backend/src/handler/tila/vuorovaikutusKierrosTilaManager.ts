@@ -41,6 +41,7 @@ import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhall
 import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 import { log } from "../../logger";
 import Mail from "nodemailer/lib/mailer";
+import { validateVuorovaikutusKierrosCanBeDeleted } from "hassu-common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -194,13 +195,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   async reject(projekti: DBProjekti, _syy: string): Promise<void> {
     const vuorovaikutus = projekti.vuorovaikutusKierros;
-    const julkaisu = projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === vuorovaikutus?.vuorovaikutusNumero);
-    if (julkaisu) {
-      throw new IllegalArgumentError("Julkaistua vuorovaikutuskierrosta ei vois poistaa!");
-    }
-    if (vuorovaikutus?.vuorovaikutusNumero === 1) {
-      throw new IllegalArgumentError("Ensimmäistä vuorovaikutuskierrosta ei vois poistaa!");
-    }
+    validateVuorovaikutusKierrosCanBeDeleted(projekti);
     const oid = projekti.oid;
     const viimeisinJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut.length - 1];
     assert(viimeisinJulkaisu, "Jostain syystä viimeisintä julkaisua ei löydy!");
