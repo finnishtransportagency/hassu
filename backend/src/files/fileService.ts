@@ -68,7 +68,6 @@ export class FileMetadata {
   checksum?: string;
   fileType?: FileType;
   asiakirjaTyyppi?: string;
-  ContentLength?: number;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -81,7 +80,6 @@ export class FileMetadata {
       isEqual(this.checksum, other.checksum) &&
       isEqual(this.fileType, other.fileType) &&
       isEqual(this.asiakirjaTyyppi, other.asiakirjaTyyppi) &&
-      isEqual(this.ContentLength, other.ContentLength) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -546,14 +544,18 @@ export class FileService {
   }
 
   async getFileContentLength(bucketName: string, key: string): Promise<number | undefined> {
-    const fileMetaData = await FileService.getFileMetaData(bucketName, key);
-    return fileMetaData?.ContentLength;
+    const headObject = await FileService.getHeadObject(bucketName, key);
+    return headObject.ContentLength;
+  }
+
+  private static async getHeadObject(bucketName: string, key: string) {
+    const keyWithoutLeadingSlash = key.replace(/^\//, "");
+    return await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
   }
 
   private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
-      const keyWithoutLeadingSlash = key.replace(/^\//, "");
-      const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
+      const headObject = await FileService.getHeadObject(bucketName, key);
       // metadatan parempi olla olemassa
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -567,7 +569,6 @@ export class FileService {
 
       result.ContentDisposition = headObject.ContentDisposition;
       result.ContentType = headObject.ContentType;
-      result.ContentLength = headObject.ContentLength;
 
       if (publishDate) {
         result.publishDate = parseDate(publishDate);
