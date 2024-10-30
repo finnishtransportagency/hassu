@@ -9,7 +9,6 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   GetObjectCommandOutput,
-  GetObjectOutput,
   HeadObjectCommand,
   ListObjectsV2Command,
   ListObjectsV2CommandOutput,
@@ -35,6 +34,7 @@ import Mail from "nodemailer/lib/mailer";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import fileValidation from "hassu-common/fileValidationSettings";
 import { adaptFileName, joinPath } from "../tiedostot/paths";
+import adaptS3ObjectOutputToMailAttachment from "./adaptS3ObjectToMailAttachment";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -68,6 +68,7 @@ export class FileMetadata {
   checksum?: string;
   fileType?: FileType;
   asiakirjaTyyppi?: string;
+  ContentLength?: number;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -80,6 +81,7 @@ export class FileMetadata {
       isEqual(this.checksum, other.checksum) &&
       isEqual(this.fileType, other.fileType) &&
       isEqual(this.asiakirjaTyyppi, other.asiakirjaTyyppi) &&
+      isEqual(this.ContentLength, other.ContentLength) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -543,6 +545,11 @@ export class FileService {
     return result;
   }
 
+  async getFileContentLength(bucketName: string, key: string): Promise<number | undefined> {
+    const fileMetaData = await FileService.getFileMetaData(bucketName, key);
+    return fileMetaData?.ContentLength;
+  }
+
   private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
       const keyWithoutLeadingSlash = key.replace(/^\//, "");
@@ -560,6 +567,7 @@ export class FileService {
 
       result.ContentDisposition = headObject.ContentDisposition;
       result.ContentType = headObject.ContentType;
+      result.ContentLength = headObject.ContentLength;
 
       if (publishDate) {
         result.publishDate = parseDate(publishDate);
@@ -678,38 +686,21 @@ export class FileService {
   }
 
   async getFileAsAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
-    log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
+    return (await this.getFileAsAttachmentAndItsSize(oid, key)).attachment;
+  }
 
-    function getFilenamePartFromKey(path: string): string {
-      return path.substring(path.lastIndexOf("/") + 1);
-    }
-
-    const getObjectParams = {
-      Bucket: config.yllapitoBucketName,
-      Key: FileService.getYllapitoProjektiDirectory(oid) + key,
-    };
+  async getFileAsAttachmentAndItsSize(
+    oid: string,
+    key: string
+  ): Promise<{ attachment: Mail.Attachment | undefined; size: number | undefined }> {
     try {
-      const output: GetObjectOutput = await getS3Client().send(new GetObjectCommand(getObjectParams));
-
-      if (output.Body instanceof Readable) {
-        let contentType = output.ContentType;
-        if (contentType == "null") {
-          contentType = undefined;
-        }
-        return {
-          filename: getFilenamePartFromKey(key),
-          contentDisposition: "attachment",
-          contentType: contentType ?? "application/octet-stream",
-          content: output.Body,
-        };
-      } else {
-        log.error("Liitetiedoston sisallossa ongelmia");
-      }
+      log.info("Haetaan s3:sta sähköpostiin liitetiedosto", { key });
+      const output = await this.getProjektiYllapitoS3Object(oid, key);
+      return { attachment: adaptS3ObjectOutputToMailAttachment(output, key), size: output.ContentLength };
     } catch (error) {
-      log.error("Virhe liitetiedostojen haussa", { error, getObjectParams });
+      log.error("Virhe liitetiedostojen haussa", { error });
     }
-
-    return Promise.resolve(undefined);
+    return { attachment: undefined, size: undefined };
   }
 }
 
