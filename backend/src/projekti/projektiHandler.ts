@@ -51,6 +51,7 @@ import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { omistajaDatabase } from "../database/omistajaDatabase";
+import { config } from "../config";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -101,7 +102,11 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
-    return projektiAdapter.adaptProjekti(projektiFromDB);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projektiFromDB);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
+    return apiProjekti;
   } else {
     requirePermissionLuonti();
     const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
@@ -109,9 +114,28 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     if (projektipaallikkoVirhetieto) {
       virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
     }
-
     return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
+}
+
+async function lisaaApiAineistolleTiedostokoko(paatosAineisto: API.Aineisto[] | null | undefined): Promise<void> {
+  if (!paatosAineisto) {
+    return;
+  }
+  await Promise.all(
+    paatosAineisto.map(async (aineisto) => {
+      if (!aineisto.tiedosto) {
+        return;
+      }
+      const parts = aineisto.tiedosto.split("/");
+      const filenamePart = parts.pop();
+
+      if (filenamePart) {
+        const filePathWithDecodedFilename = [...parts, decodeURIComponent(filenamePart)].join("/");
+        aineisto.koko = await fileService.getFileContentLength(config.yllapitoBucketName, filePathWithDecodedFilename);
+      }
+    })
+  );
 }
 
 export async function arkistoiProjekti(oid: string): Promise<string> {
