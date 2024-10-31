@@ -29,8 +29,8 @@ export default function MuokkaustilainenPaatosTiedostot({ paatosTyyppi }: Props)
       <p>{getPaatosInfoText(paatosTyyppi)}</p>
       {totalPaatosSize > maxPaatosFileSize && (
         <Notification type={NotificationType.WARN}>
-          Päätöstiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähetettää vastaanottajille sähköpostin liitteinä.
-          Valitse pienemmät tiedostot tai välitä tiedostot tiedotetaville järjestelmän ulkopuolella.
+          Päätöstiedostot ovat yhdistetyltä kooltaan yli 30 Mt, minkä takia niitä ei voi lähettää vastaanottajille sähköpostin liitteinä.
+          Valitse pienemmät tiedostot tai välitä tiedostot tiedotettaville järjestelmän ulkopuolella.
         </Notification>
       )}
       {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}

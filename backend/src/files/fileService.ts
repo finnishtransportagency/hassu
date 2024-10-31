@@ -545,44 +545,13 @@ export class FileService {
 
   async getFileContentLength(bucketName: string, key: string): Promise<number | undefined> {
     const headObject = await FileService.getHeadObject(bucketName, key);
-    return headObject.ContentLength;
+    return headObject?.ContentLength;
   }
 
   private static async getHeadObject(bucketName: string, key: string) {
     const keyWithoutLeadingSlash = key.replace(/^\//, "");
-    return await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
-  }
-
-  private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
-      const headObject = await FileService.getHeadObject(bucketName, key);
-      // metadatan parempi olla olemassa
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const metadata: S3.Metadata = headObject.Metadata;
-      const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
-      const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
-      const fileType = metadata[S3_METADATA_FILE_TYPE];
-      const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
-      const result: FileMetadata = new FileMetadata();
-      result.checksum = headObject.ETag;
-
-      result.ContentDisposition = headObject.ContentDisposition;
-      result.ContentType = headObject.ContentType;
-
-      if (publishDate) {
-        result.publishDate = parseDate(publishDate);
-      }
-      if (expirationDate) {
-        result.expirationDate = parseDate(expirationDate);
-      }
-      if (fileType) {
-        result.fileType = fileType as FileType;
-      }
-      if (asiakirjaTyyppi) {
-        result.asiakirjaTyyppi = asiakirjaTyyppi;
-      }
-      return result;
+      return await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
     } catch (e) {
       if (e instanceof NotFound) {
         return undefined;
@@ -590,6 +559,46 @@ export class FileService {
       log.error(e);
       throw e;
     }
+  }
+
+  private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
+    const headObject = await FileService.getHeadObject(bucketName, key);
+    if (!headObject) {
+      return undefined;
+    }
+    // metadatan parempi olla olemassa
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const metadata: S3.Metadata = headObject.Metadata;
+    const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
+    const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
+    const fileType = metadata[S3_METADATA_FILE_TYPE];
+    const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
+    const result: FileMetadata = new FileMetadata();
+    result.checksum = headObject.ETag;
+
+    result.ContentDisposition = headObject.ContentDisposition;
+    result.ContentType = headObject.ContentType;
+    if (fileType) {
+      result.fileType = fileType as FileType;
+    }
+    if (asiakirjaTyyppi) {
+      result.asiakirjaTyyppi = asiakirjaTyyppi;
+    }
+
+    try {
+      if (publishDate) {
+        result.publishDate = parseDate(publishDate);
+      }
+      if (expirationDate) {
+        result.expirationDate = parseDate(expirationDate);
+      }
+    } catch (e) {
+      log.error(e);
+      throw e;
+    }
+
+    return result;
   }
 
   /**
