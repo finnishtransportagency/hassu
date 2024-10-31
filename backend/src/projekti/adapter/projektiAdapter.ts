@@ -280,7 +280,7 @@ export class ProjektiAdapter {
       vahainenMenettely,
       salt: projekti.salt ?? lisaAineistoService.generateSalt(),
       kasittelynTila: adaptKasittelynTilaToSave(projekti.kasittelynTila, kasittelynTila, projektiAdaptationResult),
-      asianhallinta,
+      asianhallinta: asianhallinta ? { ...projekti.asianhallinta, inaktiivinen: asianhallinta.inaktiivinen } : undefined,
       kustannuspaikka,
     } as DBProjekti);
 
