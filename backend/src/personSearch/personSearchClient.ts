@@ -18,8 +18,8 @@ async function getKayttajas(): Promise<Kayttajas> {
       const kayttajaMap: Record<string, Person> = await s3Cache.get(
         PERSON_SEARCH_CACHE_KEY,
         S3CACHE_TTL_MILLIS,
-        () => {
-          personSearchUpdaterClient.triggerUpdate();
+        async () => {
+          await personSearchUpdaterClient.triggerUpdate();
         },
         async () => {
           return await personSearchUpdaterClient.readUsersFromSearchUpdaterLambda();
