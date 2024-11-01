@@ -17,8 +17,8 @@ class PersonSearchUpdaterClient {
     if (!json) {
       throw new Error("");
     }
-    const users = JSON.parse(json);
-    if (users.length <= 0) {
+    const users: Record<string, Person> = JSON.parse(json);
+    if (Object.keys(users).length <= 0) {
       throw new Error("Could not read list of users (no users)");
     }
     return users;
@@ -27,8 +27,9 @@ class PersonSearchUpdaterClient {
   async triggerUpdate(): Promise<void> {
     log.info("triggerUpdate() ");
     if (config.personSearchUpdaterLambdaArn) {
-      try { 
+      try {
         await invokeLambda(config.personSearchUpdaterLambdaArn, false);
+        log.info("personSearchUpdaterLambda invoked");
       } catch (e) {
         log.error(e);
       }
