@@ -1,10 +1,9 @@
 import { Lambda } from "@aws-sdk/client-lambda";
 import { log } from "../logger";
 
-const lambda: Lambda = new Lambda({});
-
 export async function invokeLambda(functionName: string, asynchronousCall: boolean, payload?: string): Promise<string | undefined> {
   try {
+    const lambda: Lambda = new Lambda({});
     if (asynchronousCall) {
       const output = await lambda.invoke({
         FunctionName: functionName,
