@@ -11,6 +11,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "123-456-1-291",
@@ -21,6 +22,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "04.11.2024 10:00:00+02:00",
   ],
   Array [
     "123-456-1-291",
@@ -31,6 +33,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -46,6 +49,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "123-456-1-291",
@@ -56,6 +60,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "04.11.2024 10:00:00+02:00",
   ],
   Array [
     "123-456-1-291",
@@ -66,6 +71,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -81,6 +87,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "123-456-1-291",
@@ -91,6 +98,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "04.11.2024 10:00:00+02:00",
   ],
   Array [
     "123-456-1-291",
@@ -101,6 +109,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -662,6 +671,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "Tytti Testaaja",
@@ -671,6 +681,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "04.11.2024 11:00:00+02:00",
   ],
   Array [
     "Matti Testaaja",
@@ -680,6 +691,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -694,6 +706,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "Tytti Testaaja",
@@ -703,6 +716,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "04.11.2024 11:00:00+02:00",
   ],
   Array [
     "Matti Testaaja",
@@ -712,6 +726,7 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Suomi.fi",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
