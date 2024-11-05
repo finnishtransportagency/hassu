@@ -1457,7 +1457,14 @@ type Omistaja {
   maakoodi: String
   maa: String
   viimeisinLahetysaika: String
-  viimeisinTila: String
+  viimeisinTila: TiedotettavanLahetyksenTila
+}
+
+enum TiedotettavanLahetyksenTila {
+  OK
+  VIRHE
+  OK_ERI_KIINTEISTO_MUISTUTUS
+  VIRHE_ERI_KIINTEISTO_MUISTUTUS
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1483,7 +1490,7 @@ type Muistuttaja {
   sahkoposti: String
   paivitetty: String
   viimeisinLahetysaika: String
-  viimeisinTila: String
+  viimeisinTila: TiedotettavanLahetyksenTila
 }
 
 type Muistuttajat {
