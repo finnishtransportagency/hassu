@@ -19,11 +19,6 @@ export type OmistajaKey = {
   id: string;
 };
 
-export type Lahetys = {
-  tila: "OK" | "VIRHE";
-  lahetysaika: string;
-};
-
 export type DBOmistaja = {
   id: string;
   oid: string;
@@ -43,7 +38,7 @@ export type DBOmistaja = {
   expires?: number;
   kaytossa: boolean;
   suomifiLahetys?: boolean;
-  lahetykset?: Lahetys[];
+  lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[];
   userCreated?: boolean;
 };
 

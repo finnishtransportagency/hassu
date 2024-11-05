@@ -2,7 +2,7 @@ import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
 import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
-import { Lahetys, omistajaDatabase } from "../database/omistajaDatabase";
+import { omistajaDatabase } from "../database/omistajaDatabase";
 import { Columns, Row_, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { auditLog, log } from "../logger";
@@ -194,7 +194,7 @@ type Rivi = {
   lahetysaika: string;
 };
 
-function getLahetysaika(lahetykset?: Lahetys[]) {
+function getLahetysaika(lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[]) {
   if (!lahetykset) {
     return "";
   }
