@@ -37,15 +37,15 @@ export function ViimeisinLahetysHeader() {
                 <dt>-</dt>
                 <dd>Ei tiedoituksia</dd>
                 <dt>
-                  <FontAwesomeIcon icon={faEnvelope} color="green" />
+                  <FontAwesomeIcon icon={faEnvelope} color="#207a43" />
                 </dt>
                 <dd>Tiedotettu</dd>
                 <dt>
-                  <FontAwesomeIcon icon={faCheck} color="green" />
+                  <FontAwesomeIcon icon={faCheck} color="#207a43" />
                 </dt>
                 <dd>Tiedotettu toisesta kiinteistöstä tai muistutuksesta</dd>
                 <dt>
-                  <FontAwesomeIcon icon={faTriangleExclamation} color="red" />
+                  <FontAwesomeIcon icon={faTriangleExclamation} color="#f10e0e" />
                 </dt>
                 <dd>Tiedottaminen epäonnistunut</dd>
               </SeliteLista>

@@ -11,21 +11,21 @@ interface TilaProps {
   tila?: TiedotettavanLahetyksenTila | null;
 }
 
-const tilaIcons: Record<TiedotettavanLahetyksenTila, IconProp> = {
+export const tilaIcons: Record<TiedotettavanLahetyksenTila, IconProp> = {
   OK: faEnvelope,
   OK_ERI_KIINTEISTO_MUISTUTUS: faCheck,
   VIRHE: faCircleExclamation,
   VIRHE_ERI_KIINTEISTO_MUISTUTUS: faCircleExclamation,
 };
 
-const tilaIconColors: Record<TiedotettavanLahetyksenTila, string> = {
+export const tilaIconColors: Record<TiedotettavanLahetyksenTila, string> = {
   OK: "#207a43",
   OK_ERI_KIINTEISTO_MUISTUTUS: "#207a43",
   VIRHE: "#f10e0e",
   VIRHE_ERI_KIINTEISTO_MUISTUTUS: "#f10e0e",
 };
 
-const tilaTooltipTitles: Record<TiedotettavanLahetyksenTila, string> = {
+export const tilaTooltipTitles: Record<TiedotettavanLahetyksenTila, string> = {
   OK: "Tiedotettu",
   OK_ERI_KIINTEISTO_MUISTUTUS: "Tiedotettu toisesta kiinteistöstä tai muistutuksesta",
   VIRHE: "Tiedottaminen epäonnistunut",
