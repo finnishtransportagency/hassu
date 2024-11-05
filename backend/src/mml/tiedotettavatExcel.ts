@@ -37,19 +37,19 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
 }
 
 function getMuistuttajaColumns(): Columns {
-  return [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 10 }];
+  return [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
 }
 
 function getMuistuttajaColumnsWithLahetysaika(): Columns {
-  return getMuistuttajaColumns().concat({ width: 30 });
+  return getMuistuttajaColumns().concat({ width: 25 });
 }
 
 function getKiinteistonomistajaColumns(): Columns {
-  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 10 }];
+  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
 }
 
 function getKiinteistonomistajaColumnsWithLahetysaika(): Columns {
-  return getKiinteistonomistajaColumns().concat({ width: 30 });
+  return getKiinteistonomistajaColumns().concat({ width: 25 });
 }
 
 function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row_<ImageData> {
