@@ -855,9 +855,9 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
         omistajaIdsForLahetystilaUpdate: kiinteistonOmistajaIds,
       };
 
-      const prefix = isOmistaja ? OMISTAJA_PREFIX : MUISTUTTAJA_PREFIX;
+      const Id = isOmistaja ? OMISTAJA_PREFIX + omistajaId : MUISTUTTAJA_PREFIX + muistuttajaId;
 
-      viestit.push({ Id: prefix + omistajaId, MessageBody: JSON.stringify(msg) });
+      viestit.push({ Id, MessageBody: JSON.stringify(msg) });
     });
     if (viestit.length > 0) {
       for (const viestitChunk of chunkArray(viestit, 10)) {
