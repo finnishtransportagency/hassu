@@ -17,7 +17,8 @@ export default function Layout({ children }: Props): ReactElement {
     route.includes("lausuntopyyntoaineistot") ||
     route.includes("lausuntopyynnon-taydennysaineistot") ||
     route.includes("hyvaksymisesitysaineistot") ||
-    route.includes("ennakkoneuvotteluaineistot")
+    route.includes("ennakkoneuvotteluaineistot") ||
+    route.includes("esikatsele-ennakkoneuvottelu")
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">
