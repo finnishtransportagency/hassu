@@ -77,7 +77,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
   );
   return (
     <>
-      <H1>Ennakkoneuvottelu</H1>
+      <H1>Ennakkotarkastus/ennakkoneuvottelu</H1>
       <H2 variant="lead" sx={{ mt: 8, mb: 8 }}>
         {suunnitelmanNimi}
       </H2>

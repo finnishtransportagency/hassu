@@ -100,7 +100,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
   );
   return (
     <>
-      <H1>Ennakkoneuvottelu (esikatselu)</H1>
+      <H1>Ennakkotarkastus/ennakkoneuvottelu (esikatselu)</H1>
       <H2 variant="lead" sx={{ mt: 8, mb: 8 }}>
         {projekti?.velho.nimi}
       </H2>
