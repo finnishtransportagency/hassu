@@ -137,8 +137,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       </Section>
 
       <Section>
-        <H2>Ennakkoneuvottelun aineisto</H2>
-        <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
+        <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={kategoriat}
           aineistot={suunnitelma?.map((a) => {
