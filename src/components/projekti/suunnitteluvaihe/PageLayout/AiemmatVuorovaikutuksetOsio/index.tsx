@@ -21,10 +21,8 @@ type Props = {
 
 export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
   const pastVuorovaikutusKierrokset: VuorovaikutusKierrosJulkaisu[] = useMemo(() => {
-    return (
-      projekti.vuorovaikutusKierrosJulkaisut?.filter((julkaisu) => projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== julkaisu.id) || []
-    );
-  }, [projekti.vuorovaikutusKierros?.vuorovaikutusNumero, projekti.vuorovaikutusKierrosJulkaisut]);
+    return projekti.vuorovaikutusKierrosJulkaisut?.slice(0, projekti.vuorovaikutusKierrosJulkaisut.length - 1) || [];
+  }, [projekti.vuorovaikutusKierrosJulkaisut]);
 
   if (!pastVuorovaikutusKierrokset.length) {
     return <></>;
