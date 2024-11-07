@@ -3,7 +3,7 @@
 import fs from "fs";
 import { Config } from "../lib/config";
 import { sendSignedRequest } from "../../backend/src/aws/awsRequest";
-import { HttpRequest } from "@aws-sdk/protocol-http";
+import { HttpRequest } from "@smithy/protocol-http";
 
 process.env.AWS_SDK_LOAD_CONFIG = "true";
 type Type = {

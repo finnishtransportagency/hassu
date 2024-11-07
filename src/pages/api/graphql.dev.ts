@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { HttpRequest } from "@aws-sdk/protocol-http";
+import { HttpRequest } from "@smithy/protocol-http";
 import { HeaderBag } from "@aws-sdk/types";
 import { sendSignedRequest } from "../../../backend/src/aws/awsRequest";
 
