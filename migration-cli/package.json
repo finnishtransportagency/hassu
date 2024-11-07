@@ -12,15 +12,11 @@
   },
   "dependencies": {
     "@types/node": "^16.18.60",
-    "aws-xray-sdk-core": "^3.5.3",
+    "aws-xray-sdk-core": "^3.10.1",
     "cross-env": "^7.0.3",
     "hassu": "file:..",
     "read-excel-file": "^5.7.1",
     "yargs": "^17.7.2"
-  },
-  "overrides": {
-    "@aws-sdk/types": "3.433.0",
-    "@aws-sdk/service-error-classification": "3.370.0"
   },
   "engines": {
     "node": ">=16.20.0",
