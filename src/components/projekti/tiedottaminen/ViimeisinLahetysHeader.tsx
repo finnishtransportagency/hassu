@@ -53,7 +53,7 @@ export function ViimeisinLahetysHeader() {
                 <b>Selitteet</b>
                 <SeliteLista>
                   <dt>-</dt>
-                  <dd>Ei tiedoituksia</dd>
+                  <dd>Ei tiedotuksia</dd>
                   <dt>
                     <FontAwesomeIcon icon={faEnvelope} color="#207a43" />
                   </dt>
