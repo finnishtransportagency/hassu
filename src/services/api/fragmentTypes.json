@@ -1155,6 +1155,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "TiedotettavanLahetyksenTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TilaMuutosInput",
         "possibleTypes": null,

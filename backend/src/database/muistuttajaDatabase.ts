@@ -4,6 +4,7 @@ import { getMuistuttajaTableName } from "../util/environment";
 import { log } from "../logger";
 import { config } from "../config";
 import { chunkArray } from "./chunkArray";
+import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
 
 export type DBMuistuttaja = {
   id: string;
@@ -24,7 +25,7 @@ export type DBMuistuttaja = {
   vastaanotettu?: string | null;
   muistutus?: string | null;
   oid: string;
-  lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[];
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[];
   liitteet?: string[] | null;
   maakoodi?: string | null;
   suomifiLahetys?: boolean;
