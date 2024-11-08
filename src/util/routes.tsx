@@ -93,7 +93,7 @@ export const LAUSUNTOPYYNNOT_MAIN_ROUTE: Route = {
 };
 
 export const ENNAKKONEUVOTTELU_ROUTE: Route = {
-  title: "Ennakkoneuvottelu",
+  title: "Ennakkotarkastus/ennakkoneuvottelu",
   id: "ennakkoneuvottelu",
   requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
   pathname: `/yllapito/projekti/[oid]/ennakkoneuvottelu`,

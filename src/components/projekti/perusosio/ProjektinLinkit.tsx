@@ -4,7 +4,7 @@ import { ExternalStyledLink } from "@components/StyledLink";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { getVelhoUrl } from "../../../util/velhoUtils";
 
-export default function ProjektinLinkit({ projekti }: PerusosioProps) {
+export default function ProjektinLinkit({ projekti }: Readonly<PerusosioProps>) {
   const velhoURL = getVelhoUrl(projekti.oid);
   return (
     <ContentSpacer>
@@ -16,6 +16,11 @@ export default function ProjektinLinkit({ projekti }: PerusosioProps) {
       <p>
         <ExternalStyledLink href={velhoURL}>Projektin sivu Projektivelhossa</ExternalStyledLink>
       </p>
+      {projekti.asianhallinta.linkkiAsianhallintaan && (
+        <p>
+          <ExternalStyledLink href={projekti.asianhallinta.linkkiAsianhallintaan}>Projekti asianhallinnassa</ExternalStyledLink>
+        </p>
+      )}
     </ContentSpacer>
   );
 }
