@@ -92,7 +92,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
       vastaanottajat: vastaanottajat?.length
         ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
-        : [{ sahkoposti: "kirjaamo@traficom.fi" }],
+        : [{ sahkoposti: "" }],
     },
   };
 }
@@ -126,7 +126,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   }
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
   return (
-    <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
+    <ProjektiPageLayout title="Ennakkotarkastus/ennakkoneuvottelu" showInfo>
       {projekti.ennakkoNeuvotteluJulkaisu && (
         <Section noDivider className="mb-2">
           <Notification type={NotificationType.INFO_GREEN}>

@@ -18,7 +18,7 @@ export type MuistuttajaDocument = Pick<
   | "suomifiLahetys"
   | "sahkoposti"
   | "kaytossa"
-> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: "VIRHE" | "OK" | null };
+> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: API.TiedotettavanLahetyksenTila | null };
 
 export function adaptMuistuttajaToIndex({
   etunimi,

@@ -16,6 +16,7 @@ import {
   tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { Aineisto } from "../../src/database/model";
+import { fileService } from "../../src/files/fileService";
 
 describe("Hyväksymispäätös", () => {
   const userFixture = new UserFixture(userService);
@@ -23,6 +24,7 @@ describe("Hyväksymispäätös", () => {
 
   before(async () => {
     mockSaveProjektiToVelho();
+    sinon.stub(fileService, "getFileContentLength").returns(Promise.resolve(400));
   });
 
   afterEach(() => {
