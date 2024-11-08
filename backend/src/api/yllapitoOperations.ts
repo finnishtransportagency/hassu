@@ -44,6 +44,7 @@ import {
   AktivoiProjektiJatkopaatettavaksiMutationVariables,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaEnnakkoNeuvotteluMutationVariables,
+  JaaProjektiMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -93,6 +94,7 @@ import {
 import haeKayttoOikeudet from "../user/haeKayttoOikeudet";
 import { tallennaEnnakkoNeuvottelu } from "../ennakkoneuvottelu/tallenna";
 import { aktivoiProjektiJatkopaatettavaksi } from "../projekti/aktivoiProjektiJatkopaatettavaksi";
+import { jaaProjekti } from "../jaaProjekti";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -205,6 +207,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await aktivoiProjektiJatkopaatettavaksi(event.arguments as AktivoiProjektiJatkopaatettavaksiMutationVariables);
     case apiConfig.tallennaEnnakkoNeuvottelu.name:
       return await tallennaEnnakkoNeuvottelu((event.arguments as TallennaEnnakkoNeuvotteluMutationVariables).input);
+    case apiConfig.jaaProjekti.name:
+      return await jaaProjekti(event.arguments as JaaProjektiMutationVariables);
     default:
       return null;
   }
