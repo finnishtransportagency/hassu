@@ -12,6 +12,7 @@ import useApi from "src/hooks/useApi";
 import { ColumnDef, OnChangeFn, RowSelectionState, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import cloneDeep from "lodash/cloneDeep";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { byteFileSizeToHumanString } from "common/util/byteFileSizeToHumanString";
 
 type Props = {
   infoText?: string | undefined;
@@ -179,10 +180,10 @@ const columns: ColumnDef<VelhoAineisto>[] = [
   },
   { header: "Dokumenttityyppi", accessorKey: "dokumenttiTyyppi", meta: { widthFractions: 2, minWidth: 160 } },
   {
-    header: "Koko (kB)",
+    header: "Koko",
     accessorKey: "koko",
     meta: { minWidth: 55, widthFractions: 1 },
-    cell: (aineisto) => Math.ceil((aineisto.getValue() as number) / 1024),
+    cell: (aineisto) => byteFileSizeToHumanString(aineisto.getValue() as number) || "-",
   },
   selectColumnDef(),
 ];

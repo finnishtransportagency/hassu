@@ -644,6 +644,7 @@ type Aineisto {
   """
   jarjestys: Int
   tila: AineistoTila!
+  koko: Int
 }
 
 type AineistoNew {
