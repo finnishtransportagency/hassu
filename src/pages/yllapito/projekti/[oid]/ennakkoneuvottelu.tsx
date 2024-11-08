@@ -90,9 +90,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
-      vastaanottajat: vastaanottajat?.length
-        ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
-        : [{ sahkoposti: "" }],
+      vastaanottajat: vastaanottajat?.length ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti })) : [{ sahkoposti: "" }],
     },
   };
 }

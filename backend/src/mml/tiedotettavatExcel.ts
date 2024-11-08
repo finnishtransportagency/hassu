@@ -1,7 +1,14 @@
 import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
-import { AsiakirjaTyyppi, Excel, LataaTiedotettavatExcelQueryVariables, ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Excel,
+  LataaTiedotettavatExcelQueryVariables,
+  ProjektiTyyppi,
+  TiedotettavanLahetyksenTila,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { Columns, Row_, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
@@ -194,12 +201,12 @@ type Rivi = {
   lahetysaika: string;
 };
 
-function getLahetysaika(lahetykset?: { tila: "OK" | "VIRHE"; lahetysaika: string }[]) {
+function getLahetysaika(lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[]) {
   if (!lahetykset) {
     return "";
   }
   const lahetys = [...lahetykset].sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
-  if (lahetys.tila === "VIRHE") {
+  if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
     return "Lähetys ei onnistunut";
   }
   return formatDate(lahetys.lahetysaika);
