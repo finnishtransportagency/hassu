@@ -10,7 +10,7 @@ import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
 import { DBProjekti, KasittelynTila, Muistutus, SuunnitteluSopimus } from "../database/model";
 import { getSQS } from "../aws/clients/getSQS";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
@@ -37,6 +37,8 @@ export type SuomiFiSanoma = {
   muistuttajaId?: string;
   omistajaId?: string;
   tyyppi?: PublishOrExpireEventType;
+  muistuttajaIdsForLahetystilaUpdate?: string[];
+  omistajaIdsForLahetystilaUpdate?: string[];
 };
 
 type Kohde = {
@@ -158,14 +160,62 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
   }
 }
 
-async function paivitaLahetysStatus(
-  oid: string,
-  id: string,
-  omistaja: boolean,
-  success: boolean,
-  approvalType: PublishOrExpireEventType,
-  traceId?: string
-) {
+type PaivitaLahetysStatusParameters = {
+  oid: string;
+  id: string;
+  omistaja: boolean;
+  tila: TiedotettavanLahetyksenTila.OK | TiedotettavanLahetyksenTila.VIRHE;
+  approvalType: PublishOrExpireEventType;
+  traceId?: string;
+  muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
+  omistajaIdsForLahetystilaUpdate: string[] | undefined;
+};
+
+async function paivitaTiedotettavanLahetysStatukset(params: PaivitaLahetysStatusParameters) {
+  const { muistuttajaIdsForLahetystilaUpdate, omistajaIdsForLahetystilaUpdate, tila, id, omistaja, ...commonParams } = params;
+  const lahetysaika = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+  await paivitaLahetysStatus({ ...commonParams, id, omistaja, lahetysaika, tila });
+  const tilaForOtherEntities =
+    tila === "OK" ? TiedotettavanLahetyksenTila.OK_ERI_KIINTEISTO_MUISTUTUS : TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS;
+  if (muistuttajaIdsForLahetystilaUpdate) {
+    await Promise.all(
+      muistuttajaIdsForLahetystilaUpdate.map((muistuttajaId) =>
+        paivitaLahetysStatus({
+          ...commonParams,
+          omistaja: false,
+          tila: tilaForOtherEntities,
+          id: muistuttajaId,
+          lahetysaika,
+        })
+      )
+    );
+  }
+  if (omistajaIdsForLahetystilaUpdate) {
+    await Promise.all(
+      omistajaIdsForLahetystilaUpdate.map((omistajaId) =>
+        paivitaLahetysStatus({
+          ...commonParams,
+          omistaja: true,
+          tila: tilaForOtherEntities,
+          id: omistajaId,
+          lahetysaika,
+        })
+      )
+    );
+  }
+}
+
+type PaivitaLahetysStatusParameter = {
+  oid: string;
+  id: string;
+  omistaja: boolean;
+  tila: TiedotettavanLahetyksenTila;
+  approvalType: PublishOrExpireEventType;
+  lahetysaika: string;
+  traceId?: string;
+};
+
+async function paivitaLahetysStatus({ oid, id, omistaja, tila, approvalType, traceId, lahetysaika }: PaivitaLahetysStatusParameter) {
   const params = new UpdateCommand({
     TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
@@ -175,9 +225,7 @@ async function paivitaLahetysStatus(
     UpdateExpression: "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
     ExpressionAttributeNames: { "#l": "lahetykset" },
     ExpressionAttributeValues: {
-      ":status": [
-        { tila: success ? "OK" : "VIRHE", lahetysaika: nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ), tyyppi: approvalType, traceId },
-      ],
+      ":status": [{ tila, lahetysaika, tyyppi: approvalType, traceId }],
       ":tyhjalista": [],
     },
   });
@@ -427,7 +475,23 @@ export function parseTraceId(text: string | undefined) {
   return text.substring(idx + traceId.length);
 }
 
-async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaja: boolean, tyyppi: PublishOrExpireEventType) {
+type LahetaPdfViestiParameters = {
+  projektiFromDB: DBProjekti;
+  kohde: Kohde;
+  omistaja: boolean;
+  tyyppi: PublishOrExpireEventType;
+  muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
+  omistajaIdsForLahetystilaUpdate: string[] | undefined;
+};
+
+async function lahetaPdfViesti({
+  projektiFromDB,
+  kohde,
+  omistaja,
+  tyyppi,
+  muistuttajaIdsForLahetystilaUpdate,
+  omistajaIdsForLahetystilaUpdate,
+}: LahetaPdfViestiParameters) {
   try {
     const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
     if (!pdf) {
@@ -463,7 +527,16 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
         traceId,
       });
-      await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, true, tyyppi, traceId);
+      await paivitaTiedotettavanLahetysStatukset({
+        oid: projektiFromDB.oid,
+        id: kohde.id,
+        omistaja,
+        tila: TiedotettavanLahetyksenTila.OK,
+        approvalType: tyyppi,
+        traceId,
+        muistuttajaIdsForLahetystilaUpdate,
+        omistajaIdsForLahetystilaUpdate,
+      });
     } else {
       auditLog.info("Suomi.fi pdf-viestin lähetys epäonnistui", {
         omistajaId: omistaja ? kohde.id : undefined,
@@ -475,7 +548,15 @@ async function lahetaPdfViesti(projektiFromDB: DBProjekti, kohde: Kohde, omistaj
       throw new Error("Suomi.fi pdf-viestin lähetys epäonnistui: " + resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
     }
   } catch (e) {
-    await paivitaLahetysStatus(projektiFromDB.oid, kohde.id, omistaja, false, tyyppi);
+    await paivitaTiedotettavanLahetysStatukset({
+      oid: projektiFromDB.oid,
+      id: kohde.id,
+      omistaja,
+      tila: TiedotettavanLahetyksenTila.VIRHE,
+      approvalType: tyyppi,
+      muistuttajaIdsForLahetystilaUpdate,
+      omistajaIdsForLahetystilaUpdate,
+    });
     throw e;
   }
 }
@@ -535,7 +616,21 @@ async function getKohde(oid: string, id: string, omistaja: boolean): Promise<DBK
   return { kohde, projekti };
 }
 
-async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: PublishOrExpireEventType) {
+type HandleMuistuttajaParams = {
+  oid: string;
+  muistuttajaId: string;
+  tyyppi: PublishOrExpireEventType | undefined;
+  muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
+  omistajaIdsForLahetystilaUpdate: string[] | undefined;
+};
+
+async function handleMuistuttaja({
+  oid,
+  muistuttajaId,
+  tyyppi,
+  muistuttajaIdsForLahetystilaUpdate,
+  omistajaIdsForLahetystilaUpdate,
+}: HandleMuistuttajaParams) {
   const kohde = await getKohde(oid, muistuttajaId, false);
   if (!kohde) {
     return;
@@ -544,9 +639,9 @@ async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: Pu
   if (tyyppi === undefined) {
     await lahetaViesti(muistuttaja, kohde.projekti);
   } else if (isMuistuttujanTiedotOk(muistuttaja)) {
-    await lahetaPdfViesti(
-      kohde.projekti,
-      {
+    await lahetaPdfViesti({
+      projektiFromDB: kohde.projekti,
+      kohde: {
         id: muistuttaja.id,
         nimi: `${muistuttaja.etunimi} ${muistuttaja.sukunimi}`,
         lahiosoite: muistuttaja.lahiosoite!,
@@ -555,25 +650,49 @@ async function handleMuistuttaja(oid: string, muistuttajaId: string, tyyppi?: Pu
         hetu: muistuttaja.henkilotunnus!,
         maakoodi: muistuttaja.maakoodi ? muistuttaja.maakoodi : "FI",
       },
-      false,
-      tyyppi
-    );
+      omistaja: false,
+      tyyppi,
+      muistuttajaIdsForLahetystilaUpdate,
+      omistajaIdsForLahetystilaUpdate,
+    });
   } else {
     auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
-    await paivitaLahetysStatus(muistuttaja.oid, muistuttaja.id, false, false, tyyppi);
+    await paivitaTiedotettavanLahetysStatukset({
+      oid: muistuttaja.oid,
+      id: muistuttaja.id,
+      omistaja: false,
+      tila: TiedotettavanLahetyksenTila.VIRHE,
+      approvalType: tyyppi,
+      muistuttajaIdsForLahetystilaUpdate,
+      omistajaIdsForLahetystilaUpdate,
+    });
   }
 }
 
-async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOrExpireEventType) {
+type HandleOmistajaParams = {
+  oid: string;
+  omistajaId: string;
+  tyyppi: PublishOrExpireEventType;
+  muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
+  omistajaIdsForLahetystilaUpdate: string[] | undefined;
+};
+
+async function handleOmistaja({
+  oid,
+  omistajaId,
+  tyyppi,
+  muistuttajaIdsForLahetystilaUpdate,
+  omistajaIdsForLahetystilaUpdate,
+}: HandleOmistajaParams) {
   const kohde = await getKohde(oid, omistajaId, true);
   if (!kohde) {
     return;
   }
   const omistaja = kohde.kohde as DBOmistaja;
   if (isOmistajanTiedotOk(omistaja)) {
-    await lahetaPdfViesti(
-      kohde.projekti,
-      {
+    await lahetaPdfViesti({
+      projektiFromDB: kohde.projekti,
+      kohde: {
         id: omistaja.id,
         nimi: omistaja.nimi ? omistaja.nimi : `${omistaja.etunimet?.split(" ")[0]} ${omistaja.sukunimi}`,
         lahiosoite: omistaja.jakeluosoite!,
@@ -583,12 +702,22 @@ async function handleOmistaja(oid: string, omistajaId: string, tyyppi: PublishOr
         ytunnus: omistaja.ytunnus,
         maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
       },
-      true,
-      tyyppi
-    );
+      omistaja: true,
+      tyyppi,
+      muistuttajaIdsForLahetystilaUpdate,
+      omistajaIdsForLahetystilaUpdate,
+    });
   } else {
     auditLog.info("Omistajalta puuttuu pakollisia tietoja", { omistajaId: omistaja.id });
-    await paivitaLahetysStatus(omistaja.oid, omistaja.id, true, false, tyyppi);
+    await paivitaTiedotettavanLahetysStatukset({
+      oid: omistaja.oid,
+      id: omistaja.id,
+      omistaja: true,
+      tila: TiedotettavanLahetyksenTila.VIRHE,
+      approvalType: tyyppi,
+      muistuttajaIdsForLahetystilaUpdate,
+      omistajaIdsForLahetystilaUpdate,
+    });
   }
 }
 
@@ -610,9 +739,21 @@ async function handleSqsEvent(event: SQSEvent) {
       const msg = JSON.parse(record.body) as SuomiFiSanoma;
       log.info("Suomi.fi sanoma", { sanoma: msg });
       if (msg.omistajaId && msg.tyyppi) {
-        await handleOmistaja(msg.oid, msg.omistajaId, msg.tyyppi);
+        await handleOmistaja({
+          oid: msg.oid,
+          omistajaId: msg.omistajaId,
+          tyyppi: msg.tyyppi,
+          muistuttajaIdsForLahetystilaUpdate: msg.muistuttajaIdsForLahetystilaUpdate,
+          omistajaIdsForLahetystilaUpdate: msg.omistajaIdsForLahetystilaUpdate,
+        });
       } else if (msg.muistuttajaId) {
-        await handleMuistuttaja(msg.oid, msg.muistuttajaId, msg.tyyppi);
+        await handleMuistuttaja({
+          oid: msg.oid,
+          muistuttajaId: msg.muistuttajaId,
+          tyyppi: msg.tyyppi,
+          muistuttajaIdsForLahetystilaUpdate: msg.muistuttajaIdsForLahetystilaUpdate,
+          omistajaIdsForLahetystilaUpdate: msg.omistajaIdsForLahetystilaUpdate,
+        });
       } else {
         log.error("Suomi.fi sanoma virheellinen", { sanoma: msg });
       }
@@ -643,28 +784,46 @@ export const handleEvent = async (event: SuomifiEvent) => {
   await wrapXRayAsync("handler", handlerFactory(event));
 };
 
-async function haeUniqueKiinteistonOmistajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
-  const dbOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projektiFromDB.oid);
-  for (const omistaja of dbOmistajat.filter((o) => o.suomifiLahetys)) {
-    if (omistaja.henkilotunnus && !uniqueIds.has(omistaja.henkilotunnus)) {
-      uniqueIds.set(omistaja.henkilotunnus, omistaja.id);
-    } else if (omistaja.ytunnus && !uniqueIds.has(omistaja.ytunnus)) {
-      uniqueIds.set(omistaja.ytunnus, omistaja.id);
-    }
+type TiedotettavaToTiedotusMap = Map<
+  string,
+  {
+    kiinteistonOmistajaIds: string[];
+    muistuttajaIds: string[];
   }
-  return [...uniqueIds.values()];
+>;
+
+async function paivitaMapKiinteistonOmistajilla(projektiFromDB: DBProjekti, tiedotettavaMap: TiedotettavaToTiedotusMap): Promise<void> {
+  const dbOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projektiFromDB.oid);
+  dbOmistajat
+    .filter((o) => o.suomifiLahetys)
+    .forEach((omistaja) => {
+      const tunnus = omistaja.henkilotunnus ?? omistaja.ytunnus;
+      if (!tunnus) {
+        log.warn("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta tiedottamiseen. Tiedotusta ei pystytä tekemään.", {
+          id: omistaja.id,
+        });
+        return;
+      }
+      const tiedotettavanRivit =
+        tiedotettavaMap.get(tunnus) ?? tiedotettavaMap.set(tunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(tunnus)!;
+      tiedotettavanRivit.kiinteistonOmistajaIds.push(omistaja.id);
+    });
 }
 
-async function haeUniqueMuistuttajaIds(projektiFromDB: DBProjekti, uniqueIds: Map<string, string>) {
+async function paivitaMapMuistuttajilla(projektiFromDB: DBProjekti, tiedotettavaMap: TiedotettavaToTiedotusMap): Promise<void> {
   const dbMuistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projektiFromDB.oid);
-  const newIds: string[] = [];
-  for (const muistuttaja of dbMuistuttajat.filter((m) => m.suomifiLahetys)) {
-    if (muistuttaja.henkilotunnus && !uniqueIds.has(muistuttaja.henkilotunnus)) {
-      uniqueIds.set(muistuttaja.henkilotunnus, muistuttaja.id);
-      newIds.push(muistuttaja.id);
-    }
-  }
-  return newIds;
+  dbMuistuttajat
+    .filter((m) => m.suomifiLahetys)
+    .forEach((muistuttaja) => {
+      if (!muistuttaja.henkilotunnus) {
+        log.warn("Suomi.fi tiedotettavalla ei ole henkilötunnusta tiedottamiseen. Tiedotusta ei pystytä tekemään.", { id: muistuttaja.id });
+        return;
+      }
+      const tiedotettavanRivit =
+        tiedotettavaMap.get(muistuttaja.henkilotunnus) ??
+        tiedotettavaMap.set(muistuttaja.henkilotunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(muistuttaja.henkilotunnus)!;
+      tiedotettavanRivit.muistuttajaIds.push(muistuttaja.id);
+    });
 }
 
 const OMISTAJA_PREFIX = "omistaja-";
@@ -672,17 +831,34 @@ const MUISTUTTAJA_PREFIX = "muistuttaja-";
 export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: PublishOrExpireEventType) {
   if (await parameters.isSuomiFiViestitIntegrationEnabled()) {
     const viestit: SendMessageBatchRequestEntry[] = [];
-    const uniqueIds: Map<string, string> = new Map();
-    (await haeUniqueKiinteistonOmistajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-      const msg: SuomiFiSanoma = { omistajaId: id, tyyppi, oid: projektiFromDB.oid };
-      viestit.push({ Id: OMISTAJA_PREFIX + id, MessageBody: JSON.stringify(msg) });
-    });
+
+    const tiedotettavaToTiedotus: TiedotettavaToTiedotusMap = new Map();
+    await paivitaMapKiinteistonOmistajilla(projektiFromDB, tiedotettavaToTiedotus);
     if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
-      (await haeUniqueMuistuttajaIds(projektiFromDB, uniqueIds)).forEach((id) => {
-        const msg: SuomiFiSanoma = { muistuttajaId: id, tyyppi, oid: projektiFromDB.oid };
-        viestit.push({ Id: MUISTUTTAJA_PREFIX + id, MessageBody: JSON.stringify(msg) });
-      });
+      await paivitaMapMuistuttajilla(projektiFromDB, tiedotettavaToTiedotus);
     }
+    tiedotettavaToTiedotus.forEach(({ kiinteistonOmistajaIds, muistuttajaIds }) => {
+      const isOmistaja = !!kiinteistonOmistajaIds.length;
+      const omistajaId = isOmistaja ? kiinteistonOmistajaIds.shift() : undefined;
+      const muistuttajaId = !isOmistaja ? muistuttajaIds.shift() : undefined;
+      if (!omistajaId && !muistuttajaId) {
+        //Ei pitäisi tapahtua
+        log.warn("Suomi.fi tiedotettavalla ei ole kiinteistöjä tai muistutuksia. Tiedottamista ei voida tehdä.");
+        return;
+      }
+      const msg: SuomiFiSanoma = {
+        omistajaId,
+        muistuttajaId,
+        tyyppi,
+        oid: projektiFromDB.oid,
+        muistuttajaIdsForLahetystilaUpdate: muistuttajaIds,
+        omistajaIdsForLahetystilaUpdate: kiinteistonOmistajaIds,
+      };
+
+      const Id = isOmistaja ? OMISTAJA_PREFIX + omistajaId : MUISTUTTAJA_PREFIX + muistuttajaId;
+
+      viestit.push({ Id, MessageBody: JSON.stringify(msg) });
+    });
     if (viestit.length > 0) {
       for (const viestitChunk of chunkArray(viestit, 10)) {
         const response = await getSQS().sendMessageBatch({ QueueUrl: await parameters.getSuomiFiSQSUrl(), Entries: viestitChunk });

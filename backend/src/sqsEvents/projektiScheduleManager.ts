@@ -261,7 +261,8 @@ abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheSchedul
 }
 
 const HYVAKSYMISPAATOS_VAIHE = "HyvaksymisPaatosVaihe";
-
+const JATKOPAATOS1_VAIHE = "JatkoPaatos1Vaihe";
+const JATKOPAATOS2_VAIHE = "JatkoPaatos2Vaihe";
 export class HyvaksymisPaatosVaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
@@ -272,19 +273,21 @@ export class HyvaksymisPaatosVaiheScheduleManager extends AbstractHyvaksymisPaat
 export class JatkoPaatos1VaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "JatkoPaatos1Vaihe", "JATKOPAATOS1VAIHE", JATKOPAATOS_DURATION);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, JATKOPAATOS1_VAIHE, "JATKOPAATOS1VAIHE", JATKOPAATOS_DURATION);
   }
 }
 
 export class JatkoPaatos2VaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "JatkoPaatos2Vaihe", "JATKOPAATOS2VAIHE", JATKOPAATOS_DURATION);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, JATKOPAATOS2_VAIHE, "JATKOPAATOS2VAIHE", JATKOPAATOS_DURATION);
   }
 }
 
 const KUULUTUSVAIHE_PAATTYY = " kuulutusvaihe päättyy";
 export const HYVAKSYMISPAATOS_VAIHE_PAATTYY = HYVAKSYMISPAATOS_VAIHE + KUULUTUSVAIHE_PAATTYY;
+export const JATKOPAATOS1_VAIHE_PAATTYY = JATKOPAATOS1_VAIHE + KUULUTUSVAIHE_PAATTYY;
+export const JATKOPAATOS2_VAIHE_PAATTYY = JATKOPAATOS2_VAIHE + KUULUTUSVAIHE_PAATTYY;
 
 function getPublishExpireScheduleForVaiheJulkaisut(
   julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,

@@ -23,6 +23,8 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
   if (!kielitiedot) {
     return <></>;
   }
+
+  const viimeisinJulkaisu = projekti?.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut?.length - 1];
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
@@ -41,7 +43,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
+            <PreWrapParagraph>{viimeisinJulkaisu?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
         )}
         {toissijainenKaannettavaKieli && (
@@ -54,7 +56,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
+            <PreWrapParagraph>{viimeisinJulkaisu?.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
         )}
       </Section>
@@ -69,9 +71,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <PreWrapParagraph>
-              {projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[ensisijainenKaannettavaKieli] || "- "}
-            </PreWrapParagraph>
+            <PreWrapParagraph>{viimeisinJulkaisu?.suunnittelunEteneminenJaKesto?.[ensisijainenKaannettavaKieli] || "- "}</PreWrapParagraph>
           </SectionContent>
         )}
         {toissijainenKaannettavaKieli && (
@@ -84,9 +84,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <PreWrapParagraph>
-              {projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[toissijainenKaannettavaKieli] || "- "}
-            </PreWrapParagraph>
+            <PreWrapParagraph>{viimeisinJulkaisu?.suunnittelunEteneminenJaKesto?.[toissijainenKaannettavaKieli] || "- "}</PreWrapParagraph>
           </SectionContent>
         )}
       </Section>
@@ -101,7 +99,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <p>{projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta?.[ensisijainenKaannettavaKieli] || "- "}</p>
+            <p>{viimeisinJulkaisu?.arvioSeuraavanVaiheenAlkamisesta?.[ensisijainenKaannettavaKieli] || "- "}</p>
           </SectionContent>
         )}
         {toissijainenKaannettavaKieli && (
@@ -114,17 +112,17 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
                 required: true,
               })}
             </p>
-            <p>{projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta?.[toissijainenKaannettavaKieli] || "- "}</p>
+            <p>{viimeisinJulkaisu?.arvioSeuraavanVaiheenAlkamisesta?.[toissijainenKaannettavaKieli] || "- "}</p>
           </SectionContent>
         )}
       </Section>
-      {projekti.vuorovaikutusKierros && (
+      {viimeisinJulkaisu && (
         <>
           <Section>
             <SectionContent>
               <p className="vayla-label">Videoesittely</p>
-              {!!projekti.vuorovaikutusKierros?.videot?.length && projekti.vuorovaikutusKierros.videot[0].SUOMI.url ? (
-                projekti.vuorovaikutusKierros.videot.map((video) => (
+              {!!viimeisinJulkaisu?.videot?.length && viimeisinJulkaisu.videot[0].SUOMI.url ? (
+                viimeisinJulkaisu.videot.map((video) => (
                   <>
                     {ensisijainenKaannettavaKieli && (
                       <div key={video?.[ensisijainenKaannettavaKieli]?.url} style={{ marginTop: "0.4rem" }}>
@@ -150,8 +148,8 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
 
             <SectionContent>
               <p className="vayla-label">Esittelyaineistot</p>
-              {!!projekti.vuorovaikutusKierros?.esittelyaineistot?.length ? (
-                projekti.vuorovaikutusKierros.esittelyaineistot.map((aineisto) => (
+              {!!viimeisinJulkaisu?.esittelyaineistot?.length ? (
+                viimeisinJulkaisu.esittelyaineistot.map((aineisto) => (
                   <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                     <Link underline="none" href={aineisto.tiedosto || "#"}>
                       {aineisto.nimi}
@@ -164,8 +162,8 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
             </SectionContent>
             <SectionContent>
               <p className="vayla-label">Suunnitelmaluonnokset</p>
-              {!!projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.length ? (
-                projekti.vuorovaikutusKierros.suunnitelmaluonnokset.map((aineisto) => (
+              {!!viimeisinJulkaisu?.suunnitelmaluonnokset?.length ? (
+                viimeisinJulkaisu.suunnitelmaluonnokset.map((aineisto) => (
                   <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
                     <Link underline="none" href={aineisto.tiedosto || "#"}>
                       {aineisto.nimi}
@@ -180,7 +178,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
             <SectionContent>
               <p className="vayla-label">Muu esittelymateriaali</p>
               {ensisijainenKaannettavaKieli &&
-                projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => (
+                viimeisinJulkaisu?.suunnittelumateriaali?.map((link) => (
                   <React.Fragment key={link[ensisijainenKaannettavaKieli]?.nimi}>
                     {ensisijainenKaannettavaKieli && link[ensisijainenKaannettavaKieli]?.nimi ? (
                       <>
