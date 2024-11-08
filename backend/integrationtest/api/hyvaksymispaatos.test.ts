@@ -37,6 +37,9 @@ describe("Hyväksymispäätös", () => {
   });
 
   it("suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     const dbProjekti = await createSaameProjektiToVaihe(Status.HYVAKSYMISMENETTELYSSA);
     const { oid } = dbProjekti;
 
