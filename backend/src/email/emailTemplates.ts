@@ -615,10 +615,10 @@ export function createEnnakkoNeuvotteluViranomaisilleEmail(
     cc.push(muokkaajaEmail);
   }
   return {
-    subject: `Ennakkoneuvottelu ${projekti.velho?.nimi}`,
+    subject: `Ennakkotarkastus/ennakkoneuvottelu ${projekti.velho?.nimi}`,
     text: `${viranomainen} lähettää suunnitelman ${
       projekti.velho?.nimi
-    } ennakkoneuvottelua varten Traficomiin. Suunnitelman ennakkoneuvotteluaineisto löytyy oheisen linkin takaa ${url.href}.
+    } ennakkotarkastusta/ennakkoneuvottelua varten. Suunnitelman aineisto löytyy oheisen linkin takaa ${url.href}.
 
 Lisätiedot 
 

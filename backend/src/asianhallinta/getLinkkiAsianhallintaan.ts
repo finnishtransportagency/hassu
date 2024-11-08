@@ -1,13 +1,12 @@
 import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
 import { parameters } from "../aws/parameters";
 import { DBProjekti } from "../database/model";
-import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 
 type LinkkiAsianhallintaanFunc = (projekti: Pick<DBProjekti, "asianhallinta" | "velho">) => Promise<string | undefined>;
 
 export const getLinkkiAsianhallintaan: LinkkiAsianhallintaanFunc = async (projekti) => {
   const asiaId = projekti.asianhallinta?.asiaId;
-  if (!asiaId || !(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
+  if (!asiaId) {
     return undefined;
   }
   const baseUrl = isVaylaAsianhallinta(projekti) ? await parameters.getAshaBaseUrl() : await parameters.getUspaBaseUrl();
