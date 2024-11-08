@@ -9,7 +9,6 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   GetObjectCommandOutput,
-  GetObjectOutput,
   HeadObjectCommand,
   ListObjectsV2Command,
   ListObjectsV2CommandOutput,
@@ -35,6 +34,7 @@ import Mail from "nodemailer/lib/mailer";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import fileValidation from "hassu-common/fileValidationSettings";
 import { adaptFileName, joinPath } from "../tiedostot/paths";
+import adaptS3ObjectOutputToMailAttachment from "./adaptS3ObjectToMailAttachment";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -543,37 +543,15 @@ export class FileService {
     return result;
   }
 
-  private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
+  async getFileContentLength(bucketName: string, key: string): Promise<number | undefined> {
+    const headObject = await FileService.getHeadObject(bucketName, key);
+    return headObject?.ContentLength;
+  }
+
+  private static async getHeadObject(bucketName: string, key: string) {
+    const keyWithoutLeadingSlash = key.replace(/^\//, "");
     try {
-      const keyWithoutLeadingSlash = key.replace(/^\//, "");
-      const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
-      // metadatan parempi olla olemassa
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const metadata: S3.Metadata = headObject.Metadata;
-      const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
-      const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
-      const fileType = metadata[S3_METADATA_FILE_TYPE];
-      const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
-      const result: FileMetadata = new FileMetadata();
-      result.checksum = headObject.ETag;
-
-      result.ContentDisposition = headObject.ContentDisposition;
-      result.ContentType = headObject.ContentType;
-
-      if (publishDate) {
-        result.publishDate = parseDate(publishDate);
-      }
-      if (expirationDate) {
-        result.expirationDate = parseDate(expirationDate);
-      }
-      if (fileType) {
-        result.fileType = fileType as FileType;
-      }
-      if (asiakirjaTyyppi) {
-        result.asiakirjaTyyppi = asiakirjaTyyppi;
-      }
-      return result;
+      return await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
     } catch (e) {
       if (e instanceof NotFound) {
         return undefined;
@@ -581,6 +559,46 @@ export class FileService {
       log.error(e);
       throw e;
     }
+  }
+
+  private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
+    const headObject = await FileService.getHeadObject(bucketName, key);
+    if (!headObject) {
+      return undefined;
+    }
+    // metadatan parempi olla olemassa
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const metadata: S3.Metadata = headObject.Metadata;
+    const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
+    const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
+    const fileType = metadata[S3_METADATA_FILE_TYPE];
+    const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
+    const result: FileMetadata = new FileMetadata();
+    result.checksum = headObject.ETag;
+
+    result.ContentDisposition = headObject.ContentDisposition;
+    result.ContentType = headObject.ContentType;
+    if (fileType) {
+      result.fileType = fileType as FileType;
+    }
+    if (asiakirjaTyyppi) {
+      result.asiakirjaTyyppi = asiakirjaTyyppi;
+    }
+
+    try {
+      if (publishDate) {
+        result.publishDate = parseDate(publishDate);
+      }
+      if (expirationDate) {
+        result.expirationDate = parseDate(expirationDate);
+      }
+    } catch (e) {
+      log.error(e);
+      throw e;
+    }
+
+    return result;
   }
 
   /**
@@ -678,38 +696,21 @@ export class FileService {
   }
 
   async getFileAsAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
-    log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
+    return (await this.getFileAsAttachmentAndItsSize(oid, key)).attachment;
+  }
 
-    function getFilenamePartFromKey(path: string): string {
-      return path.substring(path.lastIndexOf("/") + 1);
-    }
-
-    const getObjectParams = {
-      Bucket: config.yllapitoBucketName,
-      Key: FileService.getYllapitoProjektiDirectory(oid) + key,
-    };
+  async getFileAsAttachmentAndItsSize(
+    oid: string,
+    key: string
+  ): Promise<{ attachment: Mail.Attachment | undefined; size: number | undefined }> {
     try {
-      const output: GetObjectOutput = await getS3Client().send(new GetObjectCommand(getObjectParams));
-
-      if (output.Body instanceof Readable) {
-        let contentType = output.ContentType;
-        if (contentType == "null") {
-          contentType = undefined;
-        }
-        return {
-          filename: getFilenamePartFromKey(key),
-          contentDisposition: "attachment",
-          contentType: contentType ?? "application/octet-stream",
-          content: output.Body,
-        };
-      } else {
-        log.error("Liitetiedoston sisallossa ongelmia");
-      }
+      log.info("Haetaan s3:sta sähköpostiin liitetiedosto", { key });
+      const output = await this.getProjektiYllapitoS3Object(oid, key);
+      return { attachment: adaptS3ObjectOutputToMailAttachment(output, key), size: output.ContentLength };
     } catch (error) {
-      log.error("Virhe liitetiedostojen haussa", { error, getObjectParams });
+      log.error("Virhe liitetiedostojen haussa", { error });
     }
-
-    return Promise.resolve(undefined);
+    return { attachment: undefined, size: undefined };
   }
 }
 
