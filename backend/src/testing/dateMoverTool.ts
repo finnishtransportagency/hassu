@@ -11,7 +11,12 @@ import {
 import { testProjektiDatabase } from "../database/testProjektiDatabase";
 import { log } from "../logger";
 import { projektiSchedulerService } from "../sqsEvents/projektiSchedulerService";
-import { HYVAKSYMISPAATOS_VAIHE_PAATTYY, PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
+import {
+  HYVAKSYMISPAATOS_VAIHE_PAATTYY,
+  JATKOPAATOS1_VAIHE_PAATTYY,
+  JATKOPAATOS2_VAIHE_PAATTYY,
+  PublishOrExpireEventType,
+} from "../sqsEvents/projektiScheduleManager";
 
 class DateMoverTool {
   async ajansiirto(params: Pick<TestiKomentoInput, "oid" | "vaihe" | "ajansiirtoPaivina">) {
@@ -34,12 +39,17 @@ class DateMoverTool {
     if (deltaInDays !== 0) {
       siirraProjektinAikaa(projekti, deltaInDays);
       await testProjektiDatabase.saveProjekti(projekti);
-      const sendTraficomMessage = params.vaihe === TestiKomentoVaihe.HYVAKSYMISVAIHE;
-      await projektiSchedulerService.synchronizeProjektiFiles(
-        params.oid,
-        PublishOrExpireEventType.EXPIRE,
-        sendTraficomMessage ? HYVAKSYMISPAATOS_VAIHE_PAATTYY : undefined
-      );
+      let reason;
+      if (params.vaihe === TestiKomentoVaihe.HYVAKSYMISVAIHE) {
+        reason = HYVAKSYMISPAATOS_VAIHE_PAATTYY;
+      } else if (params.vaihe === TestiKomentoVaihe.JATKOPAATOS1VAIHE) {
+        reason = JATKOPAATOS1_VAIHE_PAATTYY;
+      } else if (params.vaihe === TestiKomentoVaihe.JATKOPAATOS2VAIHE) {
+        reason = JATKOPAATOS2_VAIHE_PAATTYY;
+      } else {
+        reason = undefined;
+      }
+      await projektiSchedulerService.synchronizeProjektiFiles(params.oid, PublishOrExpireEventType.EXPIRE, reason);
     }
   }
 

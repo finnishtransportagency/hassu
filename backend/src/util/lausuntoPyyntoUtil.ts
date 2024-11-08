@@ -19,12 +19,34 @@ export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   );
 }
 
+type PaatosVaihe = HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe | undefined;
+
 export function findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(
   projekti: Pick<DBProjekti, "hyvaksymisPaatosVaiheJulkaisut" | "hyvaksymisPaatosVaihe">
-): HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe | undefined {
+): PaatosVaihe {
   return (
     projekti.hyvaksymisPaatosVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
     projekti.hyvaksymisPaatosVaihe ??
+    undefined
+  );
+}
+
+export function findLatestJatko1paatosVaiheJulkaisu(
+  projekti: Pick<DBProjekti, "jatkoPaatos1VaiheJulkaisut" | "jatkoPaatos1Vaihe">
+): PaatosVaihe {
+  return (
+    projekti.jatkoPaatos1VaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
+    projekti.jatkoPaatos1Vaihe ??
+    undefined
+  );
+}
+
+export function findLatestJatko2paatosVaiheJulkaisu(
+  projekti: Pick<DBProjekti, "jatkoPaatos2VaiheJulkaisut" | "jatkoPaatos2Vaihe">
+): PaatosVaihe {
+  return (
+    projekti.jatkoPaatos2VaiheJulkaisut?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY).pop() ??
+    projekti.jatkoPaatos2Vaihe ??
     undefined
   );
 }

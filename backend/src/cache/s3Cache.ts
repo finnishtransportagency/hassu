@@ -13,7 +13,7 @@ export class S3Cache {
     this.cache = new NodeCache();
   }
 
-  async get<T>(key: string, ttlMillis: number, triggerUpdate: () => void, populateMissingData: () => Promise<T>): Promise<T> {
+  async get<T>(key: string, ttlMillis: number, triggerUpdate: () => Promise<void>, populateMissingData: () => Promise<T>): Promise<T> {
     const cachedData = this.cache.get(key);
     if (cachedData) {
       return cachedData as T;
@@ -22,7 +22,7 @@ export class S3Cache {
     const s3Object = await this.getS3Object<T>(key, ttlMillis);
     if (s3Object.expired) {
       log.info(`${key} expired, triggering update.`);
-      triggerUpdate();
+      await triggerUpdate();
     }
 
     if (s3Object.data) {

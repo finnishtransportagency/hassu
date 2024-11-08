@@ -21,16 +21,23 @@ import { AineistoMuokkausError } from "hassu-common/error";
 import { DBProjekti, LausuntoPyynnonTaydennys } from "../database/model";
 import { LausuntoPyynnonTaydennyksetTiedostoManager } from "../tiedostot/ProjektiTiedostoManager/LausuntoPyynnonTaydennysTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
-import { HYVAKSYMISPAATOS_VAIHE_PAATTYY, PublishOrExpireEventType } from "./projektiScheduleManager";
+import {
+  HYVAKSYMISPAATOS_VAIHE_PAATTYY,
+  JATKOPAATOS1_VAIHE_PAATTYY,
+  JATKOPAATOS2_VAIHE_PAATTYY,
+  PublishOrExpireEventType,
+} from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
 import { emailClient } from "../email/email";
-import { createKuukausiEpaaktiiviseenEmail } from "../email/emailTemplates";
+import { createKuukausiEpaaktiiviseenEmail, projektiPaallikkoJaVarahenkilotEmails } from "../email/emailTemplates";
 import {
   findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu,
   findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu,
+  findLatestJatko1paatosVaiheJulkaisu,
+  findLatestJatko2paatosVaiheJulkaisu,
 } from "../util/lausuntoPyyntoUtil";
 import { velho } from "../velho/velhoClient";
-import { linkHyvaksymisPaatos } from "hassu-common/links";
+import { linkHyvaksymisPaatos, linkJatkoPaatos1, linkJatkoPaatos2 } from "hassu-common/links";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -461,10 +468,11 @@ export const handlerFactory = (event: SQSEvent) => async () => {
         } else if (
           successfulSynchronization &&
           sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE &&
-          sqsEvent.reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY
+          sqsEvent.reason &&
+          [HYVAKSYMISPAATOS_VAIHE_PAATTYY, JATKOPAATOS1_VAIHE_PAATTYY, JATKOPAATOS2_VAIHE_PAATTYY].includes(sqsEvent.reason)
         ) {
-          // sähköposti Traficomille
-          await lahetaSahkopostiTraficom(projekti);
+          // sähköposti Traficomille, projektipäällikölle ja varahenkilölle
+          await lahetaVaihePaattynytSahkopostiTraficom(projekti, sqsEvent.reason);
         }
       }
       if (!successfulSynchronization) {
@@ -483,13 +491,36 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", handlerFactory(event));
 };
 
-async function lahetaSahkopostiTraficom(projekti: DBProjekti) {
-  log.info("Lähetetään sähköposti Traficomille");
-  const julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
-  const text = `Hei,
+async function lahetaVaihePaattynytSahkopostiTraficom(projekti: DBProjekti, reason: string) {
+  log.info("Lähetetään sähköposti Traficomille: " + reason);
+  let julkaisu;
+  let text;
+  let subject;
+  if (reason === HYVAKSYMISPAATOS_VAIHE_PAATTYY) {
+    julkaisu = findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(projekti);
+    text = `Hei,
 Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} hyväksymispäätöksen (${
-    projekti.kasittelynTila?.hyvaksymispaatos?.asianumero
-  }) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
+      projekti.kasittelynTila?.hyvaksymispaatos?.asianumero
+    }) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
 Linkki kuulutukseen Valtion liikenneväylien suunnittelu -palvelussa: ${linkHyvaksymisPaatos(projekti, API.Kieli.SUOMI)}`;
-  await emailClient.sendEmail({ to: "kirjaamo@traficom.fi", subject: "Hyväksymispäätöksen nähtävilläoloaika päättynyt", text });
+    subject = "Hyväksymispäätöksen nähtävilläoloaika päättynyt";
+  } else if (reason === JATKOPAATOS1_VAIHE_PAATTYY) {
+    julkaisu = findLatestJatko1paatosVaiheJulkaisu(projekti);
+    text = `Hei,
+Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} jatkopäätöksen (${
+      projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero
+    }) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
+Linkki kuulutukseen Valtion liikenneväylien suunnittelu -palvelussa: ${linkJatkoPaatos1(projekti, API.Kieli.SUOMI)}`;
+    subject = "Jatkopäätöksen nähtävilläoloaika päättynyt";
+  } else {
+    julkaisu = findLatestJatko2paatosVaiheJulkaisu(projekti);
+    text = `Hei,
+Tiedoksenne, että suunnitelman ${projekti.velho?.nimi} jatkopäätöksen (${
+      projekti.kasittelynTila?.toinenJatkopaatos?.asianumero
+    }) nähtävilläoloaika on päättynyt ${dayjs(julkaisu?.kuulutusVaihePaattyyPaiva).format("DD.MM.YYYY")}.
+Linkki kuulutukseen Valtion liikenneväylien suunnittelu -palvelussa: ${linkJatkoPaatos2(projekti, API.Kieli.SUOMI)}`;
+    subject = "Jatkopäätöksen nähtävilläoloaika päättynyt";
+  }
+  const to = ["kirjaamo@traficom.fi", ...projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet)];
+  await emailClient.sendEmail({ to, subject, text });
 }
