@@ -120,4 +120,5 @@ export const adaptVelhoAineistoToAineistoInput = (velhoAineisto: VelhoAineisto):
   nimi: velhoAineisto.tiedosto,
   tila: AineistoTila.ODOTTAA_TUONTIA,
   uuid: uuid.v4(),
+  koko: velhoAineisto.koko,
 });

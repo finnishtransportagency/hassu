@@ -20,6 +20,7 @@ import { EmailOptions } from "../../email/model/emailOptions";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { getProjektipaallikkoAndOrganisaatio } from "../../util/userUtil";
 import { translate } from "../../util/localization";
+import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
@@ -31,10 +32,10 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   }
 
   protected async sendEmailToMaakuntaliitto(
-    emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
-    projektinKielet: Kieli[],
-    projekti: DBProjekti
+    _emailCreator: HyvaksymisPaatosEmailCreator,
+    _julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    _projektinKielet: Kieli[],
+    _projekti: DBProjekti
   ): Promise<void> {}
 
   public async sendEmails(oid: string): Promise<void> {
@@ -58,6 +59,52 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
     return emailCreator.createHyvaksymispaatosHyvaksyttyViranomaisille();
+  }
+
+  protected async getMandatoryProjektiFileAsAttachmentAndItsSize(
+    filepath: string | undefined | null,
+    projekti: DBProjekti,
+    logInfo: string
+  ): Promise<{
+    attachment: Mail.Attachment;
+    size: number | undefined;
+  }> {
+    if (!filepath) {
+      throw new Error(`emailAttachmentError: Polku tiedostolle '${logInfo}' on määrittelemättä.`);
+    }
+    const { attachment, size } = await fileService.getFileAsAttachmentAndItsSize(projekti.oid, filepath);
+    if (!attachment) {
+      throw new Error(`emailAttachmentError: Polusta '${filepath}' ei löytynyt tiedostoa.`);
+    }
+    return { attachment, size };
+  }
+
+  protected async getPaatostiedostotAsAttachments(
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    projekti: DBProjekti
+  ): Promise<Mail.Attachment[]> {
+    const attachmentsAndSizes = await Promise.all(
+      (julkaisu.hyvaksymisPaatos ?? []).map(
+        async (aineisto) =>
+          await this.getMandatoryProjektiFileAsAttachmentAndItsSize(aineisto.tiedosto, projekti, `oid:${aineisto.dokumenttiOid}`)
+      )
+    );
+
+    // 30MB
+    const maximumCombinedSize = 30 * 1024 * 1024;
+
+    const combinedFileSize = attachmentsAndSizes.reduce((combinedFileSize, { size = 0 }) => (combinedFileSize += size), 0);
+
+    if (combinedFileSize > maximumCombinedSize) {
+      log.info("Päätöstiedostojen koko ylittää sallitun 30 Mt rajan. Jätetään päätöstiedostot pois liitteistä.", {
+        combinedFileSize,
+        maximumCombinedSize,
+        tiedostot: attachmentsAndSizes.map(({ attachment }) => attachment.filename).filter((filename): filename is string => !!filename),
+      });
+      return [];
+    }
+
+    return attachmentsAndSizes.map(({ attachment }) => attachment);
   }
 
   protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
@@ -108,16 +155,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot =
-      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
-          aineisto.tiedosto,
-          projekti,
-          `oid:${aineisto.dokumenttiOid}`
-        );
-        (await tiedostot).push(aineistoTiedosto);
-        return tiedostot;
-      }, Promise.resolve([]))) ?? [];
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
     const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
 
@@ -200,16 +238,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
         (await lahetettavatPDFt).push(...attachments);
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot =
-      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
-          aineisto.tiedosto,
-          projekti,
-          `oid:${aineisto.dokumenttiOid}`
-        );
-        (await tiedostot).push(aineistoTiedosto);
-        return tiedostot;
-      }, Promise.resolve([]))) ?? [];
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
     const virasto =
       projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
         ? "Väyläviraston"
