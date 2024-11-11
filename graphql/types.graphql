@@ -1392,6 +1392,9 @@ type KasittelynTila {
   korkeinHallintoOikeus: OikeudenPaatos
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 type OikeudenPaatos {

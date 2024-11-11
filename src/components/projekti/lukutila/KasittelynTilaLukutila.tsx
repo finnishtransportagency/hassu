@@ -6,9 +6,20 @@ import { formatDateIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateU
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { H3 } from "../../Headings";
+import { ProjektiTyyppi } from "@services/api";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
+}
+
+function formatBoolean(luotu?: boolean | null) {
+  if (luotu === true) {
+    return "Kyllä";
+  } else if (luotu === false) {
+    return "Ei";
+  } else {
+    return "-";
+  }
 }
 
 export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): ReactElement {
@@ -70,36 +81,55 @@ export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): R
           <p className="md:col-span-1 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.lainvoimaAlkaen)}</p>
           <p className="md:col-span-3 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.lainvoimaPaattyen)}</p>
         </div>
+        {projekti.velho.tyyppi === ProjektiTyyppi.YLEINEN && (
+          <>
+            <h4 className="vayla-small-title">Tie- tai ratasuunnitelman laatiminen</h4>
+            <ContentSpacer>
+              <h4 className="vayla-label">Onko yleissuunnitelmasta luotu tie- tai ratasuunnitelmaa?</h4>
+              <p>{formatBoolean(projekti.kasittelynTila?.tieRatasuunnitelmaLuotu)}</p>
+              <p className="vayla-label">Laaditun suunnitelman lisätiedot</p>
+              <PreWrapParagraph>{projekti.kasittelynTila?.laaditunSuunnitelmanLisatiedot ?? "-"}</PreWrapParagraph>
+              <p className="vayla-label">Suunnitelman raukeaminen</p>
+              <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.suunnitelmaRauennut)}</p>
+            </ContentSpacer>
+          </>
+        )}
       </Section>
-      <Section>
-        <h3 className="vayla-subtitle">Väylätoimitus</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-4">Toimitus käynnistynyt</p>
-          <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toimitusKaynnistynyt)}</p>
-        </div>
-        <h3 className="vayla-subtitle">Liikenteelleluovutus</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-4">Osaluovutus</p>
-          <p className="md:col-span-4 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.liikenteeseenluovutusOsittain)}
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-4">Kokoluovutus</p>
-          <p className="md:col-span-4 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.liikenteeseenluovutusKokonaan)}
-          </p>
-        </div>
-        <h3 className="vayla-subtitle">Ratasuunnitelman toteutusilmoitus</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-4">Osatoteutus</p>
-          <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusOsittain)}</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-4">Kokototeutus</p>
-          <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}</p>
-        </div>
-      </Section>
+      {projekti.velho.tyyppi !== ProjektiTyyppi.YLEINEN && (
+        <Section>
+          <h3 className="vayla-subtitle">Väylätoimitus</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-4">Toimitus käynnistynyt</p>
+            <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toimitusKaynnistynyt)}</p>
+          </div>
+          <h3 className="vayla-subtitle">Liikenteelleluovutus</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-4">Osaluovutus</p>
+            <p className="md:col-span-4 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.liikenteeseenluovutusOsittain)}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-4">Kokoluovutus</p>
+            <p className="md:col-span-4 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.liikenteeseenluovutusKokonaan)}
+            </p>
+          </div>
+          <h3 className="vayla-subtitle">Ratasuunnitelman toteutusilmoitus</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-4">Osatoteutus</p>
+            <p className="md:col-span-4 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusOsittain)}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-4">Kokototeutus</p>
+            <p className="md:col-span-4 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}
+            </p>
+          </div>
+        </Section>
+      )}
       <Section>
         <h3 className="vayla-subtitle">Jatkopäätös</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
