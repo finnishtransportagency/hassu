@@ -1111,6 +1111,7 @@ Object {
         "projektinNimiVieraskielella": "Projektin nimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
+      "kopioituToiseltaProjektilta": undefined,
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
         "__typename": "KuulutusPDFJulkinen",

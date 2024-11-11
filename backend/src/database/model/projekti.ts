@@ -82,6 +82,7 @@ export type AloitusKuulutusJulkaisu = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   asianhallintaEventId?: string | null;
+  kopioituToiseltaProjektilta?: boolean | null;
 };
 
 export type SuunnitteluSopimus = {

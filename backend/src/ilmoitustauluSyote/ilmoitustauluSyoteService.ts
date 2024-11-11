@@ -78,7 +78,7 @@ class IlmoitustauluSyoteService {
     julkaisuVaihe: JulkaisuVaiheIndexPart,
     uiOtsikkoPath: string
   ) {
-    if (julkaisu?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
+    if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && !julkaisu.kopioituToiseltaProjektilta) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForJulkaisu(oid, julkaisuVaihe, julkaisu.kuulutusPaiva, kieli),
@@ -89,7 +89,7 @@ class IlmoitustauluSyoteService {
   }
 
   private async indexVuorovaikutusKierrokset(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    if (projekti.vuorovaikutukset && projekti.vuorovaikutukset.tila === VuorovaikutusKierrosTila.JULKINEN) {
+    if (projekti.vuorovaikutukset?.tila === VuorovaikutusKierrosTila.JULKINEN && !projekti.vuorovaikutukset.kopioituToiseltaProjektilta) {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForJulkaisu(

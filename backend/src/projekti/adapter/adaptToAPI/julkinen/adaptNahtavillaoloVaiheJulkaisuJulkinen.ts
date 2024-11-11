@@ -40,6 +40,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
     tila,
     uudelleenKuulutus,
     nahtavillaoloSaamePDFt,
+    kopioituToiseltaProjektilta,
   } = julkaisu;
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
@@ -47,6 +48,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
       tila,
       velho: adaptVelhoJulkinen(velho),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      kopioituToiseltaProjektilta,
     };
   }
 
@@ -78,6 +80,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
+    kopioituToiseltaProjektilta,
   };
   if (apiAineistoNahtavilla) {
     julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;

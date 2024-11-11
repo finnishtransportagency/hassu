@@ -53,6 +53,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   asianhallintaEventId?: string | null;
   viimeinenVoimassaolovuosi?: string | null;
   maanomistajaluettelo?: string | null;
+  kopioituToiseltaProjektilta?: boolean | null;
 };
 
 export type HyvaksymisPaatosVaihePDF = {

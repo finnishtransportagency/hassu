@@ -31,13 +31,15 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
   if (!julkaisu) {
     return undefined;
   }
-  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
+  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus, kopioituToiseltaProjektilta } =
+    julkaisu;
   if (tila === API.KuulutusJulkaisuTila.MIGROITU) {
     return {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       tila,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelhoJulkinen(velho),
+      kopioituToiseltaProjektilta,
     };
   }
 
@@ -60,6 +62,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
     aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFtToAPI(aloituskuulutusPath, julkaisu.aloituskuulutusSaamePDFt, true),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
+    kopioituToiseltaProjektilta,
   };
 
   if (kieli) {

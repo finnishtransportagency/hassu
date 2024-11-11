@@ -78,6 +78,7 @@ export function adaptVuorovaikutusKierroksetJulkinen(dbProjekti: DBProjekti): AP
         viimeisinVuorovaikutusKierros.vuorovaikutusSaamePDFt,
         true
       ),
+      kopioituToiseltaProjektilta: viimeisinVuorovaikutusKierros.kopioituToiseltaProjektilta,
     };
     return vuorovaikutusJulkinen;
   } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {

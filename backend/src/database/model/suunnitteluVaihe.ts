@@ -58,6 +58,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   lahetekirje?: LadattuTiedosto | null;
   asianhallintaEventId?: string | null;
   selosteVuorovaikutuskierrokselle?: string | null;
+  kopioituToiseltaProjektilta?: boolean | null;
 };
 
 export type VuorovaikutusPDF = {

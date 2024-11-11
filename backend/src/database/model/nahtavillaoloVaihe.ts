@@ -53,6 +53,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   hyvaksymisPaiva?: string | null;
   asianhallintaEventId?: string | null;
   maanomistajaluettelo?: string | null;
+  kopioituToiseltaProjektilta?: boolean | null;
 };
 
 export type NahtavillaoloPDF = {

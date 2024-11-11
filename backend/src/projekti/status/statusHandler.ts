@@ -22,7 +22,10 @@ export abstract class StatusHandler<T> {
   }
 }
 
-export type HyvaksymisPaatosJulkaisuEndDateAndTila = Pick<HyvaksymisPaatosVaiheJulkaisu, "kuulutusVaihePaattyyPaiva" | "tila">;
+export type HyvaksymisPaatosJulkaisuEndDateAndTila = Pick<
+  HyvaksymisPaatosVaiheJulkaisu,
+  "kuulutusVaihePaattyyPaiva" | "tila" | "kopioituToiseltaProjektilta"
+>;
 
 /*
  * Handler to determine if given hyväksymispäätöskuulutusvaihe ended a year or 6 months ago
@@ -47,7 +50,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
   handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);
 
-    if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
+    if (hyvaksymisPaatosVaihe?.tila === KuulutusJulkaisuTila.MIGROITU && !hyvaksymisPaatosVaihe.kopioituToiseltaProjektilta) {
       p.status = this.epaAktiivisuusStatus;
       super.handle(p); // Continue evaluating next rules
       return;
@@ -59,7 +62,7 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
       const paatosDuration = this.isHyvaksymisPaatos ? HYVAKSYMISPAATOS_DURATION : JATKOPAATOS_DURATION;
       const hyvaksymisPaatosKuulutusPaattyyInThePast = isDateTimeInThePast(kuulutusVaihePaattyyPaiva, "end-of-day", paatosDuration);
 
-      if (hyvaksymisPaatosKuulutusPaattyyInThePast) {
+      if (hyvaksymisPaatosKuulutusPaattyyInThePast && !hyvaksymisPaatosVaihe.kopioituToiseltaProjektilta) {
         p.status = this.epaAktiivisuusStatus;
       }
       super.handle(p); // Continue evaluating next rules
