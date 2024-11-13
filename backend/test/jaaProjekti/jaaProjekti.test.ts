@@ -11,7 +11,7 @@ import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBPro
 import { Vaihe } from "hassu-common/graphql/apiModel";
 import { cloneDeep } from "lodash";
 import { velho as velhoClient } from "../../src/velho/velhoClient";
-import { PutCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, DynamoDBDocumentClientResolvedConfig, PutCommandOutput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { AwsStub, mockClient } from "aws-sdk-client-mock";
 import {
   CopyObjectCommand,
@@ -32,7 +32,7 @@ describe("jaaProjekti", () => {
   });
 
   it("should throw error if user is not authenticted", async () => {
-    await expect(jaaProjekti({ oid: "oid-123", targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
+    await expect(jaaProjekti({ oid: "oid-123", versio: 1, targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
       Error,
       "Väylä-kirjautuminen puuttuu"
     );
@@ -40,7 +40,7 @@ describe("jaaProjekti", () => {
 
   it("should throw error if user not admin", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await expect(jaaProjekti({ oid: "oid-123", targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
+    await expect(jaaProjekti({ oid: "oid-123", versio: 1, targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
       Error,
       "Sinulla ei ole admin-oikeuksia"
     );
@@ -50,7 +50,7 @@ describe("jaaProjekti", () => {
     userFixture.loginAs(UserFixture.hassuAdmin);
     const oid = "oid-123";
     sinon.stub(projektiDatabase, "loadProjektiByOid").returns(Promise.resolve(undefined));
-    await expect(jaaProjekti({ oid, targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
+    await expect(jaaProjekti({ oid, versio: 1, targetOid: "toinen-oid-234" })).to.eventually.be.rejectedWith(
       IllegalArgumentError,
       `Jaettavaa projektia ei löydy oid:lla '${oid}'`
     );
@@ -66,10 +66,9 @@ describe("jaaProjekti", () => {
       .returns(Promise.resolve(srcProjekti))
       .withArgs(targetProjekti.oid)
       .returns(Promise.resolve(targetProjekti));
-    await expect(jaaProjekti({ oid: srcProjekti.oid, targetOid: targetProjekti.oid })).to.eventually.be.rejectedWith(
-      IllegalArgumentError,
-      `Kohde projekti oid:lla '${targetProjekti.oid}' on jo VLS-järjestelmässä`
-    );
+    await expect(
+      jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjekti.oid })
+    ).to.eventually.be.rejectedWith(IllegalArgumentError, `Kohde projekti oid:lla '${targetProjekti.oid}' on jo VLS-järjestelmässä`);
   });
 
   it("should throw error if Velho-projekti does not exist with targetOid", async () => {
@@ -88,16 +87,17 @@ describe("jaaProjekti", () => {
       kayttoOikeudet: [],
     };
     sinon.stub(velhoClient, "loadProjekti").withArgs(targetProjektiOid).returns(Promise.resolve(targetProjektiFromVelho));
-    await expect(jaaProjekti({ oid: srcProjekti.oid, targetOid: targetProjektiOid })).to.eventually.be.rejectedWith(
-      Error,
-      `Kohde projektia oid:lla '${targetProjektiOid}' ei löydy Projektivelhosta`
-    );
+    await expect(
+      jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })
+    ).to.eventually.be.rejectedWith(Error, `Kohde projektia oid:lla '${targetProjektiOid}' ei löydy Projektivelhosta`);
   });
 
   describe("with admin user and correct parameters", () => {
     let srcProjekti: DBProjekti;
     const targetProjektiOid = "toinen-oid";
     let createProjektiStub: sinon.SinonStub<[projekti: DBProjekti], Promise<PutCommandOutput>>;
+    let dynamoDBClient: AwsStub<ServiceInputTypes, ServiceOutputTypes, DynamoDBDocumentClientResolvedConfig>;
+
     let targetVelho: Velho;
     let targetProjektiFromVelho: DBProjekti;
     let s3Mock: AwsStub<ServiceInputTypes, ServiceOutputTypes, S3ClientResolvedConfig>;
@@ -133,6 +133,7 @@ describe("jaaProjekti", () => {
           ],
         });
       s3Mock.on(CopyObjectCommand).resolves({});
+      dynamoDBClient = mockClient(DynamoDBDocumentClient);
     });
 
     afterEach(() => {
@@ -140,7 +141,8 @@ describe("jaaProjekti", () => {
     });
 
     it("should copy projekti's fields and mark each julkaisu as copied", async () => {
-      await expect(jaaProjekti({ oid: srcProjekti.oid, targetOid: targetProjektiOid })).to.eventually.be.fulfilled;
+      await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
+        .fulfilled;
       expect(createProjektiStub.calledOnce).to.be.true;
       const targetProjektiToCreate = createProjektiStub.firstCall.args[0];
       expect(targetProjektiToCreate).toMatchSnapshot();
@@ -153,10 +155,32 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.length).to.equal(1);
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.[0].kopioituToiseltaProjektilta).to.be.true;
       expect(targetProjektiToCreate.nahtavillaoloVaiheJulkaisut).to.be.undefined;
+      expect(targetProjektiToCreate.jaettuProjektista).to.eql(srcProjekti.oid);
+      expect(targetProjektiToCreate.jaettuProjekteihin).to.eql(undefined);
+
+      const updateCommands = dynamoDBClient.commandCalls(UpdateCommand);
+      expect(updateCommands.length).to.equal(1);
+      const input = updateCommands[0].args[0].input;
+      expect(input.ExpressionAttributeNames).to.eql({
+        "#jaettuProjekteihin": "jaettuProjekteihin",
+        "#versio": "versio",
+      });
+      expect(input.ExpressionAttributeNames).to.eql({
+        "#jaettuProjekteihin": "jaettuProjekteihin",
+        "#versio": "versio",
+      });
+      expect(input.ExpressionAttributeValues?.[":targetOid"]).to.eql(["toinen-oid"]);
+      expect(input.Key).to.eql({
+        oid: "2",
+      });
+      expect(input.UpdateExpression).to.contain(
+        "SET #jaettuProjekteihin = list_append(if_not_exists(#jaettuProjekteihin, :tyhjalista), :targetOid)"
+      );
     });
 
-    it("should copy all objects from srcProjekti's s3 to targetProjekti's ", async () => {
-      await expect(jaaProjekti({ oid: srcProjekti.oid, targetOid: targetProjektiOid })).to.eventually.be.fulfilled;
+    it("should copy all srcProjekti's s3objects to targetProjekti's path", async () => {
+      await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
+        .fulfilled;
       expect(s3Mock.calls().length).to.equal(3);
       const listObjectCommands = s3Mock.commandCalls(ListObjectsV2Command);
       expect(listObjectCommands.length).to.equal(1);

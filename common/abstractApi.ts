@@ -878,8 +878,8 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.aktivoiProjektiJatkopaatettavaksi, variables);
   }
 
-  async jaaProjekti(oid: string, targetOid: string) {
-    return await this.callYllapitoAPI(apiConfig.jaaProjekti, { oid, targetOid } as JaaProjektiMutationVariables);
+  async jaaProjekti(oid: string, versio: number, targetOid: string) {
+    return await this.callYllapitoAPI(apiConfig.jaaProjekti, { oid, versio, targetOid } as JaaProjektiMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

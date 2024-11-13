@@ -198,6 +198,8 @@ export type DBProjekti = {
   ennakkoNeuvottelu?: DBEnnakkoNeuvottelu;
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
   ennakkoNeuvotteluAineistoPaketti?: string | null;
+  jaettuProjekteihin?: string[] | null;
+  jaettuProjektista?: string | null;
 };
 
 export type DBEnnakkoNeuvottelu = {

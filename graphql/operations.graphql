@@ -87,5 +87,5 @@ type Mutation {
     paatoksenTiedot: HyvaksymispaatosInput!
   ): String
   tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput!): String
-  jaaProjekti(oid: String!, targetOid: String!): String
+  jaaProjekti(oid: String!, versio: Int!, targetOid: String!): String
 }
