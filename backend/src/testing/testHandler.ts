@@ -11,13 +11,13 @@ class TestHandler {
     setLogContextOid(params.oid);
     switch (params.tyyppi) {
       case TestiKomento.RESET:
-        return projektiResetTool.reset(params.oid, params.vaihe);
+        return await projektiResetTool.reset(params.oid, params.vaihe);
       case TestiKomento.AJANSIIRTO:
-        return dateMoverTool.ajansiirto(Pick(params, "oid", "vaihe", "ajansiirtoPaivina"));
+        return await dateMoverTool.ajansiirto(Pick(params, "oid", "vaihe", "ajansiirtoPaivina"));
       case TestiKomento.MIGRAATIO:
-        return this.migraatio(params);
+        return await this.migraatio(params);
       case TestiKomento.VIE_ASIANHALLINTAAN:
-        return asianhallintaVientiTool.kaynnista(params.oid);
+        return await asianhallintaVientiTool.kaynnista(params.oid);
     }
   }
 
