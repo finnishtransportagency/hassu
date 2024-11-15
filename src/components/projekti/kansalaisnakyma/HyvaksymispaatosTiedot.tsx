@@ -18,6 +18,7 @@ import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 import EuLogo from "../common/EuLogo";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -90,6 +91,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
           <p key={index}>{renderTextAsHTML(teksti)}</p>
         ))}
       </ContentSpacer>
+      {projekti.suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={projekti.suunnitelmaJaettu} />}
       <ContentSpacer>
         <H3 variant="h4">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</H3>
         <Notification hideIcon type={NotificationType.INFO}>

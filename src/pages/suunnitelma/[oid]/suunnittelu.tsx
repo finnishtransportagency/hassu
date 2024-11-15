@@ -14,6 +14,7 @@ import {
   Linkki,
   LokalisoituLinkki,
   ProjektiJulkinen,
+  ProjektinJakotieto,
   Status,
   VelhoJulkinen,
   VuorovaikutusJulkinen,
@@ -48,6 +49,7 @@ import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { useIsBelowBreakpoint } from "../../../hooks/useIsSize";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -93,7 +95,11 @@ export default function Suunnittelu(): ReactElement {
     >
       {!migroitu && (
         <>
-          <Perustiedot vuorovaikutusKierros={projekti?.vuorovaikutukset} velho={projekti.velho} />
+          <Perustiedot
+            vuorovaikutusKierros={projekti?.vuorovaikutukset}
+            velho={projekti.velho}
+            suunnitelmaJaettu={projekti.suunnitelmaJaettu}
+          />
           <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={projekti?.vuorovaikutukset} projektiOid={projekti.oid} />
           <EuLogo projekti={projekti} />
         </>
@@ -113,10 +119,11 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkinen; velho: VelhoJulkinen }> = ({
-  vuorovaikutusKierros,
-  velho,
-}) => {
+const Perustiedot: FunctionComponent<{
+  vuorovaikutusKierros: VuorovaikutusJulkinen;
+  velho: VelhoJulkinen;
+  suunnitelmaJaettu: ProjektinJakotieto[] | undefined | null;
+}> = ({ vuorovaikutusKierros, velho, suunnitelmaJaettu }) => {
   const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
 
@@ -140,6 +147,7 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkin
   return (
     <Section>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
+      {suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={suunnitelmaJaettu} />}
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
         <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

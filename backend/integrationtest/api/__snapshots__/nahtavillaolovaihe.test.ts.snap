@@ -319,6 +319,7 @@ Object {
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
+      "kopioituToiseltaProjektilta": undefined,
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/3/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
@@ -1140,6 +1141,7 @@ Object {
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
+      "kopioituToiseltaProjektilta": undefined,
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/3/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",

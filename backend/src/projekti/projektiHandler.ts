@@ -52,6 +52,7 @@ import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTil
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { config } from "../config";
+import { adaptSuunnitelmaJaettu } from "./adapter/adaptToAPI/adaptSuunnitelmaJaettu";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -106,6 +107,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
+    apiProjekti.suunnitelmaJaettu = await adaptSuunnitelmaJaettu(projektiFromDB);
     return apiProjekti;
   } else {
     requirePermissionLuonti();

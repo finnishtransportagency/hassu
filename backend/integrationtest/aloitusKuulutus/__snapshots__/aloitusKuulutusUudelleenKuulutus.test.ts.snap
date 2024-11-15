@@ -257,6 +257,7 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
+    "kopioituToiseltaProjektilta": undefined,
     "kuulutusPDF": Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
       "__typename": "KuulutusPDFJulkinen",

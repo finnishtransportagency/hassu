@@ -36,6 +36,7 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import useCurrentUser from "src/hooks/useCurrentUser";
 import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
 import { H3 } from "../../../../components/Headings";
+import SuunnitelmaJaettuOsiin from "@components/projekti/SuunnitelmaJaettuOsiin";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -296,6 +297,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiKuulutuskielet projekti={projekti} />
           <LinkitetytProjektit projekti={projekti} />
+          {projekti.suunnitelmaJaettu && <SuunnitelmaJaettuOsiin projektinJakotiedot={projekti.suunnitelmaJaettu} />}
           <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
           {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (

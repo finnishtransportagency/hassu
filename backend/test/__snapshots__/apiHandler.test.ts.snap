@@ -195,6 +195,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": undefined,
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -303,6 +304,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": undefined,
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -435,6 +437,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": undefined,
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -720,6 +723,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "ALOITUSKUULUTUS",
+    "suunnitelmaJaettu": undefined,
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
       "kunta": 536,
@@ -1054,6 +1058,7 @@ Object {
   "muistutusMaara": 0,
   "oid": "1",
   "status": "SUUNNITTELU",
+  "suunnitelmaJaettu": undefined,
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
     "kunta": 536,
@@ -1208,6 +1213,7 @@ Object {
       },
     ],
     "status": "ALOITUSKUULUTUS",
+    "suunnitelmaJaettu": undefined,
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
       "email": "a2@vayla.fi",

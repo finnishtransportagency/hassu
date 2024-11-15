@@ -19,6 +19,7 @@ import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
+import { LiittyvatSuunnitelmat } from "../../../components/kansalainen/LiittyvatSuunnitelmat";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -113,6 +114,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
+        {projekti.suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={projekti.suunnitelmaJaettu} />}
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

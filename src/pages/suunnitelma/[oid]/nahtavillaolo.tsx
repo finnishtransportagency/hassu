@@ -25,6 +25,7 @@ import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { getSuomiFiAuthenticationURL } from "@services/userService";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -125,6 +126,7 @@ export default function Nahtavillaolo(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
+        {projekti.suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={projekti.suunnitelmaJaettu} />}
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

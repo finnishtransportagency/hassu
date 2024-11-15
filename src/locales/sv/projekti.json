@@ -63,6 +63,11 @@
     "hankesuunnittelusivu": "Projektplaneringssida",
     "etakaytto": "Fjärranslutning (extranättjänster, VPN-fjärranslutning, intra)"
   },
+  "liittyvat_suunnitelmat": {
+    "title": "Relaterade planer",
+    "kuulutettu_yhdessa": "Planen har tidigare meddelats tillsammans med planen",
+    "ei_julkaisuja": "Inga publikationer"
+  },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
     "kuulutus_suunnitelman_alkamisesta": "Kungörelse om inledande av planering",
