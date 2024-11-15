@@ -10,6 +10,7 @@ import { JULKAISU_KEYS } from "./database/model/julkaisuKey";
 import { projektiDatabase } from "./database/projektiDatabase";
 import { fileService } from "./files/fileService";
 import { ProjektiPaths } from "./files/ProjektiPath";
+import { lisaAineistoService } from "./tiedostot/lisaAineistoService";
 import { requireAdmin } from "./user";
 import { velho as velhoClient } from "./velho/velhoClient";
 
@@ -40,6 +41,7 @@ export async function jaaProjekti(input: Variables) {
     velho: targetProjektiFromVelho.velho,
     kayttoOikeudet: targetProjektiFromVelho.kayttoOikeudet,
     jaettuProjektista: input.oid,
+    salt: lisaAineistoService.generateSalt(),
   };
 
   await updateJaettuProjekteihin(input);

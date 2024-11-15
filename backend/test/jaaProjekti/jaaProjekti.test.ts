@@ -22,6 +22,7 @@ import {
   ServiceOutputTypes,
 } from "@aws-sdk/client-s3";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import { lisaAineistoService } from "../../src/tiedostot/lisaAineistoService";
 
 describe("jaaProjekti", () => {
   const userFixture = new UserFixture(userService);
@@ -112,6 +113,7 @@ describe("jaaProjekti", () => {
         .returns(Promise.resolve(srcProjekti))
         .withArgs(targetProjektiOid)
         .returns(Promise.resolve(undefined));
+      sinon.stub(lisaAineistoService, "generateSalt").returns("foo-salt");
       targetVelho = { ...cloneDeep(srcProjekti.velho), nimi: "Toinen-oid projektin nimi" };
       targetProjektiFromVelho = {
         oid: targetProjektiOid,
@@ -148,7 +150,7 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate).toMatchSnapshot();
       expect(targetProjektiToCreate.oid).to.equal(targetProjektiOid);
       expect(targetProjektiToCreate.velho).to.eql(targetVelho);
-      expect(targetProjektiToCreate.salt).to.equal(undefined);
+      expect(targetProjektiToCreate.salt).to.equal("foo-salt");
       expect(targetProjektiToCreate.kayttoOikeudet).to.eql([]);
       expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.length).to.equal(1);
       expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.[0].kopioituToiseltaProjektilta).to.be.true;

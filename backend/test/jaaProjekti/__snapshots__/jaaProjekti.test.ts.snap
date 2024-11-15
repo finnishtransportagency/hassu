@@ -216,6 +216,7 @@ Object {
   "nahtavillaoloVaiheJulkaisut": undefined,
   "oid": "toinen-oid",
   "paivitetty": "2022-03-15T14:30:00.000Z",
+  "salt": "foo-salt",
   "tallennettu": true,
   "vahainenMenettely": false,
   "velho": Object {
