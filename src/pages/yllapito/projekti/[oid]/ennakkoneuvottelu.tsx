@@ -96,7 +96,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
 }
 
 export default function EnnakkoNeuvotteluLomake(): ReactElement {
-  const { data: projekti } = useProjekti();
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), [projekti]);
   const validationMode = useValidationMode();
   const formOptions: UseFormProps<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext> = {
