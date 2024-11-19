@@ -50,15 +50,14 @@ if (Config.isDeveloperEnvironment()) {
     "appsync"
   )
     .then(({ body }) => {
+      const possibleTypes: Record<string, string[]> = {};
       const value: Schema = (body as { data: { __schema: Schema } }).data.__schema;
-      const typeComparatorFn = (a: Type, b: Type) => a.name.localeCompare(b.name);
-      value.types = value.types.sort(typeComparatorFn);
-      value.types.map((type) => {
-        if (type.possibleTypes) {
-          type.possibleTypes = type.possibleTypes.sort(typeComparatorFn);
+      value.types.forEach((supertype) => {
+        if (supertype.possibleTypes) {
+          possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype) => subtype.name);
         }
       });
-      fs.writeFileSync("src/services/api/fragmentTypes.json", JSON.stringify({ __schema: value }, null, 2) + "\n");
+      fs.writeFileSync("src/services/api/fragmentTypes.json", JSON.stringify(possibleTypes, null, 2) + "\n");
     })
     .catch((reason: any) => console.log(reason));
 }

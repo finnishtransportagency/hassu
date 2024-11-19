@@ -2,10 +2,10 @@ import React, { createContext, ReactNode, useMemo } from "react";
 import { API } from "@services/api/commonApi";
 import useSnackbars from "src/hooks/useSnackbars";
 import { createApiWithAdditionalErrorHandling, ErrorResponseHandler, relativeEndpointAPI } from "@services/api/permanentApi";
-import { ErrorResponse } from "apollo-link-error";
+import { ErrorResponse } from "@apollo/client/link/error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
-import { GraphQLError } from "graphql";
+import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { NoHassuAccessError, NoVaylaAuthenticationError, SimultaneousUpdateError } from "hassu-common/error";
 import Cookies from "js-cookie";
 import { generateErrorMessage } from "../util/errorMessageUtil";
@@ -19,7 +19,10 @@ interface Props {
   simultaneousUpdateErrorCallback: () => void;
 }
 
-type ConcatCorrelationIdToErrorMessage = (message: string, error?: GraphQLError | GraphQLError[] | readonly GraphQLError[]) => string;
+type ConcatCorrelationIdToErrorMessage = (
+  message: string,
+  error?: GraphQLFormattedError | GraphQLFormattedError[] | readonly GraphQLFormattedError[]
+) => string;
 
 export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessage = (message, error) => {
   if (!error) {

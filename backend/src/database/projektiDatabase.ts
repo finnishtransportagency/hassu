@@ -391,7 +391,7 @@ export class ProjektiDatabase {
       },
     });
     log.info("Inserting " + description + " to projekti", { oid });
-    return getDynamoDBDocumentClient().send(params);
+    return await getDynamoDBDocumentClient().send(params);
   }
 
   async updateJulkaisuToList(projekti: DBProjekti, julkaisu: JulkaisuWithId, listFieldName: JulkaisutFieldName, description: string) {

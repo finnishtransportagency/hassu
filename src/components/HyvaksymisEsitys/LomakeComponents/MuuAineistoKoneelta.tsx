@@ -44,9 +44,9 @@ export default function MuuAineistoKoneelta({
     <SectionContent>
       <H5 variant="h4">Omalta koneelta</H5>
       <p>
-        Voit halutessasi liittää omalta koneelta {ennakkoneuvottelu ? "ennakkoneuvotteluun" : "hyväksymisesitykseen"} toimitettavaan
-        aineistoon myös muuta lisäaineistoa, kuten
-        {ennakkoneuvottelu ? "ennakkoneuvottelun" : "hyväksymisesityksen"} luonnoksen tai muuta valitsemaasi materiaalia.
+        {ennakkoneuvottelu && "Voit halutessasi tuoda omalta koneelta aineistoon myös muuta lisäaineistoa."}
+        {!ennakkoneuvottelu &&
+          "Voit halutessasi liittää omalta koneelta hyväksymisesitykseen toimitettavaan aineistoon myös muuta lisäaineistoa, kuten hyväksymisesityksen luonnoksen tai muuta valitsemaasi materiaalia."}
       </p>
       {!!fields?.length && (
         <TiedostoInputNewTable

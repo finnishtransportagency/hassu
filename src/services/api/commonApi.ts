@@ -1,20 +1,20 @@
 import { AbstractApi, OperationConfig, OperationType } from "../../../common/abstractApi";
-import { ApolloQueryResult } from "apollo-client/core/types";
-import { ApolloLink, FetchResult, GraphQLRequest } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import gql from "graphql-tag";
-import ApolloClient, { DefaultOptions } from "apollo-client";
-import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
+import {
+  DefaultOptions,
+  ApolloQueryResult,
+  ApolloLink,
+  FetchResult,
+  GraphQLRequest,
+  ApolloClient,
+  InMemoryCache,
+  gql,
+} from "@apollo/client";
 import log from "loglevel";
-import { onError } from "apollo-link-error";
-import * as introspectionQueryResultData from "./fragmentTypes.json";
-import { IntrospectionResultData } from "apollo-cache-inmemory/lib/types";
-
+import { onError } from "@apollo/client/link/error";
+import { setContext } from "@apollo/client/link/context";
 export const ERROR_MESSAGE_NOT_AUTHENTICATED = "NOT_AUTHENTICATED";
 
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData: introspectionQueryResultData as IntrospectionResultData,
-});
+import possibleTypes from "./fragmentTypes.json";
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -66,16 +66,16 @@ export class API extends AbstractApi {
     this.publicClient = new ApolloClient({
       link: ApolloLink.from(publicLinks),
       cache: new InMemoryCache({
-        fragmentMatcher,
-        dataIdFromObject: () => null, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
+        possibleTypes,
+        dataIdFromObject: () => undefined, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
       }),
       defaultOptions,
     });
     this.authenticatedClient = new ApolloClient({
       link: ApolloLink.from(authenticatedLinks),
       cache: new InMemoryCache({
-        fragmentMatcher,
-        dataIdFromObject: () => null, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
+        possibleTypes,
+        dataIdFromObject: () => undefined, // Ilman tätä tietorakenteessa cachetetaan kaikki elementit joissa on sama id samoiksi objekteiksi, eli data korruptoituu
       }),
       defaultOptions,
     });
@@ -89,7 +89,6 @@ export class API extends AbstractApi {
           variables,
           fetchPolicy: "network-only",
           errorPolicy: "all",
-          fetchResults: true,
         });
         const data = queryResponse.data?.[operation.name];
         if (queryResponse.errors) {
