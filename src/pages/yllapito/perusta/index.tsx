@@ -111,10 +111,10 @@ export default function Perusta() {
           <SectionContent>
             <p>
               Hae projekti, jonka haluat tuoda Valtion liikenneväylien suunnittelu -palveluun Projektivelhosta. Hakuehtona voit käyttää
-              Projektivelhoon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden osaa. Jos etsimääsi suunnitelmaa /
-              projektia ei näy listassa, varmista, että se on tallennettu Projektivelhoon, ja että hakuehdot ovat oikein. Ota tarvittaessa
-              yhteys pääkäyttäjään. Huomioithan, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä
-              perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
+              Projektivelhoon tallennettua suunnitelman / projektin nimeä, tai sen osaa. Jos etsimääsi suunnitelmaa / projektia ei näy
+              listassa, varmista, että se on tallennettu Projektivelhoon, ja että hakuehto on oikein. Ota tarvittaessa yhteys pääkäyttäjään.
+              Huomioithan, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä perustettu palveluun.
+              Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
             </p>
             <TextInput
               error={errors.name}

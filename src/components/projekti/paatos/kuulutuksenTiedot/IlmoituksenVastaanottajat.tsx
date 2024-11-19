@@ -20,6 +20,7 @@ import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmi
 import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import { H2, H3 } from "../../../Headings";
+import { InfoText } from "@components/projekti/common/IlmoituksenVastaanottajatLukutila";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -77,15 +78,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
         <Section>
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
-            <p>
-              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-              -painikkeella.
-            </p>
-            <p>
-              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
-            </p>
+            <InfoText paatosTyyppi={paatosTyyppi} />
           </SectionContent>
           <SectionContent>
             <div className="grid grid-cols-4 gap-x-6 mb-4">
@@ -151,15 +144,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
         <Section>
           <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
-            <p>
-              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-              -painikkeella.
-            </p>
-            <p>
-              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
-            </p>
+            <InfoText paatosTyyppi={paatosTyyppi} />
           </SectionContent>
 
           <>
