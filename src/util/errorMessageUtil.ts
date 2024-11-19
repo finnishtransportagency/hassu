@@ -1,7 +1,7 @@
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
-import { ErrorResponse } from "apollo-link-error";
+import { ErrorResponse } from "@apollo/client/link/error";
 import { Translate } from "next-translate";
-import { GraphQLError } from "graphql/error/GraphQLError";
+import { GraphQLFormattedError } from "graphql";
 
 type GenerateErrorMessage = (props: GenerateErrorMessageProps) => string;
 type GenerateErrorMessageProps = { errorResponse: ErrorResponse; isYllapito: boolean; t: Translate };
@@ -105,7 +105,7 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
   return isYllapito ? `Odottamaton virhe toiminnossa '${operationName}'.` : t("error:yleinen");
 };
 
-function extractErrorInfo(e: GraphQLError): ErrorInfo {
+function extractErrorInfo(e: GraphQLFormattedError): ErrorInfo {
   return {
     errorClassName: (e as any).errorInfo?.errorSubType,
     errorMessage: e.message,

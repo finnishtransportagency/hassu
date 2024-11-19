@@ -16,3 +16,4 @@ cdk.out
 .node-persist
 .report
 .turbo
+src/services/api/fragmentTypes.json

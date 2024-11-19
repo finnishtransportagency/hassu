@@ -476,8 +476,8 @@ export const handlerFactory = (event: SQSEvent) => async () => {
         }
       }
       if (!successfulSynchronization) {
-        // Yritä uudelleen minuutin päästä
-        await eventSqsClient.addEventToSqsQueue(sqsEvent, true);
+        // Yritä uudelleen 10 minuutin päästä
+        throw new Error("Synkronointi epäonnistui");
       }
     }
   } catch (e: unknown) {
