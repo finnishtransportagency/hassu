@@ -10,10 +10,10 @@ export interface HyvaksymisEsitysEnnakkoNeuvotteluProps {
 export default function LinkinVoimassaoloaika({ ennakkoneuvottelu }: Readonly<HyvaksymisEsitysEnnakkoNeuvotteluProps>): ReactElement {
   return (
     <SectionContent>
-      <H4 variant="h3">{ennakkoneuvottelu ? "Suunnitelmalinkin voimassaoloaika" : "Linkin voimassaoloaika"}</H4>
+      <H4 variant="h3">{ennakkoneuvottelu ? "Aineistolinkin voimassaoloaika" : "Linkin voimassaoloaika"}</H4>
       <p>
         {ennakkoneuvottelu
-          ? "Valitse ennakkoneuvotteluun toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaikaa voi muuttaa jälkikäteen."
+          ? "Valitse aineistolinkille voimassaoloaika. Voimassaoloaikaa voi muuttaa jälkikäteen."
           : "Valitse hyväksymisesityksenä toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaikaa voi muuttaa jälkikäteen."}
       </p>
       <div>

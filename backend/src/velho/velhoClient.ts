@@ -56,7 +56,7 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator(VelhoApiName.authenticate, "authenticate")
-  private async callAuthenticate(axios: AxiosStatic) {
+  private callAuthenticate(axios: AxiosStatic) {
     assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
     assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
     assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");

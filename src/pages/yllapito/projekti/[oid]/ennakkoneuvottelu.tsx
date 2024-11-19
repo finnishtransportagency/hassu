@@ -90,15 +90,13 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
-      vastaanottajat: vastaanottajat?.length
-        ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
-        : [{ sahkoposti: "kirjaamo@traficom.fi" }],
+      vastaanottajat: vastaanottajat?.length ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti })) : [{ sahkoposti: "" }],
     },
   };
 }
 
 export default function EnnakkoNeuvotteluLomake(): ReactElement {
-  const { data: projekti } = useProjekti();
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
   const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), [projekti]);
   const validationMode = useValidationMode();
   const formOptions: UseFormProps<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext> = {
@@ -126,11 +124,11 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
   }
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
   return (
-    <ProjektiPageLayout title="Ennakkoneuvottelu" showInfo>
+    <ProjektiPageLayout title="Ennakkotarkastus/ennakkoneuvottelu" showInfo>
       {projekti.ennakkoNeuvotteluJulkaisu && (
         <Section noDivider className="mb-2">
           <Notification type={NotificationType.INFO_GREEN}>
-            Ennakkoneuvottelu on lähetetty vastaanottajalle {formatDate(projekti.ennakkoNeuvotteluJulkaisu.lahetetty)}:{" "}
+            Aineistolinkki on lähetetty vastaanottajalle {formatDate(projekti.ennakkoNeuvotteluJulkaisu.lahetetty)}:{" "}
             <ExtLink href={url}>{url}</ExtLink>
           </Notification>
         </Section>
@@ -142,32 +140,35 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
               <Section>
                 <OhjelistaNotification onClose={ohjeetOnClose} open={ohjeetOpen}>
                   <li>
-                    Tällä sivulla luodaan ennakkoneuvotteluun lähetettävän suunnitelman aineiston sisältö ja määritellään sen
-                    vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee
-                    tarkastelemaan ennakkoneuvotteluun lähetettävän suunnitelman sisällön.
+                    Tällä sivulla luodaan ennakkoneuvotteluun/ennakkotarkastukseen lähetettävän suunnitelman aineiston sisältö ja
+                    määritellään sen vastaanottajat. Vaihetta voi tarvittaessa käyttää myös suunnitelma-aineiston jakoon hyväksymisesityksen
+                    allekirjoittajalle.
                   </li>
                   <li>
-                    Anna ennakkoneuvotteluun toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että
-                    vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
-                    voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
+                    Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee tarkastelemaan
+                    suunnitelman sisällön.
                   </li>
-                  <li>Halutessasi voit kirjata ennakkoneuvottelusta lisätietoa vastaanottajalle.</li>
+                  <li>
+                    Anna luotavalle linkille voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että vastaanottajan on mahdollista
+                    tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin voimassaoloaikaa on mahdollista muuttaa
+                    jälkikäteen.
+                  </li>
+                  <li>Halutessasi voit kirjata lisätietoa vastaanottajalle.</li>
                   <li>
                     Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
-                    kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon ennakkoneuvotteluun. Voit haluessasi tuoda myös muuta
-                    aineistoa.
+                    kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon. Voit haluessasi tuoda myös muuta aineistoa.
                   </li>
-                  <li>Lisää ennakkoneuvotteluun lähetettävälle aineistolle vastaanottajat.</li>
-                  <li>Ennakkoneuvotteluun lähetettävän aineiston sisältöä on mahdollista päivittää suunnitelman lähettämisen jälkeen.</li>
+                  <li>Lisää lähetettävälle aineistolle vastaanottajat.</li>
+                  <li>Aineiston sisältöä on mahdollista päivittää lähettämisen jälkeen.</li>
                 </OhjelistaNotification>
-                <H3 variant="h2">Ennakkoneuvotteluun toimitettava suunnitelma</H3>
+                <H3 variant="h2">Aineistolinkin sisältö</H3>
                 <LinkinVoimassaoloaika ennakkoneuvottelu={true} />
               </Section>
               <Section>
                 <ViestiVastaanottajalle ennakkoneuvottelu={true} />
               </Section>
               <Section>
-                <H3 variant="h2">Ennakkoneuvotteluun liitettävä aineisto</H3>
+                <H3 variant="h2">Aineistolinkkiin liitettävä aineisto</H3>
                 <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
@@ -188,9 +189,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
                   ennakkoneuvottelu={true}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
-                <p>
-                  Voit halutessasi liittää ennakkoneuvotteluun muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.
-                </p>
+                <p>Voit halutessasi tuoda muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.</p>
                 <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} />
                 <MuuAineistoKoneelta tiedostot={projekti.ennakkoNeuvottelu?.muuAineistoKoneelta} ennakkoneuvottelu={true} />
               </Section>
@@ -199,7 +198,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
               </Section>
               {projekti.ennakkoNeuvotteluJulkaisu && (
                 <Section>
-                  <H2>Ennakkoneuvottelun vastaanottajat</H2>
+                  <H2>Vastaanottajat</H2>
                   {projekti.ennakkoNeuvotteluJulkaisu.vastaanottajat && (
                     <SectionContent>
                       <IlmoituksenVastaanottajatTable vastaanottajat={projekti.ennakkoNeuvotteluJulkaisu.vastaanottajat} />

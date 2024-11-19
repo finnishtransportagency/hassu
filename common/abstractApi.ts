@@ -665,7 +665,10 @@ export abstract class AbstractApi {
     const variables: ListaaPalautteetQueryVariables = {
       oid,
     };
-    return await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
+    const palautteet: Palaute[] = await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
+    // mahdollistetaan palautteiden muokkaus
+    // Apollo Cachen palauttama data on immutable ja palaute.vastattu muokkaus ei onnistu
+    return palautteet.map((palaute) => ({ ...palaute }));
   }
 
   async lataaPalautteetPDF(oid: string): Promise<PDF> {

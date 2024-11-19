@@ -18,7 +18,7 @@ export type OmistajaDocument = Pick<
   | "suomifiLahetys"
   | "kaytossa"
   | "userCreated"
-> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: "VIRHE" | "OK" | null };
+> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: API.TiedotettavanLahetyksenTila | null };
 
 export function adaptOmistajaToIndex({
   etunimet,

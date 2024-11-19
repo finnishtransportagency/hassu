@@ -6,6 +6,7 @@ import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutila
 import { KiinteistonOmistajatOhjeLukutila, KiinteistonomistajatVaihe } from "./KiinteistonOmistajatOhje";
 import { H2 } from "../../Headings";
 import { TukiEmailLink } from "../../EiOikeuksia";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 
 interface Props {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatType | null | undefined;
@@ -16,6 +17,68 @@ interface Props {
   omistajahakuStatus: Status | null | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   kuulutusPaiva?: string | null;
+  paatosTyyppi?: PaatosTyyppi;
+}
+
+interface InfoTextProps {
+  paatosTyyppi?: PaatosTyyppi;
+}
+
+export function InfoText(props: Readonly<InfoTextProps>) {
+  if (props.paatosTyyppi === undefined || props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return (
+      <>
+        <p>
+          Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+          Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
+          -painikkeella.
+        </p>
+        <p>
+          Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin tiedot
+          -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
+        </p>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <p>
+          Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille ja maakuntaliitoille. Kunnat on
+          haettu Projektivelhosta, maakuntaliitto määräytyy Projektivelhossa asetetun maakunnan mukaan. Jos tiedote pitää lähettää
+          useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi -painikkeella.
+        </p>
+        <p>
+          Jos kunta- tai maakuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään
+          Projektin tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle
+          automaattisesti.
+        </p>
+      </>
+    );
+  }
+}
+
+function HyvaksyttyInfoText(props: Readonly<InfoTextProps>) {
+  if (props.paatosTyyppi === undefined || props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    return (
+      <>
+        <p>
+          Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty, tarkasta
+          sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
+        </p>
+        <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <p>
+          Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille, kunnille ja maakuntaliitoille. Jos ilmoituksen tila on Ei
+          Lähetetty, tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
+        </p>
+        <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
+      </>
+    );
+  }
 }
 
 export default function IlmoituksenVastaanottajat({
@@ -27,7 +90,8 @@ export default function IlmoituksenVastaanottajat({
   omistajahakuStatus,
   uudelleenKuulutus,
   kuulutusPaiva,
-}: Props): ReactElement {
+  paatosTyyppi,
+}: Readonly<Props>): ReactElement {
   return (
     <Section>
       <SectionContent>
@@ -35,26 +99,9 @@ export default function IlmoituksenVastaanottajat({
         {!epaaktiivinen && (
           <>
             {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY ? (
-              <>
-                <p>
-                  Ilmoitukset on lähetetty eteenpäin alla oleville viranomaisille ja kunnille. Jos ilmoituksen tila on Ei Lähetetty,
-                  tarkasta sähköpostiosoite. Olethan tässä tapauksessa yhteydessä Väylävirastoon <TukiEmailLink />.
-                </p>
-                <p>Käythän varmistamassa kuulutuksen alkamisen jälkeen, että ilmoitus on julkaistu myös kuntien omilla sivuilla.</p>
-              </>
+              <HyvaksyttyInfoText paatosTyyppi={paatosTyyppi} />
             ) : (
-              <>
-                <p>
-                  Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-                  Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-                  -painikkeella.
-                </p>
-                <p>
-                  Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-                  tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle
-                  automaattisesti.
-                </p>
-              </>
+              <InfoText paatosTyyppi={paatosTyyppi} />
             )}
           </>
         )}
