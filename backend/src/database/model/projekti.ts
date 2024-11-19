@@ -123,6 +123,9 @@ export type KasittelynTila = {
   toimitusKaynnistynyt?: string;
   toteutusilmoitusOsittain?: string;
   toteutusilmoitusKokonaan?: string;
+  suunnitelmaRauennut?: string;
+  tieRatasuunnitelmaLuotu?: boolean;
+  laaditunSuunnitelmanLisatiedot?: string;
 };
 
 export type OikeudenPaatos = {

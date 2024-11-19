@@ -273,6 +273,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         julkaisunTila={julkaisu.tila}
         epaaktiivinen={epaaktiivinen}
         vaihe={paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? Vaihe.HYVAKSYMISPAATOS : undefined}
+        paatosTyyppi={paatosTyyppi}
         omistajahakuStatus={projekti.omistajahaku?.status}
         oid={projekti.oid}
         uudelleenKuulutus={julkaisu.uudelleenKuulutus}

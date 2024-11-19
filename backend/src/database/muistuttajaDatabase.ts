@@ -1,5 +1,12 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { BatchWriteCommand, QueryCommand, ScanCommand, ScanCommandOutput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  QueryCommand,
+  ScanCommand,
+  ScanCommandOutput,
+  TransactWriteCommand,
+  TransactWriteCommandInput,
+  UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { getMuistuttajaTableName } from "../util/environment";
 import { log } from "../logger";
 import { config } from "../config";
@@ -42,8 +49,10 @@ export type MuistuttajaScanResult = {
   muistuttajat: DBMuistuttaja[];
 };
 
+type TransactionItem = Exclude<TransactWriteCommandInput["TransactItems"], undefined>[0];
+
 class MuistuttajaDatabase {
-  private tableName: string;
+  private readonly tableName: string;
   constructor(tableName: string) {
     this.tableName = tableName;
   }
@@ -130,19 +139,17 @@ class MuistuttajaDatabase {
         lastEvaluatedKey = data.LastEvaluatedKey;
         muistuttajat.push(...(data.Items ?? []));
       } while (lastEvaluatedKey !== undefined);
-      for (const chunk of chunkArray(muistuttajat, 25)) {
-        const deleteRequests = chunk.map((muistuttaja) => ({
-          DeleteRequest: {
-            Key: { oid, id: muistuttaja.id },
-          },
-        }));
-        await getDynamoDBDocumentClient().send(
-          new BatchWriteCommand({
-            RequestItems: {
-              [this.tableName]: deleteRequests,
-            },
-          })
-        );
+      const newTransactItems = muistuttajat.map<TransactionItem>(({ id }) => ({
+        Delete: {
+          TableName: this.tableName,
+          Key: { oid, id },
+        },
+      }));
+      for (const chunk of chunkArray(newTransactItems, 25)) {
+        const transactCommand = new TransactWriteCommand({
+          TransactItems: chunk,
+        });
+        await getDynamoDBDocumentClient().send(transactCommand);
       }
     }
   }

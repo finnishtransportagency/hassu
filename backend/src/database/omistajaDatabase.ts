@@ -7,7 +7,6 @@ import {
   ScanCommand,
   ScanCommandOutput,
   QueryCommand,
-  BatchWriteCommand,
   UpdateCommand,
   TransactWriteCommand,
   TransactWriteCommandInput,
@@ -51,7 +50,7 @@ export type OmistajaScanResult = {
 type TransactionItem = Exclude<TransactWriteCommandInput["TransactItems"], undefined>[0];
 
 class OmistajaDatabase {
-  private tableName: string;
+  private readonly tableName: string;
   constructor(tableName: string) {
     this.tableName = tableName;
   }
@@ -199,19 +198,17 @@ class OmistajaDatabase {
         lastEvaluatedKey = data.LastEvaluatedKey;
         omistajat.push(...(data.Items ?? []));
       } while (lastEvaluatedKey !== undefined);
-      for (const chunk of chunkArray(omistajat, 25)) {
-        const deleteRequests = chunk.map((omistaja) => ({
-          DeleteRequest: {
-            Key: { oid, id: omistaja.id },
-          },
-        }));
-        await getDynamoDBDocumentClient().send(
-          new BatchWriteCommand({
-            RequestItems: {
-              [this.tableName]: deleteRequests,
-            },
-          })
-        );
+      const newTransactItems = omistajat.map<TransactionItem>(({ id }) => ({
+        Delete: {
+          TableName: this.tableName,
+          Key: { oid, id },
+        },
+      }));
+      for (const chunk of chunkArray(newTransactItems, 25)) {
+        const transactCommand = new TransactWriteCommand({
+          TransactItems: chunk,
+        });
+        await getDynamoDBDocumentClient().send(transactCommand);
       }
     }
   }
