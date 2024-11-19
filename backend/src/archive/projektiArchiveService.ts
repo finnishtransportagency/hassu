@@ -12,8 +12,7 @@ class ProjektiArchiveService {
     try {
       await projektiSchedulerService.deleteAllSchedules(oid);
     } catch (e) {
-      // tämä saattaa epäonnistua development modessa koska arkistointia kutsutaan kahteen kertaan
-      log.error("Ajastuksien poisto epäonnistui");
+      log.error("Ajastuksien poisto epäonnistui", e);
     }
     await omistajaDatabase.deleteOmistajatByOid(oid);
     await muistuttajaDatabase.deleteMuistuttajatByOid(oid);

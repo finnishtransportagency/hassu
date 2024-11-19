@@ -543,6 +543,9 @@ input KasittelyntilaInput {
   korkeinHallintoOikeus: OikeudenPaatosInput
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 input OikeudenPaatosInput {

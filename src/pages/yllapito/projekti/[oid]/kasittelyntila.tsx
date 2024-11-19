@@ -1,8 +1,15 @@
 import React, { ReactElement, useCallback, useMemo, useEffect, FunctionComponent } from "react";
-import { JatkopaatettavaVaihe, KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
+import {
+  JatkopaatettavaVaihe,
+  KasittelyntilaInput,
+  OikeudenPaatosInput,
+  ProjektiTyyppi,
+  Status,
+  TallennaProjektiInput,
+} from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
-import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { Controller, FormProvider, useController, useForm, UseFormProps } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -37,6 +44,9 @@ import { getVelhoUrl } from "../../../../util/velhoUtils";
 import { H2, H3 } from "../../../../components/Headings";
 import { PalautaAktiiviseksiButton } from "@components/projekti/PalautaAktiiviseksiButton";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
+import RadioButton from "@components/form/RadioButton";
+import styled from "@emotion/styled";
+import FormGroup from "@components/form/FormGroup";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -216,6 +226,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             hyvaksymisPaatosKumottu: undefined,
           } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
       }
+      kasittelynTila.suunnitelmaRauennut = projekti.kasittelynTila?.suunnitelmaRauennut ?? null;
+      kasittelynTila.tieRatasuunnitelmaLuotu = projekti.kasittelynTila?.tieRatasuunnitelmaLuotu ?? null;
+      kasittelynTila.laaditunSuunnitelmanLisatiedot = projekti.kasittelynTila?.laaditunSuunnitelmanLisatiedot ?? null;
     }
     const formValues: KasittelynTilaFormValues = {
       oid: projekti.oid,
@@ -294,6 +307,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     projekti.kasittelynTila?.toinenJatkopaatos?.asianumero &&
     projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm;
 
+  const {
+    field: { onChange, value: tieRatasuunnitelmaLuotu },
+  } = useController({ name: "kasittelynTila.tieRatasuunnitelmaLuotu", control });
   return (
     <FormProvider {...useFormReturn}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -500,67 +516,111 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.lainvoimaPaattyen)}
               />
             </HassuGrid>
+            {projekti.velho.tyyppi === ProjektiTyyppi.YLEINEN && (
+              <>
+                <H3 className="vayla-small-title mt-6 !mb-6">Tie- tai ratasuunnitelman laatiminen</H3>
+                <FormGroupWithLabel label="Onko yleissuunnitelmasta luotu tie- tai ratasuunnitelmaa?" flexDirection="row">
+                  <RadioButton
+                    id="tieRatasuunnitelmaLuotuEi"
+                    label="Ei"
+                    disabled={disableAdminOnlyFields}
+                    checked={tieRatasuunnitelmaLuotu === false}
+                    onChange={() => {
+                      onChange?.(false);
+                    }}
+                  />
+                  <RadioButton
+                    id="tieRatasuunnitelmaLuotuKylla"
+                    label="Kyllä"
+                    disabled={disableAdminOnlyFields}
+                    checked={tieRatasuunnitelmaLuotu === true}
+                    onChange={() => {
+                      onChange?.(true);
+                    }}
+                  />
+                </FormGroupWithLabel>
+                <Textarea
+                  className="ml-8"
+                  label="Laaditun suunnitelman lisätiedot"
+                  disabled={disableAdminOnlyFields}
+                  {...register("kasittelynTila.laaditunSuunnitelmanLisatiedot")}
+                  maxLength={2000}
+                  minRows={3}
+                ></Textarea>
+                <H3 className="vayla-small-title !mb-6 !mt-6">Suunnitelman raukeaminen</H3>
+                <DatePickerConditionallyInTheForm
+                  label="Päivämäärä"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.suunnitelmaRauennut" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.suunnitelmaRauennut)}
+                />
+              </>
+            )}
           </SectionContent>
         </Section>
-        <Section>
-          <SectionContent>
-            <H2>Väylätoimitus</H2>
-            <p className="mt-6">Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
-            <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerConditionallyInTheForm
-                label="Toimitus käynnistynyt"
-                disabled={disableAdminOnlyFields}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-                controllerProps={{ control, name: "kasittelynTila.toimitusKaynnistynyt" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toimitusKaynnistynyt)}
-              />
-            </HassuGrid>
-          </SectionContent>
-          <SectionContent>
-            <H2>Liikenteelleluovutus</H2>
-            <p>Anna päivämäärä, jolloin tie on Liikenteelleluovutus ilmoituksen mukaan luovutettu osittain tai kokonaan liikenteelle.</p>
-            <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerConditionallyInTheForm
-                label="Osaluovutus"
-                disabled={disableAdminOnlyFields}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-                controllerProps={{ control, name: "kasittelynTila.liikenteeseenluovutusOsittain" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.liikenteeseenluovutusOsittain)}
-              />
-            </HassuGrid>
-            <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerConditionallyInTheForm
-                label="Kokoluovutus"
-                disabled={disableAdminOnlyFields}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-                controllerProps={{ control, name: "kasittelynTila.liikenteeseenluovutusKokonaan" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.liikenteeseenluovutusKokonaan)}
-              />
-            </HassuGrid>
-          </SectionContent>
-          <SectionContent>
-            <H2>Ratasuunnitelman toteutusilmoitus</H2>
-            <p>Anna päivämäärä, jolle Toteutusilmoitus on päivätty, osa tai koko toteutuksen mukaan.</p>
-            <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerConditionallyInTheForm
-                label="Osatoteutus"
-                disabled={disableAdminOnlyFields}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-                controllerProps={{ control, name: "kasittelynTila.toteutusilmoitusOsittain" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toteutusilmoitusOsittain)}
-              />
-            </HassuGrid>
-            <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerConditionallyInTheForm
-                label="Kokototeutus"
-                disabled={disableAdminOnlyFields}
-                includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
-                controllerProps={{ control, name: "kasittelynTila.toteutusilmoitusKokonaan" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}
-              />
-            </HassuGrid>
-          </SectionContent>
-        </Section>
+
+        {projekti.velho.tyyppi !== ProjektiTyyppi.YLEINEN && (
+          <Section>
+            <SectionContent>
+              <H2>Väylätoimitus</H2>
+              <p className="mt-6">Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
+              <HassuGrid cols={{ lg: 3 }}>
+                <DatePickerConditionallyInTheForm
+                  label="Toimitus käynnistynyt"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.toimitusKaynnistynyt" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toimitusKaynnistynyt)}
+                />
+              </HassuGrid>
+            </SectionContent>
+            <SectionContent>
+              <H2>Liikenteelleluovutus</H2>
+              <p>Anna päivämäärä, jolloin tie on Liikenteelleluovutus ilmoituksen mukaan luovutettu osittain tai kokonaan liikenteelle.</p>
+              <HassuGrid cols={{ lg: 3 }}>
+                <DatePickerConditionallyInTheForm
+                  label="Osaluovutus"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.liikenteeseenluovutusOsittain" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.liikenteeseenluovutusOsittain)}
+                />
+              </HassuGrid>
+              <HassuGrid cols={{ lg: 3 }}>
+                <DatePickerConditionallyInTheForm
+                  label="Kokoluovutus"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.liikenteeseenluovutusKokonaan" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.liikenteeseenluovutusKokonaan)}
+                />
+              </HassuGrid>
+            </SectionContent>
+            <SectionContent>
+              <H2>Ratasuunnitelman toteutusilmoitus</H2>
+              <p>Anna päivämäärä, jolle Toteutusilmoitus on päivätty, osa tai koko toteutuksen mukaan.</p>
+              <HassuGrid cols={{ lg: 3 }}>
+                <DatePickerConditionallyInTheForm
+                  label="Osatoteutus"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.toteutusilmoitusOsittain" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toteutusilmoitusOsittain)}
+                />
+              </HassuGrid>
+              <HassuGrid cols={{ lg: 3 }}>
+                <DatePickerConditionallyInTheForm
+                  label="Kokototeutus"
+                  disabled={disableAdminOnlyFields}
+                  includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+                  controllerProps={{ control, name: "kasittelynTila.toteutusilmoitusKokonaan" }}
+                  value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toteutusilmoitusKokonaan)}
+                />
+              </HassuGrid>
+            </SectionContent>
+          </Section>
+        )}
         <Section>
           <SectionContent>
             <H2>Jatkopäätös</H2>
@@ -678,3 +738,12 @@ const DatePickerConditionallyInTheForm: FunctionComponent<
   }
   return <HassuDatePickerWithController {...props} controllerProps={controllerProps} />;
 };
+
+const FormGroupWithLabel = styled(FormGroup)(() => ({
+  "> label": {
+    fontWeight: "normal",
+  },
+  label: {
+    marginBottom: "0.5rem",
+  },
+}));

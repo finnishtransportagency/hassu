@@ -393,7 +393,10 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   setIfDefined(ominaisuudet.toteutusilmoitus?.kokonaan, (value) => (kasittelynTila.toteutusilmoitusKokonaan = objectToString(value)));
   setIfDefined(ominaisuudet.lisatiedot, (value) => (kasittelynTila.lisatieto = objectToString(value)));
   setIfDefined(ominaisuudet["vaylatoimitus-kaynnistynyt"], (value) => (kasittelynTila.toimitusKaynnistynyt = objectToString(value)));
-
+  setIfDefined(ominaisuudet["rauennut"], (value) => (kasittelynTila.suunnitelmaRauennut = objectToString(value)));
+  if (ominaisuudet["tie-ratasuunnitelma-luotu"] !== undefined) {
+    kasittelynTila.tieRatasuunnitelmaLuotu = ominaisuudet["tie-ratasuunnitelma-luotu"];
+  }
   // Palauta tyhjälle lopputulokselle undefined
   if (isEqual(pickBy(kasittelynTila, identity), {})) {
     return undefined;
@@ -521,6 +524,10 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
   setIfDefined(params.toimitusKaynnistynyt, (value) => {
     ominaisuudet["vaylatoimitus-kaynnistynyt"] = toLocalDate(value);
   });
+  setIfDefined(params.suunnitelmaRauennut, (value) => (ominaisuudet["rauennut"] = toLocalDate(value)));
+  if (params.tieRatasuunnitelmaLuotu === true || params.tieRatasuunnitelmaLuotu === false) {
+    ominaisuudet["tie-ratasuunnitelma-luotu"] = params.tieRatasuunnitelmaLuotu;
+  }
   return projekti;
 }
 
