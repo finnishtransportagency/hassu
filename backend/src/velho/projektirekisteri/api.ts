@@ -3383,6 +3383,111 @@ export class KohdeApi extends BaseAPI {
 
 
 /**
+ * MassatransformaatioApi - axios parameter creator
+ * @export
+ */
+export const MassatransformaatioApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
+         * @param {any} kohdeluokka 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet: async (kohdeluokka: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'kohdeluokka' is not null or undefined
+            assertParamExists('projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet', 'kohdeluokka', kohdeluokka)
+            const localVarPath = `/projektirekisteri/api/v2/massatransformaatio/kaynnista/{kohdeluokka}`
+                .replace(`{${"kohdeluokka"}}`, encodeURIComponent(String(kohdeluokka)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MassatransformaatioApi - functional programming interface
+ * @export
+ */
+export const MassatransformaatioApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MassatransformaatioApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
+         * @param {any} kohdeluokka 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * MassatransformaatioApi - factory interface
+ * @export
+ */
+export const MassatransformaatioApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MassatransformaatioApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
+         * @param {any} kohdeluokka 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: any): AxiosPromise<object> {
+            return localVarFp.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MassatransformaatioApi - object-oriented interface
+ * @export
+ * @class MassatransformaatioApi
+ * @extends {BaseAPI}
+ */
+export class MassatransformaatioApi extends BaseAPI {
+    /**
+     * 
+     * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
+     * @param {any} kohdeluokka 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MassatransformaatioApi
+     */
+    public projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: AxiosRequestConfig) {
+        return MassatransformaatioApiFp(this.configuration).projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * ProjektiApi - axios parameter creator
  * @export
  */

@@ -213,7 +213,7 @@
     "dev-under-maintenance": "next dev ./under-maintenance",
     "cypress": "cypress",
     "generate:velhoapi": "MSYS_NO_PATHCONV=1 cross-env docker run --rm --env-file .env.test -e VELHO_AUTH_URL -e VELHO_API_URL -e VELHO_USERNAME -e VELHO_PASSWORD -e VELHO_ACCESS_TOKEN=\"$(ts-node --project=tsconfig.cdk.json -r dotenv/config ./tools/velho/authenticate.ts dotenv_config_path=.env.test)\" -v $INIT_CWD:/work ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) /work/tools/velho/gradlew -p /work/tools/velho --info",
-    "postgenerate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
+    "postgenerate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json && prettier ./backend/src/velho ./common/generated --write",
     "pregenerate:api": "ts-node --project=tsconfig.cdk.json ./deployment/bin/schemaMerge.ts",
     "generate:api": "cross-env docker run --rm -v $INIT_CWD:/work ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) bash -c \"cd /work && amplify codegen\"",
     "generate": "turbo run turbo:generate --output-logs=new-only",
