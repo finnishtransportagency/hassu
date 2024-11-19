@@ -174,6 +174,8 @@ type Projekti implements IProjekti {
   nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
   lausuntoPyynnot: [LausuntoPyynto!]
   lausuntoPyynnonTaydennykset: [LausuntoPyynnonTaydennys!]
+  ennakkoNeuvottelu: EnnakkoNeuvottelu
+  ennakkoNeuvotteluJulkaisu: EnnakkoNeuvotteluJulkaisu
   hyvaksymisEsitys: HyvaksymisEsitys
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
   hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
@@ -473,6 +475,36 @@ enum HyvaksymisTila {
   MUOKKAUS
 }
 
+type EnnakkoNeuvottelu {
+  poistumisPaiva: String
+  lisatiedot: String
+  suunnitelma: [AineistoNew!]
+  muistutukset: [KunnallinenLadattuTiedosto!]
+  lausunnot: [LadattuTiedostoNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoNew!]
+  muuAineistoVelhosta: [AineistoNew!]
+  muuAineistoKoneelta: [LadattuTiedostoNew!]
+  maanomistajaluettelo: [LadattuTiedostoNew!]
+  vastaanottajat: [SahkopostiVastaanottaja!]
+  tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+}
+
+type EnnakkoNeuvotteluJulkaisu {
+  poistumisPaiva: String
+  lisatiedot: String
+  suunnitelma: [AineistoNew!]
+  muistutukset: [KunnallinenLadattuTiedosto!]
+  lausunnot: [LadattuTiedostoNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoNew!]
+  muuAineistoVelhosta: [AineistoNew!]
+  muuAineistoKoneelta: [LadattuTiedostoNew!]
+  maanomistajaluettelo: [LadattuTiedostoNew!]
+  vastaanottajat: [SahkopostiVastaanottaja!]
+  tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  hash: String!
+  lahetetty: String!
+}
+
 type HyvaksymisPaatosVaiheJulkaisu {
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
@@ -612,6 +644,7 @@ type Aineisto {
   """
   jarjestys: Int
   tila: AineistoTila!
+  koko: Int
 }
 
 type AineistoNew {
@@ -1026,6 +1059,7 @@ type AloitusKuulutusJulkaisuJulkinen {
 type IlmoituksenVastaanottajat {
   kunnat: [KuntaVastaanottaja!]
   viranomaiset: [ViranomaisVastaanottaja!]
+  maakunnat: [MaakuntaVastaanottaja!]
 }
 
 type KirjaamoOsoite {
@@ -1053,6 +1087,13 @@ type ViranomaisVastaanottaja implements ISahkopostiVastaanottaja {
 }
 
 type KuntaVastaanottaja implements ISahkopostiVastaanottaja {
+  id: Int!
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
+}
+
+type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
   id: Int!
   sahkoposti: String!
   lahetetty: String
@@ -1274,6 +1315,21 @@ type HyvaksymisEsityksenAineistot {
   aineistopaketti: String
 }
 
+type EnnakkoNeuvottelunAineistot {
+  perustiedot: ProjektinPerustiedot!
+  poistumisPaiva: String
+  linkkiVanhentunut: Boolean
+  lisatiedot: String
+  projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  suunnitelma: [LadattavaTiedosto!]
+  kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
+  lausunnot: [LadattavaTiedosto!]
+  maanomistajaluettelo: [LadattavaTiedosto!]
+  kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  muutAineistot: [LadattavaTiedosto!]
+  aineistopaketti: String
+}
+
 interface ILadattavaTiedosto {
   """
   Kategorian ID, joka viittaa kategoriapuun kategoriaan
@@ -1336,6 +1392,9 @@ type KasittelynTila {
   korkeinHallintoOikeus: OikeudenPaatos
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 type OikeudenPaatos {
@@ -1402,7 +1461,14 @@ type Omistaja {
   maakoodi: String
   maa: String
   viimeisinLahetysaika: String
-  viimeisinTila: String
+  viimeisinTila: TiedotettavanLahetyksenTila
+}
+
+enum TiedotettavanLahetyksenTila {
+  OK
+  VIRHE
+  OK_ERI_KIINTEISTO_MUISTUTUS
+  VIRHE_ERI_KIINTEISTO_MUISTUTUS
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1428,7 +1494,7 @@ type Muistuttaja {
   sahkoposti: String
   paivitetty: String
   viimeisinLahetysaika: String
-  viimeisinTila: String
+  viimeisinTila: TiedotettavanLahetyksenTila
 }
 
 type Muistuttajat {

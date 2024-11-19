@@ -40,13 +40,6 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     await validate(projektiInDB, input);
     // Adaptoi muokattava hyvaksymisesitys
     const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-    // Persistoi uudet tiedostot
-    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-    if (uudetTiedostot.length) {
-      await Promise.all(
-        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
-      );
-    }
     // Poista poistetut tiedostot/aineistot
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
       projektiInDB.muokattavaHyvaksymisEsitys,
@@ -58,6 +51,13 @@ export default async function tallennaHyvaksymisEsitys(input: API.TallennaHyvaks
     );
     if (poistetutTiedostot.length || poistetutAineistot.length) {
       await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
+    }
+    // Persistoi uudet tiedostot
+    const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
+    if (uudetTiedostot.length) {
+      await Promise.all(
+        uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
+      );
     }
     // Tallenna adaptoitu hyväksymisesitys tietokantaan
     auditLog.info("Tallenna hyväksymisesitys", { oid, versio, newMuokattavaHyvaksymisEsitys });
@@ -102,7 +102,7 @@ async function validate(projektiInDB: HyvaksymisEsityksenTiedot, input: API.Tall
   await validateVaiheOnAktiivinen(projektiInDB);
 }
 
-function uusiaAineistoja(
+export function uusiaAineistoja(
   aineistotBefore: AineistoNew[],
   aineistotAfter: AineistoNew[],
   aineistoHandledAt: string | null | undefined

@@ -2,7 +2,7 @@ import { auditLog, log, recordVelhoLatencyDecorator, VelhoApiName } from "../log
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
-import { ProjektiToimeksiannotInner } from "./projektirekisteri";
+import type { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "hassu-common/graphql/apiModel";
 import {
@@ -15,8 +15,8 @@ import {
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "hassu-common/error";
-import { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
-import { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
+import type { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
+import type { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
@@ -56,7 +56,7 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator(VelhoApiName.authenticate, "authenticate")
-  private async callAuthenticate(axios: AxiosStatic) {
+  private callAuthenticate(axios: AxiosStatic) {
     assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
     assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
     assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");

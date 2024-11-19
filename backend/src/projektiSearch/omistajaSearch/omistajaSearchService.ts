@@ -83,8 +83,8 @@ class OmistajaSearchService {
   async searchOmistajat(params: HaeKiinteistonOmistajatQueryVariables): Promise<KiinteistonOmistajat> {
     const searchResult = await omistajaOpenSearchClient.query({
       query: this.buildQuery(params),
-      size: params.size ?? undefined,
-      from: params.from ?? undefined,
+      size: params.size ?? 10000,
+      from: params.from ?? 0,
       sort: [{ "kiinteistotunnus.keyword": { order: "asc" } }],
     });
 

@@ -64,17 +64,11 @@ export type Aineisto = {
   kategoriaMuuttunut?: boolean;
 };
 
-export type AineistoNew = {
+export type AineistoNew = ILadattuTiedosto & {
   // Dokumentin oid Velhossa
   dokumenttiOid: string;
   // Kategorian ID, joka viittaa kategoriapuun kategoriaan
   kategoriaId?: string;
-  // Tiedostonimi naytettavaksi
-  nimi: string;
-  // Tunniste, joka on luotu FE:ssä, kun tiedosto on valittu. Ei muutu.
-  uuid: string;
-  // Aikaleima, milloin tiedosto on lisatty jarjestelmaan yyyy-MM-ddTHH:mm
-  lisatty: string;
 };
 
 export type StandardiYhteystiedot = {
@@ -85,6 +79,7 @@ export type StandardiYhteystiedot = {
 export type IlmoituksenVastaanottajat = {
   kunnat?: Array<KuntaVastaanottaja> | null;
   viranomaiset?: Array<ViranomaisVastaanottaja> | null;
+  maakunnat?: Array<MaakuntaVastaanottaja> | null;
 };
 
 export type SahkopostiVastaanottaja = {
@@ -95,6 +90,10 @@ export type SahkopostiVastaanottaja = {
 };
 
 export type KuntaVastaanottaja = {
+  id: number;
+} & SahkopostiVastaanottaja;
+
+export type MaakuntaVastaanottaja = {
   id: number;
 } & SahkopostiVastaanottaja;
 

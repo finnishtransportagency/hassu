@@ -98,7 +98,7 @@ describe("vuorovaikutusKierrosTilaManager", () => {
     delete projekti.vuorovaikutusKierrosJulkaisut;
     await expect(vuorovaikutusKierrosTilaManager.reject(projekti, "")).to.eventually.rejectedWith(
       IllegalArgumentError,
-      "Ensimmäistä vuorovaikutuskierrosta ei vois poistaa!"
+      "Ensimmäistä vuorovaikutuskierrosta ei voi poistaa!"
     );
   });
 
@@ -114,7 +114,7 @@ describe("vuorovaikutusKierrosTilaManager", () => {
     });
     await expect(vuorovaikutusKierrosTilaManager.reject(projekti, "")).to.eventually.rejectedWith(
       IllegalArgumentError,
-      "Julkaistua vuorovaikutuskierrosta ei vois poistaa!"
+      "Julkaistua vuorovaikutuskierrosta ei voi poistaa!"
     );
   });
 

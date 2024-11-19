@@ -140,5 +140,8 @@ export const kasittelynTilaSchema = Yup.object().shape({
       return true;
     }),
     korkeinHallintoOikeus: oikeusSchema(),
+    suunnitelmaRauennut: paivamaara().notRequired().nullable(),
+    tieRatasuunnitelmaLuotu: Yup.boolean().notRequired().nullable(),
+    laaditunSuunnitelmanLisatiedot: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable(),
   }),
 });

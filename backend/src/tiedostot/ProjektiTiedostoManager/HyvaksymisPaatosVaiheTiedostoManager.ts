@@ -1,11 +1,10 @@
-import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
-import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
-import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
+import { forEverySaameDo, forSuomiRuotsiDo } from "../../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
@@ -38,51 +37,6 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractHyvaksymisPaat
       );
     }
     return true;
-  }
-
-  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
-    if (!(isStatusGreaterOrEqualTo(projektiStatus, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
-      return [];
-    }
-    const julkaisutSet = await this.julkaisut.reduce(
-      async (modifiedJulkaisutPromise: Promise<Set<HyvaksymisPaatosVaiheJulkaisu>>, julkaisu) => {
-        const modifiedJulkaisut = await modifiedJulkaisutPromise;
-        await forSuomiRuotsiDoAsync(async (kieli) => {
-          if (
-            await this.deleteFilesWhenEpaaktiivinen(
-              julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli],
-              "hyvaksymisKuulutusPDFPath",
-              "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
-              "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
-              "hyvaksymisIlmoitusLausunnonantajillePDFPath",
-              "hyvaksymisIlmoitusMuistuttajillePDFPath"
-            )
-          ) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-        });
-
-        if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
-          modifiedJulkaisut.add(julkaisu);
-        }
-
-        if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.hyvaksymisPaatosVaiheSaamePDFt)) {
-          modifiedJulkaisut.add(julkaisu);
-        }
-
-        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
-          modifiedJulkaisut.add(julkaisu);
-        }
-        if (julkaisu.maanomistajaluettelo) {
-          await this.deleteSisainenTiedosto(julkaisu.maanomistajaluettelo);
-          modifiedJulkaisut.add(julkaisu);
-        }
-
-        return modifiedJulkaisut;
-      },
-      Promise.resolve(new Set<HyvaksymisPaatosVaiheJulkaisu>())
-    );
-    return Array.from(julkaisutSet.values());
   }
 
   getAsianhallintaSynkronointi(

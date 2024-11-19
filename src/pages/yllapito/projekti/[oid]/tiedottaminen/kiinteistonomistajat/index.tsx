@@ -20,6 +20,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import ButtonLink from "@components/button/ButtonLink";
 import { PaivamaaraTila } from "@components/PaivamaaraTila";
+import { ViimeisinLahetysHeader } from "../../../../../../components/projekti/tiedottaminen/ViimeisinLahetysHeader";
+
 export default function Kiinteistonomistajat() {
   return (
     <ProjektiConsumer useProjektiOptions={{ revalidateOnMount: true }}>
@@ -217,12 +219,12 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
             columns={[
               ...readColumns,
               {
-                header: "Viimeisin lähetysaika",
+                header: () => <ViimeisinLahetysHeader />,
                 accessorKey: "viimeisinLahetysaika",
                 id: "viimeisinlahetysaika",
                 meta: {
                   widthFractions: 2,
-                  minWidth: 180,
+                  minWidth: 200,
                 },
                 cell: (c) => {
                   const value = c.getValue() as string | null;

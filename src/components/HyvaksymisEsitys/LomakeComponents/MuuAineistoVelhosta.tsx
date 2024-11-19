@@ -8,23 +8,34 @@ import { H5 } from "@components/Headings";
 import { getNewAineistot } from "../../../util/hyvaksymisesitys/getNewAineistot";
 import { adaptVelhoAineistoToAineistoInputNew } from "../../../util/hyvaksymisesitys/adaptVelhoAineistoToAineistoInputNew";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoNew[] | null }): ReactElement {
+export default function MuuAineistoVelhosta({
+  aineisto,
+  ennakkoneuvottelu,
+}: Readonly<{
+  aineisto?: AineistoNew[] | null;
+  ennakkoneuvottelu?: boolean;
+}>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
-  const { fields, remove, prepend, move } = useFieldArray({ name: "muokattavaHyvaksymisEsitys.muuAineistoVelhosta", control });
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { fields, remove, prepend, move } = useFieldArray({
+    name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoVelhosta`,
+    control,
+  });
 
   const registerDokumenttiOid = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.muuAineistoVelhosta.${index}.dokumenttiOid`);
+      return register(
+        `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoVelhosta.${index}.dokumenttiOid`
+      );
     },
     [register]
   );
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.muuAineistoVelhosta.${index}.nimi`);
+      return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.muuAineistoVelhosta.${index}.nimi`);
     },
     [register]
   );
@@ -32,7 +43,10 @@ export default function MuuAineistoVelhosta({ aineisto }: { aineisto?: AineistoN
   return (
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
-      <p>Voit halutessasi liittää hyväksymisesitykseen Projektivelhosta muuta lisäaineistoa, kuten kansiot D–E tai 500–600.</p>
+      <p>
+        Voit halutessasi {ennakkoneuvottelu ? "tuoda" : "liittää hyväksymisesitykseen"} Projektivelhosta muuta lisäaineistoa, kuten
+        kansioiden D–E tai 500–600 aineistoa.
+      </p>
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="muu_aineisto_velhosta_table"

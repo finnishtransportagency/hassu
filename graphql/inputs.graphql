@@ -112,6 +112,7 @@ input StandardiYhteystiedotInput {
 input IlmoituksenVastaanottajatInput {
   kunnat: [KuntaVastaanottajaInput!]
   viranomaiset: [ViranomaisVastaanottajaInput!]
+  maakunnat: [MaakuntaVastaanottajaInput!]
 }
 
 input ViranomaisVastaanottajaInput {
@@ -120,6 +121,11 @@ input ViranomaisVastaanottajaInput {
 }
 
 input KuntaVastaanottajaInput {
+  id: Int!
+  sahkoposti: String!
+}
+
+input MaakuntaVastaanottajaInput {
   id: Int!
   sahkoposti: String!
 }
@@ -272,6 +278,26 @@ input HyvaksymisEsitysInput {
   muuAineistoKoneelta: [LadattuTiedostoInputNew!]
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
+}
+
+input EnnakkoNeuvotteluInput {
+  poistumisPaiva: String
+  lisatiedot: String
+  suunnitelma: [AineistoInputNew!]
+  muistutukset: [KunnallinenLadattuTiedostoInput!]
+  lausunnot: [LadattuTiedostoInputNew!]
+  kuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
+  muuAineistoVelhosta: [AineistoInputNew!]
+  muuAineistoKoneelta: [LadattuTiedostoInputNew!]
+  maanomistajaluettelo: [LadattuTiedostoInputNew!]
+  vastaanottajat: [SahkopostiVastaanottajaInput!]
+}
+
+input TallennaEnnakkoNeuvotteluInput {
+  oid: String!
+  versio: Int!
+  laheta: Boolean!
+  ennakkoNeuvottelu: EnnakkoNeuvotteluInput!
 }
 
 input SahkopostiVastaanottajaInput {
@@ -517,6 +543,9 @@ input KasittelyntilaInput {
   korkeinHallintoOikeus: OikeudenPaatosInput
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 input OikeudenPaatosInput {

@@ -96,6 +96,10 @@ import {
   KayttoOikeusTiedot,
   HyvaksymisEsityksenAineistot,
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
+  TallennaEnnakkoNeuvotteluInput,
+  TallennaEnnakkoNeuvotteluMutationVariables,
+  ListaaEnnakkoNeuvottelunTiedostotQueryVariables,
+  EnnakkoNeuvottelunAineistot,
   AktivoiProjektiJatkopaatettavaksiMutationVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
@@ -136,6 +140,12 @@ export const apiConfig: ApiConfig = {
     name: "tallennaHyvaksymisesitys",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaHyvaksymisesitys,
+    isYllapitoOperation: true,
+  },
+  tallennaEnnakkoNeuvottelu: {
+    name: "tallennaEnnakkoNeuvottelu",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaEnnakkoNeuvottelu,
     isYllapitoOperation: true,
   },
   tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi: {
@@ -345,6 +355,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaHyvaksymisEsityksenTiedostot,
   },
+  listaaEnnakkoNeuvottelunTiedostot: {
+    name: "listaaEnnakkoNeuvottelunTiedostot",
+    operationType: OperationType.Query,
+    graphql: queries.listaaEnnakkoNeuvottelunTiedostot,
+  },
   esikatseleLausuntoPyynnonTiedostot: {
     name: "esikatseleLausuntoPyynnonTiedostot",
     operationType: OperationType.Query,
@@ -520,6 +535,12 @@ export abstract class AbstractApi {
     } as HaeHyvaksymisEsityksenTiedotQueryVariables);
   }
 
+  async tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.tallennaEnnakkoNeuvottelu, {
+      input,
+    } as TallennaEnnakkoNeuvotteluMutationVariables);
+  }
+
   async arkistoiProjekti(oid: string): Promise<Projekti> {
     return await this.callYllapitoAPI(apiConfig.arkistoiProjekti, {
       oid,
@@ -644,7 +665,10 @@ export abstract class AbstractApi {
     const variables: ListaaPalautteetQueryVariables = {
       oid,
     };
-    return await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
+    const palautteet: Palaute[] = await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
+    // mahdollistetaan palautteiden muokkaus
+    // Apollo Cachen palauttama data on immutable ja palaute.vastattu muokkaus ei onnistu
+    return palautteet.map((palaute) => ({ ...palaute }));
   }
 
   async lataaPalautteetPDF(oid: string): Promise<PDF> {
@@ -720,6 +744,13 @@ export abstract class AbstractApi {
       oid,
       listaaHyvaksymisEsityksenTiedostotInput,
     } as ListaaHyvaksymisEsityksenTiedostotQueryVariables);
+  }
+
+  async listaaEnnakkoNeuvottelunTiedostot(oid: string, hash: string): Promise<EnnakkoNeuvottelunAineistot> {
+    return await this.callAPI(apiConfig.listaaEnnakkoNeuvottelunTiedostot, {
+      oid,
+      hash,
+    } as ListaaEnnakkoNeuvottelunTiedostotQueryVariables);
   }
 
   async esikatseleLausuntoPyynnonTiedostot(oid: string, lausuntoPyynto: LausuntoPyyntoInput): Promise<LadattavatTiedostot> {

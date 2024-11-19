@@ -16,7 +16,11 @@ export default function Layout({ children }: Props): ReactElement {
   if (
     route.includes("lausuntopyyntoaineistot") ||
     route.includes("lausuntopyynnon-taydennysaineistot") ||
-    route.includes("hyvaksymisesitysaineistot")
+    route.includes("hyvaksymisesitysaineistot") ||
+    route.includes("ennakkoneuvotteluaineistot") ||
+    route.includes("esikatsele-ennakkoneuvottelu") ||
+    route.includes("esikatsele-hyvaksymisesitys") ||
+    route.includes("esikatsele-hyvaksyttava-hyvaksymisesitys")
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">

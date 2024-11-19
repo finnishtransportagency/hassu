@@ -125,7 +125,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
             Alla löydät linkin viimeisimpään lausuntopyynnön täydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
             tietokoneellesi ja täytä sen sisältö. Lausuntopyynnön täydennys lähetetään järjestelmän ulkopuolella.
           </p>
-          <div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
               <DownloadButtonLink
                 id="mallipohja-33T"

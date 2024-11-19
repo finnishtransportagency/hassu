@@ -15,10 +15,8 @@ import { NotFoundError } from "hassu-common/error";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
-  IlmoituksenVastaanottajat,
   LadattuTiedosto,
   PartialDBProjekti,
-  Velho,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuus,
@@ -53,6 +51,7 @@ import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { omistajaDatabase } from "../database/omistajaDatabase";
+import { config } from "../config";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -103,7 +102,11 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
-    return projektiAdapter.adaptProjekti(projektiFromDB);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projektiFromDB);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
+    await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
+    return apiProjekti;
   } else {
     requirePermissionLuonti();
     const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
@@ -111,9 +114,28 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     if (projektipaallikkoVirhetieto) {
       virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
     }
-
     return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
+}
+
+async function lisaaApiAineistolleTiedostokoko(paatosAineisto: API.Aineisto[] | null | undefined): Promise<void> {
+  if (!paatosAineisto) {
+    return;
+  }
+  await Promise.all(
+    paatosAineisto.map(async (aineisto) => {
+      if (!aineisto.tiedosto) {
+        return;
+      }
+      const parts = aineisto.tiedosto.split("/");
+      const filenamePart = parts.pop();
+
+      if (filenamePart) {
+        const filePathWithDecodedFilename = [...parts, decodeURIComponent(filenamePart)].join("/");
+        aineisto.koko = await fileService.getFileContentLength(config.yllapitoBucketName, filePathWithDecodedFilename);
+      }
+    })
+  );
 }
 
 export async function arkistoiProjekti(oid: string): Promise<string> {
@@ -335,11 +357,6 @@ export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
   }
 }
 
-type PartialProjektiWithLuonnosVaiheet = Pick<
-  DBProjekti,
-  "aloitusKuulutus" | "vuorovaikutusKierros" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
->;
-
 export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<API.Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
@@ -374,8 +391,6 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
 
-    const projektiAvaimetJoissaIlmoitetuksenVastaanottajat = getUpdatedIlmoituksenVastaanottajat(projektiFromDB, projektiFromVelho.velho);
-
     const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(projektiFromDB)) ? await haeAsiaId(oid) : undefined;
 
     const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet" | "asianhallinta"> = {
@@ -383,7 +398,6 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
       velho: projektiFromVelho.velho,
       kayttoOikeudet: kayttoOikeudetNew,
       asianhallinta: { ...(projektiFromDB.asianhallinta ?? {}), asiaId },
-      ...projektiAvaimetJoissaIlmoitetuksenVastaanottajat,
     };
 
     await projektiDatabase.saveProjektiWithoutLocking(dbProjekti);
@@ -402,63 +416,6 @@ async function haeAsiaId(oid: string) {
     log.info(e, "asiaId:tä ei voitu hakea");
     return undefined;
   }
-}
-
-function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velho): PartialProjektiWithLuonnosVaiheet {
-  const luonnosVaiheKeys: (keyof PartialProjektiWithLuonnosVaiheet)[] = [
-    "aloitusKuulutus",
-    "vuorovaikutusKierros",
-    "nahtavillaoloVaihe",
-    "hyvaksymisPaatosVaihe",
-    "jatkoPaatos1Vaihe",
-    "jatkoPaatos2Vaihe",
-  ];
-
-  return luonnosVaiheKeys.reduce<PartialProjektiWithLuonnosVaiheet>((dataToSave, vaiheKey) => {
-    if (dbProjekti[vaiheKey]) {
-      if (vaiheKey === "vuorovaikutusKierros") {
-        const oldVuorovaikutusKierros = dbProjekti[vaiheKey];
-        const vuorovaikutusNumero = oldVuorovaikutusKierros?.vuorovaikutusNumero;
-        if (!oldVuorovaikutusKierros || vuorovaikutusNumero === undefined) {
-          throw new Error("Vuorovaikutuskierrokselta puuttuu vuorovaikutusnumero");
-        }
-        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset ?? [];
-        dataToSave[vaiheKey] = {
-          ...oldVuorovaikutusKierros,
-          vuorovaikutusNumero,
-          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset },
-        };
-      } else {
-        const oldVaiheData = dbProjekti[vaiheKey];
-        const id = oldVaiheData?.id;
-        if (!oldVaiheData || id === undefined) {
-          throw new Error(`'${vaiheKey}' vaiheelta puuttuu id-tieto`);
-        }
-        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset ?? [];
-        dataToSave[vaiheKey] = {
-          ...oldVaiheData,
-          id,
-          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset },
-        };
-      }
-    }
-    return dataToSave;
-  }, {});
-}
-
-function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof PartialProjektiWithLuonnosVaiheet) {
-  const defaultKunnat: IlmoituksenVastaanottajat["kunnat"] = velho.kunnat?.map((id) => ({ id, sahkoposti: "" }));
-
-  const vanhatKuntatiedot = dbProjekti[vaiheKey]?.ilmoituksenVastaanottajat?.kunnat;
-  const kunnat: IlmoituksenVastaanottajat["kunnat"] = defaultKunnat?.map((defaultKunta) => {
-    const vanhaKuntatieto = vanhatKuntatiedot?.find((kunta) => kunta.id === defaultKunta.id);
-    return {
-      ...(vanhaKuntatieto ?? {}),
-      id: defaultKunta.id,
-      sahkoposti: vanhaKuntatieto?.sahkoposti ?? defaultKunta.sahkoposti,
-    };
-  });
-  return kunnat;
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {

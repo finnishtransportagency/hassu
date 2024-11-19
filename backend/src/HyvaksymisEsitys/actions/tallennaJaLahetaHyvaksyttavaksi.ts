@@ -45,13 +45,6 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   const newMuokattavaHyvaksymisEsitys = adaptHyvaksymisEsitysToSave(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
   // Validoi, että hyväksyttäväksi lähetettävällä hyväksymisEsityksellä on kaikki kentät kunnossa
   validateUpcoming(newMuokattavaHyvaksymisEsitys, projektiInDB.aineistoHandledAt, projektiInDB.velho?.tyyppi);
-  // Persistoi uudet tiedostot
-  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
-  if (uudetTiedostot.length) {
-    await Promise.all(
-      uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
-    );
-  }
   // Poista poistetut tiedostot/aineistot
   const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(
     projektiInDB.muokattavaHyvaksymisEsitys,
@@ -63,6 +56,13 @@ export default async function tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(in
   );
   if (poistetutTiedostot.length || poistetutAineistot.length) {
     await deleteFilesUnderSpecifiedVaihe(oid, MUOKATTAVA_HYVAKSYMISESITYS_PATH, [...poistetutTiedostot, ...poistetutAineistot]);
+  }
+  // Persistoi uudet tiedostot
+  const uudetTiedostot = getHyvaksymisEsityksenUudetLadatutTiedostot(projektiInDB.muokattavaHyvaksymisEsitys, muokattavaHyvaksymisEsitys);
+  if (uudetTiedostot.length) {
+    await Promise.all(
+      uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: MUOKATTAVA_HYVAKSYMISESITYS_PATH }))
+    );
   }
   // Tallenna adaptaation tulos "odottaa hyväksyntää" tilalla varustettuna tietokantaan
   const tallennettavaMuokattavaHyvaksymisEsitys = {

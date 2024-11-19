@@ -1,3 +1,4 @@
+import { Status } from "hassu-common/graphql/apiModel";
 import {
   AloitusKuulutusTiedostoManager,
   HyvaksymisPaatosVaiheTiedostoManager,
@@ -11,9 +12,10 @@ import {
 } from ".";
 import { DBProjekti } from "../../database/model";
 import hyvaksymisesitysAineistoImportPending from "../../HyvaksymisEsitys/aineistoImportPending";
+import ennakkoneuvotteluAineistoImportPending from "../../ennakkoneuvottelu/aineistoImportPending";
 
 export class ProjektiTiedostoManager {
-  private projekti: DBProjekti;
+  private readonly projekti: DBProjekti;
 
   constructor(projekti: DBProjekti) {
     this.projekti = projekti;
@@ -29,7 +31,8 @@ export class ProjektiTiedostoManager {
       this.getJatkoPaatos2Vaihe().isReady() &&
       this.getLausuntoPyynnot().isReady() &&
       this.getLausuntoPyynnonTaydennykset().isReady() &&
-      !hyvaksymisesitysAineistoImportPending(this.projekti)
+      !hyvaksymisesitysAineistoImportPending(this.projekti) &&
+      !ennakkoneuvotteluAineistoImportPending(this.projekti)
     );
   }
 
@@ -79,7 +82,8 @@ export class ProjektiTiedostoManager {
     return new HyvaksymisPaatosVaiheTiedostoManager(
       this.projekti.oid,
       this.projekti.hyvaksymisPaatosVaihe,
-      this.projekti.hyvaksymisPaatosVaiheJulkaisut
+      this.projekti.hyvaksymisPaatosVaiheJulkaisut,
+      Status.EPAAKTIIVINEN_1
     );
   }
 
@@ -87,7 +91,8 @@ export class ProjektiTiedostoManager {
     return new JatkoPaatos1VaiheTiedostoManager(
       this.projekti.oid,
       this.projekti.jatkoPaatos1Vaihe,
-      this.projekti.jatkoPaatos1VaiheJulkaisut
+      this.projekti.jatkoPaatos1VaiheJulkaisut,
+      Status.EPAAKTIIVINEN_2
     );
   }
 
@@ -95,7 +100,8 @@ export class ProjektiTiedostoManager {
     return new JatkoPaatos2VaiheTiedostoManager(
       this.projekti.oid,
       this.projekti.jatkoPaatos2Vaihe,
-      this.projekti.jatkoPaatos2VaiheJulkaisut
+      this.projekti.jatkoPaatos2VaiheJulkaisut,
+      Status.EPAAKTIIVINEN_3
     );
   }
 }

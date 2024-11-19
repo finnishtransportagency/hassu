@@ -20,6 +20,7 @@ import KiinteistonomistajatOhje from "@components/projekti/common/KiinteistonOmi
 import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import { H2, H3 } from "../../../Headings";
+import { InfoText } from "@components/projekti/common/IlmoituksenVastaanottajatLukutila";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -52,6 +53,12 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
     keyName: "alt-id",
   });
 
+  const { fields: maakuntaFields } = useFieldArray({
+    control,
+    name: "paatos.ilmoituksenVastaanottajat.maakunnat",
+    keyName: "alt-id",
+  });
+
   const {
     fields: viranomaisFields,
     append,
@@ -71,15 +78,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
         <Section>
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
-            <p>
-              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-              -painikkeella.
-            </p>
-            <p>
-              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
-            </p>
+            <InfoText paatosTyyppi={paatosTyyppi} />
           </SectionContent>
           <SectionContent>
             <div className="grid grid-cols-4 gap-x-6 mb-4">
@@ -118,21 +117,34 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               ))}
             </div>
           </SectionContent>
+          {paatosIsJatkopaatos(paatosTyyppi) && (
+            <SectionContent>
+              <h6 className="font-bold">Maakuntaliitot</h6>
+              <div className="content grid grid-cols-4 mb-4">
+                <p className="vayla-table-header">Maakuntaliitto</p>
+                <p className="vayla-table-header">Sähköpostiosoite</p>
+                <p className="vayla-table-header">Ilmoituksen tila</p>
+                <p className="vayla-table-header">Lähetysaika</p>
+                {paatosVaihe?.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta, index) => (
+                  <Fragment key={maakunta.id}>
+                    <p className={getStyleForRow(index)}>{kuntametadata.liittoNameForMaakuntaId(maakunta.id)}</p>
+                    <p className={getStyleForRow(index)}>{maakunta.sahkoposti}</p>
+                    <p className={getStyleForRow(index)}>{lahetysTila(maakunta)}</p>
+                    <p className={getStyleForRow(index)}>
+                      {maakunta.lahetetty ? dayjs(maakunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}
+                    </p>
+                  </Fragment>
+                ))}
+              </div>
+            </SectionContent>
+          )}
         </Section>
       )}
       <div style={julkinen ? { display: "none" } : {}}>
         <Section>
           <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
-            <p>
-              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
-              Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
-              -painikkeella.
-            </p>
-            <p>
-              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
-            </p>
+            <InfoText paatosTyyppi={paatosTyyppi} />
           </SectionContent>
 
           <>
@@ -224,6 +236,23 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
               </HassuGrid>
             ))}
           </SectionContent>
+          {paatosIsJatkopaatos(paatosTyyppi) && (
+            <SectionContent>
+              <H3>Maakuntaliitot</H3>
+              {maakuntaFields.length === 0 && <p>Maakuntia ei ole asetettu velhoon.</p>}
+              {maakuntaFields.map((maakunta, index) => (
+                <HassuGrid key={maakunta.id} cols={{ lg: 3 }}>
+                  <input type="hidden" {...register(`paatos.ilmoituksenVastaanottajat.maakunnat.${index}.id`)} readOnly />
+                  <TextInput label="Maakuntaliitto *" value={kuntametadata.liittoNameForMaakuntaId(maakunta.id)} disabled />
+                  <TextInput
+                    label="Sähköpostiosoite *"
+                    error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.maakunnat?.[index]?.sahkoposti}
+                    {...register(`paatos.ilmoituksenVastaanottajat.maakunnat.${index}.sahkoposti`)}
+                  />
+                </HassuGrid>
+              ))}
+            </SectionContent>
+          )}
           {!paatosIsJatkopaatos(paatosTyyppi) && (
             <>
               <KiinteistonomistajatOhje

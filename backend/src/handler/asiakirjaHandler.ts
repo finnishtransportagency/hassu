@@ -138,12 +138,23 @@ async function handleHyvaksymisPaatosKuulutus(
   const kasittelynTila = projektiWithChanges.kasittelynTila;
   assert(kasittelynTila, "Käsittelyn tila puuttuu");
   const muutostenAvaimet = Object.keys(muutokset);
-  const avainPaatokselle = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
-    ? "hyvaksymisPaatosVaihe"
-    : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
-    ? "jatkoPaatos1Vaihe"
-    : "jatkoPaatos2Vaihe";
-  const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
+  let avainPaatokselle: keyof DBProjekti;
+  let avainJulkaisut: keyof DBProjekti;
+  if (muutostenAvaimet.includes("hyvaksymisPaatosVaihe")) {
+    avainPaatokselle = "hyvaksymisPaatosVaihe";
+    avainJulkaisut = "hyvaksymisPaatosVaiheJulkaisut";
+  } else if (muutostenAvaimet.includes("jatkoPaatos1Vaihe")) {
+    avainPaatokselle = "jatkoPaatos1Vaihe";
+    avainJulkaisut = "jatkoPaatos1VaiheJulkaisut";
+  } else {
+    avainPaatokselle = "jatkoPaatos2Vaihe";
+    avainJulkaisut = "jatkoPaatos2VaiheJulkaisut";
+  }
+  const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+    projektiWithChanges,
+    projektiWithChanges[avainPaatokselle],
+    projektiWithChanges[avainJulkaisut]
+  );
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
     lyhytOsoite: projekti.lyhytOsoite,

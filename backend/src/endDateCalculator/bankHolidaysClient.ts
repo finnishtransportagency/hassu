@@ -16,8 +16,8 @@ async function getBankHolidays(useCachedValue = true): Promise<BankHolidays> {
         ? await s3Cache.get(
             BANK_HOLIDAYS_CACHE_KEY,
             BANK_HOLIDAYS_CACHE_TTL_MILLIS,
-            () => {
-              fetchBankHolidaysFromAPI();
+            async () => {
+              await fetchBankHolidaysFromAPI();
             },
             async () => {
               return fetchBankHolidaysFromAPI();

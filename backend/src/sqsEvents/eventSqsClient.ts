@@ -38,8 +38,8 @@ class EventSqsClient {
     await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid, approvalType, reason });
   }
 
-  async addEventToSqsQueue(params: SqsEvent, retry?: boolean) {
-    const messageParams = this.createMessageParams(params, retry);
+  async addEventToSqsQueue(params: SqsEvent) {
+    const messageParams = this.createMessageParams(params);
     if (messageParams) {
       log.info("addEventToSqsQueue", { messageParams });
       const result = await getSQS().sendMessage(messageParams);
@@ -47,24 +47,11 @@ class EventSqsClient {
     }
   }
 
-  createMessageParams(params: SqsEvent, retry?: boolean) {
-    if (retry) {
-      let retriesLeft = params.retriesLeft;
-      if (retriesLeft == undefined) {
-        retriesLeft = 60;
-      } else if (retriesLeft <= 0) {
-        log.error("Giving up retrying", { params });
-        return;
-      } else {
-        retriesLeft--;
-      }
-      params.retriesLeft = retriesLeft;
-    }
+  createMessageParams(params: SqsEvent) {
     const messageParams: SendMessageRequest = {
       MessageGroupId: params.oid,
       MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
       QueueUrl: config.eventSqsUrl,
-      DelaySeconds: retry ? 60 : undefined,
     };
     return messageParams;
   }

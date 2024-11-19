@@ -92,6 +92,14 @@ export const LAUSUNTOPYYNNOT_MAIN_ROUTE: Route = {
   isSubPath: true,
 };
 
+export const ENNAKKONEUVOTTELU_ROUTE: Route = {
+  title: "Ennakkotarkastus/ennakkoneuvottelu",
+  id: "ennakkoneuvottelu",
+  requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+  pathname: `/yllapito/projekti/[oid]/ennakkoneuvottelu`,
+  visible: true,
+};
+
 export const HYVAKSYMISESITYS_ROUTE: Route = {
   title: "Hyväksymisesitys",
   id: "hyvaksymisesitys",
@@ -197,7 +205,7 @@ const routes: Route[] = [
   LAUSUNTOPYYNNOT_MAIN_ROUTE,
   LAUSUNTOPYYNNOT_ROUTE,
   LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE,
-  HYVAKSYMISESITYS_ROUTE,
+  ENNAKKONEUVOTTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
   NAHTAVILLAOLO_AINEISTOT_ROUTE,
   NAHTAVILLAOLO_KUULUTUS_ROUTE,
@@ -218,6 +226,7 @@ export const projektinVaiheetNavigaatiossa: Route[] = [
   SUUNNITTELU_ROUTE,
   NAHTAVILLAOLO_ROUTE,
   LAUSUNTOPYYNNOT_MAIN_ROUTE,
+  ENNAKKONEUVOTTELU_ROUTE,
   HYVAKSYMISESITYS_ROUTE,
   HYVAKSYMINEN_ROUTE,
   ENSIMMAINEN_JATKAMINEN_ROUTE,

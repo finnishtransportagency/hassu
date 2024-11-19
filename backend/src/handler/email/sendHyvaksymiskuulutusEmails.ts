@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kayttaja, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
@@ -16,6 +16,11 @@ import {
   findHyvaksymisKuulutusLastApproved,
 } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { EmailOptions } from "../../email/model/emailOptions";
+import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
+import { getProjektipaallikkoAndOrganisaatio } from "../../util/userUtil";
+import { translate } from "../../util/localization";
+import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
@@ -25,6 +30,13 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   protected getPaatosTyyppi() {
     return PaatosTyyppi.HYVAKSYMISPAATOS;
   }
+
+  protected async sendEmailToMaakuntaliitto(
+    _emailCreator: HyvaksymisPaatosEmailCreator,
+    _julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    _projektinKielet: Kieli[],
+    _projekti: DBProjekti
+  ): Promise<void> {}
 
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -41,11 +53,58 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
     if (!julkaisu.aineistoMuokkaus) {
       await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
+      await this.sendEmailToMaakuntaliitto(emailCreator, julkaisu, projektinKielet, projekti);
     }
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
     return emailCreator.createHyvaksymispaatosHyvaksyttyViranomaisille();
+  }
+
+  protected async getMandatoryProjektiFileAsAttachmentAndItsSize(
+    filepath: string | undefined | null,
+    projekti: DBProjekti,
+    logInfo: string
+  ): Promise<{
+    attachment: Mail.Attachment;
+    size: number | undefined;
+  }> {
+    if (!filepath) {
+      throw new Error(`emailAttachmentError: Polku tiedostolle '${logInfo}' on määrittelemättä.`);
+    }
+    const { attachment, size } = await fileService.getFileAsAttachmentAndItsSize(projekti.oid, filepath);
+    if (!attachment) {
+      throw new Error(`emailAttachmentError: Polusta '${filepath}' ei löytynyt tiedostoa.`);
+    }
+    return { attachment, size };
+  }
+
+  protected async getPaatostiedostotAsAttachments(
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    projekti: DBProjekti
+  ): Promise<Mail.Attachment[]> {
+    const attachmentsAndSizes = await Promise.all(
+      (julkaisu.hyvaksymisPaatos ?? []).map(
+        async (aineisto) =>
+          await this.getMandatoryProjektiFileAsAttachmentAndItsSize(aineisto.tiedosto, projekti, `oid:${aineisto.dokumenttiOid}`)
+      )
+    );
+
+    // 30MB
+    const maximumCombinedSize = 30 * 1024 * 1024;
+
+    const combinedFileSize = attachmentsAndSizes.reduce((combinedFileSize, { size = 0 }) => (combinedFileSize += size), 0);
+
+    if (combinedFileSize > maximumCombinedSize) {
+      log.info("Päätöstiedostojen koko ylittää sallitun 30 Mt rajan. Jätetään päätöstiedostot pois liitteistä.", {
+        combinedFileSize,
+        maximumCombinedSize,
+        tiedostot: attachmentsAndSizes.map(({ attachment }) => attachment.filename).filter((filename): filename is string => !!filename),
+      });
+      return [];
+    }
+
+    return attachmentsAndSizes.map(({ attachment }) => attachment);
   }
 
   protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
@@ -96,16 +155,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
         return lahetettavatPDFt;
       }, Promise.resolve([]));
-    const paatosTiedostot =
-      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
-        const aineistoTiedosto = await this.getMandatoryProjektiFileAsAttachment(
-          aineisto.tiedosto,
-          projekti,
-          `oid:${aineisto.dokumenttiOid}`
-        );
-        (await tiedostot).push(aineistoTiedosto);
-        return tiedostot;
-      }, Promise.resolve([]))) ?? [];
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
     const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
 
@@ -172,6 +222,50 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 }
 
 class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+  protected async sendEmailToMaakuntaliitto(
+    emailCreator: HyvaksymisPaatosEmailCreator,
+    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    projektinKielet: Kieli[],
+    projekti: DBProjekti
+  ): Promise<void> {
+    const pdft = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
+      .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
+      .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
+        const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = ["hyvaksymisIlmoitusLausunnonantajillePDFPath"];
+        const attachments = await Promise.all(
+          pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+        );
+        (await lahetettavatPDFt).push(...attachments);
+        return lahetettavatPDFt;
+      }, Promise.resolve([]));
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
+    const virasto =
+      projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+        ? "Väyläviraston"
+        : translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI) + " ELY-keskuksen";
+    const projektiPaallikko = getProjektipaallikkoAndOrganisaatio(projekti, Kieli.SUOMI);
+    const text = `Hei,
+Liitteenä on ${virasto} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksen voimassa olon pidentämistä koskevasta päätöksestä koskien suunnitelmaa ${
+      projekti.velho?.nimi ?? ""
+    }.
+
+Ystävällisin terveisin,
+${projektiPaallikko.nimi}
+${projektiPaallikko.organisaatio}`;
+    const prefix = julkaisu.uudelleenKuulutus ? "Korjaus/uudelleenkuulutus: " + virasto : virasto;
+    const emailOptions: EmailOptions = {
+      subject: prefix + " kuulutuksesta ilmoittaminen",
+      text,
+      to: julkaisu.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta) => maakunta.sahkoposti),
+      cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+      attachments: [...pdft, ...paatosTiedostot],
+    };
+    const sentMessageInfo = await emailClient.sendEmail(emailOptions);
+    const aikaleima = localDateTimeString();
+    julkaisu.ilmoituksenVastaanottajat?.maakunnat?.map((maakunta) => examineEmailSentResults(maakunta, sentMessageInfo, aikaleima));
+    await this.updateProjektiJulkaisut(projekti, julkaisu);
+  }
+
   protected async sendEmailToProjektipaallikko(
     emailCreator: HyvaksymisPaatosEmailCreator,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu,
