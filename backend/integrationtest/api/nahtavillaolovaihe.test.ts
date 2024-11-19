@@ -46,6 +46,9 @@ describe("Nähtävilläolovaihe", () => {
   });
 
   it("suorita nähtävilläolovaihe saamen kielellä onnistuneesti", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     const dbProjekti = await createSaameProjektiToVaihe(Status.NAHTAVILLAOLO);
     const { oid } = dbProjekti;
 
