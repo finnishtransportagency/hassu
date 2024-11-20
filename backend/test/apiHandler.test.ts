@@ -3,7 +3,6 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../src/database/projektiDatabase";
 import { ProjektiFixture } from "./fixture/projektiFixture";
 import { UserFixture } from "./fixture/userFixture";
-import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
 import { userService } from "../src/user";
@@ -34,7 +33,7 @@ import assert from "assert";
 import { NoVaylaAuthenticationError } from "hassu-common/error";
 import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
 import { S3Mock } from "./aws/awsMock";
-import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
+import { mockSaveProjektiToVelho, VelhoStub } from "../integrationtest/api/testUtil/util";
 import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
 import { asetaAika } from "../integrationtest/api/testUtil/tests";
@@ -64,6 +63,7 @@ describe("apiHandler", () => {
   let aineistoServiceStub: sinon.SinonStub;
 
   defaultUnitTestMocks();
+  const velhoStub = new VelhoStub();
 
   new S3Mock(true);
   before(() => {
@@ -75,10 +75,10 @@ describe("apiHandler", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "delete");
     generateAndSetLyhytOsoiteStub = sinon.stub(lyhytOsoiteDatabase, "generateAndSetLyhytOsoite");
-    loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+    loadVelhoProjektiByOidStub = velhoStub.loadVelhoProjektiByOidStub;
     persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
-    mockSaveProjektiToVelho();
+    mockSaveProjektiToVelho(velhoStub);
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 
