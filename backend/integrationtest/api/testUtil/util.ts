@@ -253,7 +253,8 @@ export type SaveProjektiToVelhoMocks = {
 
 export function mockSaveProjektiToVelho(velhoStub?: VelhoStub): SaveProjektiToVelhoMocks {
   const saveKasittelynTilaStub = velhoStub?.saveKasittelynTilaStub ?? sinon.stub(velho, "saveKasittelynTila");
-  const saveProjektiAloituskuulutusPaivaStub = velhoStub?.saveProjektiAloituskuulutusPaivaStub ?? sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
+  const saveProjektiAloituskuulutusPaivaStub =
+    velhoStub?.saveProjektiAloituskuulutusPaivaStub ?? sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
   const saveProjektiSuunnitelmanTilaStub = velhoStub?.saveProjektiSuunnitelmanTilaStub ?? sinon.stub(velho, "saveProjektiSuunnitelmanTila");
   mocha.afterEach(() => {
     if (saveKasittelynTilaStub.getCalls().length > 0) {
@@ -394,7 +395,10 @@ function setupMockDate() {
 
 export class VelhoStub {
   public saveKasittelynTilaStub!: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
-  public saveProjektiAloituskuulutusPaivaStub!: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
+  public saveProjektiAloituskuulutusPaivaStub!: sinon.SinonStub<
+    [oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu],
+    Promise<void>
+  >;
   public saveProjektiSuunnitelmanTilaStub!: sinon.SinonStub;
   public loadVelhoProjektiByOidStub!: sinon.SinonStub;
   constructor() {
