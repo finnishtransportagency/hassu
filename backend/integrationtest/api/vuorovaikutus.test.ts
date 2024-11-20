@@ -20,10 +20,10 @@ import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 describe("Vuorovaikutus", () => {
   const userFixture = new UserFixture(userService);
-  const { eventSqsClientMock } = defaultMocks();
+  const { eventSqsClientMock, velhoStub } = defaultMocks();
 
   before(async () => {
-    mockSaveProjektiToVelho();
+    mockSaveProjektiToVelho(velhoStub);
   });
 
   afterEach(() => {

@@ -41,7 +41,6 @@ import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
 import { personSearchUpdaterClient } from "../../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/personSearchUpdaterHandler";
-import { velhoCache } from "./cachingVelhoClient";
 import { mockClient } from "aws-sdk-client-mock";
 import { CloudFront } from "@aws-sdk/client-cloudfront";
 import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
@@ -252,10 +251,10 @@ export type SaveProjektiToVelhoMocks = {
   saveProjektiAloituskuulutusPaivaStub: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
 };
 
-export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
-  const saveKasittelynTilaStub = sinon.stub(velho, "saveKasittelynTila");
-  const saveProjektiAloituskuulutusPaivaStub = sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
-  const saveProjektiSuunnitelmanTilaStub = sinon.stub(velho, "saveProjektiSuunnitelmanTila");
+export function mockSaveProjektiToVelho(velhoStub?: VelhoStub): SaveProjektiToVelhoMocks {
+  const saveKasittelynTilaStub = velhoStub?.saveKasittelynTilaStub ?? sinon.stub(velho, "saveKasittelynTila");
+  const saveProjektiAloituskuulutusPaivaStub = velhoStub?.saveProjektiAloituskuulutusPaivaStub ?? sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
+  const saveProjektiSuunnitelmanTilaStub = velhoStub?.saveProjektiSuunnitelmanTilaStub ?? sinon.stub(velho, "saveProjektiSuunnitelmanTila");
   mocha.afterEach(() => {
     if (saveKasittelynTilaStub.getCalls().length > 0) {
       expect({
@@ -393,6 +392,29 @@ function setupMockDate() {
   });
 }
 
+export class VelhoStub {
+  public saveKasittelynTilaStub!: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
+  public saveProjektiAloituskuulutusPaivaStub!: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
+  public saveProjektiSuunnitelmanTilaStub!: sinon.SinonStub;
+  public loadVelhoProjektiByOidStub!: sinon.SinonStub;
+  constructor() {
+    mocha.before(() => {
+      sinon.stub(velho, "authenticate");
+      sinon.stub(velho, "createProjektiForTesting");
+      sinon.stub(velho, "deleteProjektiForTesting");
+      sinon.stub(velho, "getAineisto");
+      sinon.stub(velho, "getLinkForDocument");
+      this.loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
+      sinon.stub(velho, "loadProjektiAineistot");
+      sinon.stub(velho, "logout");
+      this.saveKasittelynTilaStub = sinon.stub(velho, "saveKasittelynTila");
+      this.saveProjektiAloituskuulutusPaivaStub = sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
+      this.saveProjektiSuunnitelmanTilaStub = sinon.stub(velho, "saveProjektiSuunnitelmanTila");
+      sinon.stub(velho, "searchProjects");
+    });
+  }
+}
+
 export function defaultMocks(): {
   schedulerMock: SchedulerMock;
   emailClientStub: EmailClientStub;
@@ -400,6 +422,7 @@ export function defaultMocks(): {
   awsCloudfrontInvalidationStub: CloudFrontStub;
   pdfGeneratorStub: PDFGeneratorStub;
   parametersStub: ParametersStub;
+  velhoStub: VelhoStub;
 } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
@@ -414,9 +437,9 @@ export function defaultMocks(): {
   mockPersonSearchUpdaterClient();
   mockAsianhallintaService();
   setupMockDate();
-  velhoCache();
   mockUUID();
-  return { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
+  const velhoStub = new VelhoStub();
+  return { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub, velhoStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

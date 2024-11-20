@@ -35,10 +35,10 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  const { emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub } = defaultMocks();
+  const { emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub, velhoStub } = defaultMocks();
 
   before(async () => {
-    mockSaveProjektiToVelho();
+    mockSaveProjektiToVelho(velhoStub);
     parametersStub.asianhallintaEnabled = true;
   });
 
