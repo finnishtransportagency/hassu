@@ -1,23 +1,23 @@
 {
-  "IProjektiHakutulos": [
-    "ProjektiHakutulosJulkinen",
-    "ProjektiHakutulos"
-  ],
-  "ISahkopostiVastaanottaja": [
-    "KuntaVastaanottaja",
-    "ViranomaisVastaanottaja",
-    "MaakuntaVastaanottaja"
+  "ILadattavaTiedosto": [
+    "KunnallinenLadattavaTiedosto",
+    "LadattavaTiedosto"
   ],
   "ILadattuTiedosto": [
     "KunnallinenLadattuTiedosto",
     "LadattuTiedostoNew"
   ],
-  "ILadattavaTiedosto": [
-    "LadattavaTiedosto",
-    "KunnallinenLadattavaTiedosto"
-  ],
   "IProjekti": [
     "Projekti",
     "ProjektiJulkinen"
+  ],
+  "IProjektiHakutulos": [
+    "ProjektiHakutulos",
+    "ProjektiHakutulosJulkinen"
+  ],
+  "ISahkopostiVastaanottaja": [
+    "KuntaVastaanottaja",
+    "MaakuntaVastaanottaja",
+    "ViranomaisVastaanottaja"
   ]
 }

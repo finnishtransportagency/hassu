@@ -1732,7 +1732,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
      * @type {object}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'tila': object;
+    'tila'?: object;
     /**
      * 
      * @type {string}
@@ -1762,7 +1762,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'paattyy': string;
+    'paattyy'?: string;
     /**
      * 
      * @type {object}
@@ -1789,6 +1789,12 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'lyhenne': string | null;
     /**
      * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukkoOminaisuudet
+     */
+    'kustannustietojen-kuvaus'?: string | null;
+    /**
+     * 
      * @type {object}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
@@ -1798,7 +1804,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'alkaa': string;
+    'alkaa'?: string;
     /**
      * 
      * @type {Set<object>}
@@ -1810,7 +1816,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
      * @type {object}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'vaihe': object;
+    'vaihe'?: object;
 }
 
 export const ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum = {
@@ -2096,7 +2102,7 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'tila': ProjektiProjektijoukotInnerOminaisuudetTilaEnum;
+    'tila'?: ProjektiProjektijoukotInnerOminaisuudetTilaEnum;
     /**
      * 
      * @type {string}
@@ -2126,7 +2132,7 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'paattyy': string;
+    'paattyy'?: string;
     /**
      * 
      * @type {string}
@@ -2156,13 +2162,19 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
+    'kustannustietojen-kuvaus'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudet
+     */
     'rahoituksen-lahde': ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum;
     /**
      * 
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'alkaa': string;
+    'alkaa'?: string;
     /**
      * 
      * @type {Set<string>}
@@ -2174,7 +2186,7 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'vaihe': ProjektiProjektijoukotInnerOminaisuudetVaiheEnum;
+    'vaihe'?: ProjektiProjektijoukotInnerOminaisuudetVaiheEnum;
 }
 
 export const ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = {
