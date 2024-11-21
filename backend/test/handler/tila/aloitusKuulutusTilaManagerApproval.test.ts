@@ -22,6 +22,7 @@ import {
   EmailClientStub,
   SaveProjektiToVelhoMocks,
   SchedulerMock,
+  VelhoStub,
   mockSaveProjektiToVelho,
 } from "../../../integrationtest/api/testUtil/util";
 import { isDateTimeInThePast, nyt } from "../../../src/util/dateUtil";
@@ -48,7 +49,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
-    saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
+    saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho(new VelhoStub()).saveProjektiAloituskuulutusPaivaStub;
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });

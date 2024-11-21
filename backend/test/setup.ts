@@ -26,7 +26,11 @@ dotenv.config({ path: ".env.test" });
 
 process.env.USE_PINO_PRETTY = "true";
 process.env.VELHO_READ_ONLY = "true";
-
+// Nollataan Velhon asetukset ettei vahingossa mene kutsuja Velhoon
+process.env.VELHO_AUTH_URL = "http://localhost";
+process.env.VELHO_API_URL = "http://localhost";
+process.env.VELHO_USERNAME = "top";
+process.env.VELHO_PASSWORD = "secret";
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.TABLE_LYHYTOSOITE = "Lyhytosoite-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";

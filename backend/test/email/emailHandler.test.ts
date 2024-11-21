@@ -12,7 +12,7 @@ import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulut
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
 import { projektiSchedulerService } from "../../src/sqsEvents/projektiSchedulerService";
-import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
+import { EmailClientStub, mockSaveProjektiToVelho, VelhoStub } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
@@ -55,7 +55,7 @@ describe("emailHandler", () => {
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
-    mockSaveProjektiToVelho();
+    mockSaveProjektiToVelho(new VelhoStub());
   });
 
   afterEach(() => {
