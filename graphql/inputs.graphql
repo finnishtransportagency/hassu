@@ -283,6 +283,7 @@ input HyvaksymisEsitysInput {
 input EnnakkoNeuvotteluInput {
   poistumisPaiva: String
   lisatiedot: String
+  hyvaksymisEsitys: [LadattuTiedostoInputNew!]
   suunnitelma: [AineistoInputNew!]
   muistutukset: [KunnallinenLadattuTiedostoInput!]
   lausunnot: [LadattuTiedostoInputNew!]

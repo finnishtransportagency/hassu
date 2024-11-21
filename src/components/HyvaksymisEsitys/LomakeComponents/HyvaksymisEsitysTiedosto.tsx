@@ -7,13 +7,16 @@ import { useController, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
-import { HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: LadattuTiedostoNew[] | null }): ReactElement {
+export default function HyvaksymisEsitysTiedosto({
+  tiedostot,
+  ennakkoneuvottelu,
+}: Readonly<{ tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm>();
+  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
 
-  const fieldName = "muokattavaHyvaksymisEsitys.hyvaksymisEsitys";
+  const fieldName = ennakkoneuvottelu ? "ennakkoNeuvottelu.hyvaksymisEsitys" : "muokattavaHyvaksymisEsitys.hyvaksymisEsitys";
   const {
     field: { ref: refForError },
     fieldState: { error },
@@ -30,7 +33,7 @@ export default function HyvaksymisEsitysTiedosto({ tiedostot }: { tiedostot?: La
 
   const registerNimi = useCallback(
     (index: number) => {
-      return register(`muokattavaHyvaksymisEsitys.hyvaksymisEsitys.${index}.nimi`);
+      return register(`${fieldName}.${index}.nimi`);
     },
     [register]
   );
