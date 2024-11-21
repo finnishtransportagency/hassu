@@ -52,11 +52,13 @@ if (Config.isDeveloperEnvironment()) {
     .then(({ body }) => {
       const possibleTypes: Record<string, string[]> = {};
       const value: Schema = (body as { data: { __schema: Schema } }).data.__schema;
-      value.types.forEach((supertype) => {
-        if (supertype.possibleTypes) {
-          possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype) => subtype.name);
-        }
-      });
+      [...value.types]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((supertype) => {
+          if (supertype.possibleTypes) {
+            possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype) => subtype.name).sort((a, b) => a.localeCompare(b));
+          }
+        });
       fs.writeFileSync("src/services/api/fragmentTypes.json", JSON.stringify(possibleTypes, null, 2) + "\n");
     })
     .catch((reason: any) => console.log(reason));

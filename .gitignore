@@ -32,10 +32,6 @@ out
 /common/graphql/mutations.ts
 /common/graphql/queries.ts
 /common/graphql/apiModel.ts
-backend/src/velho/aineistopalvelu
-backend/src/velho/hakupalvelu
-backend/src/velho/projektirekisteri
-backend/src/velho/metadata.json
 public/huoltokatko
 
 # Gradle
