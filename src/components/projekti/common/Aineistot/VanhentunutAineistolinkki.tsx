@@ -22,11 +22,11 @@ export default function VanhentunutAineistolinkki({
 }>): ReactElement {
   let tyyppiMessage: string;
   if (tyyppi === AineistoType.ENNAKKONEUVOTTELU) {
-    tyyppiMessage = "Ennakkoneuvottelun";
+    tyyppiMessage = "Aineistolinkin";
   } else if (tyyppi === AineistoType.HYVAKSYMISESITYS) {
-    tyyppiMessage = "Hyväksymisesityksen";
+    tyyppiMessage = "Hyväksymisesityksen aineistolinkin";
   } else {
-    tyyppiMessage = "Lausuntopyynnön";
+    tyyppiMessage = "Lausuntopyynnön aineistolinkin";
   }
   return (
     <>
@@ -36,7 +36,7 @@ export default function VanhentunutAineistolinkki({
       </H2>
       <div style={{ maxWidth: "40em" }}>
         <p>
-          {tyyppiMessage} aineistolinkin voimassaolo on päättynyt{" "}
+          {tyyppiMessage} voimassaolo on päättynyt{" "}
           <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "virhe: päivämäärä puuttuu"}</b>.
         </p>
         <p>
