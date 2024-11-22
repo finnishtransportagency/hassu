@@ -41,7 +41,11 @@ export default function HyvaksymisEsitysTiedosto({
   return (
     <SectionContent>
       <H4 variant="h3">Hyväksymisesitys</H4>
-      <p>Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys.</p>
+      <p>
+        {ennakkoneuvottelu
+          ? "Tuo omalta koneelta suunnitelman hyväksymisesitys tai sen luonnos. Kohdan voi jättää tyhjäksi, jos esitystä ei ole vielä laadittu."
+          : "Tuo omalta koneeltasi suunnitelman allekirjoitettu hyväksymisesitys."}
+      </p>
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="hyvaksymisesitys_files_table"
