@@ -8,7 +8,7 @@ import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila, Vaihe } from "@services/api";
+import { KuulutusJulkaisuTila } from "@services/api";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
 import { LAUSUNTOPYYNNOT_ROUTE, LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE } from "src/util/routes";
@@ -68,7 +68,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   return (
-    <ProjektiPageLayout vaihe={Vaihe.NAHTAVILLAOLO} title="Lausuntopyyntöjen aineistolinkit" showInfo={true}>
+    <ProjektiPageLayout title="Lausuntopyyntöjen aineistolinkit" showInfo={!epaaktiivinen}>
       {!migroitu ? (
         <>
           <Section noDivider className="mb-10">
