@@ -36,8 +36,7 @@ export default function VanhentunutAineistolinkki({
       </H2>
       <div style={{ maxWidth: "40em" }}>
         <p>
-          {tyyppiMessage} voimassaolo on päättynyt{" "}
-          <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "virhe: päivämäärä puuttuu"}</b>.
+          {tyyppiMessage} voimassaolo on päättynyt <b>{poistumisPaiva ? formatDate(poistumisPaiva) : "virhe: päivämäärä puuttuu"}</b>.
         </p>
         <p>
           Aineistoon liittyvissä tiedusteluissa ja kysymyksissä voit olla yhteydessä projektipäällikköön. Voit pyytää esimerkiksi jatkoa
