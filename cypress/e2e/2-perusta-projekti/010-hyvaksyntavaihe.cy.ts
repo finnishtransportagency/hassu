@@ -45,12 +45,8 @@ describe("10 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     // or manually deleting hyvaksymisPaatosVaiheJulkaisut from DB
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos/kuulutus", { timeout: 30000 });
     cy.contains(projektiNimi);
-
-    cy.get("#kuulutuksentiedot_tab")
-      .scrollIntoView({ offset: { top: -250, left: 0 } })
-      .click();
 
     const today = formatDate(dayjs());
     cy.get('[name="paatos.kuulutusPaiva"]').should("be.enabled").type(today, {

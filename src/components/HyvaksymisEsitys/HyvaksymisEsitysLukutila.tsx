@@ -30,13 +30,16 @@ import { nyt, parseDate } from "backend/src/util/dateUtil";
 import ButtonLink from "@components/button/ButtonLink";
 import DownloadIcon from "@mui/icons-material/Download";
 import AsianhallintaStatusNotification from "./LomakeComponents/AsianhallintaStatusNotification";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function HyvaksymisEsitysLukutila({
   hyvaksymisEsityksenTiedot,
 }: Readonly<{ hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot }>) {
   const { mutate: reloadData } = useHyvaksymisEsitys();
   const { oid, versio, hyvaksymisEsitys, muokkauksenVoiAvata, perustiedot, tuodutTiedostot } = hyvaksymisEsityksenTiedot;
-  const odottaaHyvaksyntaa = hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
+  const projektiOnAktiivinen = !projektiOnEpaaktiivinen(hyvaksymisEsityksenTiedot);
+  const odottaaHyvaksyntaa =
+    projektiOnAktiivinen && hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila === HyvaksymisTila.ODOTTAA_HYVAKSYNTAA;
   const invalidPoistumisPaiva =
     !hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.poistumisPaiva ||
     parseDate(hyvaksymisEsityksenTiedot.hyvaksymisEsitys.poistumisPaiva).isBefore(nyt(), "day");
@@ -72,13 +75,11 @@ export default function HyvaksymisEsitysLukutila({
     return { kategoriat: kategoria.listKategoriat(), kategoriaIdt: kategoria.listKategoriaIds() };
   }, [perustiedot.projektiTyyppi]);
 
-  if (!hyvaksymisEsitys) {
-    return null;
-  }
+  const url = hyvaksymisEsitys?.hash
+    ? `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`
+    : undefined;
 
-  const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsitys.hash}`;
-
-  const laskutustiedot = hyvaksymisEsitys.laskutustiedot;
+  const laskutustiedot = hyvaksymisEsitys?.laskutustiedot;
 
   return (
     <ProjektiPageLayout
@@ -93,15 +94,17 @@ export default function HyvaksymisEsitysLukutila({
         )
       }
     >
-      <AsianhallintaStatusNotification
-        asianhallinta={hyvaksymisEsityksenTiedot.asianhallinta}
-        ashaTila={hyvaksymisEsityksenTiedot.ashaTila}
-        sivunVaiheOnAktiivinen={hyvaksymisEsityksenTiedot.vaiheOnAktiivinen}
-        vaiheOnMuokkaustilassa={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS}
-        kayttoOikeudet={hyvaksymisEsityksenTiedot.kayttoOikeudet}
-        suunnittelustaVastaavaViranomainen={hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio}
-      />
-      {hyvaksymisEsitys.hyvaksymisPaiva && (
+      {projektiOnAktiivinen && (
+        <AsianhallintaStatusNotification
+          asianhallinta={hyvaksymisEsityksenTiedot.asianhallinta}
+          ashaTila={hyvaksymisEsityksenTiedot.ashaTila}
+          sivunVaiheOnAktiivinen={hyvaksymisEsityksenTiedot.vaiheOnAktiivinen}
+          vaiheOnMuokkaustilassa={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.tila == HyvaksymisTila.MUOKKAUS}
+          kayttoOikeudet={hyvaksymisEsityksenTiedot.kayttoOikeudet}
+          suunnittelustaVastaavaViranomainen={hyvaksymisEsityksenTiedot.perustiedot.vastuuorganisaatio}
+        />
+      )}
+      {projektiOnAktiivinen && hyvaksymisEsitys?.hyvaksymisPaiva && (
         <Section noDivider>
           <Notification type={NotificationType.INFO_GREEN}>
             Hyväksymisesitys on lähetetty vastaanottajalle {formatDate(hyvaksymisEsitys.hyvaksymisPaiva)}:{" "}
@@ -132,20 +135,18 @@ export default function HyvaksymisEsitysLukutila({
           </Notification>
         </Section>
       )}
-      <H2>Hyväksymisesityksen sisältö</H2>
       <Section>
+        <H2>Hyväksymisesityksen sisältö</H2>
         <H5 sx={{ mt: 12 }}>Voimassaoloaika päättyy</H5>
-        <p>{formatDate(hyvaksymisEsitys.poistumisPaiva)}</p>
+        <p>{hyvaksymisEsitys?.poistumisPaiva ? formatDate(hyvaksymisEsitys?.poistumisPaiva) : "-"}</p>
       </Section>
       <Section noDivider>
         <H3>Viesti vastaanottajalle</H3>
-        {!!hyvaksymisEsitys.kiireellinen && <H5>Pyydetään kiireellistä käsittelyä</H5>}
-        {hyvaksymisEsitys.lisatiedot && (
-          <>
-            <H5>Lisätiedot</H5>
-            <p>{hyvaksymisEsitys.lisatiedot}</p>
-          </>
-        )}
+        {hyvaksymisEsitys?.kiireellinen && <H5>Pyydetään kiireellistä käsittelyä</H5>}
+        <>
+          <H5>Lisätiedot</H5>
+          <p>{hyvaksymisEsitys?.lisatiedot || "-"}</p>
+        </>
       </Section>
       <Section>
         <H3>Päätöksen hyväksymisen laskutustiedot</H3>
@@ -183,16 +184,20 @@ export default function HyvaksymisEsitysLukutila({
       <Section className="mb-4">
         <H2>Hyväksymisesitykseen liitettävä aineisto</H2>
         <H5 style={{ marginBottom: "0.5em" }}>Linkki hyväksymisesityksen aineistoon</H5>
-        {url}
-        <H3>Hyväksymisesitys</H3>
-        <ul style={{ listStyle: "none" }}>
-          {hyvaksymisEsitys.hyvaksymisEsitys?.map((tiedosto, index) => (
-            <li key={index}>
-              <TiedostoComponent tiedosto={tiedosto} />
-            </li>
-          ))}
-        </ul>
-        {hyvaksymisEsitys.suunnitelma && (
+        {url ? <ExtLink href={url}>{url}</ExtLink> : <p>-</p>}
+        {hyvaksymisEsitys?.hyvaksymisEsitys && (
+          <>
+            <H3>Hyväksymisesitys</H3>
+            <ul style={{ listStyle: "none" }}>
+              {hyvaksymisEsitys.hyvaksymisEsitys.map((tiedosto, index) => (
+                <li key={index}>
+                  <TiedostoComponent tiedosto={tiedosto} />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {hyvaksymisEsitys?.suunnitelma && (
           <>
             <H3>Suunnitelma</H3>
             <AccordionToggleButton
@@ -212,7 +217,7 @@ export default function HyvaksymisEsitysLukutila({
       <Section className="pt-8">
         <H2>Vuorovaikutus</H2>
         <SectionContent>
-          <H4>Muistutukset ({hyvaksymisEsitys.muistutukset?.length ?? 0})</H4>
+          <H4>Muistutukset ({hyvaksymisEsitys?.muistutukset?.length ?? 0})</H4>
           <HassuAccordion
             style={{ marginTop: "0.5em" }}
             items={Object.keys(kuntaMuistutukset).map((kunta) => ({
@@ -240,7 +245,7 @@ export default function HyvaksymisEsitysLukutila({
               {
                 id: "2",
                 title: <H4 sx={{ margin: 0 }}>Lausunnot</H4>,
-                content: hyvaksymisEsitys.lausunnot?.length ? (
+                content: hyvaksymisEsitys?.lausunnot?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.lausunnot?.map((tiedosto, index) => (
                       <li key={index}>
@@ -256,14 +261,14 @@ export default function HyvaksymisEsitysLukutila({
                 id: "3",
                 title: <H4 sx={{ margin: 0 }}>Maanomistajaluettelo</H4>,
                 content:
-                  hyvaksymisEsitys.maanomistajaluettelo?.length || tuodutTiedostot.maanomistajaluettelo?.length ? (
+                  hyvaksymisEsitys?.maanomistajaluettelo?.length || tuodutTiedostot.maanomistajaluettelo?.length ? (
                     <ul style={{ listStyle: "none" }}>
                       {tuodutTiedostot.maanomistajaluettelo?.map((tiedosto, index) => (
                         <li key={index}>
                           <LadattavaTiedostoComponent tiedosto={tiedosto} />
                         </li>
                       ))}
-                      {hyvaksymisEsitys.maanomistajaluettelo?.map((tiedosto, index) => (
+                      {hyvaksymisEsitys?.maanomistajaluettelo?.map((tiedosto, index) => (
                         <li key={index}>
                           <TiedostoComponent tiedosto={tiedosto} />
                         </li>
@@ -277,14 +282,14 @@ export default function HyvaksymisEsitysLukutila({
                 id: "4",
                 title: <H4 sx={{ margin: 0 }}>Kuulutukset ja kutsu vuorovaikutukseen</H4>,
                 content:
-                  hyvaksymisEsitys.kuulutuksetJaKutsu?.length || tuodutTiedostot.kuulutuksetJaKutsu?.length ? (
+                  hyvaksymisEsitys?.kuulutuksetJaKutsu?.length || tuodutTiedostot.kuulutuksetJaKutsu?.length ? (
                     <ul style={{ listStyle: "none" }}>
                       {tuodutTiedostot.kuulutuksetJaKutsu?.map((tiedosto, index) => (
                         <li key={index}>
                           <LadattavaTiedostoComponent tiedosto={tiedosto} />
                         </li>
                       ))}
-                      {hyvaksymisEsitys.kuulutuksetJaKutsu?.map((tiedosto, index) => (
+                      {hyvaksymisEsitys?.kuulutuksetJaKutsu?.map((tiedosto, index) => (
                         <li key={index}>
                           <TiedostoComponent tiedosto={tiedosto} />
                         </li>
@@ -305,8 +310,8 @@ export default function HyvaksymisEsitysLukutila({
             items={[
               {
                 id: "2",
-                title: <H3 sx={{ margin: 0 }}>Projektivelho ({hyvaksymisEsitys.muuAineistoVelhosta?.length ?? 0})</H3>,
-                content: hyvaksymisEsitys.muuAineistoVelhosta?.length ? (
+                title: <H3 sx={{ margin: 0 }}>Projektivelho ({hyvaksymisEsitys?.muuAineistoVelhosta?.length ?? 0})</H3>,
+                content: hyvaksymisEsitys?.muuAineistoVelhosta?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.muuAineistoVelhosta?.map((tiedosto, index) => (
                       <li key={index}>
@@ -320,8 +325,8 @@ export default function HyvaksymisEsitysLukutila({
               },
               {
                 id: "3",
-                title: <H3 sx={{ margin: 0 }}>Omalta koneelta ({hyvaksymisEsitys.muuAineistoKoneelta?.length ?? 0})</H3>,
-                content: hyvaksymisEsitys.muuAineistoKoneelta?.length ? (
+                title: <H3 sx={{ margin: 0 }}>Omalta koneelta ({hyvaksymisEsitys?.muuAineistoKoneelta?.length ?? 0})</H3>,
+                content: hyvaksymisEsitys?.muuAineistoKoneelta?.length ? (
                   <ul style={{ listStyle: "none" }}>
                     {hyvaksymisEsitys.muuAineistoKoneelta?.map((tiedosto, index) => (
                       <li key={index}>
@@ -337,24 +342,26 @@ export default function HyvaksymisEsitysLukutila({
           />
         </SectionContent>
       </Section>
-      <Section>
-        <ButtonLink
-          disabled={!hyvaksymisEsitys.aineistopaketti}
-          href={hyvaksymisEsitys.aineistopaketti ? "/" + hyvaksymisEsitys.aineistopaketti : undefined}
-        >
-          Lataa kaikki
-          <DownloadIcon className="ml-2" />
-        </ButtonLink>
-        {!hyvaksymisEsitys.aineistopaketti && <p className="text-red">Aineistopaketin luominen on vielä kesken.</p>}
-      </Section>
-      <Section>
-        <H2>Hyväksymisesityksen vastaanottajat</H2>
-        {hyvaksymisEsitys.vastaanottajat && (
+      {projektiOnAktiivinen && (
+        <Section>
+          <ButtonLink
+            disabled={!hyvaksymisEsitys?.aineistopaketti}
+            href={hyvaksymisEsitys?.aineistopaketti ? "/" + hyvaksymisEsitys.aineistopaketti : undefined}
+          >
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+          {!hyvaksymisEsitys?.aineistopaketti && <p className="text-red">Aineistopakettia luominen on vielä kesken.</p>}
+        </Section>
+      )}
+      {hyvaksymisEsitys?.vastaanottajat && (
+        <Section>
+          <H2>Hyväksymisesityksen vastaanottajat</H2>
           <SectionContent>
             <IlmoituksenVastaanottajatTable vastaanottajat={hyvaksymisEsitys.vastaanottajat} />
           </SectionContent>
-        )}
-      </Section>
+        </Section>
+      )}
       {odottaaHyvaksyntaa && (
         <Section>
           <H2>Hyväksymisesityksen sisällön esikatselu</H2>
@@ -372,7 +379,7 @@ export default function HyvaksymisEsitysLukutila({
         <HyvaksyTaiPalautaPainikkeet
           oid={oid}
           versio={versio}
-          vastaanottajat={hyvaksymisEsitys.vastaanottajat!}
+          vastaanottajat={hyvaksymisEsitys?.vastaanottajat!}
           invalidPoistumisPaiva={invalidPoistumisPaiva}
           asianhallintaVaarassaTilassa={asianhallintaVaarassaTilassa}
         />

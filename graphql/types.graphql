@@ -438,6 +438,7 @@ type HyvaksymisEsitys {
 type HyvaksymisEsityksenTiedot {
   oid: String!
   versio: Int!
+  status: Status
   hyvaksymisEsitys: HyvaksymisEsitys
   muokkauksenVoiAvata: Boolean!
   aineistotValmiit: Boolean!
