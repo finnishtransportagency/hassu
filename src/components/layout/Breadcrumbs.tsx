@@ -8,7 +8,6 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import classNames from "classnames";
 import { ParsedUrlQueryInput } from "querystring";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import capitalize from "lodash/capitalize";
 import { useIsYllapito } from "src/hooks/useIsYllapito";
 
 interface RouteLabels {
@@ -60,7 +59,7 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     "/tietoa-palvelusta/diehtu-planemis": { label: "diehtu-planemis" },
     "/suunnitelma": { label: "suunnitelmat", hidden: true },
     "/suunnitelma/[oid]": {
-      label: capitalize(projektiLabel),
+      label: projektiLabel,
       preventTranslation: true,
       queryParams: { oid: projekti?.oid },
     },

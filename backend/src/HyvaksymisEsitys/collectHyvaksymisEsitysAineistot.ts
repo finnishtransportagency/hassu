@@ -63,22 +63,23 @@ export default function collectHyvaksymisEsitysAineistot(
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
   let path: string;
-  let hyvaksymisEsitysTiedostot: FileInfo[] = [];
-  if ("hyvaksymisEsitys" in hyvaksymisEsitys) {
+  if ("lahetetty" in hyvaksymisEsitys) {
+    path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
+  } else {
     path = joinPath(
       getYllapitoPathForProjekti(projekti.oid),
       (hyvaksymisEsitys as JulkaistuHyvaksymisEsitys).hyvaksymisPaiva ? JULKAISTU_HYVAKSYMISESITYS_PATH : MUOKATTAVA_HYVAKSYMISESITYS_PATH
     );
-    hyvaksymisEsitysTiedostot = (hyvaksymisEsitys?.hyvaksymisEsitys ?? []).map((tiedosto) => ({
-      s3Key: joinPath(path, "hyvaksymisEsitys", adaptFileName(tiedosto.nimi)),
-      zipFolder: "Hyväksymisesitys",
-      nimi: tiedosto.nimi,
-      tuotu: tiedosto.lisatty,
-      valmis: true,
-    }));
-  } else {
-    path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
   }
+
+  let hyvaksymisEsitysTiedostot: FileInfo[] = [];
+  hyvaksymisEsitysTiedostot = (hyvaksymisEsitys?.hyvaksymisEsitys ?? []).map((tiedosto) => ({
+    s3Key: joinPath(path, "hyvaksymisEsitys", adaptFileName(tiedosto.nimi)),
+    zipFolder: "Hyväksymisesitys",
+    nimi: tiedosto.nimi,
+    tuotu: tiedosto.lisatty,
+    valmis: true,
+  }));
 
   const kuulutuksetJaKutsutOmaltaKoneelta = (hyvaksymisEsitys?.kuulutuksetJaKutsu ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "kuulutuksetJaKutsu", adaptFileName(tiedosto.nimi)),

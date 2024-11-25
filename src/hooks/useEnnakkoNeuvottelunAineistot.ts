@@ -16,7 +16,7 @@ export function useEnnakkoNeuvottelunAineistot() {
   }, [api]);
 
   const paramArray = useMemo(() => {
-    return [apiConfig.listaaHyvaksymisEsityksenTiedostot.graphql, oid, hash];
+    return [apiConfig.listaaEnnakkoNeuvottelunTiedostot.graphql, oid, hash];
   }, [hash, oid]);
 
   return useSWR(paramArray, loader);
