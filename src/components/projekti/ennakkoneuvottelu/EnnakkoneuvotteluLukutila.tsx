@@ -60,7 +60,7 @@ export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ proje
         <H2>Aineistolinkkiin liitettävä aineisto</H2>
         <H5 style={{ marginBottom: "0.5em" }}>Aineistolinkki</H5>
         {url ? <ExtLink href={url}>{url}</ExtLink> : <p>-</p>}
-        {/* {ennakkoNeuvotteluJulkaisu?.hyvaksymisEsitys && (
+        {ennakkoNeuvotteluJulkaisu?.hyvaksymisEsitys && (
           <>
             <H3>Hyväksymisesitys</H3>
             <ul style={{ listStyle: "none" }}>
@@ -71,7 +71,7 @@ export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ proje
               ))}
             </ul>
           </>
-        )} */}
+        )}
         {ennakkoNeuvotteluJulkaisu?.suunnitelma && (
           <>
             <H3>Suunnitelma</H3>

@@ -494,6 +494,7 @@ type EnnakkoNeuvottelu {
 type EnnakkoNeuvotteluJulkaisu {
   poistumisPaiva: String
   lisatiedot: String
+  hyvaksymisEsitys: [LadattuTiedostoNew!]
   suunnitelma: [AineistoNew!]
   muistutukset: [KunnallinenLadattuTiedosto!]
   lausunnot: [LadattuTiedostoNew!]
