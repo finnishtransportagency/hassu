@@ -351,7 +351,7 @@ export default function HyvaksymisEsitysLukutila({
             Lataa kaikki
             <DownloadIcon className="ml-2" />
           </ButtonLink>
-          {!hyvaksymisEsitys?.aineistopaketti && <p className="text-red">Aineistopakettia luominen on vielä kesken.</p>}
+          {!hyvaksymisEsitys?.aineistopaketti && <p className="text-red">Aineistopaketin luominen on vielä kesken.</p>}
         </Section>
       )}
       {hyvaksymisEsitys?.vastaanottajat && (
