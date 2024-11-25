@@ -48,6 +48,9 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useValidationMode from "src/hooks/useValidationMode";
+import EnnakkoneuvotteluLukutila from "@components/projekti/ennakkoneuvottelu/EnnakkoneuvotteluLukutila";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 
 export function getDefaultValuesForForm(projekti: Projekti | null | undefined): EnnakkoneuvotteluForm {
   if (!projekti) {
@@ -98,8 +101,20 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
   };
 }
 
-export default function EnnakkoNeuvotteluLomake(): ReactElement {
+export default function EnnakkoNeuvotteluPage(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
+  if (!projekti) {
+    return <></>;
+  }
+
+  if (projektiOnEpaaktiivinen(projekti)) {
+    return <EnnakkoneuvotteluLukutila projekti={projekti} />;
+  }
+
+  return <EnnakkoNeuvotteluLomake projekti={projekti} />;
+}
+
+function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const defaultValues: EnnakkoneuvotteluForm = useMemo(() => getDefaultValuesForForm(projekti), [projekti]);
   const validationMode = useValidationMode();
   const formOptions: UseFormProps<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext> = {
@@ -122,9 +137,6 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
       }),
     [projekti?.velho.tyyppi]
   );
-  if (!projekti) {
-    return <></>;
-  }
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
   return (
     <ProjektiPageLayout title="Ennakkotarkastus/ennakkoneuvottelu" showInfo>
