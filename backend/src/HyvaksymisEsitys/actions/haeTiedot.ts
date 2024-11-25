@@ -32,6 +32,7 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
     __typename: "HyvaksymisEsityksenTiedot",
     oid,
     versio,
+    status,
     hyvaksymisEsitys,
     vaiheOnAktiivinen,
     muokkauksenVoiAvata,
