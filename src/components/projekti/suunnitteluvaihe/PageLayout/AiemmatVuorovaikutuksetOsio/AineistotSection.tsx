@@ -2,9 +2,11 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { DefinitionList, StyledDefinitionList } from "@components/projekti/common/StyledDefinitionList";
 import StyledLink from "@components/StyledLink";
-import { Kielitiedot, Linkki, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { styled } from "@mui/system";
+import { Aineisto, AineistoTila, Kielitiedot, Linkki, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { FILE_PATH_DELETED_PREFIX } from "common/links";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
-import React, { Fragment, useMemo, FunctionComponent } from "react";
+import React, { useMemo, FunctionComponent } from "react";
 
 export const AineistotSection: FunctionComponent<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
@@ -84,15 +86,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: FunctionComponent<{
           <p>Esittelyaineistot</p>
           <ContentSpacer as="ul" gap={2}>
             {julkaisu.esittelyaineistot.map((aineisto) => (
-              <Fragment key={aineisto.dokumenttiOid}>
-                {aineisto.tiedosto && (
-                  <li>
-                    <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
-                      {aineisto.nimi || aineisto.tiedosto}
-                    </StyledLink>
-                  </li>
-                )}
-              </Fragment>
+              <AineistoListElement key={aineisto.uuid || aineisto.dokumenttiOid} aineisto={aineisto} />
             ))}
           </ContentSpacer>
         </ContentSpacer>
@@ -102,15 +96,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: FunctionComponent<{
           <p>Suunnitelmaluonnokset</p>
           <ContentSpacer as="ul" gap={2}>
             {julkaisu.suunnitelmaluonnokset.map((aineisto) => (
-              <Fragment key={aineisto.dokumenttiOid}>
-                {aineisto.tiedosto && (
-                  <li>
-                    <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
-                      {aineisto.nimi || aineisto.tiedosto}
-                    </StyledLink>
-                  </li>
-                )}
-              </Fragment>
+              <AineistoListElement key={aineisto.uuid || aineisto.dokumenttiOid} aineisto={aineisto} />
             ))}
           </ContentSpacer>
         </ContentSpacer>
@@ -133,3 +119,26 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: FunctionComponent<{
     </ContentSpacer>
   );
 };
+
+function AineistoListElement(props: { aineisto: Aineisto }): React.JSX.Element {
+  const shouldShowHref =
+    props.aineisto.tiedosto &&
+    !props.aineisto.tiedosto.startsWith(FILE_PATH_DELETED_PREFIX) &&
+    props.aineisto.tila !== AineistoTila.POISTETTU;
+  const href = shouldShowHref ? props.aineisto.tiedosto || undefined : undefined;
+  const nimi = props.aineisto.nimi ?? props.aineisto.tiedosto;
+
+  if (href) {
+    return (
+      <Li>
+        <StyledLink target="_blank" href={href}>
+          {nimi}
+        </StyledLink>
+      </Li>
+    );
+  }
+
+  return <Li>{nimi}</Li>;
+}
+
+const Li = styled("li")({ fontWeight: 400 });
