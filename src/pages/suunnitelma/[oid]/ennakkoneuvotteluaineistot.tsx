@@ -46,6 +46,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
     kuulutuksetJaKutsu,
     muutAineistot,
     perustiedot,
+    hyvaksymisEsitys,
   } = props;
 
   const { suunnitelmanNimi } = perustiedot;
@@ -105,6 +106,20 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
             {projektipaallikonYhteystiedot?.email} ({projarinOrganisaatio})
           </p>
         </SectionContent>
+      </Section>
+      <Section>
+        <H2>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H2>
+        {hyvaksymisEsitys?.length ? (
+          <ul style={{ listStyle: "none" }}>
+            {hyvaksymisEsitys?.map((tiedosto, index) => (
+              <li key={index}>
+                <LadattavaTiedostoComponent tiedosto={tiedosto} esikatselu={false} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>Ei aineistoja</div>
+        )}
       </Section>
       <Section>
         <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>

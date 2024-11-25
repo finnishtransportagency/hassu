@@ -13,6 +13,7 @@ import {
 } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
 import { IlmoituksenVastaanottajatTable } from "@components/HyvaksymisEsitys/HyvaksymisEsitysLukutila";
 import AineistonEsikatselu from "@components/HyvaksymisEsitys/LomakeComponents/AineistonEsikatselu";
+import HyvaksymisEsitysTiedosto from "@components/HyvaksymisEsitys/LomakeComponents/HyvaksymisEsitysTiedosto";
 import KuulutuksetJaKutsu from "@components/HyvaksymisEsitys/LomakeComponents/KuulutuksetJaKutsu";
 import Lausunnot from "@components/HyvaksymisEsitys/LomakeComponents/Lausunnot";
 import LinkinVoimassaoloaika from "@components/HyvaksymisEsitys/LomakeComponents/LinkinVoimassaoloaika";
@@ -68,6 +69,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
+    hyvaksymisEsitys,
   } = ennakkoNeuvottelu ?? {};
   const muistutuksetSorted =
     velho.kunnat?.reduce((acc, kunta) => {
@@ -83,6 +85,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     ennakkoNeuvottelu: {
       poistumisPaiva: poistumisPaiva ?? null,
       lisatiedot: lisatiedot ?? "",
+      hyvaksymisEsitys: adaptLadatutTiedostotNewToInput(hyvaksymisEsitys),
       suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, velho.tyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
@@ -169,6 +172,7 @@ export default function EnnakkoNeuvotteluLomake(): ReactElement {
               </Section>
               <Section>
                 <H3 variant="h2">Aineistolinkkiin liitettävä aineisto</H3>
+                <HyvaksymisEsitysTiedosto tiedostot={projekti.ennakkoNeuvottelu?.hyvaksymisEsitys} ennakkoneuvottelu={true} />
                 <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>

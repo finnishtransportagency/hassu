@@ -4,6 +4,7 @@ import { DBProjekti } from "./projekti";
 
 export interface IEnnakkoNeuvottelu {
   lisatiedot?: string | null;
+  hyvaksymisEsitys?: Array<LadattuTiedostoNew> | null;
   suunnitelma?: Array<AineistoNew> | null;
   muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
   lausunnot?: Array<LadattuTiedostoNew> | null;
@@ -18,7 +19,6 @@ export interface IEnnakkoNeuvottelu {
 export interface IHyvaksymisEsitys extends IEnnakkoNeuvottelu {
   kiireellinen?: boolean | null;
   laskutustiedot?: Laskutustiedot | null;
-  hyvaksymisEsitys?: Array<LadattuTiedostoNew> | null;
   versio: number;
 }
 
