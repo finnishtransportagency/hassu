@@ -83,7 +83,7 @@ export default function collectHyvaksymisEsitysAineistot(
 
   const kuulutuksetJaKutsutOmaltaKoneelta = (hyvaksymisEsitys?.kuulutuksetJaKutsu ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "kuulutuksetJaKutsu", adaptFileName(tiedosto.nimi)),
-    zipFolder: "Kuulutukset ja kutsut",
+    zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
     nimi: tiedosto.nimi,
     tuotu: tiedosto.lisatty,
     valmis: true,
@@ -111,7 +111,7 @@ export default function collectHyvaksymisEsitysAineistot(
     const kategoriaFolder = getZipFolder(aineisto.kategoriaId, projekti.velho?.tyyppi) ?? "Kategorisoimattomat";
     return {
       s3Key: joinPath(path, "suunnitelma", adaptFileName(aineisto.nimi)),
-      zipFolder: joinPath("Suunnitelma", kategoriaFolder),
+      zipFolder: kategoriaFolder,
       nimi: aineisto.nimi,
       tuotu: aineisto.lisatty,
       kategoriaId: aineisto.kategoriaId,
@@ -123,7 +123,7 @@ export default function collectHyvaksymisEsitysAineistot(
     assertIsDefined(kunta, `Kuntaa id:llä ${tiedosto.kunta} ei löytynyt kuntametadatasta`);
     return {
       s3Key: joinPath(path, "muistutukset", adaptFileName(tiedosto.nimi)),
-      zipFolder: `Muistutukset/${kunta.nimi.SUOMI}`,
+      zipFolder: `Vuorovaikutusaineisto/Muistutukset/${kunta.nimi.SUOMI}`,
       nimi: tiedosto.nimi,
       tuotu: tiedosto.lisatty,
       kunta: tiedosto.kunta,
@@ -133,7 +133,7 @@ export default function collectHyvaksymisEsitysAineistot(
   const maanomistajaluetteloProjektista = getMaanomistajaLuettelo(projekti, status);
   const maanomistajaluetteloOmaltaKoneelta: FileInfo[] = (hyvaksymisEsitys?.maanomistajaluettelo ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "maanomistajaluettelo", adaptFileName(tiedosto.nimi)),
-    zipFolder: "Maanomistajaluettelo",
+    zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
     nimi: tiedosto.nimi,
     tuotu: tiedosto.lisatty,
     valmis: true,
@@ -141,7 +141,7 @@ export default function collectHyvaksymisEsitysAineistot(
   const maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
   const lausunnot = (hyvaksymisEsitys?.lausunnot ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "lausunnot", adaptFileName(tiedosto.nimi)),
-    zipFolder: "Lausunnot",
+    zipFolder: "Vuorovaikutusaineisto/Lausunnot",
     nimi: tiedosto.nimi,
     tuotu: tiedosto.lisatty,
     valmis: true,
@@ -178,7 +178,7 @@ export function getMaanomistajaLuettelo(projekti: TarvittavatTiedot, status: API
       if (nahtavillaoloVaiheJulkaisu.maanomistajaluettelo) {
         maanomistajaluttelo.push({
           s3Key: joinPath(getSisaisetPathForProjekti(projekti.oid), nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
-          zipFolder: "Maanomistajaluettelo",
+          zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
           nimi: fileService.getFileNameFromFilePath(nahtavillaoloVaiheJulkaisu.maanomistajaluettelo),
           valmis: true,
         });
@@ -209,7 +209,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
           if (kuulutus) {
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: fileService.getFileNameFromFilePath(kuulutus),
               valmis: true,
             });
@@ -225,7 +225,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
             assertIsDefined(kuulutus, `aloituskuulutusSaamePDFt[${kieli}].aloituskuulutusPDFPath on oltava olemassa`);
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
               tuotu: kuulutus.tuotu,
               valmis: tiedostoVanhaIsReady(kuulutus),
@@ -251,7 +251,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
           if (kutsu) {
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: fileService.getFileNameFromFilePath(kutsu),
               valmis: true,
             });
@@ -267,7 +267,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
             assertIsDefined(kutsu, `vuorovaikutusSaamePDFt[${kieli}] on oltava olemassa`);
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kutsu.tiedosto),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: kutsu.nimi ?? fileService.getFileNameFromFilePath(kutsu.tiedosto),
               tuotu: kutsu.tuotu,
               valmis: tiedostoVanhaIsReady(kutsu),
@@ -292,7 +292,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
           if (kuulutus) {
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: fileService.getFileNameFromFilePath(kuulutus),
               valmis: true,
             });
@@ -302,7 +302,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
           if (ilmoitusKiinteistonomistajille) {
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), ilmoitusKiinteistonomistajille),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: fileService.getFileNameFromFilePath(ilmoitusKiinteistonomistajille),
               valmis: true,
             });
@@ -318,7 +318,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
             assertIsDefined(kuulutus, `nahtavillaoloSaamePDFt[${kieli}].kuulutusPDF on oltava olemassa`);
             kutsut.push({
               s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kuulutus.tiedosto),
-              zipFolder: "Kuulutukset ja kutsut",
+              zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
               nimi: kuulutus.nimi ?? fileService.getFileNameFromFilePath(kuulutus.tiedosto),
               tuotu: kuulutus.tuotu,
               valmis: tiedostoVanhaIsReady(kuulutus),
@@ -327,7 +327,7 @@ export function getKutsut(projekti: TarvittavatTiedot, status: API.Status | unde
             if (kirje) {
               kutsut.push({
                 s3Key: joinPath(getYllapitoPathForProjekti(projekti.oid), kirje.tiedosto),
-                zipFolder: "Kuulutukset ja kutsut",
+                zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
                 nimi: kirje.nimi ?? fileService.getFileNameFromFilePath(kirje.tiedosto),
                 tuotu: kirje.tuotu,
                 valmis: tiedostoVanhaIsReady(kirje),
