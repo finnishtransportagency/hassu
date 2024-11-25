@@ -205,6 +205,7 @@ export type DBProjekti = {
 export type DBEnnakkoNeuvottelu = {
   poistumisPaiva?: string | null;
   lisatiedot?: string | null;
+  hyvaksymisEsitys?: Array<LadattuTiedostoNew> | null;
   suunnitelma?: Array<AineistoNew> | null;
   muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
   lausunnot?: Array<LadattuTiedostoNew> | null;

@@ -33,6 +33,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
+    hyvaksymisEsitys,
     ...rest
   } = ennakkoNeuvotteluInput;
   const ennakko: DBEnnakkoNeuvottelu = {
@@ -45,6 +46,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     muokkaaja: nykyinenKayttaja.uid,
+    hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.hyvaksymisEsitys, hyvaksymisEsitys),
     ...rest,
   };
   return ennakko;
@@ -71,6 +73,10 @@ export async function adaptEnnakkoNeuvotteluToAPI(
     __typename: "EnnakkoNeuvottelu",
     poistumisPaiva: ennakkoNeuvottelu.poistumisPaiva ?? null,
     lisatiedot: ennakkoNeuvottelu.lisatiedot,
+    hyvaksymisEsitys: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvottelu.hyvaksymisEsitys,
+      path: joinPath(path, "hyvaksymisEsitys"),
+    }),
     suunnitelma: adaptAineistotToAPI({ aineistot: ennakkoNeuvottelu.suunnitelma, aineistotHandledAt, path: joinPath(path, "suunnitelma") }),
     muistutukset: adaptKunnallisetLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvottelu.muistutukset,

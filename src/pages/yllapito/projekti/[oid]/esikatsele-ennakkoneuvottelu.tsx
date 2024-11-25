@@ -55,8 +55,16 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
   if (!projekti || !ennakkoNeuvotteluInput?.oid) {
     return <></>;
   }
-  const { suunnitelma, maanomistajaluettelo, lausunnot, kuulutuksetJaKutsu, muuAineistoKoneelta, muuAineistoVelhosta, poistumisPaiva } =
-    ennakkoNeuvotteluInput.ennakkoNeuvottelu;
+  const {
+    suunnitelma,
+    maanomistajaluettelo,
+    lausunnot,
+    kuulutuksetJaKutsu,
+    muuAineistoKoneelta,
+    muuAineistoVelhosta,
+    poistumisPaiva,
+    hyvaksymisEsitys,
+  } = ennakkoNeuvotteluInput.ennakkoNeuvottelu;
   const muutAineistot: LadattavaTiedosto[] = [];
   muuAineistoKoneelta?.forEach((a) =>
     muutAineistot.push({
@@ -136,6 +144,28 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
         </SectionContent>
       </Section>
 
+      <Section>
+        <H2>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H2>
+        {hyvaksymisEsitys?.length ? (
+          <ul style={{ listStyle: "none" }}>
+            {hyvaksymisEsitys?.map((tiedosto, index) => (
+              <li key={index}>
+                <LadattavaTiedostoComponent
+                  tiedosto={{
+                    __typename: "LadattavaTiedosto",
+                    ...tiedosto,
+                    linkki: projekti.ennakkoNeuvottelu?.hyvaksymisEsitys?.find((h) => h.uuid === tiedosto.uuid)?.tiedosto,
+                    tuotu: projekti.ennakkoNeuvottelu?.hyvaksymisEsitys?.find((h) => h.uuid === tiedosto.uuid)?.lisatty,
+                  }}
+                  esikatselu={true}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>Ei aineistoja</div>
+        )}
+      </Section>
       <Section>
         <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>
         <SuunnittelmaLadattavatTiedostotAccordion
