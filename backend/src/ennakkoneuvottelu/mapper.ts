@@ -123,6 +123,10 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
     __typename: "EnnakkoNeuvotteluJulkaisu",
     poistumisPaiva: ennakkoNeuvotteluJulkaisu.poistumisPaiva ?? null,
     lisatiedot: ennakkoNeuvotteluJulkaisu.lisatiedot,
+    hyvaksymisEsitys: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.hyvaksymisEsitys,
+      path: joinPath(path, "hyvaksymisEsitys"),
+    }),
     suunnitelma: adaptAineistotToAPI({
       aineistot: ennakkoNeuvotteluJulkaisu.suunnitelma,
       aineistotHandledAt,

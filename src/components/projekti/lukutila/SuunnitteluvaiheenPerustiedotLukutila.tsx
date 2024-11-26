@@ -5,9 +5,11 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
-import { Link } from "@mui/material";
+import { Link, styled } from "@mui/material";
 import { label } from "src/util/textUtil";
 import SaapuneetKysymyksetJaPalautteet from "../suunnitteluvaihe/SaapuneetKysymyksetJaPalautteet";
+import { Aineisto, AineistoTila } from "@services/api";
+import { FILE_PATH_DELETED_PREFIX } from "common/links";
 
 export default function SuunnitteluvaiheenPerustiedotLukutila(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -148,31 +150,11 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
 
             <SectionContent>
               <p className="vayla-label">Esittelyaineistot</p>
-              {!!viimeisinJulkaisu?.esittelyaineistot?.length ? (
-                viimeisinJulkaisu.esittelyaineistot.map((aineisto) => (
-                  <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
-                    <Link underline="none" href={aineisto.tiedosto || "#"}>
-                      {aineisto.nimi}
-                    </Link>
-                  </div>
-                ))
-              ) : (
-                <p>-</p>
-              )}
+              <AineistoList aineistot={viimeisinJulkaisu.esittelyaineistot} />
             </SectionContent>
             <SectionContent>
               <p className="vayla-label">Suunnitelmaluonnokset</p>
-              {!!viimeisinJulkaisu?.suunnitelmaluonnokset?.length ? (
-                viimeisinJulkaisu.suunnitelmaluonnokset.map((aineisto) => (
-                  <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
-                    <Link underline="none" href={aineisto.tiedosto || "#"}>
-                      {aineisto.nimi}
-                    </Link>
-                  </div>
-                ))
-              ) : (
-                <p>-</p>
-              )}
+              <AineistoList aineistot={viimeisinJulkaisu.suunnitelmaluonnokset} />
             </SectionContent>
 
             <SectionContent>
@@ -213,5 +195,40 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Readonly<Props>): 
         </>
       )}
     </>
+  );
+}
+function AineistoList(props: { aineistot: Aineisto[] | null | undefined }) {
+  if (!props.aineistot?.length) {
+    return <p>-</p>;
+  }
+  return (
+    <StyledList>
+      {props.aineistot.map((aineisto) => (
+        <AineistoListElement key={aineisto.dokumenttiOid} aineisto={aineisto} />
+      ))}
+    </StyledList>
+  );
+}
+
+const StyledList = styled("ul")({ "& > li": { marginTop: "0.4rem" } });
+
+function AineistoListElement(props: { aineisto: Aineisto }) {
+  const shouldShowHref =
+    props.aineisto.tiedosto &&
+    !props.aineisto.tiedosto.startsWith(FILE_PATH_DELETED_PREFIX) &&
+    props.aineisto.tila !== AineistoTila.POISTETTU;
+
+  const href = shouldShowHref ? props.aineisto.tiedosto || undefined : undefined;
+
+  if (!href) {
+    return <li>{props.aineisto.nimi}</li>;
+  }
+
+  return (
+    <li>
+      <Link underline="none" href={href}>
+        {props.aineisto.nimi}
+      </Link>
+    </li>
   );
 }
