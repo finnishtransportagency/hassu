@@ -59,15 +59,15 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
     const expectedArgs2 = [
       {
         s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
-        zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_2.png",
@@ -75,19 +75,19 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Lausunnot",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Lausunnot",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Muistutukset/Helsinki",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Muistutukset/Helsinki",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_2.png",
@@ -99,39 +99,39 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/suunnitelma/suunnitelma_aoa_2.png",
-        zipFolder: "Pääpiirustukset/",
+        zipFolder: "Pääpiirustukset (B\u2215200)/",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo sv.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo sv.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen sv.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen sv.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
     ];
     const sortFunc = (a: ZipSourceFile, b: ZipSourceFile) => a.s3Key.localeCompare(b.s3Key);
@@ -161,15 +161,15 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
     const expectedArgs2 = [
       {
         s3Key: "yllapito/sisaiset/projekti/Testi1/nahtavillaolo/1/T416 Maanomistajaluettelo 20240522.xlsx",
-        zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus se.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/hyvaksymisEsitys/hyvaksymisEsitys_aoa_2.png",
@@ -177,19 +177,19 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/kuulutuksetJaKutsu/kuulutuksetJaKutsu_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Lausunnot",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Lausunnot",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/maanomistajaluettelo/maanomistajaluettelo_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Maanomistajaluettelo",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Maanomistajaluettelo",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muistutukset/muistutukset_aoa_2.png",
-        zipFolder: "Vuorovaikutusaineisto/Muistutukset/Helsinki",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Muistutukset/Helsinki",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/muuAineistoKoneelta/muuAineistoKoneelta_aoa_2.png",
@@ -201,35 +201,35 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/muokattava_hyvaksymisesitys/suunnitelma/suunnitelma_aoa_2.png",
-        zipFolder: "Pääpiirustukset/",
+        zipFolder: "Pääpiirustukset (B\u2215200)/",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo se.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T414 Kuulutus suunnitelman nähtävilläolo.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/nahtavillaolo/1/T415 Ilmoitus kiinteistönomistajille suunnitelman nähtävilläolo.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen se.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen se.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
       {
         s3Key: "yllapito/tiedostot/projekti/Testi1/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
-        zipFolder: "Vuorovaikutusaineisto/Kuulutukset ja kutsut",
+        zipFolder: "Vuorovaikutusaineisto (D\u2215400)/Kuulutukset ja kutsut",
       },
     ];
     const sortFunc = (a: ZipSourceFile, b: ZipSourceFile) => a.s3Key.localeCompare(b.s3Key);
