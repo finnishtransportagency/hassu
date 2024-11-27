@@ -1,8 +1,6 @@
 import axios from "axios";
 import { auditLog } from "../../logger";
 import { Omistaja } from "../mmlClient";
-import { uuid } from "hassu-common/util/uuid";
-import { nyt } from "../../util/dateUtil";
 import { chunkArray } from "../../database/chunkArray";
 
 export type PrhConfig = {
@@ -22,32 +20,12 @@ export type Options = {
 };
 
 type PrhResponse = {
-  schemaLocation: string;
-  Organisaatio?: {
-    Id: string;
-    YTunnus: string;
-    Nimi: string;
-    Kotipaikka: string;
-    Puhelin: string;
-    Fax: string;
-    Sahkoposti: string;
-    Kotisivu: string;
-    Rekisterointipvm: string;
-    Kaupparekisterinumero: string;
-    Lakkaamispvm: string;
-    Sijainti: string;
-    Tila: string;
-    Osoite?: {
-      Katuosoite: string;
-      Postinumero: string;
-      Postitoimipaikka: string;
-      Maa: string;
-    };
-    aikaleima: string;
-    muuttaja: string;
-    TilanStatus: string;
-    Ryhma: string;
-  };
+  yTunnus: string;
+  postiosoite: string;
+  toiminimi: string;
+  postinumero: string;
+  coNimi: string;
+  "toimipaikka ": string;
 };
 
 const TIMEOUT = 120000;
@@ -65,20 +43,12 @@ export async function getPrhClient(options: Options): Promise<PrhClient> {
 }
 
 async function haeYritykset(ytunnus: string[], uid: string, options: Options): Promise<Omistaja[]> {
-  auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus });
+  auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus, uid });
   const omistajat: Omistaja[] = [];
   for (const ytunnusChunk of chunkArray(ytunnus, 10)) {
     const promises = ytunnusChunk.map((tunnus) =>
       axios
         .get(options.endpoint + "?YTunnus=" + tunnus, {
-          headers: {
-            "SOA-KayttajanID": uid,
-            "SOA-Toiminto": "GET",
-            "SOA-Kutsuja": options.palveluTunnus,
-            "SOA-Kohde": options.kohdeTunnus,
-            "SOA-ViestinID": uuid.v4(),
-            "SOA-Aikaleima": nyt().toISOString(),
-          },
           auth: { username: options.username, password: options.password },
           timeout: TIMEOUT,
           validateStatus: (status) => status === 200 || status === 404,
@@ -86,13 +56,12 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
         .then((response) => {
           const prhResponse: PrhResponse = response.data;
           const omistaja: Omistaja = {
-            nimi: prhResponse.Organisaatio?.Nimi,
-            ytunnus: prhResponse.Organisaatio?.YTunnus ?? tunnus,
+            nimi: prhResponse.coNimi ? prhResponse.coNimi : prhResponse.toiminimi,
+            ytunnus: prhResponse.yTunnus,
             yhteystiedot: {
-              jakeluosoite: prhResponse.Organisaatio?.Osoite?.Katuosoite,
-              postinumero: prhResponse.Organisaatio?.Osoite?.Postinumero,
-              paikkakunta: prhResponse.Organisaatio?.Osoite?.Postitoimipaikka,
-              maakoodi: prhResponse.Organisaatio?.Osoite?.Maa,
+              jakeluosoite: prhResponse.postiosoite,
+              postinumero: prhResponse.postinumero,
+              paikkakunta: prhResponse["toimipaikka "],
             },
           };
           return omistaja;
