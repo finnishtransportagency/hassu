@@ -5,6 +5,7 @@ import { validateKasittelynTila } from "../../../../src/projekti/validator/valid
 import { Projekti, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../../../../src/database/model";
 import { expect } from "chai";
+import sinon from "sinon";
 
 function createDBProjekti(asianumero?: string, paatoksenPvm?: string | null, aktiivinen?: boolean) {
   const dbProjekti: DBProjekti = {
@@ -75,6 +76,11 @@ describe("validateKasittelyntila", () => {
 
   afterEach(() => {
     userFixture.logout();
+  });
+
+  after(() => {
+    sinon.reset();
+    sinon.restore();
   });
 
   it("Testaa hyväksymispäätös tyhjällä db kasittelynTila", async () => {

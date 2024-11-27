@@ -20,6 +20,7 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
   const userFixture = new UserFixture(userService);
   let checkAsianhallintaStateStub: sinon.SinonStub;
   let isAsianhallintaIntegrationEnabledStub: sinon.SinonStub;
+  let isUspaIntegrationEnabledStub: sinon.SinonStub;
 
   let projekti: DBProjekti;
 
@@ -36,6 +37,7 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
     sinon.stub(aloitusKuulutusTilaManager, "sendForApproval");
     checkAsianhallintaStateStub = sinon.stub(asianhallintaService, "checkAsianhallintaState");
     isAsianhallintaIntegrationEnabledStub = sinon.stub(parameters, "isAsianhallintaIntegrationEnabled");
+    isUspaIntegrationEnabledStub = sinon.stub(parameters, "isUspaIntegrationEnabled");
   });
 
   beforeEach(() => {
@@ -46,6 +48,7 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
     projekti.asianhallinta = { inaktiivinen: false };
     projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
     isAsianhallintaIntegrationEnabledStub.returns(Promise.resolve(true));
+    isUspaIntegrationEnabledStub.returns(Promise.resolve(true));
 
     userFixture.loginAs(UserFixture.hassuAdmin);
   });
@@ -93,13 +96,10 @@ describe("aloitusKuulutusTilaManagerInternalApproval", () => {
   it("sendForApprovalInternal should not throw if projekti.velho.suunnittelustaVastaavaViranomainen is not VAYLAVIRASTO", async () => {
     assertIsDefined(projekti.velho);
     projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY;
-
-    for (const tila of asianTilat) {
-      checkAsianhallintaStateStub.returns(Promise.resolve(tila));
-      await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
-        .fulfilled;
-    }
-    expect(checkAsianhallintaStateStub.notCalled).to.be.true;
+    checkAsianhallintaStateStub.returns(Promise.resolve(AsianTila.VALMIS_VIENTIIN));
+    await expect(aloitusKuulutusTilaManager["sendForApprovalInternal"](projekti, TilasiirtymaTyyppi.ALOITUSKUULUTUS)).to.eventually.be
+      .fulfilled;
+    expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
   });
 
   it("sendForApprovalInternal should not throw if isAsianhallintaIntegrationEnabled parameter is false", async () => {
