@@ -7,16 +7,12 @@ export type PrhConfig = {
   endpoint: string;
   username: string;
   password: string;
-  palvelutunnus: string;
-  kohdetunnus: string;
 };
 
 export type Options = {
   endpoint: string;
   username: string;
   password: string;
-  palveluTunnus: string;
-  kohdeTunnus: string;
 };
 
 type PrhResponse = {
@@ -42,6 +38,11 @@ export async function getPrhClient(options: Options): Promise<PrhClient> {
   };
 }
 
+function trim(text: string | undefined) {
+  const txt = text?.trim();
+  return txt || undefined;
+}
+
 async function haeYritykset(ytunnus: string[], uid: string, options: Options): Promise<Omistaja[]> {
   auditLog.info("PRH tietojen haku", { ytunnukset: ytunnus, uid });
   const omistajat: Omistaja[] = [];
@@ -56,12 +57,12 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
         .then((response) => {
           const prhResponse: PrhResponse = response.data;
           const omistaja: Omistaja = {
-            nimi: prhResponse.coNimi ? prhResponse.coNimi : prhResponse.toiminimi,
-            ytunnus: prhResponse.yTunnus,
+            nimi: trim(prhResponse.coNimi) ?? trim(prhResponse.toiminimi),
+            ytunnus: trim(prhResponse.yTunnus),
             yhteystiedot: {
-              jakeluosoite: prhResponse.postiosoite,
-              postinumero: prhResponse.postinumero,
-              paikkakunta: prhResponse["toimipaikka "],
+              jakeluosoite: trim(prhResponse.postiosoite),
+              postinumero: trim(prhResponse.postinumero),
+              paikkakunta: trim(prhResponse["toimipaikka "]),
             },
           };
           return omistaja;

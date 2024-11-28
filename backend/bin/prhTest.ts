@@ -29,17 +29,18 @@ Promise.all([
         partialCfg[v[0] as keyof PrhConfig] = v[1].trim();
       });
       const cfg = partialCfg as PrhConfig;
+      if (process.argv.includes("--bastion")) {
+        cfg.endpoint = "https://localhost:8443/vls/ytj";
+      }
       return getPrhClient({
         endpoint: cfg.endpoint,
         username: cfg.username,
         password: cfg.password,
-        palveluTunnus: cfg.palvelutunnus,
-        kohdeTunnus: cfg.kohdetunnus,
       }).then((client) => {
         if (process.argv.length <= 2) {
           return Promise.reject(new Error("Anna ytunnus parametrina!"));
         }
-        return client.haeYritykset(process.argv[2].split(","), uid);
+        return client.haeYritykset(process.argv[process.argv.length - 1].split(","), uid);
       });
     }
   })

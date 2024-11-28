@@ -60,8 +60,6 @@ async function getClient2() {
       endpoint: conf.endpoint,
       username: conf.username,
       password: conf.password,
-      palveluTunnus: conf.palvelutunnus,
-      kohdeTunnus: conf.kohdetunnus,
     });
   }
   return prhClient;
@@ -459,25 +457,18 @@ async function updatePRHAddress(yhteystiedot: MmlKiinteisto[], uid: string) {
   const omistajat = yhteystiedot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
   const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus, uid);
-  function trim(text: string | undefined | null) {
-    const txt = text?.trim();
-    if (txt) {
-      return txt;
-    }
-    return undefined;
-  }
   log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
   resp.forEach((c) => {
     omistajat
-      .filter((o) => o.ytunnus === c.ytunnus)
+      .filter((o) => o.ytunnus === c.ytunnus && c.ytunnus !== undefined)
       .forEach((o) => {
         o.nimi = c.nimi ?? o.nimi;
         if (c.yhteystiedot) {
           o.yhteystiedot = {
-            postinumero: trim(c.yhteystiedot.postinumero),
-            jakeluosoite: trim(c.yhteystiedot.jakeluosoite),
-            paikkakunta: trim(c.yhteystiedot.paikkakunta),
-            maakoodi: trim(c.yhteystiedot.maakoodi),
+            postinumero: c.yhteystiedot.postinumero,
+            jakeluosoite: c.yhteystiedot.jakeluosoite,
+            paikkakunta: c.yhteystiedot.paikkakunta,
+            maakoodi: c.yhteystiedot.maakoodi,
           };
         }
       });
