@@ -10,6 +10,7 @@ import { validateTallennaProjekti } from "../../../../src/projekti/validator/pro
 import { NykyinenKayttaja, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
+import { parameters } from "../../../../src/aws/parameters";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -18,6 +19,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
   let fixture: ProjektiFixture;
   const userFixture = new UserFixture(userService);
   let user: NykyinenKayttaja;
+  let isUspaIntegrationEnabledStub: sinon.SinonStub;
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
@@ -27,6 +29,8 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
     const kayttaja2 = personSearchFixture.createKayttaja("A000111");
     const kayttaja3 = personSearchFixture.createKayttaja("A000123");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
+    isUspaIntegrationEnabledStub = sinon.stub(parameters, "isUspaIntegrationEnabled");
+    isUspaIntegrationEnabledStub.returns(Promise.resolve(true));
     user = UserFixture.mattiMeikalainen;
     fixture = new ProjektiFixture();
   });
@@ -37,6 +41,7 @@ describe("projektiValidator (vähäinen menettely ja suunnittelusopimus)", () =>
   });
 
   it("should prevent suunnittelusopimus from being added if projekti uses vahainenMenettely", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const projekti = fixture.velhoprojekti1();
     projekti.vahainenMenettely = true;
     projekti.kayttoOikeudet = [
