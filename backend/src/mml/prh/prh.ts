@@ -21,7 +21,9 @@ type PrhResponse = {
   toiminimi: string;
   postinumero: string;
   coNimi: string;
-  "toimipaikka ": string;
+  toimipaikka: string;
+  maa: string;
+  ulkomaanosoite: string;
 };
 
 const TIMEOUT = 120000;
@@ -62,7 +64,8 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
             yhteystiedot: {
               jakeluosoite: trim(prhResponse.postiosoite),
               postinumero: trim(prhResponse.postinumero),
-              paikkakunta: trim(prhResponse["toimipaikka "]),
+              paikkakunta: trim(prhResponse.toimipaikka),
+              maakoodi: trim(prhResponse.maa) ?? "FI",
             },
           };
           return omistaja;
