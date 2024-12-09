@@ -7,16 +7,20 @@ import { H3 } from "@components/Headings";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { styled } from "@mui/system";
 
-export function LiittyvatSuunnitelmat({ suunnitelmaJaettu }: { suunnitelmaJaettu: ProjektinJakotieto[] }) {
+export function LiittyvatSuunnitelmat({ liittyvatSuunnitelmat }: { liittyvatSuunnitelmat: ProjektinJakotieto[] | null | undefined }) {
   const { t } = useTranslation("projekti");
   const kieli = useKansalaiskieli();
+
+  if (!liittyvatSuunnitelmat?.length) {
+    return <></>;
+  }
 
   return (
     <ContentSpacer>
       <H3 variant="h4">{t(`liittyvat_suunnitelmat.title`)}</H3>
-      <p>{t("liittyvat_suunnitelmat.kuulutettu_yhdessa", { count: suunnitelmaJaettu.length })}</p>
+      <p>{t("liittyvat_suunnitelmat.kuulutettu_yhdessa", { count: liittyvatSuunnitelmat.length })}</p>
       <List>
-        {suunnitelmaJaettu.map((jakotieto) => (
+        {liittyvatSuunnitelmat.map((jakotieto) => (
           <li key={jakotieto.oid}>
             {jakotieto.julkinen ? (
               <ExternalStyledLink href={{ pathname: "/suunnitelma/[oid]", query: { oid: jakotieto.oid } }}>

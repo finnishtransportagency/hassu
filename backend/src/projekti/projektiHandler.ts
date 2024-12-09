@@ -52,7 +52,7 @@ import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTil
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { config } from "../config";
-import { adaptSuunnitelmaJaettu } from "./adapter/adaptToAPI/adaptSuunnitelmaJaettu";
+import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -107,7 +107,13 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
-    apiProjekti.suunnitelmaJaettu = await adaptSuunnitelmaJaettu(projektiFromDB);
+
+    const suunnitelmaJaettuOidt = [
+      ...(projektiFromDB.jakautuminen?.kopioituProjekteihin ?? []),
+      projektiFromDB.jakautuminen?.kopioituProjektista,
+    ].filter((oid): oid is string => !!oid);
+    const optionalSuunnitelmaTiedot = await Promise.all(suunnitelmaJaettuOidt.map((oid) => haeLiittyvanProjektinTiedot(oid)));
+    apiProjekti.suunnitelmaJaettu = optionalSuunnitelmaTiedot.filter((jakotieto): jakotieto is API.ProjektinJakotieto => !!jakotieto);
     return apiProjekti;
   } else {
     requirePermissionLuonti();

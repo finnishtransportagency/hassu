@@ -1,5 +1,6 @@
-import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { IllegalArgumentError } from "hassu-common/error";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
+import { UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
+import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { JaaProjektiMutationVariables as Variables } from "hassu-common/graphql/apiModel";
 import { cloneDeep, omit } from "lodash";
 import log from "loglevel";
@@ -31,16 +32,20 @@ export async function jaaProjekti(input: Variables) {
   }
 
   const clonedProjekti = cloneDeep(srcProjekti);
-  JULKAISU_KEYS.forEach((julkaisuKey) => clonedProjekti[julkaisuKey]?.forEach((julkaisu) => (julkaisu.kopioituToiseltaProjektilta = true)));
+  JULKAISU_KEYS.forEach((julkaisuKey) =>
+    clonedProjekti[julkaisuKey]?.forEach((julkaisu) => {
+      julkaisu.kopioituProjektista = input.oid;
+    })
+  );
 
-  const keysToOmit: (keyof DBProjekti)[] = ["oid", "velho", "kayttoOikeudet", "salt", "jaettuProjekteihin"];
+  const keysToOmit: (keyof DBProjekti)[] = ["oid", "velho", "kayttoOikeudet", "salt", "jakautuminen"];
   const targetProjektiToCreate: DBProjekti = {
     ...omit(clonedProjekti, ...keysToOmit),
     oid: input.targetOid,
     versio: srcProjekti.versio ?? 1,
     velho: targetProjektiFromVelho.velho,
     kayttoOikeudet: targetProjektiFromVelho.kayttoOikeudet,
-    jaettuProjektista: input.oid,
+    jakautuminen: { kopioituProjektista: input.oid },
     salt: lisaAineistoService.generateSalt(),
   };
 
@@ -50,25 +55,51 @@ export async function jaaProjekti(input: Variables) {
 }
 
 async function updateJaettuProjekteihin({ oid, versio, targetOid }: Variables) {
-  const params = new UpdateCommand({
+  const jakautuminenInput: UpdateCommandInput = {
     TableName: config.projektiTableName,
     Key: {
       oid,
     },
-    UpdateExpression: "ADD #versio :one SET #jaettuProjekteihin = list_append(if_not_exists(#jaettuProjekteihin, :tyhjalista), :targetOid)",
-    ExpressionAttributeNames: { "#jaettuProjekteihin": "jaettuProjekteihin", "#versio": "versio" },
+    UpdateExpression: "ADD versio :one SET jakautuminen = :jakautuminen",
+    ExpressionAttributeValues: {
+      ":jakautuminen": { kopioituProjekteihin: [targetOid] },
+      ":versio": versio,
+      ":one": 1,
+    },
+    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(jakautuminen)",
+  };
+  const tietojaVietyInput: UpdateCommandInput = {
+    TableName: config.projektiTableName,
+    Key: {
+      oid,
+    },
+    UpdateExpression:
+      "ADD versio :one SET jakautuminen.kopioituProjekteihin = list_append(if_not_exists(jakakautuminen.kopioituProjekteihin, :tyhjalista), :targetOid)",
     ExpressionAttributeValues: {
       ":targetOid": [targetOid],
       ":tyhjalista": [],
       ":versio": versio,
       ":one": 1,
     },
-    ConditionExpression: "(attribute_not_exists(#versio) OR #versio = :versio)",
-  });
+    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_exists(jakautuminen)",
+  };
   try {
-    await getDynamoDBDocumentClient().send(params);
+    await getDynamoDBDocumentClient().send(new UpdateCommand(jakautuminenInput));
+    return;
   } catch (e) {
-    log.error("jaettuProjektehin kentän päivitys epäonnistui", e);
+    if (!(e instanceof ConditionalCheckFailedException)) {
+      log.error(e instanceof Error ? e.message : String(e), { jakautuminenInput });
+      throw e;
+    }
+  }
+  try {
+    await getDynamoDBDocumentClient().send(new UpdateCommand(tietojaVietyInput));
+    return;
+  } catch (e) {
+    if (e instanceof ConditionalCheckFailedException) {
+      throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
+    }
+    log.error(e instanceof Error ? e.message : String(e), { tietojaVietyInput });
     throw e;
   }
 }

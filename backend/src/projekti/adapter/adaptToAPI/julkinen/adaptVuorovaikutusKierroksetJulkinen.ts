@@ -52,7 +52,7 @@ export function adaptVuorovaikutusKierroksetJulkinen(dbProjekti: DBProjekti): AP
 
     const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
       __typename: "VuorovaikutusJulkinen",
-      vuorovaikutusNumero: viimeisinVuorovaikutusKierros.id,
+      id: viimeisinVuorovaikutusKierros.id,
       tila:
         dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU
           ? API.VuorovaikutusKierrosTila.MIGROITU
@@ -78,13 +78,13 @@ export function adaptVuorovaikutusKierroksetJulkinen(dbProjekti: DBProjekti): AP
         viimeisinVuorovaikutusKierros.vuorovaikutusSaamePDFt,
         true
       ),
-      kopioituToiseltaProjektilta: viimeisinVuorovaikutusKierros.kopioituToiseltaProjektilta,
+      julkaisuOnKopio: !!viimeisinVuorovaikutusKierros.kopioituProjektista,
     };
     return vuorovaikutusJulkinen;
   } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
     return {
       __typename: "VuorovaikutusJulkinen",
-      vuorovaikutusNumero: 1,
+      id: 1,
       tila: API.VuorovaikutusKierrosTila.MIGROITU,
       yhteystiedot: [],
     };

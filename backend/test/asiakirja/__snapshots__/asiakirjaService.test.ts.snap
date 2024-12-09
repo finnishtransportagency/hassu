@@ -2004,6 +2004,7 @@ Object {
       },
     ],
   },
+  "jakautuminen": undefined,
   "kielitiedot": Object {
     "ensisijainenKieli": "SUOMI",
     "projektinNimiVieraskielella": "Namnet på svenska",

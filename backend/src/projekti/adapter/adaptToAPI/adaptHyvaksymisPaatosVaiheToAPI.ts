@@ -93,6 +93,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     uudelleenKuulutus,
     aineistoMuokkaus,
     asianhallintaEventId,
+    kopioituProjektista,
+    jakautuminen: _jakautuminen,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
@@ -143,6 +145,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
     aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
   return apiJulkaisu;
 }

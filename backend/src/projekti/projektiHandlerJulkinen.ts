@@ -5,7 +5,7 @@ import { NotActiveError, NotFoundError } from "hassu-common/error";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import assert from "assert";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
-import { adaptSuunnitelmaJaettu } from "./adapter/adaptToAPI/adaptSuunnitelmaJaettu";
+import { lisaaJakotiedotJulkisilleJulkaisuille } from "./lisaaJakotiedotJulkisilleJulkaisuille";
 
 export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVariables): Promise<API.ProjektiJulkinen> {
   const { oid } = params;
@@ -16,7 +16,7 @@ export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVar
   if (projektiFromDB) {
     const adaptedProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, params.kieli ?? undefined);
     if (adaptedProjekti) {
-      adaptedProjekti.suunnitelmaJaettu = await adaptSuunnitelmaJaettu(projektiFromDB);
+      await lisaaJakotiedotJulkisilleJulkaisuille(adaptedProjekti, projektiFromDB);
       return adaptedProjekti;
     }
     throw new NotActiveError("Projekti epäaktiivinen: " + oid);

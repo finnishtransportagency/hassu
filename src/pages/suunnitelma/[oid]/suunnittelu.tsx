@@ -14,7 +14,6 @@ import {
   Linkki,
   LokalisoituLinkki,
   ProjektiJulkinen,
-  ProjektinJakotieto,
   Status,
   VelhoJulkinen,
   VuorovaikutusJulkinen,
@@ -95,11 +94,7 @@ export default function Suunnittelu(): ReactElement {
     >
       {!migroitu && (
         <>
-          <Perustiedot
-            vuorovaikutusKierros={projekti?.vuorovaikutukset}
-            velho={projekti.velho}
-            suunnitelmaJaettu={projekti.suunnitelmaJaettu}
-          />
+          <Perustiedot vuorovaikutusKierros={projekti?.vuorovaikutukset} velho={projekti.velho} />
           <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={projekti?.vuorovaikutukset} projektiOid={projekti.oid} />
           <EuLogo projekti={projekti} />
         </>
@@ -122,8 +117,7 @@ export default function Suunnittelu(): ReactElement {
 const Perustiedot: FunctionComponent<{
   vuorovaikutusKierros: VuorovaikutusJulkinen;
   velho: VelhoJulkinen;
-  suunnitelmaJaettu: ProjektinJakotieto[] | undefined | null;
-}> = ({ vuorovaikutusKierros, velho, suunnitelmaJaettu }) => {
+}> = ({ vuorovaikutusKierros, velho }) => {
   const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
 
@@ -147,7 +141,7 @@ const Perustiedot: FunctionComponent<{
   return (
     <Section>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
-      {suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={suunnitelmaJaettu} />}
+      <LiittyvatSuunnitelmat liittyvatSuunnitelmat={vuorovaikutusKierros.suunnitelmaJaettu?.liittyvatSuunnitelmat} />
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
         <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

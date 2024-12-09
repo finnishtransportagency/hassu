@@ -91,7 +91,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
           <p key={index}>{renderTextAsHTML(teksti)}</p>
         ))}
       </ContentSpacer>
-      {projekti.suunnitelmaJaettu?.length && <LiittyvatSuunnitelmat suunnitelmaJaettu={projekti.suunnitelmaJaettu} />}
+      <LiittyvatSuunnitelmat liittyvatSuunnitelmat={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelmat} />
       <ContentSpacer>
         <H3 variant="h4">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</H3>
         <Notification hideIcon type={NotificationType.INFO}>

@@ -26,7 +26,7 @@ export type JulkaisuVaiheIndexPart =
 
 export type GenericKuulutusJulkaisuJulkinen = Pick<
   AloitusKuulutusJulkaisuJulkinen,
-  "velho" | "kielitiedot" | "kuulutusPaiva" | "tila" | "kopioituToiseltaProjektilta"
+  "velho" | "kielitiedot" | "kuulutusPaiva" | "tila" | "julkaisuOnKopio"
 >;
 
 class IlmoitustauluSyoteAdapter {

@@ -153,31 +153,31 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate.salt).to.equal("foo-salt");
       expect(targetProjektiToCreate.kayttoOikeudet).to.eql([]);
       expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.length).to.equal(1);
-      expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.[0].kopioituToiseltaProjektilta).to.be.true;
+      expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.[0].kopioituProjektista).to.equal(srcProjekti.oid);
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.length).to.equal(1);
-      expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.[0].kopioituToiseltaProjektilta).to.be.true;
+      expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.[0].kopioituProjektista).to.equal(srcProjekti.oid);
       expect(targetProjektiToCreate.nahtavillaoloVaiheJulkaisut).to.be.undefined;
-      expect(targetProjektiToCreate.jaettuProjektista).to.eql(srcProjekti.oid);
-      expect(targetProjektiToCreate.jaettuProjekteihin).to.eql(undefined);
+      expect(targetProjektiToCreate.jakautuminen?.kopioituProjektista).to.eql(srcProjekti.oid);
+      expect(targetProjektiToCreate.jakautuminen?.kopioituProjekteihin).to.eql(undefined);
 
       const updateCommands = dynamoDBClient.commandCalls(UpdateCommand);
       expect(updateCommands.length).to.equal(1);
       const input = updateCommands[0].args[0].input;
-      expect(input.ExpressionAttributeNames).to.eql({
-        "#jaettuProjekteihin": "jaettuProjekteihin",
-        "#versio": "versio",
+      expect(input).to.eql({
+        ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(jakautuminen)",
+        ExpressionAttributeValues: {
+          ":jakautuminen": {
+            kopioituProjekteihin: [targetProjektiOid],
+          },
+          ":one": 1,
+          ":versio": 1,
+        },
+        Key: {
+          oid: "2",
+        },
+        TableName: "Projekti-localstack",
+        UpdateExpression: "ADD versio :one SET jakautuminen = :jakautuminen",
       });
-      expect(input.ExpressionAttributeNames).to.eql({
-        "#jaettuProjekteihin": "jaettuProjekteihin",
-        "#versio": "versio",
-      });
-      expect(input.ExpressionAttributeValues?.[":targetOid"]).to.eql(["toinen-oid"]);
-      expect(input.Key).to.eql({
-        oid: "2",
-      });
-      expect(input.UpdateExpression).to.contain(
-        "SET #jaettuProjekteihin = list_append(if_not_exists(#jaettuProjekteihin, :tyhjalista), :targetOid)"
-      );
     });
 
     it("should copy all srcProjekti's s3objects to targetProjekti's path", async () => {

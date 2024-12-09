@@ -128,6 +128,8 @@ function adaptVuorovaikutusKierrosJulkaisuToAPI(
     kysymyksetJaPalautteetViimeistaan,
     selosteVuorovaikutuskierrokselle,
     vuorovaikutusJulkaisuPaiva,
+    jakautuminen: _jakautuminen,
+    kopioituProjektista,
   } = julkaisu;
 
   if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
@@ -172,6 +174,7 @@ function adaptVuorovaikutusKierrosJulkaisuToAPI(
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
     vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(projekti.oid, julkaisu),
     vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFtToAPI(paths, vuorovaikutusSaamePDFt, false),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
   return apiJulkaisu;
 }

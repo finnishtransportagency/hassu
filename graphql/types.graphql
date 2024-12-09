@@ -309,13 +309,14 @@ type VuorovaikutusKierrosJulkaisu {
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
   asianhallintaSynkronointiTila: AsianTila
   selosteVuorovaikutuskierrokselle: String
+  julkaisuOnKopio: Boolean
 }
 
 type VuorovaikutusJulkinen {
   """
   Vuorovaikutuksen jarjestysnumero
   """
-  vuorovaikutusNumero: Int!
+  id: Int!
   tila: VuorovaikutusKierrosTila
   hankkeenKuvaus: LokalisoituTeksti
   arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
@@ -336,7 +337,8 @@ type VuorovaikutusJulkinen {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-  kopioituToiseltaProjektilta: Boolean
+  julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type NahtavillaoloVaihe {
@@ -393,6 +395,7 @@ type NahtavillaoloVaiheJulkaisu {
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: AsianTila
+  julkaisuOnKopio: Boolean
 }
 
 type LausuntoPyynto {
@@ -529,9 +532,11 @@ type HyvaksymisPaatosVaiheJulkaisu {
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: AsianTila
+  julkaisuOnKopio: Boolean
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
+  id: Int!
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
@@ -545,10 +550,12 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
-  kopioituToiseltaProjektilta: Boolean
+  julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {
+  id: Int!
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
   hyvaksymisPaatoksenPvm: String
@@ -565,7 +572,8 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
-  kopioituToiseltaProjektilta: Boolean
+  julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type NahtavillaoloPDF {
@@ -882,7 +890,6 @@ type ProjektiJulkinen implements IProjekti {
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
-  suunnitelmaJaettu: [ProjektinJakotieto!]
 }
 
 type Suunnitelma {
@@ -1050,9 +1057,11 @@ type AloitusKuulutusJulkaisu {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
   asianhallintaSynkronointiTila: AsianTila
+  julkaisuOnKopio: Boolean
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
+  id: Int!
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTeksti
@@ -1065,7 +1074,14 @@ type AloitusKuulutusJulkaisuJulkinen {
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
-  kopioituToiseltaProjektilta: Boolean
+  julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
+}
+
+type SuunnitelmaJaettuJulkinen {
+  liittyvatSuunnitelmat: [ProjektinJakotieto!]
+  julkaisuKopioituProjektista: ProjektinJakotieto
+  julkaisuKopioituProjekteille: [ProjektinJakotieto!]
 }
 
 type IlmoituksenVastaanottajat {

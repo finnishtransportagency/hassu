@@ -2,11 +2,11 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { expect } from "chai";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
-import { Kieli, Vaihe } from "hassu-common/graphql/apiModel";
-import { BatchGetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { Kieli, ProjektinJakotieto, Vaihe } from "hassu-common/graphql/apiModel";
+import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import { config } from "../../src/config";
-import { haeLiittyvienProjektienTiedot, LiittyvaProjekti } from "../../src/projekti/haeLiittyvienProjektienTiedot";
+import { haeLiittyvanProjektinTiedot } from "../../src/projekti/haeLiittyvanProjektinTiedot";
 import { parameters } from "../../src/aws/parameters";
 import { bankHolidaysClient } from "../../src/endDateCalculator/bankHolidaysClient";
 import { BankHolidays } from "../../src/endDateCalculator/bankHolidays";
@@ -14,7 +14,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { JULKAISU_KEYS } from "../../src/database/model/julkaisuKey";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
-describe("haeLiittyvienProjektienTiedot", () => {
+describe("haeLiittyvanProjektinTiedot", () => {
   const tableName = "Projekti-localstack";
 
   beforeEach(() => {
@@ -29,11 +29,6 @@ describe("haeLiittyvienProjektienTiedot", () => {
     sinon.restore();
   });
 
-  it("should return empty array if given empty array", async () => {
-    const result = await haeLiittyvienProjektienTiedot([]);
-    expect(result).to.eql([]);
-  });
-
   it("should return julkinen false if aloituskuulutus is just a draft", async () => {
     const projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.ALOITUSKUULUTUS, VaiheenTila.LUONNOS);
     assertIsDefined(projekti.kielitiedot);
@@ -45,21 +40,24 @@ describe("haeLiittyvienProjektienTiedot", () => {
     projekti.kielitiedot.toissijainenKieli = Kieli.RUOTSI;
     projekti.kielitiedot.projektinNimiVieraskielella = nimiRuotsi;
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand, { RequestItems: { [tableName]: { Keys: [{ oid: projekti.oid }] } } })
+      .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Responses: {
-          [tableName]: [projekti],
-        },
+        Item: projekti,
       });
-    const result = await haeLiittyvienProjektienTiedot([projekti.oid]);
-    const expectedResult: LiittyvaProjekti[] = [{ oid: projekti.oid, julkinen: false, nimiRuotsi, nimiSuomi }];
-    expect(mock.commandCalls(BatchGetCommand).length).to.equal(1);
+    const result = await haeLiittyvanProjektinTiedot(projekti.oid);
+    const expectedResult: ProjektinJakotieto = {
+      oid: projekti.oid,
+      julkinen: false,
+      nimi: { __typename: "LokalisoituTeksti", SUOMI: nimiSuomi, RUOTSI: nimiRuotsi },
+      __typename: "ProjektinJakotieto",
+    };
+    expect(mock.commandCalls(GetCommand).length).to.equal(1);
     expect(result).to.eql(expectedResult);
   });
 
   it("should return julkinen false if every julkaisu is copied from another project", async () => {
     const projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.HYVAKSYTTY);
-    JULKAISU_KEYS.forEach((key) => projekti[key]?.forEach((julkaisu) => (julkaisu.kopioituToiseltaProjektilta = true)));
+    JULKAISU_KEYS.forEach((key) => projekti[key]?.forEach((julkaisu) => (julkaisu.kopioituProjektista = "123")));
     assertIsDefined(projekti.kielitiedot);
     assertIsDefined(projekti.velho);
     const nimiSuomi = "Nimi suomeksi 123";
@@ -69,15 +67,18 @@ describe("haeLiittyvienProjektienTiedot", () => {
     projekti.kielitiedot.toissijainenKieli = Kieli.RUOTSI;
     projekti.kielitiedot.projektinNimiVieraskielella = nimiRuotsi;
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand, { RequestItems: { [tableName]: { Keys: [{ oid: projekti.oid }] } } })
+      .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Responses: {
-          [tableName]: [projekti],
-        },
+        Item: projekti,
       });
-    const result = await haeLiittyvienProjektienTiedot([projekti.oid]);
-    const expectedResult: LiittyvaProjekti[] = [{ oid: projekti.oid, julkinen: false, nimiRuotsi, nimiSuomi }];
-    expect(mock.commandCalls(BatchGetCommand).length).to.equal(1);
+    const result = await haeLiittyvanProjektinTiedot(projekti.oid);
+    const expectedResult: ProjektinJakotieto = {
+      oid: projekti.oid,
+      julkinen: false,
+      nimi: { __typename: "LokalisoituTeksti", SUOMI: nimiSuomi, RUOTSI: nimiRuotsi },
+      __typename: "ProjektinJakotieto",
+    };
+    expect(mock.commandCalls(GetCommand).length).to.equal(1);
     expect(result).to.eql(expectedResult);
   });
 
@@ -92,15 +93,18 @@ describe("haeLiittyvienProjektienTiedot", () => {
     projekti.kielitiedot.toissijainenKieli = Kieli.RUOTSI;
     projekti.kielitiedot.projektinNimiVieraskielella = nimiRuotsi;
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand, { RequestItems: { [tableName]: { Keys: [{ oid: projekti.oid }] } } })
+      .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Responses: {
-          [tableName]: [projekti],
-        },
+        Item: projekti,
       });
-    const result = await haeLiittyvienProjektienTiedot([projekti.oid]);
-    const expectedResult: LiittyvaProjekti[] = [{ oid: projekti.oid, julkinen: true, nimiSuomi, nimiRuotsi }];
-    expect(mock.commandCalls(BatchGetCommand).length).to.equal(1);
+    const result = await haeLiittyvanProjektinTiedot(projekti.oid);
+    const expectedResult: ProjektinJakotieto = {
+      oid: projekti.oid,
+      julkinen: true,
+      nimi: { __typename: "LokalisoituTeksti", SUOMI: nimiSuomi, RUOTSI: nimiRuotsi },
+      __typename: "ProjektinJakotieto",
+    };
+    expect(mock.commandCalls(GetCommand).length).to.equal(1);
     expect(result).to.eql(expectedResult);
   });
 
@@ -115,15 +119,18 @@ describe("haeLiittyvienProjektienTiedot", () => {
     projekti.kielitiedot.projektinNimiVieraskielella = "Nimi saameksi 456";
 
     const mock = mockClient(DynamoDBDocumentClient)
-      .on(BatchGetCommand, { RequestItems: { [tableName]: { Keys: [{ oid: projekti.oid }] } } })
+      .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Responses: {
-          [tableName]: [projekti],
-        },
+        Item: projekti,
       });
-    const result = await haeLiittyvienProjektienTiedot([projekti.oid]);
-    const expectedResult: LiittyvaProjekti[] = [{ oid: projekti.oid, julkinen: true, nimiRuotsi: undefined, nimiSuomi }];
-    expect(mock.commandCalls(BatchGetCommand).length).to.equal(1);
+    const result = await haeLiittyvanProjektinTiedot(projekti.oid);
+    const expectedResult: ProjektinJakotieto = {
+      oid: projekti.oid,
+      julkinen: true,
+      nimi: { __typename: "LokalisoituTeksti", SUOMI: nimiSuomi, RUOTSI: undefined },
+      __typename: "ProjektinJakotieto",
+    };
+    expect(mock.commandCalls(GetCommand).length).to.equal(1);
     expect(result).to.eql(expectedResult);
   });
 });

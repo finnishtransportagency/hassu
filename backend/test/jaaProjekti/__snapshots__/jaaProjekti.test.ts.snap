@@ -98,7 +98,7 @@ Object {
         "projektinNimiVieraskielella": "Marikas testprojekt",
         "toissijainenKieli": "RUOTSI",
       },
-      "kopioituToiseltaProjektilta": true,
+      "kopioituProjektista": "2",
       "kuulutusPaiva": "2022-03-28T14:28",
       "kuulutusYhteystiedot": Object {
         "yhteysHenkilot": Array [
@@ -150,7 +150,9 @@ Object {
     },
   ],
   "euRahoitus": false,
-  "jaettuProjektista": "2",
+  "jakautuminen": Object {
+    "kopioituProjektista": "2",
+  },
   "kasittelynTila": Object {
     "hyvaksymispaatos": Object {
       "asianumero": "traficom-123",
@@ -358,7 +360,7 @@ yksi tavoitteista.",
           },
         ],
       },
-      "kopioituToiseltaProjektilta": true,
+      "kopioituProjektista": "2",
       "suunnittelunEteneminenJaKesto": Object {
         "RUOTSI": "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
 Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta

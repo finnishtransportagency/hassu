@@ -80,6 +80,8 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       aineistoMuokkaus,
       nahtavillaoloSaamePDFt,
       asianhallintaEventId,
+      jakautuminen: _jakautuminen,
+      kopioituProjektista,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -124,6 +126,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
+      julkaisuOnKopio: !!kopioituProjektista,
     };
 
     return apiJulkaisu;

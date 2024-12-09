@@ -85,9 +85,10 @@ describe("IlmoitustauluSyote", () => {
     const dbProjekti = projektiFixture.dbProjekti4();
     const copiedJulkaisuKeys: JulkaisuKey[] = ["aloitusKuulutusJulkaisut", "vuorovaikutusKierrosJulkaisut", "nahtavillaoloVaiheJulkaisut"];
     JULKAISU_KEYS.filter((key) => copiedJulkaisuKeys.includes(key)).forEach((key) =>
-      dbProjekti[key]?.forEach((julkaisu) => (julkaisu.kopioituToiseltaProjektilta = true))
+      dbProjekti[key]?.forEach((julkaisu) => (julkaisu.kopioituProjektista = "oid-123"))
     );
     const projekti = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
+
     assertIsDefined(projekti);
     await ilmoitustauluSyoteService.index(projekti);
     expect(putDocumentStub.getCalls().map((call) => call.lastArg.title)).to.eql([
@@ -99,7 +100,7 @@ describe("IlmoitustauluSyote", () => {
   it("Should index none of projekti's julkaisu's if every julkaisu is copied from another projekti", async () => {
     const projektiFixture = new ProjektiFixture();
     const dbProjekti = projektiFixture.dbProjekti4();
-    JULKAISU_KEYS.forEach((key) => dbProjekti[key]?.forEach((julkaisu) => (julkaisu.kopioituToiseltaProjektilta = true)));
+    JULKAISU_KEYS.forEach((key) => dbProjekti[key]?.forEach((julkaisu) => (julkaisu.kopioituProjektista = "oid-123")));
     const projekti = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
     assertIsDefined(projekti);
     await ilmoitustauluSyoteService.index(projekti);

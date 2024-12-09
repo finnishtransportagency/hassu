@@ -31,15 +31,15 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
   if (!julkaisu) {
     return undefined;
   }
-  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus, kopioituToiseltaProjektilta } =
+  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus, id, kopioituProjektista } =
     julkaisu;
   if (tila === API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       tila,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelhoJulkinen(velho),
-      kopioituToiseltaProjektilta,
     };
   }
 
@@ -50,6 +50,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
   const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(julkaisu);
 
   const julkaisuJulkinen: API.AloitusKuulutusJulkaisuJulkinen = {
+    id,
     __typename: "AloitusKuulutusJulkaisuJulkinen",
     kuulutusPaiva,
     siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
@@ -62,7 +63,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
     aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFtToAPI(aloituskuulutusPath, julkaisu.aloituskuulutusSaamePDFt, true),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
-    kopioituToiseltaProjektilta,
+    julkaisuOnKopio: !!kopioituProjektista,
   };
 
   if (kieli) {
