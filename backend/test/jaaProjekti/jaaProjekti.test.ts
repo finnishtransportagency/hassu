@@ -11,15 +11,23 @@ import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBPro
 import { Vaihe } from "hassu-common/graphql/apiModel";
 import { cloneDeep } from "lodash";
 import { velho as velhoClient } from "../../src/velho/velhoClient";
-import { DynamoDBDocumentClient, DynamoDBDocumentClientResolvedConfig, PutCommandOutput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  DynamoDBDocumentClientResolvedConfig,
+  PutCommandOutput,
+  ServiceInputTypes as DynamoDBServiceInputTypes,
+  ServiceOutputTypes as DynamoDBServiceOutputTypes,
+  UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
+
 import { AwsStub, mockClient } from "aws-sdk-client-mock";
 import {
   CopyObjectCommand,
   ListObjectsV2Command,
   S3Client,
   S3ClientResolvedConfig,
-  ServiceInputTypes,
-  ServiceOutputTypes,
+  ServiceInputTypes as S3ServiceInputTypes,
+  ServiceOutputTypes as S3ServiceOutputTypes,
 } from "@aws-sdk/client-s3";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { lisaAineistoService } from "../../src/tiedostot/lisaAineistoService";
@@ -97,11 +105,11 @@ describe("jaaProjekti", () => {
     let srcProjekti: DBProjekti;
     const targetProjektiOid = "toinen-oid";
     let createProjektiStub: sinon.SinonStub<[projekti: DBProjekti], Promise<PutCommandOutput>>;
-    let dynamoDBClient: AwsStub<ServiceInputTypes, ServiceOutputTypes, DynamoDBDocumentClientResolvedConfig>;
+    let dynamoDBClient: AwsStub<DynamoDBServiceInputTypes, DynamoDBServiceOutputTypes, DynamoDBDocumentClientResolvedConfig>;
 
     let targetVelho: Velho;
     let targetProjektiFromVelho: DBProjekti;
-    let s3Mock: AwsStub<ServiceInputTypes, ServiceOutputTypes, S3ClientResolvedConfig>;
+    let s3Mock: AwsStub<S3ServiceInputTypes, S3ServiceOutputTypes, S3ClientResolvedConfig>;
 
     beforeEach(() => {
       userFixture.loginAs(UserFixture.hassuAdmin);
