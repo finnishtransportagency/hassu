@@ -1,0 +1,16 @@
+export const suunnitelmanTilat = {
+  "suunnitelman-tila/sutil03": "Hyväksymisesitys Traficomissa",
+  "suunnitelman-tila/sutil14": "Toteutuksessa / Osin toteutuksessa",
+  "suunnitelman-tila/sutil02": "Esitarkistus/Ennakkoneuvottelu",
+  "suunnitelman-tila/sutil06": "Liikenteelleluovutus/Toteutusilmoitus, Osa",
+  "suunnitelman-tila/sutil01": "Ei tilaa",
+  "suunnitelman-tila/sutil13": "Suunnittelu käynnissä",
+  "suunnitelman-tila/sutil11": "Rauennut",
+  "suunnitelman-tila/sutil04": "Hyväksymispäätös annettu / odottaa kuulutustodistusta, lainvoimaisuus päätöstä yms.",
+  "suunnitelman-tila/sutil08": "Valitus",
+  "suunnitelman-tila/sutil12": "Palautettu suunnitelman laatijalle",
+  "suunnitelman-tila/sutil05": "Hyväksymispäätös annettu, lainvoimainen",
+  "suunnitelman-tila/sutil10": "Osin rauennut",
+  "suunnitelman-tila/sutil07": "Liikenteelleluovutus/Toteutusilmoitus, koko",
+  "suunnitelman-tila/sutil09": "LVM:n hyväksymispäätös",
+};

@@ -443,6 +443,7 @@ type HyvaksymisEsitys {
 type HyvaksymisEsityksenTiedot {
   oid: String!
   versio: Int!
+  status: Status
   hyvaksymisEsitys: HyvaksymisEsitys
   muokkauksenVoiAvata: Boolean!
   aineistotValmiit: Boolean!
@@ -483,6 +484,7 @@ enum HyvaksymisTila {
 type EnnakkoNeuvottelu {
   poistumisPaiva: String
   lisatiedot: String
+  hyvaksymisEsitys: [LadattuTiedostoNew!]
   suunnitelma: [AineistoNew!]
   muistutukset: [KunnallinenLadattuTiedosto!]
   lausunnot: [LadattuTiedostoNew!]
@@ -497,6 +499,7 @@ type EnnakkoNeuvottelu {
 type EnnakkoNeuvotteluJulkaisu {
   poistumisPaiva: String
   lisatiedot: String
+  hyvaksymisEsitys: [LadattuTiedostoNew!]
   suunnitelma: [AineistoNew!]
   muistutukset: [KunnallinenLadattuTiedosto!]
   lausunnot: [LadattuTiedostoNew!]
@@ -1349,6 +1352,7 @@ type EnnakkoNeuvottelunAineistot {
   linkkiVanhentunut: Boolean
   lisatiedot: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  hyvaksymisEsitys: [LadattavaTiedosto!]
   suunnitelma: [LadattavaTiedosto!]
   kuntaMuistutukset: [KunnallinenLadattavaTiedosto!]
   lausunnot: [LadattavaTiedosto!]
@@ -1420,6 +1424,9 @@ type KasittelynTila {
   korkeinHallintoOikeus: OikeudenPaatos
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 type OikeudenPaatos {

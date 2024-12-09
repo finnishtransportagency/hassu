@@ -125,6 +125,9 @@ export type KasittelynTila = {
   toimitusKaynnistynyt?: string;
   toteutusilmoitusOsittain?: string;
   toteutusilmoitusKokonaan?: string;
+  suunnitelmaRauennut?: string;
+  tieRatasuunnitelmaLuotu?: boolean;
+  laaditunSuunnitelmanLisatiedot?: string;
 };
 
 export type OikeudenPaatos = {
@@ -210,6 +213,7 @@ export type SuunnitelmanJakautuminen = {
 export type DBEnnakkoNeuvottelu = {
   poistumisPaiva?: string | null;
   lisatiedot?: string | null;
+  hyvaksymisEsitys?: Array<LadattuTiedostoNew> | null;
   suunnitelma?: Array<AineistoNew> | null;
   muistutukset?: Array<KunnallinenLadattuTiedosto> | null;
   lausunnot?: Array<LadattuTiedostoNew> | null;

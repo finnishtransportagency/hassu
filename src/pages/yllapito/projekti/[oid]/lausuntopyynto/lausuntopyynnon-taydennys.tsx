@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
 import LausuntopyynnotPageLayout from "@components/projekti/lausuntopyynnot/LausuntoPyynnotPageLayout";
 import Section from "@components/layout/Section2";
 import { LadattuTiedosto, LausuntoPyynnonTaydennys, ProjektiTyyppi } from "@services/api";
@@ -20,15 +19,26 @@ import { handleLadattuTiedostoArrayForDefaultValues } from "@components/projekti
 import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut";
 import dayjs from "dayjs";
 import DownloadButtonLink from "@components/button/DownloadButtonLink";
-import { H2 } from "../../../../../components/Headings";
+import { H2 } from "@components/Headings";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function LausuntoPyynnonTaydennysWrapper() {
-  useProjekti({ revalidateOnMount: true });
-  return (
-    <ProjektiConsumerComponent useProjektiOptions={{ revalidateOnMount: true }}>
-      {(projekti) => <LausuntoPyynnonTaydennyksetForm projekti={projekti} />}
-    </ProjektiConsumerComponent>
-  );
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
+  if (!projekti) {
+    return <></>;
+  }
+
+  if (projektiOnEpaaktiivinen(projekti)) {
+    return (
+      <LausuntopyynnotPageLayout>
+        <Section noDivider>
+          <p>Ei lausuntopyynnön täydennyksiä</p>
+        </Section>
+      </LausuntopyynnotPageLayout>
+    );
+  }
+
+  return <LausuntoPyynnonTaydennyksetForm projekti={projekti} />;
 }
 
 const defaultLausuntoPyynnonTaydennys: (kuntaId: number) => LausuntoPyynnonTaydennysLisakentilla = (kuntaId: number) => ({
@@ -125,7 +135,7 @@ const LausuntoPyynnonTaydennyksetForm = ({ projekti }: { projekti: ProjektiLisat
             Alla löydät linkin viimeisimpään lausuntopyynnön täydennyksen mallipohjaan. Lataa lausuntopyynnön täydennyksen mallipohja
             tietokoneellesi ja täytä sen sisältö. Lausuntopyynnön täydennys lähetetään järjestelmän ulkopuolella.
           </p>
-          <div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
               <DownloadButtonLink
                 id="mallipohja-33T"

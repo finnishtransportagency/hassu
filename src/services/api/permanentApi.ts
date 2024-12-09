@@ -1,11 +1,8 @@
 import awsExports from "../../aws-exports";
 import { createAuthLink } from "aws-appsync-auth-link";
-import { createHttpLink } from "apollo-link-http";
-import { ErrorResponse, onError } from "apollo-link-error";
+import { createHttpLink, FetchResult, Observable, ServerError, ApolloLink } from "@apollo/client";
+import { ErrorResponse, onError } from "@apollo/client/link/error";
 import { API, ERROR_MESSAGE_NOT_AUTHENTICATED } from "@services/api/commonApi";
-import { FetchResult } from "apollo-link/lib/types";
-import { ApolloLink, Observable } from "apollo-link";
-import { ServerError } from "apollo-link-http-common";
 import { GraphQLError } from "graphql/error/GraphQLError";
 import fetch from "cross-fetch";
 

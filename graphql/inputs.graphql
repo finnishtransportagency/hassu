@@ -283,6 +283,7 @@ input HyvaksymisEsitysInput {
 input EnnakkoNeuvotteluInput {
   poistumisPaiva: String
   lisatiedot: String
+  hyvaksymisEsitys: [LadattuTiedostoInputNew!]
   suunnitelma: [AineistoInputNew!]
   muistutukset: [KunnallinenLadattuTiedostoInput!]
   lausunnot: [LadattuTiedostoInputNew!]
@@ -543,6 +544,9 @@ input KasittelyntilaInput {
   korkeinHallintoOikeus: OikeudenPaatosInput
   toteutusilmoitusOsittain: String
   toteutusilmoitusKokonaan: String
+  suunnitelmaRauennut: String
+  tieRatasuunnitelmaLuotu: Boolean
+  laaditunSuunnitelmanLisatiedot: String
 }
 
 input OikeudenPaatosInput {

@@ -19,12 +19,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
-  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, velhoStub } = defaultMocks();
 
   before(async () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
-    mockSaveProjektiToVelho();
+    mockSaveProjektiToVelho(velhoStub);
 
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     await deleteProjekti(oid);

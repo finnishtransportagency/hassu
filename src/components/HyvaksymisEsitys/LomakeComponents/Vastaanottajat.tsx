@@ -22,11 +22,11 @@ export default function Vastaanottajat({ ennakkoneuvottelu }: Readonly<Hyvaksymi
 
   return (
     <>
-      <H3 variant="h2">{ennakkoneuvottelu ? "Ennakkoneuvotteluun toimitettavan suunnitelman" : "Hyväksymisesityksen"} vastaanottajat</H3>
+      <H3 variant="h2">{ennakkoneuvottelu ? "Aineistolinkin" : "Hyväksymisesityksen"} vastaanottajat</H3>
       <p>
-        Lisää lähetettävälle {ennakkoneuvottelu ? "ennakkoneuvottelulle" : "hyväksymisesitykselle"} vastaanottaja. Jos{" "}
-        {ennakkoneuvottelu ? "ennakkoneuvottelu" : "hyväksymisesitys"} pitää lähettää useammalle kuin yhdelle vastaanottajalle, lisää uusi
-        rivi Lisää uusi -painikkeella.
+        Lisää lähetettävälle {ennakkoneuvottelu ? "aineistolinkille" : "hyväksymisesitykselle"} vastaanottaja. Jos{" "}
+        {ennakkoneuvottelu ? "linkki" : "hyväksymisesitys"} pitää lähettää useammalle kuin yhdelle vastaanottajalle, lisää uusi rivi Lisää
+        uusi -painikkeella.
       </p>
       {fields.map((field, index) => (
         <Stack direction="row" key={field.id}>

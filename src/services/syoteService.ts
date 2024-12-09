@@ -3,6 +3,8 @@ import {
   linkAloituskuulutus,
   linkHyvaksymismenettelyssa,
   linkHyvaksymisPaatos,
+  linkJatkoPaatos1,
+  linkJatkoPaatos2,
   linkNahtavillaOlo,
   linkSuunnitelma,
 } from "../../common/links";
@@ -33,6 +35,10 @@ function createActiveKuulutusLink(projekti: ProjektiJulkinen, kieli = Kieli.SUOM
       return linkHyvaksymismenettelyssa(projekti, kieli);
     case Status.HYVAKSYTTY:
       return linkHyvaksymisPaatos(projekti, kieli);
+    case Status.JATKOPAATOS_1:
+      return linkJatkoPaatos1(projekti, kieli);
+    case Status.JATKOPAATOS_2:
+      return linkJatkoPaatos2(projekti, kieli);
   }
 }
 
