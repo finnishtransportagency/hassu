@@ -313,13 +313,14 @@ Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
+      "id": 1,
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
-      "kopioituToiseltaProjektilta": undefined,
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/3/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
@@ -376,6 +377,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         },
         "__typename": "KuulutusSaamePDFt",
       },
+      "suunnitelmaJaettu": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -609,6 +611,7 @@ Object {
           },
         ],
       },
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -825,6 +828,7 @@ Object {
           },
         ],
       },
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -1135,13 +1139,14 @@ Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
+      "id": 2,
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
-      "kopioituToiseltaProjektilta": undefined,
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/3/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
@@ -1198,6 +1203,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         },
         "__typename": "KuulutusSaamePDFt",
       },
+      "suunnitelmaJaettu": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
