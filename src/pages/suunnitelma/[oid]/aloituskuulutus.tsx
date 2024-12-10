@@ -20,6 +20,7 @@ import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/Tiedos
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
 import { LiittyvatSuunnitelmat } from "../../../components/kansalainen/LiittyvatSuunnitelmat";
+import { DottedList } from "@components/notification/DottedList";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -74,7 +75,11 @@ export default function AloituskuulutusJulkinen(): ReactElement {
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
-      <ProjektiJulkinenPageLayout selectedStep={Status.ALOITUSKUULUTUS} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+      <ProjektiJulkinenPageLayout
+        suunnitelmaJaettu={projekti.aloitusKuulutusJulkaisu?.suunnitelmaJaettu}
+        selectedStep={Status.ALOITUSKUULUTUS}
+        title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}
+      >
         <Section noDivider>
           <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
           {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
@@ -93,6 +98,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   return (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.ALOITUSKUULUTUS}
+      suunnitelmaJaettu={kuulutus?.suunnitelmaJaettu}
       title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}
       saameContent={
         <SaameContent
@@ -125,11 +131,11 @@ export default function AloituskuulutusJulkinen(): ReactElement {
         <H3 variant="h4">{t(`ui-otsikot.asianosaisen_oikeudet`)}</H3>
         <ContentSpacer>
           <Notification type={NotificationType.INFO} hideIcon role="presentation">
-            <ul>
+            <DottedList>
               {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
                 <li key={index}>{renderTextAsHTML(teksti)}</li>
               ))}
-            </ul>
+            </DottedList>
           </Notification>
           <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
         </ContentSpacer>

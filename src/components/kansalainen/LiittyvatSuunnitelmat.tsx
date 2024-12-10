@@ -1,15 +1,13 @@
 import React from "react";
 import useTranslation from "next-translate/useTranslation";
-import { Kieli, ProjektinJakotieto } from "hassu-common/graphql/apiModel";
+import { ProjektinJakotieto } from "hassu-common/graphql/apiModel";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { H3 } from "@components/Headings";
-import { ExternalStyledLink } from "@components/StyledLink";
-import { styled } from "@mui/system";
+import { DashedList } from "./DashedList";
+import { ProjektinJakotietoJulkinen } from "./ProjektinJakotietoJulkinen";
 
 export function LiittyvatSuunnitelmat({ liittyvatSuunnitelmat }: { liittyvatSuunnitelmat: ProjektinJakotieto[] | null | undefined }) {
   const { t } = useTranslation("projekti");
-  const kieli = useKansalaiskieli();
 
   if (!liittyvatSuunnitelmat?.length) {
     return <></>;
@@ -17,38 +15,15 @@ export function LiittyvatSuunnitelmat({ liittyvatSuunnitelmat }: { liittyvatSuun
 
   return (
     <ContentSpacer>
-      <H3 variant="h4">{t(`liittyvat_suunnitelmat.title`)}</H3>
-      <p>{t("liittyvat_suunnitelmat.kuulutettu_yhdessa", { count: liittyvatSuunnitelmat.length })}</p>
-      <List>
+      <H3 variant="h4">{t(`liittyvat-suunnitelmat.title`)}</H3>
+      <p>{t("liittyvat-suunnitelmat.kuulutettu-yhdessa", { count: liittyvatSuunnitelmat.length })}</p>
+      <DashedList>
         {liittyvatSuunnitelmat.map((jakotieto) => (
           <li key={jakotieto.oid}>
-            {jakotieto.julkinen ? (
-              <ExternalStyledLink href={{ pathname: "/suunnitelma/[oid]", query: { oid: jakotieto.oid } }}>
-                {jakotieto.nimi[kieli] ?? jakotieto.nimi[Kieli.SUOMI]}
-              </ExternalStyledLink>
-            ) : (
-              // Fallback kielenä Suomi
-              <p>{`${jakotieto.nimi[kieli] ?? jakotieto.nimi[Kieli.SUOMI]} (${t("liittyvat_suunnitelmat.ei_julkaisuja")})`}</p>
-            )}
+            <ProjektinJakotietoJulkinen jakotieto={jakotieto} />
           </li>
         ))}
-      </List>
+      </DashedList>
     </ContentSpacer>
   );
 }
-
-const List = styled("ul")(({ theme }) => ({
-  listStylePosition: "inside",
-  listStyleType: "'-'",
-  marginLeft: theme.spacing(4),
-  "& > li": {
-    "& > p,a": {
-      marginLeft: theme.spacing(1),
-      display: "inline-block",
-      marginBottom: "0px",
-    },
-    "&:not(:last-child)": {
-      marginBottom: theme.spacing(1),
-    },
-  },
-}));

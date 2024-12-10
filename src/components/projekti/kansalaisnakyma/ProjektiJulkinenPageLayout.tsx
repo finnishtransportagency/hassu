@@ -1,7 +1,7 @@
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Kieli, Status } from "@services/api";
+import { Kieli, Status, SuunnitelmaJaettuJulkinen } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -12,15 +12,26 @@ import useTranslation from "next-translate/useTranslation";
 import { H1, H2 } from "@components/Headings";
 import HassuWidget from "@components/layout/HassuWidget";
 import ExtLink from "@components/ExtLink";
+import { ProjektinJakotietoJulkinen } from "@components/kansalainen/ProjektinJakotietoJulkinen";
+import { DashedList } from "@components/kansalainen/DashedList";
+import ContentSpacer from "@components/layout/ContentSpacer";
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
   title: string;
   selectedStep: Status;
   vahainenMenettely?: boolean | null;
+  suunnitelmaJaettu?: SuunnitelmaJaettuJulkinen | null;
 }
 
-export default function ProjektiPageLayout({ children, saameContent, title, selectedStep, vahainenMenettely }: Props): ReactElement {
+export default function ProjektiPageLayout({
+  children,
+  saameContent,
+  title,
+  selectedStep,
+  vahainenMenettely,
+  suunnitelmaJaettu,
+}: Props): ReactElement {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
@@ -64,6 +75,32 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             {saameContent}
             <H2>{title}</H2>
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
+            {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                <p>
+                  {t("suunnitelma-jaettu.kaynnistetty-suunnitelmalla")}{" "}
+                  <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />
+                  {". "}
+                  {t("suunnitelma-jaettu.tiedot-kopioitu")}
+                </p>
+              </Notification>
+            )}
+            {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                <ContentSpacer gap={2}>
+                  <p>
+                    {t("suunnitelma-jaettu.suunnittelua-on-jaettu", { count: suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length })}{" "}
+                  </p>
+                  <DashedList>
+                    {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin.map((jakotieto) => (
+                      <li key={jakotieto.oid}>
+                        <ProjektinJakotietoJulkinen jakotieto={jakotieto} />
+                      </li>
+                    ))}
+                  </DashedList>
+                </ContentSpacer>
+              </Notification>
+            )}
             {smallScreen && velho?.linkki && (
               <HassuWidget smallScreen>
                 <p>{t("lue_hankesivulta")}</p>

@@ -80,6 +80,7 @@ export default function Suunnittelu(): ReactElement {
   return (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.SUUNNITTELU}
+      suunnitelmaJaettu={projekti.vuorovaikutukset.suunnitelmaJaettu}
       title={t("otsikko")}
       saameContent={
         migroitu ? null : (

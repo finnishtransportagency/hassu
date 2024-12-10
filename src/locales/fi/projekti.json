@@ -63,11 +63,17 @@
     "hankesuunnittelusivu": "Hankesuunnittelusivu",
     "etakaytto": "Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
   },
-  "liittyvat_suunnitelmat": {
+  "suunnitelma-jaettu": {
+    "kaynnistetty-suunnitelmalla": "Suunnittelu on aiemmin käynnistetty suunnitelmalla",
+    "tiedot-kopioitu": "Alla olevan julkaisun tiedot on kopioitu siitä.",
+    "suunnittelua-on-jaettu_one": "Suunnittelua on jaettu alla olevaan suunnitelmaan.",
+    "suunnittelua-on-jaettu_other": "Suunnittelua on jaettu alla oleviin suunnitelmiin."
+  },
+  "liittyvat-suunnitelmat": {
     "title": "Liittyvät suunnitelmat",
-    "kuulutettu_yhdessa_one": "Suunnitelma on aiemmin kuulutettu yhdessä suunnitelman kanssa",
-    "kuulutettu_yhdessa_other": "Suunnitelma on aiemmin kuulutettu yhdessä suunnitelmien kanssa",
-    "ei_julkaisuja": "Ei julkaisuja"
+    "kuulutettu-yhdessa_one": "Suunnitelma on aiemmin kuulutettu yhdessä alla olevan suunnitelman kanssa.",
+    "kuulutettu-yhdessa_other": "Suunnitelma on aiemmin kuulutettu yhdessä alla olevien suunnitelmien kanssa.",
+    "ei-julkaisuja": "Ei julkaisuja"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Valtion liikenneväylien suunnittelu",
