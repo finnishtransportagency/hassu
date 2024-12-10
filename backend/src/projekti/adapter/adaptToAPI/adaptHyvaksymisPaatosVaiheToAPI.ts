@@ -94,7 +94,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     aineistoMuokkaus,
     asianhallintaEventId,
     kopioituProjektista,
-    jakautuminen: _jakautuminen,
+    projektinJakautuminen: _jakautuminen,
     ...fieldsToCopyAsIs
   } = julkaisu;
 

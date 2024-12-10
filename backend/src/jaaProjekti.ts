@@ -38,14 +38,14 @@ export async function jaaProjekti(input: Variables) {
     })
   );
 
-  const keysToOmit: (keyof DBProjekti)[] = ["oid", "velho", "kayttoOikeudet", "salt", "jakautuminen"];
+  const keysToOmit: (keyof DBProjekti)[] = ["oid", "velho", "kayttoOikeudet", "salt", "projektinJakautuminen"];
   const targetProjektiToCreate: DBProjekti = {
     ...omit(clonedProjekti, ...keysToOmit),
     oid: input.targetOid,
     versio: srcProjekti.versio ?? 1,
     velho: targetProjektiFromVelho.velho,
     kayttoOikeudet: targetProjektiFromVelho.kayttoOikeudet,
-    jakautuminen: { kopioituProjektista: input.oid },
+    projektinJakautuminen: { jaettuProjektista: input.oid },
     salt: lisaAineistoService.generateSalt(),
   };
 
@@ -60,13 +60,13 @@ async function updateJaettuProjekteihin({ oid, versio, targetOid }: Variables) {
     Key: {
       oid,
     },
-    UpdateExpression: "ADD versio :one SET jakautuminen = :jakautuminen",
+    UpdateExpression: "ADD versio :one SET projektinJakautuminen = :projektinJakautuminen",
     ExpressionAttributeValues: {
-      ":jakautuminen": { kopioituProjekteihin: [targetOid] },
+      ":projektinJakautuminen": { jaettuProjekteihin: [targetOid] },
       ":versio": versio,
       ":one": 1,
     },
-    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(jakautuminen)",
+    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(projektinJakautuminen)",
   };
   const tietojaVietyInput: UpdateCommandInput = {
     TableName: config.projektiTableName,
@@ -74,14 +74,14 @@ async function updateJaettuProjekteihin({ oid, versio, targetOid }: Variables) {
       oid,
     },
     UpdateExpression:
-      "ADD versio :one SET jakautuminen.kopioituProjekteihin = list_append(if_not_exists(jakakautuminen.kopioituProjekteihin, :tyhjalista), :targetOid)",
+      "ADD versio :one SET projektinJakautuminen.jaettuProjekteihin = list_append(if_not_exists(projektinJakautuminen.jaettuProjekteihin, :tyhjalista), :targetOid)",
     ExpressionAttributeValues: {
       ":targetOid": [targetOid],
       ":tyhjalista": [],
       ":versio": versio,
       ":one": 1,
     },
-    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_exists(jakautuminen)",
+    ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_exists(projektinJakautuminen)",
   };
   try {
     await getDynamoDBDocumentClient().send(new UpdateCommand(jakautuminenInput));

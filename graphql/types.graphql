@@ -1083,8 +1083,8 @@ type AloitusKuulutusJulkaisuJulkinen {
 
 type SuunnitelmaJaettuJulkinen {
   liittyvatSuunnitelmat: [ProjektinJakotieto!]
-  julkaisuKopioituProjektista: ProjektinJakotieto
-  julkaisuKopioituProjekteille: [ProjektinJakotieto!]
+  julkaisuKopioituSuunnitelmasta: ProjektinJakotieto
+  julkaisuKopioituSuunnitelmiin: [ProjektinJakotieto!]
 }
 
 type IlmoituksenVastaanottajat {

@@ -150,9 +150,6 @@ Object {
     },
   ],
   "euRahoitus": false,
-  "jakautuminen": Object {
-    "kopioituProjektista": "2",
-  },
   "kasittelynTila": Object {
     "hyvaksymispaatos": Object {
       "asianumero": "traficom-123",
@@ -218,6 +215,9 @@ Object {
   "nahtavillaoloVaiheJulkaisut": undefined,
   "oid": "toinen-oid",
   "paivitetty": "2022-03-15T14:30:00.000Z",
+  "projektinJakautuminen": Object {
+    "jaettuProjektista": "2",
+  },
   "salt": "foo-salt",
   "tallennettu": true,
   "vahainenMenettely": false,

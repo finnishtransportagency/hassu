@@ -83,7 +83,7 @@ export type AloitusKuulutusJulkaisu = {
   uudelleenKuulutus?: UudelleenKuulutus | null;
   asianhallintaEventId?: string | null;
   kopioituProjektista?: string | null;
-  jakautuminen?: SuunnitelmanJakautuminen;
+  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
 export type SuunnitteluSopimus = {
@@ -202,12 +202,12 @@ export type DBProjekti = {
   ennakkoNeuvottelu?: DBEnnakkoNeuvottelu;
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
   ennakkoNeuvotteluAineistoPaketti?: string | null;
-  jakautuminen?: SuunnitelmanJakautuminen;
+  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
-export type SuunnitelmanJakautuminen = {
-  kopioituProjekteihin?: string[];
-  kopioituProjektista?: string;
+export type ProjektinJakautuminen = {
+  jaettuProjekteihin?: string[];
+  jaettuProjektista?: string;
 };
 
 export type DBEnnakkoNeuvottelu = {

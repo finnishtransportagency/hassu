@@ -128,7 +128,7 @@ function adaptVuorovaikutusKierrosJulkaisuToAPI(
     kysymyksetJaPalautteetViimeistaan,
     selosteVuorovaikutuskierrokselle,
     vuorovaikutusJulkaisuPaiva,
-    jakautuminen: _jakautuminen,
+    projektinJakautuminen: _jakautuminen,
     kopioituProjektista,
   } = julkaisu;
 

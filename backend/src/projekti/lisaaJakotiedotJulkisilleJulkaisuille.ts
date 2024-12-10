@@ -1,6 +1,6 @@
 import * as API from "hassu-common/graphql/apiModel";
 import { JulkaisuKey as DBJulkaisuKey } from "../database/model/julkaisuKey";
-import { DBProjekti, SuunnitelmanJakautuminen } from "../database/model";
+import { DBProjekti, ProjektinJakautuminen } from "../database/model";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 
 const aloituskuulutusKey: keyof API.ProjektiJulkinen = "aloitusKuulutusJulkaisu";
@@ -31,7 +31,7 @@ const julkaisuApiKeyToDBKey: Record<JulkaisuKey, DBJulkaisuKey> = {
 };
 
 type GenericDBJulkaisu = {
-  jakautuminen?: SuunnitelmanJakautuminen | undefined;
+  projektinJakautuminen?: ProjektinJakautuminen | undefined;
   id: number;
   kopioituProjektista?: string | null;
 };
@@ -69,13 +69,13 @@ export async function lisaaJakotiedotJulkisilleJulkaisuille(adaptedProjekti: API
   }
 
   const viimeisinJulkaisu = dbJaApijulkaisutJaAvaimet[0].dbJulkaisu;
-  const jakautuminen = viimeisinJulkaisu.jakautuminen;
+  const jakautuminen = viimeisinJulkaisu.projektinJakautuminen;
 
-  const kopioituProjektista = jakautuminen?.kopioituProjektista
-    ? await haeLiittyvanProjektinTiedot(jakautuminen.kopioituProjektista)
+  const kopioituProjektista = jakautuminen?.jaettuProjektista
+    ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjektista)
     : undefined;
-  const kopioituProjekteihin = jakautuminen?.kopioituProjekteihin
-    ? (await Promise.all(jakautuminen.kopioituProjekteihin.map((oid) => haeLiittyvanProjektinTiedot(oid)))).filter(
+  const kopioituProjekteihin = jakautuminen?.jaettuProjekteihin
+    ? (await Promise.all(jakautuminen.jaettuProjekteihin.map((oid) => haeLiittyvanProjektinTiedot(oid)))).filter(
         (jakotieto): jakotieto is API.ProjektinJakotieto => !!jakotieto
       )
     : undefined;
@@ -97,7 +97,10 @@ function adaptSuunnitelmaJaettuJulkinen(
   if (!kopioituProjektista && !kopioituProjekteihin?.length) {
     return undefined;
   }
-  const liittyvatSuunnitelmat = [...(dbJulkaisu.jakautuminen?.kopioituProjekteihin ?? []), dbJulkaisu.jakautuminen?.kopioituProjektista]
+  const liittyvatSuunnitelmat = [
+    ...(dbJulkaisu.projektinJakautuminen?.jaettuProjekteihin ?? []),
+    dbJulkaisu.projektinJakautuminen?.jaettuProjektista,
+  ]
     .filter((oid): oid is string => !!oid)
     .reduce<API.ProjektinJakotieto[]>((liittyvat, oid) => {
       const jakotieto =
@@ -108,10 +111,10 @@ function adaptSuunnitelmaJaettuJulkinen(
       return liittyvat;
     }, []);
 
-  const julkaisuKopioituProjektista = dbJulkaisu.kopioituProjektista ? kopioituProjektista : undefined;
+  const julkaisuKopioituSuunnitelmasta = dbJulkaisu.kopioituProjektista ? kopioituProjektista : undefined;
 
-  const julkaisuKopioituProjekteille = kopioituProjekteihin?.filter(
-    (jakotieto) => !dbJulkaisu.jakautuminen?.kopioituProjekteihin?.includes(jakotieto.oid)
+  const julkaisuKopioituSuunnitelmiin = kopioituProjekteihin?.filter(
+    (jakotieto) => !dbJulkaisu.projektinJakautuminen?.jaettuProjekteihin?.includes(jakotieto.oid)
   );
 
   const suunnitelmaJaettuJulkinen: API.SuunnitelmaJaettuJulkinen = {
@@ -119,9 +122,9 @@ function adaptSuunnitelmaJaettuJulkinen(
     // Kaikki julkaisun liittyvät suunnitelmat
     liittyvatSuunnitelmat,
     // Kaikki projektin liittyvät suunnitelmat, joille kopioitu tiedot ja jotka ei ole julkaisulla
-    julkaisuKopioituProjekteille,
+    julkaisuKopioituSuunnitelmiin,
     // Projektin liittyvä suunnitelma, josta kopioitu tiedot ja joka ei ole julkaisulla
-    julkaisuKopioituProjektista,
+    julkaisuKopioituSuunnitelmasta,
   };
   return suunnitelmaJaettuJulkinen;
 }

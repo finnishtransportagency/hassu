@@ -46,7 +46,7 @@ export class AsiakirjaAdapter {
           findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
         ),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        jakautuminen: cloneDeep(dbProjekti.jakautuminen),
+        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
       };
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
@@ -95,7 +95,7 @@ export class AsiakirjaAdapter {
         esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, esitettavatYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
-        jakautuminen: cloneDeep(dbProjekti.jakautuminen),
+        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
       };
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
@@ -129,7 +129,7 @@ export class AsiakirjaAdapter {
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        jakautuminen: cloneDeep(dbProjekti.jakautuminen),
+        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
       };
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();
@@ -161,7 +161,7 @@ export class AsiakirjaAdapter {
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        jakautuminen: cloneDeep(dbProjekti.jakautuminen),
+        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
       };
       if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
         julkaisu.asianhallintaEventId = uuid.v4();

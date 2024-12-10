@@ -165,17 +165,17 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.length).to.equal(1);
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.[0].kopioituProjektista).to.equal(srcProjekti.oid);
       expect(targetProjektiToCreate.nahtavillaoloVaiheJulkaisut).to.be.undefined;
-      expect(targetProjektiToCreate.jakautuminen?.kopioituProjektista).to.eql(srcProjekti.oid);
-      expect(targetProjektiToCreate.jakautuminen?.kopioituProjekteihin).to.eql(undefined);
+      expect(targetProjektiToCreate.projektinJakautuminen?.jaettuProjektista).to.eql(srcProjekti.oid);
+      expect(targetProjektiToCreate.projektinJakautuminen?.jaettuProjekteihin).to.eql(undefined);
 
       const updateCommands = dynamoDBClient.commandCalls(UpdateCommand);
       expect(updateCommands.length).to.equal(1);
       const input = updateCommands[0].args[0].input;
       expect(input).to.eql({
-        ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(jakautuminen)",
+        ConditionExpression: "(attribute_not_exists(versio) OR versio = :versio) AND attribute_not_exists(projektinJakautuminen)",
         ExpressionAttributeValues: {
-          ":jakautuminen": {
-            kopioituProjekteihin: [targetProjektiOid],
+          ":projektinJakautuminen": {
+            jaettuProjekteihin: [targetProjektiOid],
           },
           ":one": 1,
           ":versio": 1,
@@ -184,7 +184,7 @@ describe("jaaProjekti", () => {
           oid: "2",
         },
         TableName: "Projekti-localstack",
-        UpdateExpression: "ADD versio :one SET jakautuminen = :jakautuminen",
+        UpdateExpression: "ADD versio :one SET projektinJakautuminen = :projektinJakautuminen",
       });
     });
 

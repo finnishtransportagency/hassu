@@ -109,8 +109,8 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
 
     const suunnitelmaJaettuOidt = [
-      ...(projektiFromDB.jakautuminen?.kopioituProjekteihin ?? []),
-      projektiFromDB.jakautuminen?.kopioituProjektista,
+      ...(projektiFromDB.projektinJakautuminen?.jaettuProjekteihin ?? []),
+      projektiFromDB.projektinJakautuminen?.jaettuProjektista,
     ].filter((oid): oid is string => !!oid);
     const optionalSuunnitelmaTiedot = await Promise.all(suunnitelmaJaettuOidt.map((oid) => haeLiittyvanProjektinTiedot(oid)));
     apiProjekti.suunnitelmaJaettu = optionalSuunnitelmaTiedot.filter((jakotieto): jakotieto is API.ProjektinJakotieto => !!jakotieto);

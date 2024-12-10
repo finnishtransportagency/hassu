@@ -80,7 +80,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       aineistoMuokkaus,
       nahtavillaoloSaamePDFt,
       asianhallintaEventId,
-      jakautuminen: _jakautuminen,
+      projektinJakautuminen: _jakautuminen,
       kopioituProjektista,
       ...fieldsToCopyAsIs
     } = julkaisu;

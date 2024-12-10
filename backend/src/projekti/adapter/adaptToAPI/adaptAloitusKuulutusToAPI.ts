@@ -71,7 +71,7 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
     uudelleenKuulutus,
     aloituskuulutusSaamePDFt,
     asianhallintaEventId,
-    jakautuminen: _jakautuminen,
+    projektinJakautuminen: _jakautuminen,
     kopioituProjektista,
     ...fieldsToCopyAsIs
   } = julkaisu;

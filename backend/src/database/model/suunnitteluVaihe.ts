@@ -8,7 +8,7 @@ import {
   StandardiYhteystiedot,
   Yhteystieto,
 } from "./common";
-import { SuunnitelmanJakautuminen } from "./projekti";
+import { ProjektinJakautuminen } from "./projekti";
 
 export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero
@@ -60,7 +60,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   asianhallintaEventId?: string | null;
   selosteVuorovaikutuskierrokselle?: string | null;
   kopioituProjektista?: string | null;
-  jakautuminen?: SuunnitelmanJakautuminen;
+  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
 export type VuorovaikutusPDF = {

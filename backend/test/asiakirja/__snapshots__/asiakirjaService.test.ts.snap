@@ -2004,7 +2004,6 @@ Object {
       },
     ],
   },
-  "jakautuminen": undefined,
   "kielitiedot": Object {
     "ensisijainenKieli": "SUOMI",
     "projektinNimiVieraskielella": "Namnet på svenska",
@@ -2026,6 +2025,7 @@ Object {
       },
     ],
   },
+  "projektinJakautuminen": undefined,
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {
     "email": "Kunta.Kuntalainen@vayla.fi",

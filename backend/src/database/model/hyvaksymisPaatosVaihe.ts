@@ -10,7 +10,7 @@ import {
   Velho,
   Yhteystieto,
   KuulutusSaamePDFt,
-  SuunnitelmanJakautuminen,
+  ProjektinJakautuminen,
 } from ".";
 import { HallintoOikeus, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
@@ -55,7 +55,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   viimeinenVoimassaolovuosi?: string | null;
   maanomistajaluettelo?: string | null;
   kopioituProjektista?: string | null;
-  jakautuminen?: SuunnitelmanJakautuminen;
+  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
 export type HyvaksymisPaatosVaihePDF = {
