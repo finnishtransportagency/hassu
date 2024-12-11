@@ -342,7 +342,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       </OhjelistaNotification>
                     )}
                   </ProjektiPageLayoutContext.Consumer>
-
                   <ContentSpacer>
                     <H2>Kuulutus- ja julkaisupäivä</H2>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
