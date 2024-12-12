@@ -44,8 +44,7 @@ export default function MuuAineistoVelhosta({
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
       <p>
-        Voit halutessasi {ennakkoneuvottelu ? "tuoda" : "liittää hyväksymisesitykseen"} Projektivelhosta muuta lisäaineistoa, kuten
-        kansioiden D–E tai 500–600 aineistoa.
+        Voit halutessasi {ennakkoneuvottelu ? "tuoda" : "liittää hyväksymisesitykseen"} Projektivelhosta muuta lisäaineistoa.
       </p>
       {!!fields?.length && (
         <TiedostoInputNewTable
