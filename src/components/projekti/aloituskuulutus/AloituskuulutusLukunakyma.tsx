@@ -23,6 +23,7 @@ import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../Headings";
 import KuulutuksenSisalto from "../common/KuulutuksenSisalto";
+import { JulkaisuOnKopioNotification } from "../common/JulkaisuOnKopioNotification";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -63,7 +64,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             {!published && aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}</Notification>
             )}
-            {published && aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+            {!aloituskuulutusjulkaisu.julkaisuOnKopio && published && aloituskuulutusjulkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
                 Aloituskuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
                 julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
@@ -75,18 +76,21 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
               </Notification>
             )}
+            {aloituskuulutusjulkaisu.suunnitteluSopimus && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                Hankkeesta on tehty suunnittelusopimus kunnan kanssa
+                <br />
+                <br />
+                {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
+                <br />
+                {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
+                {aloituskuulutusjulkaisu.suunnitteluSopimus.email
+                  ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]")
+                  : ""}
+              </Notification>
+            )}
+            {aloituskuulutusjulkaisu.julkaisuOnKopio && <JulkaisuOnKopioNotification />}
           </>
-        )}
-        {aloituskuulutusjulkaisu.suunnitteluSopimus && (
-          <Notification type={NotificationType.INFO_GRAY}>
-            Hankkeesta on tehty suunnittelusopimus kunnan kanssa
-            <br />
-            <br />
-            {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
-            <br />
-            {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
-            {aloituskuulutusjulkaisu.suunnitteluSopimus.email ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]") : ""}
-          </Notification>
         )}
         <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen ?? ""}>
           {isKieliTranslatable(ensisijainenKieli) && (
@@ -155,7 +159,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 )}
               </div>
             )}
-
             {toissijainenKieli && (
               <div className="content mb-4">
                 <p>
@@ -204,7 +207,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
       </Section>
-
       <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
     </>
   );

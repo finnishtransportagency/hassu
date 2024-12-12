@@ -19,6 +19,7 @@ import HassuDialog from "@components/HassuDialog";
 import log from "loglevel";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
+import { JulkaisuOnKopioNotification } from "@components/projekti/common/JulkaisuOnKopioNotification";
 
 export default function SuunnitteluPageLayoutWrapper({
   children,
@@ -145,10 +146,11 @@ function SuunnitteluPageLayout({
     };
   }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showSuccessMessage]);
 
-  const { vuorovaikutusKierros } = projekti;
-  const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
-  const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
-  const migroitu = vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const { vuorovaikutusKierros, vuorovaikutusKierrosJulkaisut } = projekti;
+  const viimeisinJulkaisu = vuorovaikutusKierrosJulkaisut?.[vuorovaikutusKierrosJulkaisut.length - 1];
+  const tilaJulkinen = viimeisinJulkaisu?.tila === VuorovaikutusKierrosTila.JULKINEN;
+  const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, viimeisinJulkaisu?.vuorovaikutusJulkaisuPaiva);
+  const migroitu = viimeisinJulkaisu?.tila === VuorovaikutusKierrosTila.MIGROITU;
   const edellinenVaiheMigroitu = projekti.aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   return (
@@ -171,20 +173,23 @@ function SuunnitteluPageLayout({
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
         {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
-        {published && (
+        {published && !viimeisinJulkaisu?.julkaisuOnKopio && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}.{" "}
             {!projekti.nahtavillaoloVaiheJulkaisu ? "Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää rajoitetusti." : ""}
           </Notification>
         )}
-        {tilaJulkinen && !published && (
+        {tilaJulkinen && !published && !viimeisinJulkaisu?.julkaisuOnKopio && (
           <Notification type={NotificationType.WARN}>
             Vuorovaikuttamista ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu{" "}
-            {formatDate(vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva)}.
-            {!vuorovaikutusKierros?.esittelyaineistot?.length && !vuorovaikutusKierros?.suunnitelmaluonnokset?.length
+            {formatDate(viimeisinJulkaisu?.vuorovaikutusJulkaisuPaiva)}.
+            {!viimeisinJulkaisu?.esittelyaineistot?.length && !viimeisinJulkaisu?.suunnitelmaluonnokset?.length
               ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä Suunnitteluvaiheen perustiedot -välilehdelle."
               : ""}
           </Notification>
+        )}
+        {viimeisinJulkaisu?.julkaisuOnKopio && vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN && (
+          <JulkaisuOnKopioNotification />
         )}
         {!migroitu &&
           (!tilaJulkinen ? (
