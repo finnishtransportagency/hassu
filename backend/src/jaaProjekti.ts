@@ -2,7 +2,7 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
 import { JaaProjektiMutationVariables as Variables } from "hassu-common/graphql/apiModel";
-import { cloneDeep, omit } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import log from "loglevel";
 import { getDynamoDBDocumentClient } from "./aws/client";
 import { config } from "./config";
@@ -11,6 +11,7 @@ import { JULKAISU_KEYS } from "./database/model/julkaisuKey";
 import { projektiDatabase } from "./database/projektiDatabase";
 import { fileService } from "./files/fileService";
 import { ProjektiPaths } from "./files/ProjektiPath";
+import { synchronizeUpdatesFromVelho } from "./projekti/projektiHandler";
 import { lisaAineistoService } from "./tiedostot/lisaAineistoService";
 import { requireAdmin } from "./user";
 import { velho as velhoClient } from "./velho/velhoClient";
@@ -38,19 +39,19 @@ export async function jaaProjekti(input: Variables) {
     })
   );
 
-  const keysToOmit: (keyof DBProjekti)[] = ["oid", "velho", "kayttoOikeudet", "salt", "projektinJakautuminen"];
+  const { oid: _oid, salt: _salt, projektinJakautuminen: _projektinJakautuminen, ...kopioitavatKentat } = clonedProjekti;
   const targetProjektiToCreate: DBProjekti = {
-    ...omit(clonedProjekti, ...keysToOmit),
+    ...kopioitavatKentat,
     oid: input.targetOid,
     versio: srcProjekti.versio ?? 1,
     velho: targetProjektiFromVelho.velho,
-    kayttoOikeudet: targetProjektiFromVelho.kayttoOikeudet,
     projektinJakautuminen: { jaettuProjektista: input.oid },
     salt: lisaAineistoService.generateSalt(),
   };
 
   await updateJaettuProjekteihin(input);
   await projektiDatabase.createProjekti(targetProjektiToCreate);
+  await synchronizeUpdatesFromVelho(input.targetOid);
   await fileService.copyYllapitoFolder(new ProjektiPaths(input.oid), new ProjektiPaths(input.targetOid));
 }
 
