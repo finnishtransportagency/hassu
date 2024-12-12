@@ -118,6 +118,25 @@ class MuistuttajaDatabase {
     }
   }
 
+  async copyKaytossaolevatMuistuttajaToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
+    const muistuttajat = await this.haeProjektinKaytossaolevatMuistuttajat(srcOid);
+    if (!muistuttajat.length) {
+      return;
+    }
+    const newTransactItems = muistuttajat.map<TransactionItem>((muistuttaja) => ({
+      Put: {
+        TableName: this.tableName,
+        Item: { ...muistuttaja, oid: targetOid },
+      },
+    }));
+    for (const chunk of chunkArray(newTransactItems, 25)) {
+      const transactCommand = new TransactWriteCommand({
+        TransactItems: chunk,
+      });
+      await getDynamoDBDocumentClient().send(transactCommand);
+    }
+  }
+
   async deleteMuistuttajatByOid(oid: string) {
     if (config.env !== "prod") {
       let lastEvaluatedKey: Record<string, any> | undefined;

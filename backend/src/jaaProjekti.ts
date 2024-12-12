@@ -8,6 +8,8 @@ import { getDynamoDBDocumentClient } from "./aws/client";
 import { config } from "./config";
 import { DBProjekti } from "./database/model";
 import { JULKAISU_KEYS } from "./database/model/julkaisuKey";
+import { muistuttajaDatabase } from "./database/muistuttajaDatabase";
+import { feedbackDatabase } from "./database/palauteDatabase";
 import { projektiDatabase } from "./database/projektiDatabase";
 import { fileService } from "./files/fileService";
 import { ProjektiPaths } from "./files/ProjektiPath";
@@ -53,6 +55,8 @@ export async function jaaProjekti(input: Variables) {
   await projektiDatabase.createProjekti(targetProjektiToCreate);
   await synchronizeUpdatesFromVelho(input.targetOid);
   await fileService.copyYllapitoFolder(new ProjektiPaths(input.oid), new ProjektiPaths(input.targetOid));
+  await muistuttajaDatabase.copyKaytossaolevatMuistuttajaToAnotherProjekti(input.oid, input.targetOid);
+  await feedbackDatabase.copyFeedbackToAnotherProjekti(input.oid, input.targetOid);
 }
 
 async function updateJaettuProjekteihin({ oid, versio, targetOid }: Variables) {
