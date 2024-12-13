@@ -13,7 +13,7 @@ import { feedbackDatabase } from "./database/palauteDatabase";
 import { projektiDatabase } from "./database/projektiDatabase";
 import { fileService } from "./files/fileService";
 import { ProjektiPaths } from "./files/ProjektiPath";
-import { synchronizeUpdatesFromVelho } from "./projekti/projektiHandler";
+import { haeVelhoSynkronoinninMuutoksetTallennukseen } from "./projekti/projektiHandler";
 import { lisaAineistoService } from "./tiedostot/lisaAineistoService";
 import { requireAdmin } from "./user";
 import { velho as velhoClient } from "./velho/velhoClient";
@@ -41,32 +41,37 @@ export async function jaaProjekti(input: Variables) {
     })
   );
 
+  const synkronoinnistaTallennettavatTiedot = await haeVelhoSynkronoinninMuutoksetTallennukseen(
+    input.targetOid,
+    srcProjekti,
+    targetProjektiFromVelho.velho
+  );
   const {
     oid: _oid,
     salt: _salt,
     projektinJakautuminen: _projektinJakautuminen,
     omistajahaku: _omistajahaku,
     velho: _velho,
+    kayttoOikeudet: _kayttooikeudet,
+    asianhallinta: _asianhallinta,
+    suunnitteluSopimus: _suunnitteluSopimus,
     ...kopioitavatKentat
   } = clonedProjekti;
   const targetProjektiToCreate: DBProjekti = {
     ...kopioitavatKentat,
-    oid: input.targetOid,
-    versio: srcProjekti.versio ?? 1,
-    velho: targetProjektiFromVelho.velho,
+    ...synkronoinnistaTallennettavatTiedot,
     projektinJakautuminen: { jaettuProjektista: input.oid },
     salt: lisaAineistoService.generateSalt(),
   };
 
   await updateJaettuProjekteihin(input);
   await projektiDatabase.createProjekti(targetProjektiToCreate);
-  await synchronizeUpdatesFromVelho(input.targetOid);
   await fileService.copyYllapitoFolder(new ProjektiPaths(input.oid), new ProjektiPaths(input.targetOid));
-  await muistuttajaDatabase.copyKaytossaolevatMuistuttajaToAnotherProjekti(input.oid, input.targetOid);
+  await muistuttajaDatabase.copyKaytossaolevatMuistuttajatToAnotherProjekti(input.oid, input.targetOid);
   await feedbackDatabase.copyFeedbackToAnotherProjekti(input.oid, input.targetOid);
   await fileService.deleteYllapitoFileFromProjekti({
     oid: input.targetOid,
-    filePathInProjekti: "karttarajaus/karttarajaus.geojson",
+    filePathInProjekti: "/karttarajaus/karttarajaus.geojson",
     reason: "Projekti jaettu osiin. Karttarajausta ei haluta siirtää projektilta toiselle.",
   });
 }

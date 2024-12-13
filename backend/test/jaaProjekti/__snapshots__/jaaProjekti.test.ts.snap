@@ -149,6 +149,9 @@ Object {
       ],
     },
   ],
+  "asianhallinta": Object {
+    "asiaId": undefined,
+  },
   "euRahoitus": false,
   "kasittelynTila": Object {
     "hyvaksymispaatos": Object {
@@ -156,7 +159,29 @@ Object {
       "paatoksenPvm": "2022-02-03",
     },
   },
-  "kayttoOikeudet": Array [],
+  "kayttoOikeudet": Array [
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "pekka.projari@vayla.fi",
+      "etunimi": "Pekka",
+      "kayttajatunnus": "A123",
+      "muokattavissa": false,
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Projari",
+      "tyyppi": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "Matti.Meikalainen@vayla.fi",
+      "etunimi": "Matti",
+      "kayttajatunnus": "A000111",
+      "muokattavissa": true,
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Meikalainen",
+    },
+  ],
   "kielitiedot": Object {
     "ensisijainenKieli": "SUOMI",
     "projektinNimiVieraskielella": "Marikas testprojekt",

@@ -118,7 +118,7 @@ class MuistuttajaDatabase {
     }
   }
 
-  async copyKaytossaolevatMuistuttajaToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
+  async copyKaytossaolevatMuistuttajatToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
     const muistuttajat = await this.haeProjektinKaytossaolevatMuistuttajat(srcOid);
     if (!muistuttajat.length) {
       return;

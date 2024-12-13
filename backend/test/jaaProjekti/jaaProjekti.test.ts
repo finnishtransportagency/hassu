@@ -3,12 +3,12 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { UserFixture } from "../fixture/userFixture";
 import { expect } from "chai";
-import { DBProjekti, Velho } from "../../src/database/model";
+import { DBProjekti, Palaute, Velho } from "../../src/database/model";
 import { jaaProjekti } from "../../src/jaaProjekti";
 import { IllegalArgumentError } from "hassu-common/error";
 import { userService } from "../../src/user";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
-import { Vaihe } from "hassu-common/graphql/apiModel";
+import { Kayttaja, Vaihe } from "hassu-common/graphql/apiModel";
 import { cloneDeep } from "lodash";
 import { velho as velhoClient } from "../../src/velho/velhoClient";
 import {
@@ -17,12 +17,14 @@ import {
   PutCommandOutput,
   ServiceInputTypes as DynamoDBServiceInputTypes,
   ServiceOutputTypes as DynamoDBServiceOutputTypes,
+  TransactWriteCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 import { AwsStub, mockClient } from "aws-sdk-client-mock";
 import {
   CopyObjectCommand,
+  DeleteObjectCommand,
   ListObjectsV2Command,
   S3Client,
   S3ClientResolvedConfig,
@@ -31,6 +33,12 @@ import {
 } from "@aws-sdk/client-s3";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { lisaAineistoService } from "../../src/tiedostot/lisaAineistoService";
+import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
+import { personSearch } from "../../src/personSearch/personSearchClient";
+import { Kayttajas } from "../../src/personSearch/kayttajas";
+import { parameters } from "../../src/aws/parameters";
+import { DBMuistuttaja, muistuttajaDatabase } from "../../src/database/muistuttajaDatabase";
+import { feedbackDatabase } from "../../src/database/palauteDatabase";
 
 describe("jaaProjekti", () => {
   const userFixture = new UserFixture(userService);
@@ -111,7 +119,22 @@ describe("jaaProjekti", () => {
     let targetProjektiFromVelho: DBProjekti;
     let s3Mock: AwsStub<S3ServiceInputTypes, S3ServiceOutputTypes, S3ClientResolvedConfig>;
 
+    let getKayttajasStub: sinon.SinonStub;
+    let a1User: Kayttaja;
+    let a2User: Kayttaja;
+    let x1User: Kayttaja;
+    let srcMuistuttajat: DBMuistuttaja[];
+    let srcFeedback: Palaute[];
+
     beforeEach(() => {
+      sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
+      sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+      const personSearchFixture = new PersonSearchFixture();
+      a1User = personSearchFixture.createKayttaja("A1");
+      a2User = personSearchFixture.createKayttaja("A2");
+      x1User = personSearchFixture.createKayttaja("X1");
+      getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+      getKayttajasStub.resolves(Kayttajas.fromKayttajaList([a1User, a2User, x1User]));
       userFixture.loginAs(UserFixture.hassuAdmin);
       srcProjekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.NAHTAVILLAOLO, VaiheenTila.LUONNOS);
       createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
@@ -144,6 +167,10 @@ describe("jaaProjekti", () => {
         });
       s3Mock.on(CopyObjectCommand).resolves({});
       dynamoDBClient = mockClient(DynamoDBDocumentClient);
+      srcMuistuttajat = [{ id: "123", expires: 123, lisatty: "2022-01-01", oid: srcProjekti.oid }];
+      srcFeedback = [{ id: "123", vastaanotettu: "2022-01-01", oid: srcProjekti.oid }];
+      sinon.stub(muistuttajaDatabase, "haeProjektinKaytossaolevatMuistuttajat").returns(Promise.resolve(srcMuistuttajat));
+      sinon.stub(feedbackDatabase, "listFeedback").returns(Promise.resolve(srcFeedback));
     });
 
     afterEach(() => {
@@ -159,7 +186,29 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate.oid).to.equal(targetProjektiOid);
       expect(targetProjektiToCreate.velho).to.eql(targetVelho);
       expect(targetProjektiToCreate.salt).to.equal("foo-salt");
-      expect(targetProjektiToCreate.kayttoOikeudet).to.eql([]);
+      expect(targetProjektiToCreate.kayttoOikeudet).to.eql([
+        {
+          elyOrganisaatio: undefined,
+          email: "pekka.projari@vayla.fi",
+          etunimi: "Pekka",
+          kayttajatunnus: "A123",
+          muokattavissa: false,
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "123456789",
+          sukunimi: "Projari",
+          tyyppi: "PROJEKTIPAALLIKKO",
+        },
+        {
+          elyOrganisaatio: undefined,
+          email: "Matti.Meikalainen@vayla.fi",
+          etunimi: "Matti",
+          kayttajatunnus: "A000111",
+          muokattavissa: true,
+          organisaatio: "Väylävirasto",
+          puhelinnumero: "123456789",
+          sukunimi: "Meikalainen",
+        },
+      ]);
       expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.length).to.equal(1);
       expect(targetProjektiToCreate.aloitusKuulutusJulkaisut?.[0].kopioituProjektista).to.equal(srcProjekti.oid);
       expect(targetProjektiToCreate.vuorovaikutusKierrosJulkaisut?.length).to.equal(1);
@@ -191,7 +240,7 @@ describe("jaaProjekti", () => {
     it("should copy all srcProjekti's s3objects to targetProjekti's path", async () => {
       await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
         .fulfilled;
-      expect(s3Mock.calls().length).to.equal(3);
+      expect(s3Mock.calls().length).to.equal(4);
       const listObjectCommands = s3Mock.commandCalls(ListObjectsV2Command);
       expect(listObjectCommands.length).to.equal(1);
       expect(listObjectCommands[0].args[0].input).to.eql({
@@ -212,6 +261,22 @@ describe("jaaProjekti", () => {
         CopySource: "hassu-localstack-yllapito%2Fyllapito%2Ftiedostot%2Fprojekti%2F2%2Fsyva%2Ftiedosto%2Fpolku%2Ftiedosto.json",
         Key: "yllapito/tiedostot/projekti/toinen-oid/syva/tiedosto/polku/tiedosto.json",
       });
+      const deleteObjectCommands = s3Mock.commandCalls(DeleteObjectCommand);
+      expect(deleteObjectCommands[0].args[0].input).to.eql({
+        Bucket: "hassu-localstack-yllapito",
+        Key: "yllapito/tiedostot/projekti/toinen-oid/karttarajaus/karttarajaus.geojson",
+      });
+    });
+
+    it("should copy muistuttajat and palautteet", async () => {
+      await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
+        .fulfilled;
+      const updateCommands = dynamoDBClient.commandCalls(TransactWriteCommand);
+      expect(updateCommands.length).to.equal(2);
+      const tallennettuMuistuttaja = updateCommands[0].args[0].input.TransactItems?.[0].Put?.Item;
+      expect(tallennettuMuistuttaja).to.eql({ ...srcMuistuttajat[0], oid: targetProjektiOid });
+      const tallennettuPalaute = updateCommands[1].args[0].input.TransactItems?.[0].Put?.Item;
+      expect(tallennettuPalaute).to.eql({ ...srcFeedback[0], oid: targetProjektiOid });
     });
   });
 });
