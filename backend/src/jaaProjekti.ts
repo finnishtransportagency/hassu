@@ -41,7 +41,14 @@ export async function jaaProjekti(input: Variables) {
     })
   );
 
-  const { oid: _oid, salt: _salt, projektinJakautuminen: _projektinJakautuminen, ...kopioitavatKentat } = clonedProjekti;
+  const {
+    oid: _oid,
+    salt: _salt,
+    projektinJakautuminen: _projektinJakautuminen,
+    omistajahaku: _omistajahaku,
+    velho: _velho,
+    ...kopioitavatKentat
+  } = clonedProjekti;
   const targetProjektiToCreate: DBProjekti = {
     ...kopioitavatKentat,
     oid: input.targetOid,
@@ -57,6 +64,11 @@ export async function jaaProjekti(input: Variables) {
   await fileService.copyYllapitoFolder(new ProjektiPaths(input.oid), new ProjektiPaths(input.targetOid));
   await muistuttajaDatabase.copyKaytossaolevatMuistuttajaToAnotherProjekti(input.oid, input.targetOid);
   await feedbackDatabase.copyFeedbackToAnotherProjekti(input.oid, input.targetOid);
+  await fileService.deleteYllapitoFileFromProjekti({
+    oid: input.targetOid,
+    filePathInProjekti: "karttarajaus/karttarajaus.geojson",
+    reason: "Projekti jaettu osiin. Karttarajausta ei haluta siirtää projektilta toiselle.",
+  });
 }
 
 async function updateJaettuProjekteihin({ oid, versio, targetOid }: Variables) {
