@@ -85,7 +85,7 @@ export default function ProjektiPageLayout({
                 </p>
               </Notification>
             )}
-            {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length && (
+            {!!suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length && (
               <Notification type={NotificationType.INFO_GRAY}>
                 <ContentSpacer gap={2}>
                   <p>

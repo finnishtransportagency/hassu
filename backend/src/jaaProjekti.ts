@@ -24,6 +24,9 @@ export async function jaaProjekti(input: Variables) {
   if (!srcProjekti) {
     throw new IllegalArgumentError(`Jaettavaa projektia ei löydy oid:lla '${input.oid}'`);
   }
+  if (srcProjekti.projektinJakautuminen?.jaettuProjekteihin?.length || srcProjekti.projektinJakautuminen?.jaettuProjektista) {
+    throw new IllegalArgumentError(`Jaettava projekti '${input.oid}' on jo aiemmin jaettu. Projektia ei voi jakaa kuin vain kerran.`);
+  }
   const targetProjekti = await projektiDatabase.loadProjektiByOid(input.targetOid);
   if (targetProjekti) {
     throw new IllegalArgumentError(`Kohde projekti oid:lla '${input.targetOid}' on jo VLS-järjestelmässä`);

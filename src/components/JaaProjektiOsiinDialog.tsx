@@ -18,6 +18,7 @@ import useTranslation from "next-translate/useTranslation";
 import { TextFieldWithController } from "./form/TextFieldWithController";
 import useSnackbars from "src/hooks/useSnackbars";
 import { H5 } from "./Headings";
+import Grid from "./HassuGrid";
 
 type JaaProjektiFormValues = {
   projektinNimi: string;
@@ -130,21 +131,23 @@ export function JaaProjektiOsiinDialog(props: JaaProjektiOsiinDialog) {
           <ContentSpacer as="form" onSubmit={handleSubmit(haeProjekteja)} style={{ display: "contents" }} gap={7}>
             <ContentSpacer>
               <p>
-                Hae projekti johon haluat jakaa tämän projektin. Projekti haetaan Projektivelhosta. Hakuehtona voit käyttää Projektivelhoon
-                asetetun projektin nimeä, tai sen osaa. Jos etsimääsi projektia ei näy listassa, varmista, että se on tallennettu
-                Projektivelhoon, ja että hakuehto on oikein. Huomioithan, että hakutuloksissa näytetään ainoastaan ne projektit joita ei ole
-                vielä perustettu palveluun.
+                Hae projekti, johon haluat jakaa tämän projektin tiedot ja julkaisut. Projekti haetaan Projektivelhosta. Hakuehtona voit
+                käyttää Projektivelhoon asetetun projektin nimeä, tai sen osaa. Jos etsimääsi projektia ei näy listassa, varmista, että se
+                on tallennettu Projektivelhoon, ja että hakuehto on oikein. Huomioithan, että hakutuloksissa näytetään ainoastaan ne
+                projektit joita ei ole vielä perustettu palveluun.
               </p>
               <p>
                 Valitse projekti hakutuloksista ja jaa projekti osiin Jaa projekti osiin -painikkeella. Projekti perustetaan Valtion
                 liikenneväylien suunnittelu -palveluun ja sille kopioidaan jaettavan projektin julkaisut.
               </p>
             </ContentSpacer>
-            <TextFieldWithController
-              label="Projektin nimi"
-              inputProps={{ maxLength: PROJEKTI_NIMI_MAX_LENGTH }}
-              controllerProps={{ name: "projektinNimi", control }}
-            />
+            <Grid cols={{ xs: 1, md: 3 }}>
+              <TextFieldWithController
+                label="Projektin nimi"
+                inputProps={{ maxLength: PROJEKTI_NIMI_MAX_LENGTH }}
+                controllerProps={{ name: "projektinNimi", control }}
+              />
+            </Grid>
             <Button primary type="submit">
               Hae
             </Button>

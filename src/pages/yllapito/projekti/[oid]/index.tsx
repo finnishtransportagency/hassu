@@ -81,12 +81,11 @@ export default function ProjektiSivu() {
       showInfo={!epaaktiivinen}
       contentAsideTitle={<ContentAsideTitle epaaktiivinen={epaaktiivinen} projekti={projekti} reloadProjekti={reloadProjekti} />}
     >
-      {projekti &&
-        (epaaktiivinen ? (
-          <ProjektinTiedotLukutila projekti={projekti} />
-        ) : (
-          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
-        ))}
+      {epaaktiivinen ? (
+        <ProjektinTiedotLukutila projekti={projekti} />
+      ) : (
+        <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+      )}
     </ProjektiPageLayout>
   );
 }
@@ -109,7 +108,7 @@ function ContentAsideTitle({
   if (epaaktiivinen) {
     return <></>;
   }
-  if (projekti.nykyinenKayttaja.onYllapitaja) {
+  if (projekti.nykyinenKayttaja.onYllapitaja && !projekti.suunnitelmaJaettu?.length) {
     return <YllapitajaMenu versio={projekti.versio} projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }
   return <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
