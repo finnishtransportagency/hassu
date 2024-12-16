@@ -8,6 +8,7 @@ import { PutCommand, QueryCommand, TransactWriteCommand, TransactWriteCommandInp
 import { sortBy } from "lodash";
 import { migrateFromOldSchema } from "./palauteSchemaUpdate";
 import { chunkArray } from "./chunkArray";
+import { uuid } from "hassu-common/util/uuid";
 
 const feedbackTableName: string = config.feedbackTableName ?? "missing";
 
@@ -91,7 +92,7 @@ class FeedbackDatabase {
     const newTransactItems = palautteet.map<TransactionItem>((palaute) => ({
       Put: {
         TableName: feedbackTableName,
-        Item: { ...palaute, oid: targetOid },
+        Item: { ...palaute, id: uuid.v4(), oid: targetOid },
       },
     }));
     for (const chunk of chunkArray(newTransactItems, 25)) {

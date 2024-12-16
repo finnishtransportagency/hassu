@@ -12,6 +12,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import { chunkArray } from "./chunkArray";
 import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { uuid } from "hassu-common/util/uuid";
 
 export type DBMuistuttaja = {
   id: string;
@@ -126,7 +127,7 @@ class MuistuttajaDatabase {
     const newTransactItems = muistuttajat.map<TransactionItem>((muistuttaja) => ({
       Put: {
         TableName: this.tableName,
-        Item: { ...muistuttaja, oid: targetOid },
+        Item: { ...muistuttaja, id: uuid.v4(), oid: targetOid },
       },
     }));
     for (const chunk of chunkArray(newTransactItems, 25)) {
