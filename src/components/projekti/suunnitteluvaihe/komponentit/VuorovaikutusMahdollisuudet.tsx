@@ -48,6 +48,10 @@ export default function VuorovaikutusMahdollisuudet({
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
   );
 
+  const muokattavaJulkaisuOnKopio = !!projekti.vuorovaikutusKierrosJulkaisut?.some(
+    (julkaisu) => !!julkaisu.julkaisuOnKopio && projekti.vuorovaikutusKierros?.vuorovaikutusNumero === julkaisu.id
+  );
+
   return (
     <Section>
       <H2>Vuorovaikutustilaisuudet</H2>
@@ -184,6 +188,7 @@ export default function VuorovaikutusMahdollisuudet({
               e.preventDefault();
             }}
             id="add_or_edit_tilaisuus"
+            disabled={muokattavaJulkaisuOnKopio}
           >
             {isYleisotilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
           </Button>

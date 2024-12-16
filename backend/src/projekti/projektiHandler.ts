@@ -263,6 +263,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
     const oldVuorovaikutuskierrosJulkaisu = vuorovaikutusKierrosJulkaisut?.pop();
     vuorovaikutusKierrosJulkaisu.asianhallintaEventId = oldVuorovaikutuskierrosJulkaisu?.asianhallintaEventId;
     vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat = oldVuorovaikutuskierrosJulkaisu?.ilmoituksenVastaanottajat;
+    vuorovaikutusKierrosJulkaisu.kopioituProjektista = oldVuorovaikutuskierrosJulkaisu?.kopioituProjektista;
     vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
 
     await projektiDatabase.saveProjekti({

@@ -14,7 +14,14 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
   if (projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero) {
     throw new IllegalArgumentError(`Et voi päivittää muun viimeisimmän vuorovaikutuskierroksen perustietoja.`);
   }
-  if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
+  if (
+    projekti.vuorovaikutusKierrosJulkaisut?.some(
+      (julkaisu) => !!julkaisu.kopioituProjektista && julkaisu.id === input.vuorovaikutusKierros.vuorovaikutusNumero
+    )
+  ) {
+    throw new IllegalArgumentError(`Et voi päivittää kopioidun julkaisun tietoja. Tulee luoda uusi vuorovaikutuskierros.`);
+  }
+  if (projekti.nahtavillaoloVaiheJulkaisut?.length) {
     throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
   }
   validateAineistoInput(

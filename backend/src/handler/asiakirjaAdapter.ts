@@ -78,31 +78,31 @@ export class AsiakirjaAdapter {
   }
 
   async adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): Promise<VuorovaikutusKierrosJulkaisu> {
-    if (dbProjekti.vuorovaikutusKierros) {
-      const {
-        vuorovaikutusTilaisuudet,
-        esitettavatYhteystiedot,
-        vuorovaikutusNumero,
-        palattuNahtavillaolosta: _palattuNahtavillaolosta,
-        ...includedFields
-      } = dbProjekti.vuorovaikutusKierros;
-      const julkaisu: VuorovaikutusKierrosJulkaisu = {
-        ...includedFields,
-        id: vuorovaikutusNumero,
-        vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
-          this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
-        ),
-        esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, esitettavatYhteystiedot, true, true),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
-        tila: VuorovaikutusKierrosTila.JULKINEN,
-        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
-      };
-      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
-        julkaisu.asianhallintaEventId = uuid.v4();
-      }
-      return julkaisu;
+    if (!dbProjekti.vuorovaikutusKierros) {
+      throw new Error("VuorovaikutusKierros puuttuu");
     }
-    throw new Error("VuorovaikutusKierros puuttuu");
+    const {
+      vuorovaikutusTilaisuudet,
+      esitettavatYhteystiedot,
+      vuorovaikutusNumero,
+      palattuNahtavillaolosta: _palattuNahtavillaolosta,
+      ...includedFields
+    } = dbProjekti.vuorovaikutusKierros;
+    const julkaisu: VuorovaikutusKierrosJulkaisu = {
+      ...includedFields,
+      id: vuorovaikutusNumero,
+      vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
+        this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
+      ),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, esitettavatYhteystiedot, true, true),
+      yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
+      tila: VuorovaikutusKierrosTila.JULKINEN,
+      projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
+    };
+    if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
+      julkaisu.asianhallintaEventId = uuid.v4();
+    }
+    return julkaisu;
   }
 
   private adaptVuorovaikutusTilaisuusJulkaisuksi(
