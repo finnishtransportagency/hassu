@@ -1291,6 +1291,8 @@ type LadattavatTiedostot {
   poistumisPaiva: String!
   linkkiVanhentunut: Boolean
   kunta: Int
+  nimi: String!
+  tyyppi: ProjektiTyyppi
   aineistot: [LadattavaTiedosto!]
   lisaAineistot: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
