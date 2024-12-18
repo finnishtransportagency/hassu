@@ -76,6 +76,8 @@ describe("tiedostoDownloadLinkHandler", () => {
       ],
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -126,6 +128,8 @@ describe("tiedostoDownloadLinkHandler", () => {
       ],
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -181,6 +185,8 @@ describe("tiedostoDownloadLinkHandler", () => {
         ],
         poistumisPaiva: nyt().add(10, "day").format("YYYY-MM-DD"),
         aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
+        nimi: "Projekti 1",
+        tyyppi: API.ProjektiTyyppi.TIE,
       };
       expect(files).to.eql(expectedFiles);
     }
@@ -211,6 +217,8 @@ describe("tiedostoDownloadLinkHandler", () => {
         organisaatio: "Organisaatio",
         elyOrganisaatio: API.ELY.HAME_ELY,
       },
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     });
   });
 
@@ -260,6 +268,8 @@ describe("tiedostoDownloadLinkHandler", () => {
       ],
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineistot.zip",
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -289,6 +299,8 @@ describe("tiedostoDownloadLinkHandler", () => {
         organisaatio: "Organisaatio",
         elyOrganisaatio: API.ELY.HAME_ELY,
       },
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     });
   });
 
@@ -362,6 +374,8 @@ describe("tiedostoDownloadLinkHandler", () => {
       ],
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "(esikatselu)",
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -443,6 +457,8 @@ describe("tiedostoDownloadLinkHandler", () => {
       ],
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "(esikatselu)",
+      nimi: "Projekti 1",
+      tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -618,5 +634,5 @@ const projekti: DBProjekti = {
   lausuntoPyynnot: [lausuntoPyynto1, lausuntoPyynto2],
   lausuntoPyynnonTaydennykset: [lausuntoPyynnonTaydennys1, lausuntoPyynnonTaydennys2],
   tallennettu: true,
-  velho: { nimi: "Projekti 1" },
+  velho: { nimi: "Projekti 1", tyyppi: API.ProjektiTyyppi.TIE },
 };
