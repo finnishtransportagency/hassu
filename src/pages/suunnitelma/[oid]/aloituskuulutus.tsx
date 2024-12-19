@@ -120,7 +120,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
-        <LiittyvatSuunnitelmat liittyvatSuunnitelmat={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelmat} />
+        <LiittyvatSuunnitelmat liittyvatSuunnitelma={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelma} />
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

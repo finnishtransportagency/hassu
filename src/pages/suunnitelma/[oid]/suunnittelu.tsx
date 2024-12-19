@@ -142,7 +142,7 @@ const Perustiedot: FunctionComponent<{
   return (
     <Section>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
-      <LiittyvatSuunnitelmat liittyvatSuunnitelmat={vuorovaikutusKierros.suunnitelmaJaettu?.liittyvatSuunnitelmat} />
+      <LiittyvatSuunnitelmat liittyvatSuunnitelma={vuorovaikutusKierros.suunnitelmaJaettu?.liittyvatSuunnitelma} />
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
         <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

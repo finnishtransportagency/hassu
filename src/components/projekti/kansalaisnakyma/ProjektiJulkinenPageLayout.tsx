@@ -13,8 +13,9 @@ import { H1, H2 } from "@components/Headings";
 import HassuWidget from "@components/layout/HassuWidget";
 import ExtLink from "@components/ExtLink";
 import { ProjektinJakotietoJulkinen } from "@components/kansalainen/ProjektinJakotietoJulkinen";
-import { DashedList } from "@components/kansalainen/DashedList";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import Trans from "next-translate/Trans";
+
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
@@ -78,26 +79,28 @@ export default function ProjektiPageLayout({
             {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
               <Notification type={NotificationType.INFO_GRAY}>
                 <p>
-                  {t("suunnitelma-jaettu.kaynnistetty-suunnitelmalla")}{" "}
-                  <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />
-                  {". "}
-                  {t("suunnitelma-jaettu.tiedot-kopioitu")}
+                  <Trans
+                    i18nKey="projekti:liittyvat-suunnitelmat.kaynnistetty-suunnitelmalla"
+                    components={{
+                      suunnitelma: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />,
+                    }}
+                  />
+                  {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
                 </p>
               </Notification>
             )}
-            {!!suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length && (
+            {!!suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan && (
               <Notification type={NotificationType.INFO_GRAY}>
                 <ContentSpacer gap={2}>
                   <p>
-                    {t("suunnitelma-jaettu.suunnittelua-on-jaettu", { count: suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin?.length })}{" "}
+                    <Trans
+                      i18nKey="projekti:liittyvat-suunnitelmat.suunnittelua-on-jaettu"
+                      components={{
+                        suunnitelma: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
+                      }}
+                    />
+                    {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
                   </p>
-                  <DashedList>
-                    {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmiin.map((jakotieto) => (
-                      <li key={jakotieto.oid}>
-                        <ProjektinJakotietoJulkinen jakotieto={jakotieto} />
-                      </li>
-                    ))}
-                  </DashedList>
                 </ContentSpacer>
               </Notification>
             )}

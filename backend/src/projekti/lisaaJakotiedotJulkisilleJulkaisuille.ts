@@ -120,9 +120,9 @@ function adaptSuunnitelmaJaettuJulkinen(
   const suunnitelmaJaettuJulkinen: API.SuunnitelmaJaettuJulkinen = {
     __typename: "SuunnitelmaJaettuJulkinen",
     // Kaikki julkaisun liittyvät suunnitelmat
-    liittyvatSuunnitelmat,
+    liittyvatSuunnitelma: liittyvatSuunnitelmat?.[0],
     // Kaikki projektin liittyvät suunnitelmat, joille kopioitu tiedot ja jotka ei ole julkaisulla
-    julkaisuKopioituSuunnitelmiin,
+    julkaisuKopioituSuunnitelmaan: julkaisuKopioituSuunnitelmiin?.[0],
     // Projektin liittyvä suunnitelma, josta kopioitu tiedot ja joka ei ole julkaisulla
     julkaisuKopioituSuunnitelmasta,
   };

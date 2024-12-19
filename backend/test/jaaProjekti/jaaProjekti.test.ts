@@ -39,6 +39,7 @@ import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { parameters } from "../../src/aws/parameters";
 import { DBMuistuttaja, muistuttajaDatabase } from "../../src/database/muistuttajaDatabase";
 import { feedbackDatabase } from "../../src/database/palauteDatabase";
+import { uuid } from "hassu-common/util/uuid";
 
 describe("jaaProjekti", () => {
   const userFixture = new UserFixture(userService);
@@ -118,6 +119,7 @@ describe("jaaProjekti", () => {
     let targetVelho: Velho;
     let targetProjektiFromVelho: DBProjekti;
     let s3Mock: AwsStub<S3ServiceInputTypes, S3ServiceOutputTypes, S3ClientResolvedConfig>;
+    let uuidStub: sinon.SinonStub<[], string>;
 
     let getKayttajasStub: sinon.SinonStub;
     let a1User: Kayttaja;
@@ -129,6 +131,7 @@ describe("jaaProjekti", () => {
     beforeEach(() => {
       sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
       sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+      uuidStub = sinon.stub(uuid, "v4");
       const personSearchFixture = new PersonSearchFixture();
       a1User = personSearchFixture.createKayttaja("A1");
       a2User = personSearchFixture.createKayttaja("A2");
@@ -269,14 +272,16 @@ describe("jaaProjekti", () => {
     });
 
     it("should copy muistuttajat and palautteet", async () => {
+      uuidStub.onFirstCall().returns("1");
+      uuidStub.onSecondCall().returns("2");
       await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
         .fulfilled;
       const updateCommands = dynamoDBClient.commandCalls(TransactWriteCommand);
       expect(updateCommands.length).to.equal(2);
       const tallennettuMuistuttaja = updateCommands[0].args[0].input.TransactItems?.[0].Put?.Item;
-      expect(tallennettuMuistuttaja).to.eql({ ...srcMuistuttajat[0], oid: targetProjektiOid });
+      expect(tallennettuMuistuttaja).to.eql({ ...srcMuistuttajat[0], oid: targetProjektiOid, id: "1" });
       const tallennettuPalaute = updateCommands[1].args[0].input.TransactItems?.[0].Put?.Item;
-      expect(tallennettuPalaute).to.eql({ ...srcFeedback[0], oid: targetProjektiOid });
+      expect(tallennettuPalaute).to.eql({ ...srcFeedback[0], oid: targetProjektiOid, id: "2" });
     });
   });
 });
