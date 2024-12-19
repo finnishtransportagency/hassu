@@ -10,6 +10,9 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
   if (!affectedJulkaisu) {
     throw new IllegalArgumentError("Vuorovaikutusta ei ole vielä julkaistu");
   }
+  if (affectedJulkaisu.kopioituProjektista) {
+    throw new IllegalArgumentError("Kopioidun vuorovaikutuskierroksen tietoja ei voi muokata.");
+  }
   if (input.vuorovaikutusNumero !== projekti.vuorovaikutusKierros?.vuorovaikutusNumero) {
     throw new IllegalArgumentError("Vuorovaikutusta ei voi päivittää, koska seuraava kierros on jo otettu suunnitteluun.");
   }

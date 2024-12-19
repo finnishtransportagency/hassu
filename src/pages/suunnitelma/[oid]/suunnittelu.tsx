@@ -48,6 +48,7 @@ import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { useIsBelowBreakpoint } from "../../../hooks/useIsSize";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -79,6 +80,7 @@ export default function Suunnittelu(): ReactElement {
   return (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.SUUNNITTELU}
+      suunnitelmaJaettu={projekti.vuorovaikutukset.suunnitelmaJaettu}
       title={t("otsikko")}
       saameContent={
         migroitu ? null : (
@@ -113,10 +115,10 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkinen; velho: VelhoJulkinen }> = ({
-  vuorovaikutusKierros,
-  velho,
-}) => {
+const Perustiedot: FunctionComponent<{
+  vuorovaikutusKierros: VuorovaikutusJulkinen;
+  velho: VelhoJulkinen;
+}> = ({ vuorovaikutusKierros, velho }) => {
   const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
 
@@ -140,6 +142,7 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkin
   return (
     <Section>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
+      <LiittyvatSuunnitelmat liittyvatSuunnitelma={vuorovaikutusKierros.suunnitelmaJaettu?.liittyvatSuunnitelma} />
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
         <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
