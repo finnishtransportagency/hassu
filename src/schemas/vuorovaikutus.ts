@@ -59,7 +59,17 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
       }).nullable(),
       paivamaara: paivamaara({ preventPast: true }).required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa"),
       alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
-      paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
+      paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp)
+      .test("on-after-start", "Päättymisajan täytyy olla alkamisajan jälkeen", function(paattymisAika) {
+        const { alkamisAika } = this.parent;
+        if (!alkamisAika || !paattymisAika) return true;
+
+        const alku = alkamisAika.split(':').map(Number);
+        const loppu = paattymisAika.split(':').map(Number);
+
+        return (loppu[0] > alku[0]) || (loppu[0] === alku[0] && loppu[1] > alku[1]);
+      }),
+
       kaytettavaPalvelu: Yup.string()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
