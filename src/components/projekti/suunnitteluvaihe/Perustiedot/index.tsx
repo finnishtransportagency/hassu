@@ -289,9 +289,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  const viimeisinJulkaisuOnKopio =
-    projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut.length - 1].julkaisuOnKopio;
-
   const saveDraft = useCallback(
     (formData: SuunnittelunPerustiedotFormValues) =>
       withLoadingSpinner(
@@ -463,7 +460,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                     style={{ whiteSpace: "nowrap" }}
                     id="save_published_suunnitteluvaihe"
                     onClick={handleSubmit(confirmPublish)}
-                    disabled={isLoading || !!viimeisinJulkaisuOnKopio}
+                    disabled={isLoading}
                   >
                     Päivitä muutokset
                   </Button>

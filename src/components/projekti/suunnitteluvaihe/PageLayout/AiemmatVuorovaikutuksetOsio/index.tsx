@@ -30,7 +30,7 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
 
   const viimeisinJulkinenJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.reduce((max, julkaisu) => {
     const { published } = examineJulkaisuPaiva(julkaisu.tila === VuorovaikutusKierrosTila.JULKINEN, julkaisu.vuorovaikutusJulkaisuPaiva);
-    if (published && !julkaisu.julkaisuOnKopio) {
+    if (published) {
       return Math.max(max, julkaisu.id);
     } else {
       return max;
