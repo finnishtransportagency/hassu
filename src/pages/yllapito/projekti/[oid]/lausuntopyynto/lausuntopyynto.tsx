@@ -19,6 +19,7 @@ import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut"
 import dayjs from "dayjs";
 import DownloadButtonLink from "@components/button/DownloadButtonLink";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import ExtLink from "@components/ExtLink";
 
 export default function LausuntoPyynnotWrapper() {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -127,7 +128,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
           <h2 className="vayla-subtitle">Lausuntopyynnön mallipohjat</h2>
           <p>
             Alla löydät linkit viimeisimpiin lausuntopyyntöjen mallipohjiin. Lataa lausuntopyynnön mallipohja tietokoneellesi ja täytä sen
-            sisältö. Vie valmislausuntopyyntö asianhallintaan allekirjoitettavaksi.
+            sisältö. Vie valmis lausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
           <div className="grid gap-4">
             {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
@@ -158,7 +159,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                   id="mallipohja-41R"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
                 >
-                  Mallipohja ELY:le 41R
+                  Mallipohja ELY:lle 41R
                 </DownloadButtonLink>
                 <DownloadButtonLink
                   id="mallipohja-42R"
@@ -169,6 +170,10 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
               </div>
             )}
           </div>
+        </Section>
+        <Section>
+            <p className="vayla-label mb-5">Projektisivu kansalaispuolella</p>
+              <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki palvelun julkiselle puolelle</ExtLink>
         </Section>
         <LausuntoPyynnotPainikkeet projekti={projekti} />
       </FormProvider>
