@@ -36,6 +36,7 @@ export default function Hyvaksymispaatos(): ReactElement {
   }
   return (
     <PaatosPageLayout
+      suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
       pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}
       saameContent={
         <SaameContent

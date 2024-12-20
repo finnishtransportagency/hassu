@@ -25,6 +25,9 @@ function VuorovaikutusKierros({ projekti }: Readonly<{ projekti: ProjektiLisatie
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const viimeisinJulkaisuOnKopio =
+    projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut?.length - 1].julkaisuOnKopio;
+
   const lukutila: boolean =
     !!projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === projekti?.vuorovaikutusKierros?.vuorovaikutusNumero) ||
     !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
@@ -43,7 +46,7 @@ function VuorovaikutusKierros({ projekti }: Readonly<{ projekti: ProjektiLisatie
         <VuorovaikutusKierrosLukutila
           vuorovaikutusnro={kierrosId}
           projekti={projekti}
-          showMuokkaaTilaisuuksia={!projekti.nahtavillaoloVaiheJulkaisu}
+          showMuokkaaTilaisuuksia={!projekti.nahtavillaoloVaiheJulkaisu && !viimeisinJulkaisuOnKopio}
         />
       </SuunnitteluPageLayout>
     );

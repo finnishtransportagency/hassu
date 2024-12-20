@@ -12,6 +12,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import { chunkArray } from "./chunkArray";
 import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { uuid } from "hassu-common/util/uuid";
 
 export type DBMuistuttaja = {
   id: string;
@@ -115,6 +116,25 @@ class MuistuttajaDatabase {
     } catch (e) {
       log.error(e);
       throw e;
+    }
+  }
+
+  async copyKaytossaolevatMuistuttajatToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
+    const muistuttajat = await this.haeProjektinKaytossaolevatMuistuttajat(srcOid);
+    if (!muistuttajat.length) {
+      return;
+    }
+    const newTransactItems = muistuttajat.map<TransactionItem>((muistuttaja) => ({
+      Put: {
+        TableName: this.tableName,
+        Item: { ...muistuttaja, id: uuid.v4(), oid: targetOid },
+      },
+    }));
+    for (const chunk of chunkArray(newTransactItems, 25)) {
+      const transactCommand = new TransactWriteCommand({
+        TransactItems: chunk,
+      });
+      await getDynamoDBDocumentClient().send(transactCommand);
     }
   }
 

@@ -628,12 +628,12 @@ export class FileService {
   }
 
   async copyYllapitoFolder(sourceFolder: PathTuple, targetFolder: PathTuple): Promise<void> {
-    if (sourceFolder.yllapitoFullPath == targetFolder.yllapitoFullPath) {
+    if (sourceFolder.yllapitoFullPath === targetFolder.yllapitoFullPath) {
       return;
     }
     try {
       const yllapitoBucketName = config.yllapitoBucketName;
-      log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
+      log.info(`Kopioidaan kaikki S3Objektit prefixillä ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
       const data = await getS3Client().send(
         new ListObjectsV2Command({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName })
       );
@@ -650,7 +650,7 @@ export class FileService {
           Key: object.Key.replace(sourceFolder.yllapitoFullPath, targetFolder.yllapitoFullPath),
           ChecksumAlgorithm: "CRC32",
         };
-        log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
+        log.info(`Kopioidaan S3Objekti ${params.CopySource} -> ${params.Key}`);
         return getS3Client().send(new CopyObjectCommand(params));
       });
       await Promise.all(promises);

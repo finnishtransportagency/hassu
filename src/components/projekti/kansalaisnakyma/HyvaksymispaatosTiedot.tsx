@@ -18,6 +18,8 @@ import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 import EuLogo from "../common/EuLogo";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
+import { DottedList } from "@components/notification/DottedList";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -90,14 +92,15 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
           <p key={index}>{renderTextAsHTML(teksti)}</p>
         ))}
       </ContentSpacer>
+      <LiittyvatSuunnitelmat liittyvatSuunnitelma={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelma} />
       <ContentSpacer>
         <H3 variant="h4">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</H3>
         <Notification hideIcon type={NotificationType.INFO}>
-          <ul>
+          <DottedList>
             {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
               <li key={index}>{renderTextAsHTML(teksti)}</li>
             ))}
-          </ul>
+          </DottedList>
         </Notification>
         <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
       </ContentSpacer>

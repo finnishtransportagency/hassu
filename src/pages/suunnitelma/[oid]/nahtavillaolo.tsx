@@ -25,6 +25,8 @@ import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { getSuomiFiAuthenticationURL } from "@services/userService";
+import { LiittyvatSuunnitelmat } from "@components/kansalainen/LiittyvatSuunnitelmat";
+import { DottedList } from "@components/notification/DottedList";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -87,7 +89,11 @@ export default function Nahtavillaolo(): ReactElement {
   const authUrl = getSuomiFiAuthenticationURL(`${lang === "sv" ? "sv/" : ""}suunnitelma/${projekti?.oid}/nahtavillaolo`);
 
   return migroitu ? (
-    <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
+    <ProjektiJulkinenPageLayout
+      suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
+      selectedStep={Status.NAHTAVILLAOLO}
+      title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
+    >
       <Section noDivider>
         <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
         {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
@@ -101,6 +107,7 @@ export default function Nahtavillaolo(): ReactElement {
   ) : (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.NAHTAVILLAOLO}
+      suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
       title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
       saameContent={
         <SaameContent
@@ -125,6 +132,7 @@ export default function Nahtavillaolo(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
+        <LiittyvatSuunnitelmat liittyvatSuunnitelma={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelma} />
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
@@ -132,11 +140,11 @@ export default function Nahtavillaolo(): ReactElement {
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</H3>
           <Notification type={NotificationType.INFO} hideIcon>
-            <ul>
+            <DottedList>
               {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
                 <li key={index}>{renderTextAsHTML(teksti)}</li>
               ))}
-            </ul>
+            </DottedList>
           </Notification>
           <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
         </ContentSpacer>

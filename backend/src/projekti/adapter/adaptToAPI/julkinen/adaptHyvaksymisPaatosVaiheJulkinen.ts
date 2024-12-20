@@ -45,10 +45,13 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
     hallintoOikeus,
     tila,
     uudelleenKuulutus,
+    id,
+    kopioituProjektista,
   } = julkaisu;
 
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
       tila,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -81,6 +84,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
   }
 
   const julkaisuJulkinen: API.HyvaksymisPaatosVaiheJulkaisuJulkinen = {
+    id,
     __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
     hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
@@ -96,6 +100,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
     kuulutusPDF: adaptHyvaksymispaatosPDFPaths(paths, julkaisu),
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, julkaisu.hyvaksymisPaatosVaiheSaamePDFt, true),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
 
   if (kieli) {

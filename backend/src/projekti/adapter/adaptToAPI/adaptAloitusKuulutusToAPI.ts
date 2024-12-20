@@ -71,6 +71,8 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
     uudelleenKuulutus,
     aloituskuulutusSaamePDFt,
     asianhallintaEventId,
+    projektinJakautuminen: _jakautuminen,
+    kopioituProjektista,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
@@ -105,6 +107,7 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
       ),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+      julkaisuOnKopio: !!kopioituProjektista,
     };
     return apiJulkaisu;
   }

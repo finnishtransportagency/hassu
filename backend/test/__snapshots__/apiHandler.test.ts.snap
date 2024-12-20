@@ -195,6 +195,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -303,6 +304,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -435,6 +437,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
+    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -720,6 +723,7 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "ALOITUSKUULUTUS",
+    "suunnitelmaJaettu": Array [],
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
       "kunta": 536,
@@ -883,6 +887,7 @@ Object {
         },
       ],
     },
+    "julkaisuOnKopio": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -1054,6 +1059,7 @@ Object {
   "muistutusMaara": 0,
   "oid": "1",
   "status": "SUUNNITTELU",
+  "suunnitelmaJaettu": Array [],
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
     "kunta": 536,
@@ -1105,6 +1111,8 @@ Object {
         "SUOMI": "Lorem Ipsum",
         "__typename": "LokalisoituTeksti",
       },
+      "id": 1,
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -1131,6 +1139,7 @@ Object {
         "tietosuoja": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+      "suunnitelmaJaettu": undefined,
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",

@@ -253,6 +253,8 @@ Object {
       "SUOMI": "Lorem Ipsum",
       "__typename": "LokalisoituTeksti",
     },
+    "id": 2,
+    "julkaisuOnKopio": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -277,6 +279,7 @@ Object {
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
     "siirtyySuunnitteluVaiheeseen": "2023-01-01",
+    "suunnitelmaJaettu": undefined,
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
       "email": "mikko.haapamaki1@cgi.com",
