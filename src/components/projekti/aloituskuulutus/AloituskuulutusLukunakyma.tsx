@@ -24,6 +24,7 @@ import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../Headings";
 import KuulutuksenSisalto from "../common/KuulutuksenSisalto";
 import { JulkaisuOnKopioNotification } from "../common/JulkaisuOnKopioNotification";
+import { LiittyvatSuunnitelmat } from "../LiittyvatSuunnitelmat";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -121,6 +122,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={aloituskuulutusjulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
         )}
+        <LiittyvatSuunnitelmat jakotieto={aloituskuulutusjulkaisu.suunnitelmaJaettu} />
         <div>
           <H3>Kuulutuksen yhteystiedot</H3>
           {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (

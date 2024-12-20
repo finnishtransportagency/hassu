@@ -195,7 +195,6 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
-    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -304,7 +303,6 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
-    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -437,7 +435,6 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "EI_JULKAISTU",
-    "suunnitelmaJaettu": Array [],
     "tallennettu": true,
     "tyyppi": "TIE",
     "velho": Object {
@@ -723,7 +720,6 @@ Array [
     "muistutusMaara": 0,
     "oid": "1",
     "status": "ALOITUSKUULUTUS",
-    "suunnitelmaJaettu": Array [],
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
       "kunta": 536,
@@ -1059,7 +1055,6 @@ Object {
   "muistutusMaara": 0,
   "oid": "1",
   "status": "SUUNNITTELU",
-  "suunnitelmaJaettu": Array [],
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
     "kunta": 536,

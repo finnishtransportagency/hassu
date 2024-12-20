@@ -108,7 +108,7 @@ function ContentAsideTitle({
   if (epaaktiivinen) {
     return <></>;
   }
-  if (projekti.nykyinenKayttaja.onYllapitaja && !projekti.suunnitelmaJaettu?.length) {
+  if (projekti.nykyinenKayttaja.onYllapitaja && !projekti.suunnitelmaJaettu) {
     return <YllapitajaMenu versio={projekti.versio} projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }
   return <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
@@ -369,7 +369,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiKuulutuskielet projekti={projekti} />
           <LinkitetytProjektit projekti={projekti} />
-          {!!projekti.suunnitelmaJaettu?.length && <SuunnitelmaJaettuOsiin projektinJakotiedot={projekti.suunnitelmaJaettu} />}
+          {!!projekti.suunnitelmaJaettu && <SuunnitelmaJaettuOsiin jakotieto={projekti.suunnitelmaJaettu} />}
           <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
           {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (

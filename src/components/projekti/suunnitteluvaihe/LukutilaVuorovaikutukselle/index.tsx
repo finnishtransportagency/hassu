@@ -15,6 +15,7 @@ import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -107,6 +108,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
       </SectionContent>
       <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+      <LiittyvatSuunnitelmat jakotieto={vuorovaikutusKierrosjulkaisu.suunnitelmaJaettu} />
       <VuorovaikutusMahdollisuudet
         showAjansiirtopainikkeet={showAjansiirtopainikkeet}
         projekti={projekti}

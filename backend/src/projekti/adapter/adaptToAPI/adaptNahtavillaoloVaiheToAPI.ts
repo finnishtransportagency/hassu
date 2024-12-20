@@ -67,6 +67,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
 
   if (julkaisu) {
     const {
+      id,
       aineistoNahtavilla,
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
@@ -87,6 +88,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
 
     if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
       return {
+        id,
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
         velho: adaptVelhoToAPI(velho),
@@ -111,6 +113,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
     assertIsDefined(dbProjekti.salt);
     const apiJulkaisu: API.NahtavillaoloVaiheJulkaisu = {
+      id,
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,

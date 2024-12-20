@@ -201,7 +201,7 @@ type Projekti implements IProjekti {
   asianhallinta: Asianhallinta!
   omistajahaku: OmistajaHaku
   kustannuspaikka: String
-  suunnitelmaJaettu: [ProjektinJakotieto!]
+  suunnitelmaJaettu: ProjektinJakotieto
 }
 
 type OmistajaHaku {
@@ -310,6 +310,7 @@ type VuorovaikutusKierrosJulkaisu {
   asianhallintaSynkronointiTila: AsianTila
   selosteVuorovaikutuskierrokselle: String
   julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: ProjektinJakotieto
 }
 
 type VuorovaikutusJulkinen {
@@ -376,6 +377,7 @@ type HyvaksymisPaatosVaihe {
 }
 
 type NahtavillaoloVaiheJulkaisu {
+  id: Int!
   aineistoNahtavilla: [Aineisto!]
   aineistopaketti: String
   kuulutusPaiva: String
@@ -396,6 +398,7 @@ type NahtavillaoloVaiheJulkaisu {
   aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: AsianTila
   julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: ProjektinJakotieto
 }
 
 type LausuntoPyynto {
@@ -514,6 +517,7 @@ type EnnakkoNeuvotteluJulkaisu {
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
+  id: Int!
   aineistoNahtavilla: [Aineisto!]
   hyvaksymisPaatos: [Aineisto!]
   hyvaksymisPaatoksenPvm: String
@@ -536,6 +540,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: AsianTila
   julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: ProjektinJakotieto
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -1044,6 +1049,7 @@ type StandardiYhteystiedot {
 }
 
 type AloitusKuulutusJulkaisu {
+  id: Int!
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTeksti
@@ -1061,6 +1067,7 @@ type AloitusKuulutusJulkaisu {
   uudelleenKuulutus: UudelleenKuulutus
   asianhallintaSynkronointiTila: AsianTila
   julkaisuOnKopio: Boolean
+  suunnitelmaJaettu: ProjektinJakotieto
 }
 
 type AloitusKuulutusJulkaisuJulkinen {

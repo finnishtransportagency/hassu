@@ -54,6 +54,7 @@ import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/mu
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
+import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -108,13 +109,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
-
-    const suunnitelmaJaettuOidt = [
-      ...(projektiFromDB.projektinJakautuminen?.jaettuProjekteihin ?? []),
-      projektiFromDB.projektinJakautuminen?.jaettuProjektista,
-    ].filter((oid): oid is string => !!oid);
-    const optionalSuunnitelmaTiedot = await Promise.all(suunnitelmaJaettuOidt.map((oid) => haeLiittyvanProjektinTiedot(oid)));
-    apiProjekti.suunnitelmaJaettu = optionalSuunnitelmaTiedot.filter((jakotieto): jakotieto is API.ProjektinJakotieto => !!jakotieto);
+    await lisaaSuunnitelmanJakotiedotProjektilleJaSenJulkaisuille(projektiFromDB, apiProjekti);
     return apiProjekti;
   } else {
     requirePermissionLuonti();
@@ -125,6 +120,23 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
     }
     return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
+}
+
+async function lisaaSuunnitelmanJakotiedotProjektilleJaSenJulkaisuille(projektiFromDB: DBProjekti, apiProjekti: API.Projekti) {
+  const suunnitelmaJaettu = await haeSuunnitelmaJaettuTieto(projektiFromDB);
+  if (!suunnitelmaJaettu) {
+    return;
+  }
+  lisaaJakotiedotJulkaisuille(apiProjekti, projektiFromDB, suunnitelmaJaettu);
+  apiProjekti.suunnitelmaJaettu = suunnitelmaJaettu;
+}
+
+async function haeSuunnitelmaJaettuTieto(projektiFromDB: DBProjekti) {
+  const suunnitelmaJaettu: string | undefined = [
+    ...(projektiFromDB.projektinJakautuminen?.jaettuProjekteihin ?? []),
+    projektiFromDB.projektinJakautuminen?.jaettuProjektista,
+  ].find((oid) => !!oid);
+  return suunnitelmaJaettu ? await haeLiittyvanProjektinTiedot(suunnitelmaJaettu) : undefined;
 }
 
 async function lisaaApiAineistolleTiedostokoko(paatosAineisto: API.Aineisto[] | null | undefined): Promise<void> {

@@ -80,6 +80,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   }
 
   const {
+    id,
     aineistoNahtavilla,
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     ilmoituksenVastaanottajat,
@@ -100,6 +101,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
 
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "HyvaksymisPaatosVaiheJulkaisu",
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -128,6 +130,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   }
   const paths = getPathCallback(julkaisu);
   const apiJulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
+    id,
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),

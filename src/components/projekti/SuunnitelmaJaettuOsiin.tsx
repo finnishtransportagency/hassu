@@ -7,22 +7,20 @@ import { ExternalStyledLink } from "@components/StyledLink";
 import { styled } from "@mui/system";
 
 interface Props {
-  projektinJakotiedot: ProjektinJakotieto[];
+  jakotieto: ProjektinJakotieto;
 }
 
-export default function SuunnitelmaJaettuOsiin({ projektinJakotiedot }: Readonly<Props>): ReactElement {
+export default function SuunnitelmaJaettuOsiin({ jakotieto }: Readonly<Props>): ReactElement {
   return (
     <Section smallGaps>
       <H3>Suunnitelma jaettu osiin</H3>
       <SectionContent>
         <List>
-          {projektinJakotiedot.map((jakotieto) => (
-            <li key={jakotieto.oid}>
-              <ExternalStyledLink target="_blank" href={{ pathname: "/yllapito/projekti/[oid]", query: { oid: jakotieto.oid } }}>
-                {jakotieto.nimi.SUOMI}
-              </ExternalStyledLink>
-            </li>
-          ))}
+          <li key={jakotieto.oid}>
+            <ExternalStyledLink target="_blank" href={{ pathname: "/yllapito/projekti/[oid]", query: { oid: jakotieto.oid } }}>
+              {jakotieto.nimi.SUOMI}
+            </ExternalStyledLink>
+          </li>
         </List>
       </SectionContent>
     </Section>
