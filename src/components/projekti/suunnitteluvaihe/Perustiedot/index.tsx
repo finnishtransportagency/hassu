@@ -27,7 +27,6 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "hassu-common/util/dateUtils";
 import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
@@ -373,7 +372,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"
                 label="Kysymykset ja palautteet viimeistään"
-                minDate={today()}
                 textFieldProps={{
                   required: true,
                   sx: { maxWidth: { md: "min-content" } },
