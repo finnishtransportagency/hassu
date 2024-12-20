@@ -69,7 +69,7 @@ export default function Linkki({
       <p className="mt-8 mb-8">{infoText}</p>
       {buttonDisabled && (
         <Notification type={NotificationType.WARN}>
-          Kuulutukselta suunnitelman nähtäville asettamisesta puuttuuvat aineistot. Lisää aineistot Nähtävilläolo-sivulta.
+          Kuulutukselta suunnitelman nähtäville asettamisesta puuttuvat aineistot. Lisää aineistot Nähtävilläolo-sivulta.
         </Notification>
       )}
       {kunta && <h4 className="vayla-small-title">{kuntametadata.nameForKuntaId(kunta, "fi")}</h4>}
