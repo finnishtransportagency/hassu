@@ -1,11 +1,15 @@
 import { Typography, TypographyProps } from "@mui/material";
 import { ElementType } from "react";
 
-type HeadingType = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "lead" | "plain";
+export type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-type HeadingProps = Omit<TypographyProps, "variant"> & { variant?: HeadingType };
+type HeadingVariant = HeadingLevel | "lead" | "plain";
 
-const Heading = ({ children, ...props }: HeadingProps & { component: ElementType<any> }) => <Typography {...props}>{children}</Typography>;
+type HeadingProps = Omit<TypographyProps, "variant"> & { variant?: HeadingVariant };
+
+export const Heading = ({ children, ...props }: HeadingProps & { component: ElementType<any> }) => (
+  <Typography {...props}>{children}</Typography>
+);
 
 const H1 = ({ variant = "h1", ...props }: HeadingProps) => <Heading component="h1" variant={variant} {...props} />;
 const H2 = ({ variant = "h2", ...props }: HeadingProps) => <Heading component="h2" variant={variant} {...props} />;
