@@ -98,7 +98,7 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
         return !linkki.SUOMI;
       }),
     suunnittelumateriaali: Yup.array().notRequired().of(suunnittelumateriaaliSchema()),
-    kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
+    kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: false }).required("Toivottu palautepäivämäärä täytyy antaa"),
   }),
 });
 
