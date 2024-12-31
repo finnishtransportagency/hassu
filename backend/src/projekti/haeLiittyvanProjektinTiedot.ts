@@ -1,6 +1,5 @@
 import { config } from "../config";
 import { Kieli, ProjektinJakotieto, Status } from "hassu-common/graphql/apiModel";
-import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { projektiDatabase } from "../database/projektiDatabase";
 
@@ -15,7 +14,7 @@ export async function haeLiittyvanProjektinTiedot(oid: string): Promise<Projekti
     return undefined;
   }
 
-  const julkinenProjekti = await projektiAdapterJulkinen.adaptProjekti(migrateFromOldSchema(projekti), Kieli.SUOMI);
+  const julkinenProjekti = await projektiAdapterJulkinen.adaptProjekti(projekti, Kieli.SUOMI);
   const julkinen =
     !!julkinenProjekti?.status &&
     ![Status.EI_JULKAISTU, Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3].includes(julkinenProjekti.status);
