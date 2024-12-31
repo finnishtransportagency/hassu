@@ -42,6 +42,7 @@ Object {
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "muistutusMaara": 0,
   "oid": "1",
+  "projektinVoiJakaa": true,
   "tallennettu": false,
   "tyyppi": "TIE",
   "velho": Object {
@@ -194,6 +195,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -302,6 +304,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -434,6 +437,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -719,6 +723,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "ALOITUSKUULUTUS",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
@@ -1054,6 +1059,7 @@ Object {
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "muistutusMaara": 0,
   "oid": "1",
+  "projektinVoiJakaa": true,
   "status": "SUUNNITTELU",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",

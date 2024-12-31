@@ -184,6 +184,10 @@ export class ProjektiAdapter {
       kustannuspaikka,
       ennakkoNeuvottelu: await adaptEnnakkoNeuvotteluToAPI(dbProjekti, status),
       ennakkoNeuvotteluJulkaisu: await adaptEnnakkoNeuvotteluJulkaisuToAPI(dbProjekti, status),
+      projektinVoiJakaa: ![
+        ...(dbProjekti.projektinJakautuminen?.jaettuProjekteihin ?? []),
+        dbProjekti.projektinJakautuminen?.jaettuProjektista,
+      ].some((oid) => !!oid),
     });
 
     if (apiProjekti.tallennettu) {

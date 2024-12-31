@@ -108,7 +108,7 @@ function ContentAsideTitle({
   if (epaaktiivinen) {
     return <></>;
   }
-  if (projekti.nykyinenKayttaja.onYllapitaja && !projekti.suunnitelmaJaettu) {
+  if (projekti.nykyinenKayttaja.onYllapitaja && projekti.projektinVoiJakaa) {
     return <YllapitajaMenu versio={projekti.versio} projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }
   return <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
