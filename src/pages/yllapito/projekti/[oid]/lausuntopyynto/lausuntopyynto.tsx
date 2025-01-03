@@ -19,7 +19,6 @@ import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut"
 import dayjs from "dayjs";
 import DownloadButtonLink from "@components/button/DownloadButtonLink";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import ExtLink from "@components/ExtLink";
 
 export default function LausuntoPyynnotWrapper() {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -170,10 +169,6 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
               </div>
             )}
           </div>
-        </Section>
-        <Section>
-            <p className="vayla-label mb-5">Projektisivu kansalaispuolella</p>
-              <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki palvelun julkiselle puolelle</ExtLink>
         </Section>
         <LausuntoPyynnotPainikkeet projekti={projekti} />
       </FormProvider>
