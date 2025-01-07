@@ -1297,6 +1297,7 @@ type LadattavatTiedostot {
   muistutukset: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  julkinen: Boolean!
 }
 
 type HyvaksymisEsityksenAineistot {

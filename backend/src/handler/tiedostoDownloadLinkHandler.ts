@@ -5,6 +5,7 @@ import {
   ListaaLausuntoPyynnonTiedostotQueryVariables,
   ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
   KayttajaTyyppi,
+  Status,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
@@ -15,6 +16,8 @@ import { adaptProjektiKayttajaJulkinen } from "../projekti/adapter/adaptToAPI/ju
 import { assertIsDefined } from "../util/assertions";
 import { lausuntoPyyntoDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyyntoDownloadLinkService";
 import { lausuntoPyynnonTaydennysDownloadLinkService } from "../tiedostot/TiedostoDownloadLinkService/LausuntoPyynnonTaydennysDownloadLinkService";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
 
 class TiedostoDownloadLinkHandler {
   async listaaLausuntoPyynnonTiedostot({
@@ -36,6 +39,9 @@ class TiedostoDownloadLinkHandler {
       // @ts-ignore
       lausuntoPyyntoDownloadLinkService.validateHash(oid, projekti.salt, params.hash, lausuntoPyynto);
 
+      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynto.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
@@ -45,6 +51,7 @@ class TiedostoDownloadLinkHandler {
           poistumisPaiva: lausuntoPyynto.poistumisPaiva,
           linkkiVanhentunut: true,
           projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+          julkinen,
         });
       }
       return lausuntoPyyntoDownloadLinkService.listaaTiedostot(projekti, params);
@@ -71,6 +78,10 @@ class TiedostoDownloadLinkHandler {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       lausuntoPyynnonTaydennysDownloadLinkService.validateHash(oid, projekti.salt, params.hash, lausuntoPyynnonTaydennys);
+
+      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+      
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
@@ -80,6 +91,7 @@ class TiedostoDownloadLinkHandler {
           poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
           linkkiVanhentunut: true,
           projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
+          julkinen,
         });
       }
       return lausuntoPyynnonTaydennysDownloadLinkService.listaaTiedostot(projekti, params);
@@ -122,3 +134,5 @@ class TiedostoDownloadLinkHandler {
 }
 
 export const tiedostoDownloadLinkHandler = new TiedostoDownloadLinkHandler();
+
+

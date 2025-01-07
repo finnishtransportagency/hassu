@@ -12,6 +12,8 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 import { adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
+import { projektiAdapterJulkinen } from "../../projekti/adapter/projektiAdapterJulkinen";
 
 class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkService<
   API.LausuntoPyynnonTaydennysInput,
@@ -44,6 +46,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       kunta: uusiLausuntoPyynnonTaydennys?.kunta,
@@ -51,6 +55,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
       aineistopaketti,
+      julkinen,
     };
   }
 
@@ -82,13 +87,16 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
-    return {
+      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+      return {
       __typename: "LadattavatTiedostot",
       kunta: lausuntoPyynnonTaydennys.kunta,
       muutAineistot,
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
       aineistopaketti,
+      julkinen,
     };
   }
 

@@ -19,6 +19,7 @@ import {
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { ProjektiScheduleManager } from "../../sqsEvents/projektiScheduleManager";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
   if (
@@ -117,7 +118,7 @@ class ProjektiAdapterJulkinen {
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
-    if (projektiJulkinen.status && this.isStatusPublic(projektiJulkinen.status)) {
+    if (projektiJulkinen.status && isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
       return {
@@ -130,12 +131,10 @@ class ProjektiAdapterJulkinen {
 
     return returnUndefinedForNonPublic ? undefined : projekti;
   }
-
-  private isStatusPublic(status: Status) {
-    const notPublicStatuses = [Status.EI_JULKAISTU, Status.EPAAKTIIVINEN_1, Status.EPAAKTIIVINEN_2, Status.EPAAKTIIVINEN_3];
-    return !notPublicStatuses.includes(status);
-  }
 }
+  function isStatusPublic(status: Status) {
+    return isProjektiJulkinenStatusPublic(status);
+  }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
   return { __typename: "ProjektiJulkinen", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };

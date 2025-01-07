@@ -1,7 +1,7 @@
 import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
 import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { LadattavaTiedosto, ProjektiJulkinen, Status } from "@services/api";
+import { LadattavaTiedosto, ProjektiJulkinen } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
@@ -12,6 +12,7 @@ import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
 import ExtLink from "@components/ExtLink";
+import { isProjektiJulkinenStatusPublic } from "common/isProjektiJulkinenStatusPublic";
 
 type Props = {
   esikatselu?: boolean;
@@ -39,13 +40,12 @@ export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): Reac
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
-        {projekti && projekti.status && (projekti.status !== Status.EI_JULKAISTU ? (
+      {projekti && projekti.status && isProjektiJulkinenStatusPublic(projekti.status) ? (
             <Section>
-            <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki projektisivuun kansalaispuolelle</ExtLink>
+            <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
             </Section>
           ) : (
-          <p>Projektia ei ole julkaistu kansalaispuolelle.</p>
-          )
+          <p>Suunnitelmalla ei ole julkaisuja kansalaispuolella.</p>
         )}
       <Section noDivider>
         {props.esikatselu && (
