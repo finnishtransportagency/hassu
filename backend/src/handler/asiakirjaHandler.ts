@@ -10,10 +10,10 @@ import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import { findAloitusKuulutusWaitingForApproval } from "../projekti/projektiUtil";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
@@ -21,42 +21,25 @@ async function handleAloitusKuulutus(
   kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput
 ) {
-  // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
-  const aloitusKuulutusJulkaisu = findAloitusKuulutusWaitingForApproval(projekti);
-  if (aloitusKuulutusJulkaisu) {
-    return pdfGeneratorClient.createAloituskuulutusPdf({
-      oid: projekti.oid,
-      lyhytOsoite: projekti.lyhytOsoite,
-      aloitusKuulutusJulkaisu,
-      asiakirjaTyyppi,
-      kieli,
-      luonnos: true,
-      kayttoOikeudet: projekti.kayttoOikeudet,
-      euRahoitusLogot: projekti.euRahoitusLogot,
-      vahainenMenettely: projekti.vahainenMenettely,
-      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
-      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    });
-  } else {
-    // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
-    const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
-    projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
-    projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
+  // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
+  const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
+  projektiWithChanges.velho = projekti.velho; // Restore read-only velho data which was removed by adaptProjektiToSave
+  projektiWithChanges.suunnitteluSopimus = projekti.suunnitteluSopimus;
 
-    return pdfGeneratorClient.createAloituskuulutusPdf({
-      oid: projekti.oid,
-      lyhytOsoite: projekti.lyhytOsoite,
-      aloitusKuulutusJulkaisu: await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
-      asiakirjaTyyppi,
-      kieli,
-      luonnos: true,
-      kayttoOikeudet: projekti.kayttoOikeudet,
-      euRahoitusLogot: projekti.euRahoitusLogot,
-      vahainenMenettely: projekti.vahainenMenettely,
-      asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
-      linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    });
-  }
+  return pdfGeneratorClient.createAloituskuulutusPdf({
+    oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
+    aloitusKuulutusJulkaisu: await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
+    asiakirjaTyyppi,
+    kieli,
+    luonnos: true,
+    kayttoOikeudet: projekti.kayttoOikeudet,
+    euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
+    asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+    linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
+  });
 }
 
 async function handleYleisotilaisuusKutsu(
@@ -90,6 +73,7 @@ async function handleYleisotilaisuusKutsu(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
   });
 }
 
@@ -120,6 +104,7 @@ async function handleNahtavillaoloKuulutus(
     vahainenMenettely: projekti.vahainenMenettely,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
   });
 }
 
@@ -167,6 +152,7 @@ async function handleHyvaksymisPaatosKuulutus(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
   });
 }
 

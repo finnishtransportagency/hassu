@@ -1,13 +1,15 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
-import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu } from "../../database/model";
+import { LocalizedMap, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
+import { Kieli } from "hassu-common/graphql/apiModel";
 
 export interface SuunnitteluVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
   vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined;
 }
 
 export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
@@ -15,12 +17,15 @@ export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
 export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   private readonly suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
+  protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(props: SuunnitteluVaiheKutsuAdapterProps) {
     super(props);
-    const { vuorovaikutusKierrosJulkaisu, suunnitteluSopimus } = props;
+    const { vuorovaikutusKierrosJulkaisu, suunnitteluSopimus, kuulutettuYhdessaSuunnitelmanimi } = props;
     this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
     this.suunnitteluSopimus = suunnitteluSopimus;
+    this.kuulutettuYhdessaSuunnitelmanimi =
+      kuulutettuYhdessaSuunnitelmanimi?.[this.kieli] ?? kuulutettuYhdessaSuunnitelmanimi?.[Kieli.SUOMI];
   }
 
   get subject(): string {

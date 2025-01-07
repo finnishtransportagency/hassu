@@ -22,6 +22,7 @@ import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/proj
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
@@ -189,6 +190,7 @@ async function createPDF(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,

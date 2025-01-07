@@ -36,6 +36,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   private readonly oid: string;
   private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   protected header: string;
+  protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   protected kieli: KaannettavaKieli;
   private suunnitteluSopimus: undefined | SuunnitteluSopimus;
 
@@ -66,6 +67,8 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     this.oid = props.oid;
     this.suunnitteluSopimus = props.suunnitteluSopimus;
     this.vuorovaikutusKierrosJulkaisu = props.vuorovaikutusKierrosJulkaisu;
+    this.kuulutettuYhdessaSuunnitelmanimi =
+      props.kuulutettuYhdessaSuunnitelmanimi?.[this.kieli] ?? props.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
   }
 
@@ -99,11 +102,11 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     return [
       this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale1"),
       this.localizedParagraphFromMap(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus),
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       ...(this.vuorovaikutusTilaisuudet(
         this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet,
         VuorovaikutusTilaisuusTyyppi.VERKOSSA
       ) ?? []),
-      this.paragraph(""),
       ...(this.vuorovaikutusTilaisuudet(
         this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet,
         VuorovaikutusTilaisuusTyyppi.PAIKALLA
@@ -123,7 +126,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
       this.tervetuloa(),
       this.paragraph(this.kutsuAdapter.kutsujat ?? ""),
-    ].filter((elem) => elem);
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   private tervetuloa() {
@@ -326,5 +329,11 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       return fileService.getProjektiFile(this.oid, logo);
     }
     return super.loadLogo();
+  }
+
+  protected kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
+    }
   }
 }

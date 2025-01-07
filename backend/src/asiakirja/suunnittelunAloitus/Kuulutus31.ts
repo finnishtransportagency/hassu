@@ -19,6 +19,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected kieli: KaannettavaKieli;
   private readonly velho: Velho;
   protected vahainenMenettely: boolean | undefined | null;
+  protected kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
@@ -58,6 +59,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       asianhallintaPaalla: params.asianhallintaPaalla,
       linkkiAsianhallintaan: params.linkkiAsianhallintaan,
       yhteystiedot: params.yhteystiedot,
+      kuulutettuYhdessaSuunnitelmanimi: params.kuulutettuYhdessaSuunnitelmanimi,
     });
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
@@ -73,6 +75,8 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.vahainenMenettely = params.vahainenMenettely;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
+    this.kuulutettuYhdessaSuunnitelmanimi =
+      params.kuulutettuYhdessaSuunnitelmanimi?.[params.kieli] ?? params.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
 
     this.kutsuAdapter.addTemplateResolver(this);
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
@@ -91,6 +95,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("kiinteistonomistaja_kappale2"),
       this.vahainenMenettely
         ? this.paragraphFromKey("kiinteistonomistaja_kappale3_vahainen_menettely")
@@ -98,14 +103,16 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.paragraphFromKey("kiinteistonomistaja_kappale4"),
       this.paragraphFromKey("kiinteistonomistaja_kappale5"),
       this.lahetettyOmistajilleParagraph(),
-      // this.localizedParagraph([
-      //   "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-      //   "RUOTSIKSI Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-      // ]),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
     ].filter((elem): elem is PDFStructureElement => !!elem);
+  }
+
+  private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
+    }
   }
 
   private get startOfPlanningPhrase() {

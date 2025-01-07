@@ -89,4 +89,15 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       return this.localizedParagraphFromMap(this.params.uudelleenKuulutus?.selosteKuulutukselle);
     }
   }
+
+  private kuulutettuYhdessaSuunnitelmanimi(): string | undefined {
+    const nimi = this.params.kuulutettuYhdessaSuunnitelmanimi;
+    return nimi?.[this.kieli] ?? nimi?.SUOMI;
+  }
+
+  protected kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi()) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
+    }
+  }
 }

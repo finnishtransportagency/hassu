@@ -1,6 +1,7 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
 import {
   IlmoituksenVastaanottajat,
+  LocalizedMap,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   UudelleenKuulutus,
@@ -18,6 +19,7 @@ export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusVaihePaattyyPaiva?: string;
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | null | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   yhteystiedot: Yhteystieto[];
 }

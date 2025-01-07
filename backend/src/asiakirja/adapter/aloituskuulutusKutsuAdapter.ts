@@ -19,17 +19,31 @@ import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandl
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
-export async function createAloituskuulutusKutsuAdapterProps(
-  oid: string,
-  lyhytOsoite: string | undefined | null,
-  kayttoOikeudet: DBVaylaUser[],
-  kieli: KaannettavaKieli,
-  asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined,
-  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
-  euRahoitusLogot?: LocalizedMap<string> | null,
-  vahainenMenettely?: boolean | null
-): Promise<AloituskuulutusKutsuAdapterProps> {
+type CreateAloituskuulutusKutsuAdapterProps = {
+  oid: string;
+  lyhytOsoite: string | undefined | null;
+  kayttoOikeudet: DBVaylaUser[];
+  kieli: KaannettavaKieli;
+  asianhallintaPaalla: boolean;
+  linkkiAsianhallintaan: string | undefined;
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu | undefined;
+  euRahoitusLogot: LocalizedMap<string> | null | undefined;
+  vahainenMenettely: boolean | null | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | null | undefined;
+};
+
+export async function createAloituskuulutusKutsuAdapterProps({
+  oid,
+  lyhytOsoite,
+  kayttoOikeudet,
+  kieli,
+  asianhallintaPaalla,
+  linkkiAsianhallintaan,
+  aloitusKuulutusJulkaisu,
+  euRahoitusLogot,
+  vahainenMenettely,
+  kuulutettuYhdessaSuunnitelmanimi,
+}: CreateAloituskuulutusKutsuAdapterProps): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
   const kuulutusVaihePaattyyPaiva = await calculateEndDate({
@@ -53,6 +67,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
     vahainenMenettely,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
 }
 

@@ -1,4 +1,4 @@
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, LocalizedMap } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
@@ -27,15 +27,25 @@ function getAsiaNumero(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyypp
   }
 }
 
-export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
-  projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,
-  kieli: KaannettavaKieli,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-  paatosTyyppi: PaatosTyyppi,
-  asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined,
-  osoite?: Osoite
-): HyvaksymisPaatosVaiheKutsuAdapterProps {
+export function createHyvaksymisPaatosVaiheKutsuAdapterProps({
+  projekti,
+  kieli,
+  hyvaksymisPaatosVaihe,
+  paatosTyyppi,
+  asianhallintaPaalla,
+  linkkiAsianhallintaan,
+  osoite,
+  kuulutettuYhdessaSuunnitelmanimi,
+}: {
+  projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">;
+  kieli: KaannettavaKieli;
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  paatosTyyppi: PaatosTyyppi;
+  asianhallintaPaalla: boolean;
+  linkkiAsianhallintaan: string | undefined;
+  osoite: Osoite | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined;
+}): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
   if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
@@ -78,6 +88,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
 }
 

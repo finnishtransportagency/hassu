@@ -1,7 +1,7 @@
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
-import { DBProjekti, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, IlmoituksenVastaanottajat, LocalizedMap, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -11,17 +11,26 @@ import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
-export async function createNahtavillaoloVaiheKutsuAdapterProps(
+export async function createNahtavillaoloVaiheKutsuAdapterProps({
+  projekti,
+  julkaisu,
+  kieli,
+  asianhallintaPaalla,
+  linkkiAsianhallintaan,
+  osoite,
+  kuulutettuYhdessaSuunnitelmanimi,
+}: {
   projekti: Pick<
     DBProjekti,
     "oid" | "lyhytOsoite" | "kayttoOikeudet" | "suunnitteluSopimus" | "euRahoitusLogot" | "vahainenMenettely" | "velho"
-  >,
-  julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: KaannettavaKieli,
-  asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined,
-  osoite?: Osoite
-): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
+  >;
+  julkaisu: NahtavillaoloVaiheJulkaisu;
+  kieli: KaannettavaKieli;
+  asianhallintaPaalla: boolean;
+  linkkiAsianhallintaan: string | undefined;
+  osoite: Osoite | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined;
+}): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
 
   assertIsDefined(julkaisu);
@@ -50,6 +59,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
 }
 

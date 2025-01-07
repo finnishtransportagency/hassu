@@ -98,26 +98,13 @@ export abstract class AbstractPdf {
   private getParagraphWithBoldText(strings: string[], options?: ParagraphOptions) {
     return this.doc.struct("P", {}, [
       () => {
-        let bold = false;
-        let boldOn = false;
-        let first = true;
-        for (const string of strings) {
-          if (bold) {
-            this.doc.font("ArialMTBold");
-            boldOn = true;
-          }
-          if (!bold && boldOn) {
-            this.doc.font("ArialMT");
-            boldOn = false;
-          }
-          if (first) {
-            this.doc.text("", { continued: true, baseline: this.baseline });
-            first = false;
-          }
-          this.doc.text(string, { continued: true, baseline: boldOn ? "hanging" : "top" });
-          bold = !bold;
-        }
-        this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0));
+        strings.forEach((string, index) => {
+          const bold = index % 2 === 1;
+          const last = index === strings.length - 1;
+          this.doc.font(bold ? "ArialMTBold" : "ArialMT");
+          this.doc.text(string, { continued: !last, baseline: bold ? "hanging" : "top" });
+        });
+        this.doc.moveDown(1 + (options?.spacingAfter ?? 0));
       },
     ]);
   }
