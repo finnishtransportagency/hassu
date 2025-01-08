@@ -29,6 +29,7 @@ describe("LisaAineistoHandler", () => {
     const expectedResult: API.LadattavatTiedostot = {
       __typename: "LadattavatTiedostot",
       poistumisPaiva: "2024-06-09",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",

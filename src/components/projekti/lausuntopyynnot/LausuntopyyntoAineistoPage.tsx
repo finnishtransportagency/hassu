@@ -12,7 +12,7 @@ import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
 import ExtLink from "@components/ExtLink";
-import { isProjektiJulkinenStatusPublic } from "common/isProjektiJulkinenStatusPublic";
+
 
 type Props = {
   esikatselu?: boolean;
@@ -21,10 +21,11 @@ type Props = {
   aineistot: LadattavaTiedosto[] | null | undefined;
   poistumisPaiva: string | undefined;
   projekti: ProjektiJulkinen | ProjektiLisatiedolla | null | undefined;
-};
+  julkinen: boolean;
+}
 
 export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): ReactElement {
-  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, projekti } = props;
+  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, projekti, julkinen } = props;
 
   const kategoriat = useMemo(
     () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
@@ -40,12 +41,10 @@ export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): Reac
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
-      {projekti && projekti.status && isProjektiJulkinenStatusPublic(projekti.status) ? (
+      {projekti && julkinen && (
             <Section>
             <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
             </Section>
-          ) : (
-          <p>Suunnitelmalla ei ole julkaisuja kansalaispuolella.</p>
         )}
       <Section noDivider>
         {props.esikatselu && (

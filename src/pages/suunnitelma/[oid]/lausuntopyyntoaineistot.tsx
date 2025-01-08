@@ -12,7 +12,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
   if (!(poistumisPaiva && data && projekti)) {
     return <></>;
   }
-  const { lisaAineistot, aineistopaketti, aineistot } = data;
+  const { lisaAineistot, aineistopaketti, aineistot, julkinen } = data;
 
   if (data.linkkiVanhentunut) {
     return (
@@ -31,6 +31,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
       lisaAineistot={lisaAineistot}
       poistumisPaiva={poistumisPaiva}
       projekti={projekti}
+      julkinen={julkinen}
     />
   );
 }

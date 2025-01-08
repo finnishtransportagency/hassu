@@ -55,6 +55,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -105,6 +106,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // and all files from latest public nahtavillaoloVaiheJulkaisu (the second one)
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -160,6 +162,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       // and all files from latest public nahtavillaoloVaiheJulkaisu (the second one)
       const expectedFiles = {
         __typename: "LadattavatTiedostot",
+        julkinen: false,
         aineistot: [
           {
             __typename: "LadattavaTiedosto",
@@ -199,6 +202,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     expect(actualResult).to.eql({
       __typename: "LadattavatTiedostot",
+      julkinen:false,
       poistumisPaiva: lausuntoPyynto1.poistumisPaiva,
       linkkiVanhentunut: true,
       projektipaallikonYhteystiedot: {
@@ -239,6 +243,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen:false,
       kunta: 1,
       muistutukset: [
         {
@@ -277,6 +282,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     expect(actualResult).to.eql({
       __typename: "LadattavatTiedostot",
+      julkinen:false,
       poistumisPaiva: lausuntoPyynnonTaydennys1.poistumisPaiva,
       linkkiVanhentunut: true,
       projektipaallikonYhteystiedot: {
@@ -334,6 +340,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen:false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -408,6 +415,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen:false,
       kunta: 1,
       muutAineistot: [
         {

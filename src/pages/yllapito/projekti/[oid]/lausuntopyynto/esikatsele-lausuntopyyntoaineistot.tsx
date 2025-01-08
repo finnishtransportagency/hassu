@@ -17,7 +17,7 @@ export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
     return <></>;
   }
 
-  const { lisaAineistot, poistumisPaiva, aineistot, aineistopaketti } = data;
+  const { lisaAineistot, poistumisPaiva, aineistot, aineistopaketti, julkinen } = data;
 
   return (
     <LausuntopyyntoAineistoPage
@@ -26,6 +26,7 @@ export default function EsikatseleLausuntopyynnonAineistot(): ReactElement {
       aineistot={aineistot}
       lisaAineistot={lisaAineistot}
       poistumisPaiva={poistumisPaiva}
+      julkinen={julkinen}
       esikatselu
     />
   );
