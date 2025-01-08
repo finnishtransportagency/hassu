@@ -3,7 +3,7 @@ import { AloituskuulutusPdfOptions } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
+import { AloitusKuulutusJulkaisu, DBVaylaUser, LocalizedMap } from "../../src/database/model";
 import * as sinon from "sinon";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF } from "./asiakirjaTestUtil";
@@ -85,6 +85,7 @@ async function doTestGenerateKuulutus(
     !!vahainenMenettely,
     await isProjektiAsianhallintaIntegrationEnabled(projekti),
     await getLinkkiAsianhallintaan(projekti),
+    undefined,
     projektiTyyppi,
     suunnitteluSopimus ? "suunnittelusopimus" : "",
     vahainenMenettely ? "vahainen_menettely" : ""
@@ -100,6 +101,7 @@ async function testKuulutusWithLanguage(
   vahainenMenettely: boolean,
   asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
+  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined | null,
   ...description: string[]
 ): Promise<void> {
   const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
@@ -113,6 +115,7 @@ async function testKuulutusWithLanguage(
     vahainenMenettely,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
   const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);

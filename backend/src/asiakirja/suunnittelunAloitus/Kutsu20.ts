@@ -138,30 +138,33 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     tyyppi: VuorovaikutusTilaisuusTyyppi
   ): PDFStructureElement[] | undefined {
     const tilaisuudetOfSpecificType = vuorovaikutusTilaisuudet.filter((tilaisuus) => tilaisuus.tyyppi == tyyppi);
-    if (tilaisuudetOfSpecificType.length > 0) {
-      const elements: PDFStructureElement[] = tilaisuudetOfSpecificType
-        .map((tilaisuus) => {
-          const time = this.formatTilaisuusTime(tilaisuus);
-
-          if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
-            // tilaisuus.linkki on oltava, koska tilaisuustyyppi on VERKOSSA
-            return this.verkkoVuorovaikutusTilaisuus(tilaisuus, time);
-          } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
-            return this.paikallaVuorovaikutusTilaisuus(tilaisuus, time);
-          }
-        })
-        .filter((p) => !!p) as PDFStructureElement[];
-      if (elements.length == 0) {
-        return undefined;
-      }
-
-      if (tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
-        elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "yleisotilaisuus_jarjestetaan", { spacingAfter: 1 }));
-      } else if (tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
-        elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "verkkotilaisuus_jarjestetaan", { spacingAfter: 1 }));
-      }
-      return elements;
+    if (!tilaisuudetOfSpecificType.length) {
+      return undefined;
     }
+
+    const elements: PDFStructureElement[] = tilaisuudetOfSpecificType
+      .map((tilaisuus) => {
+        const time = this.formatTilaisuusTime(tilaisuus);
+
+        if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+          // tilaisuus.linkki on oltava, koska tilaisuustyyppi on VERKOSSA
+          return this.verkkoVuorovaikutusTilaisuus(tilaisuus, time);
+        } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
+          return this.paikallaVuorovaikutusTilaisuus(tilaisuus, time);
+        }
+      })
+      .filter((p) => !!p) as PDFStructureElement[];
+    if (elements.length == 0) {
+      return undefined;
+    }
+
+    if (tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
+      elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "yleisotilaisuus_jarjestetaan", { spacingAfter: 1 }));
+    } else if (tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+      elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "verkkotilaisuus_jarjestetaan", { spacingAfter: 1 }));
+    }
+    elements.push(this.doc.struct("P", {}, () => this.doc.moveDown()));
+    return elements;
   }
 
   private paikallaVuorovaikutusTilaisuus(tilaisuus: VuorovaikutusTilaisuus, time: string): PDFStructureElement | undefined {
@@ -187,14 +190,15 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
         this.doc.text(place, {
           baseline,
         });
-        if (tilaisuus.lisatiedot?.[this.kieli] !== undefined) {
+        const lisatiedot = tilaisuus.lisatiedot?.[this.kieli];
+        if (lisatiedot !== undefined) {
           this.doc.font("ArialMTBold");
           this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "lisatiedot") + ": ", {
             baseline,
             continued: true,
           });
           this.doc.font("ArialMT");
-          this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
+          this.doc.text(lisatiedot);
         }
         this.doc.moveDown();
       },
@@ -223,9 +227,14 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
           continued: true,
           underline: true,
         });
-        this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown();
-
-        if (tilaisuus.lisatiedot?.[this.kieli] !== undefined) {
+      }),
+      () => {
+        const lisatiedot = tilaisuus.lisatiedot?.[this.kieli];
+        this.doc
+          .fillColor("black")
+          .text("", { baseline, link: undefined, underline: false, continued: false })
+          .moveDown(lisatiedot ? 1 : 2);
+        if (lisatiedot !== undefined) {
           this.doc.fillColor("black").font("ArialMTBold");
           this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "lisatiedot") + ": ", {
             baseline,
@@ -233,10 +242,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
             underline: false,
           });
           this.doc.font("ArialMT");
-          this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
-          this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown();
+          this.doc.text(lisatiedot).moveDown();
         }
-      }),
+      },
     ]);
   }
 
@@ -282,7 +290,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   }
 
   private soittoajanVastaanottajatLista(soittoaikaTilaisuudet: VuorovaikutusTilaisuusJulkaisu[]) {
-    soittoaikaTilaisuudet.forEach((tilaisuus) => {
+    soittoaikaTilaisuudet.forEach((tilaisuus, index) => {
       this.insertLabelAndText(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "aika") + ": ", this.formatTilaisuusTime(tilaisuus));
       this.insertTilaisuusNimi(tilaisuus);
 
@@ -310,9 +318,10 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
           continued: true,
         });
         this.doc.font("ArialMT");
-        this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
+        this.doc.text(tilaisuus.lisatiedot[this.kieli] as string);
       }
-      this.doc.moveDown();
+      const line = index === soittoaikaTilaisuudet.length - 1 ? 2 : 1;
+      this.doc.moveDown(line);
     });
   }
 

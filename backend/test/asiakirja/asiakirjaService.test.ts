@@ -33,6 +33,7 @@ import { mockUUID } from "../../integrationtest/shared/sharedMock";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../src/projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -40,7 +41,7 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
   }
 }
 
-describe("asiakirjaService", () => {
+describe.only("asiakirjaService", () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
@@ -72,6 +73,7 @@ describe("asiakirjaService", () => {
       kayttoOikeudet: projekti.kayttoOikeudet,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(aloitusKuulutusJulkaisu.projektinJakautuminen),
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
     expect(pdf.sisalto.length).to.be.greaterThan(30000);
@@ -116,6 +118,7 @@ describe("asiakirjaService", () => {
       suunnitteluSopimus: projekti.suunnitteluSopimus,
       kieli,
       luonnos: true,
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
     };
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
     expectPDF("", pdf, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU);
@@ -153,18 +156,20 @@ describe("asiakirjaService", () => {
     asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
   ) {
     const projektiToTestWith: DBProjekti = { ...projekti, nahtavillaoloVaihe };
+    const julkaisu = await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiToTestWith);
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
       oid: projektiToTestWith.oid,
       lyhytOsoite: projekti.lyhytOsoite,
       velho: projektiToTestWith.velho as Velho,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus as SuunnitteluSopimus,
-      nahtavillaoloVaihe: await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiToTestWith),
+      nahtavillaoloVaihe: julkaisu,
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
     });
     pdf.textContent = cleanupUrlsInPDF(pdf.textContent);
     expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
@@ -220,21 +225,23 @@ describe("asiakirjaService", () => {
   ) {
     const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
     assertIsDefined(projektiToTestWith.kasittelynTila);
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.hyvaksymisPaatosVaihe,
+      projekti.hyvaksymisPaatosVaiheJulkaisut
+    );
     const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
       oid: projektiToTestWith.oid,
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       kasittelynTila: projektiToTestWith.kasittelynTila,
-      hyvaksymisPaatosVaihe: await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
-        projekti,
-        projekti.hyvaksymisPaatosVaihe,
-        projekti.hyvaksymisPaatosVaiheJulkaisut
-      ),
+      hyvaksymisPaatosVaihe: julkaisu,
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
   }

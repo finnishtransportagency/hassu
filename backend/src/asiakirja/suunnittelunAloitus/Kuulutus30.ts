@@ -94,9 +94,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
-    if (this.kuulutettuYhdessaSuunnitelmanimi) {
-      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
-    }
+    return this.kuulutettuYhdessaSuunnitelmanimi ? this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf") : undefined;
   }
 
   private get startOfPlanningPhrase() {
