@@ -41,7 +41,7 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
   }
 }
 
-describe.only("asiakirjaService", () => {
+describe("asiakirjaService", () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
