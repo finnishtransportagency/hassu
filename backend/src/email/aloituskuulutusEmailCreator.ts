@@ -20,6 +20,7 @@ export class AloituskuulutusEmailCreator extends KuulutusEmailCreator {
     this.adapter = new AloituskuulutusKutsuAdapter({
       ...(await pickCommonAdapterProps(projekti, aloituskuulutus.hankkeenKuvaus, Kieli.SUOMI)),
       ...aloituskuulutus,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
       kuulutusPaiva: aloituskuulutus.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: await calculateEndDate({
         alkupaiva: aloituskuulutus.kuulutusPaiva,
