@@ -67,8 +67,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     this.oid = props.oid;
     this.suunnitteluSopimus = props.suunnitteluSopimus;
     this.vuorovaikutusKierrosJulkaisu = props.vuorovaikutusKierrosJulkaisu;
-    this.kuulutettuYhdessaSuunnitelmanimi =
-      props.kuulutettuYhdessaSuunnitelmanimi?.[this.kieli] ?? props.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
+    this.kuulutettuYhdessaSuunnitelmanimi = props.kuulutettuYhdessaSuunnitelmanimi;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
   }
 

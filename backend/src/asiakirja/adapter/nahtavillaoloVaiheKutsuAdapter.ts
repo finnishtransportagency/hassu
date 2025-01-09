@@ -1,7 +1,7 @@
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
-import { DBProjekti, IlmoituksenVastaanottajat, LocalizedMap, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -29,7 +29,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps({
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
   osoite: Osoite | undefined;
-  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 }): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
 

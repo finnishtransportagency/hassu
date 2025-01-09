@@ -59,7 +59,7 @@ async function createAloituskuulutusPDF(
     vahainenMenettely: projekti.vahainenMenettely,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisuWaitingForApproval.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisuWaitingForApproval.projektinJakautuminen, kieli),
   });
 
   return fileService.createFileToProjekti({

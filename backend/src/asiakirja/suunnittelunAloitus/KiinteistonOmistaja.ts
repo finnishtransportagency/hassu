@@ -76,8 +76,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
     this.header = headers[language];
     this.kieli = params.kieli;
     this.vahainenMenettely = params.vahainenMenettely;
-    this.kuulutettuYhdessaSuunnitelmanimi =
-      params.kuulutettuYhdessaSuunnitelmanimi?.[params.kieli] ?? params.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.kutsuAdapter.addTemplateResolver(this);

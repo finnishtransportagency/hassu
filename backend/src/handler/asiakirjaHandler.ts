@@ -38,7 +38,7 @@ async function handleAloitusKuulutus(
     vahainenMenettely: projekti.vahainenMenettely,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen, kieli),
   });
 }
 
@@ -73,7 +73,7 @@ async function handleYleisotilaisuusKutsu(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen, kieli),
   });
 }
 
@@ -104,7 +104,7 @@ async function handleNahtavillaoloKuulutus(
     vahainenMenettely: projekti.vahainenMenettely,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen, kieli),
   });
 }
 
@@ -152,7 +152,7 @@ async function handleHyvaksymisPaatosKuulutus(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen, kieli),
   });
 }
 

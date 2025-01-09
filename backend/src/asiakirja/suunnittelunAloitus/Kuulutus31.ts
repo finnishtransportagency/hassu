@@ -75,8 +75,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.vahainenMenettely = params.vahainenMenettely;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.kuulutettuYhdessaSuunnitelmanimi =
-      params.kuulutettuYhdessaSuunnitelmanimi?.[params.kieli] ?? params.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.kutsuAdapter.addTemplateResolver(this);
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);

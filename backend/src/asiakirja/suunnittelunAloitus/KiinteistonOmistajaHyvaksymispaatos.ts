@@ -64,8 +64,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params, "lain2");
     super(kieli, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.kieli = kieli;
-    this.kuulutettuYhdessaSuunnitelmanimi =
-      params.kuulutettuYhdessaSuunnitelmanimi?.[params.kieli] ?? params.kuulutettuYhdessaSuunnitelmanimi?.SUOMI;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
     this.kutsuAdapter.addTemplateResolver(this);

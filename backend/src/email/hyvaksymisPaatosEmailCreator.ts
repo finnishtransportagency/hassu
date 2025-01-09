@@ -11,7 +11,6 @@ import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { KuulutusEmailCreator } from "./kuulutusEmailCreator";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
 
 export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
   static async newInstance(
@@ -34,7 +33,7 @@ export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
         asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
         linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
         osoite: undefined,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
       })
     );
     return this;

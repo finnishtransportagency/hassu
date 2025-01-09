@@ -60,7 +60,7 @@ async function createNahtavillaoloVaihePDF(
     vahainenMenettely: projekti.vahainenMenettely,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,

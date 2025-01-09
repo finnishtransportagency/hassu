@@ -388,7 +388,7 @@ async function createVuorovaikutusKierrosPDF(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
   });
 
   const fullFilePathInProjekti = fileService.createFileToProjekti({

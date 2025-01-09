@@ -79,7 +79,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
         aloitusKuulutusJulkaisu: julkaisu,
         euRahoitusLogot: undefined,
         vahainenMenettely: projekti.vahainenMenettely,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
       })
     ).userInterfaceFields;
   }

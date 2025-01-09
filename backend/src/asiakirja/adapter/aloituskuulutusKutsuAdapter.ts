@@ -29,7 +29,7 @@ type CreateAloituskuulutusKutsuAdapterProps = {
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu | undefined;
   euRahoitusLogot: LocalizedMap<string> | null | undefined;
   vahainenMenettely: boolean | null | undefined;
-  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | null | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 
 export async function createAloituskuulutusKutsuAdapterProps({

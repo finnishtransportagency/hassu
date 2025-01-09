@@ -73,7 +73,7 @@ describe("asiakirjaService", () => {
       kayttoOikeudet: projekti.kayttoOikeudet,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(aloitusKuulutusJulkaisu.projektinJakautuminen),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(aloitusKuulutusJulkaisu.projektinJakautuminen, kieli),
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
     expect(pdf.sisalto.length).to.be.greaterThan(30000);
@@ -118,7 +118,7 @@ describe("asiakirjaService", () => {
       suunnitteluSopimus: projekti.suunnitteluSopimus,
       kieli,
       luonnos: true,
-      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
     };
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
     expectPDF("", pdf, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU);
@@ -169,7 +169,7 @@ describe("asiakirjaService", () => {
       asiakirjaTyyppi,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
     });
     pdf.textContent = cleanupUrlsInPDF(pdf.textContent);
     expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
@@ -241,7 +241,7 @@ describe("asiakirjaService", () => {
       asiakirjaTyyppi,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+      kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
   }

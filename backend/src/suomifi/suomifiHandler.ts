@@ -261,7 +261,7 @@ async function createGenerateEvent(
     return {
       createNahtavillaoloKuulutusPdf: {
         asiakirjaTyyppi,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
         asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
         kayttoOikeudet: projektiFromDB.kayttoOikeudet,
         kieli: Kieli.SUOMI,
@@ -291,7 +291,7 @@ async function createGenerateEvent(
     return {
       createHyvaksymisPaatosKuulutusPdf: {
         asiakirjaTyyppi,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
         asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
         kayttoOikeudet: projektiFromDB.kayttoOikeudet,
         kieli: Kieli.SUOMI,

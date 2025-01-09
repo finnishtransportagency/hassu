@@ -3,7 +3,7 @@ import { AloituskuulutusPdfOptions } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { AloitusKuulutusJulkaisu, DBVaylaUser, LocalizedMap } from "../../src/database/model";
+import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
 import * as sinon from "sinon";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF } from "./asiakirjaTestUtil";
@@ -101,7 +101,7 @@ async function testKuulutusWithLanguage(
   vahainenMenettely: boolean,
   asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
-  kuulutettuYhdessaSuunnitelmanimi: LocalizedMap<string> | undefined | null,
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined,
   ...description: string[]
 ): Promise<void> {
   const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {

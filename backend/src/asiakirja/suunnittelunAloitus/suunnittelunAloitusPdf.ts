@@ -91,8 +91,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
   }
 
   private kuulutettuYhdessaSuunnitelmanimi(): string | undefined {
-    const nimi = this.params.kuulutettuYhdessaSuunnitelmanimi;
-    return nimi?.[this.kieli] ?? nimi?.SUOMI;
+    return this.params.kuulutettuYhdessaSuunnitelmanimi;
   }
 
   protected kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {

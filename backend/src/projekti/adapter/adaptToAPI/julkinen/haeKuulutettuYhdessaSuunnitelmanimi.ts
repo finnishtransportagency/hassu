@@ -1,10 +1,13 @@
-import { LocalizedMap, ProjektinJakautuminen } from "../../../../database/model";
+import { Kieli } from "hassu-common/graphql/apiModel";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { ProjektinJakautuminen } from "../../../../database/model";
 import { haeJaetunProjektinOid } from "../../../haeJaetunProjektinOid";
 import { haeLiittyvanProjektinTiedot } from "../../../haeLiittyvanProjektinTiedot";
 
 export async function haeKuulutettuYhdessaSuunnitelmanimi(
-  projektinJakautuminen: ProjektinJakautuminen | undefined
-): Promise<LocalizedMap<string> | undefined> {
+  projektinJakautuminen: ProjektinJakautuminen | undefined,
+  kieli: KaannettavaKieli
+): Promise<string | undefined> {
   const jaetunProjektinOid = haeJaetunProjektinOid(projektinJakautuminen);
   if (!jaetunProjektinOid) {
     return undefined;
@@ -13,7 +16,5 @@ export async function haeKuulutettuYhdessaSuunnitelmanimi(
   if (!liittyvanProjektinTiedot) {
     return undefined;
   }
-  return liittyvanProjektinTiedot.RUOTSI
-    ? { SUOMI: liittyvanProjektinTiedot.SUOMI, RUOTSI: liittyvanProjektinTiedot.RUOTSI }
-    : { SUOMI: liittyvanProjektinTiedot.SUOMI };
+  return kieli === Kieli.RUOTSI && liittyvanProjektinTiedot.RUOTSI ? liittyvanProjektinTiedot.RUOTSI : liittyvanProjektinTiedot.SUOMI;
 }

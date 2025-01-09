@@ -114,7 +114,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
         asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
         linkkiAsianhallintaan: await getLinkkiAsianhallintaan(dbProjekti),
         osoite: undefined,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen),
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
       })
     ).userInterfaceFields;
   }
