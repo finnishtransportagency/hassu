@@ -34,7 +34,6 @@ const HassuStep = styled(Step)<StepProps>({
 });
 
 const HassuLabel = styled(StepLabel)<{
-  active?: boolean;
   selected?: boolean;
 }>(({ selected }) => ({
   "& .step-icon": {
@@ -231,7 +230,6 @@ export default function ProjektiJulkinenStepper({
               StepIconComponent={HassuStepIcon}
               StepIconProps={selectedStepIndex === index ? { property: "selected" } : {}}
               selected={selectedStepIndex === index}
-              active={index === activeStepIndex}
             >
               <span className="step-name-label">{step.label}</span>
               {vertical && selectedStepIndex !== index && (

@@ -135,6 +135,7 @@ Object {
           },
         ],
       },
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -402,6 +403,7 @@ Object {
           },
         ],
       },
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",

@@ -23,6 +23,7 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusIlmoitusJaTiedotettavatKirjeInput";
 import useValidationMode from "src/hooks/useValidationMode";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
@@ -128,6 +129,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
                 vaiheenAvain="nahtavillaoloVaihe"
               />
               <HankkeenSisallonKuvaus projekti={projekti} kielitiedot={projekti?.kielitiedot} />
+              <LiittyvatSuunnitelmat jakotieto={projekti.suunnitelmaJaettu} />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti
                 nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}

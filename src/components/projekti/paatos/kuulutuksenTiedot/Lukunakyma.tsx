@@ -28,6 +28,7 @@ import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../../Headings";
 import KuulutuksenSisalto from "../../common/KuulutuksenSisalto";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -130,6 +131,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           päätöksen tiedoksiannosta. Valitusosoituksen tiedosto löytyy Päätös ja sen liitteenä oleva aineisto -välilehdeltä.
         </p>
       </Section>
+      <LiittyvatSuunnitelmat jakotieto={julkaisu.suunnitelmaJaettu} />
       <Section>
         <SectionContent>
           <H3>Kuulutuksen yhteyshenkilöt</H3>

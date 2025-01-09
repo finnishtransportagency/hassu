@@ -67,6 +67,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
 
   if (julkaisu) {
     const {
+      id,
       aineistoNahtavilla,
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
@@ -80,11 +81,14 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       aineistoMuokkaus,
       nahtavillaoloSaamePDFt,
       asianhallintaEventId,
+      projektinJakautuminen: _jakautuminen,
+      kopioituProjektista,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
     if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
       return {
+        id,
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
         velho: adaptVelhoToAPI(velho),
@@ -109,6 +113,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
     assertIsDefined(dbProjekti.salt);
     const apiJulkaisu: API.NahtavillaoloVaiheJulkaisu = {
+      id,
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
@@ -124,6 +129,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
+      julkaisuOnKopio: !!kopioituProjektista,
     };
 
     return apiJulkaisu;

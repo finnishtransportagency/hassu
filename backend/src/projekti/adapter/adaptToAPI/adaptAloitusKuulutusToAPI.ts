@@ -62,6 +62,7 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
 
   const oid = projekti.oid;
   const {
+    id,
     yhteystiedot,
     kuulutusYhteystiedot,
     velho,
@@ -71,11 +72,14 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
     uudelleenKuulutus,
     aloituskuulutusSaamePDFt,
     asianhallintaEventId,
+    projektinJakautuminen: _jakautuminen,
+    kopioituProjektista,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
   if (tila == KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "AloitusKuulutusJulkaisu",
       tila,
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -87,6 +91,7 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
     throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
   } else {
     const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
+      id,
       ...fieldsToCopyAsIs,
       __typename: "AloitusKuulutusJulkaisu",
       tila,
@@ -105,6 +110,7 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
       ),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+      julkaisuOnKopio: !!kopioituProjektista,
     };
     return apiJulkaisu;
   }

@@ -34,6 +34,7 @@ import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import useValidationMode from "src/hooks/useValidationMode";
 import { getPaatosSpecificData, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -165,6 +166,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
               {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi paatosTyyppi={paatosTyyppi} />}
               <MuutoksenHaku />
               <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
+              <LiittyvatSuunnitelmat jakotieto={projekti.suunnitelmaJaettu} />
               <IlmoituksenVastaanottajatKomponentti
                 paatosVaihe={julkaisematonPaatos}
                 paatosTyyppi={paatosTyyppi}
