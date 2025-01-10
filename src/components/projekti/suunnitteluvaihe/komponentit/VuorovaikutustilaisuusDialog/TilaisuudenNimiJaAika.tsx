@@ -9,6 +9,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { label } from "src/util/textUtil";
+import { useAikavalidointi } from "src/hooks/useAikavalidointi";
 
 export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
   const {
@@ -16,6 +17,8 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
     formState: { errors },
     trigger,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
+
+  useAikavalidointi(props.index);
 
   const { data: projekti } = useProjekti();
   const kielitiedot = projekti?.kielitiedot;

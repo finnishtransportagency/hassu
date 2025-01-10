@@ -58,6 +58,7 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
         additionalStringValidations: (schema) => schema.max(150, `Nimi voi olla maksimissaan 150 merkkiä`),
       }).nullable(),
       paivamaara: paivamaara({ preventPast: true }).required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa"),
+      
       alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
       paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp)
       .test("on-after-start", "Päättymisajan täytyy olla alkamisajan jälkeen", function(paattymisAika) {
