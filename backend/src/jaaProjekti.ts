@@ -57,7 +57,6 @@ export async function jaaProjekti(input: Variables) {
     velho: _velho,
     kayttoOikeudet: _kayttooikeudet,
     asianhallinta: _asianhallinta,
-    suunnitteluSopimus: _suunnitteluSopimus,
     ...kopioitavatKentat
   } = clonedProjekti;
   const targetProjektiToCreate: DBProjekti = {
