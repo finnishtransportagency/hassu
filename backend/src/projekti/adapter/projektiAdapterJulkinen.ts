@@ -118,7 +118,7 @@ class ProjektiAdapterJulkinen {
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
-    if (projektiJulkinen.status && isStatusPublic(projektiJulkinen.status)) {
+    if (projektiJulkinen.status && isProjektiJulkinenStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
       return {
@@ -132,9 +132,6 @@ class ProjektiAdapterJulkinen {
     return returnUndefinedForNonPublic ? undefined : projekti;
   }
 }
-  function isStatusPublic(status: Status) {
-    return isProjektiJulkinenStatusPublic(status);
-  }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
   return { __typename: "ProjektiJulkinen", oid: object.oid, velho: object.velho, ...pickBy(object, (value) => value !== undefined) };

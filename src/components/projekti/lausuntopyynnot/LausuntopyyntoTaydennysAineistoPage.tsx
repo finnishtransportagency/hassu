@@ -35,10 +35,10 @@ export default function LausuntopyyntoTaydennysAineistoPage(props: Props): React
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
       {projekti && julkinen && (
-            <Section>
-            <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
-            </Section>
-        )}
+        <Section>
+          <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
+        </Section>
+      )}
       <Section noDivider>
         {esikatselu && (
           <Notification type={NotificationType.INFO_GRAY}>

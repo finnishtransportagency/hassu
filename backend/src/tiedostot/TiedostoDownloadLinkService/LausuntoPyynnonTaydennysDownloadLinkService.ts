@@ -87,9 +87,9 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
-      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
-      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
-      return {
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+    return {
       __typename: "LadattavatTiedostot",
       kunta: lausuntoPyynnonTaydennys.kunta,
       muutAineistot,

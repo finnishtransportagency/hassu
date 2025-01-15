@@ -5,7 +5,6 @@ import {
   ListaaLausuntoPyynnonTiedostotQueryVariables,
   ListaaLausuntoPyynnonTaydennyksenTiedostotQueryVariables,
   KayttajaTyyppi,
-  Status,
 } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { log } from "../logger";
@@ -81,7 +80,7 @@ class TiedostoDownloadLinkHandler {
 
       const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
       const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
-      
+
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
         const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
@@ -134,5 +133,3 @@ class TiedostoDownloadLinkHandler {
 }
 
 export const tiedostoDownloadLinkHandler = new TiedostoDownloadLinkHandler();
-
-

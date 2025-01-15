@@ -73,9 +73,16 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
-      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
-      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
-    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyynto.poistumisPaiva, aineistopaketti, julkinen };
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+    return {
+      __typename: "LadattavatTiedostot",
+      aineistot,
+      lisaAineistot,
+      poistumisPaiva: lausuntoPyynto.poistumisPaiva,
+      aineistopaketti,
+      julkinen,
+    };
   }
 
   async listaaLisaAineistoLegacy(projekti: DBProjekti, params: API.ListaaLisaAineistoInput): Promise<API.LadattavatTiedostot> {
@@ -96,9 +103,16 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;
-      const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
-      const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
-      return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti, julkinen };
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+    return {
+      __typename: "LadattavatTiedostot",
+      aineistot,
+      lisaAineistot,
+      poistumisPaiva: params.poistumisPaiva,
+      aineistopaketti,
+      julkinen,
+    };
   }
 
   generateHash(oid: string, uuid: string, salt: string): string {
