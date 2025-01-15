@@ -19,7 +19,7 @@ import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandl
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
-type CreateAloituskuulutusKutsuAdapterProps = {
+type PropsCreatorOptions = {
   oid: string;
   lyhytOsoite: string | undefined | null;
   kayttoOikeudet: DBVaylaUser[];
@@ -43,7 +43,7 @@ export async function createAloituskuulutusKutsuAdapterProps({
   euRahoitusLogot,
   vahainenMenettely,
   kuulutettuYhdessaSuunnitelmanimi,
-}: CreateAloituskuulutusKutsuAdapterProps): Promise<AloituskuulutusKutsuAdapterProps> {
+}: PropsCreatorOptions): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
   const kuulutusVaihePaattyyPaiva = await calculateEndDate({
