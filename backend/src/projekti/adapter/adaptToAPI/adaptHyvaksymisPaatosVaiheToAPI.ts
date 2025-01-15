@@ -80,6 +80,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   }
 
   const {
+    id,
     aineistoNahtavilla,
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     ilmoituksenVastaanottajat,
@@ -93,11 +94,14 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     uudelleenKuulutus,
     aineistoMuokkaus,
     asianhallintaEventId,
+    kopioituProjektista,
+    projektinJakautuminen: _jakautuminen,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "HyvaksymisPaatosVaiheJulkaisu",
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -126,6 +130,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   }
   const paths = getPathCallback(julkaisu);
   const apiJulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
+    id,
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -143,6 +148,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
     aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
   return apiJulkaisu;
 }

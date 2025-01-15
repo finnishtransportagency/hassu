@@ -58,6 +58,7 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { H2, H3 } from "../../../../components/Headings";
+import { LiittyvatSuunnitelmat } from "../../../../components/projekti/LiittyvatSuunnitelmat";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -342,7 +343,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       </OhjelistaNotification>
                     )}
                   </ProjektiPageLayoutContext.Consumer>
-
                   <ContentSpacer>
                     <H2>Kuulutus- ja julkaisupäivä</H2>
                     <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
@@ -374,6 +374,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
                   vaiheenAvain="aloitusKuulutus"
                 />
+                <LiittyvatSuunnitelmat jakotieto={projekti.suunnitelmaJaettu} />
                 <Section>
                   <ContentSpacer>
                     <H3>Hankkeen sisällönkuvaus</H3>

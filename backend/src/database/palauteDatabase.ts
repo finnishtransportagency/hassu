@@ -4,11 +4,15 @@ import { config } from "../config";
 import { SystemError } from "hassu-common/error";
 import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, QueryCommand, TransactWriteCommand, TransactWriteCommandInput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { sortBy } from "lodash";
 import { migrateFromOldSchema } from "./palauteSchemaUpdate";
+import { chunkArray } from "./chunkArray";
+import { uuid } from "hassu-common/util/uuid";
 
 const feedbackTableName: string = config.feedbackTableName ?? "missing";
+
+type TransactionItem = Exclude<TransactWriteCommandInput["TransactItems"], undefined>[0];
 
 class FeedbackDatabase {
   async insertFeedback(palaute: Palaute): Promise<string | undefined> {
@@ -78,6 +82,25 @@ class FeedbackDatabase {
       handleAWSError("listFeedback", e as Error);
     }
     return sortBy(kaikkiPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
+  }
+
+  async copyFeedbackToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
+    const palautteet = await this.listFeedback(srcOid);
+    if (!palautteet?.length) {
+      return;
+    }
+    const newTransactItems = palautteet.map<TransactionItem>((palaute) => ({
+      Put: {
+        TableName: feedbackTableName,
+        Item: { ...palaute, id: uuid.v4(), oid: targetOid },
+      },
+    }));
+    for (const chunk of chunkArray(newTransactItems, 25)) {
+      const transactCommand = new TransactWriteCommand({
+        TransactItems: chunk,
+      });
+      await getDynamoDBDocumentClient().send(transactCommand);
+    }
   }
 }
 

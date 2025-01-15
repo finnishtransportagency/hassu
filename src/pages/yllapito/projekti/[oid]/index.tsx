@@ -36,6 +36,10 @@ import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNoti
 import useCurrentUser from "src/hooks/useCurrentUser";
 import LinkitetytProjektit from "@components/projekti/LinkitetytProjektit";
 import { H3 } from "../../../../components/Headings";
+import SuunnitelmaJaettuOsiin from "@components/projekti/SuunnitelmaJaettuOsiin";
+import { MenuItem } from "@mui/material";
+import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
+import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -75,14 +79,13 @@ export default function ProjektiSivu() {
     <ProjektiPageLayout
       title={"Projektin tiedot"}
       showInfo={!epaaktiivinen}
-      contentAsideTitle={!epaaktiivinen && <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
+      contentAsideTitle={<ContentAsideTitle epaaktiivinen={epaaktiivinen} projekti={projekti} reloadProjekti={reloadProjekti} />}
     >
-      {projekti &&
-        (epaaktiivinen ? (
-          <ProjektinTiedotLukutila projekti={projekti} />
-        ) : (
-          <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
-        ))}
+      {epaaktiivinen ? (
+        <ProjektinTiedotLukutila projekti={projekti} />
+      ) : (
+        <ProjektiSivuLomake {...{ projekti, projektiLoadError, reloadProjekti }} />
+      )}
     </ProjektiPageLayout>
   );
 }
@@ -91,6 +94,76 @@ interface ProjektiSivuLomakeProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}
+
+function ContentAsideTitle({
+  epaaktiivinen,
+  projekti,
+  reloadProjekti,
+}: {
+  epaaktiivinen: boolean;
+  projekti: ProjektiLisatiedolla;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+}): JSX.Element {
+  if (epaaktiivinen) {
+    return <></>;
+  }
+  if (projekti.nykyinenKayttaja.onYllapitaja && projekti.projektinVoiJakaa) {
+    return <YllapitajaMenu versio={projekti.versio} projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
+  }
+  return <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
+}
+
+function YllapitajaMenu({
+  projektiOid,
+  reloadProjekti,
+  versio,
+}: {
+  projektiOid: string;
+  reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  versio: number;
+}): JSX.Element {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const open = useCallback(() => {
+    setIsDialogOpen(true);
+  }, []);
+  const close = useCallback(() => {
+    setIsDialogOpen(false);
+  }, []);
+  const { withLoadingSpinner } = useLoadingSpinner();
+
+  const { showSuccessMessage } = useSnackbars();
+  const api = useApi();
+
+  const paivitaTiedotVelhosta = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          if (projektiOid) {
+            try {
+              await api.synkronoiProjektiMuutoksetVelhosta(projektiOid);
+              await reloadProjekti();
+              showSuccessMessage("Tiedot päivitetty Projektivelhosta");
+            } catch (e) {
+              log.log("reloadProjekti Error", e);
+            }
+          }
+        })()
+      ),
+    [api, projektiOid, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
+
+  return (
+    <>
+      <ToiminnotMenuList>
+        <MenuItem onClick={paivitaTiedotVelhosta}>Päivitä tiedot</MenuItem>
+        <MenuItem onClick={open}>Jaa projekti osiin</MenuItem>
+      </ToiminnotMenuList>
+      {isDialogOpen && (
+        <JaaProjektiOsiinDialog open={true} onClose={close} oid={projektiOid} reloadProjekti={reloadProjekti} versio={versio} />
+      )}
+    </>
+  );
 }
 
 function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
@@ -296,6 +369,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiKuulutuskielet projekti={projekti} />
           <LinkitetytProjektit projekti={projekti} />
+          {!!projekti.suunnitelmaJaettu && <SuunnitelmaJaettuOsiin jakotieto={projekti.suunnitelmaJaettu} />}
           <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
           {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (

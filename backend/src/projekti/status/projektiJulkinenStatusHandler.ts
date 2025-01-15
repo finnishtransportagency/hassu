@@ -24,7 +24,7 @@ abstract class KuulutusStatusHandler extends StatusHandler<API.ProjektiJulkinen>
 
   handle(p: API.ProjektiJulkinen) {
     const kuulutus = p[this.vaiheAvain];
-    if (kuulutus?.tila == KuulutusJulkaisuTila.MIGROITU) {
+    if (kuulutus?.tila === KuulutusJulkaisuTila.MIGROITU || kuulutus?.julkaisuOnKopio) {
       super.handle(p); // Continue evaluating next rules
     } else if (kuulutus?.kuulutusPaiva && isDateTimeInThePast(kuulutus.kuulutusPaiva, "start-of-day")) {
       p.status = this.status;
@@ -40,9 +40,11 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
     handle(p: API.ProjektiJulkinen) {
       if (projekti.vuorovaikutukset) {
         const tila = projekti.vuorovaikutukset.tila;
-        if (tila === API.VuorovaikutusKierrosTila.JULKINEN) {
+        if (tila === API.VuorovaikutusKierrosTila.JULKINEN && !projekti.vuorovaikutukset?.julkaisuOnKopio) {
           projekti.status = API.Status.SUUNNITTELU;
           super.handle(p); // Continue evaluating next rules
+        } else if (tila === API.VuorovaikutusKierrosTila.JULKINEN) {
+          super.handle(p);
         } else if (tila === API.VuorovaikutusKierrosTila.MIGROITU) {
           super.handle(p);
         }
@@ -58,7 +60,7 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
       const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-      if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
+      if (nahtavillaoloVaihe?.tila === KuulutusJulkaisuTila.MIGROITU || nahtavillaoloVaihe?.julkaisuOnKopio) {
         super.handle(p); // Continue evaluating next rules
       } else if (isKuulutusVaihePaattyyPaivaInThePast(nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva)) {
         projekti.status = API.Status.HYVAKSYMISMENETTELYSSA;

@@ -42,6 +42,7 @@ Object {
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "muistutusMaara": 0,
   "oid": "1",
+  "projektinVoiJakaa": true,
   "tallennettu": false,
   "tyyppi": "TIE",
   "velho": Object {
@@ -194,6 +195,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -302,6 +304,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -434,6 +437,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "EI_JULKAISTU",
     "tallennettu": true,
     "tyyppi": "TIE",
@@ -719,6 +723,7 @@ Array [
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "muistutusMaara": 0,
     "oid": "1",
+    "projektinVoiJakaa": true,
     "status": "ALOITUSKUULUTUS",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
@@ -883,6 +888,7 @@ Object {
         },
       ],
     },
+    "julkaisuOnKopio": false,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -1053,6 +1059,7 @@ Object {
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "muistutusMaara": 0,
   "oid": "1",
+  "projektinVoiJakaa": true,
   "status": "SUUNNITTELU",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
@@ -1105,6 +1112,8 @@ Object {
         "SUOMI": "Lorem Ipsum",
         "__typename": "LokalisoituTeksti",
       },
+      "id": 1,
+      "julkaisuOnKopio": false,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -1123,7 +1132,7 @@ Object {
           "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
         ],
         "kuvausTekstit": Array [
-          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/ABCD/aloituskuulutus\\">https://localhost:3000/s/ABCD/aloituskuulutus</a>. Kuulutus pidetään nähtävillä <strong>2.1.2022 - 1.2.2022</strong>,.",
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/ABCD/aloituskuulutus\\">https://localhost:3000/s/ABCD/aloituskuulutus</a>. Kuulutus pidetään nähtävillä <strong>2.1.2022 - 1.2.2022</strong>.",
         ],
         "leipaTekstit": Array [
           "Nokia, sovittuaan asiasta Etelä-Pohjanmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
@@ -1131,6 +1140,7 @@ Object {
         "tietosuoja": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
+      "suunnitelmaJaettu": undefined,
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",
