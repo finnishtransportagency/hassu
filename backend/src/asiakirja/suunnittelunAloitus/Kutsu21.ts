@@ -23,6 +23,7 @@ export class Kutsu21 {
     suunnitteluSopimus,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    kuulutettuYhdessaSuunnitelmanimi,
   }: YleisotilaisuusKutsuPdfOptions) {
     if (!(velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
@@ -51,6 +52,7 @@ export class Kutsu21 {
       suunnitteluSopimus: suunnitteluSopimusJulkaisu ?? undefined,
       asianhallintaPaalla,
       linkkiAsianhallintaan,
+      kuulutettuYhdessaSuunnitelmanimi,
     });
   }
 

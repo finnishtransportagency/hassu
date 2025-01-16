@@ -18,6 +18,7 @@ export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusVaihePaattyyPaiva?: string;
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   yhteystiedot: Yhteystieto[];
 }

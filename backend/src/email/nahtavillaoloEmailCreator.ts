@@ -24,6 +24,7 @@ export class NahtavillaoloEmailCreator extends KuulutusEmailCreator {
     this.adapter = new NahtavillaoloVaiheKutsuAdapter({
       ...(await pickCommonAdapterProps(projekti, julkaisu.hankkeenKuvaus, Kieli.SUOMI)),
       ...julkaisu,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
       kuulutusPaiva: julkaisu.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: await calculateEndDate({
         alkupaiva: julkaisu.kuulutusPaiva,

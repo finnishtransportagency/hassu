@@ -55,6 +55,7 @@ import { omistajaDatabase } from "../database/omistajaDatabase";
 import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
+import { haeJaetunProjektinOid } from "./haeJaetunProjektinOid";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -132,10 +133,7 @@ async function lisaaSuunnitelmanJakotiedotProjektilleJaSenJulkaisuille(projektiF
 }
 
 async function haeSuunnitelmaJaettuTieto(projektiFromDB: DBProjekti) {
-  const suunnitelmaJaettu: string | undefined = [
-    ...(projektiFromDB.projektinJakautuminen?.jaettuProjekteihin ?? []),
-    projektiFromDB.projektinJakautuminen?.jaettuProjektista,
-  ].find((oid) => !!oid);
+  const suunnitelmaJaettu = haeJaetunProjektinOid(projektiFromDB.projektinJakautuminen);
   return suunnitelmaJaettu ? await haeLiittyvanProjektinTiedot(suunnitelmaJaettu) : undefined;
 }
 
