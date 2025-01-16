@@ -29,6 +29,7 @@ class TiedostoDownloadLinkHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
+      assertIsDefined(projekti.velho?.nimi);
       const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
       if (!lausuntoPyynto) {
         throw new NotFoundError("Lausuntopyyntöä ei löyty");
@@ -51,6 +52,9 @@ class TiedostoDownloadLinkHandler {
           linkkiVanhentunut: true,
           projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
           julkinen,
+          nimi: projekti.velho.nimi,
+          tyyppi: projekti.velho.tyyppi,
+          projektiOid: oid,
         });
       }
       return lausuntoPyyntoDownloadLinkService.listaaTiedostot(projekti, params);
@@ -69,6 +73,7 @@ class TiedostoDownloadLinkHandler {
     }
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
+      assertIsDefined(projekti.velho?.nimi);
       const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
       if (!lausuntoPyynnonTaydennys) {
         throw new NotFoundError("Lausuntopyynnön täydennystä ei löydy");
@@ -91,6 +96,9 @@ class TiedostoDownloadLinkHandler {
           linkkiVanhentunut: true,
           projektipaallikonYhteystiedot: adaptProjektiKayttajaJulkinen(projari),
           julkinen,
+          nimi: projekti.velho.nimi,
+          tyyppi: projekti.velho.tyyppi,
+          projektiOid: oid,
         });
       }
       return lausuntoPyynnonTaydennysDownloadLinkService.listaaTiedostot(projekti, params);

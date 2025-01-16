@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import Section from "@components/layout/Section2";
-import { LadattavaTiedosto, ProjektiJulkinen } from "@services/api";
+import { LadattavaTiedosto } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
@@ -8,35 +8,35 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { kuntametadata } from "common/kuntametadata";
 import { H1, H2, H3 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import ExtLink from "@components/ExtLink";
 
 type Props = {
   esikatselu?: boolean;
-  projekti: ProjektiJulkinen | ProjektiLisatiedolla | null | undefined;
   poistumisPaiva: string;
   muutAineistot: LadattavaTiedosto[] | null | undefined;
   muistutukset: LadattavaTiedosto[] | null | undefined;
   kunta: number | null | undefined;
   aineistopaketti: string | null | undefined;
   julkinen: boolean;
+  nimi: string;
+  projektiOid: string;
 };
 
 export default function LausuntopyyntoTaydennysAineistoPage(props: Props): ReactElement {
-  const { muutAineistot, muistutukset, aineistopaketti, poistumisPaiva, kunta, projekti, esikatselu, julkinen } = props;
+  const { muutAineistot, muistutukset, aineistopaketti, poistumisPaiva, kunta, nimi, esikatselu, julkinen, projektiOid } = props;
   return (
     <>
       <H1>Lausuntopyynnön täydennysaineisto{esikatselu && " (esikatselu)"}</H1>
       <H2 variant="lead" className="mt-8 mb-8">
-        {projekti?.velho.nimi}
+        {nimi}
       </H2>
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
-      {projekti && julkinen && (
+      {projektiOid && julkinen && (
         <Section>
-          <ExtLink href={`/suunnitelma/${projekti.oid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
+          <ExtLink href={`/suunnitelma/${projektiOid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
         </Section>
       )}
       <Section noDivider>
