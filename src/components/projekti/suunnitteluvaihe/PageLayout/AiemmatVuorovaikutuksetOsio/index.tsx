@@ -14,6 +14,7 @@ import { AineistotSection } from "./AineistotSection";
 import { VuorovaikuttamisenYhteysHenkilot } from "../../LukutilaVuorovaikutukselle/VuorovaikuttamisenYhteysHenkilot";
 import { examineJulkaisuPaiva } from "hassu-common/util/dateUtils";
 import { Tagi } from "@components/Tagi";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -86,6 +87,7 @@ const AiempiJulkaisuLinkki: FunctionComponent<{
         <HassuDialog title={`${julkaisu.id}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
           <DialogContent>
             <VuorovaikutusPaivamaaraJaTiedotLukutila sx={{ marginTop: 0 }} kielitiedot={kielitiedot} vuorovaikutus={julkaisu} />
+            <LiittyvatSuunnitelmat jakotieto={julkaisu.suunnitelmaJaettu} />
             <VuorovaikutusMahdollisuudet showAjansiirtopainikkeet={false} projekti={projekti} vuorovaikutusKierrosJulkaisu={julkaisu} />
             <AineistotSection julkaisu={julkaisu} kielitiedot={kielitiedot} />
             <VuorovaikuttamisenYhteysHenkilot julkaisu={julkaisu} />

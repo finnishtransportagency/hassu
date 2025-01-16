@@ -1,0 +1,433 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jaaProjekti with admin user and correct parameters should copy projekti's fields and mark each julkaisu as copied 1`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+      "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 491,
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "id": 178,
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "id": 740,
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2022-03-28T14:28",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A123",
+        "A000111",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "siirtyySuunnitteluVaiheeseen": "2022-04-28T14:28",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "aloituskuulutusPDFt": Object {
+        "RUOTSI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+        },
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+        },
+      },
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+        "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+      },
+      "hyvaksyja": "A123",
+      "hyvaksymisPaiva": "2022-03-21",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Marikas testprojekt",
+        "toissijainenKieli": "RUOTSI",
+      },
+      "kopioituProjektista": "2",
+      "kuulutusPaiva": "2022-03-28T14:28",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A123",
+          "A000111",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2022-04-28T14:28",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/2/2022",
+        "asiatunnusVayla": "VAYLA/2/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 2",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+  "asianhallinta": Object {
+    "asiaId": undefined,
+  },
+  "euRahoitus": false,
+  "kasittelynTila": Object {
+    "hyvaksymispaatos": Object {
+      "asianumero": "traficom-123",
+      "paatoksenPvm": "2022-02-03",
+    },
+  },
+  "kayttoOikeudet": Array [
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "pekka.projari@vayla.fi",
+      "etunimi": "Pekka",
+      "kayttajatunnus": "A123",
+      "muokattavissa": false,
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Projari",
+      "tyyppi": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "Matti.Meikalainen@vayla.fi",
+      "etunimi": "Matti",
+      "kayttajatunnus": "A000111",
+      "muokattavissa": true,
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Meikalainen",
+    },
+  ],
+  "kielitiedot": Object {
+    "ensisijainenKieli": "SUOMI",
+    "projektinNimiVieraskielella": "Marikas testprojekt",
+    "toissijainenKieli": "RUOTSI",
+  },
+  "nahtavillaoloVaihe": Object {
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 491,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "id": 178,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "id": 740,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2022-06-07",
+    "kuulutusVaihePaattyyPaiva": "2022-06-07",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A123",
+        "A000111",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "muistutusoikeusPaattyyPaiva": "2022-06-08",
+  },
+  "nahtavillaoloVaiheJulkaisut": undefined,
+  "oid": "toinen-oid",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
+  "projektinJakautuminen": Object {
+    "jaettuProjektista": "2",
+  },
+  "salt": "foo-salt",
+  "tallennettu": true,
+  "vahainenMenettely": false,
+  "velho": Object {
+    "asiatunnusELY": "ELY/2/2022",
+    "asiatunnusVayla": "VAYLA/2/2022",
+    "kunnat": Array [
+      491,
+      178,
+      740,
+    ],
+    "maakunnat": Array [
+      1,
+      6,
+    ],
+    "nimi": "Toinen-oid projektin nimi",
+    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+    "tyyppi": "TIE",
+    "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  "versio": 1,
+  "vuorovaikutusKierros": Object {
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "RUOTSI": "Höst 2024",
+      "SUOMI": "Syksy 2024",
+    },
+    "esitettavatYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [],
+    },
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "svenska",
+      "SUOMI": "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen
+luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen
+sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn
+yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös
+yksi tavoitteista.",
+    },
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 491,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "id": 178,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "id": 740,
+          "lahetetty": "2022-03-11T14:54",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "lahetetty": "2022-03-11T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "suunnittelunEteneminenJaKesto": Object {
+      "RUOTSI": "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+      "SUOMI": "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+    },
+    "tila": "JULKINEN",
+    "vuorovaikutusJulkaisuPaiva": "2022-04-28T14:28",
+    "vuorovaikutusNumero": 1,
+    "vuorovaikutusTilaisuudet": Array [
+      Object {
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "linkki": "https://linkki_tilaisuuteen",
+        "nimi": Object {
+          "RUOTSI": "RUOTSIKSI Lorem ipsum",
+          "SUOMI": "Lorem ipsum",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-03-04",
+        "tyyppi": "VERKOSSA",
+      },
+    ],
+  },
+  "vuorovaikutusKierrosJulkaisut": Array [
+    Object {
+      "arvioSeuraavanVaiheenAlkamisesta": Object {
+        "RUOTSI": "Höst 2024",
+        "SUOMI": "Syksy 2024",
+      },
+      "esitettavatYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [],
+      },
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "svenska",
+        "SUOMI": "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen
+luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen
+sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn
+yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös
+yksi tavoitteista.",
+      },
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kopioituProjektista": "2",
+      "suunnittelunEteneminenJaKesto": Object {
+        "RUOTSI": "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+        "SUOMI": "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+      },
+      "tila": "JULKINEN",
+      "vuorovaikutusJulkaisuPaiva": "2022-04-28T14:28",
+      "vuorovaikutusPDFt": Object {
+        "RUOTSI": Object {
+          "kutsuPDFPath": "suunnitteluvaihe/vuorovaikutus_1/2.pdf",
+        },
+        "SUOMI": Object {
+          "kutsuPDFPath": "suunnitteluvaihe/vuorovaikutus_1/1.pdf",
+        },
+      },
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": Object {
+            "RUOTSI": "RUOTSIKSI Lorem ipsum",
+            "SUOMI": "Lorem ipsum",
+          },
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-03-04",
+          "tyyppi": "VERKOSSA",
+        },
+      ],
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+}
+`;

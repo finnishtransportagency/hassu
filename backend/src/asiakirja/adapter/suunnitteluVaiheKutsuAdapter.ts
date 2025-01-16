@@ -8,6 +8,7 @@ import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 export interface SuunnitteluVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
   vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 }
 
 export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
@@ -15,12 +16,14 @@ export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
 export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   private readonly suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
+  protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(props: SuunnitteluVaiheKutsuAdapterProps) {
     super(props);
-    const { vuorovaikutusKierrosJulkaisu, suunnitteluSopimus } = props;
+    const { vuorovaikutusKierrosJulkaisu, suunnitteluSopimus, kuulutettuYhdessaSuunnitelmanimi } = props;
     this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
     this.suunnitteluSopimus = suunnitteluSopimus;
+    this.kuulutettuYhdessaSuunnitelmanimi = kuulutettuYhdessaSuunnitelmanimi;
   }
 
   get subject(): string {

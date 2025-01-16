@@ -6,6 +6,7 @@ import { KatsoTarkemmatASHAOhjeetLink } from "./KatsoTarkemmatASHAOhjeetLink";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { isVaylaAsianhallinta } from "common/isVaylaAsianhallinta";
+import { DottedList } from "@components/notification/DottedList";
 
 type AsianhallintaTiedot = {
   vaihe: Vaihe;
@@ -40,14 +41,14 @@ export const OhjelistaNotification: FunctionComponent<Props> = ({ children, asia
     <Notification closable type={NotificationType.INFO} hideIcon open={open} onClose={onClose}>
       <div>
         <H3 variant="h4">Ohjeet</H3>
-        <ul className="list-disc block pl-5">
+        <DottedList className="list-disc block pl-5">
           {vaylaAsianhallinta && nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
             <li>
               <AshaKuulutusToimenpideTeksti vaihe={asianhallintaTiedot.vaihe} />
             </li>
           )}
           {children}
-        </ul>
+        </DottedList>
       </div>
     </Notification>
   );

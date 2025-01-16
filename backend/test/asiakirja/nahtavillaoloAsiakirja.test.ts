@@ -196,6 +196,7 @@ async function testKuulutusWithLanguage(
     asiakirjaTyyppi,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    kuulutettuYhdessaSuunnitelmanimi: undefined,
   };
   const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf(nahtavillaoloKuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);

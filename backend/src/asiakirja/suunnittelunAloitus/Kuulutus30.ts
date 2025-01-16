@@ -12,6 +12,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
   protected vahainenMenettely: boolean | undefined | null;
+  protected kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
@@ -51,6 +52,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       asianhallintaPaalla: params.asianhallintaPaalla,
       linkkiAsianhallintaan: params.linkkiAsianhallintaan,
       yhteystiedot: params.yhteystiedot,
+      kuulutettuYhdessaSuunnitelmanimi: params.kuulutettuYhdessaSuunnitelmanimi,
     });
     const fileName = createPDFFileName(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, params.kieli);
     super(params.kieli, kutsuAdapter);
@@ -58,6 +60,8 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.vahainenMenettely = params.vahainenMenettely;
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.header = kutsuAdapter.subject;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
+
     this.kutsuAdapter.addTemplateResolver(this);
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
@@ -76,7 +80,8 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected addDocumentElements(): PDFStructureElement[] {
     return [
       this.startOfPlanningPhrase,
-      this.paragraph("\n" + this.kutsuAdapter.hankkeenKuvaus()),
+      this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
@@ -85,6 +90,10 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
     ].filter((elem): elem is PDFStructureElement => !!elem);
+  }
+
+  private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    return this.kuulutettuYhdessaSuunnitelmanimi ? this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf") : undefined;
   }
 
   private get startOfPlanningPhrase() {

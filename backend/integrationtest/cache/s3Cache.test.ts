@@ -21,7 +21,7 @@ describe("S3Cache", () => {
       const data = await s3Cache.get(
         key,
         ttlMillis,
-        () => {
+        async () => {
           triggered = true;
         },
         async () => {

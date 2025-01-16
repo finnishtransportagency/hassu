@@ -27,15 +27,27 @@ function getAsiaNumero(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyypp
   }
 }
 
-export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
-  projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,
-  kieli: KaannettavaKieli,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-  paatosTyyppi: PaatosTyyppi,
-  asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined,
-  osoite?: Osoite
-): HyvaksymisPaatosVaiheKutsuAdapterProps {
+type PropsCreatorOptions = {
+  projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">;
+  kieli: KaannettavaKieli;
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  paatosTyyppi: PaatosTyyppi;
+  asianhallintaPaalla: boolean;
+  linkkiAsianhallintaan: string | undefined;
+  osoite: Osoite | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
+};
+
+export function createHyvaksymisPaatosVaiheKutsuAdapterProps({
+  projekti,
+  kieli,
+  hyvaksymisPaatosVaihe,
+  paatosTyyppi,
+  asianhallintaPaalla,
+  linkkiAsianhallintaan,
+  osoite,
+  kuulutettuYhdessaSuunnitelmanimi,
+}: PropsCreatorOptions): HyvaksymisPaatosVaiheKutsuAdapterProps {
   const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
   if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
@@ -78,6 +90,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
 }
 

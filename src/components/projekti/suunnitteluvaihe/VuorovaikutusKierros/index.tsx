@@ -58,6 +58,7 @@ import { isKuntatietoMissing } from "../../../../util/velhoUtils";
 import { H2 } from "../../../Headings";
 import KierroksenPoistoButton from "../KierroksenPoistoButton";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -314,6 +315,7 @@ function VuorovaikutusKierrosKutsu({
               </p>
               <Julkaisupaiva />
             </Section>
+            <LiittyvatSuunnitelmat jakotieto={projekti.suunnitelmaJaettu} heading={"h2"} />
             <HankkeenSisallonKuvaus kielitiedot={projekti.kielitiedot} />
             <VuorovaikutusMahdollisuudet projekti={projekti} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
             <VuorovaikutustilaisuusDialog

@@ -21,6 +21,7 @@ import KuulutuksenSisalto from "../../common/KuulutuksenSisalto";
 import { isAjansiirtoSallittu } from "../../../../util/isAjansiirtoSallittu";
 import { ButtonFlatWithIcon } from "../../../button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
+import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -116,6 +117,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
       {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
         <UudelleenKuulutusSelitteetLukutila uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus} kielitiedot={kielitiedot} />
       )}
+      <LiittyvatSuunnitelmat jakotieto={nahtavillaoloVaiheJulkaisu.suunnitelmaJaettu} />
       <Section smallGaps>
         <H3>Kuulutuksen yhteyshenkilöt</H3>
         <p></p>

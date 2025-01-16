@@ -19,8 +19,12 @@ export default function SuunnitteluWrapper() {
 
 function Suunnittelu({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>): ReactElement {
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const viimeisinJulkaisuOnKopio =
+    projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut?.length - 1].julkaisuOnKopio &&
+    projekti.vuorovaikutusKierros?.tila &&
+    projekti.vuorovaikutusKierros?.tila !== VuorovaikutusKierrosTila.MUOKATTAVISSA;
   const lukutila =
-    projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden || projekti.nahtavillaoloVaiheJulkaisu;
+    projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden || !!projekti.nahtavillaoloVaiheJulkaisu;
 
   if (migroitu) {
     return (
@@ -33,9 +37,9 @@ function Suunnittelu({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>)
     );
   }
 
-  if (lukutila) {
+  if (lukutila || viimeisinJulkaisuOnKopio) {
     return (
-      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={false}>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!lukutila}>
         <SuunnitteluvaiheenPerustiedotLukutila />
       </SuunnitteluPageLayoutWrapper>
     );
