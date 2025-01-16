@@ -20,7 +20,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
     );
   }
 
-  const { muutAineistot, muistutukset, aineistopaketti, kunta, nimi } = data;
+  const { muutAineistot, muistutukset, aineistopaketti, kunta, julkinen, nimi, projektiOid } = data;
   return (
     <LausuntopyyntoTaydennysAineistoPage
       poistumisPaiva={poistumisPaiva}
@@ -28,7 +28,9 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
       aineistopaketti={aineistopaketti}
       muistutukset={muistutukset}
       kunta={kunta}
+      julkinen={julkinen}
       nimi={nimi}
+      projektiOid={projektiOid}
     />
   );
 }

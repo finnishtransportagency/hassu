@@ -11,6 +11,8 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 import { adaptAineistoToLadattavaTiedosto, adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
+import { projektiAdapterJulkinen } from "../../projekti/adapter/projektiAdapterJulkinen";
 import { assertIsDefined } from "../../util/assertions";
 
 class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
@@ -39,14 +41,18 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       aineistot,
       lisaAineistot,
       poistumisPaiva: lausuntoPyyntoInput.poistumisPaiva,
       aineistopaketti,
+      julkinen,
       nimi: projekti.velho.nimi,
       tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 
@@ -73,14 +79,18 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       aineistot,
       lisaAineistot,
       poistumisPaiva: lausuntoPyynto.poistumisPaiva,
       aineistopaketti,
+      julkinen,
       nimi: projekti.velho.nimi,
       tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 
@@ -103,14 +113,18 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       aineistot,
       lisaAineistot,
       poistumisPaiva: params.poistumisPaiva,
       aineistopaketti,
+      julkinen,
       nimi: projekti.velho.nimi,
       tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 

@@ -29,8 +29,10 @@ describe("LisaAineistoHandler", () => {
     const expectedResult: API.LadattavatTiedostot = {
       __typename: "LadattavatTiedostot",
       poistumisPaiva: "2024-06-09",
+      julkinen: false,
       nimi: "Tiesuunnitelma 1 - Karvia",
       tyyppi: API.ProjektiTyyppi.TIE,
+      projektiOid: "1.2.246.578.5.1.2978288874.2711575506",
       aineistot: [
         {
           __typename: "LadattavaTiedosto",

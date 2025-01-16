@@ -15,7 +15,7 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
     return <></>;
   }
 
-  const { muutAineistot, muistutukset, kunta, poistumisPaiva, aineistopaketti, nimi } = data;
+  const { muutAineistot, muistutukset, kunta, poistumisPaiva, aineistopaketti, julkinen, nimi, projektiOid } = data;
 
   return (
     <LausuntopyyntoTaydennysAineistoPage
@@ -25,6 +25,8 @@ export default function EsikatseleLausuntopyynnonTaydennysAineistot(): ReactElem
       nimi={nimi}
       poistumisPaiva={poistumisPaiva}
       aineistopaketti={aineistopaketti}
+      julkinen={julkinen}
+      projektiOid={projektiOid}
       esikatselu
     />
   );

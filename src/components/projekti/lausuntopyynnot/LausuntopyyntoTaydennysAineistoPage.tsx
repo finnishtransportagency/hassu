@@ -9,6 +9,7 @@ import { kuntametadata } from "common/kuntametadata";
 import { H1, H2, H3 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
+import ExtLink from "@components/ExtLink";
 
 type Props = {
   esikatselu?: boolean;
@@ -17,11 +18,13 @@ type Props = {
   muistutukset: LadattavaTiedosto[] | null | undefined;
   kunta: number | null | undefined;
   aineistopaketti: string | null | undefined;
+  julkinen: boolean;
   nimi: string;
+  projektiOid: string;
 };
 
 export default function LausuntopyyntoTaydennysAineistoPage(props: Props): ReactElement {
-  const { muutAineistot, muistutukset, aineistopaketti, poistumisPaiva, kunta, esikatselu, nimi } = props;
+  const { muutAineistot, muistutukset, aineistopaketti, poistumisPaiva, kunta, nimi, esikatselu, julkinen, projektiOid } = props;
   return (
     <>
       <H1>Lausuntopyynnön täydennysaineisto{esikatselu && " (esikatselu)"}</H1>
@@ -31,6 +34,11 @@ export default function LausuntopyyntoTaydennysAineistoPage(props: Props): React
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
+      {projektiOid && julkinen && (
+        <Section>
+          <ExtLink href={`/suunnitelma/${projektiOid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
+        </Section>
+      )}
       <Section noDivider>
         {esikatselu && (
           <Notification type={NotificationType.INFO_GRAY}>

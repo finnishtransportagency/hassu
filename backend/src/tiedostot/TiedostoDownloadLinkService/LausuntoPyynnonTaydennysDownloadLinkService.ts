@@ -12,6 +12,8 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 import { adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
+import { projektiAdapterJulkinen } from "../../projekti/adapter/projektiAdapterJulkinen";
 import { assertIsDefined } from "../../util/assertions";
 
 class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkService<
@@ -46,6 +48,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       kunta: uusiLausuntoPyynnonTaydennys?.kunta,
@@ -53,8 +57,10 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
       aineistopaketti,
+      julkinen,
       nimi: projekti.velho.nimi,
       tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 
@@ -87,6 +93,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       kunta: lausuntoPyynnonTaydennys.kunta,
@@ -94,8 +102,10 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
       aineistopaketti,
+      julkinen,
       nimi: projekti.velho.nimi,
       tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 

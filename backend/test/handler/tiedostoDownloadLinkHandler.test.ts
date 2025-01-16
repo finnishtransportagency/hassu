@@ -55,6 +55,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -77,6 +78,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
       nimi: "Projekti 1",
+      projektiOid: "1",
       tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
@@ -107,6 +109,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // and all files from latest public nahtavillaoloVaiheJulkaisu (the second one)
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -130,6 +133,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
       nimi: "Projekti 1",
       tyyppi: API.ProjektiTyyppi.TIE,
+      projektiOid: "1",
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -164,6 +168,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       // and all files from latest public nahtavillaoloVaiheJulkaisu (the second one)
       const expectedFiles = {
         __typename: "LadattavatTiedostot",
+        julkinen: false,
         aineistot: [
           {
             __typename: "LadattavaTiedosto",
@@ -186,6 +191,7 @@ describe("tiedostoDownloadLinkHandler", () => {
         poistumisPaiva: nyt().add(10, "day").format("YYYY-MM-DD"),
         aineistopaketti: "download-link-for-/lausuntopyynto/joku-uuid/aineistot.zip",
         nimi: "Projekti 1",
+        projektiOid: "1",
         tyyppi: API.ProjektiTyyppi.TIE,
       };
       expect(files).to.eql(expectedFiles);
@@ -205,6 +211,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     expect(actualResult).to.eql({
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       poistumisPaiva: lausuntoPyynto1.poistumisPaiva,
       linkkiVanhentunut: true,
       projektipaallikonYhteystiedot: {
@@ -219,6 +226,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       },
       nimi: "Projekti 1",
       tyyppi: API.ProjektiTyyppi.TIE,
+      projektiOid: "1",
     });
   });
 
@@ -247,6 +255,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     // Should contain all files from specified lausuntoPyynto and all files from latest public nahtavillaoloVaiheJulkaisu
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       kunta: 1,
       muistutukset: [
         {
@@ -270,6 +279,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       aineistopaketti: "download-link-for-/lausuntopyynnon_taydennys/joku-kolmas-uuid/aineistot.zip",
       nimi: "Projekti 1",
       tyyppi: API.ProjektiTyyppi.TIE,
+      projektiOid: "1",
     };
     expect(files).to.eql(expectedFiles);
   });
@@ -287,6 +297,8 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     expect(actualResult).to.eql({
       __typename: "LadattavatTiedostot",
+      julkinen: false,
+      projektiOid: "1",
       poistumisPaiva: lausuntoPyynnonTaydennys1.poistumisPaiva,
       linkkiVanhentunut: true,
       projektipaallikonYhteystiedot: {
@@ -346,6 +358,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       aineistot: [
         {
           __typename: "LadattavaTiedosto",
@@ -375,6 +388,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       poistumisPaiva: "2022-01-01",
       aineistopaketti: "(esikatselu)",
       nimi: "Projekti 1",
+      projektiOid: "1",
       tyyppi: API.ProjektiTyyppi.TIE,
     };
     expect(files).to.eql(expectedFiles);
@@ -422,6 +436,7 @@ describe("tiedostoDownloadLinkHandler", () => {
     });
     const expectedFiles = {
       __typename: "LadattavatTiedostot",
+      julkinen: false,
       kunta: 1,
       muutAineistot: [
         {
@@ -459,6 +474,7 @@ describe("tiedostoDownloadLinkHandler", () => {
       aineistopaketti: "(esikatselu)",
       nimi: "Projekti 1",
       tyyppi: API.ProjektiTyyppi.TIE,
+      projektiOid: "1",
     };
     expect(files).to.eql(expectedFiles);
   });

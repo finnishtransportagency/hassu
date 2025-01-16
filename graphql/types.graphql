@@ -1327,6 +1327,7 @@ type LadattavatTiedostot {
   poistumisPaiva: String!
   linkkiVanhentunut: Boolean
   kunta: Int
+  projektiOid: String!
   nimi: String!
   tyyppi: ProjektiTyyppi
   aineistot: [LadattavaTiedosto!]
@@ -1335,6 +1336,7 @@ type LadattavatTiedostot {
   muistutukset: [LadattavaTiedosto!]
   aineistopaketti: String
   projektipaallikonYhteystiedot: ProjektiKayttajaJulkinen
+  julkinen: Boolean!
 }
 
 type HyvaksymisEsityksenAineistot {

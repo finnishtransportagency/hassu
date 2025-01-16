@@ -10,6 +10,7 @@ import { H1, H2 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
+import ExtLink from "@components/ExtLink";
 
 type Props = {
   esikatselu?: boolean;
@@ -19,10 +20,12 @@ type Props = {
   poistumisPaiva: string | undefined;
   nimi: string;
   tyyppi: ProjektiTyyppi | null | undefined;
+  julkinen: boolean;
+  projektiOid: string;
 };
 
 export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): ReactElement {
-  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, nimi, tyyppi } = props;
+  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, julkinen, nimi, tyyppi, projektiOid } = props;
 
   const kategoriat = useMemo(() => getAineistoKategoriat({ projektiTyyppi: tyyppi }).listKategoriat(), [tyyppi]);
 
@@ -35,6 +38,11 @@ export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): Reac
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
+      {projektiOid && julkinen && (
+        <Section>
+          <ExtLink href={`/suunnitelma/${projektiOid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
+        </Section>
+      )}
       <Section noDivider>
         {props.esikatselu && (
           <Notification type={NotificationType.INFO_GRAY}>
