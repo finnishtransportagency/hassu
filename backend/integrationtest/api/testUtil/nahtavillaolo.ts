@@ -137,6 +137,8 @@ export async function testLisaaMuistutusIncrement(
   userFixture.logout();
   expect(projekti.muistutusMaara).to.equal(initialMuistutusMaara);
   await api.lisaaMuistutus(oid, {
+    etunimi: "Testi",
+    sukunimi: "Testinen",
     katuosoite: "Katuosoite 123",
     muistutus: "Muistutus " + ((initialMuistutusMaara ?? 0) + 1),
     postinumero: "03132",

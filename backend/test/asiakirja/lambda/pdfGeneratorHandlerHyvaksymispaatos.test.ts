@@ -70,6 +70,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
   return {
     createHyvaksymisPaatosKuulutusPdf: {
       asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
       asianhallintaPaalla: false,
       kasittelynTila: {
         hyvaksymisesitysTraficomiinPaiva: "",

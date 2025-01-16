@@ -11,17 +11,28 @@ import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
-export async function createNahtavillaoloVaiheKutsuAdapterProps(
+type PropsCreatorOptions = {
   projekti: Pick<
     DBProjekti,
     "oid" | "lyhytOsoite" | "kayttoOikeudet" | "suunnitteluSopimus" | "euRahoitusLogot" | "vahainenMenettely" | "velho"
-  >,
-  julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: KaannettavaKieli,
-  asianhallintaPaalla: boolean,
-  linkkiAsianhallintaan: string | undefined,
-  osoite?: Osoite
-): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
+  >;
+  julkaisu: NahtavillaoloVaiheJulkaisu;
+  kieli: KaannettavaKieli;
+  asianhallintaPaalla: boolean;
+  linkkiAsianhallintaan: string | undefined;
+  osoite: Osoite | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
+};
+
+export async function createNahtavillaoloVaiheKutsuAdapterProps({
+  projekti,
+  julkaisu,
+  kieli,
+  asianhallintaPaalla,
+  linkkiAsianhallintaan,
+  osoite,
+  kuulutettuYhdessaSuunnitelmanimi,
+}: PropsCreatorOptions): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
 
   assertIsDefined(julkaisu);
@@ -50,6 +61,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
 }
 
