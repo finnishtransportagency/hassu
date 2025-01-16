@@ -1,7 +1,6 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
-import { HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
 export const JATKOPAATOS_DURATION: DateAddTuple = [6, "months"];
@@ -22,7 +21,10 @@ export abstract class StatusHandler<T> {
   }
 }
 
-export type HyvaksymisPaatosJulkaisuEndDateAndTila = Pick<HyvaksymisPaatosVaiheJulkaisu, "kuulutusVaihePaattyyPaiva" | "tila">;
+export type HyvaksymisPaatosJulkaisuEndDateAndTila = Pick<
+  HyvaksymisPaatosVaiheJulkaisu,
+  "kuulutusVaihePaattyyPaiva" | "tila" | "julkaisuOnKopio"
+>;
 
 /*
  * Handler to determine if given hyväksymispäätöskuulutusvaihe ended a year or 6 months ago
@@ -47,8 +49,11 @@ export abstract class AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler<
   handle(p: T): void {
     const hyvaksymisPaatosVaihe = this.getPaatosVaihe(p);
 
-    if (hyvaksymisPaatosVaihe?.tila == KuulutusJulkaisuTila.MIGROITU) {
+    if (hyvaksymisPaatosVaihe?.tila === KuulutusJulkaisuTila.MIGROITU) {
       p.status = this.epaAktiivisuusStatus;
+      super.handle(p); // Continue evaluating next rules
+      return;
+    } else if (hyvaksymisPaatosVaihe?.julkaisuOnKopio) {
       super.handle(p); // Continue evaluating next rules
       return;
     }

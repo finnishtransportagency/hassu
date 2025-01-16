@@ -10,6 +10,7 @@ import {
   Yhteystieto,
   AineistoMuokkaus,
   KuulutusSaamePDFt,
+  ProjektinJakautuminen,
 } from ".";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
@@ -53,6 +54,8 @@ export type NahtavillaoloVaiheJulkaisu = {
   hyvaksymisPaiva?: string | null;
   asianhallintaEventId?: string | null;
   maanomistajaluettelo?: string | null;
+  kopioituProjektista?: string | null;
+  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
 export type NahtavillaoloPDF = {

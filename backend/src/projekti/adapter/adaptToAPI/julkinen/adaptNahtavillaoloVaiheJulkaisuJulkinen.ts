@@ -19,6 +19,7 @@ import {
 } from "../../../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../../../asianhallinta/getLinkkiAsianhallintaan";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "./haeKuulutettuYhdessaSuunnitelmanimi";
 
 export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
   dbProjekti: DBProjekti,
@@ -40,9 +41,12 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
     tila,
     uudelleenKuulutus,
     nahtavillaoloSaamePDFt,
+    id,
+    kopioituProjektista,
   } = julkaisu;
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
       tila,
       velho: adaptVelhoJulkinen(velho),
@@ -67,6 +71,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
   }
 
   const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
+    id,
     __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
     hankkeenKuvaus: adaptLokalisoituTekstiToAPI(hankkeenKuvaus),
     kuulutusPaiva,
@@ -78,6 +83,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
   if (apiAineistoNahtavilla) {
     julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
@@ -86,13 +92,15 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
     const velho = dbProjekti.velho;
     assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
     julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-      await createNahtavillaoloVaiheKutsuAdapterProps(
-        dbProjekti,
+      await createNahtavillaoloVaiheKutsuAdapterProps({
+        projekti: dbProjekti,
         julkaisu,
         kieli,
-        await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
-        await getLinkkiAsianhallintaan(dbProjekti)
-      )
+        asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+        linkkiAsianhallintaan: await getLinkkiAsianhallintaan(dbProjekti),
+        osoite: undefined,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
+      })
     ).userInterfaceFields;
   }
   if (nahtavillaoloSaamePDFt) {

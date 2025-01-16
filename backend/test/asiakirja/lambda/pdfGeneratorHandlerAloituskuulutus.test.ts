@@ -73,6 +73,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
     createAloituskuulutusPdf: {
       asiakirjaTyyppi: event.asiakirjaTyyppi,
       asianhallintaPaalla: false,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
       kayttoOikeudet: [
         {
           etunimi: "Teppo",

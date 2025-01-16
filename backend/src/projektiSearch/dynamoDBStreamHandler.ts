@@ -45,7 +45,10 @@ async function handleManagementAction(event: MaintenanceEvent) {
     let startKey: string | undefined = undefined;
     const queueUrl = await parameters.getIndexerSQSUrl();
     do {
-      const scanResult = await projektiDatabase.scanProjektit(startKey);
+      const scanResult: {
+        startKey: string | undefined;
+        projektis: DBProjekti[];
+      } = await projektiDatabase.scanProjektit(startKey);
       startKey = scanResult.startKey;
       const entries = scanResult.projektis.map<SendMessageBatchRequestEntry>((projekti) => ({
         Id: uuid.v4(),
