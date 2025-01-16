@@ -40,6 +40,7 @@ projektiDatabase
       if (!hyvaksymisPaatosExists && projekti.nahtavillaoloVaiheJulkaisut) {
         const generateEvent: GeneratePDFEvent = {
           createNahtavillaoloKuulutusPdf: {
+            kuulutettuYhdessaSuunnitelmanimi: undefined,
             asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
             asianhallintaPaalla: !(projekti.asianhallinta?.inaktiivinen ?? true),
             kayttoOikeudet: projekti.kayttoOikeudet,
@@ -67,6 +68,7 @@ projektiDatabase
       } else if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
         const generateEvent: GeneratePDFEvent = {
           createHyvaksymisPaatosKuulutusPdf: {
+            kuulutettuYhdessaSuunnitelmanimi: undefined,
             asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
             asianhallintaPaalla: !(projekti.asianhallinta?.inaktiivinen ?? true),
             kayttoOikeudet: projekti.kayttoOikeudet,

@@ -11,12 +11,16 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 import { adaptAineistoToLadattavaTiedosto, adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
+import { projektiAdapterJulkinen } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { assertIsDefined } from "../../util/assertions";
 
 class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
   API.LausuntoPyyntoInput,
   API.ListaaLausuntoPyyntoTiedostotInput
 > {
   async esikatseleTiedostot(projekti: DBProjekti, lausuntoPyyntoInput: API.LausuntoPyyntoInput): Promise<API.LadattavatTiedostot> {
+    assertIsDefined(projekti.velho?.nimi);
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, lausuntoPyyntoInput.uuid);
     const uusiLausuntoPyynto = adaptLausuntoPyyntoToSave(lausuntoPyynto, lausuntoPyyntoInput, new ProjektiAdaptationResult(projekti));
@@ -37,16 +41,23 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       aineistot,
       lisaAineistot,
       poistumisPaiva: lausuntoPyyntoInput.poistumisPaiva,
       aineistopaketti,
+      julkinen,
+      nimi: projekti.velho.nimi,
+      tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 
   async listaaTiedostot(projekti: DBProjekti, params: API.ListaaLausuntoPyyntoTiedostotInput): Promise<API.LadattavatTiedostot> {
+    assertIsDefined(projekti.velho?.nimi);
     const nahtavillaolo = findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(projekti);
     const lausuntoPyynto = findLausuntoPyyntoByUuid(projekti, params.lausuntoPyyntoUuid);
     if (!lausuntoPyynto) {
@@ -68,10 +79,23 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = lausuntoPyynto?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynto?.aineistopaketti)
       : null;
-    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: lausuntoPyynto.poistumisPaiva, aineistopaketti };
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+    return {
+      __typename: "LadattavatTiedostot",
+      aineistot,
+      lisaAineistot,
+      poistumisPaiva: lausuntoPyynto.poistumisPaiva,
+      aineistopaketti,
+      julkinen,
+      nimi: projekti.velho.nimi,
+      tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
+    };
   }
 
   async listaaLisaAineistoLegacy(projekti: DBProjekti, params: API.ListaaLisaAineistoInput): Promise<API.LadattavatTiedostot> {
+    assertIsDefined(projekti.velho?.nimi);
     const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
     const aineistot =
       (
@@ -89,7 +113,19 @@ class LausuntoPyyntoDownloadLinkService extends TiedostoDownloadLinkService<
     const aineistopaketti = nahtavillaolo?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, nahtavillaolo?.aineistopaketti)
       : null;
-    return { __typename: "LadattavatTiedostot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva, aineistopaketti };
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
+    return {
+      __typename: "LadattavatTiedostot",
+      aineistot,
+      lisaAineistot,
+      poistumisPaiva: params.poistumisPaiva,
+      aineistopaketti,
+      julkinen,
+      nimi: projekti.velho.nimi,
+      tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
+    };
   }
 
   generateHash(oid: string, uuid: string, salt: string): string {

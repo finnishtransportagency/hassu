@@ -18,6 +18,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   protected header: string;
   protected kieli: KaannettavaKieli;
   protected vahainenMenettely: boolean | undefined | null;
+  private readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   private readonly velho: Velho;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
@@ -59,6 +60,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
         asianhallintaPaalla: params.asianhallintaPaalla,
         linkkiAsianhallintaan: params.linkkiAsianhallintaan,
         yhteystiedot: params.yhteystiedot,
+        kuulutettuYhdessaSuunnitelmanimi: params.kuulutettuYhdessaSuunnitelmanimi,
       },
       "lakiviite_ilmoitus_rata2"
     );
@@ -74,6 +76,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
     this.header = headers[language];
     this.kieli = params.kieli;
     this.vahainenMenettely = params.vahainenMenettely;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.kutsuAdapter.addTemplateResolver(this);
@@ -96,8 +99,9 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
-      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph("\n") : null,
-      this.paragraph((this.vahainenMenettely ? "" : "\n") + this.kutsuAdapter.hankkeenKuvaus()),
+      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
+      this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("kiinteistonomistaja_kappale6"),
       this.vahainenMenettely
         ? this.paragraphFromKey("kiinteistonomistaja_kappale7_vahainen_menettely")
@@ -119,6 +123,12 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       this.doc.text(this.kutsuAdapter.text("projektipaallikko"));
       this.doc.text(this.kutsuAdapter.projektipaallikkoOrganisaatio!).moveDown();
     };
+  }
+
+  private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
+    }
   }
 
   private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {

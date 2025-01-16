@@ -12,6 +12,9 @@ import { jarjestaTiedostot } from "hassu-common/util/jarjestaTiedostot";
 import { fileService } from "../../files/fileService";
 import TiedostoDownloadLinkService from "./AbstractTiedostoDownloadLinkService";
 import { adaptLadattuTiedostoToLadattavaTiedosto } from "../adaptToLadattavaTiedosto";
+import { isProjektiJulkinenStatusPublic } from "hassu-common/isProjektiJulkinenStatusPublic";
+import { projektiAdapterJulkinen } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { assertIsDefined } from "../../util/assertions";
 
 class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkService<
   API.LausuntoPyynnonTaydennysInput,
@@ -21,6 +24,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     projekti: DBProjekti,
     lausuntoPyynnonTaydennysInput: API.LausuntoPyynnonTaydennysInput
   ): Promise<API.LadattavatTiedostot> {
+    assertIsDefined(projekti.velho?.nimi);
     const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, lausuntoPyynnonTaydennysInput.uuid);
     const uusiLausuntoPyynnonTaydennys = adaptLausuntoPyynnonTaydennysToSave(
       lausuntoPyynnonTaydennys,
@@ -44,6 +48,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
         )
       ).sort(jarjestaTiedostot) ?? [];
     const aineistopaketti = "(esikatselu)";
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       kunta: uusiLausuntoPyynnonTaydennys?.kunta,
@@ -51,6 +57,10 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennysInput.poistumisPaiva,
       aineistopaketti,
+      julkinen,
+      nimi: projekti.velho.nimi,
+      tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 
@@ -58,6 +68,7 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     projekti: DBProjekti,
     params: API.ListaaLausuntoPyynnonTaydennyksenTiedostotInput
   ): Promise<API.LadattavatTiedostot> {
+    assertIsDefined(projekti.velho?.nimi);
     const lausuntoPyynnonTaydennys = findLausuntoPyynnonTaydennysByUuid(projekti, params.lausuntoPyynnonTaydennysUuid);
     if (!lausuntoPyynnonTaydennys) {
       throw new Error("LausuntoPyynnonTaydennystä ei löytynyt");
@@ -82,6 +93,8 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
     const aineistopaketti = lausuntoPyynnonTaydennys?.aineistopaketti
       ? await fileService.createYllapitoSignedDownloadLink(projekti.oid, lausuntoPyynnonTaydennys?.aineistopaketti)
       : null;
+    const projektijulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+    const julkinen = !!projektijulkinen?.status && isProjektiJulkinenStatusPublic(projektijulkinen.status);
     return {
       __typename: "LadattavatTiedostot",
       kunta: lausuntoPyynnonTaydennys.kunta,
@@ -89,6 +102,10 @@ class LausuntoPyynnonTaydennysDownloadLinkService extends TiedostoDownloadLinkSe
       muistutukset,
       poistumisPaiva: lausuntoPyynnonTaydennys.poistumisPaiva,
       aineistopaketti,
+      julkinen,
+      nimi: projekti.velho.nimi,
+      tyyppi: projekti.velho.tyyppi,
+      projektiOid: projekti.oid,
     };
   }
 

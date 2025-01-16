@@ -1,16 +1,16 @@
 import React, { ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section2";
 import { getAineistoKategoriat } from "hassu-common/aineistoKategoriat";
-import { LadattavaTiedosto, ProjektiJulkinen } from "@services/api";
+import { LadattavaTiedosto, ProjektiTyyppi } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import ButtonLink from "@components/button/ButtonLink";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { H1, H2 } from "@components/Headings";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import SuunnittelmaLadattavatTiedostotAccordion from "@components/LadattavatTiedostot/SuunnitelmaAccordion";
+import ExtLink from "@components/ExtLink";
 
 type Props = {
   esikatselu?: boolean;
@@ -18,26 +18,31 @@ type Props = {
   aineistopaketti: string | null | undefined;
   aineistot: LadattavaTiedosto[] | null | undefined;
   poistumisPaiva: string | undefined;
-  projekti: ProjektiJulkinen | ProjektiLisatiedolla | null | undefined;
+  nimi: string;
+  tyyppi: ProjektiTyyppi | null | undefined;
+  julkinen: boolean;
+  projektiOid: string;
 };
 
 export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): ReactElement {
-  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, projekti } = props;
+  const { lisaAineistot, aineistopaketti, aineistot, poistumisPaiva, julkinen, nimi, tyyppi, projektiOid } = props;
 
-  const kategoriat = useMemo(
-    () => getAineistoKategoriat({ projektiTyyppi: projekti?.velho.tyyppi }).listKategoriat(),
-    [projekti?.velho.tyyppi]
-  );
+  const kategoriat = useMemo(() => getAineistoKategoriat({ projektiTyyppi: tyyppi }).listKategoriat(), [tyyppi]);
 
   return (
     <>
       <H1>Lausuntopyynnön aineisto{props.esikatselu && " (esikatselu)"}</H1>
       <H2 variant="lead" sx={{ mt: 8, mb: 8 }}>
-        {projekti?.velho.nimi}
+        {nimi}
       </H2>
       <p>
         Huomioi, että tämä sisältö on tarkasteltavissa <b>{formatDate(poistumisPaiva)}</b> asti, jonka jälkeen sisältö poistuu näkyvistä.
       </p>
+      {projektiOid && julkinen && (
+        <Section>
+          <ExtLink href={`/suunnitelma/${projektiOid}`}>Linkki suunnitelmaan kansalaispuolelle</ExtLink>
+        </Section>
+      )}
       <Section noDivider>
         {props.esikatselu && (
           <Notification type={NotificationType.INFO_GRAY}>

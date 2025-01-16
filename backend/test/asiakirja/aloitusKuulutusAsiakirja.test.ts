@@ -85,6 +85,7 @@ async function doTestGenerateKuulutus(
     !!vahainenMenettely,
     await isProjektiAsianhallintaIntegrationEnabled(projekti),
     await getLinkkiAsianhallintaan(projekti),
+    undefined,
     projektiTyyppi,
     suunnitteluSopimus ? "suunnittelusopimus" : "",
     vahainenMenettely ? "vahainen_menettely" : ""
@@ -100,6 +101,7 @@ async function testKuulutusWithLanguage(
   vahainenMenettely: boolean,
   asianhallintaPaalla: boolean,
   linkkiAsianhallintaan: string | undefined,
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined,
   ...description: string[]
 ): Promise<void> {
   const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
@@ -113,6 +115,7 @@ async function testKuulutusWithLanguage(
     vahainenMenettely,
     asianhallintaPaalla,
     linkkiAsianhallintaan,
+    kuulutettuYhdessaSuunnitelmanimi,
   };
   const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);

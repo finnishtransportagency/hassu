@@ -25,14 +25,16 @@ export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     assertIsDefined(julkaisu.kuulutusPaiva);
     this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
-      createHyvaksymisPaatosVaiheKutsuAdapterProps(
+      createHyvaksymisPaatosVaiheKutsuAdapterProps({
         projekti,
-        Kieli.SUOMI,
-        julkaisu,
+        kieli: Kieli.SUOMI,
+        hyvaksymisPaatosVaihe: julkaisu,
         paatosTyyppi,
-        await isProjektiAsianhallintaIntegrationEnabled(projekti),
-        await getLinkkiAsianhallintaan(projekti)
-      )
+        asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+        linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+        osoite: undefined,
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
+      })
     );
     return this;
   }

@@ -22,6 +22,8 @@ Tilaisuuden nimi: Lorem ipsum
 Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
+
+
 Yleisötilaisuus järjestetään:
 
 
@@ -29,7 +31,6 @@ Yleisötilaisuus järjestetään:
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
-
 
 Soittoajat:
 
@@ -48,6 +49,8 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
+
+
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
@@ -58,8 +61,6 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman la
 
 
 https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Kunta Kuntalainen (Nokia), 
@@ -146,6 +147,8 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum
 Länk till evenemanget: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
+
+
 En offentlig tillställning ordnas:
 
 
@@ -153,7 +156,6 @@ En offentlig tillställning ordnas:
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
-
 
 Telefontider:
 
@@ -172,18 +174,18 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
+
+
 Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-.
-
-
+https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
@@ -223,6 +225,8 @@ Tilaisuuden nimi: Lorem ipsum
 Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
+
+
 Yleisötilaisuus järjestetään:
 
 
@@ -230,7 +234,6 @@ Yleisötilaisuus järjestetään:
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
-
 
 Soittoajat:
 
@@ -249,18 +252,18 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
+
+
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, 
 
 
-.
-
-
+https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa 
 Kunta Kuntalainen (Nokia), 
@@ -347,6 +350,8 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum
 Länk till evenemanget: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
+
+
 En offentlig tillställning ordnas:
 
 
@@ -354,7 +359,6 @@ En offentlig tillställning ordnas:
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
-
 
 Telefontider:
 
@@ -373,18 +377,18 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
+
+
 Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-.
-
-
+https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
@@ -414,16 +418,12 @@ Object {
 Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
 Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 2
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
 Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
-
-
 
 Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -450,19 +450,13 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa suun
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Kuulutuksesta ilmoittaminen
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
 Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Uudenmaan ELY-keskus pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -514,12 +508,8 @@ Hyväksymispäätöksestä ilmoittaminen
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -544,12 +534,8 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa laus
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -572,16 +558,12 @@ Object {
 Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
 Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen ratasuunnitelman: Testiprojekti 2.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
 Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
-
-
 
 Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -608,19 +590,13 @@ Väylävirasto ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukse
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Kuulutuksesta ilmoittaminen
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöksen tiedoksiantoa (ratalaki 90 § ja hallintolaki 62 a §). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
 Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Väylävirasto pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -672,12 +648,8 @@ Testiprojekti 2
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -702,12 +674,8 @@ Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintäviras
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -730,16 +698,12 @@ Object {
 Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
 Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen yleissuunnitelman: Testiprojekti 2.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
 Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
-
-
 
 Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -766,19 +730,13 @@ Väylävirasto ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukse
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Kuulutuksesta ilmoittaminen
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
 Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Väylävirasto pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -830,12 +788,8 @@ Testiprojekti 2
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -860,12 +814,8 @@ Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintäviras
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -891,13 +841,9 @@ Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 
 Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd 2.1.2022 - 3.1.2022. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Ändring i beslutet kan sökas genom besvär hos Tavastehus förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -924,19 +870,13 @@ NTM-centralen i Nyland meddelar kommunerna i planeringsområdet och NTM-centrale
 NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Meddelande om kungörelse
 NTM-centralen i Nyland meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av vägplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
 Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 NTM-centralen i Nyland ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -988,12 +928,8 @@ NTM-centralen i Nyland meddelar dem som lämnat in en anmärkning att Transport-
 NTM-centralen i Nyland skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1018,12 +954,8 @@ NTM-centralen i Nyland meddelar dem som gett ett utlåtande att Transport- och k
 NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1049,13 +981,9 @@ Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 
 Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd 2.1.2022 - 3.1.2022. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Ändring i beslutet kan sökas genom besvär hos Tavastehus förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1082,19 +1010,13 @@ Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i S�
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Meddelande om kungörelse
 Trafikledsverket meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av järnvägsplanen som nämns i rubriken (90 § i banlagen och 62 a § i förvaltningslagen). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
 Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Trafikledsverket ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1146,12 +1068,8 @@ Trafikledsverket meddelar dem som lämnat in en anmärkning att Transport- och k
 Trafikledsverket skickar beslutet om godkännande för kännedom. (91 § i banlagen). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1176,12 +1094,8 @@ Trafikledsverket meddelar dem som gett ett utlåtande att Transport- och kommuni
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1207,13 +1121,9 @@ Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 
 Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd 2.1.2022 - 3.1.2022. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Ändring i beslutet kan sökas genom besvär hos Tavastehus förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1240,19 +1150,13 @@ Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i S�
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Meddelande om kungörelse
 Trafikledsverket meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av utredningsplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
 Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Trafikledsverket ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1304,12 +1208,8 @@ Trafikledsverket meddelar dem som lämnat in en anmärkning att Transport- och k
 Trafikledsverket skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1334,12 +1234,8 @@ Trafikledsverket meddelar dem som gett ett utlåtande att Transport- och kommuni
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
-
-
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1363,22 +1259,15 @@ Kuulutus suunnitelman nähtäville asettamisesta
 Testiprojekti 2
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 2.
 
-
 Lorem Ipsum nahtavillaoloVaihe
 Uudenmaan ELY-keskus on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä. 
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/2/2022.
 
-
-
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1430,23 +1319,17 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut li
 
 Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (laki liikennejärjestelmästä ja maanteistä LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/2/2022.
 
+Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (LjMTL 27 § 3 mom): 
 
-
-Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (LjMTL 27 § 3 mom):
-
-	- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,
-	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
-	- joiden kiinteistön alueeseen perustetaan muu oikeus tai
+	- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta, 
+	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue, 
+	- joiden kiinteistön alueeseen perustetaan muu oikeus tai 
 	- joiden kiinteistö rajoittuu tiealueeseen.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1470,22 +1353,15 @@ Kuulutus suunnitelman nähtäville asettamisesta
 Testiprojekti 2
 Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Testiprojekti 2.
 
-
 Lorem Ipsum nahtavillaoloVaihe
 Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (ratalaki 22 § 1 mom). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (ratalaki 22 § 1 mom). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä. 
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
-
-
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1537,23 +1413,17 @@ Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Testip
 
 Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (ratalaki 22 § 1 mom).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
+Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (ratalaki 22 § 3 mom): 
 
-
-Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (ratalaki 22 § 3 mom):
-
-	- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,
-	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
-	- joiden kiinteistön alueeseen perustetaan muu oikeus tai
+	- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta, 
+	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue, 
+	- joiden kiinteistön alueeseen perustetaan muu oikeus tai 
 	- joiden kiinteistö rajoittuu rautatiealueeseen.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1577,22 +1447,15 @@ Kuulutus suunnitelman nähtäville asettamisesta
 Testiprojekti 2
 Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman: Testiprojekti 2.
 
-
 Lorem Ipsum nahtavillaoloVaihe
 Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä. 
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
-
-
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1644,18 +1507,12 @@ Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman: Testi
 
 Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest***.
 
-
-
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (laki liikennejärjestelmästä ja maanteistä LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
-
-
 Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi ratalinjaus sijoittuu (ratalaki 22 § 3 mom).
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-
 
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
@@ -1680,21 +1537,14 @@ Namnet på svenska
 Trafikledsverket har utarbetat en utredningsplan enligt banlagen (110/2007): Namnet på svenska.
 
 
-
 Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
-Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042. 
 
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. I anmärkningen hänvisas till diarienummer VAYLA/2/2022.
 
-
-
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1746,18 +1596,12 @@ Trafikledsverket har utarbetat en utredningsplan enligt banlagen (110/2007): Nam
 
 Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar).
 Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
-
-
 Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya bansträckningen är belägen (banlagen 22 § 3 mom.).
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1782,21 +1626,14 @@ Namnet på svenska
 Trafikledsverket har utarbetat en järnvägsplan enligt banlagen (110/2007): Namnet på svenska.
 
 
-
 Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
-Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042. 
 
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. I anmärkningen hänvisas till diarienummer VAYLA/2/2022.
 
-
-
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1848,23 +1685,17 @@ Trafikledsverket har utarbetat en järnvägsplan enligt banlagen (110/2007): Nam
 
 Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen).
 Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
+Detta tillkännagivande har skickats till alla ägare och innehavare av (banlagen 22 § 3 mom.): 
 
-
-Detta tillkännagivande har skickats till alla ägare och innehavare av (banlagen 22 § 3 mom.):
-
-	- de fastigheter från vilka det enligt planen ska inlösas område,
-	- de fastigheter på vars område det bildas skydds- eller frisiktsområden,
-	- de fastigheter till vars område det grundas någon annan rättighet eller
+	- de fastigheter från vilka det enligt planen ska inlösas område, 
+	- de fastigheter på vars område det bildas skydds- eller frisiktsområden, 
+	- de fastigheter till vars område det grundas någon annan rättighet eller 
 	- de fastigheter som gränsar till järnvägsområdet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1889,21 +1720,14 @@ Namnet på svenska
 Trafikledsverket har utarbetat en utredningsplan enligt banlagen (110/2007): Namnet på svenska.
 
 
-
 Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
 Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
-Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042. 
 
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. I anmärkningen hänvisas till diarienummer VAYLA/2/2022.
 
-
-
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -1955,18 +1779,12 @@ Trafikledsverket har utarbetat en utredningsplan enligt banlagen (110/2007): Nam
 
 Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
-
-
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar).
 Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
-
-
 Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya bansträckningen är belägen (banlagen 22 § 3 mom.).
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 
@@ -2099,13 +1917,9 @@ Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukai
 Lorem Ipsum
 Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
-
-
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Lisätietoja antaa 
 Kunta Kuntalainen (Nokia), 
@@ -2157,13 +1971,9 @@ Efter att ha kommit överens om saken med NTM-centralen i Nyland, inleder Nokia 
 På svenska
 Nokia har 2.1.2022 publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen https://localhost:3000/sv/suunnitelma/1/aloituskuulutus. Kungörelsen är framlagd 2.1.2022 - 1.2.2022.
 
-
-
 Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har den som ansvarar för planen rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. (16 § i lagen om trafiksystem och landsvägar).
 I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. (27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar). 
 NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
