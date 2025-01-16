@@ -2,7 +2,8 @@ import { SQSRecord } from "aws-lambda";
 import {
   OmistajaHakuEvent,
   handleEvent,
-  setClient,
+  setMmlClient,
+  setPrhClient,
   tallennaKiinteistonOmistajat,
   tuoKarttarajausJaTallennaKiinteistotunnukset,
 } from "../../src/mml/kiinteistoHandler";
@@ -148,11 +149,13 @@ const mockPrhClient: PrhClient = {
 describe("kiinteistoHandler", () => {
   const time = "2024-02-23T12:32:54+02:00";
   after(() => {
-    setClient(undefined, undefined);
+    setPrhClient(undefined);
+    setMmlClient(undefined);
   });
 
   before(() => {
-    setClient(mockMmlClient, mockPrhClient);
+    setPrhClient(mockPrhClient);
+    setMmlClient(mockMmlClient);
     MockDate.set(time);
   });
 

@@ -51,7 +51,7 @@ const TIMEOUT = 120000;
 const MAX = 100;
 const CONCURRENT_MAX = 10;
 
-export function getMmlClient(options: MmlOptions): MmlClient {
+export function createMmlClient(options: MmlOptions): MmlClient {
   return {
     haeLainhuutotiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
       const all: MmlKiinteisto[] = [];

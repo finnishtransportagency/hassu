@@ -1,5 +1,5 @@
 import { SSM } from "@aws-sdk/client-ssm";
-import { getPrhClient, PrhConfig } from "../src/mml/prh/prh";
+import { createPrhClient, PrhConfig } from "../src/mml/prh/prh";
 import { Omistaja } from "../src/mml/mmlClient";
 import { STS } from "@aws-sdk/client-sts";
 
@@ -32,7 +32,7 @@ Promise.all([
       if (process.argv.includes("--bastion")) {
         cfg.endpoint = "https://localhost:8443/vls/ytj";
       }
-      return getPrhClient({
+      return createPrhClient({
         endpoint: cfg.endpoint,
         username: cfg.username,
         password: cfg.password,

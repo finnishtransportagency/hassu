@@ -32,7 +32,7 @@ export type PrhClient = {
   haeYritykset: (ytunnus: string[], uid: string) => Promise<Omistaja[]>;
 };
 
-export async function getPrhClient(options: Options): Promise<PrhClient> {
+export async function createPrhClient(options: Options): Promise<PrhClient> {
   return {
     haeYritykset: (ytunnus, uid) => {
       return haeYritykset(ytunnus, uid, options);
