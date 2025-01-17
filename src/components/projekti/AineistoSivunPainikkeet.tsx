@@ -81,7 +81,7 @@ export default function AineistoSivunPainikkeet({
 }) {
   const router = useRouter();
   const { mutate: reloadProjekti } = useProjekti();
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -203,11 +203,34 @@ export default function AineistoSivunPainikkeet({
           await router.push({ query: { oid: projekti?.oid }, pathname: paatosPathnames[siirtymaTyyppi] });
         };
         try {
+          const aineistoNahtavillaFlat = Object.values(formData.aineistoNahtavilla || {}).flat();
+          const paatosAineistotPresentIfNeeded =
+            siirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
+            muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ||
+            !!formData.hyvaksymisPaatos?.length;
+
+          const puutteet: string[] = [];
+
+          if (!aineistoNahtavillaFlat?.length) {
+            puutteet.push("Aineistoja ei ole tuotu");
+          }
+          if (!paatosAineistotPresentIfNeeded) {
+            puutteet.push("Päätösaineistot puuttuvat");
+          }
+          if (formData.aineistoNahtavilla?.[kategorisoimattomatId]?.length) {
+            puutteet.push("Aineistoja on kategorisoimatta");
+          }
+
+          if (puutteet.length > 0) {
+            showErrorMessage(puutteet.join(", "));
+            return;
+          }
           await savePaatosAineisto(formData);
           await moveToKuulutusPage();
           showSuccessMessage("Tallennus onnistui");
         } catch (e) {
           log.error("OnSubmit Error", e);
+          showErrorMessage("Tallennuksessa tapahtui virhe");
         }
       })()
     );
@@ -227,13 +250,7 @@ export default function AineistoSivunPainikkeet({
             <Button id="save_draft" disabled={kuulutusPaivaIsInPast} onClick={handleSubmit(saveDraft)}>
               Tallenna Luonnos
             </Button>
-            <Button
-              primary
-              disabled={!aineistotReadyForHyvaksynta}
-              id="aineistomuokkaus_send_for_approval"
-              type="button"
-              onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
-            >
+            <Button primary id="aineistomuokkaus_send_for_approval" type="button" onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}>
               Lähetä hyväksyttäväksi
             </Button>
           </Stack>
@@ -259,12 +276,7 @@ export default function AineistoSivunPainikkeet({
           <Button id="save_draft" onClick={handleSubmit(saveDraft)}>
             Tallenna Luonnos
           </Button>
-          <Button
-            primary
-            disabled={!aineistotPresentAndNoKategorisoimattomat}
-            id="save_and_move_to_kuulutus_page"
-            onClick={handleSubmit(saveAndMoveToKuulutusPage)}
-          >
+          <Button primary id="save_and_move_to_kuulutus_page" onClick={handleSubmit(saveAndMoveToKuulutusPage)}>
             Tallenna ja Siirry kuulutukselle
           </Button>
         </Stack>

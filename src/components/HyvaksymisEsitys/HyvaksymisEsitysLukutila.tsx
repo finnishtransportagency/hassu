@@ -365,7 +365,7 @@ export default function HyvaksymisEsitysLukutila({
       {odottaaHyvaksyntaa && (
         <Section>
           <H2>Hyväksymisesityksen sisällön esikatselu</H2>
-          <Notification type={NotificationType.INFO_GRAY}>Esikatsele hyväksymisesitys ennen sen hyväksymistä.</Notification>
+          <p>Esikatsele hyväksymisesitys ennen sen hyväksymistä.</p>
           <ButtonLink
             target="_blank"
             href={`/yllapito/projekti/${oid}/esikatsele-hyvaksyttava-hyvaksymisesitys`}
@@ -395,6 +395,7 @@ const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
     id: "ilmoituksenTila",
     header: "Ilmoituksen tila",
     cell: (info) => {
+      const value = info.getValue() as string;
       return (
         <div
           style={{
@@ -408,7 +409,7 @@ const columns: ColumnDef<SahkopostiVastaanottaja>[] = [
             backgroundColor: info.getValue() == "Ei lähetetty" ? "lightgrey" : "#F5FFEF",
           }}
         >
-          <>{info.getValue()}</>
+          {value || "-"}
         </div>
       );
     },

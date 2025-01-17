@@ -40,21 +40,21 @@ export default function Laskutustiedot(props: Readonly<{ perustiedot: ProjektinP
         <Grid container spacing={4} columns={2} sx={{ maxWidth: "700px" }}>
           <Grid item xs={2} lg={1}>
             <TextFieldWithController
-              label="OVT-tunnus"
+              label="OVT-tunnus *"
               controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.ovtTunnus" }}
               fullWidth
             />
           </Grid>
           <Grid item xs={2} lg={1}>
             <TextFieldWithController
-              label="Verkkolaskuoperaattorin välittäjätunnus"
+              label="Verkkolaskuoperaattorin välittäjätunnus *"
               controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.verkkolaskuoperaattorinTunnus" }}
               fullWidth
             />
           </Grid>
           <Grid item xs={2} lg={2}>
             <TextFieldWithController
-              label="Viitetieto"
+              label="Viitetieto *"
               controllerProps={{ control, name: "muokattavaHyvaksymisEsitys.laskutustiedot.viitetieto" }}
               fullWidth
             />

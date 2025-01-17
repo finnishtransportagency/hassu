@@ -421,15 +421,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
           <PdfPreviewForm ref={pdfFormRef} />
           {esikatselePdf && (
             <Section>
-              <H3>Kuulutuksen ja ilmoituksen esikatselu</H3>
-              <Notification type={NotificationType.INFO_GRAY}>
-                Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-              </Notification>
+              <H2>Kuulutuksen ja ilmoituksen esikatselu</H2>
               {ensisijainenKaannettavaKieli && (
                 <>
                   <p>
                     {label({
-                      label: "Esitettävät tiedostot",
+                      label: "Esikatsele tiedostot ennen tallentamista.",
                       inputLanguage: ensisijainenKaannettavaKieli,
                       kielitiedot,
                     })}
@@ -463,7 +460,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esitettävät tiedostot",
+                      label: "Esikatsele tiedostot ennen tallentamista.",
                       inputLanguage: toissijainenKaannettavaKieli,
                       kielitiedot,
                     })}

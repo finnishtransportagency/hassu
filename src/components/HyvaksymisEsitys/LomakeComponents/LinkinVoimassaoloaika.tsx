@@ -18,7 +18,7 @@ export default function LinkinVoimassaoloaika({ ennakkoneuvottelu }: Readonly<Hy
       </p>
       <div>
         <HassuDatePickerWithController
-          label="Voimassaoloaika päättyy"
+          label="Voimassaoloaika päättyy *"
           controllerProps={{
             name: ennakkoneuvottelu ? "ennakkoNeuvottelu.poistumisPaiva" : "muokattavaHyvaksymisEsitys.poistumisPaiva",
           }}
