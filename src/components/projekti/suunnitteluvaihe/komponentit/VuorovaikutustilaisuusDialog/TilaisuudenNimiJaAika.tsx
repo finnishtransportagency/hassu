@@ -72,7 +72,11 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
         <TimePicker
           disabled={props.mostlyDisabled}
           label="Alkaa *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`, {
+            onChange: () => {
+              trigger(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`);
+            },
+          })}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
         ></TimePicker>
         <TimePicker
