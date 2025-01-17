@@ -9,7 +9,6 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { label } from "src/util/textUtil";
-import { useAikavalidointi } from "src/hooks/useAikavalidointi";
 
 export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
   const {
@@ -17,8 +16,6 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
     formState: { errors },
     trigger,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
-
-  useAikavalidointi(props.index);
 
   const { data: projekti } = useProjekti();
   const kielitiedot = projekti?.kielitiedot;
@@ -75,7 +72,11 @@ export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisa
         <TimePicker
           disabled={props.mostlyDisabled}
           label="Alkaa *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`, {
+            onChange: () => {
+              trigger(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`);
+            },
+          })}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
         ></TimePicker>
         <TimePicker
