@@ -55,13 +55,12 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
   return (
     <Section>
       <H2>Kuulutuksen ja ilmoituksen esikatselu</H2>
-      <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä. </Notification>
-      <div style={{ marginTop: "4em" }}>
+      <div style={{ marginTop: "2em" }}>
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot",
+                label: "Esikatsele tiedostot ennen tallentamista.",
                 inputLanguage: Kieli.SUOMI,
                 kielitiedot,
               })}
@@ -148,7 +147,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot",
+                label: "Esikatsele tiedostot ennen tallentamista.",
                 inputLanguage: toissijainenKieli,
                 kielitiedot,
               })}

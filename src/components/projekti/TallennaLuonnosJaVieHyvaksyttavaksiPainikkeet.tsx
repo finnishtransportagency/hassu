@@ -39,7 +39,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   kuntavastaanottajat,
   tilasiirtymaTyyppi,
 }: Readonly<Props<TFieldValues>>) {
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const { mutate: reloadProjekti } = useProjekti();
 
@@ -67,12 +67,46 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
+  const { data } = useSuomifiUser();
   const lahetaHyvaksyttavaksi: SubmitHandler<TFieldValues> = useCallback(
     (formData) =>
       withLoadingSpinner(
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
+            const puutteet: string[] = [];
+
+            const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
+            if (invalidStatus) {
+              puutteet.push("Projektin tila on väärä");
+            }
+
+            if (!isProjektiReadyForTilaChange) {
+              puutteet.push("Projektin perustiedot ovat puutteelliset");
+            }
+
+            const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
+            if (lacksKunnat) {
+              puutteet.push("Kuntavastaanottajat puuttuvat");
+            }
+
+            if (
+              data?.suomifiViestitEnabled &&
+              (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
+                tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
+              !projekti.omistajahaku?.status
+            ) {
+              puutteet.push("Kiinteistönomistajat puuttuvat");
+            }
+
+            if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
+              puutteet.push("Asianhallinta on väärässä tilassa");
+            }
+
+            if (puutteet.length > 0) {
+              showErrorMessage(puutteet.join(", "));
+              return;
+            }
             const convertedFormData = await preSubmitFunction(formData);
             await api.tallennaJaSiirraTilaa(convertedFormData, {
               oid: convertedFormData.oid,
@@ -83,31 +117,24 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             reloadProjekti();
           } catch (error) {
             log.error("Virhe hyväksyntään lähetyksessä", error);
+            showErrorMessage("Virhe hyväksyttäväksi lähetyksessä");
           }
         })()
       ),
-    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
+    [
+      api,
+      preSubmitFunction,
+      reloadProjekti,
+      showSuccessMessage,
+      showErrorMessage,
+      tilasiirtymaTyyppi,
+      withLoadingSpinner,
+      projekti,
+      isProjektiReadyForTilaChange,
+      kuntavastaanottajat,
+      data?.suomifiViestitEnabled,
+    ]
   );
-  const { data } = useSuomifiUser();
-  const tallennaHyvaksyttavaksiDisabled = useMemo(() => {
-    const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
-    const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
-    let kiinteistonomistajatOk = true;
-    if (
-      data?.suomifiViestitEnabled &&
-      (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
-      !projekti.omistajahaku?.status
-    ) {
-      kiinteistonomistajatOk = false;
-    }
-    return (
-      invalidStatus ||
-      !isProjektiReadyForTilaChange ||
-      lacksKunnat ||
-      !kiinteistonomistajatOk ||
-      isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
-    );
-  }, [isProjektiReadyForTilaChange, kuntavastaanottajat?.length, projekti, tilasiirtymaTyyppi, data?.suomifiViestitEnabled]);
 
   return (
     <Section noDivider>
@@ -115,13 +142,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
         <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
           Tallenna Luonnos
         </Button>
-        <Button
-          type="button"
-          disabled={tallennaHyvaksyttavaksiDisabled}
-          id="save_and_send_for_acceptance"
-          primary
-          onClick={handleSubmit(lahetaHyvaksyttavaksi)}
-        >
+        <Button type="button" id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
           Lähetä Hyväksyttäväksi
         </Button>
       </Stack>
