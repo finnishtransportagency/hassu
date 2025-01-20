@@ -33,7 +33,7 @@ import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjekti
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
