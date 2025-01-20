@@ -128,12 +128,14 @@ async function lisaaSuunnitelmanJakotiedotProjektilleJaSenJulkaisuille(projektiF
   if (!suunnitelmaJaettu) {
     return;
   }
+  log.info("suunnitelmaJaettu", { suunnitelmaJaettu });
   lisaaJakotiedotJulkaisuille(apiProjekti, projektiFromDB, suunnitelmaJaettu);
   apiProjekti.suunnitelmaJaettu = suunnitelmaJaettu;
 }
 
 async function haeSuunnitelmaJaettuTieto(projektiFromDB: DBProjekti) {
   const suunnitelmaJaettu = haeJaetunProjektinOid(projektiFromDB.projektinJakautuminen);
+  log.info("haeSuunnitelmaJaettuTieto");
   return suunnitelmaJaettu ? await haeLiittyvanProjektinTiedot(suunnitelmaJaettu) : undefined;
 }
 
