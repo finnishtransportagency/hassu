@@ -36,7 +36,7 @@ import { approvalEmailSender } from "../email/approvalEmailSender";
 import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUtil";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,

@@ -2,6 +2,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { JulkaisuKey as DBJulkaisuKey } from "../database/model/julkaisuKey";
 import { DBProjekti, ProjektinJakautuminen } from "../database/model";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
+import { log } from "../logger";
 
 const aloituskuulutusKey: keyof API.ProjektiJulkinen = "aloitusKuulutusJulkaisu";
 const vuorovaikutusKey: keyof API.ProjektiJulkinen = "vuorovaikutukset";
@@ -71,6 +72,7 @@ export async function lisaaJakotiedotJulkisilleJulkaisuille(adaptedProjekti: API
   const viimeisinJulkaisu = dbJaApijulkaisutJaAvaimet[0].dbJulkaisu;
   const jakautuminen = viimeisinJulkaisu.projektinJakautuminen;
 
+  log.info("lisaaJakotiedotJulkisilleJulkaisuille");
   const kopioituProjektista = jakautuminen?.jaettuProjektista
     ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjektista)
     : undefined;
