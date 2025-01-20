@@ -20,7 +20,6 @@ import {
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../../../asianhallinta/getLinkkiAsianhallintaan";
 import { fileService } from "../../../../files/fileService";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "./haeKuulutettuYhdessaSuunnitelmanimi";
 
 export async function adaptHyvaksymisPaatosVaiheJulkinen(
   dbProjekti: DBProjekti,
@@ -114,7 +113,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
         asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
         linkkiAsianhallintaan: await getLinkkiAsianhallintaan(dbProjekti),
         osoite: undefined,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
       })
     ).userInterfaceFields;
   }

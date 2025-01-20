@@ -137,11 +137,13 @@ export class ProjektiDatabase {
    * @param oid Projekti oid
    * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
    */
-  async loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
+  async loadProjektiByOid(oid: string, stronglyConsistentRead = true, setContextOid = true): Promise<DBProjekti | undefined> {
     if (!oid) {
       return;
     }
-    setLogContextOid(oid);
+    if (setContextOid) {
+      setLogContextOid(oid);
+    }
     try {
       const params = new GetCommand({
         TableName: this.projektiTableName,
