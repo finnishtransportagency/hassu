@@ -44,6 +44,7 @@ export default function ProjektiPageLayout({
   }
 
   const velho = projekti.velho;
+  const suunnitelmaNimi = kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi;
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
@@ -62,7 +63,7 @@ export default function ProjektiPageLayout({
         )}
         <div className="min-w-0">
           <Section noDivider className="mb-10">
-            <H1 id="mainPageContent">{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
+            <H1 id="mainPageContent">{suunnitelmaNimi}</H1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={projekti.status}
@@ -94,10 +95,11 @@ export default function ProjektiPageLayout({
                 <ContentSpacer gap={2}>
                   <p>
                     <Trans
-                      i18nKey="projekti:liittyvat-suunnitelmat.suunnittelua-on-jaettu"
+                      i18nKey="projekti:liittyvat-suunnitelmat.suunnitelma-on-jaettu"
                       components={{
-                        suunnitelma: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
+                        suunnitelma2: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
                       }}
+                      values={{ suunnitelmaNimi }}
                     />
                     {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
                   </p>
