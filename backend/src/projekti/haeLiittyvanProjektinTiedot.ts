@@ -2,14 +2,12 @@ import { config } from "../config";
 import { Kieli, ProjektinJakotieto, Status } from "hassu-common/graphql/apiModel";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { log } from "../logger";
 
 export async function haeLiittyvanProjektinTiedot(oid: string): Promise<ProjektinJakotieto | undefined> {
   if (!config.projektiTableName) {
     return undefined;
   }
 
-  log.debug("haetaan liittyvän projektin tiedot", { toinenProjekti: oid });
   const projekti = await projektiDatabase.loadProjektiByOid(oid, true, false);
 
   if (!projekti) {

@@ -17,6 +17,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  styled,
   SvgIcon,
   TextField,
   useMediaQuery,
@@ -33,12 +34,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
 import { H2, H3 } from "../Headings";
+import { queryMatchesWithFullname } from "common/henkiloSearch/queryMatchesWithFullname";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
 type RequiredInputValues = Required<{
   [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
 }>;
+
+type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
 
 interface Props {
   disableFields?: boolean;
@@ -59,12 +63,12 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
 };
 
 function KayttoOikeusHallinta(props: Props) {
-  const [initialKayttajat, setInitialKayttajat] = useState<Kayttaja[]>();
+  const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
   const api = useApi();
 
   useEffect(() => {
     let mounted = true;
-    async function loadKayttajat(kayttajat: string[]): Promise<Kayttaja[]> {
+    async function loadKayttajat(kayttajat: string[]): Promise<PotentiaalisestiPoistunutKayttaja[]> {
       if (kayttajat.length === 0) {
         return [];
       }
@@ -74,8 +78,20 @@ function KayttoOikeusHallinta(props: Props) {
     }
     const getInitialKayttajat = async () => {
       const kayttajat = await loadKayttajat(props.projektiKayttajat.map((kayttaja) => kayttaja.kayttajatunnus));
+      const poistuneetKayttajat = props.projektiKayttajat
+        .filter((pk) => !kayttajat.some((k) => k.uid === pk.kayttajatunnus))
+        .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
+          __typename: "Kayttaja",
+          etunimi,
+          sukunimi,
+          email,
+          organisaatio,
+          puhelinnumero,
+          uid: kayttajatunnus,
+          poistunut: true,
+        }));
       if (mounted) {
-        setInitialKayttajat(kayttajat);
+        setInitialKayttajat(kayttajat.concat(poistuneetKayttajat));
       }
     };
     getInitialKayttajat();
@@ -102,7 +118,7 @@ function KayttoOikeusHallintaFormElements({
   ohjeetOpen,
   ohjeetOnClose,
   ohjeetOnOpen,
-}: Props & { initialKayttajat: Kayttaja[] }) {
+}: Props & { initialKayttajat: PotentiaalisestiPoistunutKayttaja[] }) {
   const {
     control,
     watch,
@@ -193,6 +209,7 @@ function KayttoOikeusHallintaFormElements({
               <UserFields
                 disableFields={disableFields}
                 index={index}
+                projektiKayttajatFromApi={projektiKayttajatFromApi}
                 initialKayttaja={initialKayttaja}
                 remove={remove}
                 key={paallikko.id}
@@ -218,6 +235,7 @@ function KayttoOikeusHallintaFormElements({
               disableFields={disableFields}
               index={index}
               initialKayttaja={initialKayttaja}
+              projektiKayttajatFromApi={projektiKayttajatFromApi}
               remove={remove}
               key={user.id}
               muokattavissa={muokattavissa}
@@ -244,7 +262,8 @@ function KayttoOikeusHallintaFormElements({
 
 interface UserFieldProps {
   disableFields?: boolean;
-  initialKayttaja: Kayttaja | null;
+  initialKayttaja: PotentiaalisestiPoistunutKayttaja | null;
+  projektiKayttajatFromApi: ProjektiKayttaja[];
   index: number;
   remove: UseFieldArrayRemove;
   muokattavissa: boolean;
@@ -257,11 +276,12 @@ const UserFields = ({
   disableFields,
   remove,
   initialKayttaja,
+  projektiKayttajatFromApi,
   muokattavissa,
   isProjektiPaallikko,
   isSuunnitteluSopimusYhteysHenkilo,
 }: UserFieldProps) => {
-  const [kayttaja, setKayttaja] = useState<Kayttaja | null>(initialKayttaja);
+  const [kayttaja, setKayttaja] = useState<PotentiaalisestiPoistunutKayttaja | null>(initialKayttaja);
 
   useEffect(() => {
     setKayttaja(initialKayttaja);
@@ -279,23 +299,37 @@ const UserFields = ({
 
   // Prevent onInputChange's first search from happening when initialKayttaja is given as prop
   const [preventOnInputChange, setPreventOnInputChange] = React.useState(!!initialKayttaja);
-  const [options, setOptions] = useState<Kayttaja[]>(initialKayttaja ? [initialKayttaja] : []);
+  const [options, setOptions] = useState<PotentiaalisestiPoistunutKayttaja[]>(initialKayttaja ? [initialKayttaja] : []);
 
   const searchAndUpdateKayttajat = useCallback(
     async (hakusana: string) => {
       let mounted = true;
-      let users: Kayttaja[] = [];
+      let users: PotentiaalisestiPoistunutKayttaja[] = [];
+      let poistuneetUsers: PotentiaalisestiPoistunutKayttaja[] = [];
       if (hakusana.length >= 3) {
         setLoadingKayttajaResults(true);
         users = await api.listUsers({ hakusana });
+        poistuneetUsers = projektiKayttajatFromApi
+          .filter((k) => !users.some((u) => u.uid === k.kayttajatunnus))
+          .filter((k) => queryMatchesWithFullname(hakusana, k.etunimi, k.sukunimi))
+          .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
+            __typename: "Kayttaja",
+            etunimi,
+            sukunimi,
+            email,
+            organisaatio,
+            puhelinnumero,
+            uid: kayttajatunnus,
+            poistunut: true,
+          }));
       }
       if (mounted) {
-        setOptions(users);
+        setOptions(users.concat(poistuneetUsers));
         setLoadingKayttajaResults(false);
       }
       return () => (mounted = false);
     },
-    [api]
+    [api, projektiKayttajatFromApi]
   );
 
   const debouncedSearchKayttajat = useDebounceCallback(searchAndUpdateKayttajat, 200);
@@ -305,6 +339,8 @@ const UserFields = ({
   const [popperOpen, setPopperOpen] = useState(false);
   const closePopper = () => setPopperOpen(false);
   const openPopper = () => setPopperOpen(true);
+
+  const poistettavissa = muokattavissa && !isSuunnitteluSopimusYhteysHenkilo;
 
   return (
     <ContentSpacer>
@@ -457,6 +493,12 @@ const UserFields = ({
           )}
         />
       )}
+      {kayttaja?.poistunut && (
+        <RedParagraph>
+          Henkilöä ei löytynyt käyttäjähallinnasta. Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään
+          muokkaamaan projektia.{poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektilla, se voidaan poistaa."}
+        </RedParagraph>
+      )}
       {!muokattavissa && !isProjektiPaallikko && (
         <p>
           Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat vaihtaa tai poistaa tämän henkilön, muutos pitää tehdä
@@ -491,7 +533,7 @@ const UserFields = ({
           </Box>
         )}
       />
-      {!!muokattavissa && isMobile && !isSuunnitteluSopimusYhteysHenkilo && (
+      {isMobile && poistettavissa && (
         <Button
           onClick={(event) => {
             event.preventDefault();
@@ -510,5 +552,7 @@ const UserFields = ({
     </ContentSpacer>
   );
 };
+
+const RedParagraph = styled("p")((theme) => ({ color: theme.theme.palette.error.main }));
 
 export default KayttoOikeusHallinta;

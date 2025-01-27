@@ -35,5 +35,5 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateLausuntoPyyntojenTaydennykset(projekti, input);
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   validateAsianhallinnanAktivointikytkin(apiProjekti, input);
-  await validateKayttoOikeusElyOrganisaatio(input);
+  await validateKayttoOikeusElyOrganisaatio(projekti, input);
 }

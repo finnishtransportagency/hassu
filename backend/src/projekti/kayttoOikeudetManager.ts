@@ -117,7 +117,7 @@ export class KayttoOikeudetManager {
         puhelinnumero: newUser.puhelinnumero,
         kayttajatunnus: newUser.kayttajatunnus,
         muokattavissa: true,
-        tyyppi: newUser.tyyppi == KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
+        tyyppi: isAorL(newUser.kayttajatunnus) && newUser.tyyppi === KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
         yleinenYhteystieto: newUser.yleinenYhteystieto ?? undefined,
         elyOrganisaatio: newUser.elyOrganisaatio ?? undefined,
       };
