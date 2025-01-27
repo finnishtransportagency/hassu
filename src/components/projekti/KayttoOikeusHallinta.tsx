@@ -496,7 +496,9 @@ const UserFields = ({
       {kayttaja?.poistunut && (
         <RedParagraph>
           Henkilöä ei löytynyt käyttäjähallinnasta. Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään
-          muokkaamaan projektia.{poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektilla, se voidaan poistaa."}
+          muokkaamaan projektia.
+          {poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektissa, projekti voi poistaa ne."}
+          {" Ota tarvittaessa yhteyttä Väylävirastoon tuki.vayliensuunnittelu@vayla.fi."}
         </RedParagraph>
       )}
       {!muokattavissa && !isProjektiPaallikko && (
