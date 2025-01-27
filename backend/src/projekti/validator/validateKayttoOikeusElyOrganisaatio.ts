@@ -8,9 +8,9 @@ export async function validateKayttoOikeusElyOrganisaatio(projekti: DBProjekti, 
   if (input.kayttoOikeudet) {
     const kayttajaMap = (await personSearch.getKayttajas()).asMap();
     input.kayttoOikeudet.forEach((kayttoOikeus) => {
-      const organisaatio =
-        kayttajaMap[kayttoOikeus.kayttajatunnus]?.organisaatio ??
-        projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus === kayttoOikeus.kayttajatunnus)?.organisaatio;
+      const person = kayttajaMap[kayttoOikeus.kayttajatunnus];
+      const projektiHenkilo = projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus === kayttoOikeus.kayttajatunnus);
+      const organisaatio = person ? person.organisaatio : projektiHenkilo?.organisaatio;
 
       const nonElyUserWithElyOrganisaatio = !organisaatioIsEly(organisaatio) && !!kayttoOikeus.elyOrganisaatio;
       if (nonElyUserWithElyOrganisaatio) {
