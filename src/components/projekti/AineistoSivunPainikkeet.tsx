@@ -19,6 +19,7 @@ import HassuDialog from "@components/HassuDialog";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import { isInPast } from "common/util/dateUtils";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import capitalize from "lodash/capitalize";
 
 type SiirtymaTyyppi =
   | TilasiirtymaTyyppi.NAHTAVILLAOLO
@@ -203,28 +204,40 @@ export default function AineistoSivunPainikkeet({
           await router.push({ query: { oid: projekti?.oid }, pathname: paatosPathnames[siirtymaTyyppi] });
         };
         try {
-          const aineistoNahtavillaFlat = Object.values(formData.aineistoNahtavilla || {}).flat();
-          const paatosAineistotPresentIfNeeded =
-            siirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
-            muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ||
-            !!formData.hyvaksymisPaatos?.length;
+          if (!aineistotReadyForHyvaksynta) {
+            const puutteet: string[] = [];
+            if (!aineistotPresentAndNoKategorisoimattomat) {
+              if (!Object.values(formData.aineistoNahtavilla || {}).flat().length) {
+                puutteet.push("aineistoja ei ole tuotu");
+              }
+              if (formData.aineistoNahtavilla?.[kategorisoimattomatId]?.length) {
+                puutteet.push("aineistoja on kategorisoimatta");
+              }
+            }
+            if (!aineistotReady) {
+              puutteet.push("aineistoja ei ole käsitelty");
+            }
+            if (isDirty) {
+              puutteet.push("tallentamattomia muutoksia");
+            }
+            if (kuulutusPaivaIsInPast) {
+              puutteet.push("kuulutuspäivä on menneisyydessä");
+            }
 
-          const puutteet: string[] = [];
+            if (puutteet.length > 0) {
+              const formattedPuutteet =
+                puutteet.length === 1
+                  ? capitalize(puutteet[0])
+                  : puutteet.length === 2
+                  ? `${capitalize(puutteet[0])} ja ${puutteet[1]}`
+                  : `${capitalize(puutteet[0])}, ${puutteet.slice(1, -1).join(", ")}${puutteet.length > 2 ? " ja " : ""}${
+                      puutteet[puutteet.length - 1]
+                    }`;
+              showErrorMessage(formattedPuutteet);
+              return;
+            }
+          }
 
-          if (!aineistoNahtavillaFlat?.length) {
-            puutteet.push("Aineistoja ei ole tuotu");
-          }
-          if (!paatosAineistotPresentIfNeeded) {
-            puutteet.push("Päätösaineistot puuttuvat");
-          }
-          if (formData.aineistoNahtavilla?.[kategorisoimattomatId]?.length) {
-            puutteet.push("Aineistoja on kategorisoimatta");
-          }
-
-          if (puutteet.length > 0) {
-            showErrorMessage(puutteet.join(", "));
-            return;
-          }
           await savePaatosAineisto(formData);
           await moveToKuulutusPage();
           showSuccessMessage("Tallennus onnistui");

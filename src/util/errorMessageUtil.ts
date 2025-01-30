@@ -54,6 +54,12 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "TallennaJaSiirraTilaa";
+    },
+    errorMessage: () => "Virhe hyväksyttäväksi lähetyksessä.",
+  },
+  {
+    validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "TallennaKiinteistonOmistajat";
     },
     errorMessage: () => "Kiinteistönomistajatietojen tallennus epäonnistui.",

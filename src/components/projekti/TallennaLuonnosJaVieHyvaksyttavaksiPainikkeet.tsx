@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { TallennaProjektiInput, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -17,6 +17,7 @@ import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaihe
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
+import capitalize from "lodash/capitalize";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -72,53 +73,55 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     (formData) =>
       withLoadingSpinner(
         (async () => {
-          log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-          try {
-            const puutteet: string[] = [];
+          const puutteet: string[] = [];
 
-            const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
-            if (invalidStatus) {
-              puutteet.push("Projektin tila on väärä");
-            }
-
-            if (!isProjektiReadyForTilaChange) {
-              puutteet.push("Projektin perustiedot ovat puutteelliset");
-            }
-
-            const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
-            if (lacksKunnat) {
-              puutteet.push("Kuntavastaanottajat puuttuvat");
-            }
-
-            if (
-              data?.suomifiViestitEnabled &&
-              (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
-                tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
-              !projekti.omistajahaku?.status
-            ) {
-              puutteet.push("Kiinteistönomistajat puuttuvat");
-            }
-
-            if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
-              puutteet.push("Asianhallinta on väärässä tilassa");
-            }
-
-            if (puutteet.length > 0) {
-              showErrorMessage(puutteet.join(", "));
-              return;
-            }
-            const convertedFormData = await preSubmitFunction(formData);
-            await api.tallennaJaSiirraTilaa(convertedFormData, {
-              oid: convertedFormData.oid,
-              tyyppi: tilasiirtymaTyyppi,
-              toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-            });
-            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
-            reloadProjekti();
-          } catch (error) {
-            log.error("Virhe hyväksyntään lähetyksessä", error);
-            showErrorMessage("Virhe hyväksyttäväksi lähetyksessä");
+          const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
+          if (invalidStatus) {
+            puutteet.push("projektin tila on väärä");
           }
+
+          if (!isProjektiReadyForTilaChange) {
+            puutteet.push("projektin aineistoja ei ole käsitelty");
+          }
+
+          const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
+          if (lacksKunnat) {
+            puutteet.push("kuntavastaanottajat puuttuvat");
+          }
+
+          if (
+            data?.suomifiViestitEnabled &&
+            (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
+            !projekti.omistajahaku?.status
+          ) {
+            puutteet.push("kiinteistönomistajat puuttuvat");
+          }
+
+          if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
+            puutteet.push("asianhallinta on väärässä tilassa");
+          }
+
+          if (puutteet.length > 0) {
+            const formattedPuutteet =
+              puutteet.length === 1
+                ? capitalize(puutteet[0])
+                : puutteet.length === 2
+                ? `${capitalize(puutteet[0])} ja ${puutteet[1]}`
+                : `${capitalize(puutteet[0])}, ${puutteet.slice(1, -1).join(", ")}${puutteet.length > 2 ? " ja " : ""}${
+                    puutteet[puutteet.length - 1]
+                  }`;
+            showErrorMessage(formattedPuutteet);
+            return;
+          }
+
+          const convertedFormData = await preSubmitFunction(formData);
+          await api.tallennaJaSiirraTilaa(convertedFormData, {
+            oid: convertedFormData.oid,
+            tyyppi: tilasiirtymaTyyppi,
+            toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+          });
+          showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+          reloadProjekti();
         })()
       ),
     [

@@ -1,6 +1,5 @@
 import Section from "@components/layout/Section";
 import { Kieli, AsiakirjaTyyppi } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import React from "react";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
@@ -37,7 +36,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot ennen tallentamista.",
+                label: "Esikatsele tiedostot.",
                 inputLanguage: ensisijainenKieli,
                 kielitiedot,
               })}
@@ -81,7 +80,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
             <p className="mb-10">
               {" "}
               {label({
-                label: "Esikatsele tiedostot ennen tallentamista.",
+                label: "Esikatsele tiedostot.",
                 inputLanguage: toissijainenKieli,
                 kielitiedot,
               })}

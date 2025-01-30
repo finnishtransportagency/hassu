@@ -1,7 +1,6 @@
 import React from "react";
 import Section from "@components/layout/Section";
 import { AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
 import { useProjekti } from "src/hooks/useProjekti";
