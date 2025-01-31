@@ -7,7 +7,7 @@ import remove from "lodash/remove";
 import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
-import { organisaatioIsEly } from "../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
 type OptionalNullableString = string | null | undefined;

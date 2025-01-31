@@ -64,7 +64,7 @@ Object {
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "029312",
         "sukunimi": "Projari",
         "tyyppi": "PROJEKTIPAALLIKKO",
       },
@@ -75,7 +75,7 @@ Object {
         "kayttajatunnus": "A000111",
         "muokattavissa": true,
         "organisaatio": "Väylävirasto",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "0293123123",
         "sukunimi": "Meikalainen",
       },
       Object {
@@ -85,7 +85,7 @@ Object {
         "kayttajatunnus": "A000123",
         "muokattavissa": true,
         "organisaatio": "Nokia",
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "029123123",
         "sukunimi": "Kuntalainen",
       },
       Object {

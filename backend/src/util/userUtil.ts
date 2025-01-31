@@ -1,6 +1,6 @@
 import { KayttajaTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
-import { organisaatioIsEly } from "./organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { translate } from "./localization";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 

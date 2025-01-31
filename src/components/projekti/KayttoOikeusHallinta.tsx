@@ -29,7 +29,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatNimi } from "../../util/userUtil";
 import useApi from "src/hooks/useApi";
 import useTranslation from "next-translate/useTranslation";
-import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";

@@ -22,7 +22,7 @@ import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";

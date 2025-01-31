@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
 import { addAgencyNumberTests, puhelinNumeroSchema } from "hassu-common/schema/puhelinNumero";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
-import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 
 export const kayttoOikeudetSchema = Yup.array().of(
   Yup.object()
