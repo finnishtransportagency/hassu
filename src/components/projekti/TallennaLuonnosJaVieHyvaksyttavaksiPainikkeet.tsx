@@ -55,14 +55,10 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     (formData) =>
       withLoadingSpinner(
         (async () => {
-          try {
-            const convertedFormData = await preSubmitFunction(formData);
-            await api.tallennaProjekti(convertedFormData);
-            await reloadProjekti();
-            showSuccessMessage("Tallennus onnistui");
-          } catch (e) {
-            log.error("OnSubmit Error", e);
-          }
+          const convertedFormData = await preSubmitFunction(formData);
+          await api.tallennaProjekti(convertedFormData);
+          await reloadProjekti();
+          showSuccessMessage("Tallennus onnistui");
         })()
       ),
     [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
