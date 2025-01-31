@@ -10,7 +10,6 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import useSnackbars from "src/hooks/useSnackbars";
 import { projektiMeetsMinimumStatus } from "src/util/routes";
-import log from "loglevel";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";

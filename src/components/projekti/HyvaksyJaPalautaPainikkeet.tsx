@@ -6,7 +6,7 @@ import { Stack } from "@mui/system";
 import { TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 import { isInPast } from "common/util/dateUtils";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
