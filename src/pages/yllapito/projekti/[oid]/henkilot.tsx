@@ -1,18 +1,16 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
-import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
+import KayttoOikeusHallinta, { FormValues } from "@components/projekti/KayttoOikeusHallinta";
 import * as Yup from "yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
-import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
+import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -23,12 +21,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-
-// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
-type FormValues = Required<{
-  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-}>;
+import { TallennaProjektiInput } from "@services/api";
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
@@ -58,12 +51,11 @@ export default function HenkilotPage(): ReactElement {
       showInfo={!epaaktiivinen}
       contentAsideTitle={<PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />}
     >
-      {projekti &&
-        (epaaktiivinen && projekti.kayttoOikeudet ? (
-          <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
-        ) : (
-          <Henkilot {...{ projekti, projektiLoadError, reloadProjekti }} />
-        ))}
+      {epaaktiivinen && projekti.kayttoOikeudet ? (
+        <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
+      ) : (
+        <Henkilot projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
+      )}
     </ProjektiPageLayout>
   );
 }
@@ -76,7 +68,6 @@ interface HenkilotFormProps {
 
 function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
-  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
@@ -87,26 +78,26 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
       oid: projekti.oid,
       versio: projekti.versio,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio }) => ({
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, organisaatio }) => ({
           kayttajatunnus,
           puhelinnumero: puhelinnumero || "",
           tyyppi,
           yleinenYhteystieto: !!yleinenYhteystieto,
           elyOrganisaatio: elyOrganisaatio || null,
+          organisaatio: organisaatio || "",
         })) || [],
     }),
     [projekti]
   );
 
-  const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = {
+  const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: formContext,
   };
 
-  const useFormReturn = useForm<FormValues, ProjektiValidationContext>(formOptions);
+  const useFormReturn = useForm<FormValues>(formOptions);
   const {
     handleSubmit,
     formState: { isDirty, isSubmitting },
@@ -129,9 +120,21 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     (formData: FormValues) =>
       withLoadingSpinner(
         (async () => {
-          deleteFieldArrayIds(formData?.kayttoOikeudet);
+          const tallennaProjektiInput: TallennaProjektiInput = {
+            oid: formData.oid,
+            versio: formData.versio,
+            kayttoOikeudet: formData.kayttoOikeudet.map(
+              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+                kayttajatunnus,
+                puhelinnumero,
+                elyOrganisaatio,
+                tyyppi,
+                yleinenYhteystieto,
+              })
+            ),
+          };
           try {
-            await api.tallennaProjekti(formData);
+            await api.tallennaProjekti(tallennaProjektiInput);
             await reloadProjekti();
             showSuccessMessage("Henkilötietojen tallennus onnistui");
           } catch (e) {
@@ -142,12 +145,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
     [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
-  const onKayttajatUpdate = useCallback(
-    (kayttajat: ProjektiKayttajaInput[]) => {
-      setFormContext({ kayttajat });
-    },
-    [setFormContext]
-  );
   const context = useContext(ProjektiPageLayoutContext);
   return (
     <FormProvider {...useFormReturn}>
@@ -159,7 +156,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
           <KayttoOikeusHallinta
             disableFields={disableFormEdit}
             projektiKayttajat={projekti.kayttoOikeudet || []}
-            onKayttajatUpdate={onKayttajatUpdate}
             suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
             projekti={projekti}
             includeTitle={false}

@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import Section from "@components/layout/Section2";
-import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
 import {
   Autocomplete,
@@ -12,6 +11,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   IconButton,
   InputLabel,
   MenuItem,
@@ -35,18 +35,20 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
 import { H2, H3 } from "../Headings";
 import { queryMatchesWithFullname } from "common/henkiloSearch/queryMatchesWithFullname";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
-// Extend TallennaProjektiInput by making the field nonnullable and required
-type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
-type RequiredInputValues = Required<{
-  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-}>;
+export type ProjektiKayttajaFormValue = ProjektiKayttajaInput & { organisaatio?: string | null };
+
+export type FormValues = {
+  oid: string;
+  kayttoOikeudet: ProjektiKayttajaFormValue[];
+  versio: number;
+};
 
 type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
 
 interface Props {
   disableFields?: boolean;
-  onKayttajatUpdate: (kayttajat: ProjektiKayttajaInput[]) => void;
   projektiKayttajat: ProjektiKayttaja[];
   suunnitteluSopimusYhteysHenkilo?: string | undefined;
   projekti: ProjektiLisatiedolla;
@@ -56,11 +58,14 @@ interface Props {
   ohjeetOnOpen: () => void;
 }
 
-export const defaultKayttaja: ProjektiKayttajaInput = {
+const getDefaultKayttaja = (): ProjektiKayttajaFormValue => ({
   tyyppi: undefined,
   puhelinnumero: "",
   kayttajatunnus: "",
-};
+  organisaatio: "",
+  elyOrganisaatio: undefined,
+  yleinenYhteystieto: false,
+});
 
 function KayttoOikeusHallinta(props: Props) {
   const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
@@ -90,15 +95,17 @@ function KayttoOikeusHallinta(props: Props) {
           uid: kayttajatunnus,
           poistunut: true,
         }));
+      const kaikkiKayttajat = kayttajat.concat(poistuneetKayttajat);
+
       if (mounted) {
-        setInitialKayttajat(kayttajat.concat(poistuneetKayttajat));
+        setInitialKayttajat(kaikkiKayttajat);
       }
     };
     getInitialKayttajat();
     return () => {
       mounted = false;
     };
-  }, [api, props.projektiKayttajat]);
+  }, [api, props, props.projektiKayttajat]);
 
   if (!initialKayttajat) {
     return <></>;
@@ -109,7 +116,6 @@ function KayttoOikeusHallinta(props: Props) {
 
 function KayttoOikeusHallintaFormElements({
   disableFields,
-  onKayttajatUpdate,
   projektiKayttajat: projektiKayttajatFromApi,
   initialKayttajat,
   suunnitteluSopimusYhteysHenkilo,
@@ -121,9 +127,8 @@ function KayttoOikeusHallintaFormElements({
 }: Props & { initialKayttajat: PotentiaalisestiPoistunutKayttaja[] }) {
   const {
     control,
-    watch,
     formState: { errors },
-  } = useFormContext<RequiredInputValues>();
+  } = useFormContext<FormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -133,8 +138,8 @@ function KayttoOikeusHallintaFormElements({
   const { projektiPaallikot, muutHenkilot } = useMemo(
     () =>
       fields?.reduce<{
-        projektiPaallikot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
-        muutHenkilot: FieldArrayWithId<RequiredInputValues, "kayttoOikeudet", "id">[];
+        projektiPaallikot: FieldArrayWithId<FormValues, "kayttoOikeudet", "id">[];
+        muutHenkilot: FieldArrayWithId<FormValues, "kayttoOikeudet", "id">[];
       }>(
         (acc, kayttoOikeus, index) => {
           if (kayttoOikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
@@ -148,12 +153,6 @@ function KayttoOikeusHallintaFormElements({
       ) || { projektiPaallikot: [], muutHenkilot: [] },
     [fields]
   );
-
-  const kayttoOikeudet = watch("kayttoOikeudet");
-
-  useEffect(() => {
-    onKayttajatUpdate(kayttoOikeudet || []);
-  }, [kayttoOikeudet, onKayttajatUpdate]);
 
   return (
     <Section gap={8}>
@@ -247,7 +246,7 @@ function KayttoOikeusHallintaFormElements({
       <Button
         onClick={(event) => {
           event.preventDefault();
-          append(defaultKayttaja);
+          append(getDefaultKayttaja());
         }}
         disabled={disableFields}
         type="button"
@@ -295,7 +294,7 @@ const UserFields = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const { control, setValue } = useFormContext<RequiredInputValues>();
+  const { control, setValue } = useFormContext<FormValues>();
 
   // Prevent onInputChange's first search from happening when initialKayttaja is given as prop
   const [preventOnInputChange, setPreventOnInputChange] = React.useState(!!initialKayttaja);
@@ -382,6 +381,7 @@ const UserFields = ({
                 isOptionEqualToValue={(option, value) => option.uid === value.uid}
                 onChange={(_event, newValue) => {
                   setKayttaja(newValue);
+                  setValue(`kayttoOikeudet.${index}.organisaatio`, newValue?.organisaatio ?? "");
                   if (!organisaatioIsEly(newValue?.organisaatio)) {
                     setValue(`kayttoOikeudet.${index}.elyOrganisaatio`, undefined);
                   }
@@ -411,7 +411,7 @@ const UserFields = ({
               name={`kayttoOikeudet.${index}.elyOrganisaatio`}
               render={({ field: { value, onChange, ref, ...fieldProps }, fieldState }) => (
                 <FormControl fullWidth>
-                  <InputLabel>ELY-keskus</InputLabel>
+                  <InputLabel>ELY-keskus *</InputLabel>
                   <Select
                     // Value is always string in the Select component, but "" is undefined on the form
                     value={value || ""}
@@ -421,7 +421,7 @@ const UserFields = ({
                     }}
                     inputProps={fieldProps}
                     inputRef={ref}
-                    label="ELY-keskus"
+                    label="ELY-keskus *"
                     error={!!fieldState.error}
                     defaultValue={""}
                   >
@@ -432,6 +432,7 @@ const UserFields = ({
                       </MenuItem>
                     ))}
                   </Select>
+                  {fieldState.error?.message && <FormHelperText error>{fieldState.error.message}</FormHelperText>}
                 </FormControl>
               )}
             />
@@ -467,7 +468,15 @@ const UserFields = ({
           </IconButton>
         )}
       </Stack>
-      {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
+      {kayttaja?.poistunut && (
+        <RedParagraph>
+          Henkilöä ei löytynyt käyttäjähallinnasta. Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään
+          muokkaamaan projektia.
+          {poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektissa, projekti voi poistaa ne."}
+          {" Ota tarvittaessa yhteyttä Väylävirastoon tuki.vayliensuunnittelu@vayla.fi."}
+        </RedParagraph>
+      )}
+      {!isProjektiPaallikko && kayttaja?.uid && isAorLTunnus(kayttaja?.uid) && (
         <Controller
           name={`kayttoOikeudet.${index}.tyyppi`}
           shouldUnregister
@@ -493,14 +502,6 @@ const UserFields = ({
           )}
         />
       )}
-      {kayttaja?.poistunut && (
-        <RedParagraph>
-          Henkilöä ei löytynyt käyttäjähallinnasta. Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään
-          muokkaamaan projektia.
-          {poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektissa, projekti voi poistaa ne."}
-          {" Ota tarvittaessa yhteyttä Väylävirastoon tuki.vayliensuunnittelu@vayla.fi."}
-        </RedParagraph>
-      )}
       {!muokattavissa && !isProjektiPaallikko && (
         <p>
           Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat vaihtaa tai poistaa tämän henkilön, muutos pitää tehdä
@@ -513,7 +514,7 @@ const UserFields = ({
           toinen henkilö.
         </p>
       )}
-      <Controller<RequiredInputValues>
+      <Controller<FormValues>
         name={`kayttoOikeudet.${index}.yleinenYhteystieto`}
         shouldUnregister
         render={({ field: { value, onChange, ...field } }) => (

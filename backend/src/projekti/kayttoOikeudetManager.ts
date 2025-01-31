@@ -8,7 +8,7 @@ import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
-import { isAorL } from "../util/userUtil";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
 type OptionalNullableString = string | null | undefined;
 
@@ -117,7 +117,8 @@ export class KayttoOikeudetManager {
         puhelinnumero: newUser.puhelinnumero,
         kayttajatunnus: newUser.kayttajatunnus,
         muokattavissa: true,
-        tyyppi: isAorL(newUser.kayttajatunnus) && newUser.tyyppi === KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
+        tyyppi:
+          isAorLTunnus(newUser.kayttajatunnus) && newUser.tyyppi === KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
         yleinenYhteystieto: newUser.yleinenYhteystieto ?? undefined,
         elyOrganisaatio: newUser.elyOrganisaatio ?? undefined,
       };
@@ -184,7 +185,7 @@ export class KayttoOikeudetManager {
   private createNewVelhoHenkiloFromByEmail(email: OptionalNullableString): DBVaylaUser | undefined {
     const account = email ? this.kayttajas.findByEmail(email) : undefined;
     return account
-      ? mergeKayttaja({ tyyppi: isAorL(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false }, account)
+      ? mergeKayttaja({ tyyppi: isAorLTunnus(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false }, account)
       : undefined;
   }
 

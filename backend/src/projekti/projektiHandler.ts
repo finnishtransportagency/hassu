@@ -56,7 +56,7 @@ import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
 import { haeJaetunProjektinOid } from "./haeJaetunProjektinOid";
-import { isAorL } from "../util/userUtil";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -350,7 +350,7 @@ export async function createProjektiFromVelho(
         kayttoOikeudet.addUser({
           kayttajatunnus: vaylaUser.uid,
           muokattavissa: true,
-          tyyppi: isAorL(vaylaUser.uid) ? API.KayttajaTyyppi.VARAHENKILO : undefined,
+          tyyppi: isAorLTunnus(vaylaUser.uid) ? API.KayttajaTyyppi.VARAHENKILO : undefined,
         });
       }
     }

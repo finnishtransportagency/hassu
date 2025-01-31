@@ -7,7 +7,7 @@ import { KayttajaTyyppi, NykyinenKayttaja, SuomifiKayttaja } from "hassu-common/
 import { DBProjekti } from "../database/model";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "hassu-common/abstractApi";
-import { isAorL } from "../util/userUtil";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 import { parameters } from "../aws/parameters";
 import fetch from "cross-fetch";
 import { SuomiFiCognitoKayttaja } from "./suomiFiCognitoKayttaja";
@@ -280,7 +280,7 @@ function isCurrentUserVirkamiesAndTypeOf(projekti: DBProjekti, tyyppi: KayttajaT
     return true;
   }
   const projektiUser = projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus === kayttaja.uid && user.tyyppi == tyyppi).pop();
-  return !!projektiUser && isAorL(projektiUser.kayttajatunnus);
+  return !!projektiUser && isAorLTunnus(projektiUser.kayttajatunnus);
 }
 
 export function requireOmistaja(projekti: DBProjekti, reason: string): NykyinenKayttaja {

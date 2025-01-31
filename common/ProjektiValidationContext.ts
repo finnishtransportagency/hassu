@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaihe, KayttoOikeusTiedot, Projekti, ProjektiKayttajaInput } from "./graphql/apiModel";
+import { HyvaksymisPaatosVaihe, KayttoOikeusTiedot, Projekti } from "./graphql/apiModel";
 
 export interface ProjektiLisatiedot {
   nykyinenKayttaja: Omit<KayttoOikeusTiedot, "__typename">;
@@ -24,5 +24,4 @@ export type ProjektiValidationContext = {
   hasEuRahoitus?: MutableRefObject<boolean>;
   validationMode?: ValidationModeState;
   paatos?: HyvaksymisPaatosVaihe | null;
-  kayttajat?: ProjektiKayttajaInput[];
 };
