@@ -61,12 +61,7 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
           const omistaja: Omistaja = {
             nimi: trim(prhResponse.coNimi) ?? trim(prhResponse.toiminimi),
             ytunnus: trim(prhResponse.yTunnus),
-            yhteystiedot: {
-              jakeluosoite: trim(prhResponse.postiosoite),
-              postinumero: trim(prhResponse.postinumero),
-              paikkakunta: trim(prhResponse.toimipaikka),
-              maakoodi: trim(prhResponse.maa) ?? "FI",
-            },
+            yhteystiedot: determineYhteystiedot(prhResponse),
           };
           return omistaja;
         })
@@ -74,4 +69,23 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
     omistajat.push(...(await Promise.all(promises)));
   }
   return omistajat;
+}
+
+/**
+ * @param prhResponse
+ * @returns Omistajan yrityksen ulkomaisen postiosoitteen, jollei kotimaista löydy. Muutoin kotimaisen, vaikkakin sen tiedot olisivat puutteelliset
+ */
+function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot"] {
+  const hasOnlyForeignPostalAddress =
+    !!prhResponse.ulkomaanosoite && !prhResponse.postiosoite && !prhResponse.postinumero && !prhResponse.toimipaikka && !prhResponse.maa;
+  if (hasOnlyForeignPostalAddress) {
+    return { jakeluosoite: prhResponse.ulkomaanosoite, maakoodi: undefined, paikkakunta: undefined, postinumero: undefined };
+  }
+
+  return {
+    jakeluosoite: trim(prhResponse.postiosoite),
+    postinumero: trim(prhResponse.postinumero),
+    paikkakunta: trim(prhResponse.toimipaikka),
+    maakoodi: trim(prhResponse.maa) ?? "FI",
+  };
 }
