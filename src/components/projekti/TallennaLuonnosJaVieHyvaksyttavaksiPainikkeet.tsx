@@ -10,6 +10,7 @@ import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import useSnackbars from "src/hooks/useSnackbars";
 import { projektiMeetsMinimumStatus } from "src/util/routes";
+import log from "loglevel";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import useApi from "src/hooks/useApi";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
@@ -54,10 +55,14 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     (formData) =>
       withLoadingSpinner(
         (async () => {
-          const convertedFormData = await preSubmitFunction(formData);
-          await api.tallennaProjekti(convertedFormData);
-          await reloadProjekti();
-          showSuccessMessage("Tallennus onnistui");
+          try {
+            const convertedFormData = await preSubmitFunction(formData);
+            await api.tallennaProjekti(convertedFormData);
+            await reloadProjekti();
+            showSuccessMessage("Tallennus onnistui");
+          } catch (e) {
+            log.error("OnSubmit Error", e);
+          }
         })()
       ),
     [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
@@ -68,55 +73,48 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
     (formData) =>
       withLoadingSpinner(
         (async () => {
-          const puutteet: string[] = [];
-
-          const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
-          if (invalidStatus) {
-            puutteet.push("projektin tila on väärä");
+          try {
+            const puutteet: string[] = [];
+            const invalidStatus = !projektiMeetsMinimumStatus(projekti, tilasiirtymaTyyppiToStatusMap[tilasiirtymaTyyppi]);
+            if (invalidStatus) {
+              puutteet.push("projektin tila on väärä");
+            }
+            if (!isProjektiReadyForTilaChange) {
+              puutteet.push("projektin aineistoja ei ole käsitelty");
+            }
+            const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
+            if (lacksKunnat) {
+              puutteet.push("kuntavastaanottajat puuttuvat");
+            }
+            if (
+              data?.suomifiViestitEnabled &&
+              (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
+                tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
+              !projekti.omistajahaku?.status
+            ) {
+              puutteet.push("kiinteistönomistajat puuttuvat");
+            }
+            if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
+              puutteet.push("asianhallinta on väärässä tilassa");
+            }
+            if (puutteet.length > 0) {
+              const muut = puutteet.slice(0, -1);
+              const viimeinen = puutteet[puutteet.length - 1];
+              const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
+              showErrorMessage(formattedPuutteet);
+              return;
+            }
+            const convertedFormData = await preSubmitFunction(formData);
+            await api.tallennaJaSiirraTilaa(convertedFormData, {
+              oid: convertedFormData.oid,
+              tyyppi: tilasiirtymaTyyppi,
+              toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+            });
+            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+            reloadProjekti();
+          } catch (e) {
+            log.error("Virhe hyväksyntään lähetyksessä", e);
           }
-
-          if (!isProjektiReadyForTilaChange) {
-            puutteet.push("projektin aineistoja ei ole käsitelty");
-          }
-
-          const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
-          if (lacksKunnat) {
-            puutteet.push("kuntavastaanottajat puuttuvat");
-          }
-
-          if (
-            data?.suomifiViestitEnabled &&
-            (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
-            !projekti.omistajahaku?.status
-          ) {
-            puutteet.push("kiinteistönomistajat puuttuvat");
-          }
-
-          if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
-            puutteet.push("asianhallinta on väärässä tilassa");
-          }
-
-          if (puutteet.length > 0) {
-            const formattedPuutteet =
-              puutteet.length === 1
-                ? capitalize(puutteet[0])
-                : puutteet.length === 2
-                ? `${capitalize(puutteet[0])} ja ${puutteet[1]}`
-                : `${capitalize(puutteet[0])}, ${puutteet.slice(1, -1).join(", ")}${puutteet.length > 2 ? " ja " : ""}${
-                    puutteet[puutteet.length - 1]
-                  }`;
-            showErrorMessage(formattedPuutteet);
-            return;
-          }
-
-          const convertedFormData = await preSubmitFunction(formData);
-          await api.tallennaJaSiirraTilaa(convertedFormData, {
-            oid: convertedFormData.oid,
-            tyyppi: tilasiirtymaTyyppi,
-            toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-          });
-          showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
-          reloadProjekti();
         })()
       ),
     [

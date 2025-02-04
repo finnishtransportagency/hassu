@@ -54,7 +54,10 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => {
-      return errorResponse.operation.operationName === "TallennaJaSiirraTilaa";
+      return (
+        errorResponse.operation.variables.tilasiirtyma?.toiminto === "LAHETA_HYVAKSYTTAVAKSI" &&
+        errorResponse.operation.operationName === "TallennaJaSiirraTilaa"
+      );
     },
     errorMessage: () => "Virhe hyväksyttäväksi lähetyksessä.",
   },
