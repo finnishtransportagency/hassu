@@ -1,6 +1,5 @@
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import { KuulutusJulkaisuTila, Status, UudelleenKuulutus, Vaihe } from "@services/api";
 import { nyt } from "backend/src/util/dateUtil";
 import dayjs from "dayjs";
@@ -20,16 +19,13 @@ interface KiinteistonomistajatOhjeProps {
 function KiinteistojaEiLisatty({ oid }: Readonly<KiinteistonomistajatOhjeProps>) {
   return (
     <>
-      <p>
+      <p className="text-red">
         Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
         <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
           Kiinteistönomistajat
         </StyledLink>{" "}
         -välilehdelle.
       </p>
-      <Notification type={NotificationType.WARN}>
-        Kiinteistönomistajatiedot puuttuvat. Lisää kiinteistönomistajien tiedot Tiedottaminen-sivulle ennen jatkamista.
-      </Notification>
     </>
   );
 }

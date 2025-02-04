@@ -1,7 +1,6 @@
 import Button from "@components/button/Button";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import { H3 } from "@components/Headings";
 import {
   EnnakkoneuvotteluForm,
@@ -19,11 +18,11 @@ export default function AineistonEsikatselu({ ennakkoneuvottelu }: Readonly<Hyva
   return (
     <>
       <H3 variant="h2">{ennakkoneuvottelu ? "Aineistolinkin" : "Hyväksymisesityksen"} sisällön esikatselu</H3>
-      <Notification type={NotificationType.INFO_GRAY}>
+      <p>
         {ennakkoneuvottelu
           ? "Esikatsele aineistolinkin sisältö ennen sen lähettämistä eteenpäin."
           : "Esikatsele hyväksymisesitys ennen sen lähettämistä eteenpäin."}
-      </Notification>
+      </p>
       <a
         className="hidden"
         id="esikatsele-hyvaksymisesitys-link"
