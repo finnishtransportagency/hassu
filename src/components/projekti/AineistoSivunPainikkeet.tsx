@@ -19,6 +19,7 @@ import HassuDialog from "@components/HassuDialog";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import { isInPast } from "common/util/dateUtils";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import capitalize from "lodash/capitalize";
 
 type SiirtymaTyyppi =
   | TilasiirtymaTyyppi.NAHTAVILLAOLO
@@ -81,7 +82,7 @@ export default function AineistoSivunPainikkeet({
 }) {
   const router = useRouter();
   const { mutate: reloadProjekti } = useProjekti();
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -168,11 +169,51 @@ export default function AineistoSivunPainikkeet({
               log.error(e);
             }
           };
-          await savePaatosAineisto(formData);
-          await sendForApproval();
+          try {
+            if (!aineistotReadyForHyvaksynta) {
+              const puutteet: string[] = [];
+              if (!aineistotPresentAndNoKategorisoimattomat) {
+                if (!Object.values(formData.aineistoNahtavilla || {}).flat().length) {
+                  puutteet.push("aineistoja ei ole tuotu");
+                }
+                if (formData.aineistoNahtavilla?.[kategorisoimattomatId]?.length) {
+                  puutteet.push("aineistoja on kategorisoimatta");
+                }
+              }
+              if (!aineistotReady) {
+                puutteet.push("aineistoja ei ole vielä käsitelty");
+              }
+              if (kuulutusPaivaIsInPast) {
+                puutteet.push("kuulutuspäivä on menneisyydessä");
+              }
+              if (puutteet.length > 0) {
+                const muut = puutteet.slice(0, -1);
+                const viimeinen = puutteet[puutteet.length - 1];
+                const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
+                showErrorMessage(formattedPuutteet);
+                return;
+              }
+            }
+            await savePaatosAineisto(formData);
+            await sendForApproval();
+          } catch (e) {
+            log.error(e);
+          }
         })()
       ),
-    [api, reloadProjekti, savePaatosAineisto, showSuccessMessage, siirtymaTyyppi, withLoadingSpinner]
+    [
+      api,
+      reloadProjekti,
+      savePaatosAineisto,
+      showSuccessMessage,
+      showErrorMessage,
+      siirtymaTyyppi,
+      withLoadingSpinner,
+      aineistotReadyForHyvaksynta,
+      aineistotPresentAndNoKategorisoimattomat,
+      aineistotReady,
+      kuulutusPaivaIsInPast,
+    ]
   );
 
   const saveDraft = useCallback(
@@ -203,6 +244,24 @@ export default function AineistoSivunPainikkeet({
           await router.push({ query: { oid: projekti?.oid }, pathname: paatosPathnames[siirtymaTyyppi] });
         };
         try {
+          if (!aineistotReadyForHyvaksynta) {
+            const puutteet: string[] = [];
+            if (!aineistotPresentAndNoKategorisoimattomat) {
+              if (!Object.values(formData.aineistoNahtavilla || {}).flat().length) {
+                puutteet.push("aineistoja ei ole tuotu");
+              }
+              if (formData.aineistoNahtavilla?.[kategorisoimattomatId]?.length) {
+                puutteet.push("aineistoja on kategorisoimatta");
+              }
+            }
+            if (puutteet.length > 0) {
+              const muut = puutteet.slice(0, -1);
+              const viimeinen = puutteet[puutteet.length - 1];
+              const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
+              showErrorMessage(formattedPuutteet);
+              return;
+            }
+          }
           await savePaatosAineisto(formData);
           await moveToKuulutusPage();
           showSuccessMessage("Tallennus onnistui");
@@ -227,13 +286,7 @@ export default function AineistoSivunPainikkeet({
             <Button id="save_draft" disabled={kuulutusPaivaIsInPast} onClick={handleSubmit(saveDraft)}>
               Tallenna Luonnos
             </Button>
-            <Button
-              primary
-              disabled={!aineistotReadyForHyvaksynta}
-              id="aineistomuokkaus_send_for_approval"
-              type="button"
-              onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
-            >
+            <Button primary id="aineistomuokkaus_send_for_approval" type="button" onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}>
               Lähetä hyväksyttäväksi
             </Button>
           </Stack>
@@ -259,12 +312,7 @@ export default function AineistoSivunPainikkeet({
           <Button id="save_draft" onClick={handleSubmit(saveDraft)}>
             Tallenna Luonnos
           </Button>
-          <Button
-            primary
-            disabled={!aineistotPresentAndNoKategorisoimattomat}
-            id="save_and_move_to_kuulutus_page"
-            onClick={handleSubmit(saveAndMoveToKuulutusPage)}
-          >
+          <Button primary id="save_and_move_to_kuulutus_page" onClick={handleSubmit(saveAndMoveToKuulutusPage)}>
             Tallenna ja Siirry kuulutukselle
           </Button>
         </Stack>
