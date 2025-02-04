@@ -19,7 +19,6 @@ import {
 } from "../../../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../../../asianhallinta/getLinkkiAsianhallintaan";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "./haeKuulutettuYhdessaSuunnitelmanimi";
 
 export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
   dbProjekti: DBProjekti,
@@ -99,7 +98,7 @@ export async function adaptNahtavillaoloVaiheJulkaisuJulkinen(
         asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
         linkkiAsianhallintaan: await getLinkkiAsianhallintaan(dbProjekti),
         osoite: undefined,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
       })
     ).userInterfaceFields;
   }

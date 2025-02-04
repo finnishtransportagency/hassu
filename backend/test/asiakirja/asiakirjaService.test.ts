@@ -33,7 +33,7 @@ import { mockUUID } from "../../integrationtest/shared/sharedMock";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { getLinkkiAsianhallintaan } from "../../src/asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../src/util/isProjektiAsianhallintaIntegrationEnabled";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../src/projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../src/asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {

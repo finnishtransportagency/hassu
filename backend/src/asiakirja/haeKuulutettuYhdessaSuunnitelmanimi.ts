@@ -1,8 +1,8 @@
 import { Kieli } from "hassu-common/graphql/apiModel";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import { ProjektinJakautuminen } from "../../../../database/model";
-import { haeJaetunProjektinOid } from "../../../haeJaetunProjektinOid";
-import { haeLiittyvanProjektinTiedot } from "../../../haeLiittyvanProjektinTiedot";
+import { ProjektinJakautuminen } from "../database/model";
+import { haeJaetunProjektinOid } from "../projekti/haeJaetunProjektinOid";
+import { haeLiittyvanProjektinTiedot } from "../projekti/haeLiittyvanProjektinTiedot";
 
 export async function haeKuulutettuYhdessaSuunnitelmanimi(
   projektinJakautuminen: ProjektinJakautuminen | undefined,

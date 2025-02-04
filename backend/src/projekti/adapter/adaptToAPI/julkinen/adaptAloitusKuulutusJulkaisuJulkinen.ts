@@ -19,7 +19,6 @@ import {
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../../../asianhallinta/getLinkkiAsianhallintaan";
 import { fileService } from "../../../../files/fileService";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "./haeKuulutettuYhdessaSuunnitelmanimi";
 
 export async function adaptAloitusKuulutusJulkaisuJulkinen(
   projekti: DBProjekti,
@@ -79,7 +78,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
         aloitusKuulutusJulkaisu: julkaisu,
         euRahoitusLogot: undefined,
         vahainenMenettely: projekti.vahainenMenettely,
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
       })
     ).userInterfaceFields;
   }

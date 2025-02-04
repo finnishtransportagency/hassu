@@ -31,7 +31,7 @@ import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatab
 import { Asiakas1 } from "./viranomaispalvelutwsinterface";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 export type SuomiFiSanoma = {
   oid: string;
